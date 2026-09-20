@@ -25,7 +25,12 @@ export type Database = {
       profiles: Table<Profile, Pick<Profile, "organization_id" | "user_id" | "display_name"> & Partial<Profile>>;
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      bootstrap_organization: {
+        Args: { organization_name: string; organization_slug: string; administrator_name: string };
+        Returns: string;
+      };
+    };
     Enums: { app_role: AppRole; membership_status: MembershipStatus };
     CompositeTypes: Record<string, never>;
   };

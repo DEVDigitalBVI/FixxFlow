@@ -63,6 +63,7 @@ button, input, select, textarea { font: inherit; }
 .card h2 { font-size: 16px; line-height: 24px; margin: 0 0 12px; }
 .metric { font-size: 28px; line-height: 34px; font-weight: 700; font-variant-numeric: tabular-nums; margin: 0; }
 .muted { color: var(--color-text-muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 8px; font-size: 12px; font-weight: 650; }
 .badge-active { background: var(--color-success-subtle); color: var(--color-success); }
 .badge-inactive { background: var(--color-surface-subtle); color: var(--color-text-muted); border: 1px solid var(--color-border); }

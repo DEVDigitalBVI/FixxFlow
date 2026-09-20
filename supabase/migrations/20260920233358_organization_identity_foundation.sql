@@ -85,10 +85,10 @@ create table public.profiles (
     on delete cascade,
   foreign key (organization_id, department_id)
     references public.departments(organization_id, id)
-    on delete set null,
+    on delete set null (department_id),
   foreign key (organization_id, location_id)
     references public.locations(organization_id, id)
-    on delete set null
+    on delete set null (location_id)
 );
 
 create index profiles_user_id_idx on public.profiles (user_id);
@@ -135,12 +135,128 @@ as $$
     );
 $$;
 
+create or replace function private.is_active_organization_member_path(target_organization_id text)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select (select auth.uid()) is not null
+    and exists (
+      select 1
+      from public.organization_memberships membership
+      where membership.organization_id::text = target_organization_id
+        and membership.user_id = (select auth.uid())
+        and membership.status = 'active'
+    );
+$$;
+
 revoke all on schema private from public, anon;
 grant usage on schema private to authenticated;
 revoke all on function private.is_active_organization_member(uuid) from public, anon;
 revoke all on function private.has_organization_role(uuid, public.app_role[]) from public, anon;
+revoke all on function private.is_active_organization_member_path(text) from public, anon;
 grant execute on function private.is_active_organization_member(uuid) to authenticated;
 grant execute on function private.has_organization_role(uuid, public.app_role[]) to authenticated;
+grant execute on function private.is_active_organization_member_path(text) to authenticated;
+
+create or replace function public.bootstrap_organization(
+  organization_name text,
+  organization_slug text,
+  administrator_name text
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  current_user_id uuid := (select auth.uid());
+  new_organization_id uuid;
+begin
+  if current_user_id is null then
+    raise exception 'Authentication is required';
+  end if;
+
+  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended('fixxflow-organization-bootstrap', 0));
+
+  if exists (select 1 from public.organizations) then
+    raise exception 'The initial organization has already been configured';
+  end if;
+
+  if char_length(trim(organization_name)) not between 2 and 120
+    or organization_slug !~ '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+    or char_length(trim(administrator_name)) not between 1 and 120 then
+    raise exception 'Organization setup details are invalid';
+  end if;
+
+  insert into public.organizations (name, slug)
+  values (trim(organization_name), organization_slug)
+  returning id into new_organization_id;
+
+  insert into public.organization_memberships (organization_id, user_id, role)
+  values (new_organization_id, current_user_id, 'administrator');
+
+  insert into public.profiles (organization_id, user_id, display_name)
+  values (new_organization_id, current_user_id, trim(administrator_name));
+
+  return new_organization_id;
+end;
+$$;
+
+revoke all on function public.bootstrap_organization(text, text, text) from public, anon;
+grant execute on function public.bootstrap_organization(text, text, text) to authenticated;
+
+create or replace function private.set_updated_at()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger organizations_set_updated_at before update on public.organizations
+for each row execute function private.set_updated_at();
+create trigger memberships_set_updated_at before update on public.organization_memberships
+for each row execute function private.set_updated_at();
+create trigger departments_set_updated_at before update on public.departments
+for each row execute function private.set_updated_at();
+create trigger locations_set_updated_at before update on public.locations
+for each row execute function private.set_updated_at();
+create trigger profiles_set_updated_at before update on public.profiles
+for each row execute function private.set_updated_at();
+
+create or replace function private.protect_last_administrator()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if old.role = 'administrator'
+    and old.status = 'active'
+    and (new.role <> 'administrator' or new.status <> 'active')
+    and not exists (
+      select 1
+      from public.organization_memberships membership
+      where membership.organization_id = old.organization_id
+        and membership.user_id <> old.user_id
+        and membership.role = 'administrator'
+        and membership.status = 'active'
+    ) then
+    raise exception 'An organization must retain at least one active administrator';
+  end if;
+  return new;
+end;
+$$;
+
+create trigger memberships_protect_last_administrator
+before update of role, status on public.organization_memberships
+for each row execute function private.protect_last_administrator();
 
 alter table public.organizations enable row level security;
 alter table public.organization_memberships enable row level security;
@@ -242,11 +358,23 @@ with check ((select private.has_organization_role(
   array['administrator']::public.app_role[]
 )));
 
-grant select, update on public.organizations to authenticated;
-grant select, update on public.organization_memberships to authenticated;
+revoke all on public.organizations from anon, authenticated;
+revoke all on public.organization_memberships from anon, authenticated;
+revoke all on public.departments from anon, authenticated;
+revoke all on public.locations from anon, authenticated;
+revoke all on public.profiles from anon, authenticated;
+
+grant select on public.organizations to authenticated;
+grant update (name, slug, logo_path) on public.organizations to authenticated;
+grant select on public.organization_memberships to authenticated;
+grant update (role, status, activated_at, deactivated_at) on public.organization_memberships to authenticated;
 grant select, insert, update, delete on public.departments to authenticated;
 grant select, insert, update, delete on public.locations to authenticated;
-grant select, insert, update on public.profiles to authenticated;
+grant select on public.profiles to authenticated;
+grant insert (organization_id, user_id, department_id, location_id, display_name, job_title, phone, avatar_path)
+  on public.profiles to authenticated;
+grant update (department_id, location_id, display_name, job_title, phone, avatar_path)
+  on public.profiles to authenticated;
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
@@ -265,8 +393,8 @@ create policy "Organization members can view profile photos"
 on storage.objects for select to authenticated
 using (
   bucket_id = 'profile-photos'
-  and (select private.is_active_organization_member(
-    (storage.foldername(name))[1]::uuid
+  and (select private.is_active_organization_member_path(
+    (storage.foldername(name))[1]
   ))
 );
 
@@ -275,8 +403,8 @@ on storage.objects for insert to authenticated
 with check (
   bucket_id = 'profile-photos'
   and (storage.foldername(name))[2] = (select auth.uid())::text
-  and (select private.is_active_organization_member(
-    (storage.foldername(name))[1]::uuid
+  and (select private.is_active_organization_member_path(
+    (storage.foldername(name))[1]
   ))
 );
 
@@ -289,8 +417,8 @@ using (
 with check (
   bucket_id = 'profile-photos'
   and (storage.foldername(name))[2] = (select auth.uid())::text
-  and (select private.is_active_organization_member(
-    (storage.foldername(name))[1]::uuid
+  and (select private.is_active_organization_member_path(
+    (storage.foldername(name))[1]
   ))
 );
 
@@ -299,7 +427,7 @@ on storage.objects for delete to authenticated
 using (
   bucket_id = 'profile-photos'
   and (storage.foldername(name))[2] = (select auth.uid())::text
-  and (select private.is_active_organization_member(
-    (storage.foldername(name))[1]::uuid
+  and (select private.is_active_organization_member_path(
+    (storage.foldername(name))[1]
   ))
 );
