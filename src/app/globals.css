@@ -1,0 +1,53 @@
+:root {
+  color-scheme: light;
+  --background: #f5f7f8;
+  --foreground: #132027;
+  --accent: #087f5b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 2rem;
+}
+
+.hero {
+  max-width: 44rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.hero p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.hero .eyebrow {
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
