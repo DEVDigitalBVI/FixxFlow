@@ -1,0 +1,2 @@
+import { signOut } from "../../actions";
+export default function UnassignedPage() { return <section className="auth-card"><h1>Workspace not assigned</h1><p className="auth-intro">Your account is authenticated but has not been added to an organization. Ask an administrator to complete your setup.</p><form action={signOut}><button className="button button-secondary" type="submit">Sign out</button></form></section>; }
