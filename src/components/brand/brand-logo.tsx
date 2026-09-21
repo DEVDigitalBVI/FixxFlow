@@ -31,9 +31,10 @@ const assets = {
 
 export function BrandLogo({ variant = "horizontal", priority = false, className, href = "/" }: BrandLogoProps) {
   const asset = assets[variant];
+  const classes = ["brand-logo", `brand-logo-${variant}`, className].filter(Boolean).join(" ");
   return (
-    <Link className={className} href={href} aria-label="FixxFlow home">
-      <Image src={asset.src} width={asset.width} height={asset.height} alt={asset.alt} priority={priority} sizes={variant === "icon" ? "48px" : "(max-width: 768px) 180px, 240px"} />
+    <Link className={classes} href={href} aria-label="FixxFlow home">
+      <Image className="brand-logo-image" src={asset.src} width={asset.width} height={asset.height} alt={asset.alt} priority={priority} sizes={variant === "icon" ? "48px" : "(max-width: 768px) 180px, 240px"} />
     </Link>
   );
 }
