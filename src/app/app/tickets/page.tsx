@@ -1,0 +1,20 @@
+import Link from "next/link";
+import { requireViewer } from "@/lib/auth/viewer";
+import { createClient } from "@/lib/supabase/server";
+import { ticketPriorities, ticketStatuses, formatTicketDate } from "@/features/tickets/presentation";
+import type { TicketPriority, TicketStatus } from "@/types/database";
+
+type Props = { searchParams: Promise<{ status?: string; priority?: string; q?: string }> };
+export default async function TicketsPage({ searchParams }: Props) {
+  const viewer = await requireViewer(); const filters = await searchParams; const supabase = await createClient();
+  let query = supabase.from("tickets").select("id, ticket_number, title, requester_id, assigned_technician_id, team_id, priority, status, updated_at").eq("organization_id", viewer.organizationId).order("updated_at", { ascending: false }).limit(100);
+  if (filters.status && filters.status in ticketStatuses) query = query.eq("status", filters.status as TicketStatus);
+  if (filters.priority && filters.priority in ticketPriorities) query = query.eq("priority", filters.priority as TicketPriority);
+  if (filters.q?.trim()) query = query.ilike("title", `%${filters.q.trim().replace(/[%_]/g, "")}%`);
+  const [{ data: tickets }, { data: profiles }, { data: teams }] = await Promise.all([query, supabase.from("profiles").select("user_id, display_name").eq("organization_id", viewer.organizationId), supabase.from("teams").select("id, name").eq("organization_id", viewer.organizationId)]);
+  const names = new Map((profiles ?? []).map((p) => [p.user_id, p.display_name])); const teamNames = new Map((teams ?? []).map((t) => [t.id, t.name]));
+  return <div className="page"><header className="page-header"><div><span className="page-eyebrow">Service desk</span><h1>{viewer.role === "end_user" ? "My requests" : "Ticket queue"}</h1><p>{viewer.role === "end_user" ? "Track your support requests and conversations." : "Triage, assign, and resolve support work."}</p></div><Link className="button button-primary" href="/app/tickets/new">New ticket</Link></header>
+    <form className="ticket-filters"><input className="input" name="q" defaultValue={filters.q} placeholder="Search ticket titles" aria-label="Search ticket titles"/><select className="input" name="status" defaultValue={filters.status ?? ""} aria-label="Filter by status"><option value="">All statuses</option>{Object.entries(ticketStatuses).map(([v,p]) => <option key={v} value={v}>{p.label}</option>)}</select><select className="input" name="priority" defaultValue={filters.priority ?? ""} aria-label="Filter by priority"><option value="">All priorities</option>{Object.entries(ticketPriorities).map(([v,p]) => <option key={v} value={v}>{p.label}</option>)}</select><button className="button button-secondary">Apply</button></form>
+    <div className="table-region" role="region" aria-label="Tickets" tabIndex={0}>{tickets?.length ? <table className="table ticket-table"><thead><tr><th>Ticket</th><th>Status</th><th>Priority</th><th>Requester</th><th>Assigned to</th><th>Updated</th></tr></thead><tbody>{tickets.map((ticket) => <tr key={ticket.id}><td><Link className="ticket-link" href={`/app/tickets/${ticket.id}`}><strong>#{ticket.ticket_number} · {ticket.title}</strong><span>{ticket.team_id ? teamNames.get(ticket.team_id) ?? "Team" : "No team"}</span></Link></td><td><span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span></td><td><span className={`ticket-badge tone-${ticketPriorities[ticket.priority].tone}`}>{ticketPriorities[ticket.priority].label}</span></td><td>{names.get(ticket.requester_id) ?? "Unknown"}</td><td>{ticket.assigned_technician_id ? names.get(ticket.assigned_technician_id) ?? "Unknown" : <span className="muted">Unassigned</span>}</td><td className="muted">{formatTicketDate(ticket.updated_at)}</td></tr>)}</tbody></table> : <div className="empty-state"><div className="empty-icon">✓</div><strong>No tickets found</strong><p>Create a support request or adjust the filters.</p></div>}</div>
+  </div>;
+}
