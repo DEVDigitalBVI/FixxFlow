@@ -31,9 +31,7 @@ export async function bootstrapOrganization(formData: FormData) {
     redirect(`/account/unassigned?${new URLSearchParams({ error: "Organization setup requires the Supabase server secret." })}`);
   }
 
-  if (error) {
-    redirect(`/account/unassigned?${new URLSearchParams({ error: "Setup is unavailable. Ask an administrator to add your account." })}`);
-  }
+  if (error) redirect(`/account/unassigned?${new URLSearchParams({ error: error.message.includes("organizations_slug_key") || error.message.includes("duplicate key") ? "That workspace identifier is already in use. Choose another." : "We could not create your organization. Check the details and try again." })}`);
 
   redirect("/app");
 }

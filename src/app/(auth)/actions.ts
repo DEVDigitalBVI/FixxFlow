@@ -16,6 +16,31 @@ export async function signIn(formData: FormData) {
   redirect("/app");
 }
 
+export async function signUp(formData: FormData) {
+  const email = value(formData, "email").toLowerCase();
+  const password = value(formData, "password");
+  const confirmation = value(formData, "passwordConfirmation");
+  const fullName = value(formData, "fullName");
+  if (!email || !fullName) authRedirect("/signup", "error", "Enter your name and work email.");
+  if (password.length < 8) authRedirect("/signup", "error", "Use a password with at least 8 characters.");
+  if (password !== confirmation) authRedirect("/signup", "error", "The passwords do not match.");
+  if (formData.get("terms") !== "accepted") authRedirect("/signup", "error", "Accept the terms to create your workspace.");
+
+  const supabase = await createClient();
+  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${origin}/auth/callback?next=/account/unassigned`,
+      data: { display_name: fullName },
+    },
+  });
+  if (error) authRedirect("/signup", "error", "We could not create the account. Try again or sign in if you already registered.");
+  if (data.session) redirect("/account/unassigned");
+  redirect(`/signup/check-email?${new URLSearchParams({ email })}`);
+}
+
 export async function requestPasswordReset(formData: FormData) {
   const email = value(formData, "email");
   if (!email) authRedirect("/forgot-password", "error", "Enter your email address.");
