@@ -34,8 +34,13 @@ export async function updateTicket(formData: FormData) {
   const priority = String(formData.get("priority") ?? "") as TicketPriority;
   if (!ticketId || !statuses.includes(status) || !priorities.includes(priority)) fail(`/app/tickets/${ticketId}`, "Choose a valid status and priority.");
   const supabase = await createClient();
-  const { error } = await supabase.from("tickets").update({ status, priority, assigned_technician_id: optional(formData.get("assignedTechnicianId")), team_id: optional(formData.get("teamId")), category_id: optional(formData.get("categoryId")), subcategory_id: optional(formData.get("subcategoryId")), location_id: optional(formData.get("locationId")), due_at: optional(formData.get("dueAt")) }).eq("organization_id", viewer.organizationId).eq("id", ticketId);
-  if (error) fail(`/app/tickets/${ticketId}`, "The ticket could not be updated.");
+  const assignee = optional(formData.get("assignedTechnicianId"));
+  if (assignee) {
+    const { data: worker } = await supabase.from("organization_memberships").select("user_id").eq("organization_id", viewer.organizationId).eq("user_id", assignee).eq("status", "active").in("role", ["technician", "administrator"]).maybeSingle();
+    if (!worker) fail(`/app/tickets/${ticketId}`, "Choose an active technician.");
+  }
+  const { data, error } = await supabase.from("tickets").update({ status, priority, assigned_technician_id: assignee, team_id: optional(formData.get("teamId")), category_id: optional(formData.get("categoryId")), subcategory_id: optional(formData.get("subcategoryId")), location_id: optional(formData.get("locationId")), due_at: optional(formData.get("dueAt")) }).eq("organization_id", viewer.organizationId).eq("id", ticketId).select("id").maybeSingle();
+  if (error || !data) fail(`/app/tickets/${ticketId}`, "The ticket could not be updated.");
   revalidatePath(`/app/tickets/${ticketId}`); revalidatePath("/app/tickets");
   redirect(`/app/tickets/${ticketId}?success=Ticket updated.`);
 }
@@ -63,4 +68,29 @@ export async function reopenTicket(formData: FormData) {
   if (error || !data) fail(path, "This request could not be reopened. Refresh and try again.");
   revalidatePath(path); revalidatePath("/app/tickets"); revalidatePath("/app");
   redirect(`${path}?success=Request reopened.`);
+}
+
+export async function bulkUpdateTickets(formData: FormData) {
+  const viewer = await requireViewer();
+  if (viewer.role === "end_user") fail("/app/tickets", "You cannot update these tickets.");
+  const ids = [...new Set(formData.getAll("ticketIds").map(String))];
+  const intent = String(formData.get("intent") ?? "");
+  const value = String(formData.get(intent) ?? "");
+  if (!ids.length || ids.length > 100 || ids.some(id => !/^[0-9a-f-]{36}$/i.test(id))) fail("/app/tickets", "Select up to 100 tickets.");
+  const supabase = await createClient();
+  let changes: { status?: TicketStatus; priority?: TicketPriority; assigned_technician_id?: string | null } = {};
+  if (intent === "status" && statuses.includes(value as TicketStatus)) changes = { status: value as TicketStatus };
+  else if (intent === "priority" && priorities.includes(value as TicketPriority)) changes = { priority: value as TicketPriority };
+  else if (intent === "assignee") {
+    if (value) {
+      const { data: worker } = await supabase.from("organization_memberships").select("user_id").eq("organization_id", viewer.organizationId).eq("user_id", value).eq("status", "active").in("role", ["technician", "administrator"]).maybeSingle();
+      if (!worker) fail("/app/tickets", "Choose an active technician.");
+    }
+    changes = { assigned_technician_id: value || null };
+  } else fail("/app/tickets", "Choose a valid bulk action.");
+  const { data, error } = await supabase.from("tickets").update(changes).eq("organization_id", viewer.organizationId).in("id", ids).select("id");
+  if (error || !data || data.length !== ids.length) fail("/app/tickets", "Some tickets could not be updated. Refresh the queue and try again.");
+  const count = data?.length ?? 0;
+  revalidatePath("/app/tickets"); revalidatePath("/app");
+  redirect(`/app/tickets?success=${encodeURIComponent(`${count} ticket${count === 1 ? "" : "s"} updated.`)}`);
 }
