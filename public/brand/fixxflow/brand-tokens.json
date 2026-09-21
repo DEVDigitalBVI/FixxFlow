@@ -1,0 +1,46 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "brand": {
+    "name": "FixxFlow",
+    "tagline": "IT SUPPORT IN MOTION"
+  },
+  "color": {
+    "brand": {
+      "blue": { "$value": "#007AFF", "$type": "color" },
+      "cyan": { "$value": "#00C6FF", "$type": "color" },
+      "blueHover": { "$value": "#0066D6", "$type": "color" },
+      "blueSoft": { "$value": "#EAF5FF", "$type": "color" },
+      "navy": { "$value": "#0F172A", "$type": "color" },
+      "purple": { "$value": "#865CF6", "$type": "color" }
+    },
+    "surface": {
+      "canvas": { "$value": "#F8FAFC", "$type": "color" },
+      "card": { "$value": "#FFFFFF", "$type": "color" },
+      "dark": { "$value": "#0B1220", "$type": "color" }
+    },
+    "text": {
+      "primary": { "$value": "#0F172A", "$type": "color" },
+      "secondary": { "$value": "#64748B", "$type": "color" },
+      "inverse": { "$value": "#FFFFFF", "$type": "color" }
+    },
+    "border": {
+      "subtle": { "$value": "#E2E8F0", "$type": "color" }
+    },
+    "status": {
+      "info": { "$value": "#007AFF", "$type": "color" },
+      "success": { "$value": "#22C55E", "$type": "color" },
+      "warning": { "$value": "#F59E0B", "$type": "color" },
+      "critical": { "$value": "#EF4444", "$type": "color" },
+      "inactive": { "$value": "#64748B", "$type": "color" }
+    }
+  },
+  "typography": {
+    "ui": {
+      "fontFamily": { "$value": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", "$type": "fontFamily" },
+      "guidance": "Use 400 for body, 500 for labels, 600 for controls and section headings, and 700 for major headings. If Inter is not licensed or installed, use the included system stack. No font files are included."
+    },
+    "wordmark": {
+      "guidance": "The wordmark is artwork. Do not recreate it using live text."
+    }
+  }
+}

@@ -13,6 +13,9 @@ coverage/
 supabase/.branches/
 supabase/.temp/
 
+# Local brand-package staging area (deployable copies live in public/brand)
+/brand/
+
 # Editors and operating systems
 .DS_Store
 *.swp

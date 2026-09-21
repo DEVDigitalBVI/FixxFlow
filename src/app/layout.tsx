@@ -7,7 +7,15 @@ export const metadata: Metadata = {
     default: "FixxFlow",
     template: "%s | FixxFlow",
   },
-  description: "A streamlined workflow for service and repair operations.",
+  description: "IT Support in Motion",
+  manifest: "/brand/fixxflow/site.webmanifest",
+  icons: {
+    icon: [
+      { url: "/brand/fixxflow/favicon/favicon.ico" },
+      { url: "/brand/fixxflow/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/brand/fixxflow/favicon/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

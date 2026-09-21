@@ -1,4 +1,4 @@
-# Commercial IT Service Platform Design System
+# FixxFlow Product Design System
 
 Status: Initial source of truth  
 Applies to: Admin/agent workspace, employee support portal, and shared product UI  
@@ -8,7 +8,7 @@ Primary implementation target: React and Next.js
 
 This document is the product UI source of truth. Use it when designing, implementing, or reviewing every user-facing feature. If a mockup or one-off implementation conflicts with this document, follow this document unless the product owner explicitly approves a change.
 
-The product should feel like an original, modern SaaS service platform: calm, fast, legible, and information-rich. It may draw general inspiration from the three reference screenshots discussed during product planning, but it must not copy any single product's layout, visual identity, components, iconography, or distinctive interaction patterns.
+FixxFlow should feel like an original, modern IT support SaaS platform: calm, fast, legible, trustworthy, and visibly in motion. It may draw general inspiration from the three reference screenshots discussed during product planning, but it must not copy any single product's layout, visual identity, components, iconography, or distinctive interaction patterns.
 
 ## 2. Product experience principles
 
@@ -29,35 +29,56 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
 
 ```css
 :root {
-  --color-canvas: #f6f7f9;
+  --color-brand-primary: #007aff;
+  --color-brand-secondary: #00c6ff;
+  --color-brand-navy: #0f172a;
+  --color-brand-purple: #865cf6;
+  --color-canvas: #f8fafc;
   --color-surface: #ffffff;
   --color-surface-subtle: #f9fafb;
   --color-surface-raised: #ffffff;
   --color-border: #e5e7eb;
   --color-border-strong: #d1d5db;
-  --color-text: #18202b;
-  --color-text-muted: #667085;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
   --color-text-subtle: #8a94a3;
-  --color-accent: #315efb;
-  --color-accent-hover: #244bd6;
-  --color-accent-subtle: #eef2ff;
-  --color-success: #16845b;
-  --color-success-subtle: #eaf8f2;
+  --color-accent: #007aff;
+  --color-accent-hover: #0066d6;
+  --color-accent-subtle: #eaf5ff;
+  --color-success: #15803d;
+  --color-success-brand: #22c55e;
+  --color-success-subtle: #ecfdf3;
   --color-warning: #a15c00;
-  --color-warning-subtle: #fff5df;
-  --color-danger: #c4363f;
-  --color-danger-subtle: #fff0f1;
-  --color-info: #2563a9;
-  --color-info-subtle: #edf6ff;
-  --color-focus: #315efb;
+  --color-warning-brand: #f59e0b;
+  --color-warning-subtle: #fff7e6;
+  --color-danger: #c92a2a;
+  --color-danger-brand: #ef4444;
+  --color-danger-subtle: #fff1f1;
+  --color-info: #0066d6;
+  --color-info-subtle: #eaf5ff;
+  --color-focus: #007aff;
   --shadow-card: 0 1px 2px rgb(16 24 40 / 5%), 0 4px 12px rgb(16 24 40 / 4%);
   --shadow-overlay: 0 16px 40px rgb(16 24 40 / 18%);
 }
 ```
 
-These values are an initial palette, not permission to proliferate shades. Validate normal text at WCAG AA contrast (4.5:1), large text and essential graphical objects at 3:1, and interactive state contrast in context. Use the accent primarily for interactive emphasis. Reserve success, warning, and danger colors for their meanings.
+The core brand-board palette is `#007AFF` primary blue, `#00C6FF` secondary cyan, `#0F172A` navy, `#64748B` slate, `#E2E8F0` border, `#F8FAFC` background, `#22C55E` success, `#F59E0B` warning, `#EF4444` critical, and `#865CF6` innovation/accent. The darker semantic aliases above are used where the raw brand colors would not meet text contrast. Validate normal text at WCAG AA contrast (4.5:1), large text and essential graphical objects at 3:1, and interactive state contrast in context. Use blue primarily for interactive emphasis. Reserve green, amber, and red for their meanings; purple is optional and should be rare.
 
-### 3.2 Typography
+### 3.2 Brand identity and logo flow
+
+- The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its cyan-to-blue motion and deep navy folds express speed, continuity, and dependable technical support.
+- The product name is always written **FixxFlow** with two lowercase x characters and capital F characters. The primary tagline is **IT SUPPORT IN MOTION**.
+- Use the full primary or horizontal logo on authentication, onboarding, marketing, exported documents, and other brand-forward surfaces.
+- Use the horizontal logo in the expanded application sidebar or wide header. Use the icon alone in the collapsed sidebar, favicon, app launcher, compact mobile header, and loading identity.
+- On light surfaces, use the primary blue/navy artwork. On dark navy surfaces, use the dark-mode or reversed-white asset. Do not recolor, stretch, rotate, outline, separate, or rearrange the F and wrench.
+- Keep clear space around the logo. At small sizes, drop the tagline before reducing legibility; use the icon rather than forcing the wordmark into a square.
+- The logo gradient belongs to brand artwork and occasional brand-forward moments. Functional controls should normally use solid semantic token colors, not gradients.
+- Prefer motion cues that echo the mark's forward sweep: short horizontal reveals, progress movement, and directional transitions. Keep them subtle, 120–200ms, and fully compatible with reduced-motion settings.
+- Product copy should sound clear, capable, and active. Favor outcome language such as “Resolve ticket,” “Route request,” and “Keep work moving.” Avoid mechanical jargon in the employee portal.
+
+The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its PNG masters as approved artwork; do not recreate the wordmark with live text. A designer-authored vector master should replace raster artwork if large-format print production is required.
+
+### 3.3 Typography
 
 - Use a highly legible system-oriented sans-serif stack: `Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`.
 - Default body: 14px/20px in the agent workspace; 16px/24px in the employee portal and prose-heavy content.
@@ -67,7 +88,7 @@ These values are an initial palette, not permission to proliferate shades. Valid
 - Data values: use tabular numerals when alignment matters.
 - Keep line length near 45–75 characters for prose. Do not communicate hierarchy through font size alone; combine size, weight, spacing, and placement.
 
-### 3.3 Spacing, shape, and elevation
+### 3.4 Spacing, shape, and elevation
 
 - Base spacing unit: 4px. Preferred steps: 4, 8, 12, 16, 20, 24, 32, 40, 48.
 - Dense rows: 40–44px minimum height. Standard controls: 40px. Prominent portal controls: 44–48px.
@@ -77,7 +98,7 @@ These values are an initial palette, not permission to proliferate shades. Valid
 - Use borders and surface shifts before shadows. Shadows should indicate elevation, not decorate every object.
 - Icons should be from one consistent outline icon family. Default size 16–20px. Every unfamiliar icon-only action requires an accessible name and tooltip.
 
-### 3.4 Motion
+### 3.5 Motion
 
 - Use motion to explain change, not to entertain. Most transitions: 120–200ms with an ease-out curve.
 - Avoid large parallax, bouncing, or decorative looping animation.

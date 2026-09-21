@@ -8,6 +8,7 @@ export type Viewer = {
   organizationId: string;
   organizationName: string;
   displayName: string;
+  avatarUrl: string | null;
   role: AppRole;
   status: MembershipStatus;
 };
@@ -30,8 +31,12 @@ export async function requireViewer(): Promise<Viewer> {
 
   const [{ data: organization }, { data: profile }] = await Promise.all([
     supabase.from("organizations").select("name").eq("id", membership.organization_id).single(),
-    supabase.from("profiles").select("display_name").eq("organization_id", membership.organization_id).eq("user_id", userId).maybeSingle(),
+    supabase.from("profiles").select("display_name, avatar_path").eq("organization_id", membership.organization_id).eq("user_id", userId).maybeSingle(),
   ]);
+
+  const { data: avatar } = profile?.avatar_path
+    ? await supabase.storage.from("profile-photos").createSignedUrl(profile.avatar_path, 3600)
+    : { data: null };
 
   return {
     id: userId,
@@ -39,6 +44,7 @@ export async function requireViewer(): Promise<Viewer> {
     organizationId: membership.organization_id,
     organizationName: organization?.name ?? "Organization",
     displayName: profile?.display_name ?? (typeof claims.claims.email === "string" ? claims.claims.email : "User"),
+    avatarUrl: avatar?.signedUrl ?? null,
     role: membership.role,
     status: membership.status,
   };

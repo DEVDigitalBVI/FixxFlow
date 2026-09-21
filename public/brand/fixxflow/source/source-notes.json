@@ -1,0 +1,20 @@
+{
+  "source": "AI-assisted raster reconstruction using the approved FixxFlow brand board as the authoritative reference",
+  "iconSourceDimensions": [
+    1254,
+    1254
+  ],
+  "horizontalSourceDimensions": [
+    2172,
+    724
+  ],
+  "format": "PNG RGBA",
+  "vectorOriginalIncluded": false,
+  "palette": {
+    "blue": "#007AFF",
+    "cyan": "#00C6FF",
+    "navy": "#0F172A",
+    "slate": "#64748B",
+    "white": "#FFFFFF"
+  }
+}
