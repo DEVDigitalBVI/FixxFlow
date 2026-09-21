@@ -38,7 +38,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 img { display: block; max-width: 100%; }
 .brand-logo { display: block; flex: 0 0 auto; line-height: 0; }
 .brand-logo-image { display: block; width: 100%; height: auto; }
-.brand-logo-horizontal { aspect-ratio: 1817 / 385; }
+.brand-logo-horizontal { aspect-ratio: 2172 / 724; }
 .brand-logo-dark { aspect-ratio: 1353 / 1334; }
 .brand-logo-icon { aspect-ratio: 1139 / 1151; }
 :focus-visible { outline: 3px solid color-mix(in srgb, var(--color-focus) 35%, transparent); outline-offset: 2px; }
@@ -98,7 +98,7 @@ img { display: block; max-width: 100%; }
 .app-shell { min-height: 100vh; display: grid; grid-template-columns: 252px minmax(0, 1fr); }
 .sidebar { position: sticky; top: 0; height: 100vh; background: var(--color-surface); border-right: 1px solid var(--color-border); padding: 22px 16px 18px; display: flex; flex-direction: column; gap: 28px; }
 .sidebar-brand { height: 48px; display: flex; align-items: center; padding: 0 8px; }
-.sidebar-logo-full { width: min(170px, 100%); }
+.sidebar-logo-full { width: min(160px, 100%); }
 .sidebar-logo-icon { display: none; width: 42px; }
 .nav-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
 .nav-link { min-height: 42px; display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 9px; color: var(--color-text-muted); text-decoration: none; font-weight: 620; transition: color 160ms ease-out, background-color 160ms ease-out; }

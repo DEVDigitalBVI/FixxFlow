@@ -10,10 +10,10 @@ type BrandLogoProps = {
 
 const assets = {
   horizontal: {
-    src: "/brand/fixxflow/logo/fixxflow-logo-horizontal.png",
-    width: 1817,
-    height: 385,
-    alt: "FixxFlow",
+    src: "/brand/fixxflow/source/fixxflow-horizontal-raster-master.png",
+    width: 2172,
+    height: 724,
+    alt: "FixxFlow — IT Support in Motion",
   },
   dark: {
     src: "/brand/fixxflow/logo/fixxflow-logo-dark-mode.png",
