@@ -4,6 +4,8 @@ export type MembershipStatus = "active" | "inactive";
 export type TicketStatus = "new" | "open" | "in_progress" | "waiting_on_user" | "on_hold" | "resolved" | "closed";
 export type TicketPriority = "low" | "normal" | "high" | "critical";
 export type TicketMessageKind = "reply" | "internal_note";
+export type ChatStatus = "open" | "closed";
+export type ChatMessageKind = "message" | "internal_note";
 
 type Organization = { id: string; name: string; slug: string; logo_path: string | null; created_at: string; updated_at: string };
 type Membership = { organization_id: string; user_id: string; role: AppRole; status: MembershipStatus; activated_at: string; deactivated_at: string | null; created_at: string; updated_at: string };
@@ -17,6 +19,9 @@ type Ticket = { id: string; organization_id: string; ticket_number: number; titl
 type TicketMessage = { id: string; organization_id: string; ticket_id: string; author_id: string; kind: TicketMessageKind; body: string; created_at: string; updated_at: string };
 type TicketAttachment = { id: string; organization_id: string; ticket_id: string; uploaded_by: string; storage_path: string; file_name: string; content_type: string; size_bytes: number; created_at: string };
 type TicketActivity = { id: number; organization_id: string; ticket_id: string; actor_id: string | null; action: string; details: Json; created_at: string };
+type ChatConversation = { id: string; organization_id: string; requester_id: string; assigned_technician_id: string | null; topic: string; status: ChatStatus; ticket_id: string | null; created_at: string; updated_at: string; closed_at: string | null };
+type ChatMessage = { id: string; organization_id: string; conversation_id: string; author_id: string; kind: ChatMessageKind; body: string; created_at: string };
+type ChatAttachment = { id: string; organization_id: string; conversation_id: string; uploaded_by: string; storage_path: string; file_name: string; content_type: string; size_bytes: number; created_at: string };
 
 type Table<Row, Insert = Partial<Row>, Update = Partial<Insert>> = {
   Row: Row;
@@ -40,6 +45,9 @@ export type Database = {
       ticket_messages: Table<TicketMessage, Pick<TicketMessage, "organization_id" | "ticket_id" | "author_id" | "body"> & Partial<TicketMessage>>;
       ticket_attachments: Table<TicketAttachment, Pick<TicketAttachment, "organization_id" | "ticket_id" | "uploaded_by" | "storage_path" | "file_name" | "content_type" | "size_bytes"> & Partial<TicketAttachment>>;
       ticket_activity: Table<TicketActivity>;
+      chat_conversations: Table<ChatConversation, Pick<ChatConversation, "organization_id" | "requester_id" | "topic"> & Partial<ChatConversation>>;
+      chat_messages: Table<ChatMessage, Pick<ChatMessage, "organization_id" | "conversation_id" | "author_id" | "body"> & Partial<ChatMessage>>;
+      chat_attachments: Table<ChatAttachment, Pick<ChatAttachment, "organization_id" | "conversation_id" | "uploaded_by" | "storage_path" | "file_name" | "content_type" | "size_bytes"> & Partial<ChatAttachment>>;
     };
     Views: Record<string, never>;
     Functions: {
@@ -47,8 +55,11 @@ export type Database = {
         Args: { organization_name: string; organization_slug: string; administrator_name: string; administrator_user_id: string };
         Returns: string;
       };
+      start_support_chat: { Args: { target_organization_id: string; chat_topic: string; first_message: string }; Returns: string };
+      convert_chat_to_ticket: { Args: { conversation_id: string }; Returns: string };
+      link_chat_to_ticket: { Args: { conversation_id: string; target_ticket_id: string }; Returns: string };
     };
-    Enums: { app_role: AppRole; membership_status: MembershipStatus; ticket_status: TicketStatus; ticket_priority: TicketPriority; ticket_message_kind: TicketMessageKind };
+    Enums: { app_role: AppRole; membership_status: MembershipStatus; ticket_status: TicketStatus; ticket_priority: TicketPriority; ticket_message_kind: TicketMessageKind; chat_status: ChatStatus; chat_message_kind: ChatMessageKind };
     CompositeTypes: Record<string, never>;
   };
 };

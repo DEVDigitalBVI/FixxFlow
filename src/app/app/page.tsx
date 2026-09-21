@@ -16,12 +16,13 @@ export default async function OverviewPage() {
   if (viewer.role === "technician") {
     const active = ["new", "open", "in_progress", "waiting_on_user", "on_hold"] as const;
     const base = () => supabase.from("tickets").select("id", { count: "exact", head: true }).eq("organization_id", viewer.organizationId);
-    const [mine, unassigned, waiting, overdue, critical, recent] = await Promise.all([
+    const [mine, unassigned, waiting, overdue, critical, incomingChats, recent] = await Promise.all([
       base().eq("assigned_technician_id", viewer.id).in("status", [...active]),
       base().is("assigned_technician_id", null).in("status", [...active]),
       base().eq("status", "waiting_on_user"),
       base().lt("due_at", new Date().toISOString()).in("status", [...active]),
       base().eq("priority", "critical").in("status", [...active]),
+      supabase.from("chat_conversations").select("id", { count: "exact", head: true }).eq("organization_id", viewer.organizationId).eq("status", "open").is("assigned_technician_id", null),
       supabase.from("tickets").select("id, ticket_number, title, priority, status, updated_at").eq("organization_id", viewer.organizationId).order("updated_at", { ascending: false }).limit(8),
     ]);
     const metrics = [
@@ -30,6 +31,7 @@ export default async function OverviewPage() {
       { label: "Waiting on user", count: waiting.count, href: "/app/tickets?status=waiting_on_user", hint: "Awaiting a reply" },
       { label: "Overdue", count: overdue.count, href: "/app/tickets?overdue=1", hint: "Past due date" },
       { label: "Critical", count: critical.count, href: "/app/tickets?priority=critical", hint: "Active urgent work" },
+      { label: "Incoming chats", count: incomingChats.count, href: "/app/chat?view=unassigned", hint: "Waiting for IT" },
     ];
     return <div className="page technician-home"><header className="page-header"><div><span className="page-eyebrow">IT support</span><h1>Good to see you, {viewer.displayName.split(" ")[0]}</h1><p>Here’s what needs attention across {viewer.organizationName}.</p></div><Link className="button button-primary" href="/app/tickets">Open ticket queue</Link></header><section className="tech-metrics" aria-label="Ticket overview">{metrics.map(metric => <Link key={metric.label} href={metric.href} className="tech-metric"><span>{metric.label}</span><strong>{metric.count ?? 0}</strong><small>{metric.hint}</small></Link>)}</section><section className="tech-recent" aria-labelledby="recent-tickets"><div className="tech-section-heading"><div><h2 id="recent-tickets">Recent tickets</h2><p>Latest activity across your service desk</p></div><Link href="/app/tickets">View all tickets</Link></div>{recent.data?.length ? <ul>{recent.data.map(ticket => <li key={ticket.id}><Link href={`/app/tickets/${ticket.id}`}><span className="tech-recent-id">#{ticket.ticket_number}</span><span className="tech-recent-title"><strong>{ticket.title}</strong><small>Updated {formatTicketDate(ticket.updated_at)}</small></span><span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span><span className={`ticket-badge tone-${ticketPriorities[ticket.priority].tone}`}>{ticketPriorities[ticket.priority].label}</span></Link></li>)}</ul> : <div className="empty-state"><strong>No tickets yet</strong><p>New requests will appear here.</p></div>}</section></div>;
   }

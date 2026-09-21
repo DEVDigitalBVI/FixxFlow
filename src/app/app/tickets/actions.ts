@@ -13,17 +13,15 @@ const fail = (path: string, message: string): never => redirect(`${path}?${new U
 
 export async function createTicket(formData: FormData) {
   const viewer = await requireViewer();
-  const chat = viewer.role === "end_user" && formData.get("source") === "chat";
-  const formPath = chat ? "/app/chat" : "/app/tickets/new";
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const priority = String(formData.get("priority") ?? "normal") as TicketPriority;
   const requesterId = viewer.role === "end_user" ? viewer.id : optional(formData.get("requesterId")) ?? viewer.id;
-  if (title.length < 3 || !description || !priorities.includes(priority)) fail(formPath, "Add a subject and message.");
+  if (title.length < 3 || !description || !priorities.includes(priority)) fail("/app/tickets/new", "Add a subject and description.");
   const supabase = await createClient();
   const { data, error } = await supabase.from("tickets").insert({ organization_id: viewer.organizationId, requester_id: requesterId, title, description, priority, team_id: optional(formData.get("teamId")), category_id: optional(formData.get("categoryId")), subcategory_id: optional(formData.get("subcategoryId")), location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: optional(formData.get("dueAt")) }).select("id").single();
-  if (error || !data) fail(formPath, "Your message could not be sent. Please try again.");
-  redirect(`/app/tickets/${data!.id}?success=${chat ? "Conversation started." : "Request sent."}`);
+  if (error || !data) fail("/app/tickets/new", "Your request could not be sent. Please try again.");
+  redirect(`/app/tickets/${data!.id}?success=Request sent.`);
 }
 
 export async function updateTicket(formData: FormData) {
