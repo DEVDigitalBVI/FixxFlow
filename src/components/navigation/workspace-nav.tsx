@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AppRole } from "@/types/database";
 
 function OverviewIcon() {
@@ -20,6 +20,8 @@ function ProfileIcon() { return <svg aria-hidden="true" viewBox="0 0 24 24"><pat
 export function WorkspaceNav({ role }: { role: AppRole }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
   const items = [
     { href: "/app", label: "Overview", icon: <OverviewIcon />, visible: true },
     { href: "/app/tickets", label: "Tickets", icon: <TicketIcon />, visible: true },
@@ -31,20 +33,37 @@ export function WorkspaceNav({ role }: { role: AppRole }) {
 
   useEffect(() => {
     if (!isOpen) return;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsOpen(false);
+    const panel = menuPanelRef.current;
+    const focusable = panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
+    focusable?.[0]?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        menuButtonRef.current?.focus();
+        return;
+      }
+      if (event.key !== "Tab" || !focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
   return <>
-    <button className="mobile-nav-toggle" type="button" aria-controls="workspace-navigation" aria-expanded={isOpen} aria-label={isOpen ? "Close navigation" : "Open navigation"} onClick={() => setIsOpen((open) => !open)}>
+    <button ref={menuButtonRef} className="mobile-nav-toggle" type="button" aria-controls="workspace-navigation" aria-expanded={isOpen} aria-label={isOpen ? "Close navigation" : "Open navigation"} onClick={() => setIsOpen((open) => !open)}>
       <span aria-hidden="true" />
       <span aria-hidden="true" />
       <span aria-hidden="true" />
     </button>
     {isOpen && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" onClick={() => setIsOpen(false)} />}
-    <nav id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} aria-label="Primary navigation"><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href); return <li key={item.href}><Link className="nav-link" href={item.href} aria-current={active ? "page" : undefined} onClick={() => setIsOpen(false)}>{item.icon}<span>{item.label}</span></Link></li>; })}</ul></nav>
+    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><nav aria-label="Primary navigation"><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href); return <li key={item.href}><Link className="nav-link" href={item.href} aria-current={active ? "page" : undefined} onClick={() => setIsOpen(false)}>{item.icon}<span>{item.label}</span></Link></li>; })}</ul></nav></div>
   </>;
 }
