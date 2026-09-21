@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { AppRole, MembershipStatus } from "@/types/database";
 
@@ -13,7 +14,7 @@ export type Viewer = {
   status: MembershipStatus;
 };
 
-export async function requireViewer(): Promise<Viewer> {
+export const requireViewer = cache(async (): Promise<Viewer> => {
   const supabase = await createClient();
   const { data: claims, error } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub;
@@ -53,4 +54,4 @@ export async function requireViewer(): Promise<Viewer> {
     role: membership.role,
     status: membership.status,
   };
-}
+});
