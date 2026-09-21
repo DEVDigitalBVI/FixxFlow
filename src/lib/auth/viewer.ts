@@ -19,6 +19,11 @@ export async function requireViewer(): Promise<Viewer> {
   const userId = claims?.claims?.sub;
   if (error || !userId) redirect("/login");
 
+  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (assurance?.currentLevel === "aal1" && assurance.nextLevel === "aal2") {
+    redirect("/auth/mfa");
+  }
+
   const { data: membership } = await supabase
     .from("organization_memberships")
     .select("organization_id, role, status")

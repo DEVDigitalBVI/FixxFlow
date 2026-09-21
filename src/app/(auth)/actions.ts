@@ -1,5 +1,4 @@
 "use server";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -20,7 +19,7 @@ export async function signIn(formData: FormData) {
 export async function requestPasswordReset(formData: FormData) {
   const email = value(formData, "email");
   if (!email) authRedirect("/forgot-password", "error", "Enter your email address.");
-  const origin = (await headers()).get("origin") ?? "http://localhost:3000";
+  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const supabase = await createClient();
   await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${origin}/auth/callback?next=/auth/update-password` });
   authRedirect("/forgot-password", "success", "If an account matches that email, a password reset link is on its way.");

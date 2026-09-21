@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function bootstrapOrganization(formData: FormData) {
   const organizationName = String(formData.get("organizationName") ?? "").trim();
@@ -13,11 +14,22 @@ export async function bootstrapOrganization(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.rpc("bootstrap_organization", {
-    organization_name: organizationName,
-    organization_slug: organizationSlug,
-    administrator_name: administratorName,
-  });
+  const { data: claims, error: claimsError } = await supabase.auth.getClaims();
+  const userId = claims?.claims?.sub;
+  if (claimsError || !userId) redirect("/login");
+
+  let error: { message: string } | null = null;
+  try {
+    const admin = createAdminClient();
+    ({ error } = await admin.rpc("bootstrap_organization", {
+      organization_name: organizationName,
+      organization_slug: organizationSlug,
+      administrator_name: administratorName,
+      administrator_user_id: userId,
+    }));
+  } catch {
+    redirect(`/account/unassigned?${new URLSearchParams({ error: "Organization setup requires the Supabase server secret." })}`);
+  }
 
   if (error) {
     redirect(`/account/unassigned?${new URLSearchParams({ error: "Setup is unavailable. Ask an administrator to add your account." })}`);

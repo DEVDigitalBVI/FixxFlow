@@ -74,6 +74,7 @@ create table public.profiles (
   department_id uuid,
   location_id uuid,
   display_name text not null check (char_length(display_name) between 1 and 120),
+  email text,
   job_title text,
   phone text,
   avatar_path text,
@@ -198,8 +199,10 @@ begin
   insert into public.organization_memberships (organization_id, user_id, role)
   values (new_organization_id, current_user_id, 'administrator');
 
-  insert into public.profiles (organization_id, user_id, display_name)
-  values (new_organization_id, current_user_id, trim(administrator_name));
+  insert into public.profiles (organization_id, user_id, display_name, email)
+  select new_organization_id, current_user_id, trim(administrator_name), users.email
+  from auth.users as users
+  where users.id = current_user_id;
 
   return new_organization_id;
 end;
@@ -371,7 +374,7 @@ grant update (role, status, activated_at, deactivated_at) on public.organization
 grant select, insert, update, delete on public.departments to authenticated;
 grant select, insert, update, delete on public.locations to authenticated;
 grant select on public.profiles to authenticated;
-grant insert (organization_id, user_id, department_id, location_id, display_name, job_title, phone, avatar_path)
+grant insert (organization_id, user_id, department_id, location_id, display_name, email, job_title, phone, avatar_path)
   on public.profiles to authenticated;
 grant update (department_id, location_id, display_name, job_title, phone, avatar_path)
   on public.profiles to authenticated;

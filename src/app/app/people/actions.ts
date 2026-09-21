@@ -5,12 +5,52 @@ import { redirect } from "next/navigation";
 
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { AppRole, MembershipStatus } from "@/types/database";
 
 const allowedRoles: AppRole[] = ["end_user", "technician", "administrator"];
 
 function peopleError(message: string): never {
   redirect(`/app/people?${new URLSearchParams({ error: message })}`);
+}
+
+export async function inviteMember(formData: FormData) {
+  const viewer = await requireViewer();
+  if (viewer.role !== "administrator") peopleError("Only administrators can invite members.");
+
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const displayName = String(formData.get("displayName") ?? "").trim();
+  const role = String(formData.get("role") ?? "end_user") as AppRole;
+  if (!email || !displayName || !allowedRoles.includes(role)) peopleError("Enter a name, email, and valid role.");
+
+  try {
+    const admin = createAdminClient();
+    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/callback?next=/auth/update-password`;
+    const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo });
+    if (error || !data.user) peopleError("The invitation could not be sent.");
+
+    const { error: membershipError } = await admin.from("organization_memberships").insert({
+      organization_id: viewer.organizationId,
+      user_id: data.user.id,
+      role,
+    });
+    if (membershipError) {
+      await admin.auth.admin.deleteUser(data.user.id);
+      peopleError("The invitation could not be added to this organization.");
+    }
+
+    const { error: profileError } = await admin.from("profiles").insert({
+      organization_id: viewer.organizationId,
+      user_id: data.user.id,
+      display_name: displayName,
+      email,
+    });
+    if (profileError) peopleError("The invitation was created, but its profile needs attention.");
+  } catch {
+    peopleError("Invitations are not configured yet. Add the Supabase server secret to the deployment.");
+  }
+
+  redirect("/app/people?success=Invitation sent.");
 }
 
 export async function updateMemberRole(formData: FormData) {
