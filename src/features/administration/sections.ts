@@ -22,4 +22,4 @@ export const fixedSlaTargets = [
   { priority: 'normal', response: 240, resolution: 1440 },
   { priority: 'low', response: 480, resolution: 2880 },
 ] as const;
-export function formatMinutes(minutes: number) { return minutes < 60 ? `${minutes} min` : `${minutes / 60} hrs`; }
+export function formatMinutes(minutes: number) { return minutes < 60 ? `${minutes} min` : `${minutes / 60} ${minutes === 60 ? "hr" : "hrs"}`; }

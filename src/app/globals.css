@@ -617,5 +617,6 @@ img { display: block; max-width: 100%; }
 .administration-list { list-style: none; padding: 0; }
 .administration-list li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--color-border); overflow-wrap: anywhere; }
 @media (max-width: 767px) {
+  .responsive-table caption { display: block; width: 100%; text-align: left; padding: 12px; }
   .responsive-table th[scope="row"] { display: block; width: 100%; padding: 12px; text-align: left; }
 }
