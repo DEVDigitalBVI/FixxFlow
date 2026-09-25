@@ -105,7 +105,7 @@ img { display: block; max-width: 100%; }
 .nav-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
 .nav-link { min-height: 42px; display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 9px; color: var(--color-text-muted); text-decoration: none; font-weight: 620; transition: color 160ms ease-out, background-color 160ms ease-out; }
 .nav-link svg { width: 19px; height: 19px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.nav-link:first-child svg { fill: currentColor; stroke: none; }
+.nav-list li:first-child .nav-link svg { fill: currentColor; stroke: none; }
 .nav-link:hover { color: var(--color-text); background: var(--color-surface-subtle); }
 .nav-link[aria-current="page"] { color: var(--color-accent); background: var(--color-accent-subtle); box-shadow: inset 3px 0 var(--color-accent); }
 .mobile-nav-toggle, .mobile-nav-backdrop { display: none; }
