@@ -22,5 +22,5 @@ export function AttachmentUpload({ organizationId, ticketId, userId }: { organiz
     else { setMessage("Attachment added."); router.refresh(); }
     setBusy(false);
   }
-  return <div className="attachment-upload"><label className="button button-secondary"><input type="file" disabled={busy} onChange={(event) => upload(event.target.files?.[0])} />{busy ? "Uploading…" : "Add attachment"}</label>{message && <span role="status">{message}</span>}</div>;
+  return <div className="attachment-upload"><label className="button button-secondary"><input type="file" accept={Array.from(allowed).join(",")} disabled={busy} onChange={(event) => upload(event.target.files?.[0])} />{busy ? "Uploading…" : "Add attachment"}</label>{message && <span role="status">{message}</span>}</div>;
 }

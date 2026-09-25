@@ -41,9 +41,9 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-border-strong: #d1d5db;
   --color-text: #0f172a;
   --color-text-muted: #64748b;
-  --color-text-subtle: #8a94a3;
-  --color-accent: #007aff;
-  --color-accent-hover: #0066d6;
+  --color-text-subtle: #64748b;
+  --color-accent: #0066d6;
+  --color-accent-hover: #0058b8;
   --color-accent-subtle: #eaf5ff;
   --color-success: #15803d;
   --color-success-brand: #22c55e;
@@ -61,6 +61,8 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --shadow-overlay: 0 16px 40px rgb(16 24 40 / 18%);
 }
 ```
+
+Functional links and primary buttons use the darker `--color-accent` alias to meet normal-text contrast. The logo and brand artwork retain the primary brand blue. Focus indicators use a solid outline rather than a translucent tint.
 
 The core brand-board palette is `#007AFF` primary blue, `#00C6FF` secondary cyan, `#0F172A` navy, `#64748B` slate, `#E2E8F0` border, `#F8FAFC` background, `#22C55E` success, `#F59E0B` warning, `#EF4444` critical, and `#865CF6` innovation/accent. The darker semantic aliases above are used where the raw brand colors would not meet text contrast. Validate normal text at WCAG AA contrast (4.5:1), large text and essential graphical objects at 3:1, and interactive state contrast in context. Use blue primarily for interactive emphasis. Reserve green, amber, and red for their meanings; purple is optional and should be rare.
 

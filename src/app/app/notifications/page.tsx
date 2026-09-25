@@ -18,7 +18,7 @@ export default async function NotificationsPage({ searchParams }: { searchParams
   const pageHref = (next: number) => `/app/notifications?${new URLSearchParams({ view: unread ? "unread" : "all", page: String(next) })}`;
   return <div className={`page notification-page${viewer.role === "end_user" ? " portal-detail" : ""}`}>
     <ConversationRefresh />
-    <header className="page-header"><div><p className="eyebrow">YOUR UPDATES</p><h1>Notifications</h1><p className="page-description">Ticket and chat updates that need your attention.</p></div>{!error && <ReadButton all />}</header>
+    <header className="page-header"><div><p className="page-eyebrow">YOUR UPDATES</p><h1>Notifications</h1><p className="page-description">Ticket and chat updates that need your attention.</p></div>{!error && <ReadButton all />}</header>
     <nav className="queue-views" aria-label="Notification filters"><Link href="/app/notifications" aria-current={!unread ? "page" : undefined}>All updates</Link><Link href="/app/notifications?view=unread" aria-current={unread ? "page" : undefined}>Unread</Link></nav>
     {error ? <div className="alert alert-error" role="alert">Notifications could not be loaded. <Link href={pageHref(page)}>Try again</Link></div>
       : !data?.length ? <section className="settings-card"><h2>{unread ? "You’re all caught up" : "No notifications yet"}</h2><p className="muted">{page > 1 ? "There are no updates on this page." : "Relevant ticket and chat updates will appear here."}</p>{page > 1 && <Link href={pageHref(1)}>Return to latest updates</Link>}</section>

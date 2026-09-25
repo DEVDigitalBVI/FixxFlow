@@ -14,6 +14,7 @@ function load(file, role, rows = [], error = null) {
     '@/features/identity/role': {rolePresentation:{technician:{label:'Technician'},end_user:{label:'End User'},administrator:{label:'Administrator'}}},
     './actions': {inviteMember:async()=>{},updateMemberRole:async()=>{},updateMemberStatus:async()=>{}},
     '@/components/ui/avatar': {Avatar:()=>null},
+    '@/components/ui/submit-button': {SubmitButton:(props)=>{const buttonProps={...props};delete buttonProps.pendingLabel;return React.createElement('button',buttonProps);}},
     'next/link': {default: props => React.createElement('a', props)},
     'next/navigation': {notFound: () => { throw new Error('NOT_FOUND'); }},
     '@/lib/auth/viewer': {requireViewer: async () => ({role, organizationId:'org', organizationName:'Workspace'})},
