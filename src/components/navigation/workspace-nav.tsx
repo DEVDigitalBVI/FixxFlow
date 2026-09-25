@@ -28,8 +28,8 @@ export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; 
   const items = [
     { href: "/app", label: role === "end_user" ? "Home" : "Overview", icon: <OverviewIcon />, visible: true },
     { href: "/app/tickets", label: role === "end_user" ? "My tickets" : "Tickets", icon: <TicketIcon />, visible: true },
-    { href: "/app/chat", label: role === "end_user" ? "Chat" : "Live support", icon: <ChatIcon />, visible: true },
-    { href: "/app/help", label: "Knowledge base", icon: <BookIcon />, visible: true },
+    { href: "/app/chat", label: role === "end_user" ? "My chats" : "Chats", icon: <ChatIcon />, visible: true },
+    { href: "/app/help", label: role === "end_user" ? "Help articles" : "Knowledge base", icon: <BookIcon />, visible: true },
     { href: "/app/people", label: "People", icon: <PeopleIcon />, visible: role !== "end_user" },
     { href: "/app/administration", label: "Administration", icon: <SettingsIcon />, visible: role === "administrator" },
     { href: "/app/profile", label: role === "end_user" ? "Account" : "Profile", icon: <ProfileIcon />, visible: true },
@@ -58,20 +58,14 @@ export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; 
         return;
       }
       if (event.key !== "Tab" || !focusable?.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (!panel?.contains(document.activeElement)) {
-        event.preventDefault();
-        (event.shiftKey ? last : first).focus();
-        return;
-      }
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
+      // Cycle explicitly: Safari can omit links from its native Tab order.
+      event.preventDefault();
+      const controls = Array.from(focusable);
+      const current = controls.indexOf(document.activeElement as HTMLElement);
+      const next = current < 0
+        ? (event.shiftKey ? controls.length - 1 : 0)
+        : (current + (event.shiftKey ? -1 : 1) + controls.length) % controls.length;
+      controls[next].focus();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {

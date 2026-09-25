@@ -29,11 +29,12 @@ function load(file, role, rows = [], error = null) {
 const hub='src/app/app/administration/page.tsx';
 const detail='src/app/app/administration/[section]/page.tsx';
 const props=(section,page='1')=>({params:Promise.resolve({section}),searchParams:Promise.resolve({page})});
-test('every administration entry is linked and has an honest availability label',async()=>{
+test('administration groups related settings and keeps future features out of active navigation',async()=>{
   const html=renderToStaticMarkup(await load(hub,'administrator').render());
-  assert.equal(administrationSections.length,14);
-  for(const item of administrationSections) {assert.ok(html.includes(item.title));assert.ok(html.includes('href' in item?item.href.replaceAll('&','&amp;'):`/app/administration/${item.slug}`));}
-  assert.match(html,/Planned/);assert.match(html,/Read only/);
+  for(const href of ['/app/organization','/app/organization#departments','/app/organization#locations','/app/people','/app/people?view=technicians','/app/help?view=all','/app/administration/slas']) assert.ok(html.includes(`href="${href}"`));
+  assert.match(html,/People &amp; access/);assert.match(html,/Priorities &amp; SLAs/);
+  assert.doesNotMatch(html,/href="\/app\/administration\/(priorities|assets)"/);
+  assert.match(html,/<summary>Coming later<\/summary>/);assert.match(html,/Read only/);
 });
 test('non-administrators cannot render the hub or directly request data sections',async()=>{
   for(const role of ['end_user','technician']) for(const file of [hub,detail]) {

@@ -27,3 +27,11 @@ Safari Responsive Design Mode was used for representative layouts at 320, 390, 7
 Automated regressions cover role-specific navigation, modal focus/cleanup, bulk selection and synchronization, pending controls, text contrast, and the existing product/security behavior. The global reduced-motion rule is retained; active-button movement is removed for reduced-motion users.
 
 The existing tokens and primitives were reused. The contrast aliases in DESIGN_SYSTEM.md were updated to record the accessibility correction. No new UI library or competing design tokens were introduced.
+
+## Task discoverability follow-up
+
+- Home now offers “Start a chat” and “Open a ticket” for every role. Employee labels use “My chats” and “Help articles”.
+- `/app/chat?start=1` opens the existing support-chat form for every role; the list has a visible creation action. Errors return to the form. Copy explains that the conversation is for the signed-in user and that a technician may not respond immediately. No new chat or permission model was introduced.
+- Administration groups organization/departments/locations and people/technicians. Priorities and SLAs share one entry because their existing detail screens show the same policy. Planned assets move into a “Coming later” disclosure.
+- Added role-by-role chat entry/form/error coverage and grouped-navigation assertions. Safari visual checks covered the changed administration, employee home, and chat creation at 320px, alongside the earlier responsive review.
+- Mobile menu Tab traversal now explicitly includes links for Safari configurations that omit them from the native Tab order.

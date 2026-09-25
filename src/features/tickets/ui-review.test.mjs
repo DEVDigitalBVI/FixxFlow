@@ -11,7 +11,7 @@ const navMocks={'next/navigation':{usePathname:()=>'/app/tickets'},'next/link':{
 test('employee navigation keeps employee labels and excludes staff destinations',()=>{
  const {WorkspaceNav}=load('src/components/navigation/workspace-nav.tsx',navMocks);
  const html=renderToStaticMarkup(React.createElement(WorkspaceNav,{role:'end_user',organizationId:'org',userId:'user'}));
- for(const text of ['Home','My tickets','Chat','Knowledge base','Account','Security'])assert.ok(html.includes(text));
+ for(const text of ['Home','My tickets','My chats','Help articles','Account','Security'])assert.ok(html.includes(text));
  assert.doesNotMatch(html,/href="\/app\/(administration|people)"/);
  assert.match(html,/aria-label="Employee navigation"/);
 });
@@ -59,4 +59,29 @@ test('select all synchronizes row selection and notifies the bulk toolbar',()=>{
  const {BulkSelectAll}=load('src/features/tickets/bulk-select-all.tsx',{react:{...React,useRef:()=>({current:null}),useEffect:()=>{}}});
  globalThis.document={querySelectorAll:()=>rows,getElementById:()=>({dispatchEvent:event=>{notified=event.type==='change';}})};
  try {BulkSelectAll({formId:'tickets'}).props.onChange({currentTarget:{checked:true}});assert.ok(rows.every(row=>row.checked));assert.equal(notified,true);}finally{delete globalThis.document;}
+});
+
+test('every role can find chat creation and gets a labeled form with realistic response expectations',async()=>{
+ const builder=new Proxy({}, {get:(_,key)=>key==='then'?resolve=>Promise.resolve({data:[],error:null}).then(resolve):()=>builder});
+ for(const role of ['end_user','technician','administrator']) {
+  const page=load('src/app/app/chat/page.tsx',{
+   'next/link':{default:props=>React.createElement('a',props)},
+   '@/lib/auth/viewer':{requireViewer:async()=>({role,id:'user',organizationId:'org'})},
+   '@/lib/supabase/server':{createClient:async()=>({from:()=>builder})},
+   '@/features/chat/live-queue':{LiveChatQueue:()=>null},
+   '@/features/tickets/presentation':{formatTicketDate:v=>v},
+   '@/components/ui/submit-button':{SubmitButton:props=>{const buttonProps={...props};delete buttonProps.pendingLabel;return React.createElement('button',buttonProps);}},
+   './actions':{startChat:async()=>{}},
+  }).default;
+  const list=renderToStaticMarkup(await page({searchParams:Promise.resolve({})}));
+  assert.match(list,/href="\/app\/chat\?start=1"/);
+  for(const params of [{start:'1'},{error:'Please try again.'}]) {
+   const form=renderToStaticMarkup(await page({searchParams:Promise.resolve(params)}));
+   assert.match(form,/<h1>Start a chat<\/h1>/);
+   assert.match(form,/<label for="chat-topic">/);assert.match(form,/<label for="chat-first-message">/);
+   assert.match(form,/technician may not be available immediately/);
+   assert.match(form,/href="\/app\/chat"/);
+   if(params.error)assert.match(form,/role="alert"/);
+  }
+ }
 });
