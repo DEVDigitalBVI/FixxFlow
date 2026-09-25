@@ -8,6 +8,6 @@ A SECURITY INVOKER SQL RPC reads source tables through their existing RLS polici
 
 API filters/sort are applied to the returned relation before pagination. Pages use 50 results plus one lookahead row, with a stable ID tie-breaker. Pagination retains search/filter URL parameters. Offset pagination can shift as tickets change; cursor pagination remains a future improvement.
 
-The existing four knowledge articles share a word-based search helper, and ticket search links to matching knowledge results. An editable knowledge publishing system and unified relevance-ranked ticket/article results are future work.
+Knowledge articles now live in the database with indexed search and draft/publication permissions. Ticket search links to published knowledge matches. Unified relevance-ranked ticket/article results remain future work.
 
 Validation: application tests, lint, typecheck, production build, and `supabase/tests/search-regression.sql` (transactional rollback fixtures). Database coverage includes title/description, messages, names, categories, exact numbers, error codes, duplicate suppression, organization isolation, internal-note confidentiality and MFA. A local PGlite check over 5,000 synthetic tickets found 50 expected matches in approximately 42 ms; this is not a production performance guarantee.

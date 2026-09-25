@@ -11,6 +11,8 @@ export type NotificationKind = "ticket_assigned" | "ticket_response" | "new_chat
 export type Notification = { id: string; organization_id: string; recipient_id: string; ticket_id: string | null; conversation_id: string | null; kind: NotificationKind; title: string; staff_only: boolean; event_key: string; created_at: string; read_at: string | null };
 export type NotificationEmail = { notification_id: string; lease_token: string; recipient_email: string; title: string; ticket_id: string | null; conversation_id: string | null };
 
+export type KnowledgeArticle = { id: string; organization_id: string; category: string; title: string; summary: string; content: Json; search_body: string; status: "draft" | "published" | "archived"; related_article_ids: string[]; author_id: string | null; revision: number; created_at: string; updated_at: string };
+export type KnowledgeAsset = { id: string; organization_id: string; article_id: string; storage_path: string; file_name: string; content_type: string; size_bytes: number; created_at: string };
 type Organization = { id: string; name: string; slug: string; logo_path: string | null; created_at: string; updated_at: string };
 type Membership = { organization_id: string; user_id: string; role: AppRole; status: MembershipStatus; activated_at: string; deactivated_at: string | null; created_at: string; updated_at: string };
 type Department = { id: string; organization_id: string; name: string; description: string | null; is_active: boolean; created_at: string; updated_at: string };
@@ -37,6 +39,10 @@ type Table<Row, Insert = Partial<Row>, Update = Partial<Insert>> = {
 export type Database = {
   public: {
     Tables: {
+      knowledge_articles: Table<KnowledgeArticle>;
+      knowledge_attachments: Table<KnowledgeAsset>;
+      knowledge_article_views: Table<{organization_id: string; article_id: string; user_id: string; viewed_on: string}>;
+      knowledge_article_feedback: Table<{organization_id: string; article_id: string; user_id: string; helpful: boolean; updated_at: string}>;
       notifications: Table<Notification, never, { read_at: string | null }>;
       organizations: Table<Organization, Pick<Organization, "name" | "slug"> & Partial<Organization>>;
       organization_memberships: Table<Membership, Pick<Membership, "organization_id" | "user_id"> & Partial<Membership>>;
@@ -56,6 +62,9 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      record_article_view: { Args: { target_organization_id: string; target_article_id: string }; Returns: undefined };
+      rate_article: { Args: { target_organization_id: string; target_article_id: string; is_helpful: boolean }; Returns: undefined };
+      search_knowledge_articles: { Args: { target_organization_id: string; search_text: string }; Returns: KnowledgeArticle[] };
       search_tickets: { Args: { target_organization_id: string; search_text: string }; Returns: Ticket[] };
       enqueue_sla_notifications: { Args: Record<string, never>; Returns: number };
       claim_notification_emails: { Args: { batch_size?: number }; Returns: NotificationEmail[] };

@@ -15,7 +15,6 @@ test('ticket search calls the permission-scoped RPC and preserves filters in pag
   'next/link':{default:props=>React.createElement('a',props)},
   '@/lib/auth/viewer':{requireViewer:async()=>({id:'staff',organizationId:'org',role:'technician'})},
   '@/lib/supabase/server':{createClient:async()=>({rpc:(...args)=>{calls.push(['rpc',...args]);return builder(rows);},from:()=>builder([])})},
-  '@/features/knowledge/articles':{searchArticles:()=>[]},
   '@/features/tickets/conversation-refresh':{ConversationRefresh:()=>null},
   '@/features/tickets/sla-indicator':{SlaClock:({children})=>children,SlaIndicator:()=>null},
   '@/features/tickets/presentation':{formatTicketDate:x=>x,ticketStatuses:{open:{label:'Open'}},ticketPriorities:{normal:{label:'Normal'}}},

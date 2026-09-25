@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { searchArticles } from "@/features/knowledge/articles";
 import { ConversationRefresh } from "@/features/tickets/conversation-refresh";
 import { SlaClock, SlaIndicator } from "@/features/tickets/sla-indicator";
 import { requireViewer } from "@/lib/auth/viewer";
@@ -54,8 +53,8 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const tickets = rows?.slice(0, 50);
   const hasMore = (rows?.length ?? 0) > 50;
   const pagination = <nav className="notification-pagination" aria-label="Ticket pages">{page > 1 && <Link className="button button-secondary" href={pageHref(page - 1)}>Previous</Link>}<span>Page {page}</span>{hasMore && <Link className="button button-secondary" href={pageHref(page + 1)}>Next</Link>}</nav>;
-  const knowledge = searchArticles(search);
-  const relatedArticles = search && <p className="queue-count"><Link href={`/app/help?q=${encodeURIComponent(search)}`}>Search knowledge articles{knowledge.length ? ` (${knowledge.length} matches)` : ""}</Link></p>;
+  const { count: knowledgeCount } = search ? await supabase.rpc("search_knowledge_articles", { target_organization_id: viewer.organizationId, search_text: search }, { count: "exact", head: true }).select("id").eq("status", "published") : { count: null };
+  const relatedArticles = search && <p className="queue-count"><Link href={`/app/help?q=${encodeURIComponent(search)}`}>Search knowledge articles{knowledgeCount ? ` (${knowledgeCount} ${knowledgeCount === 1 ? "match" : "matches"})` : ""}</Link></p>;
   const names = new Map((profiles ?? []).map(p => [p.user_id, p.display_name]));
   const teamNames = new Map((teams ?? []).map(t => [t.id, t.name]));
   if (viewer.role === "end_user") return <div className="portal-page"><header className="portal-page-heading"><div><Link href="/app">← Home</Link><h1>My tickets</h1><p>See updates and continue a conversation with IT.</p></div><Link className="button button-primary" href="/app/tickets/new">Submit a request</Link></header><form className="portal-search"><label htmlFor="ticket-search">Search requests</label><div><input id="ticket-search" className="input" name="q" defaultValue={filters.q} type="search" maxLength={200} placeholder="Words or #ticket number"/><button className="button button-secondary">Search</button></div></form>{relatedArticles}{error ? <div className="alert alert-error" role="alert">Requests could not be loaded. Refresh the page.</div> : tickets?.length ? <ul className="portal-ticket-list">{tickets.map(ticket => <li key={ticket.id}><Link href={`/app/tickets/${ticket.id}`}><span className="portal-ticket-main"><strong>{ticket.title}</strong><small>#{ticket.ticket_number} · Updated {formatTicketDate(ticket.updated_at)}</small></span><span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span><span aria-hidden="true">→</span></Link></li>)}</ul> : <div className="portal-empty"><h2>No requests found</h2><p>{filters.q ? "Try a different search." : "When you contact IT, your requests will appear here."}</p><Link href="/app/tickets/new" className="button button-primary">Submit a request</Link></div>}{!error && pagination}</div>;

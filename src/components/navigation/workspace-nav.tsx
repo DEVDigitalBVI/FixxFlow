@@ -28,6 +28,7 @@ export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; 
     { href: "/app", label: "Overview", icon: <OverviewIcon />, visible: true },
     { href: "/app/tickets", label: "Tickets", icon: <TicketIcon />, visible: true },
     { href: "/app/chat", label: "Live support", icon: <ChatIcon />, visible: role !== "end_user" },
+    { href: "/app/help", label: "Knowledge base", icon: <TicketIcon />, visible: true },
     { href: "/app/people", label: "People", icon: <PeopleIcon />, visible: role !== "end_user" },
     { href: "/app/organization", label: "Organization", icon: <SettingsIcon />, visible: role === "administrator" },
     { href: "/app/profile", label: "Profile", icon: <ProfileIcon />, visible: true },
