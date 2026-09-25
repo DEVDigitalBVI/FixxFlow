@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { NotificationLink } from "@/features/notifications/notification-link";
 import type { AppRole } from "@/types/database";
 
 function OverviewIcon() {
@@ -18,7 +19,7 @@ function ChatIcon() { return <svg aria-hidden="true" viewBox="0 0 24 24"><path d
 function SettingsIcon() { return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm0-12v2m0 13v2m8.5-8.5h-2m-13 0h-2m14.5-6-1.5 1.5m-9 9L6 18m12 0-1.5-1.5m-9-9L6 6" /></svg>; }
 function ProfileIcon() { return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /></svg>; }
 
-export function WorkspaceNav({ role }: { role: AppRole }) {
+export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; organizationId: string; userId: string }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -66,6 +67,6 @@ export function WorkspaceNav({ role }: { role: AppRole }) {
       <span aria-hidden="true" />
     </button>
     {isOpen && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" onClick={() => setIsOpen(false)} />}
-    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><nav aria-label="Primary navigation"><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href); return <li key={item.href}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? "page" : undefined} onClick={() => setIsOpen(false)}>{item.icon}<span>{item.label}</span></Link></li>; })}</ul></nav></div>
+    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><nav aria-label="Primary navigation"><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href); return <li key={item.href}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? "page" : undefined} onClick={() => setIsOpen(false)}>{item.icon}<span>{item.label}</span></Link></li>; })}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={() => setIsOpen(false)} /></li></ul></nav></div>
   </>;
 }

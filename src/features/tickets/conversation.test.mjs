@@ -140,6 +140,7 @@ test("switching live chat audience keeps independent drafts", () => {
 });
 
 const { WorkspaceNav } = load("src/components/navigation/workspace-nav.tsx", {
+  "@/features/notifications/notification-link": { NotificationLink: () => null },
   "next/navigation": { usePathname: () => "/app/tickets" },
   "next/link": { default: props => React.createElement("a", props) },
 });

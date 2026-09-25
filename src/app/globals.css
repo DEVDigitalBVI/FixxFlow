@@ -573,3 +573,17 @@ img { display: block; max-width: 100%; }
 .sla-label { display: flex; align-items: baseline; gap: 4px; }
 
 .chat-composer-note { background: var(--color-warning-subtle); border-top-color: var(--color-warning); }
+
+/* Notification inbox reuses the shared surface, action, and focus tokens. */
+.notification-list { list-style: none; padding: 0; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
+.notification-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px; background: var(--color-surface); }
+.notification-item + .notification-item { border-top: 1px solid var(--color-border); }
+.notification-unread { background: var(--color-accent-subtle); }
+.notification-copy { min-width: 0; }
+.notification-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--color-text-muted); font-size: 12px; margin-bottom: 8px; }
+.notification-title { font-weight: 600; overflow-wrap: anywhere; }
+.notification-pagination { display: flex; align-items: center; gap: 16px; }
+.notification-count { margin-left: 8px; font-size: 12px; }
+.portal-notifications { display: inline-flex; gap: 8px; align-items: center; }
+.portal-notifications svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+@media (max-width: 767px) { .notification-item { align-items: flex-start; flex-direction: column; } .notification-page .page-header { flex-wrap: wrap; gap: 16px; } }

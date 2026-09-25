@@ -7,6 +7,10 @@ export type TicketMessageKind = "reply" | "internal_note";
 export type ChatStatus = "open" | "closed";
 export type ChatMessageKind = "message" | "internal_note";
 
+export type NotificationKind = "ticket_assigned" | "ticket_response" | "new_chat" | "ticket_reassigned" | "sla_approaching" | "ticket_resolved" | "ticket_reopened" | "user_replied" | "chat_response";
+export type Notification = { id: string; organization_id: string; recipient_id: string; ticket_id: string | null; conversation_id: string | null; kind: NotificationKind; title: string; staff_only: boolean; event_key: string; created_at: string; read_at: string | null };
+export type NotificationEmail = { notification_id: string; lease_token: string; recipient_email: string; title: string; ticket_id: string | null; conversation_id: string | null };
+
 type Organization = { id: string; name: string; slug: string; logo_path: string | null; created_at: string; updated_at: string };
 type Membership = { organization_id: string; user_id: string; role: AppRole; status: MembershipStatus; activated_at: string; deactivated_at: string | null; created_at: string; updated_at: string };
 type Department = { id: string; organization_id: string; name: string; description: string | null; is_active: boolean; created_at: string; updated_at: string };
@@ -33,6 +37,7 @@ type Table<Row, Insert = Partial<Row>, Update = Partial<Insert>> = {
 export type Database = {
   public: {
     Tables: {
+      notifications: Table<Notification, never, { read_at: string | null }>;
       organizations: Table<Organization, Pick<Organization, "name" | "slug"> & Partial<Organization>>;
       organization_memberships: Table<Membership, Pick<Membership, "organization_id" | "user_id"> & Partial<Membership>>;
       departments: Table<Department, Pick<Department, "organization_id" | "name"> & Partial<Department>>;
@@ -51,6 +56,9 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      enqueue_sla_notifications: { Args: Record<string, never>; Returns: number };
+      claim_notification_emails: { Args: { batch_size?: number }; Returns: NotificationEmail[] };
+      finish_notification_email: { Args: { target_id: string; token: string; provider_message_id?: string | null; failure?: string | null }; Returns: boolean };
       bootstrap_organization: {
         Args: { organization_name: string; organization_slug: string; administrator_name: string; administrator_user_id: string };
         Returns: string;
@@ -59,7 +67,7 @@ export type Database = {
       convert_chat_to_ticket: { Args: { conversation_id: string }; Returns: string };
       link_chat_to_ticket: { Args: { conversation_id: string; target_ticket_id: string }; Returns: string };
     };
-    Enums: { app_role: AppRole; membership_status: MembershipStatus; ticket_status: TicketStatus; ticket_priority: TicketPriority; ticket_message_kind: TicketMessageKind; chat_status: ChatStatus; chat_message_kind: ChatMessageKind };
+    Enums: { notification_kind: NotificationKind; app_role: AppRole; membership_status: MembershipStatus; ticket_status: TicketStatus; ticket_priority: TicketPriority; ticket_message_kind: TicketMessageKind; chat_status: ChatStatus; chat_message_kind: ChatMessageKind };
     CompositeTypes: Record<string, never>;
   };
 };
