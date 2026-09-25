@@ -33,22 +33,15 @@ export async function inviteMember(formData: FormData) {
   const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo });
   if (error || !data.user) peopleError("The invitation could not be sent.");
 
-  const { error: membershipError } = await admin.from("organization_memberships").insert({
-    organization_id: viewer.organizationId,
-    user_id: data.user.id,
-    role,
+  const { error: registrationError } = await admin.rpc("register_invited_member", {
+    target_organization_id: viewer.organizationId,
+    invited_user_id: data.user.id,
+    invited_role: role,
+    invited_name: displayName,
+    invited_email: email,
+    invited_by: viewer.id,
   });
-  if (membershipError) {
-    peopleError("The invitation could not be added to this organization.");
-  }
-
-  const { error: profileError } = await admin.from("profiles").insert({
-    organization_id: viewer.organizationId,
-    user_id: data.user.id,
-    display_name: displayName,
-    email,
-  });
-  if (profileError) peopleError("The invitation was created, but its profile needs attention.");
+  if (registrationError) peopleError("The email invitation was sent, but workspace access could not be created. Please contact an administrator.");
 
   redirect("/app/people?success=Invitation sent.");
 }

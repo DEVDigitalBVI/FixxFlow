@@ -813,3 +813,14 @@ select.input-compact { height: 40px; }
 @media (max-width: 999px) { .report-chart-grid { grid-template-columns: 1fr; } }
 @media (max-width: 767px) { .report-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; } .report-metrics .settings-card { padding: 16px; } .report-axis-labels { flex-wrap: wrap; } }
 @media (max-width: 359px) { .report-metrics { grid-template-columns: 1fr; } }
+
+.audit-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin: 24px 0; }
+.audit-filters .field { flex: 1 1 160px; min-width: 0; }
+.audit-filters .field:first-child { flex-basis: 260px; }
+.audit-timeline { margin: 24px 0; padding: 0; list-style: none; }
+.audit-timeline > li { border-top: 1px solid var(--color-border); padding: 20px 0; overflow-wrap: anywhere; }
+.audit-event-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; color: var(--color-text-muted); }
+.audit-event-heading time { font-variant-numeric: tabular-nums; }
+.audit-changes { display: grid; gap: 8px; list-style: none; padding: 0; }
+.audit-changes li { padding-left: 12px; border-left: 2px solid var(--color-border-strong); }
+@media (max-width: 767px) { .audit-filters > .button { flex: 1 1 auto; } }

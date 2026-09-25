@@ -3,15 +3,17 @@ import { notFound } from 'next/navigation';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
 import { administrationSections, fixedSlaTargets, formatMinutes } from '@/features/administration/sections';
-import { ticketPriorities, activityLabels, formatTicketDate } from '@/features/tickets/presentation';
+import { AuditLog, type AuditFilters } from '@/features/audit/audit-log';
+import { ticketPriorities } from '@/features/tickets/presentation';
 
-export default async function AdministrationSection({ params, searchParams }: { params: Promise<{ section: string }>; searchParams: Promise<{ page?: string }> }) {
+export default async function AdministrationSection({ params, searchParams }: { params: Promise<{ section: string }>; searchParams: Promise<AuditFilters> }) {
   const viewer = await requireViewer();
   if (viewer.role !== 'administrator') notFound();
   const { section } = await params;
   const item = administrationSections.find(item => item.slug === section);
   if (!item || 'href' in item) notFound();
-  const rawPage = (await searchParams).page;
+  const filters = await searchParams;
+  const rawPage = filters.page;
   const page = rawPage && /^\d{1,6}$/.test(rawPage) ? Math.max(1, Number(rawPage)) : 1;
   const supabase = await createClient();
   let content;
@@ -20,9 +22,7 @@ export default async function AdministrationSection({ params, searchParams }: { 
     if (error) throw new Error('Unable to load administration settings.');
     content = <><p>These are the current {section} for your organization. Editing {section}{section === 'categories' ? ', subcategories, and issue types' : ' and team membership'} from Administration is planned.</p><ul className="administration-list">{data.slice(0, 50).map(row => <li key={row.id}><strong>{row.name}</strong><span className="badge">{row.is_active ? 'Active' : 'Inactive'}</span></li>)}</ul>{!data.length && <p>No {section} found on this page.</p>}<Pagination section={section} page={page} hasNext={data.length > 50} /></>;
   } else if (section === 'audit-log') {
-    const { data, error } = await supabase.from('ticket_activity').select('id, ticket_id, action, created_at').eq('organization_id', viewer.organizationId).order('created_at', { ascending: false }).order('id', { ascending: false }).range((page - 1) * 50, page * 50);
-    if (error) throw new Error('Unable to load ticket activity.');
-    content = <><p>This log currently covers ticket activity only. Organization settings, sign-ins, and membership changes are not included.</p><ul className="administration-list">{data.slice(0, 50).map(row => <li key={row.id}><div><Link href={`/app/tickets/${row.ticket_id}`}>{activityLabels[row.action] ?? 'Ticket activity'}</Link><br /><time dateTime={row.created_at}>{formatTicketDate(row.created_at)}</time></div><Link className="button button-secondary" href={`/app/tickets/${row.ticket_id}`}>View ticket</Link></li>)}</ul>{!data.length && <p>No ticket activity found on this page.</p>}<Pagination section={section} page={page} hasNext={data.length > 50} /></>;
+    content = <AuditLog organizationId={viewer.organizationId} filters={filters}/>;
   } else if (section === 'slas' || section === 'priorities') {
     content = <><p>These values are fixed. SLAs count calendar hours, including weekends. Business hours and custom policies are planned.</p><div className="table-region" role="region" aria-label="Priority and SLA targets" tabIndex={0}><table className="table table-policy responsive-table"><caption>Current response and resolution targets</caption><thead><tr><th scope="col">Priority</th><th scope="col">First response</th><th scope="col">Resolution</th></tr></thead><tbody>{fixedSlaTargets.map(target => <tr key={target.priority}><th scope="row" data-label="Priority">{ticketPriorities[target.priority].label}</th><td data-label="First response">{formatMinutes(target.response)}</td><td data-label="Resolution">{formatMinutes(target.resolution)}</td></tr>)}</tbody></table></div></>;
   } else if (section === 'notifications') {

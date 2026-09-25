@@ -39,6 +39,7 @@ type Table<Row, Insert = Partial<Row>, Update = Partial<Insert>> = {
 export type Database = {
   public: {
     Tables: {
+      audit_events: Table<{id:number;organization_id:string;actor_id:string|null;actor_name:string;entity_type:string;entity_id:string;entity_label:string;action:string;changes:Json;created_at:string;search_text:string}, never, never>;
       knowledge_articles: Table<KnowledgeArticle>;
       knowledge_attachments: Table<KnowledgeAsset>;
       knowledge_article_views: Table<{organization_id: string; article_id: string; user_id: string; viewed_on: string}>;
@@ -62,6 +63,7 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      register_invited_member: {Args:{target_organization_id:string;invited_user_id:string;invited_role:AppRole;invited_name:string;invited_email:string;invited_by:string};Returns:undefined};
       operational_report: { Args: { target_organization_id: string }; Returns: Json };
       record_article_view: { Args: { target_organization_id: string; target_article_id: string }; Returns: undefined };
       rate_article: { Args: { target_organization_id: string; target_article_id: string; is_helpful: boolean }; Returns: undefined };

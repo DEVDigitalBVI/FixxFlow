@@ -12,7 +12,7 @@ export const administrationSections = [
   { slug: 'knowledge', title: 'Knowledge Base', group: 'Service delivery', status: 'Available', description: 'Publish guides, manage drafts, and review article feedback.', href: '/app/help?view=all' },
   { slug: 'notifications', title: 'Notifications', group: 'Governance', status: 'Fixed', description: 'Delivery channels and current notification behavior.' },
   { slug: 'security', title: 'Security', group: 'Governance', status: 'Fixed', description: 'Review access protections and personal two-factor settings.' },
-  { slug: 'audit-log', title: 'Audit Log', group: 'Governance', status: 'Limited', description: 'Review ticket activity. Organization-wide auditing is planned.' },
+  { slug: 'audit-log', title: 'Audit Log', group: 'Governance', status: 'Available', description: 'Review who changed tickets, member access, and organization settings.' },
 ] as const;
 
 // Mirrors private.ticket_sla_deadline; the regression test checks the SQL policy.
