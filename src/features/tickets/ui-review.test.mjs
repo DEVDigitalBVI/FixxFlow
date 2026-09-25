@@ -85,3 +85,28 @@ test('every role can find chat creation and gets a labeled form with realistic r
   }
  }
 });
+
+
+test('desktop navigation does not move focus to the hidden mobile menu button',()=>{
+ let focused=false;
+ const {WorkspaceNav}=load('src/components/navigation/workspace-nav.tsx',{
+  ...navMocks,
+  react:{...React,useState:()=>[false,()=>{}],useRef:()=>({current:{focus:()=>focused=true}}),useEffect:()=>{}},
+ });
+ const tree=WorkspaceNav({role:'technician',organizationId:'org',userId:'user'});
+ const panel=tree.props.children[2];
+ const firstLink=panel.props.children[1].props.children.props.children[0][0].props.children;
+ firstLink.props.onClick();
+ assert.equal(focused,false);
+});
+
+test('input boundaries and focus contrast meet 3:1 on adjacent light surfaces',()=>{
+ const css=fs.readFileSync('src/app/globals.css','utf8');
+ const luminance=hex=>{const rgb=hex.match(/[0-9a-f]{2}/gi).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722;};
+ const token=name=>css.match(new RegExp(`--color-${name}: (#\\w+);`))[1];
+ for(const surface of ['surface','canvas','surface-subtle']){
+  for(const foreground of ['control-border','focus']){
+   assert.ok((luminance(token(surface))+.05)/(luminance(token(foreground))+.05)>=3,`${foreground} on ${surface}`);
+  }
+ }
+});

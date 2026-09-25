@@ -56,7 +56,8 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-danger-subtle: #fff1f1;
   --color-info: #0066d6;
   --color-info-subtle: #eaf5ff;
-  --color-focus: #007aff;
+  --color-focus: #0066d6;
+  --color-control-border: #8291a5;
   --shadow-card: 0 1px 2px rgb(16 24 40 / 5%), 0 4px 12px rgb(16 24 40 / 4%);
   --shadow-overlay: 0 16px 40px rgb(16 24 40 / 18%);
 }
@@ -310,3 +311,11 @@ Before considering a UI feature complete, verify:
 ## 12. Decision protocol
 
 When requirements are unclear, choose the option that improves clarity, accessibility, consistency, and task completion with the least interface complexity. Record any durable new pattern in this document or in a linked component specification. Do not silently introduce competing tokens or interaction patterns.
+
+## 13. Shared visual refinement (September 2026)
+
+- A short blue-to-cyan rule anchors workspace page headers, the sidebar identity, and the employee home introduction. This is decorative brand artwork, never a status indicator or a gradient control.
+- Use `--brand-flow` for that rule and existing surface tokens for softly shaded metric panels. Keep functional actions solid and data cards stationary.
+- Avatar initials use solid `--color-accent` for readable white text. Input boundaries use `--color-control-border`; focus uses a solid, offset `--color-focus` outline.
+- Action-card arrows sit in a small outlined circle. Only a pressed arrow moves, by 2px; reduced motion removes that movement.
+- Selected navigation keeps its text weight and edge marker, with an outline in forced-colors mode. Mobile sign-out targets are 44px.

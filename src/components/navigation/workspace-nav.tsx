@@ -43,7 +43,10 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     { href: "/app/security", label: "Security", icon: <SettingsIcon />, visible: true },
   ];
 
-  function closeMenu() { setIsOpen(false); menuButtonRef.current?.focus(); }
+  function closeMenu() {
+    setIsOpen(false);
+    if (isOpen) menuButtonRef.current?.focus();
+  }
 
   useEffect(() => {
     if (!isOpen) return;
