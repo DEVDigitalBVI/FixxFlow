@@ -146,7 +146,7 @@ const { WorkspaceNav } = load("src/components/navigation/workspace-nav.tsx", {
 });
 test("collapsed navigation retains explicit accessible names and current page", () => {
   const html = renderToStaticMarkup(React.createElement(WorkspaceNav, { role: "administrator" }));
-  for (const label of ["Overview", "Tickets", "Live support", "People", "Organization", "Profile", "Security"]) {
+  for (const label of ["Overview", "Tickets", "Live support", "People", "Administration", "Profile", "Security"]) {
     assert.ok(html.includes(`aria-label="${label}"`));
   }
   assert.match(html, /aria-label="Tickets" title="Tickets" aria-current="page"/);

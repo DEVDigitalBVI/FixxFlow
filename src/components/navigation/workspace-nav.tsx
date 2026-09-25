@@ -30,7 +30,7 @@ export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; 
     { href: "/app/chat", label: "Live support", icon: <ChatIcon />, visible: role !== "end_user" },
     { href: "/app/help", label: "Knowledge base", icon: <TicketIcon />, visible: true },
     { href: "/app/people", label: "People", icon: <PeopleIcon />, visible: role !== "end_user" },
-    { href: "/app/organization", label: "Organization", icon: <SettingsIcon />, visible: role === "administrator" },
+    { href: "/app/administration", label: "Administration", icon: <SettingsIcon />, visible: role === "administrator" },
     { href: "/app/profile", label: "Profile", icon: <ProfileIcon />, visible: true },
     { href: "/app/security", label: "Security", icon: <SettingsIcon />, visible: true },
   ];
@@ -68,6 +68,6 @@ export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; 
       <span aria-hidden="true" />
     </button>
     {isOpen && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" onClick={() => setIsOpen(false)} />}
-    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><nav aria-label="Primary navigation"><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href); return <li key={item.href}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? "page" : undefined} onClick={() => setIsOpen(false)}>{item.icon}<span>{item.label}</span></Link></li>; })}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={() => setIsOpen(false)} /></li></ul></nav></div>
+    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><nav aria-label="Primary navigation"><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : (pathname.startsWith(item.href) || (item.href === "/app/administration" && pathname.startsWith("/app/organization"))); return <li key={item.href}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? "page" : undefined} onClick={() => setIsOpen(false)}>{item.icon}<span>{item.label}</span></Link></li>; })}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={() => setIsOpen(false)} /></li></ul></nav></div>
   </>;
 }

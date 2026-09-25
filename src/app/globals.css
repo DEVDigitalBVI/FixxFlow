@@ -606,3 +606,16 @@ img { display: block; max-width: 100%; }
 .knowledge-metrics { display: flex; flex-wrap: wrap; gap: 24px; }
 .knowledge-metrics dd { margin: 8px 0 0; font-size: 24px; font-weight: 650; }
 .knowledge-actions [aria-pressed="true"] { border-color: var(--color-accent); background: var(--color-accent-subtle); }
+
+.administration-group { margin-top: 28px; }
+.administration-group > h2 { font-size: 18px; }
+.administration-link { display: block; color: var(--color-text); text-decoration: none; height: 100%; overflow-wrap: anywhere; }
+.administration-link:hover { border-color: var(--color-accent); }
+.administration-card-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.administration-card-heading h3 { margin: 0; font-size: 16px; }
+.administration-link p { color: var(--color-text-muted); margin-bottom: 0; }
+.administration-list { list-style: none; padding: 0; }
+.administration-list li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--color-border); overflow-wrap: anywhere; }
+@media (max-width: 767px) {
+  .responsive-table th[scope="row"] { display: block; width: 100%; padding: 12px; text-align: left; }
+}
