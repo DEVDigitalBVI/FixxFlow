@@ -824,3 +824,7 @@ select.input-compact { height: 40px; }
 .audit-changes { display: grid; gap: 8px; list-style: none; padding: 0; }
 .audit-changes li { padding-left: 12px; border-left: 2px solid var(--color-border-strong); }
 @media (max-width: 767px) { .audit-filters > .button { flex: 1 1 auto; } }
+
+.usage-preference { margin-top: 24px; }
+.usage-choice { display: flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; }
+.usage-choice input { width: 24px; height: 24px; flex-shrink: 0; accent-color: var(--color-accent); }

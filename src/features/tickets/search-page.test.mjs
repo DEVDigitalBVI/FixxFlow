@@ -12,6 +12,7 @@ test('ticket search calls the permission-scoped RPC and preserves filters in pag
  const rows=Array.from({length:51},(_,i)=>({id:String(i),title:'Search result',ticket_number:i,status:'open',priority:'normal',updated_at:'2026-09-25T00:00:00Z'}));
  const builder=(data)=>new Proxy({}, {get:(_,key)=>key==='then' ? (resolve)=>Promise.resolve({data,error:null}).then(resolve) : (...args)=>{calls.push([key,...args]);return builder(data);}});
  const mocks={
+  '@/features/product-analytics/usage-event':{UsageEvent:()=>null},
   '@/features/tickets/bulk-actions':{BulkActions:({children})=>children},
   'next/link':{default:props=>React.createElement('a',props)},
   '@/lib/auth/viewer':{requireViewer:async()=>({id:'staff',organizationId:'org',role:'technician'})},

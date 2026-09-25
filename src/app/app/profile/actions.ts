@@ -21,3 +21,12 @@ export async function updateProfile(formData: FormData) {
   revalidatePath("/app", "layout");
   redirect("/app/profile?success=Profile updated.");
 }
+
+export async function updateUsagePreference(formData: FormData) {
+  const viewer = await requireViewer();
+  const supabase = await createClient();
+  const {error} = await supabase.from("product_usage_preferences").upsert({user_id:viewer.id,enabled:formData.get("shareUsage")==="on"});
+  if(error)redirect("/app/profile?error=Your usage preference could not be saved. Please try again.");
+  revalidatePath("/app", "layout");
+  redirect("/app/profile?success=Usage preference saved.");
+}

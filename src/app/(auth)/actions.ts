@@ -1,4 +1,5 @@
 "use server";
+import { recordCompletedLogin } from "@/features/product-analytics/actions";
 import { requireAssurance } from "@/lib/auth/assurance";
 import { passwordValue } from "@/lib/auth/form-values";
 import { redirect } from "next/navigation";
@@ -14,6 +15,7 @@ export async function signIn(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) authRedirect("/login", "error", "We could not sign you in with those details.");
   await requireAssurance(supabase);
+  await recordCompletedLogin();
   redirect("/app");
 }
 

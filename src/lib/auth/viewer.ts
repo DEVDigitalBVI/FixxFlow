@@ -13,6 +13,7 @@ export type Viewer = {
   avatarUrl: string | null;
   role: AppRole;
   status: MembershipStatus;
+  usageSharing: boolean;
 };
 
 export const requireViewer = cache(async (): Promise<Viewer> => {
@@ -33,9 +34,10 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
   if (!membership) redirect("/account/unassigned");
   if (membership.status !== "active") redirect("/account/inactive");
 
-  const [{ data: organization }, { data: profile }] = await Promise.all([
+  const [{ data: organization }, { data: profile }, {data: usagePreference}] = await Promise.all([
     supabase.from("organizations").select("name").eq("id", membership.organization_id).single(),
     supabase.from("profiles").select("display_name, avatar_path").eq("organization_id", membership.organization_id).eq("user_id", userId).maybeSingle(),
+    supabase.from("product_usage_preferences").select("enabled").eq("user_id", userId).maybeSingle(),
   ]);
 
   const { data: avatar } = profile?.avatar_path
@@ -51,5 +53,6 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
     avatarUrl: avatar?.signedUrl ?? null,
     role: membership.role,
     status: membership.status,
+    usageSharing: usagePreference?.enabled === true,
   };
 });
