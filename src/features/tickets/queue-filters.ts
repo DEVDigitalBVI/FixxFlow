@@ -4,7 +4,7 @@ export const queueSorts = ["updated", "oldest", "newest", "due", "sla", "priorit
 export function normalizeQueueFilters(input: { view?: string; sort?: string; q?: string }) {
   const view = queueViews.find(value => value === input.view) ?? "all";
   const sort = queueSorts.find(value => value === input.sort) ?? "updated";
-  const search = input.q?.trim().replace(/[%_,()]/g, "") ?? "";
+  const search = input.q?.trim().slice(0, 200) ?? "";
   const ticketNumber = /^#?\d+$/.test(search) ? Number(search.replace("#", "")) : null;
   return { view, sort, search, ticketNumber: ticketNumber !== null && Number.isSafeInteger(ticketNumber) ? ticketNumber : null };
 }

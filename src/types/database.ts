@@ -56,6 +56,7 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      search_tickets: { Args: { target_organization_id: string; search_text: string }; Returns: Ticket[] };
       enqueue_sla_notifications: { Args: Record<string, never>; Returns: number };
       claim_notification_emails: { Args: { batch_size?: number }; Returns: NotificationEmail[] };
       finish_notification_email: { Args: { target_id: string; token: string; provider_message_id?: string | null; failure?: string | null }; Returns: boolean };
