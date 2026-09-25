@@ -62,6 +62,7 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      operational_report: { Args: { target_organization_id: string }; Returns: Json };
       record_article_view: { Args: { target_organization_id: string; target_article_id: string }; Returns: undefined };
       rate_article: { Args: { target_organization_id: string; target_article_id: string; is_helpful: boolean }; Returns: undefined };
       search_knowledge_articles: { Args: { target_organization_id: string; search_text: string }; Returns: KnowledgeArticle[] };
