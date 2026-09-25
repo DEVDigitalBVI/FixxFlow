@@ -37,7 +37,7 @@ where organization_id = '20000000-0000-0000-0000-000000000021' and name = 'Email
 update public.ticket_categories set is_active = false where id in (select id from original_email);
 insert into public.ticket_categories (organization_id, name)
 values ('20000000-0000-0000-0000-000000000021', 'Custom category');
-\ir ../../migrations/20260925002750_starter_ticket_categories.sql
+\ir ../../migrations/20260925010356_starter_ticket_categories.sql
 select extensions.is(
   (select count(*)::integer from public.ticket_categories where organization_id = '20000000-0000-0000-0000-000000000021'),
   10, 'backfill is idempotent and preserves custom categories'

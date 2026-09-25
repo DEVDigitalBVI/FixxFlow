@@ -1,5 +1,5 @@
 export const queueViews = ["mine", "unassigned", "team", "all"] as const;
-export const queueSorts = ["updated", "oldest", "newest", "due", "priority"] as const;
+export const queueSorts = ["updated", "oldest", "newest", "due", "sla", "priority"] as const;
 
 export function normalizeQueueFilters(input: { view?: string; sort?: string; q?: string }) {
   const view = queueViews.find(value => value === input.view) ?? "all";

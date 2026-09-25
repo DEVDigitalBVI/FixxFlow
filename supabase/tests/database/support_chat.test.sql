@@ -17,7 +17,7 @@ set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"10000000-0000-0000-0000-000000000021","role":"authenticated"}', true);
 select extensions.lives_ok($$select public.start_support_chat('20000000-0000-0000-0000-000000000021', 'VPN connection', 'I see error 809')$$, 'employee can start a chat atomically');
 select extensions.is((select count(*)::integer from public.chat_messages), 1, 'first message is part of chat history');
-select extensions.throws_ok($$insert into public.chat_messages (organization_id, conversation_id, author_id, kind, body) select organization_id, id, requester_id, 'internal_note', 'hidden' from public.chat_conversations limit 1$$, 'employee cannot send internal notes');
+select extensions.throws_ok($$insert into public.chat_messages (organization_id, conversation_id, author_id, kind, body) select organization_id, id, requester_id, 'internal_note', 'hidden' from public.chat_conversations limit 1$$, '42501', null, 'employee cannot send internal notes');
 
 select set_config('request.jwt.claims', '{"sub":"10000000-0000-0000-0000-000000000023","role":"authenticated"}', true);
 select extensions.is((select count(*)::integer from public.chat_conversations), 0, 'another employee cannot read the chat');

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { cache } from "react";
+import { requireAssurance } from "@/lib/auth/assurance";
 import { createClient } from "@/lib/supabase/server";
 import type { AppRole, MembershipStatus } from "@/types/database";
 
@@ -20,10 +21,7 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
   const userId = claims?.claims?.sub;
   if (error || !userId) redirect("/login");
 
-  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-  if (assurance?.currentLevel === "aal1" && assurance.nextLevel === "aal2") {
-    redirect("/auth/mfa");
-  }
+  await requireAssurance(supabase);
 
   const { data: membership } = await supabase
     .from("organization_memberships")

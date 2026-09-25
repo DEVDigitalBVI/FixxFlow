@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --test src/features/tickets/*.test.mjs src/lib/auth/*.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",

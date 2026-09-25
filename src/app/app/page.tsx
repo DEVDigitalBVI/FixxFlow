@@ -20,7 +20,7 @@ export default async function OverviewPage() {
       base().eq("assigned_technician_id", viewer.id).in("status", [...active]),
       base().is("assigned_technician_id", null).in("status", [...active]),
       base().eq("status", "waiting_on_user"),
-      base().lt("due_at", new Date().toISOString()).in("status", [...active]),
+      base().lte("sla_next_due_at", new Date().toISOString()),
       base().eq("priority", "critical").in("status", [...active]),
       supabase.from("chat_conversations").select("id", { count: "exact", head: true }).eq("organization_id", viewer.organizationId).eq("status", "open").is("assigned_technician_id", null),
       supabase.from("tickets").select("id, ticket_number, title, priority, status, updated_at").eq("organization_id", viewer.organizationId).order("updated_at", { ascending: false }).limit(8),
@@ -29,7 +29,7 @@ export default async function OverviewPage() {
       { label: "My tickets", count: mine.count, href: "/app/tickets?view=mine", hint: "Assigned to you" },
       { label: "Unassigned", count: unassigned.count, href: "/app/tickets?view=unassigned", hint: "Needs an owner" },
       { label: "Waiting on user", count: waiting.count, href: "/app/tickets?status=waiting_on_user", hint: "Awaiting a reply" },
-      { label: "Overdue", count: overdue.count, href: "/app/tickets?overdue=1", hint: "Past due date" },
+      { label: "SLA breached", count: overdue.count, href: "/app/tickets?sla=breached", hint: "Response or resolution overdue" },
       { label: "Critical", count: critical.count, href: "/app/tickets?priority=critical", hint: "Active urgent work" },
       { label: "Incoming chats", count: incomingChats.count, href: "/app/chat?view=unassigned", hint: "Waiting for IT" },
     ];

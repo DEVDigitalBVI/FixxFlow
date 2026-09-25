@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireAssurance } from "@/lib/auth/assurance";
 
 export async function bootstrapOrganization(formData: FormData) {
   const organizationName = String(formData.get("organizationName") ?? "").trim();
@@ -17,6 +18,7 @@ export async function bootstrapOrganization(formData: FormData) {
   const { data: claims, error: claimsError } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub;
   if (claimsError || !userId) redirect("/login");
+  await requireAssurance(supabase);
 
   let error: { message: string } | null = null;
   try {

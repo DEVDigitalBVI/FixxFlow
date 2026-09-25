@@ -99,3 +99,54 @@ test("lost-response retries succeed only for an identical existing message", asy
   existing = { ...existing, kind: "reply" };
   assert.ok((await send(messageForm("internal_note"))).error);
 });
+
+const { ChatRoom } = load("src/features/chat/chat-room.tsx", {
+  "@/lib/supabase/client": { createClient: () => ({}) },
+});
+const chatProps = { conversationId: "chat", organizationId: "org", viewerId: "staff", isWorker: true, open: true, names: {}, initialMessages: [], attachments: [] };
+test("live support defaults to internal notes and labels shared attachments", () => {
+  const html = renderToStaticMarkup(React.createElement(ChatRoom, chatProps));
+  assert.match(html, /value="internal_note" selected=""/);
+  assert.match(html, /Only IT staff can see this note/);
+  assert.match(html, /Attachments are shared with the employee/);
+  assert.match(html, /aria-describedby="chat-audience"/);
+});
+test("employee live support offers a public composer only", () => {
+  const html = renderToStaticMarkup(React.createElement(ChatRoom, { ...chatProps, isWorker: false }));
+  assert.doesNotMatch(html, /Internal note|chat-kind/);
+  assert.match(html, /The employee can see this message/);
+});
+test("switching live chat audience keeps independent drafts", () => {
+  const hooks = []; let cursor = 0;
+  const fakeReact = { ...React,
+    useState(initial) { const i = cursor++; if (!(i in hooks)) hooks[i] = typeof initial === "function" ? initial() : initial; return [hooks[i], next => { hooks[i] = typeof next === "function" ? next(hooks[i]) : next; }]; },
+    useRef(initial) { const i = cursor++; if (!(i in hooks)) hooks[i] = { current: initial }; return hooks[i]; },
+    useCallback: callback => callback, useEffect() {},
+  };
+  const { ChatRoom: Room } = load("src/features/chat/chat-room.tsx", { react: fakeReact, "@/lib/supabase/client": { createClient: () => ({}) } });
+  const render = () => { cursor = 0; return Room(chatProps); };
+  const find = (node, type) => {
+    if (node?.type === type) return node;
+    for (const child of React.Children.toArray(node?.props?.children)) { const result = find(child, type); if (result) return result; }
+  };
+  let tree = render();
+  find(tree, "textarea").props.onChange({ target: { value: "Private diagnosis" } });
+  find(tree, "select").props.onChange({ target: { value: "message" } });
+  tree = render();
+  assert.equal(find(tree, "textarea").props.value, "");
+  find(tree, "textarea").props.onChange({ target: { value: "Public update" } });
+  find(tree, "select").props.onChange({ target: { value: "internal_note" } });
+  assert.equal(find(render(), "textarea").props.value, "Private diagnosis");
+});
+
+const { WorkspaceNav } = load("src/components/navigation/workspace-nav.tsx", {
+  "next/navigation": { usePathname: () => "/app/tickets" },
+  "next/link": { default: props => React.createElement("a", props) },
+});
+test("collapsed navigation retains explicit accessible names and current page", () => {
+  const html = renderToStaticMarkup(React.createElement(WorkspaceNav, { role: "administrator" }));
+  for (const label of ["Overview", "Tickets", "Live support", "People", "Organization", "Profile", "Security"]) {
+    assert.ok(html.includes(`aria-label="${label}"`));
+  }
+  assert.match(html, /aria-label="Tickets" title="Tickets" aria-current="page"/);
+});
