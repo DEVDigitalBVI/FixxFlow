@@ -20,8 +20,8 @@ test('mobile menu contains a close control, locks background, traps focus and re
  const first={focus:()=>{firstFocused=true;}},last={focus:()=>{lastFocused=true;}};
  const main={inert:false},doc={body:{style:{overflow:'auto'}},getElementById:()=>main,activeElement:last};
  const handlers={};const media={matches:false,addEventListener:(key,fn)=>handlers.resize=fn,removeEventListener:()=>{}};
- const win={matchMedia:()=>media,addEventListener:(key,fn)=>handlers[key]=fn,removeEventListener:()=>{}};
- let refs=0;const react={...React,useState:()=>[true,v=>{closed=v===false;}],useRef:()=>({current:refs++===0?{focus:()=>buttonFocused=true}:{querySelectorAll:()=>[first,last]}}),useEffect:fn=>{effect=fn;}};
+ const win={requestAnimationFrame:fn=>{fn();return 1;},cancelAnimationFrame:()=>{},matchMedia:()=>media,addEventListener:(key,fn)=>handlers[key]=fn,removeEventListener:()=>{}};
+ let refs=0;const react={...React,useState:()=>[true,v=>{closed=v===false;}],useRef:()=>({current:refs++===0?{focus:()=>buttonFocused=true}:{querySelectorAll:()=>[first,last],contains:node=>node===first||node===last}}),useEffect:fn=>{effect=fn;}};
  globalThis.document=doc;globalThis.window=win;
  try {
   const {WorkspaceNav}=load('src/components/navigation/workspace-nav.tsx',{...navMocks,react});
@@ -30,6 +30,7 @@ test('mobile menu contains a close control, locks background, traps focus and re
   cleanup=effect();assert.equal(main.inert,true);assert.equal(doc.body.style.overflow,'hidden');assert.equal(firstFocused,true);
   let prevented=false;handlers.keydown({key:'Tab',preventDefault:()=>prevented=true});assert.equal(prevented,true);
   doc.activeElement=first;handlers.keydown({key:'Tab',shiftKey:true,preventDefault:()=>{}});assert.equal(lastFocused,true);
+  doc.activeElement={};prevented=false;handlers.keydown({key:'Tab',preventDefault:()=>prevented=true});assert.equal(prevented,true);
   handlers.keydown({key:'Escape'});assert.equal(closed,true);assert.equal(buttonFocused,true);
   cleanup();assert.equal(main.inert,false);assert.equal(doc.body.style.overflow,'auto');
  } finally {delete globalThis.document;delete globalThis.window;}

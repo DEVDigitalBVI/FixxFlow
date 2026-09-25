@@ -50,7 +50,7 @@ export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; 
     const onResize = () => { if (desktop.matches) setIsOpen(false); };
     desktop.addEventListener("change", onResize);
     const focusable = panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
-    focusable?.[0]?.focus();
+    const focusFrame = window.requestAnimationFrame(() => focusable?.[0]?.focus());
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
@@ -60,6 +60,11 @@ export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; 
       if (event.key !== "Tab" || !focusable?.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
+      if (!panel?.contains(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+        return;
+      }
       if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
@@ -70,6 +75,7 @@ export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; 
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
+      window.cancelAnimationFrame(focusFrame);
       window.removeEventListener("keydown", handleKeyDown);
       desktop.removeEventListener("change", onResize);
       if (main) main.inert = previousInert;
