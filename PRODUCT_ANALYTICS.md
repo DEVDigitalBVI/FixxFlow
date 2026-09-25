@@ -27,7 +27,7 @@ Counter rows older than 365 days and expired deduplication keys are cleaned up o
 | chat_converted_to_ticket | Conversion RPC creates and links a new ticket. Retries and links to existing tickets excluded. |
 | search_performed | Visible, successful first page of nonempty ticket or knowledge search results, including zero results. No query words or result content. Refreshed/remounted result pages may count again; pagination is excluded. |
 | knowledge_article_viewed | Authorized, visible article page; once per session/article/UTC day. Separate from customer-facing article view counts. |
-| asset_viewed | Reserved only. No producer or accepted browser event until the asset inventory feature exists. Knowledge attachments are not mislabeled as assets. |
+| asset_viewed | Authorized, visible inventory detail page; once per session/asset/UTC day. Employees can count views only of their assigned equipment. Knowledge attachments are not assets. |
 
 Database mutation counts commit or roll back with the business transaction. Collection exceptions are swallowed so an analytics failure cannot reject a ticket/chat write. Browser telemetry waits for page visibility and uses no analytics cookie or browser storage. Server analytics runs after responses with Next.js `after`. Counts are observational, may miss browser/network failures, and are not suitable for billing or audit evidence.
 
@@ -39,7 +39,7 @@ Customer roles cannot read the private tables or call the summary. From the owne
 select * from public.product_usage_summary(30);
 ```
 
-The result contains `day`, `event`, `role`, `surface`, and `count`; the window is bounded to 1–366 days. Never expose the service credential in a browser. No software-owner role or customer-facing analytics page has been invented.
+The result contains `day`, `event`, `role`, `surface`, and `count`; the window is bounded to 1–366 days. Never expose the service credential in a browser. The separate platform-owner console at `/platform/analytics` now exposes a checked aggregate summary to explicitly provisioned owners with a live MFA-verified session. Customer roles cannot access it. See `PLATFORM_ARCHITECTURE.md`.
 
 For maintenance through the owner SQL connection:
 

@@ -14,6 +14,6 @@ export default async function AdministrationPage() {
       <article className="settings-card"><h3>Knowledge Base</h3><p>Create help articles for employees and review their feedback.</p><nav className="administration-task-links" aria-label="Knowledge settings"><Link href="/app/help?view=all">Manage articles →</Link><Link href="/app/help/new">Write an article →</Link></nav></article>
     </div></section>
     <section className="administration-group" aria-labelledby="policies-heading"><h2 id="policies-heading">Policies &amp; activity</h2><p className="muted">Review how support is configured today. These policies cannot be edited yet.</p><div className="settings-grid">{policies.map(item => <Link className="settings-card administration-link" key={item.slug} href={`/app/administration/${item.slug}`}><div className="administration-card-heading"><h3>{item.slug === 'slas' ? 'Priorities & SLAs' : item.title}</h3><span className="badge">{item.status}</span></div><p>{item.description}</p></Link>)}</div></section>
-    <details className="administration-planned"><summary>Coming later</summary><p className="muted"><strong>Assets — Planned.</strong> Asset inventory and ticket associations are not available yet.</p></details>
+    <section className="settings-card"><h2>Assets</h2><p>Manage equipment, employee assignments and service history.</p><Link href="/app/assets">Manage assets →</Link></section>
   </div>;
 }

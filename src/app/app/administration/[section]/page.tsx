@@ -31,7 +31,7 @@ export default async function AdministrationSection({ params, searchParams }: { 
   } else if (section === 'security') {
     content = <><p>Workspace access follows active membership and assigned roles. Data access is restricted to the organization and the records each role can view.</p><p>Two-factor authentication can be enrolled per account. Once enrolled, verification is required to access the workspace. Organization-wide enrollment enforcement and configurable security policies are planned.</p><Link className="button button-secondary" href="/app/security">Manage your two-factor authentication</Link><Link className="button button-quiet" href="/app/people">Review member access</Link></>;
   } else {
-    content = <p>Asset inventory, ownership, lifecycle tracking, and associations with tickets are planned. There are no asset settings to configure yet.</p>;
+    content = <p>Asset inventory is available. Manage equipment, employee assignments and ticket history from Assets.</p>;
   }
   return <div className="page"><Link className="button button-quiet" href="/app/administration">Back to Administration</Link><header className="page-header"><div><span className="page-eyebrow">Administration · {item.status}</span><h1>{item.title}</h1><p>{item.description}</p></div></header><section className="settings-card">{content}</section></div>;
 }

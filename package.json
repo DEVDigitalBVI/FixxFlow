@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node --test src/features/tickets/*.test.mjs src/lib/auth/*.test.mjs src/features/notifications/*.test.mjs src/features/knowledge/*.test.mjs src/features/administration/*.test.mjs src/features/reporting/*.test.mjs src/features/audit/*.test.mjs src/features/product-analytics/*.test.mjs"
+    "test": "node --test src/features/tickets/*.test.mjs src/lib/auth/*.test.mjs src/features/notifications/*.test.mjs src/features/knowledge/*.test.mjs src/features/administration/*.test.mjs src/features/reporting/*.test.mjs src/features/audit/*.test.mjs src/features/product-analytics/*.test.mjs src/features/assets/*.test.mjs src/features/platform/*.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",

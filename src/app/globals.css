@@ -828,3 +828,10 @@ select.input-compact { height: 40px; }
 .usage-preference { margin-top: 24px; }
 .usage-choice { display: flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; }
 .usage-choice input { width: 24px; height: 24px; flex-shrink: 0; accent-color: var(--color-accent); }
+
+/* Inventory and owner console reuse workspace forms, tables and navigation. */
+.asset-link-list, .platform-audit { list-style: none; padding: 0; display: grid; gap: 16px; }
+.asset-link-list li { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.asset-facts { display: grid; gap: 8px; overflow-wrap: anywhere; }
+.asset-facts dt { font-weight: 600; }
+.asset-facts dd { margin: 0 0 12px; color: var(--color-text-muted); }

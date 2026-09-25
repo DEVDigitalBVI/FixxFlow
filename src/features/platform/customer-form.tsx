@@ -1,0 +1,11 @@
+'use client';
+import {useActionState,useEffect,useRef,useState,type ChangeEvent} from 'react';
+import {saveCustomer} from '@/app/platform/actions';
+import {SubmitButton} from '@/components/ui/submit-button';
+import type {SaveState} from '@/features/assets/model';
+export function CustomerForm({customer}:{customer?:{id:string;name:string}}){
+ const [draft,setDraft]=useState({name:customer?.name??'',slug:'',admin:'',email:''});
+ const [state,action]=useActionState(saveCustomer.bind(null,customer?.id??null),{} as SaveState);const errorRef=useRef<HTMLParagraphElement>(null);useEffect(()=>{if(state.error)errorRef.current?.focus();},[state]);
+ const change=(event:ChangeEvent<HTMLInputElement|HTMLSelectElement>)=>{const field=event.target;setDraft(d=>({...d,[field.name]:field.value}));};
+ return <form action={action} className="stack">{state.error&&<p ref={errorRef} tabIndex={-1} role="alert" className="alert alert-error">{state.error}</p>}{state.success&&<p role="status" className="alert alert-success">{state.success}</p>}<label className="field">Organization name *<input className="input" name="name" required minLength={2} maxLength={120} onChange={change} value={draft.name}/></label>{!customer&&<><label className="field">Workspace address *<input className="input" name="slug" onChange={change} value={draft.slug} required minLength={2} maxLength={63} pattern="[a-z0-9]+(-[a-z0-9]+)*" aria-describedby="slug-help"/></label><p id="slug-help" className="muted">A unique identifier using lowercase letters, numbers and hyphens.</p><label className="field">Administrator name *<input className="input" name="admin" onChange={change} value={draft.admin} required maxLength={120}/></label><label className="field">Administrator email *<input className="input" type="email" name="email" onChange={change} value={draft.email} required maxLength={254}/></label><p className="muted">The administrator must first create and verify an account, without joining or creating an organization. This assigns that account as this customer’s administrator. No email is sent from this form.</p></>}<SubmitButton className="button button-primary">{customer?'Save name':'Create organization'}</SubmitButton></form>;
+}

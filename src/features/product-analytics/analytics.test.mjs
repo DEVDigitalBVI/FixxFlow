@@ -7,8 +7,8 @@ import React from 'react';
 const require=createRequire(import.meta.url);
 function load(file,mocks={}) {const m={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;new Function('require','module','exports',code)(name=>mocks[name]??require(name),m,m.exports);return m.exports;}
 const events=load('src/features/product-analytics/events.ts');
-test('browser events cannot claim mutations, assets or arbitrary properties',()=>{
- assert.equal(events.allowedPageEvent('ticket_created','tickets'),false);assert.equal(events.allowedPageEvent('asset_viewed','assets'),false);assert.equal(events.allowedPageEvent('ticket_viewed','knowledge'),false);assert.equal(events.allowedPageEvent('search_performed','tickets'),true);
+test('browser events cannot claim mutations or mismatched feature areas',()=>{
+ assert.equal(events.allowedPageEvent('ticket_created','tickets'),false);assert.equal(events.allowedPageEvent('asset_viewed','assets'),true);assert.equal(events.allowedPageEvent('ticket_viewed','knowledge'),false);assert.equal(events.allowedPageEvent('search_performed','tickets'),true);
 });
 test('views wait for visibility, avoid duplicate effects and clean up listeners',()=>{
  let effect,listener,count=0;const ref={current:false};

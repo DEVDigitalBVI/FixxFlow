@@ -1,3 +1,4 @@
+import type {Asset} from '@/features/assets/model';
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 export type AppRole = "end_user" | "technician" | "administrator";
 export type MembershipStatus = "active" | "inactive";
@@ -39,6 +40,8 @@ type Table<Row, Insert = Partial<Row>, Update = Partial<Insert>> = {
 export type Database = {
   public: {
     Tables: {
+      assets: Table<Asset>;
+      ticket_assets: Table<{organization_id:string;ticket_id:string;asset_id:string;created_at:string}>;
       product_usage_preferences: Table<{user_id:string;enabled:boolean}>;
       audit_events: Table<{id:number;organization_id:string;actor_id:string|null;actor_name:string;entity_type:string;entity_id:string;entity_label:string;action:string;changes:Json;created_at:string;search_text:string}, never, never>;
       knowledge_articles: Table<KnowledgeArticle>;
@@ -64,6 +67,10 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      create_equipment_ticket: {Args:{org:string;asset:string;subject:string;body:string;category?:string|null};Returns:string};
+      platform_access: {Args:Record<string,never>;Returns:string};
+      platform_overview: {Args:{search_text?:string;page_number?:number;days?:number};Returns:Json};
+      manage_customer: {Args:{target:string|null;customer_name:string;customer_slug?:string|null;admin_email?:string|null;admin_name?:string|null};Returns:string};
       record_product_usage: {Args:{event_name:string;event_surface:string;org?:string|null;target_id?:string|null;event_token?:string|null};Returns:undefined};
       product_usage_summary: {Args:{days?:number};Returns:{day:string;event:string;role:AppRole;surface:string;count:number}[]};
       register_invited_member: {Args:{target_organization_id:string;invited_user_id:string;invited_role:AppRole;invited_name:string;invited_email:string;invited_by:string};Returns:undefined};

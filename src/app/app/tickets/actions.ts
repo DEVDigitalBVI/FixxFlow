@@ -37,6 +37,12 @@ export async function createTicket(formData: FormData) {
   const classification = { categoryId: optional(formData.get("categoryId")), subcategoryId: viewer.role === "end_user" ? null : optional(formData.get("subcategoryId")) };
   const categoryError = await classificationError(supabase, viewer.organizationId, classification);
   if (categoryError) fail("/app/tickets/new", categoryError);
+  const assetId = viewer.role === "end_user" ? optional(formData.get("assetId")) : null;
+  if (assetId) {
+    const {data: equipmentTicket,error: equipmentError} = await supabase.rpc('create_equipment_ticket',{org:viewer.organizationId,asset:assetId,subject:title,body:description,category:classification.categoryId});
+    if(equipmentError || !equipmentTicket) fail('/app/tickets/new','Your equipment request could not be sent. Check that the equipment is still assigned to you and try again.');
+    redirect(`/app/tickets/${equipmentTicket}?success=Request sent.`);
+  }
   const { data, error } = await supabase.from("tickets").insert({ organization_id: viewer.organizationId, requester_id: requesterId, title, description, priority, team_id: optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: optional(formData.get("dueAt")) }).select("id").single();
   if (error || !data) fail("/app/tickets/new", "Your request could not be sent. Please try again.");
   redirect(`/app/tickets/${data!.id}?success=Request sent.`);

@@ -8,7 +8,7 @@ export const administrationSections = [
   { slug: 'categories', title: 'Categories', group: 'Service delivery', status: 'Read only', description: 'Review ticket categories. Hierarchy editing is planned.' },
   { slug: 'priorities', title: 'Priorities', group: 'Service delivery', status: 'Fixed', description: 'Four shared priority levels used across the workspace.' },
   { slug: 'slas', title: 'SLAs', group: 'Service delivery', status: 'Fixed', description: 'First response and resolution targets by priority.' },
-  { slug: 'assets', title: 'Assets', group: 'Service delivery', status: 'Planned', description: 'Asset inventory and ticket associations are planned.' },
+  { slug: 'assets', title: 'Assets', group: 'Service delivery', status: 'Available', description: 'Manage equipment, employee assignments, lifecycle and linked tickets.', href: '/app/assets' },
   { slug: 'knowledge', title: 'Knowledge Base', group: 'Service delivery', status: 'Available', description: 'Publish guides, manage drafts, and review article feedback.', href: '/app/help?view=all' },
   { slug: 'notifications', title: 'Notifications', group: 'Governance', status: 'Fixed', description: 'Delivery channels and current notification behavior.' },
   { slug: 'security', title: 'Security', group: 'Governance', status: 'Fixed', description: 'Review access protections and personal two-factor settings.' },

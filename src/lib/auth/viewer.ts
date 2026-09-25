@@ -31,7 +31,11 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
     .limit(1)
     .maybeSingle();
 
-  if (!membership) redirect("/account/unassigned");
+  if (!membership) {
+    const {data: ownerAccess} = await supabase.rpc("platform_access");
+    if (ownerAccess && ownerAccess !== "none") redirect("/platform");
+    redirect("/account/unassigned");
+  }
   if (membership.status !== "active") redirect("/account/inactive");
 
   const [{ data: organization }, { data: profile }, {data: usagePreference}] = await Promise.all([

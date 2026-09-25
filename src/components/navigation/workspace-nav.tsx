@@ -20,16 +20,22 @@ function BookIcon() { return <svg aria-hidden="true" viewBox="0 0 24 24"><path d
 function SettingsIcon() { return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm0-12v2m0 13v2m8.5-8.5h-2m-13 0h-2m14.5-6-1.5 1.5m-9 9L6 18m12 0-1.5-1.5m-9-9L6 6" /></svg>; }
 function ProfileIcon() { return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /></svg>; }
 
-export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; organizationId: string; userId: string }) {
+export function WorkspaceNav({ role, organizationId, userId, platform = false, workspaceAvailable = true }: { platform?: boolean; workspaceAvailable?: boolean; role: AppRole; organizationId: string; userId: string }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const menuPanelRef = useRef<HTMLDivElement>(null);
-  const items = [
+  const items = platform ? [
+    { href: "/platform/customers", label: "Customers", icon: <PeopleIcon />, visible: true },
+    { href: "/platform/analytics", label: "Product analytics", icon: <OverviewIcon />, visible: true },
+    { href: "/platform/audit", label: "Platform audit", icon: <BookIcon />, visible: true },
+    { href: "/app", label: "My workspace", icon: <TicketIcon />, visible: workspaceAvailable },
+  ] : [
     { href: "/app", label: role === "end_user" ? "Home" : "Overview", icon: <OverviewIcon />, visible: true },
     { href: "/app/tickets", label: role === "end_user" ? "My tickets" : "Tickets", icon: <TicketIcon />, visible: true },
     { href: "/app/chat", label: role === "end_user" ? "My chats" : "Chats", icon: <ChatIcon />, visible: true },
     { href: "/app/help", label: role === "end_user" ? "Help articles" : "Knowledge base", icon: <BookIcon />, visible: true },
+    { href: "/app/assets", label: role === "end_user" ? "My equipment" : "Assets", icon: <SettingsIcon />, visible: true },
     { href: "/app/reports", label: "Reports", icon: <OverviewIcon />, visible: role !== "end_user" },
     { href: "/app/people", label: "People", icon: <PeopleIcon />, visible: role !== "end_user" },
     { href: "/app/administration", label: "Administration", icon: <SettingsIcon />, visible: role === "administrator" },
@@ -85,6 +91,6 @@ export function WorkspaceNav({ role, organizationId, userId }: { role: AppRole; 
       <span aria-hidden="true" />
     </button>
     {isOpen && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" tabIndex={-1} onClick={closeMenu} />}
-    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : (pathname.startsWith(item.href) || (item.href === "/app/administration" && pathname.startsWith("/app/organization"))); return <li key={item.href} className={item.href === "/app/profile" ? "nav-account-start" : undefined}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? "page" : undefined} onClick={closeMenu}>{item.icon}<span>{item.label}</span></Link></li>; })}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu} /></li></ul></nav></div>
+    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : (pathname.startsWith(item.href) || (item.href === "/app/administration" && pathname.startsWith("/app/organization"))); return <li key={item.href} className={item.href === "/app/profile" ? "nav-account-start" : undefined}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? "page" : undefined} onClick={closeMenu}>{item.icon}<span>{item.label}</span></Link></li>; })}{!platform && <li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu} /></li>}</ul></nav></div>
   </>;
 }
