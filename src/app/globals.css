@@ -1114,13 +1114,14 @@ select.input-compact { height: 40px; }
   .portal-header .theme-control { margin-top: 20px; }
 }
 
-/* Keep appearance reachable without scrolling past workspace destinations. */
-.sidebar .workspace-nav > .theme-control { margin-top: 0; margin-bottom: 16px; }
+/* Center appearance beneath the navigation destinations. */
+.workspace-nav > .theme-control { justify-items: center; text-align: center; }
+.sidebar .workspace-nav > .theme-control { margin-top: 20px; margin-bottom: 0; }
 .appearance-settings { margin-bottom: 24px; }
 .appearance-settings h2 { margin-top: 0; }
 .appearance-settings .theme-control { max-width: 320px; }
 @media (max-width: 767px) {
-  .portal-header .workspace-nav > .theme-control { margin-top: 0; margin-bottom: 16px; }
+  .portal-header .workspace-nav > .theme-control { margin-top: 20px; margin-bottom: 0; }
 }
 
 /* Approved full logos follow the resolved theme without recoloring or cropping. */

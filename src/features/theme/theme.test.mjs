@@ -85,17 +85,18 @@ test('theme selection persists and remains usable when storage rejects writes', 
     } finally { delete globalThis.document; delete globalThis.window; delete globalThis.localStorage; }
   }
 });
-test('signed-in navigation exposes appearance before destinations for every role', () => {
+test('signed-in navigation exposes appearance after notifications for every role', () => {
   const { ThemeControl } = load('src/features/theme/theme-control.tsx', { './theme': theme });
   const { WorkspaceNav } = load('src/components/navigation/workspace-nav.tsx', {
     '@/features/theme/theme-control': { ThemeControl },
     'next/navigation': { usePathname: () => '/app' },
     'next/link': { default: props => React.createElement('a', props) },
-    '@/features/notifications/notification-link': { NotificationLink: () => null },
+    '@/features/notifications/notification-link': { NotificationLink: () => React.createElement('a', { href: '/app/notifications' }, 'Notifications') },
   });
   for (const role of ['administrator', 'technician', 'end_user']) {
     const html = renderToStaticMarkup(React.createElement(WorkspaceNav, { role, organizationId: 'org', userId: 'user' }));
-    assert.ok(html.indexOf('class="theme-options"') < html.indexOf('<nav'));
+    assert.ok(html.indexOf('class="theme-options"') > html.indexOf('</nav>'));
+    assert.ok(html.indexOf('Notifications') < html.indexOf('class="theme-options"'));
     assert.match(html, /aria-label="Dark"/);
   }
   const owner = renderToStaticMarkup(React.createElement(WorkspaceNav, { role: 'administrator', platform: true, organizationId: '', userId: 'owner' }));
