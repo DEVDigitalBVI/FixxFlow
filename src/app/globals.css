@@ -1114,3 +1114,12 @@ select.input-compact { height: 40px; }
   .portal-header .theme-control { margin-top: 20px; }
   .theme-control .input { font-size: 16px; }
 }
+
+/* Keep appearance reachable without scrolling past workspace destinations. */
+.sidebar .workspace-nav > .theme-control { margin-top: 0; margin-bottom: 16px; }
+.appearance-settings { margin-bottom: 24px; }
+.appearance-settings h2 { margin-top: 0; }
+.appearance-settings .theme-control { max-width: 320px; }
+@media (max-width: 767px) {
+  .portal-header .workspace-nav > .theme-control { margin-top: 0; margin-bottom: 16px; }
+}

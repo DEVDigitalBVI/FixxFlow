@@ -82,3 +82,40 @@ test('theme selection persists and remains usable when storage rejects writes', 
     } finally { delete globalThis.document; delete globalThis.window; delete globalThis.localStorage; }
   }
 });
+test('signed-in navigation exposes appearance before destinations for every role', () => {
+  const { ThemeControl } = load('src/features/theme/theme-control.tsx', { './theme': theme });
+  const { WorkspaceNav } = load('src/components/navigation/workspace-nav.tsx', {
+    '@/features/theme/theme-control': { ThemeControl },
+    'next/navigation': { usePathname: () => '/app' },
+    'next/link': { default: props => React.createElement('a', props) },
+    '@/features/notifications/notification-link': { NotificationLink: () => null },
+  });
+  for (const role of ['administrator', 'technician', 'end_user']) {
+    const html = renderToStaticMarkup(React.createElement(WorkspaceNav, { role, organizationId: 'org', userId: 'user' }));
+    assert.ok(html.indexOf('<select') < html.indexOf('<nav'));
+    assert.match(html, /value="dark"/);
+  }
+  const owner = renderToStaticMarkup(React.createElement(WorkspaceNav, { role: 'administrator', platform: true, organizationId: '', userId: 'owner' }));
+  assert.match(owner, /value="dark"/);
+});
+test('profile offers an independent appearance control outside profile-save forms', async () => {
+  const { ThemeControl } = load('src/features/theme/theme-control.tsx', { './theme': theme });
+  const query = { select: () => query, eq: () => query, single: async () => ({ data: null }), order: async () => ({ data: [] }) };
+  const { default: ProfilePage } = load('src/app/app/profile/page.tsx', {
+    '@/features/theme/theme-control': { ThemeControl },
+    '@/features/platform/owner-link': { OwnerConsoleLink: () => null },
+    '@/components/ui/submit-button': { SubmitButton: () => null },
+    '@/components/ui/avatar': { Avatar: () => null },
+    '@/features/identity/avatar-upload': { AvatarUpload: () => null },
+    '@/lib/auth/viewer': { requireViewer: async () => ({ displayName: 'User', email: 'user@example.com', id: 'user', organizationId: 'org' }) },
+    '@/lib/supabase/server': { createClient: async () => ({ from: () => query }) },
+    './actions': { updateProfile: () => {}, updateUsagePreference: () => {} },
+  });
+  const tree = await ProfilePage({ searchParams: Promise.resolve({}) });
+  const appearance = React.Children.toArray(tree.props.children).find(child => child.props['aria-labelledby'] === 'appearance-heading');
+  assert.ok(appearance);
+  const html = renderToStaticMarkup(appearance);
+  assert.match(html, /Changes apply immediately/);
+  assert.match(html, /<select/);
+  assert.doesNotMatch(html, /<form/);
+});

@@ -336,7 +336,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Appearance themes
 
-- Offer a native, labeled Appearance selector with System, Light, and Dark choices in workspace navigation and authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.
+- Offer a native, labeled Appearance selector with System, Light, and Dark choices above the workspace navigation links, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.
 - Keep the existing semantic tokens as the single color system. Dark mode uses navy surfaces, light text, brighter semantic foregrounds, and darker tinted status backgrounds. `--color-on-accent` controls text on filled actions; `--color-inverse` stays white for fixed navy brand panels. Chart series retain their distinct line styles and data tables.
 - Use native dark form controls via `color-scheme`. Keep focus outlines and control boundaries visible. Theme changes are immediate and introduce no animation.
 - Preserve the existing dark authentication artwork. Horizontal and compact primary artwork sit on a light plate in dark mode, because there is no matching approved dark horizontal master; this deliberately retains their existing proportions and original colors.
