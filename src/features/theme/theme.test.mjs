@@ -25,11 +25,13 @@ test('first paint honors saved choices and falls back safely to the system', () 
     assert.equal(document.documentElement.dataset.theme, expected);
   }
 });
-test('appearance is a labeled native select with all three options', () => {
+test('appearance is a labeled icon-button group with all three options', () => {
   const { ThemeControl } = load('src/features/theme/theme-control.tsx', { './theme': theme });
   const html = renderToStaticMarkup(React.createElement(ThemeControl));
-  assert.match(html, /<label/); assert.match(html, /Appearance/);
-  for (const value of ['system', 'light', 'dark']) assert.match(html, new RegExp(`value="${value}"`));
+  assert.match(html, /role="group"/); assert.match(html, /Appearance/);
+  for (const label of ['System', 'Light', 'Dark']) assert.match(html, new RegExp(`aria-label="${label}"`));
+  assert.equal((html.match(/aria-pressed="true"/g) ?? []).length, 1);
+  assert.doesNotMatch(html, /<select/);
 });
 test('theme responds to system changes and cross-tab updates, then cleans up listeners', () => {
   let effect;
@@ -74,8 +76,9 @@ test('theme selection persists and remains usable when storage rejects writes', 
       const { ThemeControl } = load('src/features/theme/theme-control.tsx', {
         './theme': theme, react: { ...React, useSyncExternalStore: () => 'system' },
       });
-      const select = React.Children.toArray(ThemeControl().props.children).find(child => child.type === 'select');
-      select.props.onChange({ target: { value: 'dark' } });
+      const options = ThemeControl().props.children[1];
+      const dark = options.props.children.find(child => child.props['aria-label'] === 'Dark');
+      dark.props.onClick();
       assert.equal(document.documentElement.dataset.theme, 'dark');
       assert.equal(document.documentElement.dataset.themePreference, 'dark');
       if (!blocked) assert.deepEqual(saved, [theme.themeStorageKey, 'dark']);
@@ -92,11 +95,11 @@ test('signed-in navigation exposes appearance before destinations for every role
   });
   for (const role of ['administrator', 'technician', 'end_user']) {
     const html = renderToStaticMarkup(React.createElement(WorkspaceNav, { role, organizationId: 'org', userId: 'user' }));
-    assert.ok(html.indexOf('<select') < html.indexOf('<nav'));
-    assert.match(html, /value="dark"/);
+    assert.ok(html.indexOf('class="theme-options"') < html.indexOf('<nav'));
+    assert.match(html, /aria-label="Dark"/);
   }
   const owner = renderToStaticMarkup(React.createElement(WorkspaceNav, { role: 'administrator', platform: true, organizationId: '', userId: 'owner' }));
-  assert.match(owner, /value="dark"/);
+  assert.match(owner, /aria-label="Dark"/);
 });
 test('profile offers an independent appearance control outside profile-save forms', async () => {
   const { ThemeControl } = load('src/features/theme/theme-control.tsx', { './theme': theme });
@@ -116,7 +119,7 @@ test('profile offers an independent appearance control outside profile-save form
   assert.ok(appearance);
   const html = renderToStaticMarkup(appearance);
   assert.match(html, /Changes apply immediately/);
-  assert.match(html, /<select/);
+  assert.match(html, /role="group"/);
   assert.doesNotMatch(html, /<form/);
 });
 test('shared logos use the approved theme pair at their original proportions', () => {

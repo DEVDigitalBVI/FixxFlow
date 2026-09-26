@@ -317,7 +317,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 - A short blue-to-cyan rule anchors workspace page headers, the sidebar identity, and the employee home introduction. This is decorative brand artwork, never a status indicator or a gradient control.
 - Use `--brand-flow` for that rule and existing surface tokens for softly shaded metric panels. Keep functional actions solid and data cards stationary.
-- Avatar initials use solid `--color-accent` for readable white text. Input boundaries use `--color-control-border`; focus uses a solid, offset `--color-focus` outline.
+- Avatar initials use solid `--color-accent` for readable white text. Input boundaries use `--color-control-border`. Text fields use the subtle surface, 12px card radius, regular-weight input text, and no shadow. Focus uses one solid 2px `--color-focus` outline aligned to the border (−1px offset), avoiding a doubled ring; other controls retain their offset focus outlines.
 - Action-card arrows sit in a small outlined circle. Only a pressed arrow moves, by 2px; reduced motion removes that movement.
 - Selected navigation keeps its text weight and edge marker, with an outline in forced-colors mode. Mobile sign-out targets are 44px.
 
@@ -336,7 +336,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Appearance themes
 
-- Offer a native, labeled Appearance selector with System, Light, and Dark choices above the workspace navigation links, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.
+- Offer a soft, rounded Appearance group with native icon buttons for System (monitor), Light (sun), and Dark (moon). Each button has an accessible name, tooltip, pressed state, and a selected dot in addition to color. Keep 44px targets and visible keyboard focus. Place these choices above the workspace navigation links, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.
 - Keep the existing semantic tokens as the single color system. Dark mode uses navy surfaces, light text, brighter semantic foregrounds, and darker tinted status backgrounds. `--color-on-accent` controls text on filled actions; `--color-inverse` stays white for fixed navy brand panels. Chart series retain their distinct line styles and data tables.
 - Use native dark form controls via `color-scheme`. Keep focus outlines and control boundaries visible. Theme changes are immediate and introduce no animation.
 - All shared logos use the approved primary (light mode) and dark-mode (dark mode) full PNGs at their original 1353:1334 proportions, with no light backing, cropping, or recoloring. The authentication brand panel follows theme surfaces to keep the selected artwork legible.
