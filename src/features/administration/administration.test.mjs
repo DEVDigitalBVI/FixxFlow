@@ -11,6 +11,8 @@ function load(file, role, rows = [], error = null) {
   const calls = [];
   const builder = new Proxy({}, { get: (_, key) => key === 'then' ? resolve => Promise.resolve({data: rows, error}).then(resolve) : (...args) => { calls.push([key, ...args]); return builder; } });
   const mocks = {
+    '@/features/administration/classification-editor': {ClassificationEditor:()=>null},
+    '@/features/administration/member-details-editor': {MemberDetailsEditor:()=>null},
     '@/features/audit/audit-log': {AuditLog:()=>null},
     '@/features/identity/role': {rolePresentation:{technician:{label:'Technician'},end_user:{label:'End User'},administrator:{label:'Administrator'}}},
     './actions': {inviteMember:async()=>{},updateMemberRole:async()=>{},updateMemberStatus:async()=>{}},
@@ -35,7 +37,7 @@ test('administration groups related settings and keeps future features out of ac
   for(const href of ['/app/organization','/app/organization#departments','/app/organization#locations','/app/people','/app/people?view=technicians','/app/help?view=all','/app/administration/slas']) assert.ok(html.includes(`href="${href}"`));
   assert.match(html,/People &amp; access/);assert.match(html,/Priorities &amp; SLAs/);
   assert.doesNotMatch(html,/href="\/app\/administration\/(priorities|assets)"/);
-  assert.match(html,/href="\/app\/assets"/);assert.match(html,/Read only/);
+  assert.match(html,/href="\/app\/assets"/);assert.ok(administrationSections.filter(item => ['teams','categories'].includes(item.slug)).every(item => item.status === 'Available'));
 });
 test('non-administrators cannot render the hub or directly request data sections',async()=>{
   for(const role of ['end_user','technician']) for(const file of [hub,detail]) {

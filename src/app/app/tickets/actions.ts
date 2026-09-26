@@ -31,21 +31,22 @@ export async function createTicket(formData: FormData) {
   const description = String(formData.get("description") ?? "").trim();
   const priority = String(formData.get("priority") ?? "normal") as TicketPriority;
   const requesterId = viewer.role === "end_user" ? viewer.id : optional(formData.get("requesterId")) ?? viewer.id;
-  if (title.length < 3 || !description || !priorities.includes(priority)) fail("/app/tickets/new", "Add a subject and description.");
+  if (title.length < 3 || title.length > 180 || !description || description.length > 20000 || !priorities.includes(priority)) return { error: "Enter a subject of 3–180 characters, a description of up to 20,000 characters, and a valid priority." };
   const supabase = await createClient();
-  if (formData.has("categoryLoadError")) fail("/app/tickets/new", "Categories could not be loaded. Refresh the page and try again.");
+  if (formData.has("categoryLoadError")) return { error: "Categories could not be loaded. Refresh the page and try again." };
   const classification = { categoryId: optional(formData.get("categoryId")), subcategoryId: viewer.role === "end_user" ? null : optional(formData.get("subcategoryId")) };
   const categoryError = await classificationError(supabase, viewer.organizationId, classification);
-  if (categoryError) fail("/app/tickets/new", categoryError);
+  if (categoryError) return { error: categoryError };
   const assetId = viewer.role === "end_user" ? optional(formData.get("assetId")) : null;
   if (assetId) {
     const {data: equipmentTicket,error: equipmentError} = await supabase.rpc('create_equipment_ticket',{org:viewer.organizationId,asset:assetId,subject:title,body:description,category:classification.categoryId});
-    if(equipmentError || !equipmentTicket) fail('/app/tickets/new','Your equipment request could not be sent. Check that the equipment is still assigned to you and try again.');
-    redirect(`/app/tickets/${equipmentTicket}?success=Request sent.`);
+    if(equipmentError || !equipmentTicket) return { error: 'Your equipment request could not be sent. Check that the equipment is still assigned to you and try again.' };
+    return { redirectTo: `/app/tickets/${equipmentTicket}?success=Request sent.` };
   }
-  const { data, error } = await supabase.from("tickets").insert({ organization_id: viewer.organizationId, requester_id: requesterId, title, description, priority, team_id: optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: optional(formData.get("dueAt")) }).select("id").single();
-  if (error || !data) fail("/app/tickets/new", "Your request could not be sent. Please try again.");
-  redirect(`/app/tickets/${data!.id}?success=Request sent.`);
+  const automaticRouting = viewer.role === "end_user" || !formData.has("teamId") || formData.get("teamId") === "automatic";
+  const { data, error } = await supabase.from("tickets").insert({ organization_id: viewer.organizationId, requester_id: requesterId, title, description, priority, routing_mode: automaticRouting ? "automatic" : "manual", team_id: automaticRouting ? null : optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: viewer.role === "end_user" ? null : optional(formData.get("dueAt")) }).select("id").single();
+  if (error || !data) return { error: "Your request could not be sent. Your entries are preserved; please try again." };
+  return { redirectTo: `/app/tickets/${data.id}?success=Request sent.` };
 }
 
 export async function updateTicket(formData: FormData) {

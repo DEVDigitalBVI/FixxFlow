@@ -897,3 +897,23 @@ select.input-compact { height: 40px; }
 .organization-delete-confirm input { flex-shrink: 0; margin-top: 4px; }
 .management-item > div:first-child { min-width: 0; overflow-wrap: anywhere; }
 @media (max-width: 767px) { .organization-item-actions { justify-content: flex-start; width: 100%; } .organization-delete { max-width: 100%; } }
+
+/* Shared inline editing uses existing surfaces and native disclosure controls. */
+.action-form-fields { display: contents; }
+.settings-editor { padding: 16px 0; border-bottom: 1px solid var(--color-border); min-width: 0; }
+.settings-editor > summary { cursor: pointer; padding: 10px 0; min-height: 44px; overflow-wrap: anywhere; }
+.settings-editor > summary > * { margin-inline-end: 8px; }
+.settings-editor > form, .settings-editor > section { margin-top: 16px; }
+.settings-editor summary:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4px; }
+
+.management-item:has(> .settings-editor[open]) { flex-wrap: wrap; }
+.management-item > .settings-editor[open] { order: 3; flex-basis: 100%; }
+@media (max-width: 767px) {
+  .responsive-table .member-details-cell > .settings-editor { grid-column: 1 / -1; width: 100%; text-align: left; }
+}
+
+.ticket-suggestions { border-top: 1px solid var(--color-border); padding-top: 16px; min-width: 0; }
+.ticket-suggestions h2 { font-size: 18px; margin: 0 0 8px; }
+.ticket-suggestions ul { padding-left: 20px; }
+.ticket-suggestions li { margin-block: 12px; overflow-wrap: anywhere; }
+.ticket-suggestions li p { margin: 4px 0; color: var(--color-text-muted); }

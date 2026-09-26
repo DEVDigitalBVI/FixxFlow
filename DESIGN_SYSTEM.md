@@ -169,6 +169,7 @@ The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its
 - Validate on blur or submit unless earlier feedback prevents costly work. Do not show errors before the user has interacted.
 - Put error text next to the affected field, connect it with `aria-describedby`, and provide a focusable error summary for failed multi-field submissions.
 - Preserve entered values after validation or server errors. Disable submission only while a duplicate request is genuinely possible, and show progress in the control.
+- Use the shared `ActionForm` for inline server mutations that return recoverable errors. It keeps controls mounted, focuses persistent error feedback, and shares pending state with `SubmitButton`. Drafts remain in memory; they are not copied into URLs or browser storage. Use native `details`/`summary` for short contextual editors, with object-specific accessible names and full-width fields on compact screens.
 - Use native input semantics and browser autocomplete where appropriate. Provide safe cancel behavior and warn before discarding substantial unsaved changes.
 
 ### 5.5 Buttons, menus, and actions

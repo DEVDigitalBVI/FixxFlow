@@ -44,8 +44,8 @@ test('bulk actions appear only for selected rows and clear selection restores ro
  try{let tree=BulkActions({formId:'tickets',children:'Controls'});assert.equal(tree.props.hidden,true);effect();tree=BulkActions({formId:'tickets',children:'Controls'});assert.equal(tree.props.hidden,false);assert.match(renderToStaticMarkup(tree),/1 ticket selected/);tree.props.children[0].props.children[1].props.onClick();assert.equal(row.checked,false);assert.equal(count,0);assert.equal(focused,true);handler();assert.equal(count,0);}finally{delete globalThis.document;}
 });
 test('pending submit buttons prevent duplicate submission and announce progress',()=>{
- const {SubmitButton}=load('src/components/ui/submit-button.tsx',{'react-dom':{useFormStatus:()=>({pending:true})}});
- const html=renderToStaticMarkup(SubmitButton({children:'Save profile',pendingLabel:'Saving profile…'}));
+ const {SubmitButton}=load('src/components/ui/submit-button.tsx',{'react-dom':{useFormStatus:()=>({pending:true})},'./form-pending':{FormPendingContext:React.createContext(false)}});
+ const html=renderToStaticMarkup(React.createElement(SubmitButton,{pendingLabel:'Saving profile…'},'Save profile'));
  assert.match(html,/disabled=""/);assert.match(html,/aria-busy="true"/);assert.match(html,/Saving profile/);
 });
 test('interactive blue and muted text meet normal-text contrast on white',()=>{

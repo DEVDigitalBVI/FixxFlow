@@ -4,6 +4,42 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
+import type { ActionResult } from "@/components/ui/action-form";
+
+export async function editOrganizationItem(form: FormData): Promise<ActionResult> {
+  const viewer = await requireViewer();
+  if (viewer.role !== "administrator") return { error: "Only administrators can manage organization settings." };
+  const kind = form.get("kind");
+  if (kind !== "departments" && kind !== "locations") return { error: "Choose a valid organization setting." };
+  const name = String(form.get("name") ?? "").trim();
+  if (!name || name.length > 100) return { error: "Enter a name between 1 and 100 characters." };
+  const optional = (key: string) => String(form.get(key) ?? "").trim() || null;
+  const changes: { name: string; description?: string | null; city?: string | null; region?: string | null; country_code?: string | null; timezone?: string } = { name };
+  if (kind === "departments") {
+    changes.description = optional("description");
+    if ((changes.description?.length ?? 0) > 2000) return { error: "Keep the description within 2,000 characters." };
+  } else {
+    changes.city = optional("city");
+    changes.region = optional("region");
+    changes.country_code = optional("countryCode")?.toUpperCase() ?? null;
+    changes.timezone = optional("timezone") ?? "";
+    if (changes.country_code && !/^[A-Z]{2}$/.test(changes.country_code)) return { error: "Use a two-letter country code." };
+    try { if (!changes.timezone) throw new Error(); new Intl.DateTimeFormat("en", { timeZone: changes.timezone }); }
+    catch { return { error: "Enter a valid timezone, such as America/Tortola." }; }
+  }
+  const supabase = await createClient();
+  const query = kind === "departments"
+    ? supabase.from("departments").update({ name, description: changes.description })
+    : supabase.from("locations").update({ name, city: changes.city, region: changes.region, country_code: changes.country_code, timezone: changes.timezone });
+  const { data, error } = await query.eq("organization_id", viewer.organizationId).eq("id", String(form.get("id") ?? "")).eq("updated_at", String(form.get("updatedAt") ?? "")).select("id").maybeSingle();
+  if (error?.code === "23505") return { error: "That name already exists. Choose a different name." };
+  if (error) return { error: "Changes could not be saved. Your entries are preserved; try again." };
+  if (!data) return { error: "This record changed or was removed. Reload the page before saving again." };
+  revalidatePath("/app/organization");
+  revalidatePath("/app/people");
+  revalidatePath("/app/tickets", "layout");
+  return { success: "Changes saved." };
+}
 
 function fail(message: string): never { redirect(`/app/organization?error=${encodeURIComponent(message)}`); }
 

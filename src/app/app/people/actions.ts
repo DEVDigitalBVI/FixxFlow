@@ -1,5 +1,6 @@
 "use server";
 
+import type { ActionResult } from "@/components/ui/action-form";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -7,6 +8,31 @@ import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { AppRole, MembershipStatus } from "@/types/database";
+
+
+
+export async function updateMemberDetails(form: FormData): Promise<ActionResult> {
+  const viewer = await requireViewer();
+  if (viewer.role !== "administrator") return { error: "Only administrators can edit member details." };
+  const userId = String(form.get("userId") ?? "");
+  const departmentId = String(form.get("departmentId") ?? "") || null;
+  const locationId = String(form.get("locationId") ?? "") || null;
+  const jobTitle = String(form.get("jobTitle") ?? "").trim() || null;
+  if ((jobTitle?.length ?? 0) > 120) return { error: "Keep the job title within 120 characters." };
+  const supabase = await createClient();
+  const { data: current, error: currentError } = await supabase.from("profiles").select("department_id, location_id").eq("organization_id", viewer.organizationId).eq("user_id", userId).maybeSingle();
+  if (currentError || !current) return { error: "This member's profile could not be loaded. Reload and try again." };
+  for (const [table, id, previous] of [["departments", departmentId, current.department_id], ["locations", locationId, current.location_id]] as const) {
+    if (!id || id === previous) continue;
+    const { data, error } = await supabase.from(table).select("id").eq("organization_id", viewer.organizationId).eq("id", id).eq("is_active", true).maybeSingle();
+    if (error || !data) return { error: `Choose an active ${table === "departments" ? "department" : "location"}.` };
+  }
+  const { data, error } = await supabase.from("profiles").update({ department_id: departmentId, location_id: locationId, job_title: jobTitle }).eq("organization_id", viewer.organizationId).eq("user_id", userId).eq("updated_at", String(form.get("updatedAt") ?? "")).select("user_id").maybeSingle();
+  if (error) return { error: "Member details could not be saved. Your entries are preserved; try again." };
+  if (!data) return { error: "This profile changed. Reload to see the current details before saving again." };
+  revalidatePath("/app/people"); revalidatePath("/app/organization"); revalidatePath("/app/profile");
+  return { success: "Member details saved." };
+}
 
 const allowedRoles: AppRole[] = ["end_user", "technician", "administrator"];
 

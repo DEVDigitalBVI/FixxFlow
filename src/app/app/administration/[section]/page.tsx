@@ -1,3 +1,4 @@
+import { ClassificationEditor } from "@/features/administration/classification-editor";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -18,9 +19,31 @@ export default async function AdministrationSection({ params, searchParams }: { 
   const supabase = await createClient();
   let content;
   if (section === 'teams' || section === 'categories') {
-    const { data, error } = await supabase.from(section === 'teams' ? 'teams' : 'ticket_categories').select('id, name, is_active').eq('organization_id', viewer.organizationId).order('name').order('id').range((page - 1) * 50, page * 50);
+    const { data, error } = await supabase.from(section === 'teams' ? 'teams' : 'ticket_categories').select('*').eq('organization_id', viewer.organizationId).order('name').order('id').range((page - 1) * 50, page * 50);
     if (error) throw new Error('Unable to load administration settings.');
-    content = <><p>These are the current {section} for your organization. Editing {section}{section === 'categories' ? ', subcategories, and issue types' : ' and team membership'} from Administration is planned.</p><ul className="administration-list">{data.slice(0, 50).map(row => <li key={row.id}><strong>{row.name}</strong><span className="badge">{row.is_active ? 'Active' : 'Inactive'}</span></li>)}</ul>{!data.length && <p>No {section} found on this page.</p>}<Pagination section={section} page={page} hasNext={data.length > 50} /></>;
+    const routingTeams = section === 'categories' ? await supabase.from('teams').select('id, name, is_active').eq('organization_id', viewer.organizationId).order('name') : { data: [], error: null };
+    if (routingTeams.error) throw new Error('Unable to load routing teams.');
+    const visible = data.slice(0, 50);
+    const children = section === 'categories' && visible.length
+      ? await supabase.from('ticket_subcategories').select('id, category_id, name, is_active, updated_at').eq('organization_id', viewer.organizationId).in('category_id', visible.map(row => row.id)).order('name')
+      : { data: [], error: null };
+    if (children.error) throw new Error('Unable to load subcategories.');
+    const kind = section === 'teams' ? 'teams' : 'ticket_categories';
+    content = <>
+      <p>Manage names and availability. Inactive entries stay linked to existing tickets and are hidden from new selections.</p>
+      <ClassificationEditor kind={kind} teams={routingTeams.data ?? []}/>
+      {!data.length && <p>No {section} found on this page.</p>}
+      <div className="management-list">{visible.map(row => <details className="settings-editor" key={row.id}>
+        <summary><strong>{row.name}</strong> <span className="badge">{row.is_active ? 'Active' : 'Inactive'}</span><span className="muted">Edit{section === 'categories' ? ' and manage subcategories' : ''}</span></summary>
+        <ClassificationEditor kind={kind} item={row} teams={routingTeams.data ?? []}/>
+        {section === 'categories' && <section aria-label={`Subcategories of ${row.name}`}><h3>Subcategories</h3>
+          <p className="muted">Subcategories are available on new tickets only when their parent category is active.</p>
+          {(children.data ?? []).filter(child => child.category_id === row.id).map(child => <details className="settings-editor" key={child.id}><summary>{child.name} · {child.is_active ? 'Active' : 'Inactive'}</summary><ClassificationEditor kind="ticket_subcategories" item={child} categoryId={row.id}/></details>)}
+          <ClassificationEditor kind="ticket_subcategories" categoryId={row.id}/>
+        </section>}
+      </details>)}</div>
+      <Pagination section={section} page={page} hasNext={data.length > 50}/>
+    </>;
   } else if (section === 'audit-log') {
     content = <AuditLog organizationId={viewer.organizationId} filters={filters}/>;
   } else if (section === 'slas' || section === 'priorities') {
