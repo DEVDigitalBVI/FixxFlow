@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ThemeControl } from "@/features/theme/theme-control";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { NotificationLink } from "@/features/notifications/notification-link";
@@ -59,7 +60,7 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     const desktop = window.matchMedia("(min-width: 768px)");
     const onResize = () => { if (desktop.matches) setIsOpen(false); };
     desktop.addEventListener("change", onResize);
-    const focusable = panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
+    const focusable = panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled]), select:not([disabled])");
     const focusFrame = window.requestAnimationFrame(() => focusable?.[0]?.focus());
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -94,6 +95,6 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
       <span aria-hidden="true" />
     </button>
     {isOpen && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" tabIndex={-1} onClick={closeMenu} />}
-    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : (pathname.startsWith(item.href) || (item.href === "/app/administration" && pathname.startsWith("/app/organization"))); return <li key={item.href} className={item.href === "/app/profile" ? "nav-account-start" : undefined}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? "page" : undefined} onClick={closeMenu}>{item.icon}<span>{item.label}</span></Link></li>; })}{!platform && <li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu} /></li>}</ul></nav></div>
+    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : (pathname.startsWith(item.href) || (item.href === "/app/administration" && pathname.startsWith("/app/organization"))); return <li key={item.href} className={item.href === "/app/profile" ? "nav-account-start" : undefined}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? "page" : undefined} onClick={closeMenu}>{item.icon}<span>{item.label}</span></Link></li>; })}{!platform && <li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu} /></li>}</ul></nav><ThemeControl /></div>
   </>;
 }

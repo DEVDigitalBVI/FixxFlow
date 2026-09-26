@@ -7,7 +7,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 const require=createRequire(import.meta.url);
 function load(file,mocks={}) {const compiledModule={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;new Function('require','module','exports',code)(n=>mocks[n]??require(n),compiledModule,compiledModule.exports);return compiledModule.exports;}
-const navMocks={'next/navigation':{usePathname:()=>'/app/tickets'},'next/link':{default:props=>React.createElement('a',props)},'@/features/notifications/notification-link':{NotificationLink:()=>React.createElement('a',{href:'/app/notifications'},'Notifications')}};
+const navMocks={'@/features/theme/theme-control':{ThemeControl:()=>null},'next/navigation':{usePathname:()=>'/app/tickets'},'next/link':{default:props=>React.createElement('a',props)},'@/features/notifications/notification-link':{NotificationLink:()=>React.createElement('a',{href:'/app/notifications'},'Notifications')}};
 test('employee navigation keeps employee labels and excludes staff destinations',()=>{
  const {WorkspaceNav}=load('src/components/navigation/workspace-nav.tsx',navMocks);
  const html=renderToStaticMarkup(React.createElement(WorkspaceNav,{role:'end_user',organizationId:'org',userId:'user'}));
