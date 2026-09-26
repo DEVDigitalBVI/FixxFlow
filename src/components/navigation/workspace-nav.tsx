@@ -42,6 +42,7 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     { href: "/app/administration", label: "Administration", icon: <SettingsIcon />, visible: role === "administrator" },
     { href: "/app/profile", label: role === "end_user" ? "Account" : "Profile", icon: <ProfileIcon />, visible: true },
     { href: "/app/security", label: "Security", icon: <SettingsIcon />, visible: true },
+    { href: "/app/support", label: "Contact support", icon: <ChatIcon />, visible: true },
   ];
 
   function closeMenu() {

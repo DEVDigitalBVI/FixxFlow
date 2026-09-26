@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const supplied = Buffer.from(request.headers.get("authorization") ?? "");
   const expected = Buffer.from(`Bearer ${secret ?? ""}`);
   if (!secret || supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) return Response.json({ error: "Unauthorized" }, { status: 401 });
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.ZOHO_CPAAS_API_KEY;
   const from = process.env.NOTIFICATIONS_FROM_EMAIL;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
   if (!apiKey || !from || !siteUrl) return Response.json({ error: "Email delivery is not configured" }, { status: 503 });
