@@ -320,3 +320,10 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Avatar initials use solid `--color-accent` for readable white text. Input boundaries use `--color-control-border`; focus uses a solid, offset `--color-focus` outline.
 - Action-card arrows sit in a small outlined circle. Only a pressed arrow moves, by 2px; reduced motion removes that movement.
 - Selected navigation keeps its text weight and edge marker, with an outline in forced-colors mode. Mobile sign-out targets are 44px.
+
+### Operational overview hierarchy
+
+- Lead the staff overview with a compact navy introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with navy text; the focus outline uses cyan for contrast against navy.
+- Place real metrics before shortcuts and personal support actions. On wide screens, group comparable metrics in one divided panel; on compact screens, use two columns and a single column below 360px.
+- Queue shortcuts use native links, a title, brief supporting text, and a decorative arrow. Numbered markers indicate reading order, never ticket counts. Keep secondary support actions neutral so they do not compete with the queue.
+- Shared cards favor borders over shadows. Preserve clear input boundaries, visible focus, and the employee portal’s larger controls.

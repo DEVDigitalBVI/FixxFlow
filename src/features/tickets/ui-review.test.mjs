@@ -110,3 +110,11 @@ test('input boundaries and focus contrast meet 3:1 on adjacent light surfaces',(
   }
  }
 });
+
+test('overview navy header maintains readable text and visible keyboard focus', () => {
+ const css=fs.readFileSync('src/app/globals.css','utf8');
+ const luminance=name=>{const hex=css.match(new RegExp(`--color-${name}: (#\\w+);`))[1];const rgb=hex.match(/[0-9a-f]{2}/gi).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722;};
+ const navy=luminance('brand-navy');
+ for(const name of ['surface','border-strong','brand-secondary']) assert.ok((luminance(name)+.05)/(navy+.05)>=4.5,`${name} on navy`);
+ assert.match(css,/\.overview-page > \.page-header \.button-primary:focus-visible \{ outline-color: var\(--color-brand-secondary\); \}/);
+});
