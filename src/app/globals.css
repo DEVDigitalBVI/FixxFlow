@@ -886,3 +886,14 @@ select.input-compact { height: 40px; }
 .knowledge-content h2[id] { scroll-margin-top: 24px; }
 @media (max-width: 767px) { .knowledge-categories { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 479px) { .knowledge-categories { grid-template-columns: minmax(0, 1fr); } }
+
+.organization-item-actions { display: flex; align-items: start; justify-content: flex-end; flex-wrap: wrap; gap: 8px; min-width: 0; }
+.organization-delete { max-width: 360px; }
+.organization-delete summary { min-height: 40px; padding: 8px 12px; cursor: pointer; color: var(--color-danger); }
+.organization-delete[open] { flex-basis: 100%; }
+.organization-delete form { padding: 12px; border: 1px solid var(--color-border); border-radius: var(--radius-card); }
+.organization-delete p { margin: 0; overflow-wrap: anywhere; }
+.organization-delete-confirm { display: flex; align-items: start; gap: 8px; min-height: 44px; overflow-wrap: anywhere; }
+.organization-delete-confirm input { flex-shrink: 0; margin-top: 4px; }
+.management-item > div:first-child { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 767px) { .organization-item-actions { justify-content: flex-start; width: 100%; } .organization-delete { max-width: 100%; } }

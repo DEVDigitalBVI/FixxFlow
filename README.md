@@ -64,3 +64,11 @@ The migration filenames match the live Supabase migration versions. Earlier MCP 
 Run `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build`. Run `supabase test db` against a local stack for the pgTAP suites, plus the transactional `supabase/tests/security-regression.sql` and `supabase/tests/sla-regression.sql` using the SQL runner. All fixtures roll back. Production verification should use the same transactional isolation and must not send invitations or recovery emails.
 
 Production Auth uses `https://www.fixxflow.app`, confirmed email signup, an eight-character minimum, and leaked-password protection. Leaked-password protection is managed in the hosted Auth dashboard. Keep `NEXT_PUBLIC_SITE_URL` aligned with this domain. The server secret is required for organization bootstrap, invitations, and queued notification delivery; never expose it to the browser.
+
+### Delete or deactivate organization data
+
+Administrators can deactivate/reactivate departments and locations or permanently delete unused entries from Organization settings. Delete opens an inline confirmation naming the entry and requires an explicit checkbox; Cancel returns to the section. Server actions recheck administrator access and organization scope, validate confirmation, and distinguish a missing row from a successful deletion.
+
+`20260926022032_protect_organization_references_on_delete.sql` replaces the profile foreign keys' `ON DELETE SET NULL` behavior with `NO ACTION`. People therefore block department/location deletion; existing ticket and asset foreign keys also block location deletion, including historical or retired records. Deactivation preserves these links. Foreign keys arbitrate concurrent assignment/deletion; there is no check-then-delete race. Existing audit triggers record successful deletion. No rows are removed by the migration.
+
+Run `supabase/tests/organization-deletion-regression.sql` in a transaction-capable SQL connection to verify unused deletion, linked-record protection, deactivation/reactivation, administrator-only access, tenant isolation, and auditing. All fixtures roll back. UI and server-action coverage is included in `npm test`.

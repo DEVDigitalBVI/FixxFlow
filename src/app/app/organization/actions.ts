@@ -57,3 +57,29 @@ export async function toggleLocation(formData: FormData) {
   if (error) fail("The location status could not be changed.");
   revalidatePath("/app/organization");
 }
+
+async function deleteOrganizationItem(table: "departments" | "locations", formData: FormData) {
+  const viewer = await requireAdministrator();
+  const id = String(formData.get("id") ?? "");
+  const label = table === "departments" ? "department" : "location";
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) fail(`Choose a valid ${label}.`);
+  if (formData.get("confirmDelete") !== id) fail(`Confirm that you want to permanently delete this ${label}.`);
+  const supabase = await createClient();
+  // Foreign keys enforce this atomically, including references added during the request.
+  const { data, error } = await supabase.from(table).delete().eq("organization_id", viewer.organizationId).eq("id", id).select("id").maybeSingle();
+  if (error?.code === "23503") fail(table === "departments"
+    ? "This department is linked to people. Deactivate it to keep those links, or reassign the people before deleting it."
+    : "This location is linked to people, tickets, or assets. Deactivate it to preserve those records. Only unused locations can be deleted.");
+  if (error) fail(`The ${label} could not be deleted. Please try again.`);
+  if (!data) fail(`This ${label} is no longer available. Refresh the page to see the current list.`);
+  revalidatePath("/app/organization");
+  redirect(`/app/organization?success=${encodeURIComponent(`${label === "department" ? "Department" : "Location"} deleted.`)}#${table}`);
+}
+
+export async function deleteDepartment(formData: FormData) {
+  return deleteOrganizationItem("departments", formData);
+}
+
+export async function deleteLocation(formData: FormData) {
+  return deleteOrganizationItem("locations", formData);
+}
