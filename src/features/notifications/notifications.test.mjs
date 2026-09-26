@@ -15,6 +15,18 @@ function load(file, mocks = {}) {
 const {sendNotificationEmail} = load('src/features/notifications/email.ts');
 const item = {notification_id:'notice-1',recipient_email:'recipient@example.test',title:'Ticket #1 resolved',ticket_id:'ticket-1',conversation_id:null};
 const config = {apiKey:'mock-key',from:'FixxFlow <support@example.test>',siteUrl:'https://example.test'};
+test('auth templates retain Supabase tokens and accessible email branding',()=>{
+ for(const file of fs.readdirSync('supabase/templates').filter(name=>name.endsWith('.html'))){
+  const html=fs.readFileSync(`supabase/templates/${file}`,'utf8');
+  assert.match(html,/<html lang="en">/);
+  assert.match(html,/alt="FixxFlow/);
+  assert.match(html,/role="presentation"/);
+  assert.match(html,/mailto:support@fixxflow.app/);
+  assert.doesNotMatch(html,/<script|onerror=/i);
+  if(['reset-password.html','confirm-sign-up.html','invite-user.html','magic-link-or-otp.html','change-email-address.html'].includes(file))assert.match(html,/href="\{\{ \.ConfirmationURL \}\}"/);
+  if(file==='reauthentication.html')assert.match(html,/\{\{ \.Token \}\}/);
+ }
+});
 test('Zoho receives a correlation reference and authenticated link without conversation content',async()=>{
  let sent;
  assert.equal(await sendNotificationEmail(item,config,async(url,options)=>{sent={url,...options};return Response.json({request_id:'provider-1',data:[{code:'EM_104'}]});}), 'provider-1');
@@ -27,7 +39,18 @@ test('Zoho receives a correlation reference and authenticated link without conve
  assert.equal(body.track_clicks,false);
  assert.equal(body.track_opens,false);
  assert.match(body.textbody,/https:\/\/example.test\/app\/tickets\/ticket-1/);
- assert.equal(body.htmlbody,undefined);
+ assert.match(body.htmlbody,/fixxflow-logo-primary.png/);
+ assert.match(body.htmlbody,/View update/);
+ assert.match(body.htmlbody,/font-family:Inter,ui-sans-serif,system-ui/);
+});
+test('HTML notification titles are escaped and plain text remains available',async()=>{
+ await sendNotificationEmail({...item,title:'<img src=x onerror=alert(1)> & update'},config,async(_url,options)=>{
+  const body=JSON.parse(options.body);
+  assert.match(body.htmlbody,/&lt;img src=x onerror=alert\(1\)&gt; &amp; update/);
+  assert.doesNotMatch(body.htmlbody,/<img src=x/);
+  assert.match(body.textbody,/<img src=x/);
+  return Response.json({request_id:'safe',data:[{code:'EM_104'}]});
+ });
 });
 test('provider failures and missing IDs are not acknowledged as sent',async()=>{
  await assert.rejects(sendNotificationEmail(item,config,async()=>new Response('private error',{status:429})),/HTTP 429/);

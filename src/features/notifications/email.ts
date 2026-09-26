@@ -1,5 +1,6 @@
 import type { NotificationEmail } from "@/types/database";
 import { notificationHref } from "./presentation";
+import { renderEmail } from "./template";
 
 export async function sendNotificationEmail(item: NotificationEmail, config: { apiKey: string; from: string; siteUrl: string }, request: typeof fetch = fetch): Promise<string> {
   const base = new URL(config.siteUrl);
@@ -16,6 +17,7 @@ export async function sendNotificationEmail(item: NotificationEmail, config: { a
       reply_to: [{ address: "support@fixxflow.app", name: "FixxFlow Support" }],
       subject: `FixxFlow: ${item.title}`,
       textbody: `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\nSign in to your account to view the conversation.`,
+      htmlbody: renderEmail({ title: item.title, message: "There is an update waiting for you in FixxFlow.", action: "View update", href: url, note: "Sign in to your account to view the conversation.", siteUrl: base.origin }),
       // Correlation only: Zoho does not document provider-side idempotency.
       client_reference: `notification/${item.notification_id}`,
       track_opens: false,

@@ -39,3 +39,18 @@ The support mailbox's MX records must continue to point to Zoho Mail.
 As of setup on September 26, 2026, Zoho customer validation was submitted and
 the account displayed a temporary 100-emails-per-day limit pending review.
 Monitor the CPaaS account review and credit balance before increasing volume.
+
+## Branded templates
+
+`src/features/notifications/template.ts` is the shared HTML email layout. It uses
+the approved full primary logo, app typography stack, and design-system colors.
+Inline styles and presentation tables support mail clients; a fixed light surface
+keeps the primary artwork legible. Client-forced dark mode and font availability
+can still affect rendering. The app uses system fallbacks when Inter is unavailable.
+
+Run `node scripts/generate-email-templates.mjs` to regenerate the 13 Supabase HTML
+templates in `supabase/templates/`. Paste these into the corresponding hosted
+Supabase Auth email template source editors. This does not enable disabled security
+notifications. Keep `{{ .ConfirmationURL }}` and `{{ .Token }}` intact; Supabase
+substitutes and escapes template variables. Notification HTML escapes dynamic
+titles and retains a plain-text alternative. No tracking pixels are included.
