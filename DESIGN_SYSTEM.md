@@ -327,3 +327,9 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Place real metrics before shortcuts and personal support actions. On wide screens, group comparable metrics in one divided panel; on compact screens, use two columns and a single column below 360px.
 - Queue shortcuts use native links, a title, brief supporting text, and a decorative arrow. Numbered markers indicate reading order, never ticket counts. Keep secondary support actions neutral so they do not compete with the queue.
 - Shared cards favor borders over shadows. Preserve clear input boundaries, visible focus, and the employee portal’s larger controls.
+
+### Batch import review
+
+- Reuse asset form fields, native file selection, disclosure guides, alerts, and responsive tables for imports. Preview and validate before enabling the final import action.
+- Keep file selection and preview available after failures. Focus the persistent validation summary, identify spreadsheet row numbers, and disable duplicate submissions while reading or saving.
+- Show every imported field in a paginated preview. Tables scroll inside a labeled region on wide screens and stack into labeled records on compact screens. A successful import leaves durable confirmation and a link to inventory.
