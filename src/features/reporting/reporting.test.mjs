@@ -29,3 +29,37 @@ test('charts provide labeled data tables and distinguish empty timing samples',(
  assert.match(html,/role="img"/);assert.match(html,/<caption>/);assert.match(html,/scope="row"/);assert.match(html,/No data/);assert.match(html,/18m/);
  const empty=renderToStaticMarkup(React.createElement(Bars,{title:'SLA compliance',description:'Completed targets',rows:[],percent:true}));assert.match(empty,/No completed SLA/);assert.doesNotMatch(empty,/100%/);
 });
+
+test('overview returns its navigation before metrics resolve and preserves report failure feedback', async () => {
+ let finish;
+ const pending = new Promise(resolve => { finish = resolve; });
+ const page = load('src/app/app/page.tsx', {
+  'next/link': { default: props => React.createElement('a', props) },
+  '@/lib/auth/viewer': { requireViewer: async () => ({ role: 'technician', organizationId: 'org', organizationName: 'Workspace' }) },
+  '@/lib/supabase/server': { createClient: () => { throw Error('Staff overview should not create an unused client'); } },
+  '@/features/reporting/data': { getReport: organizationId => { assert.equal(organizationId, 'org'); return pending; } },
+  '@/features/reporting/components': { ReportUnavailable: () => React.createElement('div', { role: 'alert' }, 'Unavailable'), TodayMetrics: props => React.createElement('div', { role: props.report ? undefined : 'status' }, 'Metrics') },
+ }).default;
+ const tree = await page();
+ const children = React.Children.toArray(tree.props.children);
+ const boundary = children.find(child => child.type === React.Suspense);
+ assert.ok(boundary);
+ assert.match(renderToStaticMarkup(children[0]), /Open ticket queue/);
+ assert.match(renderToStaticMarkup(boundary.props.fallback), /role="status"/);
+ const metrics = boundary.props.children.type(boundary.props.children.props);
+ finish(null);
+ assert.match(renderToStaticMarkup(await metrics), /role="alert"/);
+});
+
+ test('pending metrics reserve the responsive six-card layout and announce loading', () => {
+ const { TodayMetrics } = load('src/features/reporting/components.tsx', {
+  'next/link': { default: props => React.createElement('a', props) },
+  './model': { duration, topRows },
+ });
+ const html = renderToStaticMarkup(React.createElement(TodayMetrics, { report: null }));
+ assert.match(html, /aria-busy="true"/);
+ assert.match(html, /role="status"/);
+ assert.match(html, /class="report-metrics"/);
+ assert.equal((html.match(/class="settings-card"/g) ?? []).length, 6);
+ assert.doesNotMatch(html, /No data/);
+});

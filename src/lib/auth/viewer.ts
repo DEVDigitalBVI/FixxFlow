@@ -22,14 +22,16 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
   const userId = claims?.claims?.sub;
   if (error || !userId) redirect("/login");
 
-  await requireAssurance(supabase);
-
-  const { data: membership } = await supabase
-    .from("organization_memberships")
-    .select("organization_id, role, status")
-    .eq("user_id", userId)
-    .limit(1)
-    .maybeSingle();
+  // These checks are independent, but both must finish before granting access.
+  const [, { data: membership }] = await Promise.all([
+    requireAssurance(supabase),
+    supabase
+      .from("organization_memberships")
+      .select("organization_id, role, status")
+      .eq("user_id", userId)
+      .limit(1)
+      .maybeSingle(),
+  ]);
 
   if (!membership) {
     const {data: ownerAccess} = await supabase.rpc("platform_access");

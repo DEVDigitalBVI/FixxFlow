@@ -46,16 +46,16 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   else if (sort === "due") query = query.order("due_at", { ascending: true, nullsFirst: false });
   else if (sort === "priority") query = query.order("priority", { ascending: false }).order("updated_at", { ascending: false });
   else query = query.order("updated_at", { ascending: false });
-  const [{ data: rows, error }, { data: profiles }, { data: teams }, { data: members }] = await Promise.all([
+  const [{ data: rows, error }, { data: profiles }, { data: teams }, { data: members }, { count: knowledgeCount }] = await Promise.all([
     query.order("id").range((page - 1) * 50, page * 50),
     supabase.from("profiles").select("user_id, display_name").eq("organization_id", viewer.organizationId),
     supabase.from("teams").select("id, name").eq("organization_id", viewer.organizationId).eq("is_active", true),
     viewer.role === "end_user" ? Promise.resolve({ data: [] }) : supabase.from("organization_memberships").select("user_id").eq("organization_id", viewer.organizationId).eq("status", "active").in("role", ["technician", "administrator"]),
+    search ? supabase.rpc("search_knowledge_articles", { target_organization_id: viewer.organizationId, search_text: search }, { count: "exact", head: true }).select("id").eq("status", "published") : Promise.resolve({ count: null }),
   ]);
   const tickets = rows?.slice(0, 50);
   const hasMore = (rows?.length ?? 0) > 50;
   const pagination = <nav className="notification-pagination" aria-label="Ticket pages">{page > 1 && <Link className="button button-secondary" href={pageHref(page - 1)}>Previous</Link>}<span>Page {page}</span>{hasMore && <Link className="button button-secondary" href={pageHref(page + 1)}>Next</Link>}</nav>;
-  const { count: knowledgeCount } = search ? await supabase.rpc("search_knowledge_articles", { target_organization_id: viewer.organizationId, search_text: search }, { count: "exact", head: true }).select("id").eq("status", "published") : { count: null };
   const usage = viewer.usageSharing && search && !error && page === 1 ? <UsageEvent key={search} event="search_performed" surface="tickets"/> : null;
   const relatedArticles = search && <p className="queue-count"><Link href={`/app/help?q=${encodeURIComponent(search)}`}>Search knowledge articles{knowledgeCount ? ` (${knowledgeCount} ${knowledgeCount === 1 ? "match" : "matches"})` : ""}</Link></p>;
   const names = new Map((profiles ?? []).map(p => [p.user_id, p.display_name]));

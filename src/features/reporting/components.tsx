@@ -4,17 +4,17 @@ import { duration, topRows, type Report } from './model';
 export function ReportUnavailable() {
   return <div className="alert alert-error" role="alert"><strong>Reporting is temporarily unavailable.</strong><p>Your tickets are still available. Refresh this page to try again.</p><Link href="/app/tickets">Open ticket queue</Link></div>;
 }
-export function TodayMetrics({ report }: { report: Report }) {
-  const s = report.summary;
+export function TodayMetrics({ report }: { report: Report | null }) {
+  const s = report?.summary;
   const metrics = [
-    {label:'Created',value:s.created,hint:'Tickets opened today'},
-    {label:'Resolved',value:s.resolved,hint:'Tickets resolved today, including any since reopened'},
-    {label:'Open',value:s.open,hint:'All unresolved tickets right now'},
-    {label:'Overdue',value:s.overdue,hint:'Open tickets with a breached response or resolution SLA'},
-    {label:'Avg response',value:duration(s.response),hint:'First public IT replies sent today'},
-    {label:'Avg resolution',value:duration(s.resolution),hint:'Latest resolutions recorded today'},
+    {label:'Created',value:s?.created ?? '—',hint:'Tickets opened today'},
+    {label:'Resolved',value:s?.resolved ?? '—',hint:'Tickets resolved today, including any since reopened'},
+    {label:'Open',value:s?.open ?? '—',hint:'All unresolved tickets right now'},
+    {label:'Overdue',value:s?.overdue ?? '—',hint:'Open tickets with a breached response or resolution SLA'},
+    {label:'Avg response',value:s ? duration(s.response) : '—',hint:'First public IT replies sent today'},
+    {label:'Avg resolution',value:s ? duration(s.resolution) : '—',hint:'Latest resolutions recorded today'},
   ];
-  return <section aria-labelledby="tickets-today"><div className="tech-section-heading"><div><h2 id="tickets-today">Tickets today</h2><p>{report.today} · British Virgin Islands time</p></div><span className="muted">Updated {new Intl.DateTimeFormat('en', {timeZone:report.timezone,hour:'numeric',minute:'2-digit'}).format(new Date(report.asOf))}</span></div><dl className="report-metrics">{metrics.map(m=><div className="settings-card" key={m.label}><dt>{m.label}</dt><dd><span>{m.value}</span><p>{m.hint}</p></dd></div>)}</dl></section>;
+  return <section aria-labelledby="tickets-today" aria-busy={!report}><div className="tech-section-heading"><div><h2 id="tickets-today">Tickets today</h2><p>{report ? `${report.today} · British Virgin Islands time` : <span role="status">Loading today’s metrics…</span>}</p></div>{report && <span className="muted">Updated {new Intl.DateTimeFormat('en', {timeZone:report.timezone,hour:'numeric',minute:'2-digit'}).format(new Date(report.asOf))}</span>}</div><dl className="report-metrics">{metrics.map(m=><div className="settings-card" key={m.label}><dt>{m.label}</dt><dd><span>{m.value}</span><p>{m.hint}</p></dd></div>)}</dl></section>;
 }
 
 type Series = { label: string; values: (number | null)[] };
