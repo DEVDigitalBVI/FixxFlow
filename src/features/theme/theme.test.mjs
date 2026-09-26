@@ -119,3 +119,20 @@ test('profile offers an independent appearance control outside profile-save form
   assert.match(html, /<select/);
   assert.doesNotMatch(html, /<form/);
 });
+test('shared logos use the approved theme pair at their original proportions', () => {
+  const { BrandLogo } = load('src/components/brand/brand-logo.tsx', {
+    'next/link': { default: props => React.createElement('a', props) },
+    'next/image': { default: props => React.createElement('img', props) },
+  });
+  for (const variant of ['full', 'compact']) {
+    const html = renderToStaticMarkup(React.createElement(BrandLogo, { variant, href: '/app', priority: true }));
+    assert.match(html, /fixxflow-logo-primary\.png/);
+    assert.match(html, /fixxflow-logo-dark-mode\.png/);
+    assert.match(html, /width="1353" height="1334"/);
+    assert.match(html, /aria-label="FixxFlow home"/);
+    assert.doesNotMatch(html, /raster-master|icon-primary/);
+  }
+  for (const name of ['primary', 'dark-mode']) {
+    assert.deepEqual(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`), fs.readFileSync(`brand/fixxflow/logo/fixxflow-logo-${name}.png`));
+  }
+});

@@ -130,9 +130,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 img { display: block; max-width: 100%; }
 .brand-logo { display: block; flex: 0 0 auto; line-height: 0; }
 .brand-logo-image { display: block; width: 100%; height: auto; }
-.brand-logo-horizontal { aspect-ratio: 2172 / 724; }
-.brand-logo-dark { aspect-ratio: 1353 / 1334; }
-.brand-logo-icon { aspect-ratio: 1139 / 1151; }
+.brand-logo { aspect-ratio: 1353 / 1334; }
 :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
 .skip-link { position: fixed; left: 16px; top: -60px; z-index: 100; background: var(--color-brand-navy); color: white; padding: 10px 14px; border-radius: 8px; }
 .skip-link:focus { top: 16px; }
@@ -1097,11 +1095,6 @@ select.input-compact { height: 40px; }
 .input-prefix input { color: var(--color-text); background: var(--color-surface); }
 .portal-header .workspace-nav { display: flex; align-items: center; gap: 16px; min-width: 0; }
 .portal-header .theme-control { margin-top: 0; flex-shrink: 0; }
-/* Keep approved horizontal artwork on a light plate; do not recolor it. */
-:root[data-theme="dark"] .brand-logo:not(.brand-logo-dark) { background: var(--color-inverse); border-radius: var(--radius-control); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .brand-logo:not(.brand-logo-dark) { background: var(--color-inverse); border-radius: var(--radius-control); }
-}
 @media (min-width: 768px) and (max-width: 1199px) {
   .sidebar .theme-control { position: relative; width: 44px; height: 44px; margin-inline: auto; }
   .sidebar .theme-control > span:first-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
@@ -1122,4 +1115,24 @@ select.input-compact { height: 40px; }
 .appearance-settings .theme-control { max-width: 320px; }
 @media (max-width: 767px) {
   .portal-header .workspace-nav > .theme-control { margin-top: 0; margin-bottom: 16px; }
+}
+
+/* Approved full logos follow the resolved theme without recoloring or cropping. */
+.brand-logo-image-dark { display: none; }
+:root[data-theme="dark"] .brand-logo-image-light { display: none; }
+:root[data-theme="dark"] .brand-logo-image-dark { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .brand-logo-image-light { display: none; }
+  :root:not([data-theme]) .brand-logo-image-dark { display: block; }
+}
+.sidebar-brand { height: auto; justify-content: center; }
+.sidebar-logo-full { width: min(112px, 100%); }
+.portal-logo { width: 72px; }
+.auth-brand { background: var(--color-canvas); color: var(--color-text); }
+.auth-brand-copy p, .trust-note { color: var(--color-text-muted); }
+.auth-brand .eyebrow { color: var(--color-accent); }
+@media (max-width: 767px) {
+  .sidebar-brand { width: 44px; height: 44px; }
+  .portal-logo { width: 44px; }
+  .auth-mobile-brand { width: min(144px, 48vw); margin-bottom: 24px; }
 }
