@@ -874,3 +874,15 @@ select.input-compact { height: 40px; }
   .nav-link[aria-current="page"], .queue-views a[aria-current="page"] { outline: 2px solid Highlight; outline-offset: -2px; }
   .avatar, .button, .portal-action { border: 1px solid ButtonText; }
 }
+
+/* Knowledge browsing uses the existing portal surfaces and interaction tokens. */
+.knowledge-categories { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
+.knowledge-categories a { display: grid; gap: 8px; margin: 0; padding: 16px; color: var(--color-text); text-decoration: none; overflow-wrap: anywhere; }
+.knowledge-categories a:hover { border-color: var(--color-accent); }
+.knowledge-categories span { color: var(--color-text-muted); font-size: 14px; }
+.knowledge-contents { background: var(--color-surface-subtle); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: 16px; }
+.knowledge-contents ul { padding-left: 20px; margin-bottom: 0; }
+.knowledge-contents a { display: inline-block; padding-block: 4px; }
+.knowledge-content h2[id] { scroll-margin-top: 24px; }
+@media (max-width: 767px) { .knowledge-categories { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 479px) { .knowledge-categories { grid-template-columns: minmax(0, 1fr); } }

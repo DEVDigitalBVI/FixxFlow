@@ -11,7 +11,7 @@ insert into public.organization_memberships(organization_id,user_id,role) values
  ('20000000-0000-0000-0000-000000000091','10000000-0000-0000-0000-000000000091','technician'),
  ('20000000-0000-0000-0000-000000000091','10000000-0000-0000-0000-000000000092','end_user'),
  ('20000000-0000-0000-0000-000000000092','10000000-0000-0000-0000-000000000093','end_user');
-select pg_temp.check_knowledge((select count(*)=4 from public.knowledge_articles where organization_id='20000000-0000-0000-0000-000000000091'),'new organizations receive starter articles');
+select pg_temp.check_knowledge((select count(*)=0 from public.knowledge_articles where organization_id='20000000-0000-0000-0000-000000000091'),'new organizations start without sample articles');
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000091","aal":"aal1"}',true);
 insert into public.knowledge_articles(id,organization_id,category,title,content) values

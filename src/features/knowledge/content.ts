@@ -1,4 +1,12 @@
 export const knowledgeCategories = ["Accounts", "Email", "Network", "Hardware", "Software", "Security"] as const;
+export const knowledgeCategoryDescriptions: Record<typeof knowledgeCategories[number], string> = {
+  Accounts: "Get help, follow requests, and manage sign-in access.",
+  Email: "Sending, receiving, and finding work messages.",
+  Network: "Wi-Fi, internet connections, and remote access.",
+  Hardware: "Printers, displays, and workplace equipment.",
+  Software: "Browsers, applications, and software access.",
+  Security: "Authenticators, suspicious messages, and lost devices.",
+};
 export const blockTypes = ["paragraph", "heading", "list", "quote", "code", "link", "image"] as const;
 export type ArticleBlock = { type: typeof blockTypes[number]; text: string; url?: string; assetId?: string };
 export const validId = (id: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);

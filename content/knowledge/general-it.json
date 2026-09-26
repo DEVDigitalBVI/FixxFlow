@@ -1,0 +1,1019 @@
+{
+  "collection": "FixxFlow and general IT",
+  "reviewedOn": "2026-09-25",
+  "articles": [
+    {
+      "key": "request-support",
+      "category": "Accounts",
+      "title": "Get help and submit a useful IT request",
+      "summary": "Choose chat or a ticket, describe the impact, and give IT the details needed to help.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "This guide is for employees using FixxFlow. A clear request helps IT identify the affected service and decide what to investigate first."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Choose how to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "From Home, choose Open a ticket for a problem or request. Choose Start a chat for a conversation. Chat replies may not be immediate; you can return to the conversation later."
+        },
+        {
+          "type": "heading",
+          "text": "2. Describe one issue clearly"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use a short title naming the affected service and symptom. In the description, include when it started, your location, the device or equipment tag, and the exact error. Explain whether you can keep working and whether coworkers are affected. Choose the closest category if one is available."
+        },
+        {
+          "type": "heading",
+          "text": "3. Share useful evidence"
+        },
+        {
+          "type": "paragraph",
+          "text": "List the checks you already tried. After creating the ticket, add a relevant screenshot or file. Crop out unrelated customer details and private information. Never include passwords, authenticator codes, payment details, or reset links."
+        },
+        {
+          "type": "heading",
+          "text": "4. Keep the ticket reference"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open My tickets to find the request again. Add updates to the same ticket so the conversation stays together."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Your request appears in My tickets with a ticket number and status. If submission fails, keep your description and retry after checking your connection."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "For an urgent outage or suspected security incident, also use your established workplace contact method. A ticket records the issue but does not guarantee an immediate response. If FixxFlow itself is inaccessible, contact IT outside the app."
+        }
+      ],
+      "related": [
+        "follow-ticket",
+        "browser",
+        "phishing"
+      ]
+    },
+    {
+      "key": "follow-ticket",
+      "category": "Accounts",
+      "title": "Follow a ticket, reply to IT, or reopen an issue",
+      "summary": "Find your request, understand its status, and keep the troubleshooting conversation in one place.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "This guide covers the employee ticket view. Your organization’s IT team manages assignment and priority."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Open your request"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose My tickets, then select the relevant subject. Search using words from the title or the ticket number. Check the latest reply before sending another message."
+        },
+        {
+          "type": "heading",
+          "text": "2. Understand the status"
+        },
+        {
+          "type": "paragraph",
+          "text": "New means the request has been recorded. Open or In progress means it is being handled. Waiting on user means IT needs information from you. On hold means work is paused. Resolved means a solution has been recorded; Closed means the request has been closed."
+        },
+        {
+          "type": "heading",
+          "text": "3. Reply with the missing details"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the reply field to answer IT’s questions. Describe what changed and whether the suggested fix helped. Add an attachment when it explains the problem, removing unrelated personal or customer information first."
+        },
+        {
+          "type": "heading",
+          "text": "4. Reopen the same problem"
+        },
+        {
+          "type": "paragraph",
+          "text": "If a resolved or closed request still has the same issue, use Reopen request. Explain what is still happening. For a different problem, create a new request instead."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm your reply appears in the conversation or the reopened ticket shows its new status. Do not repeatedly resubmit while a request is sending."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If the ticket will not load or a reply fails, keep the unsent text and retry. If work is blocked, use your established IT contact method and include the ticket number."
+        }
+      ],
+      "related": [
+        "request-support",
+        "browser"
+      ]
+    },
+    {
+      "key": "password",
+      "category": "Accounts",
+      "title": "Reset your FixxFlow password",
+      "summary": "Recover access to FixxFlow and troubleshoot a missing or expired reset email.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "These steps reset your FixxFlow password only. They do not change your email, device, or other workplace passwords."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Request a reset from the sign-in page"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open your usual FixxFlow sign-in page directly and choose Forgot password? Enter your work email and select Send reset link. Use the address associated with your existing account."
+        },
+        {
+          "type": "heading",
+          "text": "2. Open the latest reset email"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check your inbox and junk folder. If you requested several emails, use the newest one. Treat the link as private: anyone with it may be able to act on your account."
+        },
+        {
+          "type": "heading",
+          "text": "3. Choose a new password"
+        },
+        {
+          "type": "paragraph",
+          "text": "Enter and confirm a unique password with at least eight characters, as required by FixxFlow. Prefer a longer passphrase or a password generated by your approved password manager. Save the change and sign in again."
+        },
+        {
+          "type": "heading",
+          "text": "4. Complete verification if prompted"
+        },
+        {
+          "type": "paragraph",
+          "text": "If you enabled an authenticator, use its current six-digit code. Changing your password does not remove multi-factor authentication."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "You can sign in with the new password and reach your workspace. An inactive or unassigned account may still need an administrator’s help."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If no email arrives, the link is rejected, or you cannot access your work inbox or authenticator, contact IT through an established alternative channel. Do not send your password or reset link."
+        }
+      ],
+      "related": [
+        "authenticator",
+        "request-support"
+      ]
+    },
+    {
+      "key": "authenticator",
+      "category": "Security",
+      "title": "Set up an authenticator for FixxFlow",
+      "summary": "Add a second sign-in check and prepare a backup before changing phones.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "FixxFlow supports six-digit codes from an authenticator app. Keep access to an existing verified authenticator while setting up another one."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Open Security"
+        },
+        {
+          "type": "paragraph",
+          "text": "Sign in to FixxFlow and choose Security in the account navigation. Under Multi-factor authentication, choose Add authenticator."
+        },
+        {
+          "type": "heading",
+          "text": "2. Add FixxFlow to your authenticator"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use an authenticator approved for your workplace. Scan the displayed QR code, or enter the displayed setup secret into the app. Keep both private; do not attach them to a ticket."
+        },
+        {
+          "type": "heading",
+          "text": "3. Verify the setup"
+        },
+        {
+          "type": "paragraph",
+          "text": "Enter the six-digit code currently displayed in the authenticator, then select Verify and enable. If a code is about to expire, wait for the next one and try again."
+        },
+        {
+          "type": "heading",
+          "text": "4. Prepare before replacing a phone"
+        },
+        {
+          "type": "paragraph",
+          "text": "Add and verify a second factor while you still have access to your current one. Confirm the replacement can generate accepted codes before removing an old factor. FixxFlow does not present downloadable recovery codes in this setup flow."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "FixxFlow shows Authenticator enabled and lists a verified factor. At the next sign-in, complete the verification prompt with the current code."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If verification keeps failing, check that the phone uses automatic date and time. If you lost every verified authenticator, contact IT outside the app for help; do not create a duplicate organization to regain access."
+        }
+      ],
+      "related": [
+        "password",
+        "lost-device"
+      ]
+    },
+    {
+      "key": "wifi",
+      "category": "Network",
+      "title": "Troubleshoot Wi-Fi or an unavailable internet connection",
+      "summary": "Check whether a connection problem affects your device, one service, or other people.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Use these checks on your own work device. Network names and sign-in methods come from your IT team; do not guess them or change shared network equipment."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Check the connection"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm Wi-Fi is enabled and airplane mode is off. Select the workplace network IT has told you to use. If connected by cable, check that the cable is seated at your device or dock."
+        },
+        {
+          "type": "heading",
+          "text": "2. Find the scope"
+        },
+        {
+          "type": "paragraph",
+          "text": "Try a second familiar work website. If only one service fails, note its name and exact error. Ask a nearby coworker whether they have the same problem without sharing passwords or using their account."
+        },
+        {
+          "type": "heading",
+          "text": "3. Reconnect safely"
+        },
+        {
+          "type": "paragraph",
+          "text": "Save online work first. Disconnect and reconnect your device’s Wi-Fi once. Move to a location with a stronger signal if practical. On a shared business network, leave routers, access points, and network resets to IT."
+        },
+        {
+          "type": "heading",
+          "text": "4. Record what happened"
+        },
+        {
+          "type": "paragraph",
+          "text": "Note your building or room, network name, time, signal strength, and whether you see connected but no internet. Do not bypass certificate warnings or install profiles from an unexpected sign-in page."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the affected work service again. A Wi-Fi connection indicator alone does not confirm that the service is reachable."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT if several people are affected, the expected network is missing, or reconnecting does not help. If you cannot reach FixxFlow, use your established alternative contact method."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Wi-Fi troubleshooting in Windows",
+          "url": "https://support.microsoft.com/en-us/windows/fix-wi-fi-connection-issues-in-windows-9424a1f7-6a3b-65a6-4d78-7f07eee84d2c"
+        }
+      ],
+      "related": [
+        "browser",
+        "email",
+        "request-support"
+      ]
+    },
+    {
+      "key": "remote-access",
+      "category": "Network",
+      "title": "A work service or VPN will not connect",
+      "summary": "Separate internet, remote-access, and account problems before contacting IT.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "This guide applies only if IT has provided remote access or a VPN. It does not assume your organization has a VPN or that every work service requires one."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Confirm ordinary internet access"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open a familiar public website. If it also fails, first troubleshoot the local connection. Record whether you are at work, at home, or using another network."
+        },
+        {
+          "type": "heading",
+          "text": "2. Use the approved connection"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open only the remote-access application supplied by IT and use the existing profile. Do not invent a server address, install a free VPN, or change security settings to make a connection work."
+        },
+        {
+          "type": "heading",
+          "text": "3. Read the error before retrying"
+        },
+        {
+          "type": "paragraph",
+          "text": "Note whether the connection times out, rejects your account, or asks for verification. Approve only sign-in attempts you initiated. Stop repeated password guesses if access is rejected."
+        },
+        {
+          "type": "heading",
+          "text": "4. Check the actual work service"
+        },
+        {
+          "type": "paragraph",
+          "text": "If the connection succeeds but the service still fails, record the service name and the exact error. A connected VPN does not by itself grant access to every application."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The required service opens under your own account. If access remains denied, IT may need to check permissions or service availability."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Send IT the application name, error, approximate time, location, and whether ordinary websites work. Exclude passwords, codes, and connection secrets. Use another contact method if FixxFlow cannot be reached."
+        }
+      ],
+      "related": [
+        "wifi",
+        "password",
+        "request-support"
+      ]
+    },
+    {
+      "key": "email",
+      "category": "Email",
+      "title": "Troubleshoot email that will not send or receive",
+      "summary": "Identify whether the issue affects one message, your mail app, or the mailbox itself.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "These checks work across common workplace email tools. Use only your organization’s approved mail app and webmail address."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Check connection and account"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm a familiar website opens, then verify you are looking at the correct work mailbox. Read any disconnected, storage, or sign-in message rather than repeatedly sending the same email."
+        },
+        {
+          "type": "heading",
+          "text": "2. Inspect the affected message"
+        },
+        {
+          "type": "paragraph",
+          "text": "For a sending problem, check the recipient address and look in Outbox or Drafts. If you receive a delivery failure, keep its error code. Do not delete unsent work while troubleshooting."
+        },
+        {
+          "type": "heading",
+          "text": "3. Compare with webmail if available"
+        },
+        {
+          "type": "paragraph",
+          "text": "If IT provides webmail, open its known address directly. If mail works there but not in the app, save drafts and restart the app. Do not remove and recreate the account without IT’s guidance."
+        },
+        {
+          "type": "heading",
+          "text": "4. Narrow the problem"
+        },
+        {
+          "type": "paragraph",
+          "text": "Determine whether all messages are affected or only one sender or recipient. Note the most recent message that worked. Avoid sending sensitive content to personal email as a workaround."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the message leaves Outbox and, when necessary, check receipt with the intended recipient through another channel. A sent message is not proof it was read."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT with the mail app, device, time, and delivery error. Report storage or account warnings. Do not permanently delete business records just to clear space without guidance."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Outlook sending and receiving problems",
+          "url": "https://support.microsoft.com/en-us/outlook/i-can-t-send-or-receive-messages-in-outlook"
+        }
+      ],
+      "related": [
+        "missing-email",
+        "wifi",
+        "phishing"
+      ]
+    },
+    {
+      "key": "missing-email",
+      "category": "Email",
+      "title": "Find a missing email or an expected reset message",
+      "summary": "Check the right mailbox and folders before asking for another copy.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Use this when you expect a message but cannot find it. For a suspicious message, use the phishing guide before interacting with its contents."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Confirm the destination"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check which work email address the sender used and which mailbox you have open. Shared mailboxes and personal work inboxes are different destinations."
+        },
+        {
+          "type": "heading",
+          "text": "2. Search beyond the inbox"
+        },
+        {
+          "type": "paragraph",
+          "text": "Search by sender, a few subject words, or the date. Check Junk or Spam, Archive, and Deleted items. Clear active inbox filters that might be hiding older or unread messages."
+        },
+        {
+          "type": "heading",
+          "text": "3. Check the delivery outcome"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ask the sender through a known channel whether they received a delivery failure. Give them the correct work address, but do not request repeated copies of sensitive messages."
+        },
+        {
+          "type": "heading",
+          "text": "4. Handle account emails carefully"
+        },
+        {
+          "type": "paragraph",
+          "text": "For FixxFlow password resets, request a fresh email from the known sign-in page if needed and use the latest link. Do not forward reset emails to someone else or use an unexpected link to sign in."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "If you locate the message, confirm its sender and context before opening links or attachments. Keep business mail in your approved workplace mailbox."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If messages from one sender repeatedly disappear, give IT the sender address, expected recipient, subject without sensitive details, and approximate sending time. IT can investigate filtering and delivery."
+        }
+      ],
+      "related": [
+        "email",
+        "password",
+        "phishing"
+      ]
+    },
+    {
+      "key": "printer",
+      "category": "Hardware",
+      "title": "A printer is offline or your document will not print",
+      "summary": "Check the selected printer and your own print job without disrupting shared equipment.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "This guide covers basic checks for a workplace printer. Follow posted equipment instructions and ask IT before restarting shared printers or changing their configuration."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Check the destination"
+        },
+        {
+          "type": "paragraph",
+          "text": "In the print dialog, confirm you selected the intended workplace printer, not a PDF destination or another location. Note the printer name and its location or equipment tag."
+        },
+        {
+          "type": "heading",
+          "text": "2. Read the printer display"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check for a clear message such as no paper, cover open, or low supplies. Refill only user-accessible supplies you are trained to handle. Do not force a paper jam or open service panels."
+        },
+        {
+          "type": "heading",
+          "text": "3. Check your own job"
+        },
+        {
+          "type": "paragraph",
+          "text": "Look for a paused or failed job in your print queue. Cancel only your own duplicate or unwanted jobs if allowed. Do not clear a shared queue or change another person’s job."
+        },
+        {
+          "type": "heading",
+          "text": "4. Try a simple non-sensitive page"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check whether one short document prints from an approved app. If other people cannot print either, report the shared problem rather than repeatedly sending jobs."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Collect the printed page promptly and check that all pages are yours. If the printer begins working later, watch for delayed duplicate jobs."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT with the printer name, exact display message, document type, and whether other users are affected. Avoid attaching confidential documents solely to demonstrate a printing failure."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Printer connection and printing problems",
+          "url": "https://support.microsoft.com/en-US/Windows/Hardware/Printer/fix-printer-connection-and-printing-problems-in-windows"
+        }
+      ],
+      "related": [
+        "wifi",
+        "request-support"
+      ]
+    },
+    {
+      "key": "display",
+      "category": "Hardware",
+      "title": "An external monitor is blank or shows no signal",
+      "summary": "Check power, input selection, and the connection to your computer or dock.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "These checks are for a monitor connected to your work computer. Stop if cables or equipment are damaged; arrange help instead of opening equipment."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Confirm the monitor has power"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check its power light and use the monitor’s own menu if available. A menu that appears while the desktop does not can help distinguish the display from the computer connection."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check the selected input"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the monitor controls to choose the input that matches the connected cable, such as HDMI or DisplayPort. Do not move another employee’s equipment to test."
+        },
+        {
+          "type": "heading",
+          "text": "3. Check accessible connections"
+        },
+        {
+          "type": "paragraph",
+          "text": "Secure the video cable at the monitor and your computer or dock. If using a dock, confirm its power connection. Save work before disconnecting a dock that also carries network or storage connections."
+        },
+        {
+          "type": "heading",
+          "text": "4. Check display settings"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open your computer’s display settings and check whether an additional display is detected. If you know the supported display mode, choose it. Leave driver installation and hardware changes to IT."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The expected desktop appears and remains stable. If the display flickers or disconnects, record when it happens and which cable or dock is involved."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Provide IT with the monitor and computer models or equipment tags, the dock type, and the exact message on the display. Mention whether the built-in screen still works."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: External monitor troubleshooting",
+          "url": "https://support.microsoft.com/en-us/windows/hardware/display-graphics/troubleshoot-external-monitor-connections-in-windows"
+        }
+      ],
+      "related": [
+        "request-support",
+        "browser"
+      ]
+    },
+    {
+      "key": "browser",
+      "category": "Software",
+      "title": "A website will not load or the browser stops responding",
+      "summary": "Narrow down a website problem while protecting unsaved work and account access.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Use this for FixxFlow or another approved work website. If a page shows a certificate or security warning, stop and report it instead of bypassing it."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Protect your work"
+        },
+        {
+          "type": "paragraph",
+          "text": "Copy unsent text into an approved work location if possible. Record the page address without private tokens and the exact error before refreshing."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check another website"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open a familiar work website. If every page fails, troubleshoot the connection. If only one service fails, note that distinction for IT."
+        },
+        {
+          "type": "heading",
+          "text": "3. Retry the affected page"
+        },
+        {
+          "type": "paragraph",
+          "text": "Reload once. If the browser remains unresponsive, save other work and close unused tabs. Restart the browser when safe. Opening the same approved service in another IT-approved browser can help identify a browser-specific problem."
+        },
+        {
+          "type": "heading",
+          "text": "4. Keep security settings intact"
+        },
+        {
+          "type": "paragraph",
+          "text": "Do not disable managed extensions, download a repair utility from an advert, or clear every saved password to troubleshoot. Clearing site data may sign you out and discard local drafts; ask IT before taking that step."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The page loads and the original task works. After a failed submission, check whether the ticket or message already exists before submitting again."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Share the service name, browser, device, error, and time. Include whether other sites or coworkers are affected. Remove session tokens and personal information from screenshots."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Google Chrome Help: Browser crashes or will not open",
+          "url": "https://support.google.com/chrome/answer/142063?hl=en"
+        }
+      ],
+      "related": [
+        "wifi",
+        "request-support"
+      ]
+    },
+    {
+      "key": "software-access",
+      "category": "Software",
+      "title": "Request software or access to a work application",
+      "summary": "Give IT the business need and access details without sharing accounts or installing unapproved software.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Use this when you need a new application, a license, or permission to an existing service. Submitting a request does not itself approve a purchase or grant access."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Check what you already have"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the application from your usual approved launcher or bookmark and verify you are using your own work account. Record an access-denied message rather than trying a coworker’s credentials."
+        },
+        {
+          "type": "heading",
+          "text": "2. Describe the work you need to do"
+        },
+        {
+          "type": "paragraph",
+          "text": "Create a ticket naming the application, the task, who needs access, and when it is needed. State whether you need to view information, edit it, or administer a service. Request only the access needed for your work."
+        },
+        {
+          "type": "heading",
+          "text": "3. Include device and approval context"
+        },
+        {
+          "type": "paragraph",
+          "text": "Give the device type or equipment tag and any approval you have already obtained. If you do not know the approval process, say so and ask IT to route the request. Do not invent an approver or promise a purchase."
+        },
+        {
+          "type": "heading",
+          "text": "4. Wait for the approved setup"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the installation or sign-in instructions IT supplies through a trusted channel. Do not install cracked software, share licenses, or enter workplace data into a personal trial account."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the approved task works under your own account. Tell IT if the application opens but the required feature is still unavailable."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Update the ticket if your deadline changes, an installer asks for administrator credentials, or you receive unexpected access. Never put license secrets or passwords into the request."
+        }
+      ],
+      "related": [
+        "request-support",
+        "browser"
+      ]
+    },
+    {
+      "key": "phishing",
+      "category": "Security",
+      "title": "Report a suspicious email, message, or sign-in request",
+      "summary": "Recognize suspicious requests and tell IT promptly, including if you already interacted.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Phishing can arrive through email, chat, text, or a phone call. An urgent tone, unexpected attachment, or request for a password or payment is a reason to pause, even when the sender name looks familiar."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Stop interacting"
+        },
+        {
+          "type": "paragraph",
+          "text": "Do not open the attachment, follow the link, reply with information, or approve an unexpected authentication prompt. Verify unusual requests through a contact method you already know."
+        },
+        {
+          "type": "heading",
+          "text": "2. Report through a trusted channel"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use your workplace’s established reporting method or contact IT in FixxFlow. Describe the sender, subject, time, and what was requested. Do not circulate a suspicious link to coworkers."
+        },
+        {
+          "type": "heading",
+          "text": "3. Say what happened"
+        },
+        {
+          "type": "paragraph",
+          "text": "If you clicked, downloaded a file, entered information, or approved a prompt, tell IT immediately. Describe the action and affected account; do not include the actual password or verification code."
+        },
+        {
+          "type": "heading",
+          "text": "4. Follow containment instructions"
+        },
+        {
+          "type": "paragraph",
+          "text": "If credentials were entered, use the service’s known website from a trusted device to change them and contact IT. Do not rely on a password change alone after a suspected compromise. Let IT guide further account and device checks."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm IT received your report. A message disappearing from your inbox does not establish that the risk is resolved."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use an established urgent contact method for suspected account compromise or fraudulent payment. FixxFlow chat is not guaranteed to be monitored immediately."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "NIST: Recognizing and responding to phishing",
+          "url": "https://www.nist.gov/itl/smallbusinesscyber/guidance-topic/phishing"
+        }
+      ],
+      "related": [
+        "password",
+        "authenticator",
+        "request-support"
+      ]
+    },
+    {
+      "key": "lost-device",
+      "category": "Security",
+      "title": "Report a lost or stolen work device",
+      "summary": "Give IT the information needed to assess account access and protect workplace information.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Report a missing laptop, phone, tablet, or other work device promptly. Do not wait until you know whether it was misplaced or stolen."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Contact IT from another device"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use a trusted device and your established workplace contact method. If you can access FixxFlow, open a ticket, but also use the urgent contact route available to you."
+        },
+        {
+          "type": "heading",
+          "text": "2. Describe the device and last known location"
+        },
+        {
+          "type": "paragraph",
+          "text": "Provide its type, equipment tag or serial number if known, when and where you last had it, and a safe way to contact you. State whether it was unlocked and whether it held work information."
+        },
+        {
+          "type": "heading",
+          "text": "3. Explain account dependencies"
+        },
+        {
+          "type": "paragraph",
+          "text": "Tell IT if the device contains your authenticator, work email, or active application sessions. Do not paste passwords or recovery secrets into the report. If you cannot sign in, keep using the alternative contact channel."
+        },
+        {
+          "type": "heading",
+          "text": "4. Coordinate the response"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ask IT about approved locking, session revocation, or other protection steps. Do not erase a managed device or remove it from management on your own. If you find it, tell IT before reconnecting it or resuming work."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Keep the incident reference and confirm IT has a way to reach you. A device marked missing still needs IT’s assessment before the incident can be considered resolved."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If you believe the device was stolen, follow your workplace’s physical-security reporting process as well. Do not attempt to recover it from another person yourself."
+        }
+      ],
+      "related": [
+        "authenticator",
+        "password",
+        "request-support"
+      ]
+    }
+  ]
+}
