@@ -511,6 +511,7 @@ img { display: block; max-width: 100%; }
 .queue-views a { min-height: 44px; display: inline-flex; align-items: center; padding: 10px 14px; color: var(--color-text-muted); text-decoration: none; font-weight: 650; white-space: nowrap; border-bottom: 3px solid transparent; }
 .queue-views a[aria-current="page"] { color: var(--color-accent); border-bottom-color: var(--color-accent); }
 .queue-filters { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+.live-search-status { min-height: 20px; margin: 0 0 12px; overflow-wrap: anywhere; }
 .queue-filters label { display: grid; gap: 5px; min-width: 130px; font-size: 12px; font-weight: 650; color: var(--color-text-muted); }
 .queue-filters label:first-of-type { flex: 1 1 220px; }
 .queue-filters .input { min-height: 40px; font-size: 14px; }

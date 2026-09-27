@@ -1,3 +1,4 @@
+import { searchNavigation } from '../../tests/helpers/search-navigation.mjs';
 import {load} from '../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -10,7 +11,7 @@ function setup(file,{role='administrator',rows=[],count=60,error=null}={}) {
  const db={from:table=>{calls.push(['from',table]);return builder(table);},rpc:(...args)=>{calls.push(['rpc',...args]);return builder(args[0]);}};
  const mocks={
   'next/link':{default:p=>React.createElement('a',p)},
-  'next/navigation':{notFound:()=>{throw Error('NOT_FOUND');}},
+  'next/navigation':{...searchNavigation,notFound:()=>{throw Error('NOT_FOUND');}},
   '@/lib/auth/viewer':{requireViewer:async()=>({id:'employee',organizationId:'org',organizationName:'Workspace',role})},
   '@/lib/supabase/server':{createClient:async()=>db},
   '@/components/ui/submit-button':{SubmitButton:p=>React.createElement('button',{type:p.type??'submit',className:p.className},p.children)},
@@ -65,6 +66,7 @@ test('knowledge search shares normalization and keeps employee searches publishe
 test('platform search shares normalization, preserves pages and checks owner access first',async()=>{
  const calls=[];const report={organizations:[],organizationCount:30,matchingCount:30,usage:[],audit:[]};
  const {PlatformDashboard}=load('src/features/platform/dashboard.tsx',{
+  'next/navigation':searchNavigation,
   'next/link':{default:p=>React.createElement('a',p)},
   '@/lib/auth/platform':{requirePlatformOwner:async()=>{calls.push(['owner']);}},
   '@/lib/supabase/server':{createClient:async()=>({rpc:async(...args)=>{calls.push(['rpc',...args]);return {data:report,error:null};}})},

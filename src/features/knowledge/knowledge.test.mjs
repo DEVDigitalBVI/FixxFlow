@@ -1,3 +1,4 @@
+import { searchNavigation } from '../../../tests/helpers/search-navigation.mjs';
 import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -66,6 +67,7 @@ test('knowledge import is explicitly scoped and uses stable organization-specifi
 async function renderHelp({role='end_user',filters={},data=[],error=null}={}) {
  const query={select(){return this;},eq(){return this;},order(){return this;},range:async()=>({data,error})};
  const {default:Page}=load('src/app/app/help/page.tsx',{
+  'next/navigation':searchNavigation,
   'next/link':{default:props=>React.createElement('a',props)},
   '@/features/product-analytics/usage-event':{UsageEvent:()=>null},
   '@/features/knowledge/content':load('src/features/knowledge/content.ts'),

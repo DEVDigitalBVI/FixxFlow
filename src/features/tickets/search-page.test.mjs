@@ -1,3 +1,4 @@
+import { searchNavigation } from '../../../tests/helpers/search-navigation.mjs';
 import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -9,6 +10,7 @@ function setup(role = 'technician') {
  const rows=Array.from({length:51},(_,i)=>({id:String(i),title:'Search result',ticket_number:i,status:'open',priority:'normal',updated_at:'2026-09-25T00:00:00Z'}));
  const builder=(data)=>new Proxy({}, {get:(_,key)=>key==='then' ? (resolve)=>Promise.resolve({data,error:null}).then(resolve) : (...args)=>{calls.push([key,...args]);return builder(data);}});
  const mocks={
+  'next/navigation':searchNavigation,
   'server-only':{},
   '@/features/product-analytics/usage-event':{UsageEvent:()=>null},
   '@/features/tickets/bulk-actions':{BulkActions:({children})=>children},

@@ -1,3 +1,4 @@
+import { searchNavigation } from '../../../tests/helpers/search-navigation.mjs';
 import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -11,7 +12,7 @@ test('audit values reuse status, priority and role labels with explicit unset va
 test('audit query scopes and paginates, passes literal search to the shared RPC and preserves filters',async()=>{
  const calls=[];const rows=Array.from({length:51},(_,i)=>({id:i,actor_name:'Jamaal',entity_type:'tickets',entity_id:'ticket',entity_label:'Ticket #1042',action:'updated',created_at:'2026-09-25T14:42:00Z',changes:[{field:'priority',from:'normal',to:'high'},{field:'assigned_technician_id',from:null,to:'Michael'}]}));
  const builder=new Proxy({}, {get:(_,key)=>key==='then'?resolve=>Promise.resolve({data:rows,error:null}).then(resolve):(...args)=>{calls.push([key,...args]);return builder;}});
- const {AuditLog}=load('src/features/audit/audit-log.tsx',{'next/link':{default:props=>React.createElement('a',props)},'./presentation':presentation,'@/lib/supabase/server':{createClient:async()=>({from:table=>{calls.push(['from',table]);return builder;},rpc:(...args)=>{calls.push(['rpc',...args]);return builder;}})}});
+ const {AuditLog}=load('src/features/audit/audit-log.tsx',{'next/navigation':searchNavigation,'next/link':{default:props=>React.createElement('a',props)},'./presentation':presentation,'@/lib/supabase/server':{createClient:async()=>({from:table=>{calls.push(['from',table]);return builder;},rpc:(...args)=>{calls.push(['rpc',...args]);return builder;}})}});
  const html=renderToStaticMarkup(await AuditLog({organizationId:'org',filters:{page:'2',q:'1042%_',entity:'tickets',action:'updated'}}));
  assert.ok(calls.some(c=>c[0]==='eq'&&c[1]==='organization_id'&&c[2]==='org'));assert.ok(calls.some(c=>c[0]==='range'&&c[1]===50&&c[2]===100));assert.deepEqual(calls.find(c=>c[0]==='rpc'),['rpc','search_audit_events',{target_organization_id:'org',search_text:'1042%_'}]);
  assert.equal((html.match(/Ticket #1042/g)||[]).length,51); // 50 events and search placeholder

@@ -1,3 +1,4 @@
+import { searchNavigation } from '../../../tests/helpers/search-navigation.mjs';
 import { load as loadModule } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -17,7 +18,7 @@ function load(file, role, rows = [], error = null) {
     '@/components/ui/avatar': {Avatar:()=>null},
     '@/components/ui/submit-button': {SubmitButton:(props)=>{const buttonProps={...props};delete buttonProps.pendingLabel;return React.createElement('button',buttonProps);}},
     'next/link': {default: props => React.createElement('a', props)},
-    'next/navigation': {notFound: () => { throw new Error('NOT_FOUND'); }},
+    'next/navigation': {...searchNavigation,notFound: () => { throw new Error('NOT_FOUND'); }},
     '@/lib/auth/viewer': {requireViewer: async () => ({role, organizationId:'org', organizationName:'Workspace'})},
     '@/lib/supabase/server': {createClient: async () => { calls.push(['client']); return {from: table => {calls.push(['from',table]); return builder;}}; }},
     '@/features/administration/sections': {administrationSections, fixedSlaTargets, formatMinutes},
