@@ -6,7 +6,12 @@ const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function assetInput(form:FormData) {
  const value=(key:string)=>String(form.get(key)??'').trim();
  const data={tag:value('tag').toUpperCase(),name:value('name'),kind:value('kind') as Asset['kind'],status:value('status') as Asset['status'],serial_number:value('serial_number')||null,model:value('model')||null,assigned_user_id:value('assigned_user_id')||null,location_id:value('location_id')||null,purchased_on:value('purchased_on')||null,warranty_until:value('warranty_until')||null};
- if(!data.tag || data.tag.length>60 || data.name.length<2 || data.name.length>160 || !Object.hasOwn(assetKinds,data.kind) || !Object.hasOwn(assetStatuses,data.status) || (data.serial_number?.length??0)>120 || (data.model?.length??0)>160) return {error:'Check the required fields and their maximum lengths.'};
+ if(!data.tag||data.tag.length>60)return {error:'Asset tag is required and must be at most 60 characters.'};
+ if(data.name.length<2||data.name.length>160)return {error:'Name must contain 2–160 characters.'};
+ if(!Object.hasOwn(assetKinds,data.kind))return {error:`Choose a valid asset type: ${Object.values(assetKinds).join(', ')}.`};
+ if(!Object.hasOwn(assetStatuses,data.status))return {error:`Choose a valid lifecycle: ${Object.values(assetStatuses).join(', ')}.`};
+ if((data.serial_number?.length??0)>120)return {error:'Serial number must be at most 120 characters.'};
+ if((data.model?.length??0)>160)return {error:'Model must be at most 160 characters.'};
  if([data.assigned_user_id,data.location_id].some(v=>v&&!uuid.test(v)))return {error:'Choose a valid employee and location.'};
  if([data.purchased_on,data.warranty_until].some(v=>v&&(!/^\d{4}-\d{2}-\d{2}$/.test(v)||v.startsWith('0000')||!Number.isFinite(Date.parse(v))||new Date(v).toISOString().slice(0,10)!==v)))return {error:'Enter valid dates.'};
  if(data.purchased_on&&data.warranty_until&&data.warranty_until<data.purchased_on)return {error:'Warranty end cannot be before the purchase date.'};

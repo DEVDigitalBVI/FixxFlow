@@ -15,6 +15,32 @@ test('CSV handles BOM, quoted commas, multiline cells and text identifiers',()=>
  const result=parseAssetFile(csv('\uFEFFtag,name,serial_number\r\n00123,"Laptop, reception",00045\r\nPC-2,"Two\nlines",002\r\n'),'assets.csv');
  assert.equal(result.rows.length,2);assert.equal(result.rows[0].tag,'00123');assert.equal(result.rows[0].serial_number,'00045');assert.equal(result.rows[1].name,'Two\nlines');assert.equal(result.rows[0].kind,'computer');assert.equal(result.rows[0].status,'available');
 });
+test('inventory exports accept workstation and server types with blank optional fields',()=>{
+ const text=imports.importColumns.join(',')+'\r\nPC-001 (Reception),PC-001,Workstation,,00045,Office notebook,,,,\r\nSRV-001,SRV-001,Server,,00046,Rack server,,,,\r\n';
+ const result=parseAssetFile(csv(text),'assets.csv');
+ assert.equal(result.error,undefined);assert.deepEqual(result.issues,[]);assert.equal(result.rows.length,2);
+ assert.deepEqual(result.rows.map(r=>[r.kind,r.status]),[['computer','available'],['computer','available']]);
+ assert.equal(result.rows[0].tag,'PC-001 (RECEPTION)');assert.equal(result.rows[0].serial_number,'00045');
+ assert.equal(result.rows[0].assigned_email,'');assert.equal(result.rows[0].purchased_on,'');
+});
+test('common computer type names normalize in CSV, Excel and server validation',()=>{
+ for(const kind of ['Workstation','SERVER',' Desktop ','Laptop','Notebook','PC','Desktop computer','Laptop computer']) {
+  const result=imports.validateImport([row({kind})]);
+  assert.deepEqual(result.issues,[],kind);assert.equal(result.rows[0].kind,'computer',kind);
+ }
+ for(const bookType of ['xlsx','xls']) {
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['tag','name','kind'],['A','Workstation A','Workstation'],['B','Server B','Server']]),'Assets');
+  const result=parseAssetFile(XLSX.write(wb,{type:'array',bookType}),`assets.${bookType}`);
+  assert.deepEqual(result.issues,[]);assert.deepEqual(result.rows.map(r=>r.kind),['computer','computer']);
+ }
+});
+test('unknown types and lifecycle values identify the field instead of silently defaulting',()=>{
+ for(const kind of ['Unknown device','constructor','__proto__','toString']) {
+  const result=imports.validateImport([row({kind})]);
+  assert.equal(result.issues[0].row,2);assert.match(result.issues[0].message,/type.*Computer.*Other/i);assert.notEqual(result.rows[0].kind,'other');
+ }
+ const invalid=imports.validateImport([row({status:'Unknown status'})]);assert.match(invalid.issues[0].message,/lifecycle.*Available.*Retired/i);
+});
 test('headers are validated and normalized without silently ignoring columns',()=>{
  assert.equal(imports.rowsFromGrid([['Asset ID','name'],['A','Laptop']]).rows,undefined);
  assert.match(imports.rowsFromGrid([['tag','name','tag'],['A','Laptop','B']]).error,/unique/);
@@ -68,6 +94,15 @@ test('save rechecks references and creates one tenant-scoped insert with only al
  assert.ok(result.success,JSON.stringify(result));assert.match(result.success,/2 assets/);const insert=a.calls.filter(c=>c[1]==='insert');assert.equal(insert.length,1);assert.equal(insert[0][2].length,2);
  const first=insert[0][2][0];assert.equal(first.organization_id,'verified-org');assert.equal(first.assigned_user_id,user);assert.equal(first.location_id,place);assert.equal(first.id,undefined);assert.equal(first.assigned_email,undefined);
  for(const table of ['assets','profiles','locations','organization_memberships'])assert.ok(a.calls.some(c=>c[0]===table&&c[1]==='eq'&&c[2]==='organization_id'&&c[3]==='verified-org'));
+});
+test('server preview and save accept raw type aliases and insert canonical values',async()=>{
+ const input=[row({kind:'Workstation'}),row({row:3,tag:'SRV-001',kind:'Server'})];
+ const a=actions();const preview=await a.importAssets(input,'preview');
+ assert.deepEqual(preview.issues,[]);assert.deepEqual(preview.rows.map(r=>r.kind),['computer','computer']);
+ assert.ok(!a.calls.some(c=>c[1]==='insert'));
+ const saved=await a.importAssets(input,'save');assert.match(saved.success,/2 assets/);
+ const records=a.calls.find(c=>c[1]==='insert')[2];
+ assert.deepEqual(records.map(r=>[r.kind,r.status,r.organization_id]),[['computer','available','verified-org'],['computer','available','verified-org']]);
 });
 test('save-time conflicts remain recoverable without any update or upsert',async()=>{
  const a=actions('administrator',{}, {code:'23505'});assert.match((await a.importAssets([row()],'save')).error,/No rows/);assert.ok(!a.calls.some(c=>['upsert','update','delete'].includes(c[1])));

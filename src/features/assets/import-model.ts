@@ -6,9 +6,17 @@ export type ImportColumn = typeof importColumns[number];
 export type ImportRow = Record<ImportColumn,string> & {row:number};
 export type ImportIssue = {row:number;message:string};
 export type ImportResult = {rows?:ImportRow[];issues?:ImportIssue[];error?:string;success?:string};
+// Common inventory-export labels map to the existing asset categories in both preview and save.
+export const importKindAliases = {
+ Workstation:'computer',Server:'computer',Desktop:'computer',Laptop:'computer',Notebook:'computer',PC:'computer',
+ 'Desktop computer':'computer','Laptop computer':'computer','Notebook computer':'computer',
+} as const satisfies Record<string,keyof typeof assetKinds>;
 export function headerName(value:string) { return value.replace(/^\uFEFF/,'').trim().toLowerCase().replaceAll(' ','_'); }
-function choice(value:string, options:Record<string,string>, fallback:string) {
- const key=value.trim().toLowerCase();return Object.entries(options).find(([id,label])=>id===key||label.toLowerCase()===key)?.[0]??(key||fallback);
+function choice(value:string, options:Record<string,string>, fallback:string, aliases:Record<string,string>={}) {
+ const normalize=(text:string)=>text.trim().toLowerCase().replace(/\s+/g,' ');
+ const key=normalize(value);
+ return Object.entries(options).find(([id,label])=>id===key||normalize(label)===key)?.[0]
+  ??Object.entries(aliases).find(([label])=>normalize(label)===key)?.[1]??(key||fallback);
 }
 export function validateImport(input:unknown):ImportResult {
  if(!Array.isArray(input)||!input.length||input.length>IMPORT_LIMIT)return {error:`Choose a file with 1–${IMPORT_LIMIT} asset rows.`};
@@ -18,7 +26,7 @@ export function validateImport(input:unknown):ImportResult {
   const raw=input[i];const row=Number.isSafeInteger(raw?.row)&&raw.row>=2&&raw.row<=IMPORT_LIMIT+1?raw.row:i+2;
   if(!raw||typeof raw!=='object'||importColumns.some(k=>typeof raw[k]!=='string'||raw[k].length>1000))return {error:'The import data is invalid. Choose the file again.'};
   const item=Object.fromEntries(importColumns.map(k=>[k,raw[k].trim()])) as Record<ImportColumn,string>;
-  item.tag=item.tag.toUpperCase();item.kind=choice(item.kind,assetKinds,'computer');item.status=choice(item.status,assetStatuses,'available');
+  item.tag=item.tag.toUpperCase();item.kind=choice(item.kind,assetKinds,'computer',importKindAliases);item.status=choice(item.status,assetStatuses,'available');
   const form=new FormData();for(const k of importColumns)if(k!=='assigned_email'&&k!=='location')form.set(k,item[k]);
   const parsed=assetInput(form);
   if(parsed.error)issues.push({row,message:parsed.error});
