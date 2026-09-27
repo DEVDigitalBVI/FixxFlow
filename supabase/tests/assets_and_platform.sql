@@ -58,7 +58,7 @@ select set_config('request.jwt.claims',jsonb_build_object('sub',owner,'aal','aal
 set local role authenticated;
 do $$declare report jsonb; customer uuid;begin
  if public.platform_access()<>'ready' then raise exception 'Verified owner denied';end if;
- report:=public.platform_overview('Asset test',1,30);if jsonb_array_length(report->'organizations')<>1 then raise exception 'Customer search failed';end if;
+ report:=public.platform_overview('Asset '||(select org from fixture),1,30);if jsonb_array_length(report->'organizations')<>1 then raise exception 'Customer search failed';end if;
  if exists(select 1 from public.assets) or exists(select 1 from public.tickets) then raise exception 'Owner bypassed tenant access';end if;
  customer:=public.manage_customer(null,'New fixture customer','fixture-'||(select prospective from fixture),'platform-customer-'||(select prospective from fixture)||'@example.test','Fixture customer admin');
  perform public.manage_customer(customer,'Renamed fixture customer');

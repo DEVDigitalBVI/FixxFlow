@@ -51,7 +51,7 @@ select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-00000000
 select pg_temp.check_knowledge((select count(*)=0 from public.search_knowledge_articles('20000000-0000-0000-0000-000000000091','VPN')),'cross-organization search blocked');
 select pg_temp.check_knowledge((select count(*)=0 from storage.objects where bucket_id='knowledge-assets'),'cross-organization storage blocked');
 reset role;
-select pg_temp.check_knowledge((select count(*)=1 from public.knowledge_article_views),'daily reader view deduplicated');
+select pg_temp.check_knowledge((select count(*)=1 from public.knowledge_article_views where organization_id='20000000-0000-0000-0000-000000000091'),'daily reader view deduplicated');
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'10000000-0000-0000-0000-000000000092','totp','verified',now(),now());
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000092","aal":"aal1"}',true);

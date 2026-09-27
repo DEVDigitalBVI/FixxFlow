@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { normalizeQueueFilters } from "./queue-filters.ts";
+import { load } from '../../../tests/helpers/load-module.mjs';
+const { normalizeQueueFilters } = load('src/features/tickets/queue-filters.ts');
 
 test("valid queue views and sort options are preserved", () => {
   assert.deepEqual(normalizeQueueFilters({ view: "unassigned", sort: "due" }), { view: "unassigned", sort: "due", search: "", ticketNumber: null });

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { normalizeQueueFilters } from './queue-filters.ts';
+const { normalizeQueueFilters } = load('src/features/tickets/queue-filters.ts');
 function setup(role = 'technician') {
  const calls=[];
  const rows=Array.from({length:51},(_,i)=>({id:String(i),title:'Search result',ticket_number:i,status:'open',priority:'normal',updated_at:'2026-09-25T00:00:00Z'}));

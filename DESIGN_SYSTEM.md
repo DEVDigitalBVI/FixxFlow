@@ -334,6 +334,13 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Keep file selection and preview available after failures. Focus the persistent validation summary, identify spreadsheet row numbers, and disable duplicate submissions while reading or saving.
 - Show every imported field in a paginated preview. Tables scroll inside a labeled region on wide screens and stack into labeled records on compact screens. A successful import leaves durable confirmation and a link to inventory.
 
+### Search behavior
+
+- All search fields use case-insensitive literal substring matching: a fragment may occur at the beginning, middle, or end of a value. Every whitespace-separated term must match, in any order, across the feature's searchable fields. Preserve punctuation in names, emails, and identifiers; do not interpret user input as wildcard or query syntax.
+- Reuse `normalizeSearch`, `SEARCH_LIMIT`, and `SEARCH_HINT`. Keep searches submitted through native GET forms with persistent labels, linked guidance, and a clear-search or clear-filters action. Preserve the query and filters in pagination URLs; submitting a new search starts on page one.
+- Keep search permission-scoped and paginated in the database. Ticket search retains `#123` for an exact ticket number; a bare number matches fragments. Hidden notes, other organizations, and restricted records must never influence a result.
+- Show serial numbers in asset results so users can verify identifier matches. Empty results explain how to broaden the search without suggesting that the inventory itself is empty.
+
 ### Appearance themes
 
 - Offer a soft, rounded Appearance group with native icon buttons for System (monitor), Light (sun), and Dark (moon). Each button has an accessible name, tooltip, pressed state, and a selected dot in addition to color. Keep 44px targets and visible keyboard focus. Place these choices centered below Notifications in workspace navigation, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.

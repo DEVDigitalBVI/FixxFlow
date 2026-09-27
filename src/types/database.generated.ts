@@ -1327,6 +1327,55 @@ export type Database = {
         }
         Returns: undefined
       }
+      search_assets: {
+        Args: { search_text: string; target_organization_id: string }
+        Returns: {
+          assigned_user_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          location_id: string | null
+          model: string | null
+          name: string
+          organization_id: string
+          purchased_on: string | null
+          revision: number
+          search_document: unknown
+          serial_number: string | null
+          status: string
+          tag: string
+          updated_at: string
+          warranty_until: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "assets"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      search_audit_events: {
+        Args: { search_text: string; target_organization_id: string }
+        Returns: {
+          action: string
+          actor_id: string | null
+          actor_name: string
+          changes: Json
+          created_at: string
+          entity_id: string
+          entity_label: string
+          entity_type: string
+          id: number
+          organization_id: string
+          search_text: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "audit_events"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       search_knowledge_articles: {
         Args: { search_text: string; target_organization_id: string }
         Returns: {
@@ -1347,6 +1396,25 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "knowledge_articles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      search_members: {
+        Args: { search_text: string; target_organization_id: string }
+        Returns: {
+          activated_at: string
+          created_at: string
+          deactivated_at: string | null
+          organization_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          status: Database["public"]["Enums"]["membership_status"]
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "organization_memberships"
           isOneToOne: false
           isSetofReturn: true
         }
@@ -1575,4 +1643,3 @@ export const Constants = {
     },
   },
 } as const
-
