@@ -12,8 +12,10 @@ export const ticketPriorities: Record<TicketPriority, { label: string; tone: str
   high: { label: "High", tone: "amber" }, critical: { label: "Critical", tone: "red" },
 };
 
+const ticketDateFormatter = new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" });
+
 export const formatTicketDate = (value: string | null) => value
-  ? new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value))
+  ? ticketDateFormatter.format(new Date(value))
   : "Not set";
 
 export const activityLabels: Record<string, string> = {

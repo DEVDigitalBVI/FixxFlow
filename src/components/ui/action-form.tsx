@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { FormPendingContext } from "./form-pending";
-
-export type ActionResult = { error?: string; success?: string; redirectTo?: string };
+import type { ActionResult } from "@/lib/action-result";
 
 /** Keep the mounted controls (including dependent selects) intact on failure. */
 export function ActionForm({ action, children, className, resetOnSuccess = false }: {

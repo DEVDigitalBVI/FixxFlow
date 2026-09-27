@@ -1,11 +1,10 @@
+import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import fs from 'node:fs';
 import {createRequire} from 'node:module';
-import ts from 'typescript';
 const require=createRequire(import.meta.url);
 const XLSX=require('xlsx');
-function load(file,mocks={}){const m={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;new Function('require','module','exports',code)(n=>mocks[n]??require(n),m,m.exports);return m.exports;}
+
 const model=load('src/features/assets/model.ts');
 const imports=load('src/features/assets/import-model.ts',{'./model':model});
 const {parseAssetFile}=load('src/features/assets/import-parser.ts',{'./import-model':imports});

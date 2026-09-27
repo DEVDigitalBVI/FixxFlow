@@ -1,15 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouteRefresh } from '@/lib/realtime/use-route-refresh';
 
 export function ConversationRefresh() {
-  const router = useRouter();
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      if (document.visibilityState === "visible") router.refresh();
-    }, 8000);
-    return () => window.clearInterval(timer);
-  }, [router]);
+  useRouteRefresh();
   return null;
 }

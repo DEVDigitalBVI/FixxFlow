@@ -1,7 +1,8 @@
+import { pageNumber } from '@/lib/pagination';
 import Link from 'next/link';
 import {requireViewer} from '@/lib/auth/viewer';
 import {createClient} from '@/lib/supabase/server';
-import {assetKinds,assetStatuses,pageNumber} from '@/features/assets/model';
+import {assetKinds,assetStatuses} from '@/features/assets/model';
 import {AssetLinkForm} from '@/features/assets/ticket-link-form';
 export default async function AssetsPage({searchParams}:{searchParams:Promise<{q?:string;status?:string;page?:string;ticket?:string}>}) {
  const viewer=await requireViewer();const staff=viewer.role!=='end_user';const params=await searchParams;const q=(params.q??'').trim().slice(0,100);const page=pageNumber(params.page);const status=Object.hasOwn(assetStatuses,params.status??'')?params.status as keyof typeof assetStatuses:'';const db=await createClient();

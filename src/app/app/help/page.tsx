@@ -1,3 +1,4 @@
+import { pageNumber } from "@/lib/pagination";
 import { UsageEvent } from "@/features/product-analytics/usage-event";
 import Link from "next/link";
 import { requireViewer } from "@/lib/auth/viewer";
@@ -7,7 +8,7 @@ import { knowledgeCategories, knowledgeCategoryDescriptions } from "@/features/k
 export default async function HelpPage({ searchParams }: { searchParams: Promise<{q?:string;category?:string;view?:string;page?:string}> }) {
   const viewer=await requireViewer(); const filters=await searchParams; const database=await createClient();
   const q=(filters.q??"").trim().slice(0,200); const staff=viewer.role!=="end_user";
-  const page=Math.max(1,Math.min(10000,Number.parseInt(filters.page??"1",10)||1));
+  const page=pageNumber(filters.page, 10000);
   const source=q ? database.rpc("search_knowledge_articles",{target_organization_id:viewer.organizationId,search_text:q}) : database.from("knowledge_articles");
   let query=source.select("id,title,summary,category,status,updated_at").eq("organization_id",viewer.organizationId);
   if (!staff || filters.view!=="all") query=query.eq("status","published");

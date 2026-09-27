@@ -1,26 +1,14 @@
+import { load as loadModule } from '../../../tests/helpers/load-module.mjs';
 import assert from "node:assert/strict";
 import test from "node:test";
-import fs from "node:fs";
-import path from "node:path";
-import { createRequire } from "node:module";
-import ts from "typescript";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-const require = createRequire(import.meta.url);
-function load(relative, mocks = {}) {
-  const filename = path.resolve(relative);
-  const source = fs.readFileSync(filename, "utf8");
-  const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
-  const loaded = { exports: {} };
-  const localRequire = name => {
-    if (name in mocks) return mocks[name];
-    if (name === "next/navigation") return { useRouter: () => ({ refresh() {} }) };
-    if (name.startsWith(".")) return load(path.resolve(path.dirname(filename), name + ".ts"));
-    return require(name);
-  };
-  new Function("require", "module", "exports", compiled)(localRequire, loaded, loaded.exports);
-  return loaded.exports;
+function load(file, mocks = {}) {
+  return loadModule(file, {
+    "next/navigation": { useRouter: () => ({ refresh() {} }) },
+    ...mocks,
+  });
 }
 const { ConversationTimeline } = load("src/features/tickets/conversation-timeline.tsx");
 const { MessageComposer } = load("src/features/tickets/message-composer.tsx");
@@ -121,7 +109,7 @@ test("switching live chat audience keeps independent drafts", () => {
   const fakeReact = { ...React,
     useState(initial) { const i = cursor++; if (!(i in hooks)) hooks[i] = typeof initial === "function" ? initial() : initial; return [hooks[i], next => { hooks[i] = typeof next === "function" ? next(hooks[i]) : next; }]; },
     useRef(initial) { const i = cursor++; if (!(i in hooks)) hooks[i] = { current: initial }; return hooks[i]; },
-    useCallback: callback => callback, useEffect() {},
+    useCallback: callback => callback, useEffect() {}, useTransition: () => [false, fn => fn()],
   };
   const { ChatRoom: Room } = load("src/features/chat/chat-room.tsx", { react: fakeReact, "@/lib/supabase/client": { createClient: () => ({}) } });
   const render = () => { cursor = 0; return Room(chatProps); };

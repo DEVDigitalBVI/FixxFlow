@@ -1,3 +1,4 @@
+import { pageNumber } from "@/lib/pagination";
 import { ClassificationEditor } from "@/features/administration/classification-editor";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -14,8 +15,7 @@ export default async function AdministrationSection({ params, searchParams }: { 
   const item = administrationSections.find(item => item.slug === section);
   if (!item || 'href' in item) notFound();
   const filters = await searchParams;
-  const rawPage = filters.page;
-  const page = rawPage && /^\d{1,6}$/.test(rawPage) ? Math.max(1, Number(rawPage)) : 1;
+  const page = pageNumber(filters.page, 999999);
   const supabase = await createClient();
   let content;
   if (section === 'teams' || section === 'categories') {

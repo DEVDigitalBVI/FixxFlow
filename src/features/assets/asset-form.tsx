@@ -1,9 +1,10 @@
 'use client';
+import type { SaveState } from '@/lib/action-result';
 import {useActionState,useEffect,useRef,useState,type ChangeEvent} from 'react';
 import Link from 'next/link';
 import {SubmitButton} from '@/components/ui/submit-button';
 import {saveAsset} from '@/app/app/assets/actions';
-import {assetKinds,assetStatuses,type Asset,type SaveState} from './model';
+import {assetKinds,assetStatuses,type Asset} from './model';
 export function AssetForm({asset,people,locations}:{asset?:Asset;people:{user_id:string;display_name:string}[];locations:{id:string;name:string}[]}) {
  const [draft,setDraft]=useState<Record<string,string>>({tag:asset?.tag??'',name:asset?.name??'',kind:asset?.kind??'computer',status:asset?.status??'available',model:asset?.model??'',serial_number:asset?.serial_number??'',assigned_user_id:asset?.assigned_user_id??'',location_id:asset?.location_id??'',purchased_on:asset?.purchased_on??'',warranty_until:asset?.warranty_until??''});
  const [state,action]=useActionState(saveAsset.bind(null,asset?.id??null,asset?.revision??0),{} as SaveState);const errorRef=useRef<HTMLDivElement>(null);

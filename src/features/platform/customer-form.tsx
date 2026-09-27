@@ -2,7 +2,7 @@
 import {useActionState,useEffect,useRef,useState,type ChangeEvent} from 'react';
 import {saveCustomer} from '@/app/platform/actions';
 import {SubmitButton} from '@/components/ui/submit-button';
-import type {SaveState} from '@/features/assets/model';
+import type { SaveState } from '@/lib/action-result';
 export function CustomerForm({customer}:{customer?:{id:string;name:string}}){
  const [draft,setDraft]=useState({name:customer?.name??'',slug:'',admin:'',email:''});
  const [state,action]=useActionState(saveCustomer.bind(null,customer?.id??null),{} as SaveState);const errorRef=useRef<HTMLParagraphElement>(null);useEffect(()=>{if(state.error)errorRef.current?.focus();},[state]);

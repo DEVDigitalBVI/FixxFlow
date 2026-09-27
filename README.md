@@ -23,8 +23,14 @@ FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 With the local Supabase stack running, regenerate database types with:
 
 ```sh
-npx supabase gen types typescript --local > src/types/database.ts
+npx supabase gen types typescript --local > src/types/database.generated.ts
 ```
+
+`database.generated.ts` contains generated schema and relationships. Keep domain aliases,
+CHECK-constraint refinements, and trigger-populated insert fields in `database.ts`;
+regeneration must not overwrite that wrapper. The current snapshot was generated
+read-only from the FixxFlow project on 27 September 2026. Regenerate from a fully
+migrated local database and run typecheck/tests before accepting future changes.
 
 Never expose a Supabase secret or service-role key through a `NEXT_PUBLIC_` variable.
 
@@ -57,7 +63,12 @@ Run the transactional SQL regression with `supabase db query --local --file supa
 
 ### Security and database verification
 
-The migration filenames match the live Supabase migration versions. Earlier MCP deployments assigned different timestamps from their original local filenames; the SQL was compared before renaming the local files. Do not reapply those old versions or repair the production history to the original names.
+Read-only inspection on 27 September 2026 found two migration-version differences:
+local `20260926024707_category_team_routing.sql` corresponds by name to hosted
+`20260926024852`, and local `20260926024954_ticket_routing_insert_permission.sql`
+to hosted `20260926025012`. Compare the applied SQL before reconciling these
+filenames/history. Do not blindly reapply them or repair production history.
+No migration history was changed during the code cleanup.
 
 `20260925010358_enforce_mfa_and_server_owned_timestamps.sql` enforces verified MFA factors across all application tables, Storage and Realtime. Accounts without a verified factor can still use AAL1; enrolled accounts require AAL2. Authenticated callers cannot provide ticket/chat system timestamps or SLA completion fields. It also serializes administrator demotions and indexes chat foreign keys.
 
@@ -72,3 +83,20 @@ Administrators can deactivate/reactivate departments and locations or permanentl
 `20260926022032_protect_organization_references_on_delete.sql` replaces the profile foreign keys' `ON DELETE SET NULL` behavior with `NO ACTION`. People therefore block department/location deletion; existing ticket and asset foreign keys also block location deletion, including historical or retired records. Deactivation preserves these links. Foreign keys arbitrate concurrent assignment/deletion; there is no check-then-delete race. Existing audit triggers record successful deletion. No rows are removed by the migration.
 
 Run `supabase/tests/organization-deletion-regression.sql` in a transaction-capable SQL connection to verify unused deletion, linked-record protection, deactivation/reactivation, administrator-only access, tenant isolation, and auditing. All fixtures roll back. UI and server-action coverage is included in `npm test`.
+
+### Conversation history and checks
+
+Live ticket/chat pages display the latest 50 messages and files. The linked history
+routes paginate messages, attachments, and staff ticket activity using a timestamp
+and ID cursor, preserving microsecond timestamp precision. History links from the
+message composer open in a new tab so the current draft remains mounted.
+
+Ticket reconciliation runs every 30 seconds while visible. Subscribed chats use
+realtime events with a 60-second reconciliation interval; disconnected chats retain
+a shorter fallback. Focus and visibility changes reconcile promptly. Background
+refreshes coalesce event bursts and avoid overlapping route transitions.
+
+The GitHub Checks workflow runs Node 24, lockfile installation, lint, typecheck,
+unit/component tests, and the production build. It uses placeholder public Supabase
+configuration, requires no production secrets, and does not deploy or run migrations.
+Database regression tests still require a separately provisioned local Supabase stack.

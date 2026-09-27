@@ -1,10 +1,11 @@
 'use server';
+import type { SaveState } from '@/lib/action-result';
 import {revalidatePath} from 'next/cache';
 import {redirect} from 'next/navigation';
 import {requireViewer} from '@/lib/auth/viewer';
 import {createClient} from '@/lib/supabase/server';
-import {assetInput,type SaveState} from '@/features/assets/model';
-export async function saveAsset(id:string|null,revision:number,previous:SaveState,form:FormData):Promise<SaveState> {
+import {assetInput} from '@/features/assets/model';
+export async function saveAsset(id:string|null,revision:number,_previous:SaveState,form:FormData):Promise<SaveState> {
  const viewer=await requireViewer();
  if(viewer.role==='end_user')return {error:'Only IT staff can manage assets.'};
  const parsed=assetInput(form);if(!parsed.data)return {error:parsed.error};
@@ -16,7 +17,7 @@ export async function saveAsset(id:string|null,revision:number,previous:SaveStat
  revalidatePath('/app/assets');revalidatePath(`/app/assets/${data.id}`);
  redirect(`/app/assets/${data.id}?saved=1`);
 }
-export async function changeAssetLink(ticketId:string,previous:SaveState,form:FormData):Promise<SaveState> {
+export async function changeAssetLink(ticketId:string,_previous:SaveState,form:FormData):Promise<SaveState> {
  const viewer=await requireViewer();if(viewer.role==='end_user')return {error:'Only IT staff can link assets.'};
  const assetId=String(form.get('assetId')??'');const mode=String(form.get('mode')??'link');
  if(!/^[0-9a-f-]{36}$/i.test(assetId)||!['link','unlink'].includes(mode))return {error:'Choose an asset.'};

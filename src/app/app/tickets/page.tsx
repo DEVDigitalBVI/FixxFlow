@@ -1,58 +1,28 @@
+import { loadTicketQueue, type TicketQueueFilters } from "@/features/tickets/data";
 import { UsageEvent } from "@/features/product-analytics/usage-event";
 import { BulkActions } from "@/features/tickets/bulk-actions";
 import Link from "next/link";
 import { ConversationRefresh } from "@/features/tickets/conversation-refresh";
 import { SlaClock, SlaIndicator } from "@/features/tickets/sla-indicator";
 import { requireViewer } from "@/lib/auth/viewer";
-import { createClient } from "@/lib/supabase/server";
 import { formatTicketDate, ticketPriorities, ticketStatuses } from "@/features/tickets/presentation";
 import { BulkSelectAll } from "@/features/tickets/bulk-select-all";
-import { normalizeQueueFilters } from "@/features/tickets/queue-filters";
 import { bulkUpdateTickets } from "./actions";
-import type { TicketPriority, TicketStatus } from "@/types/database";
+import type { TicketStatus } from "@/types/database";
 
-type Filters = { page?: string; view?: string; team?: string; status?: string; priority?: string; q?: string; sort?: string; overdue?: string; sla?: string; success?: string; error?: string };
 const active: TicketStatus[] = ["new", "open", "in_progress", "waiting_on_user", "on_hold"];
 const sortOptions = { updated: "Recently updated", oldest: "Oldest update", newest: "Newest created", due: "Manual due date", sla: "SLA due soon", priority: "Highest priority" } as const;
 
-export default async function TicketsPage({ searchParams }: { searchParams: Promise<Filters> }) {
+export default async function TicketsPage({ searchParams }: { searchParams: Promise<TicketQueueFilters> }) {
   const viewer = await requireViewer();
   const filters = await searchParams;
-  const supabase = await createClient();
-  const { view, sort, search } = normalizeQueueFilters(filters);
-  const page = Math.max(1, Math.min(10000, Number.parseInt(filters.page ?? "1", 10) || 1));
+  const { view, sort, search, page, rows, error, profiles, teams, members, knowledgeCount } = await loadTicketQueue(viewer, filters);
   const pageHref = (next: number) => {
     const params = new URLSearchParams();
     for (const key of ["q", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) if (filters[key]) params.set(key, filters[key]);
     params.set("page", String(next));
     return `/app/tickets?${params}`;
   };
-  const source = search ? supabase.rpc("search_tickets", { target_organization_id: viewer.organizationId, search_text: search }) : supabase.from("tickets");
-  let query = source.select("id, ticket_number, title, requester_id, assigned_technician_id, team_id, priority, status, due_at, created_at, updated_at, first_response_at, resolved_at, closed_at, response_sla_due_at, resolution_sla_due_at, sla_next_due_at").eq("organization_id", viewer.organizationId);
-  if (viewer.role === "end_user") query = query.eq("requester_id", viewer.id);
-  else {
-    if (view === "mine") query = query.eq("assigned_technician_id", viewer.id).in("status", active);
-    if (view === "unassigned") query = query.is("assigned_technician_id", null).in("status", active);
-    if (view === "team") query = query.not("team_id", "is", null).in("status", active);
-    if (filters.team && /^[0-9a-f-]{36}$/i.test(filters.team)) query = query.eq("team_id", filters.team);
-    if (filters.sla === "breached") query = query.lte("sla_next_due_at", new Date().toISOString());
-    if (filters.overdue === "1") query = query.lt("due_at", new Date().toISOString()).in("status", active);
-  }
-  if (filters.status && filters.status in ticketStatuses) query = query.eq("status", filters.status as TicketStatus);
-  if (filters.priority && filters.priority in ticketPriorities) query = query.eq("priority", filters.priority as TicketPriority);
-  if (sort === "oldest") query = query.order("updated_at", { ascending: true });
-  else if (sort === "newest") query = query.order("created_at", { ascending: false });
-  else if (sort === "sla") query = query.order("sla_next_due_at", { ascending: true, nullsFirst: false });
-  else if (sort === "due") query = query.order("due_at", { ascending: true, nullsFirst: false });
-  else if (sort === "priority") query = query.order("priority", { ascending: false }).order("updated_at", { ascending: false });
-  else query = query.order("updated_at", { ascending: false });
-  const [{ data: rows, error }, { data: profiles }, { data: teams }, { data: members }, { count: knowledgeCount }] = await Promise.all([
-    query.order("id").range((page - 1) * 50, page * 50),
-    supabase.from("profiles").select("user_id, display_name").eq("organization_id", viewer.organizationId),
-    supabase.from("teams").select("id, name").eq("organization_id", viewer.organizationId).eq("is_active", true),
-    viewer.role === "end_user" ? Promise.resolve({ data: [] }) : supabase.from("organization_memberships").select("user_id").eq("organization_id", viewer.organizationId).eq("status", "active").in("role", ["technician", "administrator"]),
-    search ? supabase.rpc("search_knowledge_articles", { target_organization_id: viewer.organizationId, search_text: search }, { count: "exact", head: true }).select("id").eq("status", "published") : Promise.resolve({ count: null }),
-  ]);
   const tickets = rows?.slice(0, 50);
   const hasMore = (rows?.length ?? 0) > 50;
   const pagination = <nav className="notification-pagination" aria-label="Ticket pages">{page > 1 && <Link className="button button-secondary" href={pageHref(page - 1)}>Previous</Link>}<span>Page {page}</span>{hasMore && <Link className="button button-secondary" href={pageHref(page + 1)}>Next</Link>}</nav>;

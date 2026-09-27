@@ -1,13 +1,10 @@
+import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import fs from 'node:fs';
-import {createRequire} from 'node:module';
-import ts from 'typescript';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {duration,topRows} from './model.ts';
-const require=createRequire(import.meta.url);
-function load(file,mocks={}) {const m={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;new Function('require','module','exports',code)(name=>mocks[name]??require(name),m,m.exports);return m.exports;}
+
 test('duration distinguishes no samples, sub-minute responses, and hours',()=>{
  assert.equal(duration(null),'No data');assert.equal(duration(0),'<1m');assert.equal(duration(18),'18m');assert.equal(duration(192),'3.2h');
 });

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
-import type { ActionResult } from "@/components/ui/action-form";
+import type { ActionResult } from "@/lib/action-result";
 
 export async function saveClassification(form: FormData): Promise<ActionResult> {
   const viewer = await requireViewer();

@@ -1,3 +1,4 @@
+import { pageNumber } from "@/lib/pagination";
 import Link from "next/link";
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
@@ -9,7 +10,7 @@ export default async function NotificationsPage({ searchParams }: { searchParams
   const viewer = await requireViewer();
   const params = await searchParams;
   const unread = params.view === "unread";
-  const page = Math.max(1, Math.min(10000, Number.parseInt(params.page ?? "1", 10) || 1));
+  const page = pageNumber(params.page, 10000);
   const supabase = await createClient();
   let query = supabase.from("notifications").select("id,kind,title,ticket_id,conversation_id,created_at,read_at", { count: "exact" })
     .eq("organization_id", viewer.organizationId).eq("recipient_id", viewer.id);

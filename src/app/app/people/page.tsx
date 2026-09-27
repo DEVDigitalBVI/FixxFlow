@@ -1,5 +1,5 @@
+import { pageNumber } from "@/lib/pagination";
 import { MemberDetailsEditor } from "@/features/administration/member-details-editor";
-import type { AppRole, MembershipStatus } from "@/types/database";
 import { SubmitButton } from "@/components/ui/submit-button";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -15,12 +15,15 @@ export default async function PeoplePage({ searchParams }: Props) {
   const viewer = await requireViewer(); if (viewer.role === "end_user") notFound();
   const message = await searchParams;
   const supabase = await createClient();
-  const page = message.page && /^\d{1,6}$/.test(message.page) ? Math.max(1, Number(message.page)) : 1;
+  const page = pageNumber(message.page, 999999);
   const search = (message.q ?? "").slice(0, 120).replace(/[^\p{L}\p{N}@. +\-]/gu, " ").trim();
-  let membersQuery = supabase.from("organization_memberships").select(search ? "user_id, role, status, profiles!inner(user_id)" : "user_id, role, status", { count: "exact" }).eq("organization_id", viewer.organizationId).order("created_at").order("user_id");
+  const source = search
+    ? supabase.from("organization_memberships").select("user_id, role, status, profiles!inner(user_id)", { count: "exact" })
+    : supabase.from("organization_memberships").select("user_id, role, status", { count: "exact" });
+  let membersQuery = source.eq("organization_id", viewer.organizationId).order("created_at").order("user_id");
   if (message.view === "technicians") membersQuery = membersQuery.eq("role", "technician");
   if (search) membersQuery = membersQuery.or(`display_name.ilike.%${search}%,email.ilike.%${search}%`, { referencedTable: "profiles" });
-  const { data: memberships, error: membersError, count } = await membersQuery.range((page - 1) * 25, page * 25 - 1).overrideTypes<Array<{ user_id: string; role: AppRole; status: MembershipStatus }>, { merge: false }>();
+  const { data: memberships, error: membersError, count } = await membersQuery.range((page - 1) * 25, page * 25 - 1);
   if (membersError) throw new Error("Unable to load members.");
   const [{ data: profiles, error: profilesError }, departments, locations] = await Promise.all([
     memberships?.length ? supabase.from("profiles").select("user_id, display_name, email, job_title, avatar_path, department_id, location_id, updated_at").eq("organization_id", viewer.organizationId).in("user_id", memberships.map(member => member.user_id)) : Promise.resolve({ data: [], error: null }),

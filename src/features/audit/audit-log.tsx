@@ -1,10 +1,11 @@
+import { pageNumber } from "@/lib/pagination";
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { auditEntities, auditFields, auditTime, auditValue, parseChanges } from './presentation';
 
 export type AuditFilters = {page?:string;q?:string;entity?:string;action?:string};
 export async function AuditLog({organizationId,filters}:{organizationId:string;filters:AuditFilters}) {
-  const page = filters.page && /^\d{1,6}$/.test(filters.page) ? Math.max(1,Number(filters.page)) : 1;
+  const page = pageNumber(filters.page, 999999);
   const search = (filters.q??'').trim().slice(0,120);
   const entity = filters.entity && Object.hasOwn(auditEntities,filters.entity)?filters.entity:'';
   const action = ['created','updated','deleted'].includes(filters.action??'')?filters.action!:'';

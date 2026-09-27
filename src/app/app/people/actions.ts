@@ -1,6 +1,6 @@
 "use server";
 
-import type { ActionResult } from "@/components/ui/action-form";
+import type { ActionResult } from "@/lib/action-result";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 

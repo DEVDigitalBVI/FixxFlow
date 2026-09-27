@@ -14,7 +14,8 @@ export function auditValue(field:string,value:Json|undefined) {
   if(field==='due_at' && Number.isFinite(Date.parse(value)))return auditTime(value);
   return value;
 }
-export function auditTime(value:string) {return new Intl.DateTimeFormat('en',{timeZone:'America/Tortola',dateStyle:'medium',timeStyle:'short'}).format(new Date(value));}
+const auditDateFormatter = new Intl.DateTimeFormat('en', { timeZone: 'America/Tortola', dateStyle: 'medium', timeStyle: 'short' });
+export function auditTime(value: string) { return auditDateFormatter.format(new Date(value)); }
 export function parseChanges(value:Json): {field:string;from?:Json;to?:Json}[] {
   return Array.isArray(value)?value.filter((v):v is {field:string;from?:Json;to?:Json}=>!!v&&typeof v==='object'&&!Array.isArray(v)&&typeof v.field==='string'):[];
 }

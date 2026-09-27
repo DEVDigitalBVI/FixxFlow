@@ -1,17 +1,8 @@
+import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import fs from 'node:fs';
-import path from 'node:path';
-import { createRequire } from 'node:module';
-import ts from 'typescript';
-const require = createRequire(import.meta.url);
-function load(file, mocks = {}) {
- const filename = path.resolve(file);
- const compiled = ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText;
- const m = {exports:{}};
- new Function('require','module','exports',compiled)(name => name in mocks ? mocks[name] : name.startsWith('.') ? load(path.resolve(path.dirname(filename),name+'.ts')) : require(name),m,m.exports);
- return m.exports;
-}
+
 const {sendNotificationEmail} = load('src/features/notifications/email.ts');
 const item = {notification_id:'notice-1',recipient_email:'recipient@example.test',title:'Ticket #1 resolved',ticket_id:'ticket-1',conversation_id:null};
 const config = {apiKey:'mock-key',from:'FixxFlow <support@example.test>',siteUrl:'https://example.test'};

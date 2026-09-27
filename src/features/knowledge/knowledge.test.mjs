@@ -1,17 +1,10 @@
+import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import fs from 'node:fs';
-import path from 'node:path';
-import {createRequire} from 'node:module';
-import ts from 'typescript';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
-const require=createRequire(import.meta.url);
-function load(file,mocks={}){
- const filename=path.resolve(file);const m={exports:{}};
- const compiled=ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
- new Function('require','module','exports',compiled)(name=>name in mocks?mocks[name]:name.startsWith('.')?load(path.resolve(path.dirname(filename),name+'.ts'),mocks):require(name),m,m.exports);return m.exports;
-}
+
 const {ArticleContent}=load('src/features/knowledge/article-content.tsx');
 test('rich text is rendered semantically and raw HTML is escaped',()=>{
  const html=renderToStaticMarkup(React.createElement(ArticleContent,{content:[{type:'heading',text:'Steps'},{type:'paragraph',text:'**Bold** and *italic* <script>alert(1)</script>'},{type:'list',text:'First\nSecond'}]}));

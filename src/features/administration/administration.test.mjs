@@ -1,12 +1,10 @@
+import { load as loadModule } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import fs from 'node:fs';
-import { createRequire } from 'node:module';
-import ts from 'typescript';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { administrationSections, fixedSlaTargets, formatMinutes } from './sections.ts';
-const require = createRequire(import.meta.url);
+const { administrationSections, fixedSlaTargets, formatMinutes } = loadModule('src/features/administration/sections.ts');
 function load(file, role, rows = [], error = null) {
   const calls = [];
   const builder = new Proxy({}, { get: (_, key) => key === 'then' ? resolve => Promise.resolve({data: rows, error}).then(resolve) : (...args) => { calls.push([key, ...args]); return builder; } });
@@ -25,9 +23,7 @@ function load(file, role, rows = [], error = null) {
     '@/features/administration/sections': {administrationSections, fixedSlaTargets, formatMinutes},
     '@/features/tickets/presentation': {ticketPriorities:Object.fromEntries(fixedSlaTargets.map(t=>[t.priority,{label:t.priority}])),activityLabels:{created:'created the ticket'},formatTicketDate:v=>v},
   };
-  const compiled = ts.transpileModule(fs.readFileSync(file,'utf8'), {compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
-  const m={exports:{}}; new Function('require','module','exports',compiled)(n=>mocks[n]??require(n),m,m.exports);
-  return {render:m.exports.default,calls};
+  return { render: loadModule(file, mocks).default, calls };
 }
 const hub='src/app/app/administration/page.tsx';
 const detail='src/app/app/administration/[section]/page.tsx';

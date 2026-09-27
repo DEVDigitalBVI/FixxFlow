@@ -1,7 +1,7 @@
-export const assetKinds = {computer:'Computer',phone:'Phone',printer:'Printer',network:'Network equipment',software:'Software',other:'Other'} as const;
-export const assetStatuses = {available:'Available',in_use:'In use',repair:'Under repair',retired:'Retired'} as const;
-export type Asset = {id:string;organization_id:string;tag:string;name:string;kind:keyof typeof assetKinds;status:keyof typeof assetStatuses;serial_number:string|null;model:string|null;assigned_user_id:string|null;location_id:string|null;purchased_on:string|null;warranty_until:string|null;revision:number;created_at:string;updated_at:string};
-export type SaveState = {error?:string;success?:string};
+import type { Asset, AssetKind, AssetStatus } from "@/types/database";
+export type { Asset } from "@/types/database";
+export const assetKinds = {computer:'Computer',phone:'Phone',printer:'Printer',network:'Network equipment',software:'Software',other:'Other'} as const satisfies Record<AssetKind, string>;
+export const assetStatuses = {available:'Available',in_use:'In use',repair:'Under repair',retired:'Retired'} as const satisfies Record<AssetStatus, string>;
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function assetInput(form:FormData) {
  const value=(key:string)=>String(form.get(key)??'').trim();
@@ -13,4 +13,3 @@ export function assetInput(form:FormData) {
  if(data.status==='retired'&&data.assigned_user_id)return {error:'Unassign the employee before retiring this asset.'};
  return {data};
 }
-export function pageNumber(value:string|undefined) {const n=Number(value);return Number.isSafeInteger(n)&&n>0?Math.min(n,100000):1;}

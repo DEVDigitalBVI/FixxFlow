@@ -2,7 +2,7 @@
 import {useActionState} from 'react';
 import {SubmitButton} from '@/components/ui/submit-button';
 import {changeAssetLink} from '@/app/app/assets/actions';
-import type {SaveState} from './model';
+import type { SaveState } from '@/lib/action-result';
 export function AssetLinkForm({ticketId,asset,link=false}:{ticketId:string;asset?:{id:string;tag:string};link?:boolean}) {
  const [state,action]=useActionState(changeAssetLink.bind(null,ticketId),{} as SaveState);
  if(!asset)return null;

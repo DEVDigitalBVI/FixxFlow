@@ -1,14 +1,15 @@
 import Link from 'next/link';
 import {requirePlatformOwner} from '@/lib/auth/platform';
 import {createClient} from '@/lib/supabase/server';
-import {pageNumber} from '@/features/assets/model';
+import { pageNumber } from '@/lib/pagination';
 import {Bars} from '@/features/reporting/components';
 import {rolePresentation} from '@/features/identity/role';
 import {CustomerForm} from './customer-form';
-import {eventLabels,usageTotals,type PlatformData} from './model';
+import {eventLabels,usageTotals} from './model';
+import { isPlatformData } from './payload';
 export async function PlatformDashboard({section,searchParams}:{section:'customers'|'analytics'|'audit';searchParams:Promise<{q?:string;page?:string;days?:string}>}) {
  await requirePlatformOwner();const params=await searchParams;const page=pageNumber(params.page);const q=(params.q??'').trim().slice(0,100);const days=[7,30,90].includes(Number(params.days))?Number(params.days):30;
- const db=await createClient();const {data,error}=await db.rpc('platform_overview',{search_text:q,page_number:page,days});if(error||!data)throw Error('Platform data unavailable');const report=data as unknown as PlatformData;
+ const db=await createClient();const {data,error}=await db.rpc('platform_overview',{search_text:q,page_number:page,days});if(error||!isPlatformData(data))throw Error('Platform data unavailable');const report=data;
  const href=(n:number)=>`/platform/customers?${new URLSearchParams({q,page:String(n)})}`;
  return <div className="page stack"><header className="page-header"><div><span className="page-eyebrow">Platform owner</span><h1>{section==='customers'?'Customer organizations':section==='analytics'?'Product analytics':'Platform audit log'}</h1><p>{section==='customers'?'Manage customer workspaces. Customer tickets and messages remain private.':section==='analytics'?'Aggregate feature usage from people who opted in. Separate from customer reporting.':'Organization changes made through the owner console.'}</p></div></header>
  {section==='customers'&&<><div className="page-header-actions"><p>{report.organizationCount} organization{report.organizationCount===1?'':'s'} on the platform</p><a href="#new-customer" className="button button-primary">Add organization</a></div><form className="queue-filters" role="search"><label className="field">Search organizations<input className="input" name="q" defaultValue={q} maxLength={100}/></label><button className="button button-secondary">Search</button></form><p className="muted">{report.matchingCount} result{report.matchingCount===1?'':'s'} · Page {page}</p>{report.organizations.length?<div className="settings-grid">{report.organizations.map(o=><article key={o.id} className="settings-card"><h2>{o.name}</h2><p className="muted">{o.slug} · {o.members} active members</p><p>Created {o.created_at.slice(0,10)}</p><details><summary>Edit organization name</summary><CustomerForm customer={o}/></details></article>)}</div>:<div className="empty-state"><strong>No matching organizations</strong><p>Clear the search or create a customer workspace below.</p></div>}<nav className="notification-pagination" aria-label="Organization pages">{page>1&&<Link href={href(page-1)}>Previous</Link>}{page*25<report.matchingCount&&<Link href={href(page+1)}>Next</Link>}</nav><section className="settings-card page-narrow" id="new-customer"><h2>Add customer organization</h2><p className="muted">Fields marked * are required.</p><CustomerForm/></section></>}

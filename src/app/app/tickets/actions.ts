@@ -1,13 +1,14 @@
 "use server";
 
+import { ticketStatuses, ticketPriorities } from "@/features/tickets/presentation";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
 import type { TicketMessageKind, TicketPriority, TicketStatus } from "@/types/database";
 
-const statuses: TicketStatus[] = ["new", "open", "in_progress", "waiting_on_user", "on_hold", "resolved", "closed"];
-const priorities: TicketPriority[] = ["low", "normal", "high", "critical"];
+
+
 const optional = (value: FormDataEntryValue | null) => String(value ?? "").trim() || null;
 const fail = (path: string, message: string): never => redirect(`${path}?${new URLSearchParams({ error: message })}`);
 
@@ -31,7 +32,7 @@ export async function createTicket(formData: FormData) {
   const description = String(formData.get("description") ?? "").trim();
   const priority = String(formData.get("priority") ?? "normal") as TicketPriority;
   const requesterId = viewer.role === "end_user" ? viewer.id : optional(formData.get("requesterId")) ?? viewer.id;
-  if (title.length < 3 || title.length > 180 || !description || description.length > 20000 || !priorities.includes(priority)) return { error: "Enter a subject of 3–180 characters, a description of up to 20,000 characters, and a valid priority." };
+  if (title.length < 3 || title.length > 180 || !description || description.length > 20000 || !Object.hasOwn(ticketPriorities, priority)) return { error: "Enter a subject of 3–180 characters, a description of up to 20,000 characters, and a valid priority." };
   const supabase = await createClient();
   if (formData.has("categoryLoadError")) return { error: "Categories could not be loaded. Refresh the page and try again." };
   const classification = { categoryId: optional(formData.get("categoryId")), subcategoryId: viewer.role === "end_user" ? null : optional(formData.get("subcategoryId")) };
@@ -55,7 +56,7 @@ export async function updateTicket(formData: FormData) {
   if (viewer.role === "end_user") fail(`/app/tickets/${ticketId}`, "Only ticket workers can update ticket details.");
   const status = String(formData.get("status") ?? "") as TicketStatus;
   const priority = String(formData.get("priority") ?? "") as TicketPriority;
-  if (!ticketId || !statuses.includes(status) || !priorities.includes(priority)) fail(`/app/tickets/${ticketId}`, "Choose a valid status and priority.");
+  if (!ticketId || !Object.hasOwn(ticketStatuses, status) || !Object.hasOwn(ticketPriorities, priority)) fail(`/app/tickets/${ticketId}`, "Choose a valid status and priority.");
   const supabase = await createClient();
   if (formData.has("categoryLoadError") || !formData.has("categoryId") || !formData.has("subcategoryId")) fail(`/app/tickets/${ticketId}`, "Categories could not be loaded. Refresh the page and try again.");
   const { data: currentTicket } = await supabase.from("tickets").select("category_id, subcategory_id").eq("organization_id", viewer.organizationId).eq("id", ticketId).maybeSingle();
@@ -113,8 +114,8 @@ export async function bulkUpdateTickets(formData: FormData) {
   if (!ids.length || ids.length > 100 || ids.some(id => !/^[0-9a-f-]{36}$/i.test(id))) fail("/app/tickets", "Select up to 100 tickets.");
   const supabase = await createClient();
   let changes: { status?: TicketStatus; priority?: TicketPriority; assigned_technician_id?: string | null } = {};
-  if (intent === "status" && statuses.includes(value as TicketStatus)) changes = { status: value as TicketStatus };
-  else if (intent === "priority" && priorities.includes(value as TicketPriority)) changes = { priority: value as TicketPriority };
+  if (intent === "status" && Object.hasOwn(ticketStatuses, value)) changes = { status: value as TicketStatus };
+  else if (intent === "priority" && Object.hasOwn(ticketPriorities, value)) changes = { priority: value as TicketPriority };
   else if (intent === "assignee") {
     if (value) {
       const { data: worker } = await supabase.from("organization_memberships").select("user_id").eq("organization_id", viewer.organizationId).eq("user_id", value).eq("status", "active").in("role", ["technician", "administrator"]).maybeSingle();

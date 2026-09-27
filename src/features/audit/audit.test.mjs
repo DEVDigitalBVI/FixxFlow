@@ -1,12 +1,9 @@
+import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import fs from 'node:fs';
-import {createRequire} from 'node:module';
-import ts from 'typescript';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
-const require=createRequire(import.meta.url);
-function load(file,mocks={}) {const m={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;new Function('require','module','exports',code)(name=>mocks[name]??require(name),m,m.exports);return m.exports;}
+
 const presentation=load('src/features/audit/presentation.ts',{'@/features/tickets/presentation':load('src/features/tickets/presentation.ts'),'@/features/identity/role':load('src/features/identity/role.ts')});
 test('audit values reuse status, priority and role labels with explicit unset values',()=>{
  assert.equal(presentation.auditValue('priority','normal'),'Normal');assert.equal(presentation.auditValue('status','in_progress'),'In progress');assert.equal(presentation.auditValue('assigned_technician_id',null),'Unassigned');assert.equal(presentation.auditValue('kind','internal_note'),'Internal note');assert.deepEqual(presentation.parseChanges(null),[]);

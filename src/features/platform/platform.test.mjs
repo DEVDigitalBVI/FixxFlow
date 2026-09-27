@@ -1,10 +1,7 @@
+import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import fs from 'node:fs';
-import {createRequire} from 'node:module';
-import ts from 'typescript';
-const require=createRequire(import.meta.url);
-function load(file,mocks={}){const m={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText;new Function('require','module','exports',code)(n=>mocks[n]??require(n),m,m.exports);return m.exports;}
+
 test('platform guard denies tenants, challenges incomplete MFA and allows only ready owners',async()=>{
  for(const access of ['none','enroll','verify','ready']){const {requirePlatformOwner}=load('src/lib/auth/platform.ts',{react:{cache:fn=>fn},'next/navigation':{notFound:()=>{throw Error('NOT_FOUND');},redirect:path=>{throw Error(path);}},'@/lib/supabase/server':{createClient:async()=>({auth:{getClaims:async()=>({data:{claims:{sub:'owner',email:'owner@example.test'}}})},rpc:async()=>({data:access})})}});if(access==='ready')assert.equal((await requirePlatformOwner()).id,'owner');else await assert.rejects(()=>requirePlatformOwner(),access==='none'?/NOT_FOUND/:/platform\/access/);}
 });

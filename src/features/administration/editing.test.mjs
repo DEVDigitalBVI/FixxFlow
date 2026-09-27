@@ -1,9 +1,6 @@
+import { load as loadModule } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import fs from 'node:fs';
-import ts from 'typescript';
-import { createRequire } from 'node:module';
-const require = createRequire(import.meta.url);
 
 function load(file, { role = 'administrator', responses = [{ data: { id: 'row' }, error: null }] } = {}) {
   const calls = [];
@@ -18,10 +15,7 @@ function load(file, { role = 'administrator', responses = [{ data: { id: 'row' }
     '@/lib/supabase/server': { createClient: async () => ({ from: table => { calls.push(['from', table]); return query; }, rpc: (...args) => { calls.push(['rpc', ...args]); return query; } }) },
     '@/lib/supabase/admin': { createAdminClient: () => { throw new Error('Unexpected elevated client'); } },
   };
-  const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
-  const compiledModule = { exports: {} };
-  new Function('require', 'module', 'exports', code)(name => mocks[name] ?? require(name), compiledModule, compiledModule.exports);
-  return { actions: compiledModule.exports, calls };
+  return { actions: loadModule(file, mocks), calls };
 }
 const form = values => { const data = new FormData(); for (const [key, value] of Object.entries(values)) data.set(key, value); return data; };
 const settings = 'src/app/app/administration/actions.ts';
