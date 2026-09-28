@@ -901,6 +901,10 @@ select.input-compact { height: 40px; }
 .report-line-key.report-series-1 { border-color: var(--color-success); border-top-style: dashed; }
 .report-chart summary { min-height: 44px; padding: 12px 0; cursor: pointer; font-weight: 600; }
 .report-chart details { margin-top: 12px; }
+.report-data-region { max-height: min(24rem, 55vh); overflow: auto; }
+.report-data-region thead th { position: sticky; top: 0; z-index: 1; box-shadow: 0 1px 0 var(--color-border); }
+.report-data-region th[scope="row"] { white-space: nowrap; }
+.report-data-region td { font-variant-numeric: tabular-nums; }
 .report-bars { padding: 0; list-style: none; display: grid; gap: 16px; }
 .report-bars li > div { display: flex; justify-content: space-between; gap: 16px; }
 .report-bars li > div span { overflow-wrap: anywhere; }
