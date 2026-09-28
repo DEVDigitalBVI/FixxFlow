@@ -144,6 +144,7 @@ The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its
 - Prefer a small number of meaningful metrics over decorative charts. Charts require accessible summaries and must not rely on color alone.
 - Align comparable values and keep card heights consistent within a row. Empty cards explain why no data exists and what the user can do next.
 - Report trends keep exact daily values in a native disclosure, collapsed initially and labeled with the day count. Expanded data uses a keyboard-focusable scroll region capped at 24rem or 55% of viewport height, with sticky column headers. Preserve all dates, including zero activity and missing timing samples, without expanding the entire report to the table's full height.
+- Reports offer a labeled file-format selector and Download report action for Excel, CSV, and PDF. Include all detailed rows, the reporting period, timezone, and snapshot time. Distinguish missing measurements from zero. Announce preparation and download status, retain format choice after errors, and stack controls on compact screens. PDF exports use the approved full logo, repeated table headings, and page numbers.
 
 ### 5.2 Ticket queue: list first, board later
 

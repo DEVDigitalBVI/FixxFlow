@@ -886,6 +886,13 @@ select.input-compact { height: 40px; }
 .report-shortcuts { display: flex; flex-wrap: wrap; gap: 12px; }
 .report-period { margin: 32px 0 16px; }
 .report-period p { color: var(--color-text-muted); }
+.report-download { margin-block: 16px 24px; }
+.report-download form { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; }
+.report-download .field { flex: 0 1 220px; min-width: 0; }
+.report-download > p { margin-block: 8px 0; font-size: 13px; }
+.report-download > p:empty { display: none; }
+.report-download .alert { margin-top: 12px; }
+@media (max-width: 767px) { .report-download .field, .report-download button { flex: 1 1 100%; width: 100%; } }
 .report-chart-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; align-items: start; }
 .report-chart { min-width: 0; }
 .report-chart h2 { font-size: 18px; margin-top: 0; }

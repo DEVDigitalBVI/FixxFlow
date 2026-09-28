@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  outputFileTracingIncludes: {
+    '/app/reports/export': ['./src/features/reporting/fonts/*.ttf', './public/brand/fixxflow/logo/fixxflow-logo-horizontal.png'],
+  },
   images: {
     remotePatterns: [
       {
