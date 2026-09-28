@@ -735,6 +735,12 @@ img { display: block; max-width: 100%; }
 .table caption { padding: 16px; text-align: left; font-weight: 650; }
 .table-policy { min-width: 0; }
 .table th, .table td { overflow-wrap: anywhere; }
+/* Inventory values determine column widths; overflow stays in .table-region.
+   Compact responsive cards keep their normal wrapping and stacked labels. */
+@media (min-width: 768px) {
+  .table-nowrap { min-width: 100%; table-layout: auto; }
+  .table-nowrap th, .table-nowrap td { white-space: nowrap; overflow-wrap: normal; }
+}
 .table .ticket-link { min-width: 200px; }
 .management-form { grid-template-columns: repeat(3, minmax(0, 1fr)) auto; }
 .management-form > .management-intro { grid-column: 1 / -1; }

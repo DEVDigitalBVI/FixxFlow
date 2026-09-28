@@ -126,6 +126,7 @@ The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its
 - On medium screens, collapse the left navigation by default and reduce nonessential table columns.
 - On compact screens, navigation becomes an overlay sheet; the detail drawer becomes a full-screen route or modal sheet with browser history support.
 - Never create horizontal page scrolling. Data tables may scroll within a labeled region, but also provide a stacked/card representation when completing core tasks on mobile.
+- For asset inventory, use the shared `table-nowrap` modifier at tablet/desktop widths: size columns to their contents and keep values intact, with overflow inside the keyboard-focusable table region. Retain full text and the separate name/tag hierarchy. Compact responsive cards continue to wrap long values.
 - Primary actions remain reachable without covering content. Do not place critical actions only on hover.
 
 ### 4.3 Command search

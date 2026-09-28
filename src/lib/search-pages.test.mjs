@@ -45,6 +45,18 @@ test('asset empty results and failures retain recovery, and employee queries ret
  const blank=setup('src/app/app/assets/page.tsx');await blank.render({q:['one','two']});
  assert.ok(!blank.calls.some(c=>c[0]==='rpc'));
 });
+test('inventory keeps complete long values, semantic headers and mobile labels in a keyboard-accessible region',async()=>{
+ const serial='VMware-42 04 a7 ff 60 3d 6f f7-25 fa c1 5a d3 22 c3 5b';
+ const model='HP EliteBook 865 16 inch G11 Notebook PC';
+ const a=setup('src/app/app/assets/page.tsx',{rows:[{id:'asset',name:'Reception workstation',tag:'PC-001 (HOUSE KEEPING SUPERVISORS)',kind:'network',status:'repair',serial_number:serial,model}]});
+ const html=await a.render({});
+ assert.match(html,/role="region" aria-label="Asset inventory" tabindex="0"/);
+ for(const label of ['Asset','Serial number','Type','Lifecycle','Model']) {
+  assert.ok(html.includes(`<th scope="col">${label}</th>`));
+  assert.ok(html.includes(`data-label="${label}"`));
+ }
+ for(const value of [serial,model,'Network equipment','Under repair','PC-001 (HOUSE KEEPING SUPERVISORS)']) assert.ok(html.includes(value));
+});
 test('people and technician searches preserve punctuation and filter roles before pagination',async()=>{
  const a=setup('src/app/app/people/page.tsx');
  const html=await a.render({q:"  O'Neil  syst ",view:'technicians',page:'2'});
