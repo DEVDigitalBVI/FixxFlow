@@ -76,3 +76,61 @@ test('overview returns its navigation before metrics resolve and preserves repor
  assert.equal((html.match(/class="settings-card"/g) ?? []).length, 6);
  assert.doesNotMatch(html, /No data/);
 });
+
+const reportFixture = {
+ asOf: '2026-10-01T16:00:00Z', timezone: 'America/Tortola', today: '2026-10-01',
+ summary: { created: 4, resolved: 2, open: 7, overdue: 1, response: 18, resolution: 120 },
+ daily: [{ day: '2026-10-01', created: 4, resolved: 2, reopened: 0, response: 18, resolution: 120 }],
+ breakdowns: [], sla: [{ label: 'First response', total: 4, met: 3 }, { label: 'Resolution', total: 2, met: 2 }],
+};
+const reportComponents = () => load('src/features/reporting/components.tsx', {
+ 'next/link': { default: props => React.createElement('a', props) }, './model': { duration, topRows },
+});
+
+test('service levels distinguish historical compliance from current breached work and provide useful buttons', () => {
+ const { ServiceLevels } = reportComponents();
+ const html = renderToStaticMarkup(React.createElement(ServiceLevels, { report: reportFixture, canViewTargets: true }));
+ assert.match(html, /75.0%/); assert.match(html, /100.0%/);
+ assert.match(html, /3 of 4 completed targets met on time/);
+ assert.match(html, /Last 30 days/); assert.match(html, /Right now/);
+ assert.match(html, /open ticket past an SLA deadline/);
+ assert.match(html, /class="button button-secondary" href="\/app\/tickets\?view=all&amp;sla=breached&amp;sort=sla"/);
+ assert.match(html, /href="\/app\/administration\/slas">View SLA targets/);
+});
+
+test('no completed SLA samples is not displayed as zero or perfect compliance; technicians have no admin shortcut', () => {
+ const { ServiceLevels } = reportComponents();
+ for (const sla of [[], [{ label: 'Resolution', total: 0, met: 0 }]]) {
+  const html = renderToStaticMarkup(React.createElement(ServiceLevels, { report: { ...reportFixture, sla, summary: { ...reportFixture.summary, overdue: 0 } } }));
+  assert.match(html, /No completed targets yet/);
+  assert.match(html, /No open tickets are past/);
+  assert.doesNotMatch(html, /NaN|Infinity|100\.0%|0\.0%|\/administration\//);
+  assert.match(html, /Review breached tickets/);
+ }
+});
+
+test('report groups label distinct periods and preserve all trend and breakdown views', () => {
+ const { ReportCharts } = reportComponents();
+ const html = renderToStaticMarkup(React.createElement(ReportCharts, { report: reportFixture }));
+ for (const heading of ['Activity &amp; turnaround', 'Current workload', 'Where requests come from']) assert.ok(html.includes(heading));
+ assert.match(html, /All unresolved tickets right now, regardless of when they were created/);
+ assert.match(html, /href="\/app\/tickets\?view=unassigned"/);
+ assert.equal((html.match(/<h3>/g) ?? []).length, 9);
+ assert.equal((html.match(/<details>/g) ?? []).length, 4);
+ assert.doesNotMatch(html, /SLA compliance/);
+});
+
+test('reports page passes administrator-only SLA navigation without altering technician report access', async () => {
+ for (const role of ['administrator', 'technician']) {
+  const page = load('src/app/app/reports/page.tsx', {
+   'next/link': { default: props => React.createElement('a', props) },
+   'next/navigation': { notFound: () => { throw Error('NOT_FOUND'); } },
+   '@/lib/auth/viewer': { requireViewer: async () => ({ role, organizationId: 'org', organizationName: 'Workspace' }) },
+   '@/features/reporting/data': { getReport: async () => reportFixture },
+   '@/features/reporting/report-download': { ReportDownload: () => React.createElement('button', {}, 'Download report') },
+  }).default;
+  const html = renderToStaticMarkup(await page());
+  assert.match(html, /At a glance/); assert.match(html, /Download report/);
+  assert.equal(html.includes('href="/app/administration/slas"'), role === 'administrator');
+ }
+});

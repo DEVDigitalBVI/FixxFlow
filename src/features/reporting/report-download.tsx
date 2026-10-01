@@ -47,6 +47,6 @@ export function ReportDownload() {
     </form>
     <p className="muted" id="report-download-hint">Includes summary, all 30 days, SLA, and breakdowns. Downloads refresh the data.</p>
     <p className="muted" role="status" aria-live="polite">{status}</p>
-    {error && <div className="alert alert-error" role="alert" tabIndex={-1} ref={feedback}><p>{error}</p><a href="/app/reports">Reload Reports</a></div>}
+    {error && <div className="alert alert-error" role="alert" tabIndex={-1} ref={feedback}><p>{error}</p><a className="button button-secondary" href="/app/reports">Reload Reports</a></div>}
   </div>;
 }
