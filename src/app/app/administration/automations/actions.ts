@@ -2,7 +2,7 @@
 import { revalidatePath } from 'next/cache';
 import { createAutomation, updateAutomation, duplicateAutomation, setAutomationEnabled, archiveAutomation } from '@/features/automation/admin-service';
 import { testAutomation } from '@/features/automation/dry-run-service';
-import { automationChoices, automationEvents, automationResultLabels } from '@/features/automation/ui-service';
+import { automationEvents, automationResultLabels } from '@/features/automation/ui-service';
 import { automationPath } from '@/features/automation/ui-model';
 import type { ActionResult } from '@/lib/action-result';
 
@@ -22,9 +22,6 @@ export async function manageAutomation(form: FormData): Promise<ActionResult> {
   return {success:operation==='archive'?'Automation archived. History is retained.':operation==='duplicate'?'Disabled copy created.':'Rule status updated. Global processing was not changed.',redirectTo:operation==='duplicate'?`${automationPath}/${result.value.rule.id}`:automationPath};
 }
 export async function runAutomationTest(input: unknown) { const result=await testAutomation(input); return {result,labels:result.ok?await automationResultLabels(result.value):{}}; }
-export async function findAutomationChoices(resource: string, query: string, page: number, selected: string[] = []) {
-  try { return {ok:true as const,value:await automationChoices(resource,query,page,selected)}; } catch { return {ok:false as const,error:'Choices could not load. Try again.'}; }
-}
 export async function findAutomationEvents(ticketId: string, page: number) {
   try { return {ok:true as const,value:await automationEvents(ticketId,page)}; } catch { return {ok:false as const,error:'Ticket events could not load. Try again.'}; }
 }

@@ -8,15 +8,16 @@ function deferred() {
   const promise = new Promise(done => { resolve = done; });
   return { promise, resolve };
 }
-function setup({ assurance, membership, claimsError = null }) {
+function setup({ assurance, membership, claimsError = null, avatarPath = null, sign = async () => ({data: {signedUrl:'signed-photo'}}) }) {
   const calls = [];
   const results = {
     organization_memberships: membership,
     organizations: { data: { name: 'Workspace' } },
-    profiles: { data: { display_name: 'Agent', avatar_path: null } },
+    profiles: { data: { display_name: 'Agent', avatar_path: avatarPath } },
     product_usage_preferences: { data: { enabled: true } },
   };
   const db = {
+    storage: { from: bucket => ({ createSignedUrl: (path, duration) => { calls.push(['sign',bucket,path,duration]); return sign(); } }) },
     auth: { getClaims: async () => ({ data: { claims: { sub: 'user', email: 'agent@example.com' } }, error: claimsError }) },
     from(table) {
       calls.push(table);
@@ -37,7 +38,7 @@ function setup({ assurance, membership, claimsError = null }) {
     compilerOptions: { module: ts.ModuleKind.CommonJS },
   }).outputText;
   new Function('require', 'module', 'exports', code)(name => mocks[name], compiled, compiled.exports);
-  return { load: compiled.exports.requireViewer, calls };
+  return { load: compiled.exports.requireViewer, photo: compiled.exports.requireViewerAvatarUrl, calls };
 }
 const active = { data: { organization_id: 'org', role: 'technician', status: 'active' } };
 
@@ -54,6 +55,29 @@ test('membership lookup starts while assurance is pending, but viewer waits for 
   assert.equal(viewer.organizationId, 'org');
   assert.equal(viewer.displayName, 'Agent');
   assert.equal(viewer.usageSharing, true);
+});
+
+test('viewer authorization never waits for private photo signing', async () => {
+  const signing = deferred();
+  const {load,photo,calls} = setup({assurance:Promise.resolve(),membership:active,avatarPath:'org/user/photo.png',sign:()=>signing.promise});
+  const viewer = await load();
+  assert.equal(viewer.avatarPath,'org/user/photo.png');
+  assert.equal(calls.some(call=>Array.isArray(call)&&call[0]==='sign'),false);
+  const pending = photo();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(calls.at(-1),['sign','profile-photos','org/user/photo.png',3600]);
+  signing.resolve({data:{signedUrl:'signed-photo'}});
+  assert.equal(await pending,'signed-photo');
+});
+
+test('missing photos and storage failures use initials without weakening authorization', async () => {
+  for(const options of [{}, {avatarPath:'photo',sign:async()=>({error:Error('offline')})}, {avatarPath:'photo',sign:async()=>{throw Error('offline');}}]) {
+    const {photo} = setup({assurance:Promise.resolve(),membership:active,...options});
+    assert.equal(await photo(),null);
+  }
+  const denied = setup({assurance:Promise.reject(Error('/auth/mfa')),membership:active,avatarPath:'photo'});
+  await assert.rejects(denied.photo,/auth\/mfa/);
+  assert.equal(denied.calls.some(call=>Array.isArray(call)&&call[0]==='sign'),false);
 });
 
 test('failed assurance never releases a viewer or loads organization data', async () => {

@@ -1,4 +1,4 @@
-/** Isolated browser fixture: real components/CSS, mocked server actions only.
+/** Isolated browser fixture: real components/CSS, mocked server actions and choice reads.
  * Run with node tests/helpers/automation-ui-preview.mjs. No application database,
  * credentials, persisted rules, execution or processing controls are accessed.
  */
@@ -9,6 +9,11 @@ import {createRequire} from 'node:module';
 import ts from 'typescript';
 const root=process.cwd(),modules=new Map(),ids=new Map();
 const mocks={
+  './choice-client':`
+const id=n=>'00000000-0000-4000-8000-'+String(n).padStart(12,'0');
+const choices={teams:[{id:id(11),label:'Network Team',active:true}],ticket_categories:[{id:id(12),label:'Network',active:true},{id:id(13),label:'Software',active:true}],active_ticket_workers:[{id:id(14),label:'David Rivera',active:true}],tickets:[{id:id(18),label:'Ticket #1842 · Network access',active:true}]};
+exports.loadAutomationChoices=async(resource,query,page,selected=[])=>({rows:(choices[resource]||[]).filter(r=>selected.length?selected.includes(r.id):r.label.toLowerCase().includes(query.toLowerCase())),hasNext:false});
+`,
   'next/navigation':`exports.useRouter=()=>({push:()=>{},replace:()=>{},refresh:()=>{}});`,
   '@/app/app/administration/automations/actions':`
 const {validateDefinition}=require('@/features/automation/validation');
@@ -16,8 +21,6 @@ const {persistenceRegistry}=require('@/features/automation/persistence-contract'
 const {ticketDryRunEvent}=require('@/features/automation/domains/tickets/dry-run-context');
 const {evaluateDryRun}=require('@/features/automation/dry-run');
 const id=n=>'00000000-0000-4000-8000-'+String(n).padStart(12,'0');
-const choices={teams:[{id:id(11),label:'Network Team',active:true}],ticket_categories:[{id:id(12),label:'Network',active:true},{id:id(13),label:'Software',active:true}],active_ticket_workers:[{id:id(14),label:'David Rivera',active:true}],tickets:[{id:id(18),label:'Ticket #1842 · Network access',active:true}]};
-exports.findAutomationChoices=async(resource,query,page,selected=[])=>({ok:true,value:{rows:(choices[resource]||[]).filter(r=>selected.length?selected.includes(r.id):r.label.toLowerCase().includes(query.toLowerCase())),hasNext:false}});
 exports.findAutomationEvents=async()=>({ok:true,value:{rows:[{id:id(19),event_type:'ticket.created',occurred_at:'2026-10-01T10:00:00Z',entity_version:1}],hasNext:false}});
 exports.saveAutomationDraft=async(ruleId,version,definition)=>{
  if(definition.name==='Conflict')return{ok:false,error:{code:'conflict',message:'Changed'}};

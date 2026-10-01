@@ -10,7 +10,7 @@ export type Viewer = {
   organizationId: string;
   organizationName: string;
   displayName: string;
-  avatarUrl: string | null;
+  avatarPath: string | null;
   role: AppRole;
   status: MembershipStatus;
   usageSharing: boolean;
@@ -46,19 +46,29 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
     supabase.from("product_usage_preferences").select("enabled").eq("user_id", userId).maybeSingle(),
   ]);
 
-  const { data: avatar } = profile?.avatar_path
-    ? await supabase.storage.from("profile-photos").createSignedUrl(profile.avatar_path, 3600)
-    : { data: null };
-
   return {
     id: userId,
     email: typeof claims.claims.email === "string" ? claims.claims.email : "",
     organizationId: membership.organization_id,
     organizationName: organization?.name ?? "Organization",
     displayName: profile?.display_name ?? (typeof claims.claims.email === "string" ? claims.claims.email : "User"),
-    avatarUrl: avatar?.signedUrl ?? null,
+    avatarPath: profile?.avatar_path ?? null,
     role: membership.role,
     status: membership.status,
     usageSharing: usagePreference?.enabled === true,
   };
+});
+
+/** Request-scoped and presentation-only: storage must never delay authorization. */
+export const requireViewerAvatarUrl = cache(async (): Promise<string | null> => {
+  const viewer = await requireViewer();
+  if (!viewer.avatarPath) return null;
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase.storage.from("profile-photos").createSignedUrl(viewer.avatarPath, 3600);
+    return error ? null : data?.signedUrl ?? null;
+  } catch {
+    // A profile-photo outage should leave the initials, not break the workspace.
+    return null;
+  }
 });

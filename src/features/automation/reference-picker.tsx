@@ -1,6 +1,6 @@
 'use client';
-import { useEffect, useId, useState } from 'react';
-import { findAutomationChoices } from '@/app/app/administration/automations/actions';
+import { useEffect, useId, useRef, useState } from 'react';
+import { loadAutomationChoices } from './choice-client';
 import type { Choice } from './ui-model';
 
 export function ReferencePicker({ resource, value, onChange, label, multiple=false, activeOnly=false, parentId, describedBy, invalid, onChoices }: {
@@ -9,21 +9,23 @@ export function ReferencePicker({ resource, value, onChange, label, multiple=fal
 }) {
   const id=useId(); const [query,setQuery]=useState(''),[page,setPage]=useState(1),[refresh,setRefresh]=useState(0);
   const [state,setState]=useState<{rows:Choice[];hasNext:boolean;pending:boolean;error:string}>({rows:[],hasNext:false,pending:true,error:''});
+  const previousQuery=useRef(query);
   const selected=(Array.isArray(value)?value:[value]).filter(Boolean).join(',');
   useEffect(()=>{
     let cancelled=false;
+    const controller=new AbortController();
+    const delay=query && query!==previousQuery.current?300:0;
+    previousQuery.current=query;
     const timer=setTimeout(async()=>{
       setState(previous=>({...previous,pending:true,error:''}));
       const ids=selected?selected.split(','):[];
       try {
-      const [options,chosen]=await Promise.all([findAutomationChoices(resource,query,page),ids.length?findAutomationChoices(resource,'',1,ids):Promise.resolve(null)]);
+      const {rows,hasNext}=await loadAutomationChoices(resource,query,page,ids,controller.signal);
       if(cancelled)return;
-      if(!options.ok || (chosen && !chosen.ok)) {setState(previous=>({...previous,pending:false,error:'Choices could not load. Try again.'}));return;}
-      const rows=[...new Map([...(chosen?.ok?chosen.value.rows:[]),...options.value.rows].map(row=>[row.id,row])).values()];
-      setState({rows,hasNext:options.value.hasNext,pending:false,error:''});onChoices?.(rows);
+      setState({rows,hasNext,pending:false,error:''});onChoices?.(rows);
       } catch { if(!cancelled)setState(previous=>({...previous,pending:false,error:'Choices could not load. Try again.'})); }
-    },300);
-    return ()=>{cancelled=true;clearTimeout(timer);};
+    },delay);
+    return ()=>{cancelled=true;clearTimeout(timer);controller.abort();};
   },[resource,query,page,selected,refresh,onChoices]);
   const visible=state.rows.filter(row=>!parentId||row.parentId===parentId||selected.split(',').includes(row.id));
   return <div className="field automation-picker">

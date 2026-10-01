@@ -24,13 +24,15 @@ export default async function PeoplePage({ searchParams }: Props) {
     : supabase.from('organization_memberships');
   let membersQuery = source.select('user_id, role, status', {count:'exact'}).eq("organization_id", viewer.organizationId).order("created_at").order("user_id");
   if (message.view === "technicians") membersQuery = membersQuery.eq("role", "technician");
-  const { data: memberships, error: membersError, count } = await membersQuery.range((page - 1) * 25, page * 25 - 1);
-  if (membersError) throw new Error("Unable to load members.");
-  const [{ data: profiles, error: profilesError }, departments, locations] = await Promise.all([
-    memberships?.length ? supabase.from("profiles").select("user_id, display_name, email, job_title, avatar_path, department_id, location_id, updated_at").eq("organization_id", viewer.organizationId).in("user_id", memberships.map(member => member.user_id)) : Promise.resolve({ data: [], error: null }),
-    supabase.from("departments").select("id, name, is_active").eq("organization_id", viewer.organizationId).order("name"),
-    supabase.from("locations").select("id, name, is_active").eq("organization_id", viewer.organizationId).order("name"),
+  const [{ data: memberships, error: membersError, count }, departments, locations] = await Promise.all([
+    membersQuery.range((page - 1) * 25, page * 25 - 1),
+    viewer.role === "administrator" ? supabase.from("departments").select("id, name, is_active").eq("organization_id", viewer.organizationId).order("name") : Promise.resolve({ data: [], error: null }),
+    viewer.role === "administrator" ? supabase.from("locations").select("id, name, is_active").eq("organization_id", viewer.organizationId).order("name") : Promise.resolve({ data: [], error: null }),
   ]);
+  if (membersError) throw new Error("Unable to load members.");
+  const { data: profiles, error: profilesError } = memberships?.length
+    ? await supabase.from("profiles").select("user_id, display_name, email, job_title, avatar_path, department_id, location_id, updated_at").eq("organization_id", viewer.organizationId).in("user_id", memberships.map(member => member.user_id))
+    : { data: [], error: null };
   if (profilesError || departments.error || locations.error) throw new Error("Unable to load member details. Please try again.");
   const pageHref = (target: number) => `/app/people?${new URLSearchParams({ page: String(target), q: search, ...(message.view === 'technicians' ? { view: 'technicians' } : {}) })}`;
   const profilesByUser = new Map((profiles ?? []).map((profile) => [profile.user_id, profile]));

@@ -18,8 +18,8 @@ export async function requireAutomationAdmin() {
 }
 const unavailable = () => new Error('Automation information could not load. Please try again.');
 async function session() { const viewer = await requireAutomationAdmin(); return { viewer, client: await createClient() }; }
-async function read(args: Omit<Database['public']['Functions']['read_automation_admin']['Args'], 'org'>) {
-  const { viewer, client } = await session();
+async function read(args: Omit<Database['public']['Functions']['read_automation_admin']['Args'], 'org'>, context?: Awaited<ReturnType<typeof session>>) {
+  const { viewer, client } = context ?? await session();
   const { data, error } = await client.rpc('read_automation_admin', { ...args, org: viewer.organizationId });
   if (error || !data || typeof data !== 'object' || Array.isArray(data)) throw unavailable();
   return data as unknown as { rows: unknown[]; processingActive?: boolean };
@@ -35,10 +35,27 @@ export async function automationProcessingActive() {
   if (process.env.AUTOMATION_PROCESSING_ENABLED !== 'true') return false;
   return (await read({ kind: 'list', query: '', state: 'all', trigger_type: '', page_number: 1 })).processingActive === true;
 }
-export async function automationChoices(resource: string, query = '', page = 1, selected: string[] = []) {
+function choiceRequest(resource: string, query: string, page: number, selected: string[]) {
   if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || !Array.isArray(selected) || selected.length > 100 || selected.some(id => !isUuid(id))) throw unavailable();
-  const data = await read({ kind: 'choices', resource, query: normalizeSearch(query), page_number: page, selected });
+  return { kind: 'choices', resource, query: normalizeSearch(query), page_number: page, selected };
+}
+export async function automationChoices(resource: string, query = '', page = 1, selected: string[] = []) {
+  const data = await read(choiceRequest(resource,query,page,selected));
   return { rows: data.rows.slice(0,selected.length ? 100 : 50) as Choice[], hasNext: !selected.length && data.rows.length > 50 };
+}
+/** One authorized request loads a page and any selected values concurrently. */
+export async function automationPickerChoices(resource: string, query = '', page = 1, selected: string[] = []) {
+  const optionsRequest = choiceRequest(resource,query,page,[]);
+  const selectedRequest = choiceRequest(resource,'',1,selected);
+  const context = await session();
+  const [options, chosen] = await Promise.all([
+    read(optionsRequest,context),
+    selected.length ? read(selectedRequest,context) : Promise.resolve({ rows: [] }),
+  ]);
+  const rows = [...new Map([
+    ...chosen.rows.slice(0,100) as Choice[], ...options.rows.slice(0,50) as Choice[],
+  ].map(row => [row.id,row])).values()];
+  return { rows, hasNext: options.rows.length > 50 };
 }
 export type EventChoice = { id: string; event_type: string; occurred_at: string; entity_version: number };
 export async function automationEvents(ticketId: string, page = 1) {
@@ -66,9 +83,11 @@ export async function automationHistory(ruleId: string, page: number) {
   const response = await client.from('automation_executions').select('*').eq('organization_id',viewer.organizationId).eq('rule_id',ruleId).order('started_at',{ascending:false}).order('id',{ascending:false}).range((page-1)*50,page*50);
   if(response.error) throw unavailable();
   const rows=response.data.slice(0,50);
-  const steps=rows.length ? await client.from('automation_execution_steps').select('execution_id,status').eq('organization_id',viewer.organizationId).in('execution_id',rows.map(row=>row.id)).limit(1000) : {data:[],error:null};
+  const [steps,tickets]=await Promise.all([
+    rows.length ? client.from('automation_execution_steps').select('execution_id,status').eq('organization_id',viewer.organizationId).in('execution_id',rows.map(row=>row.id)).limit(1000) : {data:[],error:null},
+    rows.length ? automationChoices('tickets','',1,[...new Set(rows.map(row=>row.entity_id))]) : {rows:[]},
+  ]);
   if(steps.error) throw unavailable();
-  const tickets=rows.length ? await automationChoices('tickets','',1,[...new Set(rows.map(row=>row.entity_id))]) : {rows:[]};
   return { rows, hasNext:response.data.length>50, steps:steps.data ?? [], tickets:Object.fromEntries(tickets.rows.map(row=>[row.id,row.label.split(' · ')[0]])) as Labels };
 }
 export async function automationExecution(ruleId: string, executionId: string) {
@@ -85,11 +104,18 @@ export async function automationExecution(ruleId: string, executionId: string) {
 }
 export async function automationResultLabels(result: import('./dry-run-model').DryRunResult) {
   const labels: Labels = {};
+  const references = new Map<string,Set<string>>();
   for(const condition of result.conditions){
     const field=persistenceRegistry.field('ticket',condition.field);
     if(field?.value.kind!=='reference')continue;
     const selected=[...new Set([condition.expected,condition.actual].flatMap(value=>Array.isArray(value)?value:[value]).filter((value):value is string=>typeof value==='string'&&isUuid(value)))];
-    for(let start=0;start<selected.length;start+=100) for(const row of (await automationChoices(field.value.resource,'',1,selected.slice(start,start+100))).rows) labels[row.id]=row.label;
+    const ids=references.get(field.value.resource) ?? new Set<string>();
+    selected.forEach(id=>ids.add(id));
+    references.set(field.value.resource,ids);
   }
+  await Promise.all([...references].map(async ([resource,ids])=>{
+    const selected=[...ids];
+    for(let start=0;start<selected.length;start+=100) for(const row of (await automationChoices(resource,'',1,selected.slice(start,start+100))).rows) labels[row.id]=row.label;
+  }));
   return labels;
 }

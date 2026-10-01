@@ -102,7 +102,7 @@ test('profile offers an independent appearance control outside profile-save form
     '@/features/theme/theme-control': { ThemeControl },
     '@/features/platform/owner-link': { OwnerConsoleLink: () => null },
     '@/components/ui/submit-button': { SubmitButton: () => null },
-    '@/components/ui/avatar': { Avatar: () => null },
+    '@/features/identity/viewer-avatar': { ViewerAvatar: () => null },
     '@/features/identity/avatar-upload': { AvatarUpload: () => null },
     '@/lib/auth/viewer': { requireViewer: async () => ({ displayName: 'User', email: 'user@example.com', id: 'user', organizationId: 'org' }) },
     '@/lib/supabase/server': { createClient: async () => ({ from: () => query }) },
