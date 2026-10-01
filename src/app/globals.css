@@ -1161,3 +1161,35 @@ select.input-compact { height: 40px; }
   .portal-logo { width: 44px; }
   .auth-mobile-brand { width: min(144px, 48vw); margin-bottom: 24px; }
 }
+
+/* Automation administration reuses the workspace surfaces and form semantics. */
+.automation-page { display: grid; gap: 18px; min-width: 0; }
+.automation-page .page-header { margin-bottom: 0; }
+.automation-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.automation-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.automation-filters > .field { flex: 1 1 180px; }
+.automation-row { min-width: 0; margin: 0; padding: 16px 0; border: 0; border-top: 1px solid var(--color-border); }
+.automation-row legend { padding-right: 12px; font-weight: 700; }
+.automation-condition-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1.3fr); gap: 16px; align-items: start; margin-bottom: 12px; }
+.automation-action-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin-bottom: 12px; }
+.automation-row .input, .automation-picker, .automation-page .field { min-width: 0; }
+.automation-page textarea { resize: vertical; }
+.automation-page .settings-card > h2, .automation-page .settings-card > p { margin-top: 0; }
+.automation-results { display: grid; gap: 16px; padding-left: 24px; overflow-wrap: anywhere; }
+.automation-results p { margin: 6px 0 0; }
+.automation-test-result { border-top: 1px solid var(--color-border); padding-top: 20px; }
+.automation-empty { text-align: center; padding-block: 36px; }
+.automation-page .settings-editor { min-width: 0; max-width: 100%; }
+.automation-page .settings-editor > .stack { min-width: min(280px,100%); }
+.automation-page .check-field { min-height: 44px; align-items: center; }
+@media (max-width: 767px) {
+  .automation-condition-grid, .automation-action-grid { grid-template-columns: minmax(0,1fr); }
+  .automation-filters { display: grid; grid-template-columns: minmax(0,1fr); }
+  .automation-page .settings-card { padding: 16px; }
+  .automation-page .automation-inline > .settings-editor { width: 100%; }
+}
+
+.automation-page .alert-info { background: var(--color-info-subtle); border-color: var(--color-border); color: var(--color-text); }
+@media (max-width: 767px) {
+  .automation-page .responsive-table th[scope="row"] { display: block; width: 100%; padding: 12px; text-align: left; overflow-wrap: anywhere; }
+}
