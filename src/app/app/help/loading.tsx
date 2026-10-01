@@ -1,1 +1,2 @@
-export default function LoadingKnowledge() { return <div className="page"><h1>Knowledge base</h1><p role="status">Loading knowledge base…</p></div>; }
+import { PageLoading } from "@/components/ui/page-loading";
+export default function Loading() { return <PageLoading title="Knowledge base" message="Loading knowledge base…"/>; }

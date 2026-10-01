@@ -1,3 +1,2 @@
-export default function LoadingTickets() {
-  return <div className="page"><h1>Tickets</h1><p role="status">Loading tickets…</p></div>;
-}
+import { PageLoading } from "@/components/ui/page-loading";
+export default function Loading() { return <PageLoading title="Tickets" message="Loading tickets…"/>; }

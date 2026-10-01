@@ -1,1 +1,2 @@
-export default function Loading() { return <div className="page" role="status">Loading administration…</div>; }
+import { PageLoading } from "@/components/ui/page-loading";
+export default function Loading() { return <PageLoading title="Administration" message="Loading administration…"/>; }

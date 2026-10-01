@@ -45,7 +45,7 @@ export function AutomationBuilder({initial,initialLabels={},draft,template,focus
   const messages=(path:string,id:string)=>errors(path).length?<p id={id} className="alert alert-error">{errors(path).map(issue=>presentValidationIssue(definition,issue).message).join(' ')}</p>:null;
   const review=validateDefinition(definition,persistenceRegistry);
   const needsSetup=(path:string)=>Boolean(template&&!review.valid&&review.issues.some(issue=>issue.path===path||issue.path.startsWith(`${path}.`)));
-  return <div ref={root} className="stack">
+  return <div ref={root} className="stack automation-builder">
     {onChooseTemplate&&<div><button type="button" className="button button-quiet" onClick={()=>{if(!dirty||window.confirm('Discard unsaved automation changes?'))onChooseTemplate();}}>← Choose another starting point</button></div>}
     {template&&<aside className="alert alert-info"><strong>Starting from {template.name}.</strong> {template.guidance} Customize this draft before saving. Nothing is enabled.</aside>}
     <ActionForm className="stack" action={async()=>{

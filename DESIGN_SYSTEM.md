@@ -351,3 +351,14 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Keep the existing semantic tokens as the single color system. Dark mode uses navy surfaces, light text, brighter semantic foregrounds, and darker tinted status backgrounds. `--color-on-accent` controls text on filled actions; `--color-inverse` stays white for fixed navy brand panels. Chart series retain their distinct line styles and data tables.
 - Use native dark form controls via `color-scheme`. Keep focus outlines and control boundaries visible. Theme changes are immediate and introduce no animation.
 - All shared logos use the approved primary (light mode) and dark-mode (dark mode) full PNGs at their original 1353:1334 proportions, with no light backing, cropping, or recoloring. The authentication brand panel follows theme surfaces to keep the selected artwork legible.
+
+### Cross-screen consistency (October 2026)
+
+- Reuse `PageHeader` for workspace headings: optional back navigation, one title, concise context and a separate action group. Existing domain headers retain their specialized status and identity content. Back navigation remains a native link with a quiet button treatment; arrows are decorative when a text label names the destination.
+- Use button treatments for standalone actions such as clearing filters, opening history, pagination and returning to a list. Keep article titles, ticket identities, attachments and links within prose as content links. Navigation retains anchor semantics, including opening in a new tab.
+- Queue view selectors use rounded rectangular controls with a written label, selected weight and edge cue. Pagination uses ordinary secondary buttons and must not inherit the view selector's styling.
+- Shared action targets are 44px tall, including quiet and compact buttons. Hover feedback must not make disabled actions appear available. Keep visible focus, native disclosure keyboard behavior and existing reduced-motion and forced-colors support.
+- Staff knowledge browsing follows workspace width and heading rhythm. Employee pages retain their simpler layout and larger text; long articles and focused forms retain readable widths in either context.
+- Use `PageLoading` for route-level waits: a named heading, one polite status announcement and static, assistive-technology-hidden placeholders. Do not invent counts, percentages or skeleton data.
+- Template cards align their actions consistently. Builder sections keep brief guidance beside clearly separated fields. Operations uses neutral metric surfaces with written health states; color does not replace the meaning of a state.
+- These patterns apply the hierarchy, consistent controls and adaptable layout principles in Apple's [HIG layout](https://developer.apple.com/design/human-interface-guidelines/layout) and [buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) guidance to FixxFlow's web interface.

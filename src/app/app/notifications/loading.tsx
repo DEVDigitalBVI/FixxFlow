@@ -1,3 +1,2 @@
-export default function LoadingNotifications() {
-  return <div className="page"><h1>Notifications</h1><p role="status">Loading your updates…</p></div>;
-}
+import { PageLoading } from "@/components/ui/page-loading";
+export default function Loading() { return <PageLoading title="Notifications" message="Loading your updates…"/>; }

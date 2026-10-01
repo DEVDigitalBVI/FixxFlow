@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Contact support | FixxFlow" };
 export default function SupportPage() {
   return <div className="portal-page">
     <header className="portal-page-heading">
-      <div><Link href="/app">← Home</Link><h1>Contact support</h1><p>Get help with your FixxFlow account or the app.</p></div>
+      <div><Link className="button button-quiet page-back-link" href="/app">← Home</Link><h1>Contact support</h1><p>Get help with your FixxFlow account or the app.</p></div>
     </header>
     <section className="portal-detail-card" aria-labelledby="email-support-heading">
       <h2 id="email-support-heading">Email FixxFlow support</h2>
@@ -17,8 +17,8 @@ export default function SupportPage() {
     </section>
     <section className="portal-detail-card" aria-labelledby="more-help-heading">
       <h2 id="more-help-heading">More ways to get help</h2>
-      <p>For equipment, access, or other workplace IT issues, <Link href="/app/tickets/new">submit a request to your IT team</Link>.</p>
-      <p>Looking for instructions? <Link href="/app/help">Browse help articles</Link>.</p>
+      <p>For equipment, access or other workplace IT issues, contact your IT team or find a guide.</p>
+      <div className="page-header-actions"><Link className="button button-secondary" href="/app/tickets/new">Submit an IT request</Link><Link className="button button-secondary" href="/app/help">Browse help articles</Link></div>
     </section>
   </div>;
 }

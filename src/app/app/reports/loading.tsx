@@ -1,1 +1,2 @@
-export default function LoadingReports() { return <div className="page" role="status"><h1>Reports</h1><p>Loading support metrics…</p></div>; }
+import { PageLoading } from "@/components/ui/page-loading";
+export default function Loading() { return <PageLoading title="Reports" message="Loading support metrics…"/>; }

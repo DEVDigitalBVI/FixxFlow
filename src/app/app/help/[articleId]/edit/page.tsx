@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { PageHeader } from "@/components/ui/page-header";
 import { notFound } from "next/navigation";
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
@@ -18,5 +18,5 @@ export default async function EditArticlePage({params}:{params:Promise<{articleI
   const missing=article.data.related_article_ids.filter(id=>!related.data?.some(a=>a.id===id));
   const extra=missing.length?await database.from("knowledge_articles").select("id,title").eq("organization_id",viewer.organizationId).in("id",missing):{data:[],error:null};
   if(extra.error)return <div className="page"><p role="alert">Could not load related articles. Refresh to retry.</p></div>;
-  return <div className="page"><Link href={`/app/help/${articleId}`}>← Article</Link><h1>Edit article</h1><ArticleEditor article={article.data} organizationId={viewer.organizationId} assets={assets.data??[]} related={[...related.data??[],...extra.data??[]]}/></div>;
+  return <div className="page"><PageHeader title="Edit article" eyebrow="Knowledge base" description="Keep your guidance accurate and easy to follow." back={{href:`/app/help/${articleId}`,label:"Back to article"}}/><ArticleEditor article={article.data} organizationId={viewer.organizationId} assets={assets.data??[]} related={[...related.data??[],...extra.data??[]]}/></div>;
 }
