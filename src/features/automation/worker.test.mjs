@@ -33,6 +33,7 @@ test('Stage 5 worker integration through migrated database RPCs', async t => {
       assert.deepEqual(children.map(row => row.event_type), ['ticket.assigned', 'ticket.priority_changed']);
       for (const child of children) { assert.equal(child.correlation_id, saved.executions[0].correlation_id); assert.equal(child.causation_id, saved.executions[0].event_id); assert.equal(child.depth, 1); }
       assert.ok(logs.some(row => row.executionId && row.ruleVersion && row.organizationId && row.eventType && row.correlationId));
+      assert.deepEqual(logs.filter(row => row.result === 'step_succeeded').map(row => ({ id: row.stepId, action: row.actionId, position: row.actionPosition })), saved.steps.sort((a, b) => a.position - b.position).map(step => ({ id: step.id, action: step.action_id, position: step.position })));
       assert.doesNotMatch(JSON.stringify(logs), /SECRET|definition|leaseToken|description|body/);
     });
     await scenario('nonmatching rule persists skipped conditions and performs zero actions', async () => {
@@ -40,6 +41,42 @@ test('Stage 5 worker integration through migrated database RPCs', async t => {
       assert.equal((await runAutomationWorker(store, options)).acknowledged, 1);
       const saved = await state(db); assert.equal(saved.executions[0].status, 'skipped'); assert.equal(saved.executions[0].conditions[0].status, 'failed');
       assert.equal(saved.executions[0].actions_attempted, 0); assert.equal(saved.steps[0].status, 'not_attempted'); assert.equal(saved.steps[0].attempts, 0);
+    });
+    await scenario('rollout canary: Low ticket creates one automation-authored verification note', async () => {
+      const rule = await createRule(db, { conditions: group(condition('priority', 'equals', 'low')), actions: [action('add_internal_note', { body: 'Automation verification successful.' })] });
+      await activate(db); await identity(db);
+      const target = (await db.query("insert into public.tickets(organization_id,requester_id,title,description,priority) values($1,$2,'Rollout verification','SECRET DESCRIPTION','low') returning *", [ids.org, ids.employee])).rows[0];
+      await service(db); const store = storeFor(db);
+      assert.equal((await runAutomationWorker(store, options)).acknowledged, 1);
+      const saved = await state(db), execution = saved.executions[0];
+      assert.equal(execution.rule_id, rule.id); assert.equal(execution.rule_version, rule.version); assert.equal(execution.entity_id, target.id); assert.equal(execution.status, 'succeeded');
+      const notes = (await db.query('select * from public.ticket_messages where ticket_id=$1', [target.id])).rows;
+      assert.equal(notes.length, 1); assert.equal(notes[0].body, 'Automation verification successful.');
+      assert.equal(notes[0].author_type, 'automation'); assert.equal(notes[0].author_id, null);
+      assert.equal(notes[0].automation_execution_id, execution.id); assert.equal(notes[0].automation_step_id, saved.steps[0].id);
+      const event = (await db.query('select * from private.domain_events where id=$1', [execution.event_id])).rows[0];
+      assert.equal(event.correlation_id, execution.correlation_id); assert.equal(event.causation_id, execution.causation_id);
+      await service(db); assert.equal((await runAutomationWorker(store, options)).claimed, 0);
+    });
+    await scenario('rollout kill switch retains pending work and history; reactivation excludes the old backlog', async () => {
+      const { store } = await ready(db, { actions: [action('add_internal_note', { body: 'Verification note' })] });
+      await runAutomationWorker(store, options);
+      const pending = await ticket(db);
+      await activate(db, false); const before = await state(db);
+      const rulesBefore = (await db.query('select * from public.automation_rules order by id')).rows;
+      await service(db); assert.equal((await runAutomationWorker(store, options)).claimed, 0);
+      assert.deepEqual(await state(db), before);
+      assert.deepEqual((await db.query('select * from public.automation_rules order by id')).rows, rulesBefore);
+      assert.equal((await db.query('select revision from public.tickets where id=$1', [pending.id])).rows[0].revision, 1);
+      await identity(db);
+      const list = (await db.query("select public.read_automation_admin($1,'list') as result", [ids.org])).rows[0].result;
+      assert.equal(list.processingActive, false); assert.equal(list.rows.length, 1);
+      await activate(db); await service(db); assert.equal((await runAutomationWorker(store, options)).claimed, 0);
+      const fresh = await ticket(db); await service(db); assert.equal((await runAutomationWorker(store, options)).acknowledged, 1);
+      const after = await state(db); assert.equal(after.executions.length, before.executions.length + 1);
+      assert.equal(after.executions.some(row => row.entity_id === pending.id), false);
+      assert.equal(after.executions.some(row => row.entity_id === fresh.id && row.status === 'succeeded'), true);
+      assert.equal(after.deliveries.find(row => row.id === before.deliveries.find(row => row.status === 'pending').id).status, 'pending');
     });
     for (const reason of ['disabled', 'before_activation', 'before_enablement', 'processing_off']) await scenario(`${reason} does not execute or claim historical work`, async () => {
       let rule;

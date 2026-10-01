@@ -22,6 +22,7 @@ export interface AutomationWorkerStore {
 }
 export type AutomationLog = {
   result: string; code?: string; deliveryId?: string; executionId?: string;
+  stepId?: string; actionId?: string; actionPosition?: number;
   organizationId?: string; ruleId?: string; ruleVersion?: number; eventId?: string; eventType?: string; correlationId?: string;
 };
 export type WorkerOptions = { enabled: boolean; now?: () => number; budgetMs?: number; log?: (entry: AutomationLog) => void };
@@ -71,7 +72,7 @@ export async function runAutomationWorker(store: AutomationWorkerStore, options:
           for (const { action } of plan.actions) {
             checkTime(); const step = await store.execute(delivery, execution, action);
             if (step.organization_id !== event.organizationId || step.execution_id !== execution.id || step.action_id !== action.id || step.position !== action.position) throw new AutomationWorkerError('invalid_storage');
-            log({ ...context, result: `step_${step.status}`, code: step.error_code ?? undefined });
+            log({ ...context, stepId: step.id, actionId: step.action_id, actionPosition: step.position, result: `step_${step.status}`, code: step.error_code ?? undefined });
             if (step.status !== 'succeeded') break;
           }
           checkTime(); execution = await store.execution(delivery, execution.id);
