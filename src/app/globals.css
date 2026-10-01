@@ -1460,6 +1460,8 @@ select.input-compact { height: 40px; }
 .automation-builder .settings-card > h2 { font-size: 18px; margin: 0; }
 .automation-builder .settings-card > .muted { margin: 0; line-height: 1.6; }
 .automation-builder .settings-card > .button { justify-self: start; }
+.automation-portability { overflow-wrap: anywhere; }
+.automation-portability input[type="file"] { width: 100%; min-width: 0; }
 .automation-builder .automation-row { padding-block: 20px; }
 .automation-builder .automation-row legend { font-size: 13px; color: var(--color-text-muted); }
 .automation-operations-grid .settings-card { gap: 12px; }

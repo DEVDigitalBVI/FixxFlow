@@ -52,6 +52,38 @@ test('automation persistence on a clean PostgreSQL migration replay', async t =>
     for (const [name, file] of [['tenant isolation, roles, MFA, versions, stale edits, lifecycle, audit, bypasses', 'automation'], ['tenant reference validation across all fields/actions and inactive targets', 'automation-references'], ['existing security regression suite', 'security-regression']]) {
       await t.test(name, async () => { await db.exec(await readFile(`supabase/tests/${file}.sql`, 'utf8')); });
     }
+    await t.test('portable drafts use normal creation: disabled version 1, audit, cross-tenant and stale-reference rejection', async () => {
+      const { exportPortablePackage, resolvePortableDraft } = load('src/features/automation/portable.ts');
+      const { definition, action, uuid } = await import('../../../tests/fixtures/automation.mjs');
+      const org = uuid(601), other = uuid(602), admin = uuid(603), team = uuid(604), foreignTeam = uuid(605);
+      await db.exec('begin');
+      try {
+        await db.query('insert into auth.users(id,email) values ($1,$2)', [admin, 'portability@example.invalid']);
+        await db.query('insert into public.organizations(id,name,slug) values ($1,$2,$3),($4,$5,$6)', [org,'Portability A','portability-a',other,'Portability B','portability-b']);
+        await db.query("insert into public.organization_memberships(organization_id,user_id,role) values ($1,$2,'administrator')", [org,admin]);
+        await db.query('insert into public.teams(id,organization_id,name) values ($1,$2,$3),($4,$5,$6)', [team,org,'Destination team',foreignTeam,other,'Foreign team']);
+        await db.exec('set local role authenticated');
+        await db.query("select set_config('request.jwt.claims',$1,true)", [JSON.stringify({sub:admin,role:'authenticated',aal:'aal2'})]);
+        const pkg = exportPortablePackage(definition({actions:[action('assign_team',{teamId:uuid(999)})]}), {[uuid(999)]:'Source team'});
+        const draft = resolvePortableDraft(pkg,{'ref-1':team});
+        const create = input => db.query('select * from public.create_automation_rule($1,$2::jsonb)', [org,JSON.stringify(input)]);
+        const saved = (await create(draft.definition)).rows[0];
+        assert.equal(saved.enabled,false); assert.equal(saved.version,1); assert.equal(saved.organization_id,org);
+        assert.equal((await db.query('select count(*)::int n from public.automation_rule_versions where rule_id=$1',[saved.id])).rows[0].n,1);
+        assert.equal((await db.query("select count(*)::int n from public.audit_events where organization_id=$1 and entity_id=$2 and action='created'",[org,saved.id])).rows[0].n,1);
+        for(const invalid of [foreignTeam,uuid(999)]) {
+          await db.exec('savepoint invalid_mapping');
+          await assert.rejects(create(resolvePortableDraft(pkg,{'ref-1':invalid}).definition), {code:'22023'});
+          await db.exec('rollback to savepoint invalid_mapping');
+        }
+        await db.exec('reset role');
+        await db.query('update public.teams set is_active=false where id=$1',[team]);
+        await db.exec('set local role authenticated; savepoint stale_mapping');
+        await assert.rejects(create(draft.definition), {code:'22023'});
+        await db.exec('rollback to savepoint stale_mapping');
+        assert.equal((await db.query('select count(*)::int n from public.automation_rules where organization_id=$1',[org])).rows[0].n,1);
+      } finally { await db.exec('rollback'); }
+    });
     await t.test('existing audit regression suite', async () => {
       // The unchanged suite requires an existing active administrator and profile.
       await db.exec(`insert into auth.users(id,email) values ('10000000-0000-0000-0000-000000000701','audit-baseline@example.invalid');

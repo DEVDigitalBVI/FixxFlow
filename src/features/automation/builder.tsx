@@ -19,7 +19,7 @@ import type { AutomationTemplate } from './templates';
 import { automationSummary } from './summary';
 import { presentValidationIssue } from './validation-presentation';
 
-export function AutomationBuilder({initial,initialLabels={},draft,template,focusOnMount=false,onChooseTemplate}:{initial?:PersistedAutomationRule;initialLabels?:Labels;draft?:AutomationDefinition;template?:AutomationTemplate;focusOnMount?:boolean;onChooseTemplate?:()=>void}) {
+export function AutomationBuilder({initial,initialLabels={},draft,template,imported=false,focusOnMount=false,onChooseTemplate}:{initial?:PersistedAutomationRule;initialLabels?:Labels;draft?:AutomationDefinition;template?:AutomationTemplate;imported?:boolean;focusOnMount?:boolean;onChooseTemplate?:()=>void}) {
   const router=useRouter();const [definition,setDefinition]=useState<AutomationDefinition>(initial?.rule.definition??draft??newDefinition());
   const [saved,setSaved]=useState(JSON.stringify(initial?.rule.definition??draft??newDefinition()));
   const [identity,setIdentity]=useState(initial?{id:initial.rule.id,version:initial.rule.version}:null);
@@ -46,7 +46,7 @@ export function AutomationBuilder({initial,initialLabels={},draft,template,focus
   const review=validateDefinition(definition,persistenceRegistry);
   const needsSetup=(path:string)=>Boolean(template&&!review.valid&&review.issues.some(issue=>issue.path===path||issue.path.startsWith(`${path}.`)));
   return <div ref={root} className="stack automation-builder">
-    {onChooseTemplate&&<div><button type="button" className="button button-quiet" onClick={()=>{if(!dirty||window.confirm('Discard unsaved automation changes?'))onChooseTemplate();}}>← Choose another starting point</button></div>}
+    {onChooseTemplate&&<div><button type="button" className="button button-quiet" onClick={()=>{if(!dirty||window.confirm('Discard unsaved automation changes?'))onChooseTemplate();}}>{imported?'← Back to import review':'← Choose another starting point'}</button></div>}
     {template&&<aside className="alert alert-info"><strong>Starting from {template.name}.</strong> {template.guidance} Customize this draft before saving. Nothing is enabled.</aside>}
     <ActionForm className="stack" action={async()=>{
       const valid=validateDefinition(definition,persistenceRegistry);
@@ -54,8 +54,8 @@ export function AutomationBuilder({initial,initialLabels={},draft,template,focus
       const result=await saveAutomationDraft(identity?.id??null,identity?.version??null,valid.value);
       if(!result.ok){setIssues(result.error.issues??[]);return {error:result.error.code==='conflict'?'Another administrator changed this automation. Your draft is preserved. Open the saved version in a new tab to compare before reloading.':result.error.message};}
       setIdentity({id:result.value.rule.id,version:result.value.rule.version});setSaved(JSON.stringify(result.value.rule.definition));setDefinition(result.value.rule.definition);setIssues([]);
-      if(!identity)router.replace(`${automationPath}/${result.value.rule.id}?saved=disabled`);
-      return {success:identity?'Changes saved. Rule enablement was not changed.':'Automation saved as disabled. It will not run until enabled. Global processing must also be active.'};
+      if(!identity)router.replace(`${automationPath}/${result.value.rule.id}?saved=${imported?'imported':'disabled'}`);
+      return {success:identity?'Changes saved. Rule enablement was not changed.':imported?'Automation imported as disabled. Review and test it before enabling.':'Automation saved as disabled. It will not run until enabled. Global processing must also be active.'};
     }}>
       {issues.length>0&&<section id="automation-validation-summary" ref={validationFeedback} tabIndex={-1} role="alert" className="alert alert-error stack" aria-labelledby="automation-errors-heading"><h2 id="automation-errors-heading">Review your automation</h2><p>Your draft is preserved. Select an item to review it.</p><ul>{issues.map((issue,index)=>{const presented=presentValidationIssue(definition,issue);return <li key={`${issue.path}-${index}`}><a href={`#${presented.target}`} onClick={()=>document.getElementById(presented.target)?.focus()}>{presented.message}</a></li>;})}</ul></section>}
       <section className="settings-card stack" aria-labelledby="automation-name-heading"><h2 id="automation-name-heading">Automation details</h2>

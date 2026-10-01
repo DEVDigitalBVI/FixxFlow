@@ -17,6 +17,7 @@ export default async function AutomationsPage({searchParams}:{searchParams:Promi
   const href=(page:number)=>`${automationPath}?${new URLSearchParams({q:query,state,trigger,page:String(page)})}`;
   return <>
     <AutomationHeader title="Automations" description="Less repetitive work. More time for the tickets that need you." back="/app/administration" actions={<>
+      <Link href={`${automationPath}/import`} className="button button-secondary">Import Automation</Link>
       <Link href={`${automationPath}/operations`} className="button button-secondary">Operations</Link>
       <Link href={`${automationPath}/new`} className="button button-primary"><span aria-hidden="true">＋</span>Create Automation</Link>
     </>}/>

@@ -16,7 +16,7 @@ const baseMocks={'server-only':{},'next/link':link,'next/navigation':navigation,
 test('list shows status, statistics, human labels and retry exhaustion; filter values persist',async()=>{
   const calls=[];const page=load('src/app/app/administration/automations/page.tsx',{...baseMocks,'@/features/automation/ui-service':{automationList:async(...args)=>{calls.push(args);return{rows:[row],hasNext:true,processingActive:false};}}}).default;
   const html=render(await page({searchParams:Promise.resolve({q:'Network',state:'disabled',trigger:'ticket.created',page:'2'})}));
-  for(const text of ['Critical Network Routing','Disabled','Ticket created','Retry exhausted','Run count','History','Edit','Create Automation','Processing off','Next','Previous'])assert.ok(html.includes(text),text);
+  for(const text of ['Critical Network Routing','Disabled','Ticket created','Retry exhausted','Run count','History','Edit','Create Automation','Import Automation','Export','Processing off','Next','Previous'])assert.ok(html.includes(text),text);
   assert.deepEqual(calls,[['Network','disabled','ticket.created',2]]);assert.match(html,/responsive-table/);assert.match(html,/role="region"/);assert.match(html,/tabindex="0"/);
 });
 for(const [filters,message] of [[{},'Automate repetitive ticket work'],[{q:'missing'},'No automations match your search'],[{state:'enabled'},'No automations match these filters']])test(`list empty state: ${message}`,async()=>{
