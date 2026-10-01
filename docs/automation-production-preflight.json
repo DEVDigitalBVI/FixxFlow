@@ -1,0 +1,135 @@
+{
+  "projectRef": "dhuikxkrokowvnvzpihp",
+  "observedAt": "2026-10-01T04:13:15.418266Z",
+  "repositoryCommit": "0b70dc8",
+  "remotePostgres": "17.6",
+  "localComparator": "PGlite PostgreSQL 18.3",
+  "localMigrationCount": 36,
+  "remoteMigrationCount": 26,
+  "pending": [
+    {
+      "file": "20261001014435_automation_rule_definitions.sql",
+      "sha256": "7a5781ef6c3d08e15548f6c918c66ef18e47c004cfd2682fe8f5240fdf5a0379"
+    },
+    {
+      "file": "20261001014436_automation_administration_audit.sql",
+      "sha256": "621f90798308713203b069593f2fc92c89ba0c5e6177e24fc7db4e3243b21924"
+    },
+    {
+      "file": "20261001020338_durable_domain_events.sql",
+      "sha256": "255fc7c55d86bb6d95f65fac3402990034f55dcd135237dd937f950fa3d3a632"
+    },
+    {
+      "file": "20261001022623_automation_execution_authority.sql",
+      "sha256": "502864308b148f76cc9b8688b12d01d17e79cad779f8ecccfd21753bb4cd41b4"
+    },
+    {
+      "file": "20261001023010_automation_ticket_commands.sql",
+      "sha256": "085529598746c0234f437668db7889c8716f8945402e81f87ac1e28f08d7ff13"
+    },
+    {
+      "file": "20261001025400_automation_notification_kind.sql",
+      "sha256": "0a989be93641d7103bd5f311180e65a14d0241f3339aa9fc4ba34086be8a881d"
+    },
+    {
+      "file": "20261001025401_automation_worker_delivery.sql",
+      "sha256": "48f06eada8767f892d4035b7a709326345991f9b71aeeddb24235fce865d64f5"
+    },
+    {
+      "file": "20261001025402_automation_notification_command.sql",
+      "sha256": "a3ade26c636d2603bd8a9faf8a561b0686aed06be7fe05907d2dbc37c4773957"
+    },
+    {
+      "file": "20261001031036_automation_dry_run_reads.sql",
+      "sha256": "1a6e035bcb1f484fac98fd8ab25fd515cf8236fb270d3745984e453f6fdc206b"
+    },
+    {
+      "file": "20261001032617_automation_admin_reads.sql",
+      "sha256": "a2cf3f89670dbc917e06917c2b916429b93e015619abc705759df9a7e06199d8"
+    }
+  ],
+  "schemaComparison": {
+    "localFingerprints": 1168,
+    "remoteFingerprints": 1168,
+    "missingRemote": [],
+    "unexpectedRemote": [],
+    "changed": [],
+    "groups": {
+      "column": {
+        "count": 241,
+        "sha256": "843f4f4e62169fdee34362016d0b5fa14f2f905227c9a44bc5cbbfc5d6c6f008"
+      },
+      "column_grant": {
+        "count": 112,
+        "sha256": "b76ab92206b1b2d401aaed52f0d9c040aa9e7dd555f6eb93002df85de7efe3b0"
+      },
+      "constraint": {
+        "count": 149,
+        "sha256": "e5460b05fdbaf4ced84cf75feefc8b65e852e776506f3f21ac4a6c4256e88771"
+      },
+      "enum": {
+        "count": 8,
+        "sha256": "afd0ff2292081df9e794055c6256c5797aad1c8db7a2618a67a00d1685f9afb5"
+      },
+      "function": {
+        "count": 65,
+        "sha256": "bcdfa4b9cd4b1f9ec6807d479e0128ae52033dab4c94609f3de000ea06919c27"
+      },
+      "function_grant": {
+        "count": 63,
+        "sha256": "c888146941d99e5fc0834f2a80135e044239ce3bab2daff9a9c9b47d24ed4d11"
+      },
+      "index": {
+        "count": 122,
+        "sha256": "fc15c3bf1019f4244312da5791792fb4fcb4ebca48b0ab527c97537d6c288b63"
+      },
+      "policy": {
+        "count": 91,
+        "sha256": "1df7789abf3c9c8cedc10a8b8caaaa9fbc392384dfdd759ce53bfd3fcd235687"
+      },
+      "table": {
+        "count": 30,
+        "sha256": "0259e800f4e02858c2e3fae10755fc9408627b247aa6d88e4ce31b490454ca32"
+      },
+      "table_grant": {
+        "count": 240,
+        "sha256": "f28c8a6be9db28efe9104f0c5b088bc558d65fdf58ddfb2976d90f744e937948"
+      },
+      "trigger": {
+        "count": 47,
+        "sha256": "6a43043bba99daa462d4408cebbf602d897a8ceac728b0276cf3332125969dc0"
+      }
+    }
+  },
+  "counts": {
+    "organizations": 1,
+    "memberships": 1,
+    "teams": 1,
+    "categories": 11,
+    "subcategories": 0,
+    "assets": 77,
+    "auditEvents": 118,
+    "tickets": 0,
+    "ticketMessages": 0,
+    "ticketActivity": 0,
+    "notifications": 0,
+    "emailOutbox": 0
+  },
+  "backupReadiness": "BLOCKED: CLI AccessTokenRequiredError; recovery point unverified",
+  "deploymentProcessingFlag": "absent; default OFF",
+  "databaseProcessingTable": "absent; not installed",
+  "historyDivergence": [
+    {
+      "name": "category_team_routing",
+      "local": "20260926024707",
+      "remote": "20260926024852",
+      "recordedSqlMatchesLocal": true
+    },
+    {
+      "name": "ticket_routing_insert_permission",
+      "local": "20260926024954",
+      "remote": "20260926025012",
+      "recordedSqlMatchesLocal": true
+    }
+  ]
+}

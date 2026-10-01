@@ -1,5 +1,10 @@
 # Automation rollout runbook — Stage 8
 
+The subsequent [production alignment preflight](automation-production-preflight.md)
+found two historical migration-version discrepancies despite matching SQL bodies.
+Use that report's history reconciliation and recovery prerequisites before the
+migration sequence below. Counts alone do not establish aligned migration histories.
+
 Status: **deployment preparation; activation blocked**. No production migration,
 deployment or activation has been performed during this stage. Production deployment
 was authorized during the session, with processing OFF. The owner confirmed that a
