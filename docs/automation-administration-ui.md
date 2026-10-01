@@ -1,7 +1,8 @@
 # Automation administration — Stage 7
 
 The Automation administration UI is implemented inside the existing Administration
-experience. Stage 8 rollout/activation is not included. No migration, page or Server
+experience. The subsequent [Stage 8 templates and UX polish](automation-templates.md)
+extends this UI; production rollout/activation remains deferred. No migration, page or Server
 Action enables the global processing switch. Deployment configuration is unchanged.
 
 ## Routes and files
@@ -10,7 +11,7 @@ Under `/app/administration/automations`:
 
 - `/`: name search, enabled/disabled/archive and trigger filters, bounded list,
   run statistics and management actions.
-- `/new`: disabled draft builder.
+- `/new`: template gallery or Start from scratch, followed by the disabled draft builder.
 - `/[ruleId]`: existing rule builder, separate lifecycle controls and history link.
 - `/[ruleId]/history`: paginated execution history.
 - `/[ruleId]/history/[executionId]`: pinned-version execution detail.

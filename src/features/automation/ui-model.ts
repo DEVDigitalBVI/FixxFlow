@@ -27,15 +27,17 @@ export function valueLabel(value: JsonValue | undefined, labels: Labels = {}): s
   const recipients: Record<string,string> = { requester: 'Requester', assigned_technician: 'Assigned technician', ticket_update: 'Ticket update' };
   return Object.hasOwn(recipients,text) ? recipients[text] : text;
 }
+export const configurationLabels: Record<string, string> = { technicianId: 'Technician', teamId: 'Team', categoryId: 'Category', priority: 'Priority', status: 'Status', recipient: 'Recipient', body: 'Internal note' };
+export function triggerPhrase(type: string) { return ({ 'ticket.created': 'a ticket is created', 'ticket.updated': 'a ticket is updated', 'ticket.assigned': 'a ticket is assigned', 'ticket.status_changed': 'a ticket’s status changes', 'ticket.priority_changed': 'a ticket’s priority changes', 'ticket.resolved': 'a ticket is resolved' } as Record<string,string>)[type] ?? triggerLabel(type).toLowerCase(); }
 export function actionDescription(action: Pick<AutomationAction, 'type' | 'configuration'>, labels: Labels = {}) {
   if (action.type === 'add_internal_note') return 'Add an internal note';
-  return `${actionLabel(action.type)} → ${Object.entries(action.configuration).filter(([key]) => key !== 'template').map(([,value]) => valueLabel(value, labels)).join(', ')}`;
+  return `${actionLabel(action.type)} → ${Object.entries(action.configuration).filter(([key]) => key !== 'template').map(([key,value]) => value === '' ? `Select ${(configurationLabels[key] ?? 'value').toLowerCase()}` : valueLabel(value, labels)).join(', ')}`;
 }
 export function conditionValue(field: string, value: JsonValue | undefined, labels: Labels = {}) {
   if(fieldOptions.find(item=>item.key===field)?.value.kind==='string' && value!==undefined && value!==null) return Array.isArray(value) ? value.map(String).join(', ') : String(value);
   return valueLabel(value,labels);
 }
-export function conditionDescription(condition: AutomationCondition, labels: Labels = {}) { return `${fieldLabel(condition.field)} ${operatorLabels[condition.operator]}${condition.value === undefined ? '' : ` ${conditionValue(condition.field,condition.value,labels)}`}`; }
+export function conditionDescription(condition: AutomationCondition, labels: Labels = {}) { return `${fieldLabel(condition.field)} ${operatorLabels[condition.operator]}${condition.value === undefined ? '' : ` ${condition.value === '' || (Array.isArray(condition.value) && !condition.value.length) ? `Select ${fieldLabel(condition.field).toLowerCase()}` : conditionValue(condition.field,condition.value,labels)}`}`; }
 export function executionLabel(status: string, error: string | null) {
   if (error === 'retry_exhausted') return 'Retry exhausted';
   if (error === 'delivery_failed') return 'Delivery failed';
@@ -62,3 +64,5 @@ export function moveAction(actions: readonly AutomationAction[], id: string, dir
   [next[index], next[destination]] = [next[destination], next[index]];
   return next.map((item, position) => ({ ...item, position }));
 }
+
+export function executionDuration(durationMs: number | null, status: string) { return durationMs === null ? status === 'running' ? 'In progress' : 'Not recorded' : `${(durationMs / 1000).toFixed(1)}s`; }

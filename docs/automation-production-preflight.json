@@ -115,21 +115,72 @@
     "notifications": 0,
     "emailOutbox": 0
   },
-  "backupReadiness": "BLOCKED: CLI AccessTokenRequiredError; recovery point unverified",
+  "backupReadiness": "BLOCKED: completed daily physical backup verified; required fresh logical export failed because Docker/Podman is unavailable",
   "deploymentProcessingFlag": "absent; default OFF",
   "databaseProcessingTable": "absent; not installed",
-  "historyDivergence": [
-    {
-      "name": "category_team_routing",
-      "local": "20260926024707",
-      "remote": "20260926024852",
-      "recordedSqlMatchesLocal": true
+  "historyDivergence": [],
+  "platformBackup": {
+    "mechanism": "WAL-G physical daily backups",
+    "pitrEnabled": false,
+    "latestListedCompletedBackupInsertedAt": "2026-09-30T11:40:54.767Z",
+    "observedDailyPoints": 7,
+    "restoreRehearsed": false
+  },
+  "identifierReconciliation": {
+    "verifiedAt": "2026-10-01T04:35:14.958310+00:00",
+    "changes": [
+      {
+        "old": "20260926024707_category_team_routing.sql",
+        "new": "20260926024852_category_team_routing.sql",
+        "sha256": "775a5bc41b737f59bab2d8a52d675941efe2b1d39e79a32e0d22421183cc5a54",
+        "identicalBytes": true
+      },
+      {
+        "old": "20260926024954_ticket_routing_insert_permission.sql",
+        "new": "20260926025012_ticket_routing_insert_permission.sql",
+        "sha256": "701a6b59bbee9e1cbed419fbd44c62f667ec0722ea5b797f360e22eec3289438",
+        "identicalBytes": true
+      }
+    ],
+    "all36SqlBodiesMatchHead": true,
+    "alignedAppliedMigrations": 26,
+    "pendingAutomationMigrations": 10,
+    "remoteOnlyVersions": [],
+    "productionHistoryModified": false,
+    "dryRun": {
+      "cliVersion": "2.119.0",
+      "success": true,
+      "skipVault": true,
+      "migrations": [
+        "20261001014435_automation_rule_definitions.sql",
+        "20261001014436_automation_administration_audit.sql",
+        "20261001020338_durable_domain_events.sql",
+        "20261001022623_automation_execution_authority.sql",
+        "20261001023010_automation_ticket_commands.sql",
+        "20261001025400_automation_notification_kind.sql",
+        "20261001025401_automation_worker_delivery.sql",
+        "20261001025402_automation_notification_command.sql",
+        "20261001031036_automation_dry_run_reads.sql",
+        "20261001032617_automation_admin_reads.sql"
+      ],
+      "roles": [],
+      "seeds": []
     },
-    {
-      "name": "ticket_routing_insert_permission",
-      "local": "20260926024954",
-      "remote": "20260926025012",
-      "recordedSqlMatchesLocal": true
+    "realPushExecuted": false,
+    "logicalBackup": {
+      "status": "BLOCKED",
+      "errorCode": "DockerRunError",
+      "reason": "Neither Docker nor Podman is installed; native pg_dump/psql also unavailable",
+      "usableArtifactCreated": false
+    },
+    "verification": {
+      "node": "24.21.0",
+      "testsPassed": 514,
+      "testsFailed": 0,
+      "testsSkipped": 0,
+      "typecheck": "PASS",
+      "eslintZeroWarnings": "PASS",
+      "migrationReplayEnvironment": "PGlite PostgreSQL 18.3; not hosted PostgreSQL 17"
     }
-  ]
+  }
 }

@@ -63,12 +63,13 @@ Run the transactional SQL regression with `supabase db query --local --file supa
 
 ### Security and database verification
 
-Read-only inspection on 27 September 2026 found two migration-version differences:
-local `20260926024707_category_team_routing.sql` corresponds by name to hosted
-`20260926024852`, and local `20260926024954_ticket_routing_insert_permission.sql`
-to hosted `20260926025012`. Compare the applied SQL before reconciling these
-filenames/history. Do not blindly reapply them or repair production history.
-No migration history was changed during the code cleanup.
+On 1 October 2026, the two routing migration filenames were reconciled to the
+already-applied production identifiers: `20260926024852_category_team_routing.sql`
+and `20260926025012_ticket_routing_insert_permission.sql`. Their SQL is unchanged
+byte for byte. All 26 production identifiers now align; exactly ten Automation
+migrations remain pending. No production history repair or migration was performed.
+See [the production preflight](docs/automation-production-preflight.md) for the
+approved dry-run result and the outstanding fresh logical backup requirement.
 
 `20260925010358_enforce_mfa_and_server_owned_timestamps.sql` enforces verified MFA factors across all application tables, Storage and Realtime. Accounts without a verified factor can still use AAL1; enrolled accounts require AAL2. Authenticated callers cannot provide ticket/chat system timestamps or SLA completion fields. It also serializes administrator demotions and indexes chat foreign keys.
 

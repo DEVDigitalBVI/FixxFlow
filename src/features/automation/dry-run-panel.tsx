@@ -6,6 +6,7 @@ import type { DryRunResponse, DryRunSource } from './dry-run-model';
 import type { EventChoice } from './ui-service';
 import { ReferencePicker } from './reference-picker';
 import { actionDescription, operatorLabels, triggerLabel, conditionValue, type Choice, type Labels } from './ui-model';
+import { presentValidationIssue } from './validation-presentation';
 import { ticketPriorities, ticketStatuses, formatTicketDate } from '@/features/tickets/presentation';
 
 export function DryRunPanel({definition,labels,onChoices}:{definition:AutomationDefinition;labels:Labels;onChoices:(rows:Choice[])=>void}) {
@@ -19,7 +20,7 @@ export function DryRunPanel({definition,labels,onChoices}:{definition:Automation
   useEffect(()=>{
     if(!ticketId||kind!=='retained_event')return;
     let cancelled=false;
-    findAutomationEvents(ticketId,page).then(response=>{if(cancelled)return;setEventsPending(false);if(!response.ok){setEventsError(response.error);setEvents([]);return;}setEvents(response.value.rows);setHasNext(response.value.hasNext);setEventsError('');});
+    findAutomationEvents(ticketId,page).then(response=>{if(cancelled)return;setEventsPending(false);if(!response.ok){setEventsError(response.error);setEvents([]);return;}setEvents(response.value.rows);setHasNext(response.value.hasNext);setEventsError('');}).catch(()=>{if(!cancelled){setEventsPending(false);setEventsError('Ticket events could not load. Try again.');setEvents([]);}});
     return()=>{cancelled=true;};
   },[ticketId,kind,page,refresh]);
   const signature=JSON.stringify({definition,ticketId,kind,eventId,status,priority});const changed=Boolean(result&&tested!==signature);
@@ -41,7 +42,7 @@ export function DryRunPanel({definition,labels,onChoices}:{definition:Automation
     {(result||testError)&&<div className="stack automation-test-result" ref={feedback} tabIndex={-1} aria-label="Automation test result"><h3>Test result</h3><p className="alert alert-info"><strong>No changes were made.</strong></p>
       {changed&&<p className="alert alert-info">The draft or test context changed after this test. Test again for an up-to-date result.</p>}
       {testError&&<p className="alert alert-error" role="alert">{testError}</p>}
-      {result&&!result.ok&&<p className="alert alert-error">{result.error.message} {result.error.issues?.map(issue=>issue.message).join(' ')}</p>}
+      {result&&!result.ok&&<p className="alert alert-error">{result.error.message} {result.error.issues?.map(issue=>presentValidationIssue(definition,issue).message).join(' ')}</p>}
       {result?.ok&&<DryRunResultView result={result.value} labels={displayLabels}/>}
     </div>}
   </section>;
@@ -49,11 +50,13 @@ export function DryRunPanel({definition,labels,onChoices}:{definition:Automation
 export function DryRunResultView({result,labels}:{result:Extract<DryRunResponse,{ok:true}>['value'];labels:Labels}) {
   return <><p><strong>Ticket #{result.context.ticketNumber}</strong> · evaluated revision {result.context.evaluatedRevision} · current revision {result.context.currentRevision}</p>
     {result.context.source==='simulated_transition'&&<p className="alert alert-info"><strong>Simulated values.</strong> This transition did not occur.</p>}
+    {result.context.source==='retained_event'&&<p className="badge">Retained historical event</p>}
     {result.context.source==='current_ticket'&&<p className="muted">Hypothetical creation using current ticket values.</p>}
     {result.context.differsFromCurrent&&<p className="alert alert-info">The ticket has changed since this recorded event. Historical matching does not authorize changes to the current ticket.</p>}
     <h4>Trigger</h4><p>{result.trigger.compatible?'✓ Compatible':'— Not compatible'} · {result.trigger.explanation}</p>
     <h4>Conditions</h4>{!result.conditions.length?<p>No conditions configured.</p>:<ul className="automation-results">{result.conditions.map(item=><li key={item.id}><strong>{item.status==='passed'?'✓ Passed':item.status==='failed'?'✕ Not met':item.status==='error'?'Could not evaluate':'Not evaluated'}</strong> · {item.label} {operatorLabels[item.operator]} {item.expected!==undefined?conditionValue(item.field,item.expected,labels):''}{item.status!=='passed'&&<p className="muted">Actual: {item.actualRedacted?'Not displayed':conditionValue(item.field,item.actual,labels)}</p>}</li>)}</ul>}
-    <h4>Would execute</h4>{!result.actions.length?<p>No actions proposed. The automation would not run for this context.</p>:<ol className="automation-results">{result.actions.map(item=><li key={item.id}><strong>{actionDescription(item,labels)}</strong><p>{item.validation==='valid'?'✓ Current validation passed':item.validation==='invalid'?'✕ Would fail validation':'— Would not execute'} · {item.explanation}</p></li>)}</ol>}
+    <h4>Proposed actions</h4>{!result.actions.length?<p>No actions proposed. The automation would not run for this context.</p>:<ol className="automation-results">{result.actions.map(item=><li key={item.id}><strong>{actionDescription(item,labels)}</strong><p>{item.validation==='valid'?'✓ Current validation passed':item.validation==='invalid'?'✕ Would fail validation':'— Would not execute'} · {item.explanation}</p></li>)}</ol>}
+    {Boolean(result.warnings?.length)&&<section aria-label="Test warnings"><h4>Warnings</h4><ul className="automation-results">{result.warnings.map((warning,index)=><li key={index}>{warning.startsWith('This evaluates a definition')?'This test checks matching and current selections. Future runs still require an enabled rule, eligible events and active processing; success is not guaranteed.':warning.startsWith('Current ticket state differs')?'The ticket has changed since this event. This test does not allow an old event to run again.':warning}</li>)}</ul></section>}
     {!result.currentReferencesValid&&<p className="alert alert-info">One or more referenced people, teams or categories are unavailable. Review the selections.</p>}
     <p><strong>{result.wouldProceed?'This draft matches and its current checks pass.':'This draft does not pass all checks for the selected context.'}</strong> A test does not enable or run the automation.</p>
   </>;

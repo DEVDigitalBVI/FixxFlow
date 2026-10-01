@@ -19,12 +19,12 @@ test('list shows status, statistics, human labels and retry exhaustion; filter v
   for(const text of ['Critical Network Routing','Disabled','Ticket created','Retry exhausted','Run count','History','Edit','Create Automation','Processing off','Next','Previous'])assert.ok(html.includes(text),text);
   assert.deepEqual(calls,[['Network','disabled','ticket.created',2]]);assert.match(html,/responsive-table/);assert.match(html,/role="region"/);assert.match(html,/tabindex="0"/);
 });
-for(const [filters,message] of [[{},'Let FixxFlow handle repeatable work'],[{q:'missing'},'No matching automations']])test(`list empty state: ${message}`,async()=>{
+for(const [filters,message] of [[{},'Automate repetitive ticket work'],[{q:'missing'},'No automations match your search'],[{state:'enabled'},'No automations match these filters']])test(`list empty state: ${message}`,async()=>{
   const page=load('src/app/app/administration/automations/page.tsx',{...baseMocks,'@/features/automation/ui-service':{automationList:async()=>({rows:[],hasNext:false,processingActive:false})}}).default;
   assert.ok(render(await page({searchParams:Promise.resolve(filters)})).includes(message));
 });
 test('native confirmation forms require named confirmation for enable and archive; copies remain disabled',()=>{
-  const {RuleActions}=load('src/features/automation/rule-actions.tsx',baseMocks);const html=render(React.createElement(RuleActions,{id:row.id,name:row.name,version:3,enabled:false}));
+  const {RuleActions}=load('src/features/automation/rule-actions.tsx',baseMocks);const html=render(React.createElement(RuleActions,{id:row.id,name:row.name,version:3,enabled:false,definition:definition()}));
   assert.match(html,/<input(?=[^>]*name="confirmation")(?=[^>]*required="")[^>]*>/);assert.match(html,/Enable “Critical Network Routing”/);assert.match(html,/History|history/);assert.match(html,/Create disabled copy/);assert.match(html,/name="version" value="3"/);
 });
 test('builder uses semantic vertical sections and exposes only established condition/action contracts',()=>{

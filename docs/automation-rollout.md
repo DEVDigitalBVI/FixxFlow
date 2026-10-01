@@ -1,15 +1,17 @@
 # Automation rollout runbook — Stage 8
 
 The subsequent [production alignment preflight](automation-production-preflight.md)
-found two historical migration-version discrepancies despite matching SQL bodies.
-Use that report's history reconciliation and recovery prerequisites before the
-migration sequence below. Counts alone do not establish aligned migration histories.
+verified matching SQL bodies and reconciled two repository filenames to the existing
+production identifiers with explicit approval. All 26 applied IDs now align, and an
+approved CLI dry run proposes exactly ten Automation migrations. No real push or
+production history repair occurred. The required fresh logical backup remains
+blocked by the missing Docker/Podman dump runtime.
 
 Status: **deployment preparation; activation blocked**. No production migration,
-deployment or activation has been performed during this stage. Production deployment
-was authorized during the session, with processing OFF. The owner confirmed that a
-pre-migration recovery backup still needs to be created. Complete that prerequisite
-before applying migrations. Authorization to deploy does not enable processing.
+deployment or activation has been performed during this stage. The current approval
+covers repository identifier reconciliation, checks, push dry run and logical backup
+only. It explicitly excludes a real production push. Complete the fresh backup and
+obtain new migration approval before applying migrations. Processing remains OFF.
 
 ## Baseline and evidence (2026-10-01)
 
@@ -85,9 +87,10 @@ component harnesses. Live keyboard/mobile/UI state inspection is also still open
   entries exist; their correctness has not been established by a deployment smoke test.
 - Local `.env.local`: automation flag absent, OFF by default. `.env.example` is
   explicitly false. No environment or production configuration was changed.
-- Supabase MCP access supports queries/migrations but exposes no backup operation.
-  CLI `whoami` returns `AccessTokenRequiredError`; CLI backup listing cannot yet
-  verify recovery readiness. Docker and `psql` are unavailable in this workspace.
+- CLI authentication now succeeds. Backup inventory verifies seven completed daily
+  physical backups, latest listed 2026-09-30T11:40:54.767Z; PITR is disabled. The fresh
+  logical backup attempt failed because Docker/Podman is unavailable. Native
+  `pg_dump`/`psql` are also unavailable; no usable logical artifact was produced.
 
 Two independent gates must be ON to process:
 
@@ -126,8 +129,8 @@ around this policy.
 
 ## Backup and recovery readiness — required before migration
 
-Authenticate the Supabase CLI locally with `npx --yes supabase login`; never paste
-access tokens or database passwords into chat, source code or the runbook.
+Supabase CLI authentication is verified. Never paste access tokens or database
+passwords into chat, source code or the runbook.
 Verified CLI discovery commands:
 
 ```sh
@@ -140,8 +143,9 @@ command. Check the project's Database Backups page for a successful recovery poi
 and PITR availability. Do not enable a billed backup/PITR plan without approving
 its cost. Do not run restore against production as a verification step.
 
-If a suitable platform recovery point is unavailable, use the supported Supabase
-CLI logical backup procedure with a secure session/direct connection and Docker:
+The current checkpoint requires a fresh logical backup in addition to the verified
+daily platform point. Use the supported Supabase CLI logical backup procedure with
+a secure session/direct connection and a working Docker/Podman runtime:
 export roles, schema and data to access-controlled encrypted storage outside the
 repository; include application `public`/`private`, Auth, relevant Storage metadata
 and migration history. Check the tool's current default exclusions. Preserve

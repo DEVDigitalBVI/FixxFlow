@@ -28,7 +28,7 @@ test('add/remove conditions, context-sensitive operators and action order preser
 test('validation and concurrency failure keep the draft; save carries the loaded version without enabling',async()=>{
  const {h,calls,setResponse}=fixture({initial:{rule:rule({enabled:false,version:7,definition:definition({conditions:group()})}),archivedAt:null}});try{
    h.find(n=>n.props.id==='automation-name').props.onChange({target:{value:''}});h.render();
-   let result=await h.find(n=>typeof n.type==='function'&&n.type.name==='ActionForm').props.action();h.render();assert.match(result.error,/highlighted/);assert.equal(calls.length,0);
+   let result=await h.find(n=>typeof n.type==='function'&&n.type.name==='ActionForm').props.action();h.render();assert.equal(result.error,undefined);assert.equal(h.focuses.at(-1),'automation-validation-summary');assert.equal(calls.length,0);
    h.find(n=>n.props.id==='automation-name').props.onChange({target:{value:'My unsaved route'}});h.render();setResponse({ok:false,error:{code:'conflict',message:'Conflict'}});
    result=await h.find(n=>typeof n.type==='function'&&n.type.name==='ActionForm').props.action();h.render();assert.match(result.error,/draft is preserved/);assert.equal(h.find(n=>n.props.id==='automation-name').props.value,'My unsaved route');assert.equal(calls[0][1],7);
    setResponse({ok:true,value:{rule:rule({enabled:false,version:8,definition:definition({name:'My unsaved route',conditions:group()})})}});

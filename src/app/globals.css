@@ -1163,7 +1163,9 @@ select.input-compact { height: 40px; }
 }
 
 /* Automation administration reuses the workspace surfaces and form semantics. */
-.automation-page { display: grid; gap: 18px; min-width: 0; }
+.automation-page { display: grid; grid-template-columns: minmax(0,1fr); gap: 18px; min-width: 0; }
+.automation-page > * { min-width: 0; }
+.automation-page .table-region { position: relative; min-width: 0; }
 .automation-page .page-header { margin-bottom: 0; }
 .automation-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .automation-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
@@ -1192,4 +1194,18 @@ select.input-compact { height: 40px; }
 .automation-page .alert-info { background: var(--color-info-subtle); border-color: var(--color-border); color: var(--color-text); }
 @media (max-width: 767px) {
   .automation-page .responsive-table th[scope="row"] { display: block; width: 100%; padding: 12px; text-align: left; overflow-wrap: anywhere; }
+}
+
+/* Automation templates reuse settings surfaces, native controls and shared tokens. */
+.automation-template-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr)); gap: 20px; }
+.automation-template-grid article { min-width: 0; align-content: start; }
+.automation-template-grid h3, .automation-template-grid p { margin: 0; }
+.automation-template-grid summary { min-height: 40px; padding-block: 8px; cursor: pointer; }
+.automation-template-grid details p { margin-top: 12px; }
+.automation-template-grid button { justify-self: start; }
+.automation-summary { overflow-wrap: anywhere; line-height: 1.6; }
+.automation-page [tabindex="-1"]:focus { outline: 2px solid var(--color-focus); outline-offset: 4px; }
+@media (max-width: 767px) {
+  .automation-template-grid { grid-template-columns: minmax(0,1fr); gap: 16px; }
+  .automation-template-grid button { width: 100%; }
 }

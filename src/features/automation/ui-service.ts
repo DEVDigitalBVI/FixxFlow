@@ -29,6 +29,12 @@ export async function automationList(query: string, state: string, trigger: stri
   const data = await read({ kind: 'list', query: normalizeSearch(query), state: ['all','enabled','disabled','archived'].includes(state) ? state : 'all', trigger_type: trigger, page_number: page });
   return { rows: data.rows.slice(0,50) as AutomationListRow[], hasNext: data.rows.length > 50, processingActive: process.env.AUTOMATION_PROCESSING_ENABLED === 'true' && data.processingActive === true };
 }
+/** Reuse the existing administrator/MFA-scoped read contract; no runtime control. */
+export async function automationProcessingActive() {
+  await requireAutomationAdmin();
+  if (process.env.AUTOMATION_PROCESSING_ENABLED !== 'true') return false;
+  return (await read({ kind: 'list', query: '', state: 'all', trigger_type: '', page_number: 1 })).processingActive === true;
+}
 export async function automationChoices(resource: string, query = '', page = 1, selected: string[] = []) {
   if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || !Array.isArray(selected) || selected.length > 100 || selected.some(id => !isUuid(id))) throw unavailable();
   const data = await read({ kind: 'choices', resource, query: normalizeSearch(query), page_number: page, selected });

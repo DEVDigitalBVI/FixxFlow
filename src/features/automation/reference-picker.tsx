@@ -15,11 +15,13 @@ export function ReferencePicker({ resource, value, onChange, label, multiple=fal
     const timer=setTimeout(async()=>{
       setState(previous=>({...previous,pending:true,error:''}));
       const ids=selected?selected.split(','):[];
+      try {
       const [options,chosen]=await Promise.all([findAutomationChoices(resource,query,page),ids.length?findAutomationChoices(resource,'',1,ids):Promise.resolve(null)]);
       if(cancelled)return;
       if(!options.ok || (chosen && !chosen.ok)) {setState(previous=>({...previous,pending:false,error:'Choices could not load. Try again.'}));return;}
       const rows=[...new Map([...(chosen?.ok?chosen.value.rows:[]),...options.value.rows].map(row=>[row.id,row])).values()];
       setState({rows,hasNext:options.value.hasNext,pending:false,error:''});onChoices?.(rows);
+      } catch { if(!cancelled)setState(previous=>({...previous,pending:false,error:'Choices could not load. Try again.'})); }
     },300);
     return ()=>{cancelled=true;clearTimeout(timer);};
   },[resource,query,page,selected,refresh,onChoices]);
@@ -34,7 +36,7 @@ export function ReferencePicker({ resource, value, onChange, label, multiple=fal
       {visible.map(row=><option key={row.id} value={row.id} disabled={activeOnly&&!row.active}>{row.label}{!row.active?' (inactive)':''}</option>)}
     </select>
     {multiple&&<small className="muted">Select one or more. Use Control or Command to add a selection.</small>}
-    <span className="muted" role="status">{state.pending?'Loading choices…':state.error||(!visible.length?'No matches. Try a different search.':`Page ${page}`)}</span>
+    <span className="muted" role="status">{state.pending?'Loading choices…':state.error||(!visible.length?query?'No matches. Try a different search.':'No choices available. Ask an administrator to review the available records.':`Page ${page}`)}</span>
     <div className="automation-inline">{state.error&&<button type="button" className="button button-secondary" onClick={()=>setRefresh(value=>value+1)}>Try again</button>}{page>1&&<button type="button" className="button button-quiet" onClick={()=>setPage(page-1)}>Previous choices</button>}{state.hasNext&&<button type="button" className="button button-quiet" onClick={()=>setPage(page+1)}>More choices</button>}</div>
   </div>;
 }

@@ -1,6 +1,7 @@
 # Stage 8 — production schema alignment preflight
 
-Read-only production inspection, 2026-10-01. **No production migration, history
+Production inspection and approved repository identifier reconciliation, 2026-10-01.
+**No production migration, history
 repair, backup restore, deployment change or activation was performed.** Preparation
 only; a new explicit approval is required before applying production migrations.
 Baseline repository commit: `0b70dc8` (Automation Stage 8); initially clean tree.
@@ -10,12 +11,13 @@ Baseline repository commit: `0b70dc8` (Automation Stage 8); initially clean tree
 | Check | Result | Evidence |
 | --- | --- | --- |
 | Project identity | PASS | FixxFlow, `dhuikxkrokowvnvzpihp`, us-west-2, ACTIVE_HEALTHY, PostgreSQL 17.6 (`17.6.1.166`) |
-| CLI authentication | BLOCKED | Supabase CLI 2.119.0 `whoami` still returns `AccessTokenRequiredError`, including outside the sandbox |
-| Backup/recovery readiness | BLOCKED | No authenticated backup inventory or verified recovery point; do not infer backup availability from project health |
-| Migration-history consistency | FAIL | Two historical routing migration version IDs differ; recorded SQL bodies match |
+| CLI authentication | PASS | Authenticated CLI 2.119.0 migration listing, dry run and backup connection succeed for the expected project |
+| Platform backup availability | PASS | Seven completed daily physical backups observed; latest inventory timestamp 2026-09-30T11:40:54.767Z; PITR disabled; restore not rehearsed |
+| Fresh logical backup | BLOCKED | Authenticated CLI export failed because neither Docker nor Podman is installed; no usable backup produced |
+| Migration-history consistency | PASS | Approved repository-only renames align all 26 production IDs; SQL bytes unchanged; ten Automation migrations pending |
 | Application schema comparison | PASS within inspected scope | 1,168 application schema fingerprints match the first 26 local migrations |
 | Pending migration static/embedded review | PASS within tested scope | Ten-file upgrade replay succeeds on PGlite PG18.3, processing false/generation 0 |
-| Production migration preflight | BLOCKED | Recovery readiness and historical version divergence must be resolved before approval |
+| Production migration preflight | BLOCKED | Identifier reconciliation and push dry run pass; required fresh logical backup remains blocked and real push is not authorized |
 | Automation processing | OFF | Vercel flag absent/default OFF; database control and runtime schema are not installed |
 
 The hosted PG17 replay, real PostgREST/JWT/MFA behavior, independent concurrent
@@ -30,24 +32,33 @@ source MD5, not just names or whitespace-normalized text. This is an equality
 check, not an authenticity signature. Pending-file SHA-256 values are recorded in
 [the evidence manifest](automation-production-preflight.json).
 
-| Historical name | Repository version | Production version | Recorded SQL |
+| Historical name | Previous repository version | Canonical repository / production version | Recorded SQL |
 | --- | --- | --- | --- |
 | category_team_routing | 20260926024707 | 20260926024852 | Exact match: `221f44a3262e0d562ed15a6ef153518c` |
 | ticket_routing_insert_permission | 20260926024954 | 20260926025012 | Exact match: `300eff90e5e2e7f652dc60cafac7e343` |
 
-The other 24 versions/names match. No additional unmatched migration content was
-found. A strict version-ID comparison sees **12 local-only and 2 remote-only IDs**,
-not a clean ten-entry suffix. Two of the local-only files have already been applied
-under the production timestamps; replaying them would recreate existing objects.
-Do not use `db push --include-all`, mark existing migrations reverted, or use
-`migration repair` to conceal this discrepancy.
+The approved repository-only renames are complete. Before/after byte comparison
+and comparison against Git HEAD confirm all 36 migration SQL bodies are unchanged.
+The renamed files retain SHA-256 values
+`775a5bc41b737f59bab2d8a52d675941efe2b1d39e79a32e0d22421183cc5a54`
+and `701a6b59bbee9e1cbed419fbd44c62f667ec0722ea5b797f360e22eec3289438`.
+The authenticated CLI now reports **26 aligned IDs, ten local-only Automation IDs,
+and zero remote-only IDs**. No production ledger entry was changed.
 
-Recommended separate history-resolution proposal: treat verified production IDs
-as canonical and rename the two corresponding repository filenames without changing
-their SQL, after checking other environments' ledgers. Renaming does not apply SQL
-or alter production history, but is still an explicit repository/history decision.
-Do not rename automatically in this preparation step. If another environment has
-the local IDs applied, agree a reconciliation procedure for that environment first.
+Before reconciliation, CLI 2.119.0 would reject the two missing-local production
+versions before applying anything. Do not use `--include-all` or `migration repair`
+to replay already-applied routing SQL. Other environments with the former repository
+IDs require separate inspection before using this reconciled migration chain.
+
+The following approved command completed successfully and proposed exactly the ten
+files below, with empty seed/role lists and Vault synchronization disabled:
+
+```sh
+npx --yes supabase@2.119.0 db push --linked \
+  --project-ref dhuikxkrokowvnvzpihp --skip-vault --dry-run
+```
+
+No real push was run. A dry run verifies selection, not SQL execution on hosted PG17.
 
 The ten genuinely unapplied Automation files, in exact order:
 
@@ -64,31 +75,31 @@ The ten genuinely unapplied Automation files, in exact order:
 
 ## Recovery readiness
 
-The available connector supports read-only SQL inspection and migration management,
-but does not expose backup inventory/creation. CLI authentication is still absent.
-No credentials were retrieved, displayed or stored in this report. No backup was
-created, no recovery point was verified and no restoration was attempted.
+Authenticated CLI backup inventory verified WAL-G physical backups enabled and
+PITR disabled. Seven completed daily points were available, September 24–30. The
+latest entry's `inserted_at` is **2026-09-30T11:40:54.767Z** (07:40:54 in Tortola).
+This is the listed backup timestamp, not a separately exposed exact WAL checkpoint.
+No restoration or restore rehearsal was performed. No credentials or production
+row contents are included in this report.
 
 | Required recovery evidence | Current finding |
 | --- | --- |
-| Mechanism: daily physical backup, PITR, or logical export | Unverified for this project |
-| Most recent successful recoverable point / retention | Unknown |
-| Restorable artifact / recovery owner / restore rehearsal | Not verified |
-| RPO / data-loss window / restore duration | Cannot quantify without a recovery point and rehearsal |
-| Manual export appropriate? | Yes, if the available platform point is insufficiently recent or independent recovery evidence is needed; availability of a consistent export must be established |
+| Mechanism | Completed daily physical backups; PITR OFF |
+| Latest listed point / retention | 2026-09-30T11:40:54.767Z; seven daily points observed, contractual retention not independently verified |
+| Restore mechanism | Supabase dashboard backup restore; separate authorization required; no restore rehearsal |
+| RPO / data-loss window / restore duration | Restoring the daily point can lose subsequent writes; downtime/duration not measured |
+| Fresh logical export | Required by the current approval checkpoint; attempted but blocked by missing Docker/Podman |
 
-After local authentication, use the verified read-only command:
+Verified read-only commands:
 
 ```sh
 npx --yes supabase whoami
 npx --yes supabase backups list --project-ref dhuikxkrokowvnvzpihp
 ```
 
-If needed, authenticate locally with `npx --yes supabase login`; do not paste access
-tokens/passwords into chat. The CLI's backup commands list/restore existing physical
-backups; they do not create an on-demand physical backup. Establish project-specific
-backup/PITR status in the dashboard before deciding how to create additional recovery
-coverage. No paid add-on or password reset is authorized by this report.
+Do not paste tokens/passwords into chat. The CLI's backup commands list/restore
+existing physical backups; they do not create an on-demand physical backup. No
+paid add-on or password reset is authorized by this report.
 
 Supabase documents daily backups for paid plans and CLI exports for free-tier
 projects. Restore from the verified dashboard backup or PITR point only under a
@@ -102,12 +113,20 @@ A manual logical backup should cover roles, application public/private schema an
 data, Auth, relevant Storage metadata and migration history, with Storage files and
 deployment configuration protected separately. Use a supported snapshot-consistent
 procedure, encrypted access-controlled storage outside the repository, checksums
-and a disposable restore rehearsal. CLI dump requires a working database connection
-and Docker; neither Docker nor a verified database connection is available here.
-Do not export sensitive production rows through ad hoc MCP queries as a substitute.
+and a disposable restore rehearsal. The approved schema-export attempt connected
+using CLI authentication, but failed with `DockerRunError`: neither Docker nor
+Podman is installed. The only artifact was an empty mode-0600 file in a mode-0700
+temporary directory outside the repository; it was renamed `schema.sql.failed-empty`
+to avoid mistaking it for a backup. No schema, data, roles or history backup is ready.
+Native `pg_dump`/`psql` are also unavailable. Do not export production rows through
+ad hoc MCP queries as a substitute.
 
-Until recovery evidence is available, execution stops at this preflight report.
-The static reviews below are preparation, not authorization to bypass this gate.
+Provide a supported dump runtime before retrying the authorized export. Temporary
+storage alone is not durable recovery storage. Complete and validate roles, schema,
+data and migration-history exports, including managed-schema customizations and
+documented exclusions; protect them in durable encrypted storage and address
+consistency across separate exports. No migration approval is requested until
+the required fresh logical backup is available.
 
 ## Before-migration verification record
 
@@ -266,11 +285,12 @@ they do not require a clean database. An isolated 26→36 replay passed and retu
 
 ## Recommended operation after blockers and explicit approval
 
-1. Establish and document a recoverable backup point and tested restore procedure.
-   Resolve CLI authentication locally; verify the project ref again before writes.
-2. Agree and approve the two-file history reconciliation; verify every environment
-   before changing filenames. Never replay the already-applied routing SQL or repair
-   production history merely to silence the CLI.
+1. Complete the required fresh logical backup and document its recovery procedure.
+   Platform backup availability and CLI authentication are verified; a disposable
+   restore rehearsal remains outstanding. Verify the project ref again before writes.
+2. Repository-only identifier reconciliation is complete for production. Inspect
+   other environment ledgers separately. Never replay the already-applied routing
+   SQL or repair production history merely to silence the CLI.
 3. Repeat remote ledger, fingerprints, aggregate counts and OFF checks immediately
    before a quiet maintenance window. Pin this manifest's SHA-256 values. Account
    for concurrent application writes and the existing notification SLA cron.
@@ -312,8 +332,13 @@ they do not require a clean database. An isolated 26→36 replay passed and retu
   run under this preparation authorization. Require explicit scoped approval and
   complete enabled-rule inventory before any future activation.
 
-No application code or migration file changed in this preflight. New files are this
-report, the safe JSON evidence manifest and read-only schema fingerprint query.
-The general [rollout runbook](automation-rollout.md) remains the operational guide;
-this report supersedes its earlier assumption that counts alone implied an aligned
-26-migration history.
+The current authorized follow-up changes only two migration filenames and relevant
+documentation. SQL bodies and application code are unchanged. Repository migration
+verification confirms 36 unique ordered IDs and unchanged SQL/hash contents.
+Node 24.21.0: **514 tests passed, zero failed/skipped**, typecheck passed and ESLint
+passed with zero warnings. The suite includes clean migration replays, upgrade
+regressions and Stage 1–7 automation/security/ticket regressions on PGlite PG18.3;
+it does not close the hosted PG17/PostgREST/concurrency gates. Production was checked
+after the dry run: runtime tables remain absent and the Vercel processing flag is
+absent/default OFF. The general [rollout runbook](automation-rollout.md) remains the
+operational guide. A real production push requires new explicit approval.
