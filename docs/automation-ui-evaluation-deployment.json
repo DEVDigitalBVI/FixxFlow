@@ -1,0 +1,217 @@
+{
+  "projectRef": "dhuikxkrokowvnvzpihp",
+  "verifiedAt": "2026-10-01T18:09:19.990271+00:00",
+  "localCount": 39,
+  "remoteBefore": 26,
+  "pending": [
+    {
+      "file": "20261001014435_automation_rule_definitions.sql",
+      "sha256": "7a5781ef6c3d08e15548f6c918c66ef18e47c004cfd2682fe8f5240fdf5a0379"
+    },
+    {
+      "file": "20261001014436_automation_administration_audit.sql",
+      "sha256": "621f90798308713203b069593f2fc92c89ba0c5e6177e24fc7db4e3243b21924"
+    },
+    {
+      "file": "20261001020338_durable_domain_events.sql",
+      "sha256": "255fc7c55d86bb6d95f65fac3402990034f55dcd135237dd937f950fa3d3a632"
+    },
+    {
+      "file": "20261001022623_automation_execution_authority.sql",
+      "sha256": "502864308b148f76cc9b8688b12d01d17e79cad779f8ecccfd21753bb4cd41b4"
+    },
+    {
+      "file": "20261001023010_automation_ticket_commands.sql",
+      "sha256": "085529598746c0234f437668db7889c8716f8945402e81f87ac1e28f08d7ff13"
+    },
+    {
+      "file": "20261001025400_automation_notification_kind.sql",
+      "sha256": "0a989be93641d7103bd5f311180e65a14d0241f3339aa9fc4ba34086be8a881d"
+    },
+    {
+      "file": "20261001025401_automation_worker_delivery.sql",
+      "sha256": "48f06eada8767f892d4035b7a709326345991f9b71aeeddb24235fce865d64f5"
+    },
+    {
+      "file": "20261001025402_automation_notification_command.sql",
+      "sha256": "a3ade26c636d2603bd8a9faf8a561b0686aed06be7fe05907d2dbc37c4773957"
+    },
+    {
+      "file": "20261001031036_automation_dry_run_reads.sql",
+      "sha256": "1a6e035bcb1f484fac98fd8ab25fd515cf8236fb270d3745984e453f6fdc206b"
+    },
+    {
+      "file": "20261001032617_automation_admin_reads.sql",
+      "sha256": "a2cf3f89670dbc917e06917c2b916429b93e015619abc705759df9a7e06199d8"
+    },
+    {
+      "file": "20261001160233_automation_temporal_episodes.sql",
+      "sha256": "c9b40a6c90ebe9d6a58f4d99ef31009fdcc3425f1c20a1bb9a269cf8841576f2"
+    },
+    {
+      "file": "20261001160248_automation_temporal_discovery.sql",
+      "sha256": "82e0e3a5848a68a400aa9a5fb15056a44c9f31011a2c71bbe1dbe60624016141"
+    },
+    {
+      "file": "20261001165514_automation_operations.sql",
+      "sha256": "e44d2359734d1c053efe7a00051ba7df95e657b69ec1b819fc05d8196c3d0618"
+    }
+  ],
+  "history": "26 IDs and SQL-body MD5 values match",
+  "cliVersion": "2.119.0",
+  "dryRun": "13 migrations, no seeds/roles, skip-vault",
+  "processingBefore": {
+    "vercel": "absent/OFF",
+    "database": "control absent; migration defaults false"
+  },
+  "backup": {
+    "archiveSha256": "134ec92cc4e254af6300bbcbbc2dc62b7f78b7ab7b640e61d34f1810fb9f5cee",
+    "sizeBytes": 905484,
+    "validation": "checksum/list/full decode PASS",
+    "decision": "retain existing; 30 application table counts equal backup; inspected material update/audit timestamps unchanged",
+    "latestPhysical": "2026-10-01T11:41:11.659Z",
+    "pitr": false
+  },
+  "countsBefore": {
+    "private.notification_email_outbox": 0,
+    "private.platform_audit": 1,
+    "private.platform_owners": 1,
+    "private.product_usage_counts": 5,
+    "private.product_usage_dedup": 8,
+    "private.ticket_number_sequences": 0,
+    "public.assets": 77,
+    "public.audit_events": 118,
+    "public.chat_attachments": 0,
+    "public.chat_conversations": 0,
+    "public.chat_messages": 0,
+    "public.departments": 9,
+    "public.knowledge_article_feedback": 0,
+    "public.knowledge_article_views": 4,
+    "public.knowledge_articles": 14,
+    "public.knowledge_attachments": 0,
+    "public.locations": 7,
+    "public.notifications": 0,
+    "public.organization_memberships": 1,
+    "public.organizations": 1,
+    "public.product_usage_preferences": 1,
+    "public.profiles": 1,
+    "public.teams": 1,
+    "public.ticket_activity": 0,
+    "public.ticket_assets": 0,
+    "public.ticket_attachments": 0,
+    "public.ticket_categories": 11,
+    "public.ticket_messages": 0,
+    "public.ticket_subcategories": 0,
+    "public.tickets": 0
+  },
+  "lockPreflight": {
+    "longTransactions": 0,
+    "waitingLocks": 0,
+    "ticketsBytes": 262144,
+    "auditBytes": 393216
+  },
+  "schemaComparison": {
+    "local": 1662,
+    "remote": 1662,
+    "missing": [],
+    "unexpected": [],
+    "changed": []
+  },
+  "anonymousPostgREST": [
+    {
+      "path": "automation_rules",
+      "status": 401,
+      "code": "42501",
+      "denied": true
+    },
+    {
+      "path": "automation_rule_versions",
+      "status": 401,
+      "code": "42501",
+      "denied": true
+    },
+    {
+      "path": "automation_executions",
+      "status": 401,
+      "code": "42501",
+      "denied": true
+    },
+    {
+      "path": "automation_execution_steps",
+      "status": 401,
+      "code": "42501",
+      "denied": true
+    },
+    {
+      "path": "rpc/read_automation_operations",
+      "status": 401,
+      "code": "42501",
+      "denied": true
+    },
+    {
+      "path": "rpc/read_automation_operations_history",
+      "status": 401,
+      "code": "42501",
+      "denied": true
+    },
+    {
+      "path": "rpc/read_automation_dry_run",
+      "status": 401,
+      "code": "42501",
+      "denied": true
+    }
+  ],
+  "remoteAfter": 39,
+  "pendingAfter": 0,
+  "migrationResult": "PASS",
+  "processingAfter": {
+    "active": false,
+    "generation": 0,
+    "invocations": 0,
+    "executions": 0,
+    "temporalOccurrences": 0
+  },
+  "deployment": {
+    "id": "dpl_36nMqjDKgTg5bNbALzK3RQn22ER6",
+    "url": "https://www.fixxflow.app",
+    "commit": "3fea715ae85a94a234ffb9df5937216e071261f3",
+    "state": "READY"
+  },
+  "authenticatedUI": "BLOCKED: computer-use native pipe startup failed, including retry after user reconnect and session reset",
+  "migrationFilesUnchangedSincePreflight": true,
+  "hostedReads": [
+    {
+      "path": "/app/administration/automations",
+      "status": 307,
+      "location": "/login"
+    },
+    {
+      "path": "/app/administration/automations/new",
+      "status": 307,
+      "location": "/login"
+    },
+    {
+      "path": "/app/administration/automations/operations",
+      "status": 307,
+      "location": "/login"
+    },
+    {
+      "path": "/app/administration/automations/operations/history",
+      "status": 307,
+      "location": "/login"
+    }
+  ],
+  "lastDatabaseSafetyCheck": "2026-10-01T18:13:51.405163Z",
+  "securityAdvisors": {
+    "warnings": 0,
+    "errors": 0,
+    "informational": 11,
+    "reason": "Intentional RLS-enabled private infrastructure with no direct client policies"
+  },
+  "fixturesCreated": 0,
+  "vercelProcessingAfter": {
+    "checkedAt": "2026-10-01T18:20:52.362631+00:00",
+    "flagPresent": false,
+    "effectiveState": "OFF"
+  }
+}
