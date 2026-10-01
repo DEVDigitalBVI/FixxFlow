@@ -1,5 +1,6 @@
 import type { Database as GeneratedDatabase } from './database.generated';
 import type { AutomationFunctions, AutomationTables } from './automation-database';
+import type { DomainEventFunctions } from './domain-event-database';
 export type { Json } from './database.generated';
 
 type Schema = GeneratedDatabase['public'];
@@ -38,7 +39,8 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
   public: Omit<Schema, 'Tables' | 'Functions'> & {
     Tables: Omit<Tables, 'assets' | 'tickets'> & AutomationTables & {
       // BEFORE INSERT triggers assign the number and SLA deadlines.
-      tickets: Omit<Tables['tickets'], 'Insert'> & {
+      tickets: Omit<Tables['tickets'], 'Row' | 'Insert'> & {
+        Row: Tables['tickets']['Row'] & { revision: number };
         Insert: Omit<Tables['tickets']['Insert'], 'ticket_number' | 'response_sla_due_at' | 'resolution_sla_due_at'>;
       };
       assets: Omit<Tables['assets'], 'Row' | 'Insert' | 'Update'> & {
@@ -47,7 +49,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
         Update: Omit<Tables['assets']['Update'], keyof AssetFields> & Partial<AssetFields>;
       };
     };
-    Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails'> & AutomationFunctions & {
+    Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails'> & AutomationFunctions & DomainEventFunctions & {
       create_equipment_ticket: NullableArgs<'create_equipment_ticket', 'category'>;
       record_product_usage: NullableArgs<'record_product_usage', 'org' | 'target_id' | 'event_token'>;
       manage_customer: Omit<Functions['manage_customer'], 'Args'> & {
