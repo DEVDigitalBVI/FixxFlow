@@ -1,16 +1,19 @@
-import { SubmitButton } from "@/components/ui/submit-button";
+import { PageHeader } from "@/components/ui/page-header";
+import { StartChatForm, ChatIntakeGuide } from "@/features/chat/start-chat-form";
+import { ChatQueue } from "@/features/chat/chat-queue";
 import Link from "next/link";
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
 import { LiveChatQueue } from "@/features/chat/live-queue";
 import { formatTicketDate } from "@/features/tickets/presentation";
-import { startChat } from "./actions";
 
 export default async function ChatPage({ searchParams }: { searchParams: Promise<{ error?: string; view?: string; start?: string }> }) {
   const viewer = await requireViewer();
   const { error: message, view, start } = await searchParams;
-  const startForm = <form action={startChat} className="settings-card portal-request-form"><p className="form-note">Both fields are required.</p><div className="field"><label htmlFor="chat-topic">What do you need help with?</label><input className="input" id="chat-topic" name="topic" required minLength={3} maxLength={180} placeholder="For example, I can’t connect to the VPN"/></div><div className="field"><label htmlFor="chat-first-message">Your message</label><textarea className="input textarea" id="chat-first-message" name="message" required rows={4} maxLength={20000} placeholder="Tell IT what is happening"/></div><p className="form-note">Your message goes to the IT team. You can return here to read their reply; a technician may not be available immediately.</p><SubmitButton className="button button-primary" pendingLabel="Starting chat…">Start a chat</SubmitButton></form>;
-  if (start === "1" || message) return <div className="portal-page portal-form-page"><header className="portal-page-heading"><div><Link className="button button-quiet page-back-link" href="/app/chat">← Back to chats</Link><h1>Start a chat</h1><p>Tell the IT team what you need help with. This starts a support conversation for you.</p></div></header>{message && <div className="alert alert-error page-alert" role="alert">{message}</div>}{startForm}</div>;
+  if (start === "1" || message) return <div className={viewer.role === "end_user" ? "portal-page chat-intake-page" : "page chat-intake-page"}>
+    <PageHeader title="Start a chat" eyebrow="Your IT support" description="Tell us what’s happening. We’ll take it from here." back={{ href: "/app/chat", label: "Back to chats" }}/>
+    <div className="chat-intake-layout"><StartChatForm initialError={message}/><ChatIntakeGuide/></div>
+  </div>;
   const supabase = await createClient();
   let query = supabase.from("chat_conversations").select("id, topic, requester_id, assigned_technician_id, status, ticket_id, updated_at").eq("organization_id", viewer.organizationId).order("updated_at", { ascending: false }).limit(100);
   if (viewer.role === "end_user") query = query.eq("requester_id", viewer.id);
@@ -21,5 +24,19 @@ export default async function ChatPage({ searchParams }: { searchParams: Promise
   const names = new Map((profiles ?? []).map(p => [p.user_id, p.display_name]));
   if (viewer.role === "end_user") return <div className="portal-page portal-form-page"><header className="portal-page-heading"><div><Link className="button button-quiet page-back-link" href="/app">← Home</Link><h1>My chats</h1><p>Read replies or start a new conversation with IT.</p></div><Link className="button button-primary" href="/app/chat?start=1">Start a chat</Link></header><section className="chat-history-list"><h2>Your conversations</h2>{error ? <p role="alert">Conversations could not be loaded. Refresh to try again.</p> : chats?.length ? <ul>{chats.map(chat => <li key={chat.id}><Link href={`/app/chat/${chat.id}`}><strong>{chat.topic}</strong><span>{chat.status === "open" ? "Open" : "Closed"} · {formatTicketDate(chat.updated_at)}</span></Link></li>)}</ul> : <p>No chats yet. Choose “Start a chat” to send your first message to IT.</p>}</section></div>;
   const activeView = ["mine", "unassigned", "all"].includes(view ?? "") ? view : "open";
-  return <div className="page"><header className="page-header"><div><span className="page-eyebrow">IT support</span><h1>Chats</h1><p>Incoming conversations and active chats.</p></div><div className="page-header-actions"><LiveChatQueue organizationId={viewer.organizationId}/><Link className="button button-primary" href="/app/chat?start=1">Start a chat</Link></div></header><nav className="queue-views" aria-label="Chat views"><Link href="/app/chat" aria-current={activeView === "open" ? "page" : undefined}>Open</Link><Link href="/app/chat?view=unassigned" aria-current={activeView === "unassigned" ? "page" : undefined}>Unassigned</Link><Link href="/app/chat?view=mine" aria-current={activeView === "mine" ? "page" : undefined}>My chats</Link><Link href="/app/chat?view=all" aria-current={activeView === "all" ? "page" : undefined}>History</Link></nav>{error ? <div className="alert alert-error" role="alert">Conversations could not be loaded. Refresh to try again.</div> : chats?.length ? <ul className="chat-queue-list">{chats.map(chat => <li key={chat.id}><Link href={`/app/chat/${chat.id}`}><span className="chat-queue-topic"><strong>{chat.topic}</strong><small>{names.get(chat.requester_id) ?? "Employee"} · {formatTicketDate(chat.updated_at)}</small></span><span>{chat.assigned_technician_id ? names.get(chat.assigned_technician_id) ?? "Assigned" : "Unassigned"}</span><span className={`ticket-badge tone-${chat.status === "open" ? "blue" : "slate"}`}>{chat.status === "open" ? "Open" : "Closed"}</span>{chat.ticket_id && <span className="chat-linked-indicator">Linked ticket</span>}</Link></li>)}</ul> : <div className="empty-state"><strong>No conversations in this view</strong><p>New chats will appear here as employees reach IT.</p></div>}</div>;
+  return <div className="page chat-page">
+    <PageHeader title="Chats" eyebrow={viewer.organizationName} description="Keep conversations moving, from the first question to the next step." actions={<Link className="button button-primary" href="/app/chat?start=1">Start a chat</Link>}/>
+    <section className="chat-inbox" aria-labelledby="chat-inbox-title">
+      <div className="chat-inbox-toolbar">
+        <nav className="queue-views" aria-label="Chat views">{[
+          { value: "open", label: "Open", href: "/app/chat" },
+          { value: "unassigned", label: "Unassigned", href: "/app/chat?view=unassigned" },
+          { value: "mine", label: "My chats", href: "/app/chat?view=mine" },
+          { value: "all", label: "History", href: "/app/chat?view=all" },
+        ].map(item => <Link key={item.value} href={item.href} aria-current={activeView === item.value ? "page" : undefined}>{item.label}</Link>)}</nav>
+        <LiveChatQueue organizationId={viewer.organizationId}/>
+      </div>
+      <ChatQueue chats={chats ?? []} names={names} view={activeView ?? "open"} failed={Boolean(error)}/>
+    </section>
+  </div>;
 }

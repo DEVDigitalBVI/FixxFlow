@@ -15,7 +15,7 @@ function setup(role) {
     'next/link': { default: props => React.createElement('a', props) },
     '@/components/ui/submit-button': { SubmitButton: props => { const buttonProps = { ...props }; delete buttonProps.pendingLabel; return React.createElement('button', buttonProps); } },
     '@/features/chat/live-queue': { LiveChatQueue: () => null },
-    './actions': { startChat: async () => {} },
+    '@/app/app/chat/actions': { startChat: async () => {} },
     '@/lib/auth/viewer': { requireViewer: async () => ({ role, id: 'viewer', organizationId: 'org' }) },
     '@/lib/supabase/server': { createClient: async () => {
       calls.push(['client']);

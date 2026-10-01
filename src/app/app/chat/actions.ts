@@ -9,14 +9,19 @@ const chatPath = (id: string) => `/app/chat/${id}`;
 const validId = (id: string) => /^[0-9a-f-]{36}$/i.test(id);
 const fail = (path: string, message: string): never => redirect(`${path}?${new URLSearchParams({ error: message })}`);
 
-export async function startChat(formData: FormData) {
+export type StartChatState = { error?: string; fields?: { topic?: string; message?: string } };
+
+export async function startChat(_previous: StartChatState, formData: FormData): Promise<StartChatState> {
   const viewer = await requireViewer();
   const topic = String(formData.get("topic") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
-  if (topic.length < 3 || topic.length > 180 || !message || message.length > 20000) fail("/app/chat", "Add a subject and a message to start the chat.");
+  const fields: StartChatState['fields'] = {};
+  if (topic.length < 3 || topic.length > 180) fields.topic = "Enter a subject between 3 and 180 characters.";
+  if (!message || message.length > 20000) fields.message = "Enter a message of up to 20,000 characters.";
+  if (Object.keys(fields).length) return { error: "Check the highlighted fields before starting your chat.", fields };
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("start_support_chat", { target_organization_id: viewer.organizationId, chat_topic: topic, first_message: message });
-  if (error || !data) fail("/app/chat", "Chat could not be started. Please try again.");
+  if (error || !data) return { error: "Chat could not be started. Your message is still here. Please try again." };
   revalidatePath("/app/chat");
   redirect(chatPath(data!));
 }

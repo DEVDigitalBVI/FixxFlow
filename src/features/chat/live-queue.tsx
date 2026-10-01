@@ -23,5 +23,5 @@ export function LiveChatQueue({ organizationId }: { organizationId: string }) {
     }).catch(() => { if (!disposed) setConnected(false); });
     return () => { disposed = true; void supabase.removeChannel(channel); };
   }, [organizationId, refresh]);
-  return <span className="chat-connection" role="status">{connected ? 'Live queue' : 'Refreshing queue'}</span>;
+  return <span className="chat-connection" data-connected={connected} role="status">{connected ? 'Live queue' : 'Refreshing queue'}</span>;
 }
