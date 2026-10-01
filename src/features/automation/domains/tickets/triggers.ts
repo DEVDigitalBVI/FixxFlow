@@ -1,6 +1,7 @@
 import type { DomainEvent } from '@/lib/events/model';
 import type { TriggerRegistration } from '../../registries';
 import { ticketFields } from './fields';
+import { temporalTriggers } from './temporal';
 
 const changed = (event: DomainEvent, field: string) => event.before !== null && Object.hasOwn(event.before, field) && Object.hasOwn(event.after, field) && event.before[field] !== event.after[field] && event.changedFields.includes(field);
 const resolved = (value: unknown) => value === 'resolved' || value === 'closed';
@@ -9,6 +10,7 @@ const businessFields = [...ticketFields.map(field => field.key).filter(key => ke
 const trigger = (key: string, label: string, fields: readonly string[], matches: TriggerRegistration['matches']): TriggerRegistration => ({ key, label, entityType: 'ticket', eventSchemaVersion: 1, configuration: {}, beforeFields: fields, afterFields: fields, matches });
 
 export const ticketTriggers: readonly TriggerRegistration[] = [
+  ...temporalTriggers,
   { ...trigger('ticket.created', 'Ticket created', [], event => event.before === null), afterFields: ['status', 'priority', 'requester_id'] },
   trigger('ticket.updated', 'Ticket updated', [], event => event.before !== null && event.changedFields.some(key => {
     if (!businessFields.includes(key)) return false;

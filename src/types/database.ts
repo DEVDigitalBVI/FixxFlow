@@ -52,7 +52,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
       };
       // BEFORE INSERT triggers assign the number and SLA deadlines.
       tickets: Omit<Tables['tickets'], 'Row' | 'Insert'> & {
-        Row: Tables['tickets']['Row'] & { revision: number };
+        Row: Tables['tickets']['Row'] & { revision: number; unassigned_since: string | null; unassigned_episode_id: string | null; waiting_on_user_since: string | null; waiting_on_user_episode_id: string | null };
         Insert: Omit<Tables['tickets']['Insert'], 'ticket_number' | 'response_sla_due_at' | 'resolution_sla_due_at'>;
       };
       assets: Omit<Tables['assets'], 'Row' | 'Insert' | 'Update'> & {
@@ -62,6 +62,11 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
       };
     };
     Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & AutomationAdminFunctions & {
+      start_automation_run: { Args: { kind: string }; Returns: string };
+      finish_automation_run: { Args: { run_id: string; outcome: string; metrics: import('./database.generated').Json }; Returns: boolean };
+      read_automation_operations: { Args: { org: string }; Returns: import('./database.generated').Json };
+      read_automation_operations_history: { Args: { org: string; query?: string; trigger_type?: string; result_filter?: string; since_at?: string | null; until_at?: string | null; before_at?: string | null; before_id?: string | null; ticket_number?: number | null }; Returns: import('./database.generated').Json };
+      discover_temporal_automation: { Args: { rule_limit?: number; ticket_limit?: number }; Returns: import('./database.generated').Json };
       create_equipment_ticket: NullableArgs<'create_equipment_ticket', 'category'>;
       record_product_usage: NullableArgs<'record_product_usage', 'org' | 'target_id' | 'event_token'>;
       manage_customer: Omit<Functions['manage_customer'], 'Args'> & {

@@ -1209,3 +1209,10 @@ select.input-compact { height: 40px; }
   .automation-template-grid { grid-template-columns: minmax(0,1fr); gap: 16px; }
   .automation-template-grid button { width: 100%; }
 }
+
+/* Automation Operations reuses existing cards, tables and semantic tokens. */
+.automation-operations-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,240px),1fr)); gap: 16px; }
+.automation-operations-grid > * { min-width: 0; }
+.automation-operations-metrics { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,180px),1fr)); gap: 16px; margin: 0; }
+.automation-operations-metrics dd { margin: 4px 0 0; overflow-wrap: anywhere; }
+.automation-operations-identifiers dd { margin: 4px 0 12px; overflow-wrap: anywhere; }

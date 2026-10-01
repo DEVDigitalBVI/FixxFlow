@@ -52,7 +52,7 @@ test('Stage 3 database capture and durable delivery', async t => {
       assert.equal(event.after.team_id, ids.team); assert.equal(event.after.requester_department_id, ids.department);
       assert.equal(event.entityVersion, 1); assert.equal(event.rootEventId, event.id); assert.equal(event.depth, 0); assert.equal(event.causationId, null);
       assert.equal(validateEvent(event).valid, true); assert.equal(registry.trigger(event.type).matches(event, {}), true);
-      assert.deepEqual(Object.keys(event.after).sort(), ['title', 'status', 'priority', 'category_id', 'subcategory_id', 'assigned_technician_id', 'team_id', 'requester_id', 'requester_department_id', 'location_id', 'due_at', 'first_response_at'].sort());
+      assert.deepEqual(Object.keys(event.after).sort(), ['title', 'status', 'priority', 'category_id', 'subcategory_id', 'assigned_technician_id', 'team_id', 'requester_id', 'requester_department_id', 'location_id', 'due_at', 'first_response_at', 'created_at', 'unassigned_since', 'unassigned_episode_id', 'waiting_on_user_since', 'waiting_on_user_episode_id', 'response_sla_due_at', 'resolution_sla_due_at', 'resolved_at', 'closed_at'].sort());
       assert.doesNotMatch(JSON.stringify(event), /SECRET|email|description|storage_path/);
       await db.query('update public.profiles set department_id=null where organization_id=$1 and user_id=$2', [ids.org, ids.employee]);
       assert.equal((await events(db, created.id))[0].after.requester_department_id, ids.department);
@@ -281,7 +281,7 @@ test('revision migration initializes existing tickets without artificial events,
   } });
   try {
     const current = (await db.query('select * from public.tickets where id=$1', [original.id])).rows[0];
-    assert.deepEqual(current, { ...original, revision: 1 });
+    assert.deepEqual(current, { ...original, revision: 1, unassigned_since: null, unassigned_episode_id: null, waiting_on_user_since: null, waiting_on_user_episode_id: null });
     assert.equal((await db.query('select count(*)::integer n from public.audit_events')).rows[0].n, auditCount);
     assert.equal((await db.query('select count(*)::integer n from private.domain_events')).rows[0].n, 0);
     assert.equal((await db.query('select count(*)::integer n from private.domain_event_deliveries')).rows[0].n, 0);

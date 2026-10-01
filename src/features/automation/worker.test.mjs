@@ -290,6 +290,7 @@ test('cron checks the secret before privileged access; default OFF and missing e
   const previous = { secret: process.env.CRON_SECRET, flag: process.env.AUTOMATION_PROCESSING_ENABLED };
   let calls = 0;
   const { GET } = load('src/app/api/cron/automation/route.ts', {
+    '@/features/automation/operations-telemetry':{observeAutomationRun:async(_client,_kind,work)=>work()},
     '@/lib/supabase/admin': { createAdminClient() { calls++; return {}; } },
     '@/features/automation/worker-repository': { automationWorkerRepository: value => value },
     '@/features/automation/worker': { runAutomationWorker: async () => ({ acknowledged: 1 }) },

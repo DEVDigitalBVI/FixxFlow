@@ -192,3 +192,7 @@ hosted advisors, production migration, rollout or activation was performed.
 Stage 8 must also complete the browser checks above, apply the read migration before
 deploying these routes, and review processing controls separately. No backend
 architecture was redesigned and no design-system exception was introduced.
+
+Stage 9 extends the WHEN card with elapsed-time and SLA threshold controls. See
+[Temporal automation](automation-temporal.md) for episode semantics, discovery,
+read-only temporal tests and deployment restrictions.

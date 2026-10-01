@@ -12,11 +12,13 @@ export type DryRunRequest = {
 /** Read model from the one authorized, read-only database statement. */
 export type DryRunContext = {
   organizationId: string; ticketId: string; ticketNumber: number; revision: number;
+  evaluatedAt?: string;
   snapshot: EntitySnapshot; event: DomainEvent | null; definition: AutomationDefinition;
   ruleId: string | null; ruleVersion: number | null; storedEnabled: boolean | null; storedArchived: boolean;
   conditionsReferencesValid: boolean; actionReferences: { actionId: string; valid: boolean }[];
 };
 export type DryRunResult = {
+  temporal?: import('./domains/tickets/temporal').TemporalEvaluation;
   sideEffectsPerformed: false; notice: 'No changes were made.';
   structuralValidation: { valid: boolean; issues: readonly ValidationIssue[] };
   context: { source: DryRunSource['kind']; ticketId: string; ticketNumber: number; currentRevision: number; evaluatedRevision: number; eventId: string | null; simulatedFields: readonly string[]; differsFromCurrent: boolean; ruleId: string | null; ruleVersion: number | null };

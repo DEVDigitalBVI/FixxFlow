@@ -2,6 +2,7 @@ import type { DomainEvent } from '@/lib/events/model';
 import type { DryRunContext, DryRunSource } from '../../dry-run-model';
 import { persistenceRegistry } from '../../persistence-contract';
 import { hasOnly, isRecord, isBoundedJson } from '../../values';
+import { isTemporalTrigger } from './temporal';
 import { validateSnapshotField } from '../../validation';
 
 export function validTicketSimulation(value: unknown): value is Extract<DryRunSource, { kind: 'simulated_transition' }>['after'] {
@@ -13,6 +14,9 @@ export function ticketDryRunEvent(context: DryRunContext, source: DryRunSource):
   if (source.kind === 'retained_event') {
     if (!context.event || context.event.id !== source.eventId) throw new Error('Invalid retained context');
     return context.event;
+  }
+  if (source.kind === 'current_ticket' && isTemporalTrigger(context.definition.trigger.type)) {
+    return { id: context.ticketId, schemaVersion: 1, organizationId: context.organizationId, entityType: 'ticket', entityId: context.ticketId, entityVersion: context.revision, type: context.definition.trigger.type, actorType: 'system', actorId: null, timestamp: context.evaluatedAt ?? '', before: null, after: { ...context.snapshot, temporal: { configuration: context.definition.trigger.configuration } }, changedFields: [], correlationId: context.ticketId, causationId: null, rootEventId: context.ticketId, depth: 0 };
   }
   const before = source.kind === 'simulated_transition' ? context.snapshot : null;
   const after = source.kind === 'simulated_transition' ? { ...context.snapshot, ...source.after } : context.snapshot;
