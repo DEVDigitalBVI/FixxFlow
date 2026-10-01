@@ -14,8 +14,11 @@ export function serviceHealth(enabled: boolean, heartbeat: Heartbeat, now: strin
   return age(heartbeat.lastSuccessfulAt) <= operationsPolicy.intervalSeconds * (1 + operationsPolicy.graceIntervals) ? 'healthy' : 'delayed';
 }
 export function approachingWindow(threshold: string, deadline: string, observed: string): 'within_window' | 'late_before_deadline' | 'missed_window' {
-  if (Date.parse(observed) >= Date.parse(deadline)) return 'missed_window';
-  return Date.parse(observed) - Date.parse(threshold) > operationsPolicy.intervalSeconds * 1000 ? 'late_before_deadline' : 'within_window';
+  // Match PostgreSQL microsecond boundaries; operational classification must not
+  // round an observation just before a deadline into a missed window.
+  const micros = (value: string) => BigInt(Date.parse(value))*1000n + BigInt((/\.(\d+)(?:Z|[+-])/.exec(value)?.[1] ?? '').padEnd(6,'0').slice(3,6));
+  if (micros(observed) >= micros(deadline)) return 'missed_window';
+  return micros(observed) - micros(threshold) > BigInt(operationsPolicy.intervalSeconds) * 1000000n ? 'late_before_deadline' : 'within_window';
 }
 export type QueueHealth = { sampled: number; truncated: boolean; ready: number; leased: number; retryScheduled: number; ineligiblePending: number; oldestEligibleAt: string | null; recent: { acknowledged: number; recovered: number; exhausted: number; failed: number; truncated: boolean } };
 export type ExecutionSummary = { total: number; completed: number; skipped: number; running: number; actionFailed: number; retryExhausted: number; deliveryFailed: number; truncated: boolean };
@@ -30,5 +33,5 @@ export function queueHealth(active: boolean, queue: QueueHealth, now: string): H
   if (!active) return 'disabled';
   if (queue.recent.exhausted || queue.recent.failed) return 'degraded';
   if (queue.oldestEligibleAt && Date.parse(now)-Date.parse(queue.oldestEligibleAt)>operationsPolicy.intervalSeconds*(1+operationsPolicy.graceIntervals)*1000) return 'delayed';
-  return queue.truncated ? 'unknown' : 'healthy';
+  return queue.truncated || queue.recent.truncated ? 'unknown' : 'healthy';
 }

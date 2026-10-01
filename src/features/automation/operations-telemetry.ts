@@ -14,7 +14,8 @@ export async function observeAutomationRun<T>(client: SupabaseClient<Database>, 
   let value: T;
   try { value = await work(); }
   catch (error) { await finish('failed', { failures: 1 }); throw error; }
-  const counts = metrics(value);
+  let counts: RunMetrics;
+  try { counts = metrics(value); } catch { unavailable(); return value; }
   await finish((counts.failures ?? 0) + (counts.retried ?? 0) + (counts.deferred ?? 0) > 0 ? 'degraded' : 'succeeded', counts);
   return value;
 }

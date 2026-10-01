@@ -196,3 +196,9 @@ architecture was redesigned and no design-system exception was introduced.
 Stage 9 extends the WHEN card with elapsed-time and SLA threshold controls. See
 [Temporal automation](automation-temporal.md) for episode semantics, discovery,
 read-only temporal tests and deployment restrictions.
+
+Stage 10 adds organization-scoped Operations and global execution history inside
+Automation administration. See [Operations and health](automation-operations.md)
+for precise health/lag semantics, tenant visibility, tests and deferred hosted gates.
+This later record supersedes the older environment notes above for local Node 24
+verification only; it does not close hosted verification gates.

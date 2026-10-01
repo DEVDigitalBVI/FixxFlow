@@ -95,10 +95,10 @@ begin
    'retryScheduled',count(*) filter(where actionable and status='pending' and attempts>0 and available_at>stamp),
    'ineligiblePending',count(*) filter(where not actionable and status='pending'),
    'oldestEligibleAt',min(created_at) filter(where actionable and available_at<=stamp)) into queue from eligible;
- with candidates as materialized(select d.status,d.error_code,d.attempts from private.domain_event_deliveries d where d.organization_id=org and d.consumer='automation' and d.status in ('acknowledged','dead') and d.completed_at>=stamp-interval '24 hours' order by d.completed_at desc,d.id limit 1001), sample as(select * from candidates limit 1000)
+ with candidates as materialized(select d.status,d.error_code,d.attempts,d.completed_at,d.id from private.domain_event_deliveries d where d.organization_id=org and d.consumer='automation' and d.status in ('acknowledged','dead') and d.completed_at>=stamp-interval '24 hours' order by d.completed_at desc,d.id limit 1001), sample as(select * from candidates order by completed_at desc,id limit 1000)
  select jsonb_build_object('acknowledged',count(*) filter(where status='acknowledged'),'recovered',count(*) filter(where status='acknowledged' and attempts>1),'exhausted',count(*) filter(where error_code='retry_exhausted'),'failed',count(*) filter(where status='dead' and error_code is distinct from 'retry_exhausted'),'truncated',(select count(*)>1000 from candidates)) into recent from sample;
  queue:=queue||jsonb_build_object('recent',recent);
- with candidates as materialized(select status,error_code from public.automation_executions x where x.organization_id=org and x.started_at>=stamp-interval '24 hours' order by started_at desc,id desc limit 1001), sample as(select * from candidates limit 1000)
+ with candidates as materialized(select status,error_code,started_at,id from public.automation_executions x where x.organization_id=org and x.started_at>=stamp-interval '24 hours' order by started_at desc,id desc limit 1001), sample as(select * from candidates order by started_at desc,id desc limit 1000)
  select jsonb_build_object('total',count(*),'completed',count(*) filter(where status='succeeded'),'skipped',count(*) filter(where status='skipped'),'running',count(*) filter(where status='running'),
    'actionFailed',count(*) filter(where status in ('failed','partially_completed') and error_code is distinct from 'retry_exhausted' and error_code is distinct from 'delivery_failed'),
    'retryExhausted',count(*) filter(where error_code='retry_exhausted'),'deliveryFailed',count(*) filter(where error_code='delivery_failed'),'truncated',(select count(*)>1000 from candidates)) into executions from sample;
@@ -110,12 +110,12 @@ begin
  with candidates as materialized(select id from private.automation_missed_windows m where m.organization_id=org and m.observed_at>=stamp-interval '24 hours' order by observed_at desc,id limit 1001)
  select jsonb_build_object('missedWindow',least(count(*),1000),'missedTruncated',count(*)>1000) into missed from candidates;
  lag:=lag||missed;
- with candidates as materialized(select r.id,r.definition->>'name' name,r.version,r.trigger_type trigger,(r.definition#>>'{trigger,configuration,durationMinutes}')::integer duration,c.scanned_at
+ with candidates as materialized(select r.id,r.created_at,r.definition->>'name' name,r.version,r.trigger_type trigger,(r.definition#>>'{trigger,configuration,durationMinutes}')::integer duration,c.scanned_at
    from public.automation_rules r left join private.automation_temporal_cursors c on c.organization_id=r.organization_id and c.rule_id=r.id and c.rule_version=r.version
    where r.organization_id=org and r.enabled and r.archived_at is null and r.trigger_type in ('ticket.unassigned_duration_reached','ticket.waiting_on_user_duration_reached','ticket.open_duration_reached','ticket.sla_approaching','ticket.sla_breached')
-   order by r.created_at,r.id limit 51), sample as(select * from candidates limit 50)
+   order by r.created_at,r.id limit 51), sample as(select * from candidates order by created_at,id limit 50)
  select jsonb_build_object('rows',coalesce(jsonb_agg(jsonb_build_object('id',id,'name',name,'version',version,'trigger',trigger,'durationMinutes',duration,'lastScannedAt',scanned_at,
- 'atRisk',trigger='ticket.sla_approaching' and (scanned_at is null or extract(epoch from stamp-scanned_at)>=duration*60 or coalesce((lag->>'maxSeconds')::numeric,0)>=duration*60))), '[]'),'truncated',(select count(*)>50 from candidates)) into rules from sample;
+ 'atRisk',trigger='ticket.sla_approaching' and (scanned_at is null or extract(epoch from stamp-scanned_at)>=duration*60 or coalesce((lag->>'maxSeconds')::numeric,0)>=duration*60)) order by created_at,id), '[]'),'truncated',(select count(*)>50 from candidates)) into rules from sample;
  return jsonb_build_object('now',stamp,'processingActive',(select active from private.automation_processing_state),'worker',private.automation_heartbeat('worker'),'discovery',private.automation_heartbeat('discovery'),
   'queue',queue,'executions',executions,'lag',lag,'temporalRules',rules->'rows','temporalRulesTruncated',rules->'truncated');
 end $$;
@@ -132,7 +132,7 @@ begin
   select x.id,x.rule_id,x.rule_version,x.rule_name,x.trigger_type,x.entity_id,x.started_at,x.status,x.error_code,x.duration_ms,t.ticket_number
   from public.automation_executions x left join public.tickets t on t.organization_id=x.organization_id and t.id=x.entity_id
   where x.organization_id=org and x.started_at>=start_at and x.started_at<end_at
-    and (query='' or strpos(lower(x.rule_name),lower(query))>0) and (trigger_type='' or x.trigger_type=read_automation_operations_history.trigger_type)
+    and (query='' or strpos(lower(x.rule_name),lower(query))>0) and (read_automation_operations_history.trigger_type='' or x.trigger_type=read_automation_operations_history.trigger_type)
     and (read_automation_operations_history.ticket_number is null or t.ticket_number=read_automation_operations_history.ticket_number)
     and (before_at is null or (x.started_at,x.id)<(before_at,before_id))
     and case result_filter when 'all' then true when 'failures' then x.status in ('failed','partially_completed')

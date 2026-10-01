@@ -55,5 +55,13 @@ await query(`begin;${jwt}insert into public.tickets(organization_id,requester_id
 await query(`begin;${service}select public.discover_temporal_automation();rollback;`);
 assert.equal((await query('select count(*) from private.automation_temporal_occurrences')).trim(),'1');
 const recovery=JSON.parse((await query(`begin;${service}select public.discover_temporal_automation();commit;`)).trim());assert.equal(recovery.emitted,1);
+// Stage 10: independent completion attempts fence the same invocation row.
+const runId=(await query(`begin;${service}select public.start_automation_run('discovery');commit;`)).trim();
+const completing=session(`begin;select id from private.automation_runs where id='${runId}' for update;select 'LOCKED';select pg_sleep(1);${service}select public.finish_automation_run('${runId}','succeeded','{"rules":1,"emitted":1}');commit;`);
+await completing.locked;
+const conflicting=session(`begin;${service}select public.finish_automation_run('${runId}','failed','{"failures":1}');commit;`);
+assert.equal((await conflicting.done).trim(),'f');await completing.done;
+assert.equal((await query(`select outcome from private.automation_runs where id='${runId}'`)).trim(),'succeeded');
+assert.equal((await query(`select count(*) from private.automation_runs where id='${runId}'`)).trim(),'1');
 await query('select private.set_automation_processing(false);');
-console.log(JSON.stringify({postgres:(await query('show server_version')).trim(),cleanReplay:'PASS',overlappingDiscovery:'PASS',independentDuplicateAction:'PASS',oneNoteOneAttempt:'PASS',rollbackRecovery:'PASS',processing:'OFF'}));
+console.log(JSON.stringify({postgres:(await query('show server_version')).trim(),cleanReplay:'PASS',overlappingDiscovery:'PASS',independentDuplicateAction:'PASS',oneNoteOneAttempt:'PASS',rollbackRecovery:'PASS',concurrentHeartbeatCompletion:'PASS',processing:'OFF'}));
