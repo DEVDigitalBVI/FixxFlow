@@ -1,6 +1,7 @@
 import type { NotificationKind } from "@/types/database";
 
 export const notificationLabels: Record<NotificationKind, string> = {
+  automation_update: "Automation update",
   ticket_assigned: "Assignment", ticket_response: "Response", new_chat: "New chat",
   ticket_reassigned: "Reassignment", sla_approaching: "SLA warning", ticket_resolved: "Resolved",
   ticket_reopened: "Reopened", user_replied: "Requester reply", chat_response: "Chat response",

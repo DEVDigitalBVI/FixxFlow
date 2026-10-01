@@ -25,7 +25,7 @@ async function createRule(db, actions = [action()], conditions = group(), tenant
   const created = (await db.query('select * from public.create_automation_rule($1,$2)', [tenant, definition({ actions, conditions, trigger: { type: trigger, configuration: {} } })])).rows[0];
   return (await db.query('select * from public.set_automation_rule_enabled($1,$2,$3,true)', [tenant, created.id, created.version])).rows[0];
 }
-async function activate(db, value = true) { await owner(db); await db.query('select private.set_automation_processing($1)', [value]); }
+async function activate(db, value = true) { await owner(db); await db.query('select private.set_automation_processing($1)', [value]); await new Promise(resolve => setTimeout(resolve, 2)); }
 async function ticket(db, tenant = org, fields = {}) {
   await identity(db, tenant === org ? admin : otherAdmin);
   return (await db.query('insert into public.tickets(organization_id,requester_id,title,description,category_id,subcategory_id) values($1,$2,$3,$4,$5,$6) returning *', [tenant, tenant === org ? employee : otherAdmin, 'Network request', 'PRIVATE DESCRIPTION', fields.category ?? null, fields.subcategory ?? null])).rows[0];
@@ -284,9 +284,10 @@ test('Stage 4 execution authority and trusted ticket commands on clean migration
       await denied(db, 'select public.execute_automation_ticket_step($1,$2,$3)', [context.execution.id, context.delivery.lease_token, command(context.execution, context.rule.definition.actions[0])]);
       assert.equal((await execute(db, { ...context, delivery: reclaimed })).status, 'succeeded');
     });
-    await scenario('unsupported Stage 5 notification action fails closed, without sending it', async () => {
+    await scenario('Stage 5 notification action now uses the same trusted command boundary', async () => {
       const context = await ready(db, [action('send_notification', { recipient: 'requester', template: 'ticket_update' })]);
-      assert.equal((await execute(db, context)).error_code, 'unsupported_action');
+      const step = await execute(db, context);
+      assert.equal(step.status, 'succeeded'); assert.equal(step.result.entityType, 'notification');
     });
     await scenario('two-tenant administrator reads; technician/end-user/MFA denial and service direct bypass denial', async () => {
       const context = await ready(db);

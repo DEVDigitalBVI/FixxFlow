@@ -2,6 +2,7 @@ import type { Database as GeneratedDatabase } from './database.generated';
 import type { AutomationFunctions, AutomationTables } from './automation-database';
 import type { DomainEventFunctions } from './domain-event-database';
 import type { AutomationExecutionFunctions, AutomationExecutionTables } from './automation-execution-database';
+import type { AutomationWorkerFunctions } from './automation-worker-database';
 export type { Json } from './database.generated';
 
 type Schema = GeneratedDatabase['public'];
@@ -14,8 +15,8 @@ export type TicketPriority = Schema['Enums']['ticket_priority'];
 export type TicketMessageKind = Schema['Enums']['ticket_message_kind'];
 export type ChatStatus = Schema['Enums']['chat_status'];
 export type ChatMessageKind = Schema['Enums']['chat_message_kind'];
-export type NotificationKind = Schema['Enums']['notification_kind'];
-export type Notification = Tables['notifications']['Row'];
+export type NotificationKind = Schema['Enums']['notification_kind'] | 'automation_update';
+export type Notification = Omit<Tables['notifications']['Row'], 'kind'> & { kind: NotificationKind };
 export type KnowledgeArticle = Tables['knowledge_articles']['Row'];
 export type KnowledgeAsset = Tables['knowledge_attachments']['Row'];
 
@@ -37,8 +38,10 @@ type NullableArgs<Name extends keyof Functions, Keys extends keyof Functions[Nam
   };
 
 export type Database = Omit<GeneratedDatabase, 'public'> & {
-  public: Omit<Schema, 'Tables' | 'Functions'> & {
-    Tables: Omit<Tables, 'assets' | 'tickets' | 'ticket_messages'> & AutomationTables & AutomationExecutionTables & {
+  public: Omit<Schema, 'Tables' | 'Functions' | 'Enums'> & {
+    Enums: Omit<Schema['Enums'], 'notification_kind'> & { notification_kind: NotificationKind };
+    Tables: Omit<Tables, 'assets' | 'tickets' | 'ticket_messages' | 'notifications'> & AutomationTables & AutomationExecutionTables & {
+      notifications: Omit<Tables['notifications'], 'Row'> & { Row: Notification };
       ticket_messages: Omit<Tables['ticket_messages'], 'Row'> & {
         Row: Omit<Tables['ticket_messages']['Row'], 'author_id'> & {
           author_id: string | null; author_type: 'member' | 'automation';
@@ -56,7 +59,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
         Update: Omit<Tables['assets']['Update'], keyof AssetFields> & Partial<AssetFields>;
       };
     };
-    Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & {
+    Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & {
       create_equipment_ticket: NullableArgs<'create_equipment_ticket', 'category'>;
       record_product_usage: NullableArgs<'record_product_usage', 'org' | 'target_id' | 'event_token'>;
       manage_customer: Omit<Functions['manage_customer'], 'Args'> & {

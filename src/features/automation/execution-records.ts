@@ -5,6 +5,8 @@ import type { AutomationAction, AutomationExecution, AutomationExecutionStep, Sa
 export type AutomationTicketCommand = { readonly organizationId: string; readonly entityId: string; readonly action: AutomationAction };
 
 const failureMessages: Record<AutomationFailureCode, string> = {
+  retry_exhausted: 'Delivery retries were exhausted. Remaining actions were not executed.',
+  delivery_failed: 'Delivery processing failed. Remaining actions were not executed.',
   stale_entity: 'The ticket changed after this automation observed it. No further actions were performed.',
   unavailable_reference: 'An action target is no longer available to this organization.',
   rule_unavailable: 'The automation was changed, disabled, or archived.',
