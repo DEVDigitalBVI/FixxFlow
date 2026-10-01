@@ -259,7 +259,7 @@ test('Stage 4 execution authority and trusted ticket commands on clean migration
       await denied(db, 'select public.execute_automation_ticket_step($1,$2,$3)', [context.execution.id, context.delivery.lease_token, command({ ...context.execution, entity_id: id(9) }, context.rule.definition.actions[0])]);
       await owner(db); await db.query('update public.automation_executions set entity_id=$2 where id=$1', [context.execution.id, context.target.id]); await service(db);
       const receipt = await execute(db, context);
-      await owner(db); await db.query("update private.domain_event_deliveries set leased_at=clock_timestamp()-interval '2 minutes',lease_expires_at=clock_timestamp()-interval '1 minute',available_at=clock_timestamp()-interval '1 minute' where id=$1", [context.delivery.delivery_id]);
+      await owner(db); await db.query("update private.domain_event_deliveries set leased_at=statement_timestamp()-interval '2 minutes',lease_expires_at=statement_timestamp()-interval '1 minute',available_at=statement_timestamp()-interval '1 minute' where id=$1", [context.delivery.delivery_id]);
       const delivery = await deliveryFor(db, context.target.id); assert.deepEqual(await execute(db, { ...context, delivery }), receipt);
       assert.equal((await rows(db, 'public.tickets', 'id', context.target.id))[0].revision, 2);
     });
@@ -277,7 +277,7 @@ test('Stage 4 execution authority and trusted ticket commands on clean migration
     });
     await scenario('expired lease cannot mutate; reclaim rotates authority and keeps the pinned execution', async () => {
       const context = await ready(db); await owner(db);
-      await db.query("update private.domain_event_deliveries set leased_at=clock_timestamp()-interval '2 minutes',lease_expires_at=clock_timestamp()-interval '1 minute',available_at=clock_timestamp()-interval '1 minute' where id=$1", [context.delivery.delivery_id]);
+      await db.query("update private.domain_event_deliveries set leased_at=statement_timestamp()-interval '2 minutes',lease_expires_at=statement_timestamp()-interval '1 minute',available_at=statement_timestamp()-interval '1 minute' where id=$1", [context.delivery.delivery_id]);
       await service(db); await denied(db, 'select public.execute_automation_ticket_step($1,$2,$3)', [context.execution.id, context.delivery.lease_token, command(context.execution, context.rule.definition.actions[0])]);
       const reclaimed = await deliveryFor(db, context.target.id); assert.notEqual(reclaimed.lease_token, context.delivery.lease_token);
       assert.equal((await begin(db, reclaimed, context.rule)).id, context.execution.id);

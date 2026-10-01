@@ -2,6 +2,7 @@ import type { Database as GeneratedDatabase } from './database.generated';
 import type { AutomationFunctions, AutomationTables } from './automation-database';
 import type { DomainEventFunctions } from './domain-event-database';
 import type { AutomationExecutionFunctions, AutomationExecutionTables } from './automation-execution-database';
+import type { AutomationDryRunFunctions } from './automation-dry-run-database';
 import type { AutomationWorkerFunctions } from './automation-worker-database';
 export type { Json } from './database.generated';
 
@@ -59,7 +60,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
         Update: Omit<Tables['assets']['Update'], keyof AssetFields> & Partial<AssetFields>;
       };
     };
-    Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & {
+    Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & {
       create_equipment_ticket: NullableArgs<'create_equipment_ticket', 'category'>;
       record_product_usage: NullableArgs<'record_product_usage', 'org' | 'target_id' | 'event_token'>;
       manage_customer: Omit<Functions['manage_customer'], 'Args'> & {

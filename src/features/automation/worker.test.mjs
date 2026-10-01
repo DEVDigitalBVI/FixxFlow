@@ -11,7 +11,7 @@ const options = { enabled: true };
 async function ready(db, ruleOptions) { const rule = await createRule(db, ruleOptions); await activate(db); const target = await ticket(db); await service(db); return { rule, target, store: storeFor(db) }; }
 async function expire(db, deliveryId, attempts) {
   await owner(db);
-  await db.query("update private.domain_event_deliveries set attempts=coalesce($2,attempts),leased_at=clock_timestamp()-interval '2 minutes',lease_expires_at=clock_timestamp()-interval '1 minute',available_at=clock_timestamp()-interval '1 minute' where id=$1", [deliveryId, attempts ?? null]);
+  await db.query("update private.domain_event_deliveries set attempts=coalesce($2,attempts),leased_at=statement_timestamp()-interval '2 minutes',lease_expires_at=statement_timestamp()-interval '1 minute',available_at=statement_timestamp()-interval '1 minute' where id=$1", [deliveryId, attempts ?? null]);
   await service(db);
 }
 async function available(db, deliveryId) { await owner(db); await db.query("update private.domain_event_deliveries set available_at=clock_timestamp()-interval '1 second' where id=$1 and status='pending'", [deliveryId]); await service(db); }
