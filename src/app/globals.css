@@ -1216,3 +1216,33 @@ select.input-compact { height: 40px; }
 .automation-operations-metrics { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,180px),1fr)); gap: 16px; margin: 0; }
 .automation-operations-metrics dd { margin: 4px 0 0; overflow-wrap: anywhere; }
 .automation-operations-identifiers dd { margin: 4px 0 12px; overflow-wrap: anywhere; }
+
+/* Administration uses one card/action rhythm across editable and reference settings. */
+.administration-hub { max-width: 1440px; }
+.administration-hub-header { align-items: center; }
+.administration-workspace-name { max-width: 100%; overflow-wrap: anywhere; white-space: normal; padding: 8px 12px; }
+.administration-jump-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+.administration-jump-nav .button { min-height: 44px; background: var(--color-surface); }
+.administration-hub-group { scroll-margin-top: 96px; margin-top: 32px; }
+.administration-section-heading { margin-bottom: 16px; }
+.administration-section-heading h2 { margin: 0 0 4px; font-size: 18px; letter-spacing: -.02em; }
+.administration-section-heading p { margin: 0; color: var(--color-text-muted); line-height: 1.5; }
+.administration-card-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+.administration-hub-card { display: flex; flex-direction: column; padding: 24px; min-width: 0; }
+.administration-hub-card-heading { display: flex; gap: 12px; align-items: center; }
+.administration-hub-card-heading h3 { margin: 0; font-size: 16px; line-height: 1.4; letter-spacing: -.01em; }
+.administration-card-icon { display: grid; place-items: center; flex: 0 0 40px; height: 40px; border-radius: var(--radius-control); background: var(--color-accent-subtle); color: var(--color-accent); }
+.administration-card-icon svg { width: 22px; height: 22px; }
+.administration-hub-card .administration-card-description { color: var(--color-text-muted); line-height: 1.6; margin: 16px 0 20px; max-width: 45ch; }
+.administration-card-note { color: var(--color-text-muted); font-size: 12px; margin: -8px 0 16px; }
+.administration-card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--color-border); }
+.administration-card-actions .button { flex: 1 1 auto; min-width: 0; font-size: 13px; min-height: 44px; }
+@media (min-width: 768px) and (max-width: 1199px) { .administration-card-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 767px) {
+  .administration-card-grid { grid-template-columns: minmax(0,1fr); }
+  .administration-hub-header { align-items: flex-start; }
+  .administration-hub-card { padding: 20px; }
+  .administration-jump-nav { gap: 8px; margin-bottom: 24px; }
+  .administration-jump-nav .button { flex: 1 1 auto; }
+  .administration-hub-group { margin-top: 24px; }
+}
