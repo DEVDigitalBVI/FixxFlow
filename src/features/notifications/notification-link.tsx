@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { NavigationIcon } from "@/components/navigation/navigation-icon";
 
 export function NotificationLink({ organizationId, userId, className, onNavigate }: {
   organizationId: string; userId: string; className?: string; onNavigate?: () => void;
@@ -30,7 +31,7 @@ export function NotificationLink({ organizationId, userId, className, onNavigate
   const label = `Notifications${count ? `, ${count} unread` : ""}`;
   return <Link href="/app/notifications" className={className} aria-label={label} title={label}
     aria-current={pathname === "/app/notifications" ? "page" : undefined} onClick={onNavigate}>
-    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" /></svg>
+    <NavigationIcon name="notifications" />
     <span>Notifications{count ? <b className="notification-count">{count > 99 ? "99+" : count}</b> : null}</span>
   </Link>;
 }
