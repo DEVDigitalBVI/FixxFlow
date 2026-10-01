@@ -23,6 +23,38 @@ for(const [filters,message] of [[{},'Automate repetitive ticket work'],[{q:'miss
   const page=load('src/app/app/administration/automations/page.tsx',{...baseMocks,'@/features/automation/ui-service':{automationList:async()=>({rows:[],hasNext:false,processingActive:false})}}).default;
   assert.ok(render(await page({searchParams:Promise.resolve(filters)})).includes(message));
 });
+test('empty library offers a clearly illustrative workflow; filtered results do not imply the library is empty',async()=>{
+  const page=load('src/app/app/administration/automations/page.tsx',{...baseMocks,'@/features/automation/ui-service':{automationList:async()=>({rows:[],hasNext:false,processingActive:false})}}).default;
+  const empty=render(await page({searchParams:Promise.resolve({})}));
+  for(const text of ['Example workflow','No rule has been created.','Save a disabled draft and test it before enabling.','When','If','Then'])assert.ok(empty.includes(text),text);
+  assert.doesNotMatch(empty,/aria-label="Automation pages"/);
+  for(const filters of [{q:'missing'},{state:'enabled'},{trigger:'ticket.created'}]){
+    const html=render(await page({searchParams:Promise.resolve(filters)}));
+    assert.match(html,/Clear filters/);assert.doesNotMatch(html,/Example workflow|No rule has been created/);
+  }
+  const pastEnd=render(await page({searchParams:Promise.resolve({page:'2'})}));
+  assert.match(pastEnd,/Previous/);assert.doesNotMatch(pastEnd,/Example workflow/);
+});
+test('library navigation uses button treatments with row-specific accessible names and preserves rule management',async()=>{
+  const page=load('src/app/app/administration/automations/page.tsx',{...baseMocks,'@/features/automation/ui-service':{automationList:async()=>({rows:[row],hasNext:false,processingActive:false})}}).default;
+  const html=render(await page({searchParams:Promise.resolve({})}));
+  for(const anchor of html.matchAll(/<a\b([^>]*)>/g))assert.match(anchor[1],/class="[^"]*\bbutton\b/);
+  assert.match(html,/>Edit<span class="sr-only"> Critical Network Routing/);
+  assert.match(html,/>History<span class="sr-only"> for Critical Network Routing/);
+  assert.match(html,/<details class="automation-list-manage"><summary[^>]*>Manage/);
+  for(const text of ['Review and enable','Duplicate','Archive','name="version" value="3"','name="confirmation"','required=""','All triggers'])assert.ok(html.includes(text),text);
+  assert.match(html,/href="\/app\/administration\/automations\/operations\/history"/);
+  assert.match(html,/1 automation on this page/);
+});
+test('rule enablement is separate from processing availability and archived rows retain only read navigation',async()=>{
+  for(const archived of [false,true]){
+    const page=load('src/app/app/administration/automations/page.tsx',{...baseMocks,'@/features/automation/ui-service':{automationList:async()=>({rows:[{...row,enabled:true,archived_at:archived?'2026-10-01':null}],hasNext:false,processingActive:false})}}).default;
+    const html=render(await page({searchParams:Promise.resolve({})}));
+    assert.match(html,/Processing off/);assert.doesNotMatch(html,/Processing active/);
+    if(archived){assert.match(html,/Archived/);assert.match(html,/>View<span/);assert.doesNotMatch(html,/automation-list-manage|name="operation"/);}
+    else {assert.match(html,/Enabled/);assert.match(html,/Disable rule/);}
+  }
+});
 test('native confirmation forms require named confirmation for enable and archive; copies remain disabled',()=>{
   const {RuleActions}=load('src/features/automation/rule-actions.tsx',baseMocks);const html=render(React.createElement(RuleActions,{id:row.id,name:row.name,version:3,enabled:false,definition:definition()}));
   assert.match(html,/<input(?=[^>]*name="confirmation")(?=[^>]*required="")[^>]*>/);assert.match(html,/Enable “Critical Network Routing”/);assert.match(html,/History|history/);assert.match(html,/Create disabled copy/);assert.match(html,/name="version" value="3"/);

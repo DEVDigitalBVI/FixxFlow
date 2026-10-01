@@ -1217,6 +1217,79 @@ select.input-compact { height: 40px; }
 .automation-operations-metrics dd { margin: 4px 0 0; overflow-wrap: anywhere; }
 .automation-operations-identifiers dd { margin: 4px 0 12px; overflow-wrap: anywhere; }
 
+/* Automation library: one collection surface, with quiet controls and clear next steps. */
+.automation-back-link { justify-self: start; }
+.automation-page > aside.alert { margin: 0; background: var(--color-surface-subtle); border-color: var(--color-border); }
+.automation-collection { min-width: 0; border: 1px solid var(--color-border); border-radius: var(--radius-panel); background: var(--color-surface); }
+.automation-collection-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 24px; }
+.automation-collection-heading h2 { font-size: 18px; margin: 0 0 4px; letter-spacing: -.02em; }
+.automation-collection-heading p { margin: 0; color: var(--color-text-muted); }
+.automation-collection-toolbar { padding: 20px 24px 16px; border-block: 1px solid var(--color-border); background: var(--color-surface-subtle); }
+.automation-collection-toolbar .automation-filters > .field:first-child { flex-grow: 2; }
+.automation-collection-toolbar .live-search-status { margin: 12px 0 0; font-size: 12px; }
+.automation-list-welcome { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 48px; align-items: center; padding: 40px; }
+.automation-list-welcome-copy { min-width: 0; }
+.automation-list-welcome-copy > .administration-card-icon { width: 44px; height: 44px; margin-bottom: 20px; }
+.automation-list-welcome-copy h3 { font-size: 24px; line-height: 1.25; letter-spacing: -.03em; margin: 0 0 12px; max-width: 20ch; }
+.automation-list-welcome-copy p { margin: 0 0 24px; max-width: 45ch; color: var(--color-text-muted); line-height: 1.6; }
+.automation-list-welcome-copy .automation-list-welcome-note { margin: 16px 0 0; font-size: 12px; }
+.automation-workflow-example { min-width: 0; padding: 24px; border-radius: var(--radius-card); background: var(--color-surface-subtle); }
+.automation-workflow-example h3 { margin: 12px 0 0; font-size: 16px; line-height: 1.5; }
+.automation-workflow-example ol { list-style: none; display: grid; gap: 20px; padding: 0; margin: 24px 0; }
+.automation-workflow-example li { display: flex; gap: 12px; align-items: center; }
+.automation-example-step { display: grid; place-items: center; flex: 0 0 36px; height: 36px; border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface); color: var(--color-text-muted); font-weight: 600; }
+.automation-workflow-example li strong, .automation-workflow-example li div > span { display: block; }
+.automation-workflow-example li strong { color: var(--color-accent); font-size: 12px; margin-bottom: 4px; }
+.automation-workflow-example > p { margin: 0; color: var(--color-text-muted); font-size: 12px; line-height: 1.6; }
+.automation-list-no-results { padding: 48px 24px; text-align: center; }
+.automation-list-no-results h3 { margin: 0 0 8px; font-size: 18px; }
+.automation-list-no-results p { color: var(--color-text-muted); margin: 0 0 20px; }
+.automation-page .automation-list-region { border: 0; border-radius: 0; }
+.automation-list-table th[scope="row"] { background: transparent; font-size: inherit; font-weight: inherit; color: var(--color-text); vertical-align: middle; }
+.automation-list-table tr:last-child th[scope="row"] { border-bottom: 0; }
+.automation-list-identity { min-width: 180px; max-width: 32ch; overflow-wrap: anywhere; }
+.automation-list-identity strong, .automation-list-identity span, .automation-list-activity > * { display: block; }
+.automation-list-identity strong { font-size: 14px; font-weight: 650; }
+.automation-list-identity span, .automation-list-activity > span { margin-top: 6px; font-size: 12px; color: var(--color-text-muted); font-weight: 400; }
+.automation-list-activity { min-width: 150px; }
+.automation-list-activity > strong { font-weight: 600; }
+.automation-list-actions { min-width: 200px; }
+.automation-list-actions .automation-inline { gap: 8px; }
+.automation-list-actions .button { font-size: 13px; min-height: 44px; }
+.automation-list-manage { margin-top: 8px; }
+.automation-list-manage > summary { width: fit-content; cursor: pointer; }
+.automation-list-manage > summary::-webkit-details-marker { display: none; }
+.automation-list-manage[open] > summary { margin-bottom: 12px; }
+.automation-list-manage[open] > summary > [aria-hidden] { transform: rotate(180deg); }
+.automation-list-manage > .automation-inline { display: grid; justify-items: stretch; }
+.automation-list-manage .settings-editor { padding: 0; border: 0; }
+.automation-list-manage .settings-editor > summary { padding: 12px; border: 1px solid var(--color-border); border-radius: var(--radius-control); font-weight: 600; }
+.automation-list-manage .settings-editor > summary:hover { background: var(--color-surface-subtle); }
+.automation-list-manage .settings-editor > .stack { min-width: 0; width: 260px; max-width: 100%; padding-bottom: 12px; }
+.automation-list-manage .settings-editor > .stack p { white-space: normal; }
+.automation-collection-footer { padding: 16px 24px; border-top: 1px solid var(--color-border); }
+.automation-collection-footer .queue-views { margin: 0; }
+.automation-list-loading { padding: 24px; }
+.automation-list-loading p { margin: 0 0 24px; }
+.automation-list-loading-bars { display: grid; gap: 16px; }
+.automation-list-loading-bars span { height: 48px; border-radius: var(--radius-control); background: var(--color-surface-subtle); }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .automation-list-welcome { gap: 24px; padding: 24px; }
+}
+@media (max-width: 767px) {
+  .automation-collection-heading, .automation-collection-toolbar { padding: 20px 16px; }
+  .automation-list-welcome { grid-template-columns: minmax(0,1fr); padding: 24px 20px; gap: 32px; }
+  .automation-list-welcome-copy h3 { max-width: none; }
+  .automation-workflow-example { padding: 20px; }
+  .automation-page .automation-list-table td.automation-list-actions { display: block; text-align: left; }
+  .automation-list-actions::before { display: block; margin-bottom: 12px; }
+  .automation-list-actions > .automation-inline .button { flex: 1; }
+  .automation-list-identity { max-width: none; min-width: 0; }
+  .automation-list-activity { min-width: 0; overflow-wrap: anywhere; }
+  .automation-list-manage > summary { width: 100%; }
+  .automation-collection-footer { padding: 16px; }
+}
+
 /* Administration uses one card/action rhythm across editable and reference settings. */
 .administration-hub { max-width: 1440px; }
 .administration-hub-header { align-items: center; }

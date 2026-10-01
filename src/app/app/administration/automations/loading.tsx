@@ -1,1 +1,1 @@
-export default function Loading(){return <div className="settings-card" role="status" aria-live="polite">Loading automations…</div>;}
+export default function Loading(){return <div className="automation-collection automation-list-loading" role="status" aria-live="polite"><p>Loading automations…</p><div className="automation-list-loading-bars" aria-hidden="true"><span/><span/><span/></div></div>;}
