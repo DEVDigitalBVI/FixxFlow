@@ -49,6 +49,14 @@ test("message text is escaped instead of rendered as HTML", () => {
   assert.doesNotMatch(html, /<script>/);
   assert.match(html, /&lt;script&gt;/);
 });
+test("automation notes have a system label, never impersonate a human, and remain hidden from employees", () => {
+  const messages = [{ id: 'automation-note', author_id: null, author_type: 'automation', automation_name: 'Critical <Routing>', kind: 'internal_note', body: 'Automated diagnosis', created_at: '2026-10-01T01:00:00Z' }];
+  const render = staff => renderToStaticMarkup(React.createElement(ConversationTimeline, { messages, names: new Map(), viewerId: 'human', requesterId: 'requester', staff, error: false }));
+  const html = render(true);
+  assert.match(html, /Automation: Critical &lt;Routing&gt;/); assert.match(html, /Internal note/); assert.match(html, /IT staff only/);
+  assert.doesNotMatch(html, /Team member|<strong>You/);
+  assert.doesNotMatch(render(false), /Critical|Automated diagnosis/);
+});
 
 const id = "11111111-1111-4111-8111-111111111111";
 function messageForm(kind, body = "Hello") {

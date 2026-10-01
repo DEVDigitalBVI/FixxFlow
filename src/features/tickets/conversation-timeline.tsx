@@ -4,8 +4,9 @@ import { useRef, useState } from "react";
 import type { TicketMessageKind } from "@/types/database";
 import { formatTicketDate } from "./presentation";
 import { messageKinds } from "./message-presentation";
+import { messageAuthorName, type MessageAuthor } from "./authorship";
 
-type Message = { id: string; author_id: string; kind: TicketMessageKind; body: string; created_at: string };
+type Message = MessageAuthor & { id: string; kind: TicketMessageKind; body: string; created_at: string };
 
 export function ConversationTimeline({ messages, names, viewerId, requesterId, staff, error }: {
   messages: Message[]; names: Map<string, string>; viewerId: string; requesterId: string; staff: boolean; error: boolean;
@@ -21,7 +22,7 @@ export function ConversationTimeline({ messages, names, viewerId, requesterId, s
     const note = message.kind === "internal_note";
     return <li key={message.id} className={`conversation-item ${own ? "conversation-item-own" : ""} ${note ? "conversation-item-note" : ""}`}>
       <article tabIndex={-1} className="conversation-bubble">
-        <header><strong>{own ? "You" : names.get(message.author_id) ?? "Team member"}</strong><span>{message.author_id === requesterId ? "Requester" : "IT staff"}</span><time dateTime={message.created_at}>{formatTicketDate(message.created_at)}</time></header>
+        <header><strong>{messageAuthorName(message, names, viewerId)}</strong><span>{message.author_type === "automation" ? "Automation" : message.author_id === requesterId ? "Requester" : "IT staff"}</span><time dateTime={message.created_at}>{formatTicketDate(message.created_at)}</time></header>
         {staff && <div className="message-visibility"><strong>{messageKinds[message.kind].label}</strong><span>{note ? "IT staff only" : "Visible to requester"}</span></div>}
         <p>{message.body}</p>
       </article>
