@@ -13,9 +13,8 @@ function Metric({label,value}:{label:string;value:string|number}) { return <div>
 export function OperationsOverviewView({ data }: { data: OperationsOverview }) {
   const worker = serviceHealth(data.processingActive,data.worker,data.now), discovery = serviceHealth(data.processingActive,data.discovery,data.now);
   return <div className="stack">
-    {!data.processingActive && <p className="alert alert-info"><strong>Automation processing is currently disabled.</strong> Rules and configuration remain available, but automated actions will not execute. Enabled rules do not activate processing.</p>}
     <div className="automation-operations-grid">
-      <section className="settings-card stack"><h2>Processing</h2><p><strong>{data.processingActive?'On':'Off'}</strong></p><p className="muted">Deployment availability, separate from individual rule enablement.</p></section>
+      <section className="settings-card stack"><h2>Processing</h2><p><strong>{data.processingActive?'On':'Off'}</strong></p><p className="muted">{data.processingActive?'Deployment availability, separate from individual rule enablement.':'Automation processing is currently disabled. Rules remain available; automated actions will not execute. Enabled rules do not activate processing.'}</p></section>
       <section className="settings-card stack"><h2>Worker</h2><HealthBadge state={worker}/><p>Last successful run<br/>{date(data.worker.lastSuccessfulAt)}</p>{worker==='unknown'&&<p className="muted">Insufficient run history. Never run does not mean healthy.</p>}</section>
       <section className="settings-card stack"><h2>Temporal discovery</h2><HealthBadge state={discovery}/><p>Last successful run<br/>{date(data.discovery.lastSuccessfulAt)}</p>{discovery==='unknown'&&<p className="muted">No successful discovery has been recorded yet.</p>}</section>
     </div>
