@@ -39,7 +39,7 @@ test('server reads derive organization from authorization and mask database acti
 test('Stage 12 capacity delay has distinct text, tenant counts and no noisy live region',()=>{
  const data={...overview,processingActive:true,queue:{...overview.queue,capacityDeferred:7,notificationDeferred:2,oldestCapacityDeferredAt:overview.now}};
  const html=render(React.createElement(OperationsOverviewView,{data}));
- for(const label of ['Delayed by capacity','Notification capacity delay','Oldest capacity delay','No work has been lost','Delayed','Retry exhausted','Action failed','Safety limit reached'])assert.ok(html.includes(label),label);
+ for(const label of ['Delayed by capacity','Notification capacity delay','Oldest capacity delay','No work has been lost','Delayed','Retry exhausted','Action failed','Safety limit reached','does not make the service degraded'])assert.ok(html.includes(label),label);
  assert.doesNotMatch(html,/aria-live|role="alert"/);
  const {queueHealth}=load('src/features/automation/operations-model.ts');assert.equal(queueHealth(true,data.queue,data.now),'delayed');assert.equal(queueHealth(false,data.queue,data.now),'disabled');
 });

@@ -271,6 +271,16 @@ real infrastructure faults under the established bounded retry/failure policy;
 monitor before enabling rather than using them as a bypass. Environment processing
 flags retain the existing exact-`true` requirement; unset/malformed remains OFF.
 
+## Stage 12B verification and release preparation
+
+The [Stage 12B gate report](automation-stage12b-verification.md) records fresh
+Node 24 checks, real local Supabase PostgreSQL 17.11 clean/upgrade replay, Auth/MFA
+and PostgREST checks, independent contention, a measured default-cadence smoke
+workload, temporal discovery and a synthetic isolated restore. Hosted staging and
+the full responsive/screen-reader release gates remain open. No production
+database, deployment, credential or prepared backup was changed. The original
+Stage 12 evidence below remains a historical record, not the latest gate status.
+
 ## Verification and release checklist
 
 Verification record is completed after the checks below. Tests use Node 24 and

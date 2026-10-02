@@ -1,0 +1,678 @@
+{
+  "postgrest": {
+    "engine": "17.11",
+    "gates": {
+      "real_auth_mfa_aal2_and_insufficient_aal1_denial": "PASS",
+      "create_edit_duplicate_enable_disable_archive_and_revision_conflict": "PASS",
+      "technician_employee_cross_tenant_rules_references_dry_run_history_operations_denial": "PASS",
+      "dry_run_structural_validation_zero_runtime_side_effects": "PASS",
+      "independent_http_enable_race_ceiling_and_disabled_creation": "PASS"
+    },
+    "processing": "OFF"
+  },
+  "capacity": {
+    "scope": "Local Supabase PG17, actual PostgREST worker, unmodified 60-second cadence; short smoke only",
+    "engine": "17.11",
+    "startedAt": "2026-10-02T23:18:37.544Z",
+    "finishedAt": "2026-10-02T23:23:38.400Z",
+    "steady": {
+      "arrivals": 12,
+      "observationSeconds": 180,
+      "completed": 12,
+      "ratePerMinute": 4
+    },
+    "burst": {
+      "arrivals": 14,
+      "completed": 14,
+      "drainSeconds": 120.511016333
+    },
+    "actionLatencyMs": {
+      "count": 26,
+      "p50": 6.412082999988343,
+      "p95": 10.568207999996957,
+      "max": 11.313083000000006
+    },
+    "invocations": [
+      {
+        "phase": "steady",
+        "at": "2026-10-02T23:18:38.073Z",
+        "elapsedMs": 255.27220899999998,
+        "result": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "counts": {
+          "tenantB": 1,
+          "tenantA": 3
+        },
+        "queue": {
+          "leased": 0,
+          "pending": 0,
+          "deferred": 0,
+          "oldestPendingSeconds": null
+        }
+      },
+      {
+        "phase": "steady",
+        "at": "2026-10-02T23:19:38.085Z",
+        "elapsedMs": 229.29275000000052,
+        "result": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "counts": {
+          "tenantB": 2,
+          "tenantA": 6
+        },
+        "queue": {
+          "leased": 0,
+          "pending": 0,
+          "deferred": 0,
+          "oldestPendingSeconds": null
+        }
+      },
+      {
+        "phase": "steady",
+        "at": "2026-10-02T23:20:38.132Z",
+        "elapsedMs": 269.23458299999766,
+        "result": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "counts": {
+          "tenantB": 3,
+          "tenantA": 9
+        },
+        "queue": {
+          "leased": 0,
+          "pending": 0,
+          "deferred": 0,
+          "oldestPendingSeconds": null
+        }
+      },
+      {
+        "phase": "burst",
+        "at": "2026-10-02T23:21:38.248Z",
+        "elapsedMs": 357.80937500001164,
+        "result": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "counts": {
+          "tenantB": 5,
+          "tenantA": 12
+        },
+        "queue": {
+          "leased": 0,
+          "pending": 9,
+          "deferred": 0,
+          "oldestPendingSeconds": 0.412005
+        }
+      },
+      {
+        "phase": "burst",
+        "at": "2026-10-02T23:22:38.308Z",
+        "elapsedMs": 419.07895799999824,
+        "result": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "counts": {
+          "tenantB": 5,
+          "tenantA": 17
+        },
+        "queue": {
+          "leased": 0,
+          "pending": 4,
+          "deferred": 0,
+          "oldestPendingSeconds": 60.471575
+        }
+      },
+      {
+        "phase": "burst",
+        "at": "2026-10-02T23:23:38.172Z",
+        "elapsedMs": 282.60854099999415,
+        "result": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "counts": {
+          "tenantB": 5,
+          "tenantA": 21
+        },
+        "queue": {
+          "leased": 0,
+          "pending": 0,
+          "deferred": 0,
+          "oldestPendingSeconds": null
+        }
+      }
+    ],
+    "before": {
+      "relations": {
+        "domain_events": {
+          "rows": 1,
+          "bytes": 114688,
+          "indexBytes": 98304
+        },
+        "automation_runs": {
+          "rows": 0,
+          "bytes": 40960,
+          "indexBytes": 32768
+        },
+        "ticket_messages": {
+          "rows": 0,
+          "bytes": 81920,
+          "indexBytes": 73728
+        },
+        "automation_rules": {
+          "rows": 106,
+          "bytes": 376832,
+          "indexBytes": 139264
+        },
+        "automation_chains": {
+          "rows": 0,
+          "bytes": 8192,
+          "indexBytes": 8192
+        },
+        "automation_capacity": {
+          "rows": 0,
+          "bytes": 16384,
+          "indexBytes": 8192
+        },
+        "automation_executions": {
+          "rows": 0,
+          "bytes": 90112,
+          "indexBytes": 81920
+        },
+        "automation_chain_claims": {
+          "rows": 0,
+          "bytes": 24576,
+          "indexBytes": 16384
+        },
+        "domain_event_deliveries": {
+          "rows": 1,
+          "bytes": 106496,
+          "indexBytes": 90112
+        },
+        "automation_rule_versions": {
+          "rows": 210,
+          "bytes": 221184,
+          "indexBytes": 57344
+        },
+        "automation_missed_windows": {
+          "rows": 0,
+          "bytes": 32768,
+          "indexBytes": 24576
+        },
+        "automation_execution_steps": {
+          "rows": 0,
+          "bytes": 57344,
+          "indexBytes": 49152
+        },
+        "automation_tenant_schedule": {
+          "rows": 4,
+          "bytes": 57344,
+          "indexBytes": 49152
+        },
+        "automation_command_contexts": {
+          "rows": 0,
+          "bytes": 8192,
+          "indexBytes": 8192
+        },
+        "automation_processing_state": {
+          "rows": 1,
+          "bytes": 24576,
+          "indexBytes": 16384
+        },
+        "automation_temporal_cursors": {
+          "rows": 0,
+          "bytes": 8192,
+          "indexBytes": 8192
+        },
+        "automation_version_visibility": {
+          "rows": 210,
+          "bytes": 90112,
+          "indexBytes": 40960
+        },
+        "automation_temporal_occurrences": {
+          "rows": 0,
+          "bytes": 49152,
+          "indexBytes": 40960
+        }
+      }
+    },
+    "after": {
+      "relations": {
+        "domain_events": {
+          "rows": 27,
+          "bytes": 172032,
+          "indexBytes": 98304
+        },
+        "automation_runs": {
+          "rows": 5,
+          "bytes": 81920,
+          "indexBytes": 65536
+        },
+        "ticket_messages": {
+          "rows": 22,
+          "bytes": 163840,
+          "indexBytes": 147456
+        },
+        "automation_rules": {
+          "rows": 108,
+          "bytes": 385024,
+          "indexBytes": 147456
+        },
+        "automation_chains": {
+          "rows": 22,
+          "bytes": 24576,
+          "indexBytes": 16384
+        },
+        "automation_capacity": {
+          "rows": 4,
+          "bytes": 32768,
+          "indexBytes": 16384
+        },
+        "automation_executions": {
+          "rows": 22,
+          "bytes": 212992,
+          "indexBytes": 163840
+        },
+        "automation_chain_claims": {
+          "rows": 22,
+          "bytes": 49152,
+          "indexBytes": 32768
+        },
+        "domain_event_deliveries": {
+          "rows": 27,
+          "bytes": 114688,
+          "indexBytes": 98304
+        },
+        "automation_rule_versions": {
+          "rows": 314,
+          "bytes": 278528,
+          "indexBytes": 57344
+        },
+        "automation_missed_windows": {
+          "rows": 0,
+          "bytes": 32768,
+          "indexBytes": 24576
+        },
+        "automation_execution_steps": {
+          "rows": 22,
+          "bytes": 114688,
+          "indexBytes": 98304
+        },
+        "automation_tenant_schedule": {
+          "rows": 4,
+          "bytes": 90112,
+          "indexBytes": 49152
+        },
+        "automation_command_contexts": {
+          "rows": 0,
+          "bytes": 24576,
+          "indexBytes": 16384
+        },
+        "automation_processing_state": {
+          "rows": 1,
+          "bytes": 24576,
+          "indexBytes": 16384
+        },
+        "automation_temporal_cursors": {
+          "rows": 0,
+          "bytes": 8192,
+          "indexBytes": 8192
+        },
+        "automation_version_visibility": {
+          "rows": 314,
+          "bytes": 98304,
+          "indexBytes": 40960
+        },
+        "automation_temporal_occurrences": {
+          "rows": 0,
+          "bytes": 49152,
+          "indexBytes": 40960
+        }
+      }
+    },
+    "sanitizedTrace": "PASS",
+    "processing": "OFF"
+  },
+  "contention": {
+    "engine": "17.11",
+    "gates": {
+      "independent_execution_admission_120_and_capacity_attempt_refund": "PASS",
+      "recipient_contention_20_duplicate_receipt_and_rollback": "PASS",
+      "tenant_notification_capacity_defer_resume_and_no_repeated_completed_action": "PASS",
+      "overlapping_connections_action_idempotency_and_expired_lease_recovery": "PASS",
+      "independent_tenant_notification_contention_120": "PASS",
+      "retry_exhaustion_terminalizes_running_execution": "PASS"
+    },
+    "processing": "OFF"
+  },
+  "temporal": {
+    "engine": "17.11",
+    "discovery": [
+      {
+        "rules": 2,
+        "emitted": 101,
+        "examined": 101,
+        "duplicates": 0
+      },
+      {
+        "rules": 2,
+        "emitted": 100,
+        "examined": 101,
+        "duplicates": 1
+      },
+      {
+        "rules": 2,
+        "emitted": 10,
+        "examined": 11,
+        "duplicates": 1
+      },
+      {
+        "rules": 2,
+        "emitted": 0,
+        "examined": 101,
+        "duplicates": 101
+      }
+    ],
+    "worker": [
+      {
+        "disabled": false,
+        "claimed": 1,
+        "acknowledged": 1,
+        "retried": 0,
+        "failed": 0,
+        "deferred": 0,
+        "capacityDeferred": 0
+      },
+      {
+        "disabled": false,
+        "claimed": 1,
+        "acknowledged": 1,
+        "retried": 0,
+        "failed": 0,
+        "deferred": 0,
+        "capacityDeferred": 0
+      },
+      {
+        "disabled": false,
+        "claimed": 2,
+        "acknowledged": 2,
+        "retried": 0,
+        "failed": 0,
+        "deferred": 0,
+        "capacityDeferred": 0
+      }
+    ],
+    "lag": {
+      "emitted": 211,
+      "maxLagSeconds": 0.300174,
+      "minLagSeconds": 0.123552
+    },
+    "cursorRollbackRecovery": "PASS",
+    "idempotency": "PASS",
+    "smallTenantProgress": "PASS",
+    "scope": "Aged synthetic thresholds; not a real-time SLA-window or throughput measurement",
+    "processing": "OFF"
+  },
+  "upgrade": {
+    "engine": "17.11",
+    "cleanPreStage12Ledger": 39,
+    "upgradedLedger": 40,
+    "legacyEnabledRules": 101,
+    "tickets": 2000,
+    "deliveries": 2000,
+    "executions": 1,
+    "steps": 1,
+    "immutableSnapshot": "PASS",
+    "furtherEnableDenied": "PASS",
+    "migrationElapsedMs": 4849.639792,
+    "observedLockWait": false,
+    "processing": "OFF",
+    "lockingNote": "A four-second reader lock was injected, but lock wait was not captured by the polling predicate. Total replay time is not lock duration."
+  },
+  "restore": {
+    "engine": "17.11",
+    "method": "Supabase CLI schema/data/history; replica-mode transaction; managed vector tables excluded",
+    "tablesCompared": 49,
+    "rowDigests": "PASS",
+    "migrationLedger": 40,
+    "enabledRules": 101,
+    "tickets": 2000,
+    "processing": "OFF",
+    "scope": "Isolated local restore; no hosted platform configuration or Storage object bytes restored",
+    "managedSchemaPoliciesCompared": 17,
+    "excludedVectorTablesVerifiedEmpty": true
+  },
+  "baseline": {
+    "commit": "bd4cd42",
+    "node": "24.21.0",
+    "tests": 707,
+    "failures": 0,
+    "skipped": 0,
+    "durationMs": 23384.822958,
+    "typecheck": "PASS",
+    "lintZeroWarnings": "PASS",
+    "buildProcessingOff": "PASS",
+    "operationsRegressionTests": 7
+  },
+  "migrationManifest": [
+    {
+      "file": "20260921005845_organization_identity_foundation.sql",
+      "sha256": "7d28801934bc41bdcd9732333913e8160b1a937e067ef693f1bec2988934204f"
+    },
+    {
+      "file": "20260921010019_harden_identity_policies.sql",
+      "sha256": "e3a9a2ff009ed8fb6f42f0055684544460e2e1a925e6ff1a1711ad17aac589f6"
+    },
+    {
+      "file": "20260921015452_ticketing_engine.sql",
+      "sha256": "4a4f93b88746a77872c5388834f732e54efbb611b7ad334bd757039f2fec9bc8"
+    },
+    {
+      "file": "20260921015519_ticketing_foreign_key_indexes.sql",
+      "sha256": "de3a251d0ed87592b4dadb9a6cdc04670d7f93cd6f889a31b168da78ad86add8"
+    },
+    {
+      "file": "20260921020443_enable_customer_organization_signup.sql",
+      "sha256": "865d48537813dee99b10135a9f80f57a2bda22df2dee65708fc9ad219acbf70c"
+    },
+    {
+      "file": "20260921211804_first_class_support_chat.sql",
+      "sha256": "dafe2166a3d62eb0e385894f36a1da4baeb353eb72500bfe3c33054fd7189cea"
+    },
+    {
+      "file": "20260925004637_employee_ticket_reopen.sql",
+      "sha256": "d304a2673f072d4f19a4c5506c91bdc4e178dc2c33f3663089c5ff13658ef483"
+    },
+    {
+      "file": "20260925004643_ticket_sla_targets.sql",
+      "sha256": "4008fbf36a967d9d5b968fb953bd286e80d01640b2e449e9f9e95eb29ad8c063"
+    },
+    {
+      "file": "20260925010356_starter_ticket_categories.sql",
+      "sha256": "874501ecd6f506301a3bc3bc14b8c88eca782468d3453fda588d5c5aabdc34d6"
+    },
+    {
+      "file": "20260925010358_enforce_mfa_and_server_owned_timestamps.sql",
+      "sha256": "f46fbffb27eeafb1efebb0bc6929911f9e9b29f75d1f01932408b9e4857fdd4f"
+    },
+    {
+      "file": "20260925013051_ticket_notifications.sql",
+      "sha256": "dd047825235ed60f89ea97173c856f03aacf35bee5508d6909ce7af274d2f232"
+    },
+    {
+      "file": "20260925013110_schedule_notification_sla.sql",
+      "sha256": "9ba45bfc9ef84e2cf613221b4b055f2b3076009120e7cbd5729f92ab63d78d94"
+    },
+    {
+      "file": "20260925013145_harden_notification_dispatcher.sql",
+      "sha256": "65c519a2caaab1ca5212c0617c1d2f745d1934249fdcf6bfd45cf5a4b88db979"
+    },
+    {
+      "file": "20260925014034_indexed_ticket_search.sql",
+      "sha256": "c713c05842478b2f293749503ef92d0cbe8c2964269d3e7a1f7c682b96584939"
+    },
+    {
+      "file": "20260925015718_knowledge_base.sql",
+      "sha256": "16f37843802cae32b7b4fc51f5133afdb5769a2381d1b7899422aad0ce18aa87"
+    },
+    {
+      "file": "20260925015806_restrict_knowledge_column_grants.sql",
+      "sha256": "4070300bec42b7bc7eb9854cca48691f97d340a5c321c31ce87c67f6e21c4c13"
+    },
+    {
+      "file": "20260925025937_operational_reporting.sql",
+      "sha256": "867b025fc7ddd81ce227627d185717a315d9ad7d21b3a70d34d13291f6d02508"
+    },
+    {
+      "file": "20260925031136_audit_log.sql",
+      "sha256": "9ac8f05a05be9c4cb6b2624035c708a4f90c34c2ddc67d6baac7b6cb4d28df16"
+    },
+    {
+      "file": "20260925032928_product_analytics.sql",
+      "sha256": "2572d1dac155bc445a2ff06244d065bca1519a1b00d5c5cffc878e0fa003f45b"
+    },
+    {
+      "file": "20260925033210_product_analytics_private_policies.sql",
+      "sha256": "03b74e2b573f653007454d49605cfa26777ce80e02c5b5b751eb89347d8fe27d"
+    },
+    {
+      "file": "20260925035955_assets_and_platform.sql",
+      "sha256": "3c436a0cb500a16870fb53b63c5e226d8c23a135bbd75bef9185beb1fd2c7486"
+    },
+    {
+      "file": "20260926020400_remove_sample_knowledge_articles.sql",
+      "sha256": "6822f2ee115b7c60bb4d5eb85bc333e2789e1d0d6f2644fe051fe0aba38fd62d"
+    },
+    {
+      "file": "20260926022032_protect_organization_references_on_delete.sql",
+      "sha256": "0bf99501e01101c830231c2fc33fa14f6e28a79e844d2cb863480944229c9497"
+    },
+    {
+      "file": "20260926024852_category_team_routing.sql",
+      "sha256": "775a5bc41b737f59bab2d8a52d675941efe2b1d39e79a32e0d22421183cc5a54"
+    },
+    {
+      "file": "20260926025012_ticket_routing_insert_permission.sql",
+      "sha256": "701a6b59bbee9e1cbed419fbd44c62f667ec0722ea5b797f360e22eec3289438"
+    },
+    {
+      "file": "20260927233229_universal_partial_search.sql",
+      "sha256": "f265cc381b7a81a1d76d96a8eb0d7c9a4a90522642406ae9bf50619f59c52cd5"
+    },
+    {
+      "file": "20261001014435_automation_rule_definitions.sql",
+      "sha256": "7a5781ef6c3d08e15548f6c918c66ef18e47c004cfd2682fe8f5240fdf5a0379"
+    },
+    {
+      "file": "20261001014436_automation_administration_audit.sql",
+      "sha256": "621f90798308713203b069593f2fc92c89ba0c5e6177e24fc7db4e3243b21924"
+    },
+    {
+      "file": "20261001020338_durable_domain_events.sql",
+      "sha256": "255fc7c55d86bb6d95f65fac3402990034f55dcd135237dd937f950fa3d3a632"
+    },
+    {
+      "file": "20261001022623_automation_execution_authority.sql",
+      "sha256": "502864308b148f76cc9b8688b12d01d17e79cad779f8ecccfd21753bb4cd41b4"
+    },
+    {
+      "file": "20261001023010_automation_ticket_commands.sql",
+      "sha256": "085529598746c0234f437668db7889c8716f8945402e81f87ac1e28f08d7ff13"
+    },
+    {
+      "file": "20261001025400_automation_notification_kind.sql",
+      "sha256": "0a989be93641d7103bd5f311180e65a14d0241f3339aa9fc4ba34086be8a881d"
+    },
+    {
+      "file": "20261001025401_automation_worker_delivery.sql",
+      "sha256": "48f06eada8767f892d4035b7a709326345991f9b71aeeddb24235fce865d64f5"
+    },
+    {
+      "file": "20261001025402_automation_notification_command.sql",
+      "sha256": "a3ade26c636d2603bd8a9faf8a561b0686aed06be7fe05907d2dbc37c4773957"
+    },
+    {
+      "file": "20261001031036_automation_dry_run_reads.sql",
+      "sha256": "1a6e035bcb1f484fac98fd8ab25fd515cf8236fb270d3745984e453f6fdc206b"
+    },
+    {
+      "file": "20261001032617_automation_admin_reads.sql",
+      "sha256": "a2cf3f89670dbc917e06917c2b916429b93e015619abc705759df9a7e06199d8"
+    },
+    {
+      "file": "20261001160233_automation_temporal_episodes.sql",
+      "sha256": "c9b40a6c90ebe9d6a58f4d99ef31009fdcc3425f1c20a1bb9a269cf8841576f2"
+    },
+    {
+      "file": "20261001160248_automation_temporal_discovery.sql",
+      "sha256": "82e0e3a5848a68a400aa9a5fb15056a44c9f31011a2c71bbe1dbe60624016141"
+    },
+    {
+      "file": "20261001165514_automation_operations.sql",
+      "sha256": "e44d2359734d1c053efe7a00051ba7df95e657b69ec1b819fc05d8196c3d0618"
+    },
+    {
+      "file": "20261002202406_automation_guardrails.sql",
+      "sha256": "baf23a60dfcf7002369a4924f4b6c8be878fc30e6735571cdcdd5abd99dcfd9a"
+    }
+  ],
+  "resourceSnapshot": {
+    "kind": "post-workload spot sample, not peak measurement",
+    "postgres": {
+      "cpuPercent": 0.29,
+      "memoryMiB": 184.3
+    },
+    "postgrest": {
+      "cpuPercent": 0.17,
+      "memoryMiB": 160.1
+    },
+    "auth": {
+      "cpuPercent": 0.03,
+      "memoryMiB": 20.73
+    }
+  },
+  "cleanup": {
+    "localProcessing": "OFF",
+    "upgradeProcessing": "OFF",
+    "restoreProcessing": "OFF",
+    "testStacks": "STOPPED, volumes preserved",
+    "syntheticPreview": "STOPPED",
+    "production": "Untouched; no live database-state query"
+  }
+}
