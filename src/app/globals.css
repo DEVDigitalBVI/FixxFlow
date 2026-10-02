@@ -1096,6 +1096,61 @@ select.input-compact { height: 40px; }
 .asset-facts dt { font-weight: 600; }
 .asset-facts dd { margin: 0 0 12px; color: var(--color-text-muted); }
 
+/* Inventory uses the same grouped directory rhythm as People. */
+.assets-page { display: grid; grid-template-columns: minmax(0,1fr); gap: 24px; }
+.assets-page > .page-header { margin-bottom: 0; }
+.asset-inventory { min-width: 0; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-panel); overflow: hidden; }
+.asset-inventory-heading, .asset-inventory-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
+.asset-inventory-heading h2 { margin: 0 0 4px; font-size: 18px; letter-spacing: -.02em; }
+.asset-inventory-heading p { margin: 0; color: var(--color-text-muted); }
+.asset-inventory-heading > span, .asset-inventory-footer { font-size: 13px; }
+.asset-inventory-toolbar { padding: 20px 24px; background: var(--color-surface-subtle); border-block: 1px solid var(--color-border); }
+.asset-search { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+.asset-search-query { flex: 1 1 320px; min-width: 0; }
+.asset-search-lifecycle { flex: 0 1 180px; min-width: 0; }
+.asset-inventory-toolbar .live-search-status { margin: 12px 0 0; font-size: 12px; }
+.asset-inventory .table-region { border: 0; border-radius: 0; }
+.asset-inventory .table-region:focus-visible { outline-offset: -3px; }
+.asset-inventory-table .asset-name { font-weight: 650; }
+.asset-tag { color: var(--color-text-muted); margin-top: 4px; font-size: 12px; }
+.asset-row-actions, .asset-pagination { display: flex; align-items: center; gap: 12px; }
+.asset-status-available { color: var(--color-success); background: var(--color-success-subtle); }
+.asset-status-in_use { color: var(--color-info); background: var(--color-info-subtle); }
+.asset-status-repair { color: var(--color-warning); background: var(--color-warning-subtle); }
+.asset-status-retired { color: var(--color-text-muted); background: var(--color-surface-subtle); border: 1px solid var(--color-border); }
+.asset-inventory-footer { border-top: 1px solid var(--color-border); }
+.asset-inventory-feedback { padding: 24px; }
+.asset-empty h3 { font-size: 20px; margin: 0; }
+.asset-ticket-context { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.asset-ticket-context p { margin: 4px 0 0; }
+.asset-editor { display: grid; gap: 24px; }
+.asset-editor-intro h2, .asset-history h2 { margin: 0 0 8px; font-size: 18px; }
+.asset-editor p { margin: 0; }
+.asset-form-section { min-width: 0; margin: 0; padding: 20px 0 0; border: 0; border-top: 1px solid var(--color-border); }
+.asset-form-section legend { padding: 0 12px 0 0; font-size: 15px; font-weight: 650; }
+.asset-form-section .form-grid { margin-block: 16px; }
+.asset-editor-actions { border-top: 1px solid var(--color-border); padding-top: 24px; }
+.asset-history-list { list-style: none; padding: 0; margin: 16px 0 0; }
+.asset-history-list li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 16px; border-top: 1px solid var(--color-border); }
+.asset-history-list li > div { min-width: 0; overflow-wrap: anywhere; }
+.asset-history-list p { margin: 4px 0 0; font-weight: 600; }
+.asset-history-list .button { flex-shrink: 0; }
+@media (max-width: 767px) {
+  .asset-inventory-heading, .asset-inventory-toolbar, .asset-inventory-footer { padding: 20px 16px; }
+  .asset-search-query { flex-basis: 100%; }
+  .asset-search-lifecycle { flex: 1 1 100%; }
+  .asset-search > .button { flex: 1 1 auto; }
+  .asset-inventory-table td { overflow-wrap: anywhere; }
+  .asset-row-actions { width: 100%; flex-wrap: wrap; }
+  .asset-row-actions > a, .asset-row-actions > form { flex: 1 1 100%; }
+  .asset-row-actions .button { width: 100%; }
+  .asset-inventory-table td:last-child { grid-template-columns: minmax(0,1fr); }
+  .asset-inventory-table td:last-child::before { display: none; }
+  .asset-pagination { width: 100%; justify-content: space-between; }
+  .asset-editor-actions { flex-direction: column; align-items: stretch; }
+  .asset-history-list li { align-items: stretch; flex-direction: column; }
+}
+
 /* Shared brand expression: quiet surfaces, a directional accent, solid controls. */
 .sidebar-brand { position: relative; }
 .sidebar-brand::after { content: ""; position: absolute; left: 8px; bottom: -12px; width: 32px; height: 3px; border-radius: 3px; background: var(--brand-flow); }
