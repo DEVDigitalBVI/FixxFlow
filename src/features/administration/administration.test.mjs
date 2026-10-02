@@ -52,7 +52,7 @@ test('fixed SLA presentation matches the database deadline function',()=>{
 
 test('technician view filters memberships on the server and defaults invitations to technician',async()=>{
   const {render,calls}=load('src/app/app/people/page.tsx','administrator');
-  const html=renderToStaticMarkup(await render({searchParams:Promise.resolve({view:'technicians'})}));
+  const html=renderToStaticMarkup(await render({searchParams:Promise.resolve({view:'technicians',invite:'1'})}));
   assert.ok(calls.some(c=>c[0]==='eq'&&c[1]==='role'&&c[2]==='technician'));
   assert.match(html,/<h1>Technicians<\/h1>/);
   assert.match(html,/<option value="technician" selected="">/);
