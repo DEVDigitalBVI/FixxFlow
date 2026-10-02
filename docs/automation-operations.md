@@ -1,5 +1,9 @@
 # Automation Operations — Stage 10
 
+Stage 12 adds [guardrails and capacity backpressure](automation-guardrails.md); its
+limits, scheduling and capacity-state semantics extend this stage's contracts.
+
+
 Stage 10 observes the existing engine. It adds no retry/replay/force-run controls,
 changes no ticket action semantics, and does not activate processing. Production
 Supabase and the previously prepared production backup were not accessed.

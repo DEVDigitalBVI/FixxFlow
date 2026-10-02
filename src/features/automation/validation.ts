@@ -5,7 +5,8 @@ import type { AutomationRegistry, FieldRegistration } from './registries';
 import { operatorsFor } from './registries';
 import { copyJson, hasOnly, isBoundedJson, isIdentifier, isRecord, isTimestamp, isUuid, matchesConfiguration, matchesValue } from './values';
 
-export const automationLimits = Object.freeze({ conditions: 50, actions: 20, listValues: 100, name: 120, description: 2000 });
+import { automationSafetyLimits } from './limits';
+export const automationLimits = automationSafetyLimits.structural;
 const issue = (path: string, code: string, message: string): ValidationIssue => ({ path, code, message });
 const invalid = <T>(path: string, code: string, message: string): ValidationResult<T> => ({ valid: false, issues: [issue(path, code, message)] });
 const positiveInteger = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) > 0;
@@ -41,6 +42,7 @@ export function validateCondition(input: unknown, registry: AutomationRegistry, 
 
 export function validateDefinition(input: unknown, registry: AutomationRegistry): ValidationResult<AutomationDefinition> {
   if (!isBoundedJson(input) || !isRecord(input) || !hasOnly(input, ['schemaVersion', 'name', 'description', 'trigger', 'conditions', 'actions'])) return invalid('definition', 'invalid_definition', 'Provide a bounded structured automation definition.');
+  if (new TextEncoder().encode(JSON.stringify(input)).length > automationLimits.definitionBytes) return invalid('definition', 'definition_limit_exceeded', 'The automation definition exceeds the 256 KiB safety limit. Shorten notes or condition values.');
   const issues: ValidationIssue[] = [];
   if (input.schemaVersion !== 1) issues.push(issue('schemaVersion', 'unsupported_version', 'Only definition schema version 1 is supported.'));
   if (!matchesValue(input.name, { kind: 'string', minLength: 1, maxLength: automationLimits.name })) issues.push(issue('name', 'invalid_name', 'Enter an automation name of 1–120 characters.'));

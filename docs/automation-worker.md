@@ -1,5 +1,9 @@
 # Automation worker — Stage 5
 
+Stage 12 adds [guardrails and capacity backpressure](automation-guardrails.md); its
+limits, scheduling and capacity-state semantics extend this stage's contracts.
+
+
 Stage 5 adds server orchestration and the existing notification action. Processing
 remains **OFF** by default. No production database was migrated or activated.
 Stage 6 dry runs, administration UI, historical replay and external integration

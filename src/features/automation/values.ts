@@ -1,3 +1,4 @@
+import { automationSafetyLimits } from './limits';
 import type { JsonValue } from '@/lib/events/model';
 import type { ConfigurationSchema, ValueSchema } from './registries';
 
@@ -24,19 +25,19 @@ export function isBoundedJson(value: unknown): value is JsonValue {
   let characters = 0;
   const ancestors = new Set<object>();
   function visit(item: unknown, depth: number): boolean {
-    if (++nodes > 10000 || depth > 12) return false;
-    if (typeof item === 'string') { characters += item.length; return characters <= 100000; }
+    if (++nodes > automationSafetyLimits.json.nodes || depth > automationSafetyLimits.json.depth) return false;
+    if (typeof item === 'string') { characters += item.length; return characters <= automationSafetyLimits.json.characters; }
     if (item === null || typeof item === 'boolean') return true;
     if (typeof item === 'number') return Number.isFinite(item);
     if (!Array.isArray(item) && !isRecord(item)) return false;
     if (ancestors.has(item) || Object.getOwnPropertySymbols(item).length) return false;
     ancestors.add(item);
     const descriptors = Object.getOwnPropertyDescriptors(item);
-    if (Array.isArray(item) && (item.length > 1000 || Object.keys(descriptors).length !== item.length + 1)) return false;
+    if (Array.isArray(item) && (item.length > automationSafetyLimits.json.arrayItems || Object.keys(descriptors).length !== item.length + 1)) return false;
     for (const [key, descriptor] of Object.entries(descriptors)) {
       if (Array.isArray(item) && key === 'length') continue;
       characters += key.length;
-      if (characters > 100000 || ['__proto__', 'prototype', 'constructor'].includes(key) || !('value' in descriptor) || !descriptor.enumerable || !visit(descriptor.value, depth + 1)) return false;
+      if (characters > automationSafetyLimits.json.characters || ['__proto__', 'prototype', 'constructor'].includes(key) || !('value' in descriptor) || !descriptor.enumerable || !visit(descriptor.value, depth + 1)) return false;
     }
     ancestors.delete(item);
     return true;

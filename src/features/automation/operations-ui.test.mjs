@@ -35,3 +35,11 @@ test('server reads derive organization from authorization and mask database acti
  const {automationOperations,automationOperationsHistory}=load('src/features/automation/operations-service.ts',{'server-only':{},'./ui-service':{requireAutomationAdmin:async()=>{if(denied)throw Error('DENIED');return{organizationId:'trusted-org'};}},'@/lib/supabase/server':{createClient:async()=>({rpc:async(name,args)=>{calls.push({name,args});return{data:name==='read_automation_operations'?{...overview,processingActive:true}:{rows:[],hasNext:false},error:null};}})}});
  try{assert.equal((await automationOperations()).processingActive,false);await automationOperationsHistory({org:'foreign',q:'Network'});assert.ok(calls.every(c=>c.args.org==='trusted-org'));denied=true;await assert.rejects(automationOperations(),/DENIED/);await assert.rejects(automationOperationsHistory({}),/DENIED/);assert.equal(calls.length,2);}finally{if(prior===undefined)delete process.env.AUTOMATION_PROCESSING_ENABLED;else process.env.AUTOMATION_PROCESSING_ENABLED=prior;}
 });
+
+test('Stage 12 capacity delay has distinct text, tenant counts and no noisy live region',()=>{
+ const data={...overview,processingActive:true,queue:{...overview.queue,capacityDeferred:7,notificationDeferred:2,oldestCapacityDeferredAt:overview.now}};
+ const html=render(React.createElement(OperationsOverviewView,{data}));
+ for(const label of ['Delayed by capacity','Notification capacity delay','Oldest capacity delay','No work has been lost','Delayed','Retry exhausted','Action failed','Safety limit reached'])assert.ok(html.includes(label),label);
+ assert.doesNotMatch(html,/aria-live|role="alert"/);
+ const {queueHealth}=load('src/features/automation/operations-model.ts');assert.equal(queueHealth(true,data.queue,data.now),'delayed');assert.equal(queueHealth(false,data.queue,data.now),'disabled');
+});

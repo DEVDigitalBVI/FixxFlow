@@ -3,10 +3,11 @@ import type { DomainDeliveryFailure } from '@/lib/events/delivery';
 export class AutomationWorkerError extends Error {
   constructor(readonly code: string, readonly status?: number) { super('Automation processing failed'); }
 }
-export type WorkerFailure = { outcome: 'retry' | 'failed'; code: DomainDeliveryFailure };
+export type WorkerFailure = { outcome: 'retry' | 'failed' | 'deferred'; code: DomainDeliveryFailure };
 /** Unknown/programming errors fail closed. Never classify from raw message text. */
 export function classifyWorkerFailure(error: unknown): WorkerFailure {
   const code = error instanceof AutomationWorkerError ? error.code : '';
+  if (code === 'FF002' || code === 'FF003') return { outcome: 'deferred', code: code === 'FF002' ? 'execution_deferred_capacity' : 'notification_deferred_capacity' };
   if (['invalid_event', 'invalid_configuration', 'planner_mismatch'].includes(code)) return { outcome: 'failed', code: code as DomainDeliveryFailure };
   if (code === '42501' || code === 'authorization_failed') return { outcome: 'failed', code: 'authorization_failed' };
   if (code === '54000') return { outcome: 'failed', code: 'chain_limit' };

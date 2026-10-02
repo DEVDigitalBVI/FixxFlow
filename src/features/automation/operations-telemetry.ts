@@ -1,7 +1,7 @@
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database, Json } from '@/types/database';
-export type RunMetrics = { claimed?: number; executions?: number; failures?: number; retried?: number; deferred?: number; acknowledged?: number; rules?: number; examined?: number; emitted?: number; duplicates?: number };
+export type RunMetrics = { capacityDeferred?: number; claimed?: number; executions?: number; failures?: number; retried?: number; deferred?: number; acknowledged?: number; rules?: number; examined?: number; emitted?: number; duplicates?: number };
 /** Observation failures never provide or remove execution authority. */
 export async function observeAutomationRun<T>(client: SupabaseClient<Database>, kind: 'worker' | 'discovery', work: () => Promise<T>, metrics: (result: T) => RunMetrics): Promise<T> {
   let runId: string | null = null;
@@ -16,6 +16,6 @@ export async function observeAutomationRun<T>(client: SupabaseClient<Database>, 
   catch (error) { await finish('failed', { failures: 1 }); throw error; }
   let counts: RunMetrics;
   try { counts = metrics(value); } catch { unavailable(); return value; }
-  await finish((counts.failures ?? 0) + (counts.retried ?? 0) + (counts.deferred ?? 0) > 0 ? 'degraded' : 'succeeded', counts);
+  await finish((counts.failures ?? 0) + (counts.retried ?? 0) + Math.max(0,(counts.deferred ?? 0)-(counts.capacityDeferred ?? 0)) > 0 ? 'degraded' : 'succeeded', counts);
   return value;
 }

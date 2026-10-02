@@ -8,6 +8,8 @@ import { validateDefinition } from './validation';
 import { isUuid } from './values';
 
 const messages: Record<AdministrationErrorCode, string> = {
+  automation_limit_reached: 'This organization has reached the active Automation safety limit. Disable another Automation before enabling this one.',
+  definition_limit_exceeded: 'The automation definition exceeds the 256 KiB safety limit. Shorten notes or condition values.',
   forbidden: 'Administrator access and the required account verification are needed.',
   invalid_input: 'Check the automation identifier, version and request values.',
   invalid_definition: 'Check the automation configuration and available organization references.',
@@ -17,7 +19,7 @@ const messages: Record<AdministrationErrorCode, string> = {
   unavailable: 'Automation management is temporarily unavailable. Try again.',
 };
 function failure(code: AdministrationErrorCode): AdministrationResult<never> { return { ok: false, error: { code, message: messages[code] } }; }
-const errorCodes: Record<string, AdministrationErrorCode> = { '42501': 'forbidden', '22023': 'invalid_definition', '22P05': 'invalid_definition', '22021': 'invalid_definition', '40001': 'conflict', 'P0002': 'not_found', '55000': 'archived' };
+const errorCodes: Record<string, AdministrationErrorCode> = { 'FF001': 'automation_limit_reached', 'FF004': 'definition_limit_exceeded', '42501': 'forbidden', '22023': 'invalid_definition', '22P05': 'invalid_definition', '22021': 'invalid_definition', '40001': 'conflict', 'P0002': 'not_found', '55000': 'archived' };
 type Repository = ReturnType<typeof automationRepository>;
 
 async function administer<T>(work: (repository: Repository) => Promise<AdministrationResult<T>>): Promise<AdministrationResult<T>> {

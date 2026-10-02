@@ -32,7 +32,7 @@ function service(db, viewer = {}, calls = []) {
     '@/lib/supabase/server': { createClient: async () => client(db, calls) },
   });
 }
-const tables = ['public.tickets','public.ticket_messages','public.ticket_activity','public.notifications','private.notification_email_outbox','private.domain_events','private.domain_event_deliveries','public.automation_executions','public.automation_execution_steps','public.audit_events','public.automation_rules','public.automation_rule_versions','private.automation_processing_state','private.automation_chains','private.automation_chain_claims','private.automation_command_contexts'];
+const tables = ['private.automation_capacity','private.automation_tenant_schedule','public.tickets','public.ticket_messages','public.ticket_activity','public.notifications','private.notification_email_outbox','private.domain_events','private.domain_event_deliveries','public.automation_executions','public.automation_execution_steps','public.audit_events','public.automation_rules','public.automation_rule_versions','private.automation_processing_state','private.automation_chains','private.automation_chain_claims','private.automation_command_contexts'];
 async function snapshot(db) {
   await owner(db); const value = {};
   for (const table of tables) value[table] = (await db.query(`select coalesce(jsonb_agg(to_jsonb(t) order by to_jsonb(t)::text),'[]') data from ${table} t`)).rows[0].data;

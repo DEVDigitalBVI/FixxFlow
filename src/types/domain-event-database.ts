@@ -8,7 +8,7 @@ export type DomainEventFunctions = {
     Returns: { delivery_id: string; lease_token: string; lease_expires_at: string; attempts: number; event: Json }[];
   };
   finish_domain_event_delivery: {
-    Args: { delivery_id: string; token: string; outcome: 'acknowledged' | 'retry' | 'failed'; failure_code?: DomainDeliveryFailure | null };
+    Args: { delivery_id: string; token: string; outcome: 'acknowledged' | 'retry' | 'failed' | 'deferred'; failure_code?: DomainDeliveryFailure | null };
     Returns: boolean;
   };
 };

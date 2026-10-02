@@ -1,5 +1,9 @@
 # Automation portability — Stage 11
 
+Stage 12 adds [guardrails and capacity backpressure](automation-guardrails.md); its
+limits, scheduling and capacity-state semantics extend this stage's contracts.
+
+
 Stage 11 adds configuration import/export only. It does not change execution,
 activation, tenant authority, built-in templates or database schema. Processing
 remains OFF. No production access or deployment is part of this stage.

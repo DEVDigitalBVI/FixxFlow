@@ -44,6 +44,7 @@ export function executionLabel(status: string, error: string | null) {
   if (error === 'stale_entity') return 'Ticket changed';
   if (error === 'processing_inactive') return 'Processing paused';
   if (error === 'rule_unavailable') return 'Rule changed or disabled';
+  if (error === 'notification_fanout_limit') return 'Notification safety limit reached';
   if (error === 'chain_limit') return 'Safety limit reached';
   return ({ running: 'Processing', succeeded: 'Completed', skipped: 'Conditions not met / skipped', failed: 'Action failed', partially_completed: 'Partially completed · action failed' } as Record<string, string>)[status] ?? 'Not run';
 }

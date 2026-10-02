@@ -4,6 +4,7 @@ import { fieldLabel } from './ui-model';
 
 export type PresentedIssue = { message: string; target: string; path: string };
 export function presentValidationIssue(definition: AutomationDefinition, issue: ValidationIssue): PresentedIssue {
+  if (issue.code === 'definition_limit_exceeded') return { path: issue.path, target: 'automation-name', message: 'The automation definition exceeds the 256 KiB safety limit. Shorten notes or condition values.' };
   if (issue.path.startsWith('trigger') && isTemporalTrigger(definition.trigger.type)) return { path: issue.path, target: definition.trigger.type === 'ticket.sla_breached' ? 'automation-sla-objective' : 'automation-duration', message: 'Choose an SLA requirement where applicable and a duration from 1 minute to 365 days, expressed in whole minutes.' };
   const condition = /^conditions\.children\.(\d+)/.exec(issue.path);
   const action = /^actions\.(\d+)/.exec(issue.path);

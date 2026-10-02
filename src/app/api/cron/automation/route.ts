@@ -22,7 +22,7 @@ export async function GET(request: Request) {
         if (entry.executionId && ['failed', 'partially_completed'].includes(entry.result)) failures.add(entry.executionId);
         console.info(JSON.stringify({ component: 'automation', ...entry }));
       },
-    }), result => ({ claimed: result.claimed, acknowledged: result.acknowledged, retried: result.retried, deferred: result.deferred, executions: executions.size, failures: failures.size + result.failed }));
+    }), result => ({ capacityDeferred: result.capacityDeferred, claimed: result.claimed, acknowledged: result.acknowledged, retried: result.retried, deferred: result.deferred, executions: executions.size, failures: failures.size + result.failed }));
     return Response.json(result);
   } catch (error) {
     console.error(JSON.stringify({ component: 'automation', result: 'worker_unavailable', code: classifyWorkerFailure(error).code }));

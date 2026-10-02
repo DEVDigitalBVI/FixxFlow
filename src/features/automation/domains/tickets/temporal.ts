@@ -1,3 +1,4 @@
+import { automationSafetyLimits } from '../../limits';
 import type { EntitySnapshot, JsonValue } from '@/lib/events/model';
 import type { AutomationTrigger } from '../../model';
 import type { ConfigurationSchema, TriggerRegistration } from '../../registries';
@@ -5,7 +6,7 @@ import { isRecord, isTimestamp, isUuid, matchesConfiguration } from '../../value
 
 export const temporalTypes = ['ticket.unassigned_duration_reached', 'ticket.waiting_on_user_duration_reached', 'ticket.open_duration_reached', 'ticket.sla_approaching', 'ticket.sla_breached'] as const;
 export const isTemporalTrigger = (type: string) => (temporalTypes as readonly string[]).includes(type);
-export const durationSchema = { value: { kind: 'number', integer: true, min: 1, max: 525600 } } as const;
+export const durationSchema = { value: { kind: 'number', integer: true, min: 1, max: automationSafetyLimits.structural.durationMinutes } } as const;
 export function temporalConfiguration(type: string): ConfigurationSchema {
   return { ...(type !== 'ticket.sla_breached' ? { durationMinutes: durationSchema } : {}), ...(type.startsWith('ticket.sla_') ? { objective: { value: { kind: 'enum', values: ['response', 'resolution'] } as const } } : {}) };
 }

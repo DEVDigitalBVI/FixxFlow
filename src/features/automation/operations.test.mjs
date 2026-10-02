@@ -44,6 +44,7 @@ test('invocation telemetry preserves worker results/failures and never converts 
  const calls=[];const {observeAutomationRun}=load('src/features/automation/operations-telemetry.ts',{'server-only':{}});
  const client={rpc:async(name,args)=>{calls.push({name,args});return{data:name==='start_automation_run'?'00000000-0000-4000-8000-000000000001':true,error:null};}};
  const value=await observeAutomationRun(client,'worker',async()=>({done:true}),()=>({claimed:2,executions:1,failures:0}));assert.deepEqual(value,{done:true});assert.equal(calls[1].args.outcome,'succeeded');
+ calls.length=0;await observeAutomationRun(client,'worker',async()=>1,()=>({deferred:3,capacityDeferred:3}));assert.equal(calls[1].args.outcome,'succeeded');
  calls.length=0;await observeAutomationRun(client,'worker',async()=>1,()=>({retried:1}));assert.equal(calls[1].args.outcome,'degraded');
  calls.length=0;await assert.rejects(observeAutomationRun(client,'discovery',async()=>{throw Error('PRIVATE');},()=>({})),/PRIVATE/);assert.equal(calls[1].args.outcome,'failed');assert.doesNotMatch(JSON.stringify(calls),/PRIVATE/);
  const log=console.error;const logs=[];console.error=value=>logs.push(value);

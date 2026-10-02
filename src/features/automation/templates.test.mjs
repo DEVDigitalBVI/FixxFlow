@@ -24,12 +24,13 @@ test('built-in catalog has unique stable IDs and only existing engine capabiliti
   for (const t of automationTemplates) {
     assert.ok(t.useCase && t.guidance && t.category);
     assert.equal(t.definition.schemaVersion, 1);
+    assert.ok(Buffer.byteLength(JSON.stringify(t.definition)) <= 262144);
     assert.ok(persistenceRegistry.trigger(t.definition.trigger.type));
     for (const a of t.definition.actions) assert.ok(persistenceRegistry.action(a.type));
   }
   assert.throws(() => templateDraft('unknown'), /available/);
 });
-for (const template of automationTemplates) test(`${template.name}: completed draft validates without new semantics or guessed references`, () => {
+for (const template of automationTemplates) test(`${template.name}: completed draft fits Stage 12 structural ceilings without guessed references`, () => {
   const generated = templateDraft(template.id);
   assert.equal(generated.enabled, false);
   for (const c of generated.definition.conditions.children) {

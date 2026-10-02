@@ -1,7 +1,7 @@
 import type { Json } from './database.generated';
 import type { AutomationExecution, AutomationExecutionStep } from '@/features/automation/model';
 
-export type AutomationFailureCode = 'stale_entity' | 'unavailable_reference' | 'rule_unavailable' | 'processing_inactive' | 'unsupported_action' | 'chain_limit' | 'action_failed' | 'retry_exhausted' | 'delivery_failed';
+export type AutomationFailureCode = 'stale_entity' | 'unavailable_reference' | 'rule_unavailable' | 'processing_inactive' | 'unsupported_action' | 'chain_limit' | 'notification_fanout_limit' | 'action_failed' | 'retry_exhausted' | 'delivery_failed';
 /** Stage 4 read/RPC extension; no direct client writes or private-table API. */
 export type AutomationExecutionRow = {
   id: string; organization_id: string; rule_id: string; rule_version: number; rule_name: string;

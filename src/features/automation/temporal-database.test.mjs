@@ -147,7 +147,7 @@ test('Stage 9 clean replay: episodes, scheduler, trusted pipeline, isolation and
   });
   await scenario('temporal current-context dry run is read-only across all data and matches planner',async()=>{
    const a=await ticket(db);await clockFixture(db,a.id,'unassigned_since');await owner(db);
-   const tables=['public.tickets','public.ticket_messages','public.ticket_activity','public.notifications','private.notification_email_outbox','private.domain_events','private.domain_event_deliveries','public.automation_executions','public.automation_execution_steps','public.audit_events','private.automation_temporal_occurrences','private.automation_temporal_cursors'];
+   const tables=['private.automation_capacity','private.automation_tenant_schedule','public.tickets','public.ticket_messages','public.ticket_activity','public.notifications','private.notification_email_outbox','private.domain_events','private.domain_event_deliveries','public.automation_executions','public.automation_execution_steps','public.audit_events','private.automation_temporal_occurrences','private.automation_temporal_cursors'];
    const snapshot=async()=>{await owner(db);const result={};for(const table of tables)result[table]=(await db.query(`select coalesce(jsonb_agg(to_jsonb(t) order by to_jsonb(t)::text),'[]') data from ${table} t`)).rows[0].data;return result;};
    const before=await snapshot();await identity(db);
    const c=(await db.query('select public.read_automation_dry_run($1,$2,null,null,null,$3) result',[ids.org,a.id,temporalDefinition()])).rows[0].result;

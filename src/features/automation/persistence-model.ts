@@ -18,7 +18,7 @@ export type AutomationRuleVersion = {
   readonly createdBy: string;
   readonly createdAt: string;
 };
-export type AdministrationErrorCode = 'forbidden' | 'invalid_input' | 'invalid_definition' | 'conflict' | 'not_found' | 'archived' | 'unavailable';
+export type AdministrationErrorCode = 'automation_limit_reached' | 'definition_limit_exceeded' | 'forbidden' | 'invalid_input' | 'invalid_definition' | 'conflict' | 'not_found' | 'archived' | 'unavailable';
 export type AdministrationResult<T> = { readonly ok: true; readonly value: T } | {
   readonly ok: false;
   readonly error: { readonly code: AdministrationErrorCode; readonly message: string; readonly issues?: readonly ValidationIssue[] };

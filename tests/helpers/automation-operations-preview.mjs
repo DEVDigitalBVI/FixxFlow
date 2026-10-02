@@ -10,8 +10,8 @@ const mocks={'server-only':{},'next/link':{default:p=>React.createElement('a',p)
 const {OperationsOverviewView,OperationsHistoryTable}=load('src/features/automation/operations-view.tsx',mocks);
 const history=load('src/app/app/administration/automations/operations/history/page.tsx',{...mocks,'@/features/automation/operations-service':{automationOperationsHistory:async input=>({rows,hasNext:true,since:'2026-09-30T12:00:00Z',until:overview.now,error:'',filters:filterModel.operationsHistoryFilters(input)})}}).default;
 const markup={};
-for(const state of ['off','unknown','healthy','degraded']){
- const data={...overview,processingActive:state!=='off',worker:state==='healthy'?recentHeartbeat:state==='degraded'?{...recentHeartbeat,latestCompletedResult:'failed'}:overview.worker};
+for(const state of ['off','unknown','healthy','degraded','capacity']){
+ const data={...overview,...(state==='capacity'?{queue:{...overview.queue,sampled:12,capacityDeferred:12,notificationDeferred:4,oldestCapacityDeferredAt:overview.now}}:{}),processingActive:state!=='off',worker:state==='healthy'?recentHeartbeat:state==='degraded'?{...recentHeartbeat,latestCompletedResult:'failed'}:overview.worker};
  markup['/'+state]=renderToStaticMarkup(React.createElement(React.Fragment,null,React.createElement('h1',null,'Automation Operations'),React.createElement(OperationsOverviewView,{data}),React.createElement('section',{className:'settings-card stack'},React.createElement('h2',null,'Recent failures'),React.createElement(OperationsHistoryTable,{rows}))));
 }
 markup['/history']=renderToStaticMarkup(await history({searchParams:Promise.resolve({q:'Network'})}));

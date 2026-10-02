@@ -1,3 +1,4 @@
+import { automationSafetyLimits } from './limits';
 import type { JsonValue } from '@/lib/events/model';
 import type { AutomationDefinition, ConditionOperator } from './model';
 import { persistenceRegistry } from './persistence-contract';
@@ -5,7 +6,7 @@ import { validateDefinition, automationLimits } from './validation';
 import { copyJson, hasOnly, isBoundedJson, isRecord, isTimestamp, isUuid, UUID_PATTERN } from './values';
 import type { Choice, Labels } from './ui-model';
 
-export const portableLimits = { bytes: 512 * 1024, references: 200, rules: 1, depth: 12 } as const;
+export const portableLimits = automationSafetyLimits.interchange;
 export const portableResources = {
   technician: 'active_ticket_workers', team: 'teams', category: 'ticket_categories',
   subcategory: 'ticket_subcategories', requester: 'organization_memberships', department: 'departments', location: 'locations',

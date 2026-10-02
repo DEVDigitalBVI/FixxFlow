@@ -13,6 +13,7 @@ const failureMessages: Record<AutomationFailureCode, string> = {
   processing_inactive: 'Automation processing is inactive or has been restarted.',
   unsupported_action: 'This action is not available for execution.',
   chain_limit: 'The automation chain reached its work limit.',
+  notification_fanout_limit: 'This action would notify more recipients than the safety limit allows. No changes from this action were saved.',
   action_failed: 'The action could not be completed. No changes from this action were saved.',
 };
 export function executionError(code: AutomationFailureCode | null): SafeAutomationError | null {

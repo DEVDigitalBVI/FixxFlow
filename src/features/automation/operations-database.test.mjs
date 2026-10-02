@@ -46,7 +46,8 @@ test('Stage 10 durable health and bounded tenant operational reads',async t=>{
   await scenario('global history filters, cursor pages, immutable names and execution counts stay tenant scoped',async()=>{
    await activate(db);const rule=await createRule(db);await createRule(db,{tenant:ids.otherOrg});
    for(let i=0;i<53;i++)await ticket(db);await ticket(db,ids.otherOrg);
-   await service(db);for(let i=0;i<12;i++)await runAutomationWorker(storeFor(db),{enabled:true,log(){}});
+   // Stage 12: simulate successive scheduled windows while building history.
+   for(let i=0;i<26;i++){await owner(db);await db.exec("update private.automation_capacity set window_started_at=clock_timestamp()-interval '61 seconds';update private.domain_event_deliveries set available_at=clock_timestamp() where status='pending'");await service(db);await runAutomationWorker(storeFor(db),{enabled:true,log(){}});}
    await identity(db);const first=await history(db);assert.equal(first.rows.length,50);assert.equal(first.hasNext,true);assert.equal(new Set(first.rows.map(r=>r.id)).size,50);
    const last=first.rows.at(-1),second=await history(db,{before:last.started_at,cursor:last.id,since:first.since,until:first.until});assert.equal(second.rows.length,3);assert.equal(second.hasNext,false);assert.equal(new Set([...first.rows,...second.rows].map(r=>r.id)).size,53);
    const target=first.rows[0];assert.equal((await history(db,{ticket:target.ticket_number})).rows.length,1);assert.equal((await history(db,{trigger:'ticket.resolved'})).rows.length,0);

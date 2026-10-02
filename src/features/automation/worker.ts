@@ -18,7 +18,7 @@ export interface AutomationWorkerStore {
   begin(delivery: WorkerDelivery, rule: AutomationRule): Promise<AutomationExecutionRow>;
   execute(delivery: WorkerDelivery, execution: AutomationExecutionRow, action: AutomationAction): Promise<AutomationExecutionStepRow>;
   execution(delivery: WorkerDelivery, id: string): Promise<AutomationExecutionRow>;
-  finish(delivery: WorkerDelivery, outcome: 'acknowledged' | 'retry' | 'failed', code?: DomainDeliveryFailure): Promise<boolean>;
+  finish(delivery: WorkerDelivery, outcome: 'acknowledged' | 'retry' | 'failed' | 'deferred', code?: DomainDeliveryFailure): Promise<boolean>;
 }
 export type AutomationLog = {
   result: string; code?: string; deliveryId?: string; executionId?: string;
@@ -29,7 +29,7 @@ export type WorkerOptions = { enabled: boolean; now?: () => number; budgetMs?: n
 
 /** Orchestration only: no table writes, new evaluator, provider calls or authority. */
 export async function runAutomationWorker(store: AutomationWorkerStore, options: WorkerOptions) {
-  const result = { disabled: !options.enabled, claimed: 0, acknowledged: 0, retried: 0, failed: 0, deferred: 0 };
+  const result = { disabled: !options.enabled, claimed: 0, acknowledged: 0, retried: 0, failed: 0, deferred: 0, capacityDeferred: 0 };
   if (!options.enabled) return result;
   const now = options.now ?? Date.now, deadline = now() + (options.budgetMs ?? 45_000);
   const log = options.log ?? (() => {});
@@ -92,7 +92,8 @@ export async function runAutomationWorker(store: AutomationWorkerStore, options:
       log({ ...context, result: failure.outcome, code: failure.code });
       try {
         if (await store.finish(delivery, failure.outcome, failure.code)) {
-          if (failure.outcome === 'retry' && delivery.attempts < 8) result.retried++;
+          if (failure.outcome === 'deferred') { result.deferred++; result.capacityDeferred++; }
+          else if (failure.outcome === 'retry' && delivery.attempts < 8) result.retried++;
           else { result.failed++; if (failure.outcome === 'retry') log({ ...context, result: 'dead', code: 'retry_exhausted' }); }
         } else { result.deferred++; log({ ...context, result: 'lease_lost' }); }
       } catch { result.deferred++; log({ ...context, result: 'acknowledgement_unavailable', code: 'transient_failure' }); }
