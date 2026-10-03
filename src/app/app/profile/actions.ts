@@ -1,4 +1,5 @@
 "use server";
+import { reportServerError } from "@/lib/server-errors";
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -11,15 +12,16 @@ export async function updateProfile(formData: FormData) {
   const displayName = String(formData.get("displayName") ?? "").trim();
   const jobTitle = String(formData.get("jobTitle") ?? "").trim() || null;
   const phone = String(formData.get("phone") ?? "").trim() || null;
+  if (formData.has("lookupLoadError") || !formData.has("departmentId") || !formData.has("locationId")) return { error: "Choices could not load. Your entries are preserved; retry the lookup before saving." };
   const departmentId = String(formData.get("departmentId") ?? "") || null;
   const locationId = String(formData.get("locationId") ?? "") || null;
-  if (!displayName || displayName.length > 120) redirect("/app/profile?error=Enter a valid display name.");
+  if (!displayName || displayName.length > 120) return { error: "Enter a valid display name." };
 
   const supabase = await createClient();
-  const { error } = await supabase.from("profiles").update({ display_name: displayName, job_title: jobTitle, phone, department_id: departmentId, location_id: locationId }).eq("organization_id", viewer.organizationId).eq("user_id", viewer.id);
-  if (error) redirect("/app/profile?error=Your profile could not be updated.");
+  const { data, error } = await supabase.from("profiles").update({ display_name: displayName, job_title: jobTitle, phone, department_id: departmentId, location_id: locationId }).eq("organization_id", viewer.organizationId).eq("user_id", viewer.id).select("user_id").maybeSingle();
+  if (error || !data) { const reference = reportServerError("profile.save", error); return { error: `Your profile could not be updated. Your entries are preserved. Reference: ${reference}` }; }
   revalidatePath("/app", "layout");
-  redirect("/app/profile?success=Profile updated.");
+  return { success: "Profile updated." };
 }
 
 export async function updateUsagePreference(formData: FormData) {

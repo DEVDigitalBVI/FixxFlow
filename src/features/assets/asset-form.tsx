@@ -1,11 +1,12 @@
 'use client';
+import { LookupSelect } from '@/features/lookups/lookup-select';
 import type { SaveState } from '@/lib/action-result';
 import {useActionState,useEffect,useRef,useState,type ChangeEvent} from 'react';
 import Link from 'next/link';
 import {SubmitButton} from '@/components/ui/submit-button';
 import {saveAsset} from '@/app/app/assets/actions';
 import {assetKinds,assetStatuses,type Asset} from './model';
-export function AssetForm({asset,people,locations,onCancel}:{onCancel?:()=>void;asset?:Asset;people:{user_id:string;display_name:string}[];locations:{id:string;name:string}[]}) {
+export function AssetForm({asset,onCancel}:{onCancel?:()=>void;asset?:Asset}) {
  const initialDraft:Record<string,string>={tag:asset?.tag??'',name:asset?.name??'',kind:asset?.kind??'computer',status:asset?.status??'available',model:asset?.model??'',serial_number:asset?.serial_number??'',assigned_user_id:asset?.assigned_user_id??'',location_id:asset?.location_id??'',purchased_on:asset?.purchased_on??'',warranty_until:asset?.warranty_until??''};
  const [draft,setDraft]=useState(initialDraft);
  const [state,action,pending]=useActionState(saveAsset.bind(null,asset?.id??null,asset?.revision??0),{} as SaveState);const errorRef=useRef<HTMLDivElement>(null);
@@ -20,8 +21,8 @@ export function AssetForm({asset,people,locations,onCancel}:{onCancel?:()=>void;
  <label className="field">Serial number<input className="input" name="serial_number" onChange={change} value={draft.serial_number} maxLength={120}/></label>
  </div></fieldset><fieldset className="asset-form-section"><legend>Assignment & lifecycle</legend><p className="muted">Keep ownership, location and availability up to date.</p><div className="form-grid">
  <label className="field">Lifecycle *<select className="input" name="status" onChange={change} value={draft.status}>{Object.entries(assetStatuses).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>
- <label className="field">Assigned employee<select className="input" name="assigned_user_id" onChange={change} value={draft.assigned_user_id}><option value="">Unassigned</option>{people.map(p=><option key={p.user_id} value={p.user_id}>{p.display_name}</option>)}</select></label>
- <label className="field">Location<select className="input" name="location_id" onChange={change} value={draft.location_id}><option value="">Not set</option>{locations.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label>
+ <LookupSelect resource="people" name="assigned_user_id" label="Assigned employee" emptyLabel="Unassigned" value={draft.assigned_user_id} onChange={value=>setDraft(d=>({...d,assigned_user_id:value}))}/>
+ <LookupSelect resource="locations" name="location_id" label="Location" emptyLabel="Not set" value={draft.location_id} onChange={value=>setDraft(d=>({...d,location_id:value}))}/>
  </div><p className="muted">Retirement preserves the asset and its ticket history. Unassign the employee before retiring it.</p></fieldset><fieldset className="asset-form-section"><legend>Purchase & warranty</legend><p className="muted">Optional dates to help with replacement and support planning.</p><div className="form-grid">
  <label className="field">Purchase date<input className="input" name="purchased_on" type="date" onChange={change} value={draft.purchased_on}/></label>
  <label className="field">Warranty ends<input className="input" name="warranty_until" type="date" onChange={change} value={draft.warranty_until}/></label>

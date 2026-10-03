@@ -5,7 +5,7 @@ import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 
 const model=load('src/features/assets/model.ts');
-const form=()=>{const f=new FormData();for(const [k,v] of Object.entries({tag:' pc-001 ',name:'Laptop',kind:'computer',status:'available'}))f.set(k,v);return f;};
+const form=()=>{const f=new FormData();for(const [k,v] of Object.entries({tag:' pc-001 ',name:'Laptop',kind:'computer',status:'available',assigned_user_id:'',location_id:''}))f.set(k,v);return f;};
 test('asset validation normalizes tags and rejects invalid lifecycle and dates',()=>{
  assert.equal(model.assetInput(form()).data.tag,'PC-001');const f=form();f.set('kind','__proto__');assert.ok(model.assetInput(f).error);f.set('kind','computer');f.set('purchased_on','2026-09-20');f.set('warranty_until','2026-09-01');assert.match(model.assetInput(f).error,/Warranty/);f.set('warranty_until','2027-09-01');f.set('status','retired');f.set('assigned_user_id','11111111-1111-4111-8111-111111111111');assert.match(model.assetInput(f).error,/Unassign/);
 });

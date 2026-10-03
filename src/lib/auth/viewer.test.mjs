@@ -28,6 +28,7 @@ function setup({ assurance, membership, claimsError = null, avatarPath = null, s
     rpc: async () => ({ data: 'none' }),
   };
   const mocks = {
+    "@/lib/server-errors": { reportServerError: (operation) => calls.push(["failure",operation]) },
     react: { cache: fn => fn },
     'next/navigation': { redirect: path => { throw Error(path); } },
     '@/lib/auth/assurance': { requireAssurance: () => assurance },
@@ -96,4 +97,11 @@ test('invalid claims and inactive or missing memberships still deny access', asy
     await assert.rejects(load, error => error.message === destination);
     assert.equal(calls.includes('organizations'), false);
   }
+});
+
+
+test('membership failures never route an existing account into onboarding', async () => {
+ const { load, calls } = setup({ assurance: Promise.resolve(), membership: { data: null, error: { code: '08006' } } });
+ await assert.rejects(load, /Workspace access could not be verified/);
+ assert.deepEqual(calls, ['organization_memberships', ['failure', 'viewer.membership']]);
 });

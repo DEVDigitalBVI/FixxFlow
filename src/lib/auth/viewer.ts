@@ -1,3 +1,4 @@
+import { reportServerError } from "@/lib/server-errors";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { requireAssurance } from "@/lib/auth/assurance";
@@ -23,7 +24,7 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
   if (error || !userId) redirect("/login");
 
   // These checks are independent, but both must finish before granting access.
-  const [, { data: membership }] = await Promise.all([
+  const [, { data: membership, error: membershipError }] = await Promise.all([
     requireAssurance(supabase),
     supabase
       .from("organization_memberships")
@@ -33,18 +34,22 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
       .maybeSingle(),
   ]);
 
+  if (membershipError) { reportServerError("viewer.membership", membershipError); throw new Error("Workspace access could not be verified. Please try again."); }
   if (!membership) {
-    const {data: ownerAccess} = await supabase.rpc("platform_access");
+    const {data: ownerAccess, error: ownerError} = await supabase.rpc("platform_access");
+    if (ownerError) { reportServerError("viewer.platform", ownerError); throw new Error("Account access could not be verified. Please try again."); }
     if (ownerAccess && ownerAccess !== "none") redirect("/platform");
     redirect("/account/unassigned");
   }
   if (membership.status !== "active") redirect("/account/inactive");
 
-  const [{ data: organization }, { data: profile }, {data: usagePreference}] = await Promise.all([
+  const [{ data: organization, error: organizationError }, { data: profile, error: profileError }, {data: usagePreference, error: usageError}] = await Promise.all([
     supabase.from("organizations").select("name").eq("id", membership.organization_id).single(),
     supabase.from("profiles").select("display_name, avatar_path").eq("organization_id", membership.organization_id).eq("user_id", userId).maybeSingle(),
     supabase.from("product_usage_preferences").select("enabled").eq("user_id", userId).maybeSingle(),
   ]);
+
+  if (organizationError || profileError || usageError) { reportServerError("viewer.details", organizationError || profileError || usageError); throw new Error("Workspace details could not load. Please try again."); }
 
   return {
     id: userId,

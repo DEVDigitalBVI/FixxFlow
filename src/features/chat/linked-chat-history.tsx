@@ -1,3 +1,4 @@
+import { profileLabels } from "@/features/lookups/labels";
 import { HISTORY_PAGE_SIZE, recentMessages } from "@/features/conversations/history";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
@@ -8,12 +9,12 @@ export async function LinkedChatHistory({ ticketId, organizationId, viewerId }: 
   const { data: chat, error: chatError } = await supabase.from("chat_conversations").select("id, topic, requester_id").eq("organization_id", organizationId).eq("ticket_id", ticketId).maybeSingle();
   if (chatError) return <p role="alert">Linked chat could not load. Refresh to retry.</p>;
   if (!chat) return null;
-  const [messagesR, attachmentsR, profilesR] = await Promise.all([
+  const [messagesR, attachmentsR] = await Promise.all([
     supabase.from("chat_messages").select("id, author_id, kind, body, created_at").eq("organization_id", organizationId).eq("conversation_id", chat.id).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(HISTORY_PAGE_SIZE),
     supabase.from("chat_attachments").select("id, file_name, storage_path, size_bytes").eq("organization_id", organizationId).eq("conversation_id", chat.id).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(HISTORY_PAGE_SIZE),
-    supabase.from("profiles").select("user_id, display_name").eq("organization_id", organizationId),
   ]);
-  const names = new Map((profilesR.data ?? []).map(profile => [profile.user_id, profile.display_name]));
+  const profiles = await profileLabels(supabase, organizationId, (messagesR.data ?? []).map(row => row.author_id));
+  const names = new Map(profiles.map(profile => [profile.user_id, profile.display_name]));
   const paths = (attachmentsR.data ?? []).map(file => file.storage_path);
   const { data: signed } = paths.length ? await supabase.storage.from("chat-attachments").createSignedUrls(paths, 3600) : { data: [] };
   const urls = new Map((signed ?? []).map(file => [file.path, file.signedUrl ?? undefined]));

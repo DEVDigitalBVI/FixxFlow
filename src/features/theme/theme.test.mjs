@@ -97,7 +97,7 @@ test('signed-in navigation exposes appearance after notifications for every role
 });
 test('profile offers an independent appearance control outside profile-save forms', async () => {
   const { ThemeControl } = load('src/features/theme/theme-control.tsx', { './theme': theme });
-  const query = { select: () => query, eq: () => query, single: async () => ({ data: null }), order: async () => ({ data: [] }) };
+  const query = { select: () => query, eq: () => query, single: async () => ({ data: { display_name: 'User', department_id: null, location_id: null } }), order: async () => ({ data: [] }) };
   const { default: ProfilePage } = load('src/app/app/profile/page.tsx', {
     '@/features/theme/theme-control': { ThemeControl },
     '@/features/platform/owner-link': { OwnerConsoleLink: () => null },

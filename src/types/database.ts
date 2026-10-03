@@ -62,6 +62,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
       };
     };
     Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & AutomationAdminFunctions & {
+      lookup_choices: { Args: { org: string; resource: string; query?: string; after_label?: string | null; after_id?: string | null; selected?: string | null; parent?: string | null; active_only?: boolean }; Returns: import('@/features/lookups/model').LookupChoice[] };
       start_automation_run: { Args: { kind: string }; Returns: string };
       finish_automation_run: { Args: { run_id: string; outcome: string; metrics: import('./database.generated').Json }; Returns: boolean };
       read_automation_operations: { Args: { org: string }; Returns: import('./database.generated').Json };

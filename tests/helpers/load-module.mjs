@@ -23,6 +23,9 @@ export function load(file, mocks = {}) {
     }).outputText;
     const localRequire = name => {
       if (Object.hasOwn(mocks, name)) return mocks[name];
+      // Next's build-time boundary marker has no Node test runtime implementation.
+      // The production build continues to enforce client/server import boundaries.
+      if (name === 'server-only') return {};
       if (name.startsWith('.') || name.startsWith('@/')) {
         const base = name.startsWith('@/')
           ? path.resolve('src', name.slice(2))

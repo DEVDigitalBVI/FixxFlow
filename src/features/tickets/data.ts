@@ -1,4 +1,6 @@
 import 'server-only';
+import { profileLabels } from '@/features/lookups/labels';
+import { reportServerError } from '@/lib/server-errors';
 import { createClient } from '@/lib/supabase/server';
 import type { Viewer } from '@/lib/auth/viewer';
 import type { TicketPriority, TicketStatus } from '@/types/database';
@@ -32,12 +34,17 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
   else if (sort === "due") query = query.order("due_at", { ascending: true, nullsFirst: false });
   else if (sort === "priority") query = query.order("priority", { ascending: false }).order("updated_at", { ascending: false });
   else query = query.order("updated_at", { ascending: false });
-  const [{ data: rows, error }, { data: profiles }, { data: teams }, { data: members }, { count: knowledgeCount }] = await Promise.all([
+  const [{ data: rows, error }, { count: knowledgeCount }] = await Promise.all([
     query.order("id").range((page - 1) * 50, page * 50),
-    viewer.role === "end_user" ? Promise.resolve({ data: [] }) : supabase.from("profiles").select("user_id, display_name").eq("organization_id", viewer.organizationId),
-    viewer.role === "end_user" ? Promise.resolve({ data: [] }) : supabase.from("teams").select("id, name").eq("organization_id", viewer.organizationId).eq("is_active", true),
-    viewer.role === "end_user" ? Promise.resolve({ data: [] }) : supabase.from("organization_memberships").select("user_id").eq("organization_id", viewer.organizationId).eq("status", "active").in("role", ["technician", "administrator"]),
     search ? supabase.rpc("search_knowledge_articles", { target_organization_id: viewer.organizationId, search_text: search }, { count: "exact", head: true }).select("id").eq("status", "published") : Promise.resolve({ count: null }),
   ]);
-  return { view, sort, search, page, rows, error, profiles, teams, members, knowledgeCount };
+  const visible = error ? [] : (rows ?? []).slice(0, 50);
+  const teamIds = [...new Set(visible.flatMap(row => row.team_id ? [row.team_id] : []))];
+  const [profiles, teamResult] = viewer.role === 'end_user' ? [[], { data: [], error: null }] : await Promise.all([
+    profileLabels(supabase, viewer.organizationId, visible.flatMap(row => [row.requester_id, row.assigned_technician_id])),
+    teamIds.length ? supabase.from('teams').select('id, name').eq('organization_id', viewer.organizationId).in('id', teamIds) : { data: [], error: null },
+  ]);
+  if (teamResult.error) { reportServerError('ticket.references', teamResult.error); throw new Error('Team names could not load. Please try again.'); }
+  const teams = teamResult.data;
+  return { view, sort, search, page, rows, error, profiles, teams, knowledgeCount };
 }

@@ -1,3 +1,4 @@
+import { LookupSelect } from "@/features/lookups/lookup-select";
 import { PageHeader } from '@/components/ui/page-header';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { loadTicketQueue, type TicketQueueFilters } from "@/features/tickets/data";
@@ -19,7 +20,7 @@ const sortOptions = { updated: "Recently updated", oldest: "Oldest update", newe
 export default async function TicketsPage({ searchParams }: { searchParams: Promise<TicketQueueFilters> }) {
   const viewer = await requireViewer();
   const filters = await searchParams;
-  const { view, sort, search, page, rows, error, profiles, teams, members, knowledgeCount } = await loadTicketQueue(viewer, filters);
+  const { view, sort, search, page, rows, error, profiles, teams, knowledgeCount } = await loadTicketQueue(viewer, filters);
   const pageHref = (next: number) => {
     const params = new URLSearchParams();
     for (const key of ["q", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) if (filters[key]) params.set(key, filters[key]);
@@ -60,7 +61,6 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   ] as const;
   const appliedFilters = filterChips.filter(item => item.label);
   const activeFilterCount = appliedFilters.filter(item => item.key !== "q").length;
-  const workers = (members ?? []).map(m => ({ id: m.user_id, name: names.get(m.user_id) ?? "Team member" })).sort((a, b) => a.name.localeCompare(b.name));
   return <div className="page ticket-queue-page">
     {usage}<ConversationRefresh/>
     <PageHeader title="Ticket queue" eyebrow={viewer.organizationName} description="Find, assign and move support work forward." actions={<Link className="button button-primary" href="/app/tickets/new">New ticket</Link>}/>
@@ -83,7 +83,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
             <div className="queue-filter-fields">
               <label>Status<select className="input" name="status" defaultValue={filters.status ?? ""}><option value="">Any status</option>{Object.entries(ticketStatuses).map(([value, p]) => <option key={value} value={value}>{p.label}</option>)}</select></label>
               <label>Priority<select className="input" name="priority" defaultValue={filters.priority ?? ""}><option value="">Any priority</option>{Object.entries(ticketPriorities).map(([value, p]) => <option key={value} value={value}>{p.label}</option>)}</select></label>
-              <label>Team<select className="input" name="team" defaultValue={filters.team ?? ""}><option value="">All teams</option>{teams?.map(team => <option key={team.id} value={team.id}>{team.name}</option>)}</select></label>
+              <LookupSelect key={filters.team ?? ""} resource="teams" name="team" label="Team" defaultValue={filters.team ?? ""} emptyLabel="All teams" activeOnly={false} guardSave={false}/>
               <label>Sort by<select className="input" name="sort" defaultValue={sort}>{Object.entries(sortOptions).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
               <label className="queue-check"><input type="checkbox" name="overdue" value="1" defaultChecked={filters.overdue === "1"}/> Manual date overdue</label>
               <label className="queue-check"><input type="checkbox" name="sla" value="breached" defaultChecked={filters.sla === "breached"}/> SLA breached</label>
@@ -102,7 +102,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
             <strong>Bulk actions</strong>
             <label>Status<select className="input" name="status" defaultValue=""><option value="">Choose status</option>{Object.entries(ticketStatuses).map(([value, p]) => <option key={value} value={value}>{p.label}</option>)}</select></label><button className="button button-secondary button-small" type="submit" name="intent" value="status">Change status</button>
             <label>Priority<select className="input" name="priority" defaultValue=""><option value="">Choose priority</option>{Object.entries(ticketPriorities).map(([value, p]) => <option key={value} value={value}>{p.label}</option>)}</select></label><button className="button button-secondary button-small" type="submit" name="intent" value="priority">Change priority</button>
-            <label>Assign to<select className="input" name="assignee" defaultValue=""><option value="">Unassigned</option>{workers.map(worker => <option key={worker.id} value={worker.id}>{worker.name}</option>)}</select></label><button className="button button-secondary button-small" type="submit" name="intent" value="assignee">Assign</button>
+            <LookupSelect resource="technicians" name="assignee" label="Technician" emptyLabel="Unassigned"/><button className="button button-secondary button-small" type="submit" name="intent" value="assignee">Assign</button>
           </div></BulkActions>
           {tickets?.length ? <div className="table-region" role="region" aria-label="Tickets" tabIndex={0}><table className="table ticket-table responsive-table">
             <thead><tr><th scope="col"><span className="sr-only">Select</span></th><th scope="col">Ticket</th><th scope="col">Status</th><th scope="col">Priority</th><th scope="col">Requester</th><th scope="col">Assigned to</th><th scope="col">SLA</th><th scope="col">Updated</th></tr></thead>

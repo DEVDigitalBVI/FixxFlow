@@ -1,3 +1,4 @@
+import { profileLabels } from "@/features/lookups/labels";
 import { PageHeader } from "@/components/ui/page-header";
 import { StartChatForm, ChatIntakeGuide } from "@/features/chat/start-chat-form";
 import { ChatQueue } from "@/features/chat/chat-queue";
@@ -20,7 +21,8 @@ export default async function ChatPage({ searchParams }: { searchParams: Promise
   else if (view === "unassigned") query = query.is("assigned_technician_id", null).eq("status", "open");
   else if (view === "mine") query = query.eq("assigned_technician_id", viewer.id).eq("status", "open");
   else if (view !== "all") query = query.eq("status", "open");
-  const [{ data: chats, error }, { data: profiles }] = await Promise.all([query, viewer.role === "end_user" ? Promise.resolve({ data: [] }) : supabase.from("profiles").select("user_id, display_name").eq("organization_id", viewer.organizationId)]);
+  const { data: chats, error } = await query;
+  const profiles = viewer.role === "end_user" ? [] : await profileLabels(supabase, viewer.organizationId, (chats ?? []).slice(0, 50).flatMap(chat => [chat.requester_id, chat.assigned_technician_id]));
   const names = new Map((profiles ?? []).map(p => [p.user_id, p.display_name]));
   if (viewer.role === "end_user") return <div className="portal-page portal-form-page"><header className="portal-page-heading"><div><Link className="button button-quiet page-back-link" href="/app">← Home</Link><h1>My chats</h1><p>Read replies or start a new conversation with IT.</p></div><Link className="button button-primary" href="/app/chat?start=1">Start a chat</Link></header><section className="chat-history-list"><h2>Your conversations</h2>{error ? <p role="alert">Conversations could not be loaded. Refresh to try again.</p> : chats?.length ? <ul>{chats.map(chat => <li key={chat.id}><Link href={`/app/chat/${chat.id}`}><strong>{chat.topic}</strong><span>{chat.status === "open" ? "Open" : "Closed"} · {formatTicketDate(chat.updated_at)}</span></Link></li>)}</ul> : <p>No chats yet. Choose “Start a chat” to send your first message to IT.</p>}</section></div>;
   const activeView = ["mine", "unassigned", "all"].includes(view ?? "") ? view : "open";

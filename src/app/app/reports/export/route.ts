@@ -1,3 +1,4 @@
+import { reportServerError } from "@/lib/server-errors";
 import { requireViewer } from '@/lib/auth/viewer';
 import { getReport } from '@/features/reporting/data';
 import { exportFilename, exportFormats, isExportFormat } from '@/features/reporting/export-model';
@@ -6,7 +7,7 @@ import { createReportPdf, PdfCharacterError } from '@/features/reporting/export-
 
 export const runtime = 'nodejs';
 const privateHeaders = { 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' };
-function failure(message: string, status: number) { return Response.json({ error: message }, { status, headers: privateHeaders }); }
+function failure(message: string, status: number, reference?: string) { return Response.json({ error: message, ...(reference ? { reference } : {}) }, { status, headers: { ...privateHeaders, ...(reference ? { 'X-Correlation-ID': reference } : {}) } }); }
 
 export async function GET(request: Request) {
   const viewer = await requireViewer();
@@ -14,8 +15,8 @@ export async function GET(request: Request) {
   const format = new URL(request.url).searchParams.get('format');
   if (!isExportFormat(format)) return failure('Choose Excel, CSV, or PDF.', 400);
   try {
-    const report = await getReport(viewer.organizationId);
-    if (!report) return failure('Reporting is temporarily unavailable. Please try again.', 503);
+    const report = await getReport(viewer.organizationId, { throwOnError: true });
+    if (!report) return failure('Reporting is temporarily unavailable. Please try again.', 503, reportServerError('report.export'));
     const bytes = format === 'csv' ? new TextEncoder().encode(createReportCsv(report, viewer.organizationName))
       : format === 'xlsx' ? createReportWorkbook(report, viewer.organizationName)
         : await createReportPdf(report, viewer.organizationName);
@@ -26,6 +27,6 @@ export async function GET(request: Request) {
     } });
   } catch (error) {
     if (error instanceof PdfCharacterError) return failure(error.message, 422);
-    return failure('The report could not be downloaded. Please try again.', 500);
+    return failure('The report could not be downloaded. Please try again.', 500, reportServerError('report.export', error));
   }
 }

@@ -41,6 +41,7 @@ function editor({ dirty = false, pending = false, confirm = true } = {}) {
   const { AssetForm } = load('src/features/assets/asset-form.tsx', {
     react: { ...React, useState: value => [dirty ? { ...value, name: 'Changed draft' } : value, () => {}], useActionState: () => [{}, () => {}, pending], useEffect: () => {}, useRef: () => ({ current: null }) },
     'next/link': { default: p => React.createElement('a', p) },
+    '@/features/lookups/lookup-select': { LookupSelect: () => null },
     '@/app/app/assets/actions': { saveAsset: () => {} },
     '@/components/ui/submit-button': { SubmitButton: p => React.createElement('button', p) },
   });

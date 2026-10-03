@@ -8,6 +8,7 @@ import {assetInput} from '@/features/assets/model';
 export async function saveAsset(id:string|null,revision:number,_previous:SaveState,form:FormData):Promise<SaveState> {
  const viewer=await requireViewer();
  if(viewer.role==='end_user')return {error:'Only IT staff can manage assets.'};
+ if(form.has("lookupLoadError") || !form.has("assigned_user_id") || !form.has("location_id"))return {error:"Choices could not load. Your draft is preserved; retry the lookup before saving."};
  const parsed=assetInput(form);if(!parsed.data)return {error:parsed.error};
  const db=await createClient();
  const query=id?db.from('assets').update(parsed.data).eq('organization_id',viewer.organizationId).eq('id',id).eq('revision',revision):db.from('assets').insert({...parsed.data,organization_id:viewer.organizationId});

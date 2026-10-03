@@ -6,10 +6,11 @@ import { FormPendingContext } from "./form-pending";
 import type { ActionResult } from "@/lib/action-result";
 
 /** Keep the mounted controls (including dependent selects) intact on failure. */
-export function ActionForm({ action, children, className, resetOnSuccess = false }: {
+export function ActionForm({ action, children, className, resetOnSuccess = false, id }: {
   action: (data: FormData) => Promise<ActionResult>;
   children: ReactNode;
   className?: string;
+  id?: string;
   resetOnSuccess?: boolean;
 }) {
   const [result, setResult] = useState<ActionResult>({});
@@ -19,7 +20,7 @@ export function ActionForm({ action, children, className, resetOnSuccess = false
   const feedback = useRef<HTMLDivElement>(null);
   useEffect(() => { if (result.error) feedback.current?.focus(); }, [result]);
 
-  return <form method="post" className={className} aria-busy={pending} onSubmit={event => {
+  return <form id={id} method="post" className={className} aria-busy={pending} onSubmit={event => {
     event.preventDefault();
     if (busy.current) return;
     const form = event.currentTarget;

@@ -1782,3 +1782,9 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
   .ticket-create-form > .alert { margin-inline: 16px; }
   .ticket-create-form > [role="status"] { margin-inline: 16px; }
 }
+
+/* Shared paginated references reuse native fields and existing action tokens. */
+.lookup-picker { min-width: 0; }
+.lookup-picker .input { min-width: 0; width: 100%; max-width: 100%; }
+.lookup-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.lookup-picker small, .lookup-picker [role="status"] { overflow-wrap: anywhere; }

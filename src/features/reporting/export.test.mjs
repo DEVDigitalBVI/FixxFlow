@@ -77,14 +77,25 @@ test('PDF paginates an oversized name and empty reports and reports unsupported 
 
 function route({ role = 'technician', result = report, authError, dataError, pdfError } = {}) {
   const calls = [];
+  const logged = [];
   const { GET } = load('src/app/app/reports/export/route.ts', {
     '@/lib/auth/viewer': { requireViewer: async () => { if (authError) throw authError; return { role, organizationId: 'verified-org', organizationName: organization }; } },
-    '@/features/reporting/data': { getReport: async id => { calls.push(id); if (dataError) throw dataError; return result; } },
+    '@/features/reporting/data': { getReport: async (id, options) => { assert.equal(options.throwOnError, true); calls.push(id); if (dataError) throw dataError; return result; } },
+    '@/lib/server-errors': { reportServerError: (...args) => { logged.push(args); return 'failure-reference'; } },
     '@/features/reporting/export-spreadsheet': { createReportCsv: () => 'csv', createReportWorkbook: () => new Uint8Array([1, 2]) },
     '@/features/reporting/export-pdf': { PdfCharacterError, createReportPdf: async () => { if (pdfError) throw pdfError; return new Uint8Array([3, 4]); } },
   });
-  return { calls, GET: format => GET(new Request(`https://example.test/app/reports/export?format=${format}&organizationId=attacker-org`)) };
+  return { calls, logged, GET: format => GET(new Request(`https://example.test/app/reports/export?format=${format}&organizationId=attacker-org`)) };
 }
+
+test('export failures return a correlation reference and retain the error for safe logging', async () => {
+  const error = { code: '08006', message: 'private database details' };
+  const r = route({ dataError: error }); const response = await r.GET('csv');
+  assert.equal(response.headers.get('X-Correlation-ID'), 'failure-reference');
+  const body = await response.json(); assert.equal(body.reference, 'failure-reference');
+  assert.doesNotMatch(JSON.stringify(body), /private database details/);
+  assert.deepEqual(r.logged, [['report.export', error]]);
+});
 
 test('downloads use only verified organization membership and private attachments for all formats', async () => {
   for (const format of ['csv', 'xlsx', 'pdf']) {

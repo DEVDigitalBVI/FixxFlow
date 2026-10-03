@@ -10,6 +10,15 @@ const report = {
   sla: [{ label: 'Response', total: 1, met: 1 }],
 };
 
+test('export callers can retain database failure codes while page callers receive unavailable state', async () => {
+  const failure = { code: '08006', message: 'private connection details' };
+  const { getReport } = load('src/features/reporting/data.ts', {
+    '@/lib/supabase/server': { createClient: async () => ({ rpc: async () => ({ error: failure }) }) },
+  });
+  assert.equal(await getReport('org'), null);
+  await assert.rejects(getReport('org', { throwOnError: true }), error => error === failure);
+});
+
 test('report RPC accepts valid nullable timings and rejects malformed nested payloads', async () => {
   const { isReport } = load('src/features/reporting/payload.ts');
   assert.equal(isReport(report), true);

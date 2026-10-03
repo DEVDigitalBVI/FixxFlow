@@ -1,5 +1,9 @@
 # Automation rollout runbook
 
+## Database deployment update — 3 October 2026
+
+Under the user's subsequent explicit instruction to apply needed remaining migrations, Stage 12 and its corrective migration were applied to FixxFlow with processing OFF. All 42 current repository versions, including lookup pagination, are recorded remotely. The final dry run has no pending migrations. See [the deployment and recovery record](code-review.md#remaining-migration-deployment--3-october-2026) for backup, test, function-match, permissions, and OFF-state evidence. No application deployment or automation activation was performed. Historical verification reports below remain unchanged; active-processing/hosted and accessibility acceptance work is still separate.
+
 ## Current release gate — Stage 12C
 
 The [Stage 12C verification record](automation-stage12c-verification.md) is the

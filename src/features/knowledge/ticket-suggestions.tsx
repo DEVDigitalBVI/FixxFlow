@@ -10,7 +10,7 @@ export function TicketSuggestions({ articles, categories, unavailable = false }:
 }) {
   const ref = useRef<HTMLElement>(null);
   const heading = useId();
-  const [selection, setSelection] = useState({ text: '', category: '' });
+  const [selection, setSelection] = useState({ text: '', category: '', categoryLabel: '' });
   useEffect(() => {
     const form = ref.current?.closest('form');
     if (!form) return;
@@ -18,7 +18,7 @@ export function TicketSuggestions({ articles, categories, unavailable = false }:
     const update = () => {
       clearTimeout(timeout);
       const values = new FormData(form);
-      const next = { text: `${values.get('title') ?? ''} ${values.get('description') ?? ''}`, category: String(values.get('categoryId') ?? '') };
+      const next = { text: `${values.get('title') ?? ''} ${values.get('description') ?? ''}`, category: String(values.get('categoryId') ?? ''), categoryLabel: form.querySelector<HTMLSelectElement>('select[name=categoryId]')?.selectedOptions[0]?.textContent?.replace(/ \(inactive\)$/, '') ?? '' };
       timeout = setTimeout(() => {
         setSelection(next);
       }, 250);
@@ -28,7 +28,7 @@ export function TicketSuggestions({ articles, categories, unavailable = false }:
     update();
     return () => { clearTimeout(timeout); form.removeEventListener('input', update); form.removeEventListener('change', update); };
   }, []);
-  const matches = suggestArticles(articles, selection.text, categories.find(category => category.id === selection.category)?.name ?? '');
+  const matches = suggestArticles(articles, selection.text, categories.find(category => category.id === selection.category)?.name ?? (selection.category ? selection.categoryLabel : ''));
   return <section ref={ref} className="ticket-suggestions field-wide" aria-labelledby={heading}>
     <h2 id={heading}>Guides that may help</h2>
     <p className="muted">Optional help while you write. You can submit your request at any time.</p>

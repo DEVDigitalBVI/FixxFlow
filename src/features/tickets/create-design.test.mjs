@@ -30,10 +30,10 @@ test('employee creation stays simple and equipment context retains its submitted
  assert.doesNotMatch(equipment,/name="locationId"/);
 });
 
-test('creation retains category failure protection, optional knowledge failure and escaped feedback',async()=>{
+test('creation guards pending lookup data, tolerates knowledge failure and escapes feedback',async()=>{
  const html=await renderTicketCreate({errors:['ticket_categories','knowledge_articles'],params:{error:'<script>error</script>'}});
- assert.match(html,/name="categoryLoadError" value="true"/);
- assert.match(html,/Categories could not be loaded/);
+ assert.match(html,/name="lookupLoadError" value="true"/);
+ assert.match(html,/Loading choices/);
  assert.match(html,/Suggestions are unavailable. You can still submit your request./);
  assert.match(html,/role="alert"/);assert.match(html,/&lt;script&gt;error&lt;\/script&gt;/);
 });

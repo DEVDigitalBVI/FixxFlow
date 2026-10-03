@@ -345,6 +345,13 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Keep search permission-scoped and paginated in the database. Ticket search retains `#123` for an exact ticket number; a bare number matches fragments. Hidden notes, other organizations, and restricted records must never influence a result.
 - Show serial numbers in asset results so users can verify identifier matches. Empty results explain how to broaden the search without suggesting that the inventory itself is empty.
 
+### Reference pickers inside forms
+
+- Reuse `LookupSelect` for large reference sets: a labeled native search field, native select, current selection, and explicit Previous/More choices buttons. Fetch 50 permission-scoped choices per page with stable cursors. Resolve the selected record separately so paging and searching never clear it.
+- These searches operate within the editing form; Enter searches immediately without submitting the outer form. Reuse the 300ms delay, composition handling, literal search contract, and guidance from list search. Cancel stale requests and keep existing choices visible while loading.
+- Announce loading, empty, unavailable, and failed states in text. Offer retry, return focus to search after retry/clear, and prevent saves while required reference data is unresolved. Keep draft fields mounted after save failures and focus the shared `ActionForm` error summary.
+- Reuse existing field, button, focus, surface, and spacing tokens. Let paging actions wrap on compact screens. Introduce no new animation.
+
 ### Appearance themes
 
 - Offer a soft, rounded Appearance group with native icon buttons for System (monitor), Light (sun), and Dark (moon). Each button has an accessible name, tooltip, pressed state, and a selected dot in addition to color. Keep 44px targets and visible keyboard focus. Place these choices centered below Notifications in workspace navigation, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.

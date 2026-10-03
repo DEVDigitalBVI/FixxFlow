@@ -43,9 +43,9 @@ test('employee chat lists skip staff names and retain requester scoping', async 
   assert.ok(calls.some(call => call[0] === 'eq' && call[1] === 'organization_id' && call[2] === 'org'));
 });
 
-test('staff queues still load names and apply assignment filters', async () => {
+test('empty staff queues skip name lookups and apply assignment filters', async () => {
   const { calls, render } = setup('technician');
   await render({ view: 'mine' });
-  assert.ok(calls.some(call => call[0] === 'from' && call[1] === 'profiles'));
+  assert.equal(calls.some(call => call[0] === 'from' && call[1] === 'profiles'), false);
   assert.ok(calls.some(call => call[0] === 'eq' && call[1] === 'assigned_technician_id' && call[2] === 'viewer'));
 });
