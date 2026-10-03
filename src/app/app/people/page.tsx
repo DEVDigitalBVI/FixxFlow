@@ -60,9 +60,10 @@ export default async function PeoplePage({ searchParams }: Props) {
       </form>
     </section>}
     <section className="people-directory" aria-labelledby="people-directory-heading">
-      <header className="people-directory-heading"><div><h2 id="people-directory-heading">{search ? 'Search results' : technicians ? 'Your technicians' : 'Your workspace'}</h2><p>{count ?? 0} {search ? 'matching' : ''} {(count ?? 0) === 1 ? 'person' : 'people'}{technicians ? ' · Technician role' : ''}</p></div>
-        <nav className="queue-views" aria-label="People views"><Link href={viewHref('')} aria-current={!technicians ? 'page' : undefined}>All people</Link><Link href={viewHref('technicians')} aria-current={technicians ? 'page' : undefined}>Technicians</Link></nav>
+      <header className="people-directory-heading"><div><h2 id="people-directory-heading">{search ? 'Search results' : technicians ? 'Your technicians' : 'Your workspace'}</h2><p>{search ? 'People matching your search' : technicians ? 'Members with the Technician role' : 'Everyone with access to this workspace'}</p></div>
+        <span className="people-count" aria-label={`${count ?? 0} ${(count ?? 0) === 1 ? 'person' : 'people'}`}><strong>{count ?? 0}</strong><span>{(count ?? 0) === 1 ? 'person' : 'people'}</span></span>
       </header>
+      <nav className="queue-views people-views" aria-label="People views"><Link href={viewHref('')} aria-current={!technicians ? 'page' : undefined}>All people</Link><Link href={viewHref('technicians')} aria-current={technicians ? 'page' : undefined}>Technicians</Link></nav>
       <div className="people-directory-toolbar"><LiveSearchForm action="/app/people" className="people-search" label="Search people" resultSummary={`${count ?? 0} matching people. Page ${page}.`}>
         {technicians && <input type="hidden" name="view" value="technicians"/>}
         <div className="field"><label htmlFor="people-search">Search name, email or job title</label><input type="search" className="input" id="people-search" name="q" defaultValue={search} placeholder="Find someone in your workspace…" maxLength={SEARCH_LIMIT} aria-describedby="people-search-hint"/></div>
