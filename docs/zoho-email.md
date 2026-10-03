@@ -18,6 +18,13 @@ The support mailbox lives in Zoho Mail. Automated email uses Zoho CPaaS
 Credentials belong in provider secret settings, never in this repository.
 Changing the mailbox password does not rotate these CPaaS credentials.
 
+The notification dispatcher also requires `SUPABASE_SECRET_KEY` to access its
+queue. Administration's email status uses the same validation as the dispatcher:
+the five required settings must be present, the site URL must use HTTPS without
+embedded credentials, and the sender must be valid. The status reports configuration
+readiness, not a live provider health check. Invalid configuration prevents queue
+claims and returns 503 to an authorized cron request.
+
 ## Delivery behavior
 
 Notifications preserve the database queue, leases, and bounded retries. They

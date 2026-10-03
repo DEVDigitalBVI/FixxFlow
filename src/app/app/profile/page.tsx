@@ -59,7 +59,7 @@ export default async function ProfilePage({ searchParams }: Props) {
     </section>
 
     <section className="settings-card profile-card appearance-settings" aria-labelledby="appearance-heading">
-      <div className="profile-section-heading"><div><h2 id="appearance-heading">Appearance</h2><p className="muted">Choose light or dark mode, or follow your device. Your choice is remembered on this browser.</p></div></div>
+      <div className="profile-section-heading"><div><h2 id="appearance-heading">Appearance</h2><p className="muted">Choose light or dark mode, or follow your device. Changes apply immediately and are remembered on this browser.</p></div></div>
       <ThemeControl />
     </section>
 

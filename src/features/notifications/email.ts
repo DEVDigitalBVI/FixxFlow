@@ -1,13 +1,11 @@
 import type { NotificationEmail } from "@/types/database";
 import { notificationHref } from "./presentation";
 import { renderEmail } from "./template";
+import { parseNotificationEmailConfiguration, type NotificationEmailConfiguration } from "./configuration";
 
-export async function sendNotificationEmail(item: NotificationEmail, config: { apiKey: string; from: string; siteUrl: string }, request: typeof fetch = fetch): Promise<string> {
-  const base = new URL(config.siteUrl);
-  if (base.protocol !== "https:" || base.username || base.password) throw new Error("Invalid notification site URL");
+export async function sendNotificationEmail(item: NotificationEmail, config: NotificationEmailConfiguration, request: typeof fetch = fetch): Promise<string> {
+  const { base, sender } = parseNotificationEmailConfiguration(config);
   const url = new URL(notificationHref(item), base.origin).href;
-  const sender = /^(?:([^<>\r\n]+)\s*<([^<>\s@]+@[^<>\s@]+)>|([^<>\s@]+@[^<>\s@]+))$/.exec(config.from.trim());
-  if (!sender || /[\r\n]/.test(config.from)) throw new Error("Invalid notification sender");
   const response = await request("https://cpaas.zoho.com/v1.1/email", {
     method: "POST",
     headers: { Authorization: config.apiKey.startsWith("Zoho-enczapikey ") ? config.apiKey : `Zoho-enczapikey ${config.apiKey}`, "Content-Type": "application/json", Accept: "application/json" },

@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 import { administrationSections, fixedSlaTargets, formatMinutes } from '@/features/administration/sections';
 import { AuditLog, type AuditFilters } from '@/features/audit/audit-log';
 import { ticketPriorities } from '@/features/tickets/presentation';
+import { getNotificationEmailConfiguration } from '@/features/notifications/configuration';
 
 export default async function AdministrationSection({ params, searchParams }: { params: Promise<{ section: string }>; searchParams: Promise<AuditFilters> }) {
   const viewer = await requireViewer();
@@ -49,8 +50,8 @@ export default async function AdministrationSection({ params, searchParams }: { 
   } else if (section === 'slas' || section === 'priorities') {
     content = <><p>These values are fixed. SLAs count calendar hours, including weekends. Business hours and custom policies are planned.</p><div className="table-region" role="region" aria-label="Priority and SLA targets" tabIndex={0}><table className="table table-policy responsive-table"><caption>Current response and resolution targets</caption><thead><tr><th scope="col">Priority</th><th scope="col">First response</th><th scope="col">Resolution</th></tr></thead><tbody>{fixedSlaTargets.map(target => <tr key={target.priority}><th scope="row" data-label="Priority">{ticketPriorities[target.priority].label}</th><td data-label="First response">{formatMinutes(target.response)}</td><td data-label="Resolution">{formatMinutes(target.resolution)}</td></tr>)}</tbody></table></div></>;
   } else if (section === 'notifications') {
-    const emailConfigured = Boolean(process.env.RESEND_API_KEY && process.env.NOTIFICATIONS_FROM_EMAIL && process.env.CRON_SECRET);
-    content = <><p>In-app notifications are enabled. Email delivery: <strong>{emailConfigured ? 'Configured; delivery depends on provider availability' : 'Pending Resend setup'}</strong>.</p><p>Notifications cover assignment, reassignment, replies, chats, approaching SLAs, resolution, and reopening. Internal notes do not notify requesters.</p><p>Repeated notifications are grouped to reduce noise. Individual notification preferences are planned.</p><Link className="button button-secondary" href="/app/notifications">Open your notifications</Link></>;
+    const emailConfigured = Boolean(getNotificationEmailConfiguration(process.env));
+    content = <><p>In-app notifications are enabled. Email delivery: <strong>{emailConfigured ? 'Zoho configured; delivery depends on provider availability' : 'Zoho setup incomplete; contact your deployment administrator'}</strong>.</p><p>Notifications cover assignment, reassignment, replies, chats, approaching SLAs, resolution, and reopening. Internal notes do not notify requesters.</p><p>Repeated notifications are grouped to reduce noise. Individual notification preferences are planned.</p><Link className="button button-secondary" href="/app/notifications">Open your notifications</Link></>;
   } else if (section === 'security') {
     content = <><p>Workspace access follows active membership and assigned roles. Data access is restricted to the organization and the records each role can view.</p><p>Two-factor authentication can be enrolled per account. Once enrolled, verification is required to access the workspace. Organization-wide enrollment enforcement and configurable security policies are planned.</p><Link className="button button-secondary" href="/app/security">Manage your two-factor authentication</Link><Link className="button button-quiet" href="/app/people">Review member access</Link></>;
   } else {
