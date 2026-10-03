@@ -5,6 +5,7 @@ export const automationSafetyLimits = {
   interchange: { bytes: 524288, references: 200, rules: 1, depth: 12 },
   runtime: { chainDepthExclusive: 8, executionsPerChain: 32, actionAttemptsPerChain: 100, deliveryAttempts: 8 },
   throughput: { activeRules: 100, windowSeconds: 60, executions: 120, notifications: 120, recipientNotifications: 20, claims: 20, retryClaims: 5 },
+  claiming: { tenantVisits: 20, candidatesPerVisit: 100, eligibilityChecksPerRequestedDelivery: 100 },
   discovery: { rules: 5, ticketsPerRule: 100, events: 500, budgetSeconds: 20 },
   storage: { destructiveRetention: false },
 } as const;

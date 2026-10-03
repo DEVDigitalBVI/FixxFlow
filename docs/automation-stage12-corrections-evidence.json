@@ -1,0 +1,4838 @@
+{
+  "recordedAt": "2026-10-03T02:22:52.705815+00:00",
+  "baseCommit": "048a16280310b65838192d5ac1aef8100a5bd6bc",
+  "candidate": "uncommitted working tree; hashes below",
+  "node": "24.21.0",
+  "checks": {
+    "applicationTests": {
+      "passed": 724,
+      "failed": 0,
+      "skipped": 0
+    },
+    "typecheck": "PASS",
+    "eslintZeroWarnings": "PASS",
+    "productionBuildProcessingOFF": "PASS",
+    "diffCheck": "PASS"
+  },
+  "migrations": [
+    {
+      "path": "supabase/migrations/20260921005845_organization_identity_foundation.sql",
+      "sha256": "7d28801934bc41bdcd9732333913e8160b1a937e067ef693f1bec2988934204f",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260921010019_harden_identity_policies.sql",
+      "sha256": "e3a9a2ff009ed8fb6f42f0055684544460e2e1a925e6ff1a1711ad17aac589f6",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260921015452_ticketing_engine.sql",
+      "sha256": "4a4f93b88746a77872c5388834f732e54efbb611b7ad334bd757039f2fec9bc8",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260921015519_ticketing_foreign_key_indexes.sql",
+      "sha256": "de3a251d0ed87592b4dadb9a6cdc04670d7f93cd6f889a31b168da78ad86add8",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260921020443_enable_customer_organization_signup.sql",
+      "sha256": "865d48537813dee99b10135a9f80f57a2bda22df2dee65708fc9ad219acbf70c",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260921211804_first_class_support_chat.sql",
+      "sha256": "dafe2166a3d62eb0e385894f36a1da4baeb353eb72500bfe3c33054fd7189cea",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925004637_employee_ticket_reopen.sql",
+      "sha256": "d304a2673f072d4f19a4c5506c91bdc4e178dc2c33f3663089c5ff13658ef483",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925004643_ticket_sla_targets.sql",
+      "sha256": "4008fbf36a967d9d5b968fb953bd286e80d01640b2e449e9f9e95eb29ad8c063",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925010356_starter_ticket_categories.sql",
+      "sha256": "874501ecd6f506301a3bc3bc14b8c88eca782468d3453fda588d5c5aabdc34d6",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925010358_enforce_mfa_and_server_owned_timestamps.sql",
+      "sha256": "f46fbffb27eeafb1efebb0bc6929911f9e9b29f75d1f01932408b9e4857fdd4f",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925013051_ticket_notifications.sql",
+      "sha256": "dd047825235ed60f89ea97173c856f03aacf35bee5508d6909ce7af274d2f232",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925013110_schedule_notification_sla.sql",
+      "sha256": "9ba45bfc9ef84e2cf613221b4b055f2b3076009120e7cbd5729f92ab63d78d94",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925013145_harden_notification_dispatcher.sql",
+      "sha256": "65c519a2caaab1ca5212c0617c1d2f745d1934249fdcf6bfd45cf5a4b88db979",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925014034_indexed_ticket_search.sql",
+      "sha256": "c713c05842478b2f293749503ef92d0cbe8c2964269d3e7a1f7c682b96584939",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925015718_knowledge_base.sql",
+      "sha256": "16f37843802cae32b7b4fc51f5133afdb5769a2381d1b7899422aad0ce18aa87",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925015806_restrict_knowledge_column_grants.sql",
+      "sha256": "4070300bec42b7bc7eb9854cca48691f97d340a5c321c31ce87c67f6e21c4c13",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925025937_operational_reporting.sql",
+      "sha256": "867b025fc7ddd81ce227627d185717a315d9ad7d21b3a70d34d13291f6d02508",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925031136_audit_log.sql",
+      "sha256": "9ac8f05a05be9c4cb6b2624035c708a4f90c34c2ddc67d6baac7b6cb4d28df16",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925032928_product_analytics.sql",
+      "sha256": "2572d1dac155bc445a2ff06244d065bca1519a1b00d5c5cffc878e0fa003f45b",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925033210_product_analytics_private_policies.sql",
+      "sha256": "03b74e2b573f653007454d49605cfa26777ce80e02c5b5b751eb89347d8fe27d",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260925035955_assets_and_platform.sql",
+      "sha256": "3c436a0cb500a16870fb53b63c5e226d8c23a135bbd75bef9185beb1fd2c7486",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260926020400_remove_sample_knowledge_articles.sql",
+      "sha256": "6822f2ee115b7c60bb4d5eb85bc333e2789e1d0d6f2644fe051fe0aba38fd62d",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260926022032_protect_organization_references_on_delete.sql",
+      "sha256": "0bf99501e01101c830231c2fc33fa14f6e28a79e844d2cb863480944229c9497",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260926024852_category_team_routing.sql",
+      "sha256": "775a5bc41b737f59bab2d8a52d675941efe2b1d39e79a32e0d22421183cc5a54",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260926025012_ticket_routing_insert_permission.sql",
+      "sha256": "701a6b59bbee9e1cbed419fbd44c62f667ec0722ea5b797f360e22eec3289438",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260927233229_universal_partial_search.sql",
+      "sha256": "f265cc381b7a81a1d76d96a8eb0d7c9a4a90522642406ae9bf50619f59c52cd5",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001014435_automation_rule_definitions.sql",
+      "sha256": "7a5781ef6c3d08e15548f6c918c66ef18e47c004cfd2682fe8f5240fdf5a0379",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001014436_automation_administration_audit.sql",
+      "sha256": "621f90798308713203b069593f2fc92c89ba0c5e6177e24fc7db4e3243b21924",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001020338_durable_domain_events.sql",
+      "sha256": "255fc7c55d86bb6d95f65fac3402990034f55dcd135237dd937f950fa3d3a632",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001022623_automation_execution_authority.sql",
+      "sha256": "502864308b148f76cc9b8688b12d01d17e79cad779f8ecccfd21753bb4cd41b4",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001023010_automation_ticket_commands.sql",
+      "sha256": "085529598746c0234f437668db7889c8716f8945402e81f87ac1e28f08d7ff13",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001025400_automation_notification_kind.sql",
+      "sha256": "0a989be93641d7103bd5f311180e65a14d0241f3339aa9fc4ba34086be8a881d",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001025401_automation_worker_delivery.sql",
+      "sha256": "48f06eada8767f892d4035b7a709326345991f9b71aeeddb24235fce865d64f5",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001025402_automation_notification_command.sql",
+      "sha256": "a3ade26c636d2603bd8a9faf8a561b0686aed06be7fe05907d2dbc37c4773957",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001031036_automation_dry_run_reads.sql",
+      "sha256": "1a6e035bcb1f484fac98fd8ab25fd515cf8236fb270d3745984e453f6fdc206b",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001032617_automation_admin_reads.sql",
+      "sha256": "a2cf3f89670dbc917e06917c2b916429b93e015619abc705759df9a7e06199d8",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001160233_automation_temporal_episodes.sql",
+      "sha256": "c9b40a6c90ebe9d6a58f4d99ef31009fdcc3425f1c20a1bb9a269cf8841576f2",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001160248_automation_temporal_discovery.sql",
+      "sha256": "82e0e3a5848a68a400aa9a5fb15056a44c9f31011a2c71bbe1dbe60624016141",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261001165514_automation_operations.sql",
+      "sha256": "e44d2359734d1c053efe7a00051ba7df95e657b69ec1b819fc05d8196c3d0618",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261002202406_automation_guardrails.sql",
+      "sha256": "baf23a60dfcf7002369a4924f4b6c8be878fc30e6735571cdcdd5abd99dcfd9a",
+      "baselineUnchanged": true
+    },
+    {
+      "path": "supabase/migrations/20261003005804_automation_guardrails_corrections.sql",
+      "sha256": "fb3f67050cd5348077e8e61f638e607969198fec160aaa7c3a7e17e861cff6f0",
+      "baselineUnchanged": null
+    }
+  ],
+  "candidateFiles": [
+    {
+      "path": "docs/sql/automation-logical-restore-visibility.sql",
+      "sha256": "f2d254042a65412a4c1e11e96f52d0c6548ac159dbbfd26ef4ededcc5dafaba7"
+    },
+    {
+      "path": "src/app/api/cron/automation-scheduler/route.ts",
+      "sha256": "7b084e4eb0a8c1e9181bab5c28cb4d197c3d337aa9f2050c61873ceba6b4efa7"
+    },
+    {
+      "path": "src/app/api/cron/automation/route.ts",
+      "sha256": "2b256cff43fccb06b85d3f9b5c37edadf724c413bc9f9bd6da7d4b9153b70e1e"
+    },
+    {
+      "path": "src/app/app/administration/automations/operations/history/page.tsx",
+      "sha256": "f06adacf959e478f625ff6c6b480daab8693de43e2ee7e8c700b251197fe1c66"
+    },
+    {
+      "path": "src/features/automation/dry-run-model.ts",
+      "sha256": "519743dc367c457e61f0d3c7588431a317598fa71b0654523c50e75ff99355e9"
+    },
+    {
+      "path": "src/features/automation/dry-run-service.ts",
+      "sha256": "40343ac7c6c165e6b16a0ea683c17bfc2690f243fd1b0e0b1cb740931ca5aaf0"
+    },
+    {
+      "path": "src/features/automation/guardrails-corrections.test.mjs",
+      "sha256": "bd96958c2c995a973ee72225d66a59d6691a55390d1ab45a8f5380f447504dc3"
+    },
+    {
+      "path": "src/features/automation/guardrails.test.mjs",
+      "sha256": "d8e97aa5ba1f4276dd3a3a33ceb94032d03b8ff68682745b195a39a598907c56"
+    },
+    {
+      "path": "src/features/automation/limits.ts",
+      "sha256": "dd92601220caf4121793633efe757d0a264d247d120bc958c7c0286bda2c0af0"
+    },
+    {
+      "path": "src/features/automation/operations-model.ts",
+      "sha256": "6ad513c25402b7aeaf2e07688e50375b3a08238de8c9dd0a652372344e109edc"
+    },
+    {
+      "path": "src/features/automation/operations-service.ts",
+      "sha256": "aa13d5c1db3d1cdba1d2bd77f6a599d92bcc34ea51ed9e3b36b9df18b2578ef4"
+    },
+    {
+      "path": "src/features/automation/operations-telemetry.ts",
+      "sha256": "ebeb65d7e936d2b3ec2aea496dc2a8fc2a184b0bd74a385f5e91965c0a0de1ea"
+    },
+    {
+      "path": "src/features/automation/operations-ui.test.mjs",
+      "sha256": "8f8d2ff2eb7dfdb11928a0448f57b4d10ec0d8c8787a75aefa589806050fdc87"
+    },
+    {
+      "path": "src/features/automation/operations-view.tsx",
+      "sha256": "992c672b826efc1f5f4c598c8c2b2728469316a221f415b3eed934ea339cba0e"
+    },
+    {
+      "path": "src/features/automation/operations.test.mjs",
+      "sha256": "ae6527af9e91cd151bb405357b1bd64688123c1a9d0425aca8e51c6a7f4a5900"
+    },
+    {
+      "path": "src/features/automation/planner.ts",
+      "sha256": "dc56590195b94d83c050c48854f509cd2065856e46e52cd3fba7d5e76dfb046e"
+    },
+    {
+      "path": "src/features/automation/repository.ts",
+      "sha256": "3ee4751557992004520dc5a021cb7729f22ad3b0343f042d395da38ad0babd12"
+    },
+    {
+      "path": "src/features/automation/ui-service.ts",
+      "sha256": "46f6aea853ebf327d600be5145f6b0061721d311a5c148b036f08f3e426b8d58"
+    },
+    {
+      "path": "src/features/automation/validation.ts",
+      "sha256": "1f51c6f6fee8f8cbc3711a15e4d748a1b8ec4c188f38c6ae3b01260c81b73e9f"
+    },
+    {
+      "path": "src/features/automation/worker.ts",
+      "sha256": "4c03e42dcfdab47c496cb0a672e58cd10464fd0c47ca23046544477e6859afe6"
+    },
+    {
+      "path": "tests/helpers/automation-stage12-corrections-database.mjs",
+      "sha256": "6c7723809b1f6658cae151f38fba40c7f546633ece95bf6330d0a7b9daf2b522"
+    },
+    {
+      "path": "tests/helpers/automation-stage12-corrections-native.mjs",
+      "sha256": "c6d0b28a7876b49effdef41cf33a37c6d685bba20b83cf5aa13866453e60fd73"
+    },
+    {
+      "path": "tests/helpers/automation-stage12-corrections-postgrest.mjs",
+      "sha256": "af46c5a6c9f9626b8a80f1f6ca07df593c8e0b32380e53e3c0279892b8868cb5"
+    }
+  ],
+  "nativeVerification": {
+    "clean": {
+      "mode": "clean",
+      "scope": "Disposable local Supabase PostgreSQL; test Auth/Storage substrate, no PostgREST or hosted services",
+      "acceptance": {
+        "migrationMs": 300000,
+        "ordinaryMutationP95Ms": 1000,
+        "ordinaryMutationMaxMs": 2000
+      },
+      "startedAt": "2026-10-03T01:18:40.271Z",
+      "engine": "17.11",
+      "migrations": 41,
+      "timings": [
+        {
+          "file": "20260921005845_organization_identity_foundation.sql",
+          "ms": 47.574708999999984
+        },
+        {
+          "file": "20260921010019_harden_identity_policies.sql",
+          "ms": 38.05866600000013
+        },
+        {
+          "file": "20260921015452_ticketing_engine.sql",
+          "ms": 48.316040999999814
+        },
+        {
+          "file": "20260921015519_ticketing_foreign_key_indexes.sql",
+          "ms": 32.06379199999992
+        },
+        {
+          "file": "20260921020443_enable_customer_organization_signup.sql",
+          "ms": 30.493916000000127
+        },
+        {
+          "file": "20260921211804_first_class_support_chat.sql",
+          "ms": 42.131541999999854
+        },
+        {
+          "file": "20260925004637_employee_ticket_reopen.sql",
+          "ms": 31.434124999999995
+        },
+        {
+          "file": "20260925004643_ticket_sla_targets.sql",
+          "ms": 35.697124999999915
+        },
+        {
+          "file": "20260925010356_starter_ticket_categories.sql",
+          "ms": 30.230084000000033
+        },
+        {
+          "file": "20260925010358_enforce_mfa_and_server_owned_timestamps.sql",
+          "ms": 33.394457999999986
+        },
+        {
+          "file": "20260925013051_ticket_notifications.sql",
+          "ms": 35.783333000000084
+        },
+        {
+          "file": "20260925013110_schedule_notification_sla.sql",
+          "ms": 35.32070799999997
+        },
+        {
+          "file": "20260925013145_harden_notification_dispatcher.sql",
+          "ms": 31.082124999999905
+        },
+        {
+          "file": "20260925014034_indexed_ticket_search.sql",
+          "ms": 31.013500000000022
+        },
+        {
+          "file": "20260925015718_knowledge_base.sql",
+          "ms": 38.36020800000006
+        },
+        {
+          "file": "20260925015806_restrict_knowledge_column_grants.sql",
+          "ms": 30.01479100000006
+        },
+        {
+          "file": "20260925025937_operational_reporting.sql",
+          "ms": 30.276375000000144
+        },
+        {
+          "file": "20260925031136_audit_log.sql",
+          "ms": 34.336667000000034
+        },
+        {
+          "file": "20260925032928_product_analytics.sql",
+          "ms": 36.76441699999987
+        },
+        {
+          "file": "20260925033210_product_analytics_private_policies.sql",
+          "ms": 29.283500000000004
+        },
+        {
+          "file": "20260925035955_assets_and_platform.sql",
+          "ms": 42.46950000000015
+        },
+        {
+          "file": "20260926020400_remove_sample_knowledge_articles.sql",
+          "ms": 30.613083999999844
+        },
+        {
+          "file": "20260926022032_protect_organization_references_on_delete.sql",
+          "ms": 32.90945899999997
+        },
+        {
+          "file": "20260926024852_category_team_routing.sql",
+          "ms": 32.90325000000007
+        },
+        {
+          "file": "20260926025012_ticket_routing_insert_permission.sql",
+          "ms": 29.832042
+        },
+        {
+          "file": "20260927233229_universal_partial_search.sql",
+          "ms": 38.33383300000014
+        },
+        {
+          "file": "20261001014435_automation_rule_definitions.sql",
+          "ms": 39.98299999999972
+        },
+        {
+          "file": "20261001014436_automation_administration_audit.sql",
+          "ms": 31.00487499999963
+        },
+        {
+          "file": "20261001020338_durable_domain_events.sql",
+          "ms": 37.78108299999985
+        },
+        {
+          "file": "20261001022623_automation_execution_authority.sql",
+          "ms": 45.34258399999999
+        },
+        {
+          "file": "20261001023010_automation_ticket_commands.sql",
+          "ms": 36.45166700000027
+        },
+        {
+          "file": "20261001025400_automation_notification_kind.sql",
+          "ms": 29.488166999999976
+        },
+        {
+          "file": "20261001025401_automation_worker_delivery.sql",
+          "ms": 34.42195899999979
+        },
+        {
+          "file": "20261001025402_automation_notification_command.sql",
+          "ms": 31.734375
+        },
+        {
+          "file": "20261001031036_automation_dry_run_reads.sql",
+          "ms": 33.247292000000016
+        },
+        {
+          "file": "20261001032617_automation_admin_reads.sql",
+          "ms": 31.798749999999927
+        },
+        {
+          "file": "20261001160233_automation_temporal_episodes.sql",
+          "ms": 31.6571670000003
+        },
+        {
+          "file": "20261001160248_automation_temporal_discovery.sql",
+          "ms": 38.008082999999715
+        },
+        {
+          "file": "20261001165514_automation_operations.sql",
+          "ms": 36.67991699999993
+        },
+        {
+          "file": "20261002202406_automation_guardrails.sql",
+          "ms": 36.82229099999995
+        },
+        {
+          "file": "20261003005804_automation_guardrails_corrections.sql",
+          "ms": 34.36808400000018
+        }
+      ],
+      "security": {
+        "helperExposed": false,
+        "ruleRls": true,
+        "capacityRls": true,
+        "capacityMutation": false
+      },
+      "processing": "f",
+      "result": "PASS",
+      "finishedAt": "2026-10-03T01:18:42.756Z"
+    },
+    "upgrade": {
+      "mode": "upgrade",
+      "scope": "Disposable local Supabase PostgreSQL; test Auth/Storage substrate, no PostgREST or hosted services",
+      "acceptance": {
+        "migrationMs": 300000,
+        "ordinaryMutationP95Ms": 1000,
+        "ordinaryMutationMaxMs": 2000
+      },
+      "startedAt": "2026-10-03T01:18:38.973Z",
+      "engine": "17.11",
+      "migrations": 41,
+      "timings": [
+        {
+          "file": "20260921005845_organization_identity_foundation.sql",
+          "ms": 52.471542
+        },
+        {
+          "file": "20260921010019_harden_identity_policies.sql",
+          "ms": 42.69162499999993
+        },
+        {
+          "file": "20260921015452_ticketing_engine.sql",
+          "ms": 54.76708299999996
+        },
+        {
+          "file": "20260921015519_ticketing_foreign_key_indexes.sql",
+          "ms": 38.321249999999964
+        },
+        {
+          "file": "20260921020443_enable_customer_organization_signup.sql",
+          "ms": 31.273333999999977
+        },
+        {
+          "file": "20260921211804_first_class_support_chat.sql",
+          "ms": 43.91991600000006
+        },
+        {
+          "file": "20260925004637_employee_ticket_reopen.sql",
+          "ms": 35.00800000000004
+        },
+        {
+          "file": "20260925004643_ticket_sla_targets.sql",
+          "ms": 37.05754200000001
+        },
+        {
+          "file": "20260925010356_starter_ticket_categories.sql",
+          "ms": 31.36933399999998
+        },
+        {
+          "file": "20260925010358_enforce_mfa_and_server_owned_timestamps.sql",
+          "ms": 34.65949999999998
+        },
+        {
+          "file": "20260925013051_ticket_notifications.sql",
+          "ms": 38.595582999999806
+        },
+        {
+          "file": "20260925013110_schedule_notification_sla.sql",
+          "ms": 39.40979200000015
+        },
+        {
+          "file": "20260925013145_harden_notification_dispatcher.sql",
+          "ms": 32.31316599999991
+        },
+        {
+          "file": "20260925014034_indexed_ticket_search.sql",
+          "ms": 34.160249999999905
+        },
+        {
+          "file": "20260925015718_knowledge_base.sql",
+          "ms": 45.51916600000004
+        },
+        {
+          "file": "20260925015806_restrict_knowledge_column_grants.sql",
+          "ms": 35.60179200000016
+        },
+        {
+          "file": "20260925025937_operational_reporting.sql",
+          "ms": 33.04516699999999
+        },
+        {
+          "file": "20260925031136_audit_log.sql",
+          "ms": 37.928084000000126
+        },
+        {
+          "file": "20260925032928_product_analytics.sql",
+          "ms": 55.35804200000007
+        },
+        {
+          "file": "20260925033210_product_analytics_private_policies.sql",
+          "ms": 30.49829100000011
+        },
+        {
+          "file": "20260925035955_assets_and_platform.sql",
+          "ms": 43.47575000000006
+        },
+        {
+          "file": "20260926020400_remove_sample_knowledge_articles.sql",
+          "ms": 32.10629199999994
+        },
+        {
+          "file": "20260926022032_protect_organization_references_on_delete.sql",
+          "ms": 31.675917000000027
+        },
+        {
+          "file": "20260926024852_category_team_routing.sql",
+          "ms": 39.50524999999993
+        },
+        {
+          "file": "20260926025012_ticket_routing_insert_permission.sql",
+          "ms": 29.75083399999994
+        },
+        {
+          "file": "20260927233229_universal_partial_search.sql",
+          "ms": 43.61550000000011
+        },
+        {
+          "file": "20261001014435_automation_rule_definitions.sql",
+          "ms": 55.937582999999904
+        },
+        {
+          "file": "20261001014436_automation_administration_audit.sql",
+          "ms": 32.062124999999924
+        },
+        {
+          "file": "20261001020338_durable_domain_events.sql",
+          "ms": 45.70470800000021
+        },
+        {
+          "file": "20261001022623_automation_execution_authority.sql",
+          "ms": 51.39087500000005
+        },
+        {
+          "file": "20261001023010_automation_ticket_commands.sql",
+          "ms": 41.675459000000046
+        },
+        {
+          "file": "20261001025400_automation_notification_kind.sql",
+          "ms": 31.71508300000005
+        },
+        {
+          "file": "20261001025401_automation_worker_delivery.sql",
+          "ms": 38.1267499999999
+        },
+        {
+          "file": "20261001025402_automation_notification_command.sql",
+          "ms": 31.48120800000015
+        },
+        {
+          "file": "20261001031036_automation_dry_run_reads.sql",
+          "ms": 31.7798329999996
+        },
+        {
+          "file": "20261001032617_automation_admin_reads.sql",
+          "ms": 32.85095799999999
+        },
+        {
+          "file": "20261001160233_automation_temporal_episodes.sql",
+          "ms": 33.34237499999972
+        },
+        {
+          "file": "20261001160248_automation_temporal_discovery.sql",
+          "ms": 36.743417000000136
+        },
+        {
+          "file": "20261001165514_automation_operations.sql",
+          "ms": 36.91462499999989
+        },
+        {
+          "file": "20261002202406_automation_guardrails.sql",
+          "ms": 53.04595800000061
+        },
+        {
+          "file": "20261003005804_automation_guardrails_corrections.sql",
+          "ms": 6189.947333
+        }
+      ],
+      "rules": 4000,
+      "legacyEnabled": 101,
+      "waits": [
+        {
+          "waitType": "Lock",
+          "blockedBy": 1
+        }
+      ],
+      "lockTimeoutRollback": "PASS",
+      "mutationMs": [
+        53.781708000002254,
+        48.19429200000013,
+        49.01720800000112,
+        49.91620799999873,
+        48.49116700000013,
+        47.31399999999849,
+        49.63958300000013,
+        55.52300000000105,
+        54.42479199999798,
+        52.31333399999858,
+        53.75800000000163,
+        50.51087499999994,
+        52.44037500000195,
+        50.37274999999863,
+        52.49724999999671,
+        53.9665419999983,
+        48.82562500000131,
+        49.287209000001894,
+        51.26695800000016,
+        50.740750000000844,
+        49.621541000000434,
+        52.01837500000329,
+        52.61320799999885,
+        49.40712500000154,
+        50.895541999998386,
+        51.35820799999783,
+        49.78862500000105,
+        51.801917000000685,
+        52.69695800000045,
+        48.78941699999996,
+        50.91945900000064,
+        49.762166999997135,
+        51.336167000001296,
+        49.9486250000009,
+        47.918792000000394,
+        48.37041699999827,
+        50.85370899999907,
+        51.20445800000016,
+        48.19550000000163,
+        49.70587499999965,
+        49.700542000002315,
+        52.23612499999945,
+        51.20854200000031,
+        48.48237499999959,
+        48.71812499999942,
+        51.09466600000087,
+        51.11999999999898,
+        48.828333000001294,
+        51.16525000000183,
+        46.711583000000246,
+        47.47141600000032,
+        48.82179199999882,
+        49.76604199999929,
+        49.87116699999751,
+        50.13304199999766,
+        52.32716699999946,
+        47.84425000000192,
+        49.426666999999725,
+        50.72083300000304,
+        49.06379100000049,
+        50.28199999999924
+      ],
+      "correctionMigrationMs": 6189.947333,
+      "preservation": "PASS",
+      "furtherEnableDenied": "PASS",
+      "mutationLatency": {
+        "count": 61,
+        "p95Ms": 53.781708000002254,
+        "maxMs": 55.52300000000105
+      },
+      "impactTarget": "PASS",
+      "security": {
+        "helperExposed": false,
+        "ruleRls": true,
+        "capacityRls": true,
+        "capacityMutation": false
+      },
+      "processing": "f",
+      "result": "PASS",
+      "finishedAt": "2026-10-03T01:19:02.679Z"
+    },
+    "concurrency": {
+      "mode": "concurrency",
+      "scope": "Disposable local Supabase PostgreSQL; test Auth/Storage substrate, no PostgREST or hosted services",
+      "acceptance": {
+        "migrationMs": 300000,
+        "ordinaryMutationP95Ms": 1000,
+        "ordinaryMutationMaxMs": 2000
+      },
+      "startedAt": "2026-10-03T01:21:22.979Z",
+      "engine": "17.11",
+      "migrations": 41,
+      "timings": [
+        {
+          "file": "20260921005845_organization_identity_foundation.sql",
+          "ms": 50.91279199999997
+        },
+        {
+          "file": "20260921010019_harden_identity_policies.sql",
+          "ms": 40.900957999999946
+        },
+        {
+          "file": "20260921015452_ticketing_engine.sql",
+          "ms": 57.61200000000008
+        },
+        {
+          "file": "20260921015519_ticketing_foreign_key_indexes.sql",
+          "ms": 32.20358299999998
+        },
+        {
+          "file": "20260921020443_enable_customer_organization_signup.sql",
+          "ms": 29.87799999999993
+        },
+        {
+          "file": "20260921211804_first_class_support_chat.sql",
+          "ms": 42.11183300000016
+        },
+        {
+          "file": "20260925004637_employee_ticket_reopen.sql",
+          "ms": 30.408332999999857
+        },
+        {
+          "file": "20260925004643_ticket_sla_targets.sql",
+          "ms": 33.49258299999997
+        },
+        {
+          "file": "20260925010356_starter_ticket_categories.sql",
+          "ms": 29.254916000000094
+        },
+        {
+          "file": "20260925010358_enforce_mfa_and_server_owned_timestamps.sql",
+          "ms": 32.21958300000006
+        },
+        {
+          "file": "20260925013051_ticket_notifications.sql",
+          "ms": 35.59012500000017
+        },
+        {
+          "file": "20260925013110_schedule_notification_sla.sql",
+          "ms": 34.36016699999982
+        },
+        {
+          "file": "20260925013145_harden_notification_dispatcher.sql",
+          "ms": 29.560292000000118
+        },
+        {
+          "file": "20260925014034_indexed_ticket_search.sql",
+          "ms": 30.624000000000024
+        },
+        {
+          "file": "20260925015718_knowledge_base.sql",
+          "ms": 38.65924999999993
+        },
+        {
+          "file": "20260925015806_restrict_knowledge_column_grants.sql",
+          "ms": 29.328374999999824
+        },
+        {
+          "file": "20260925025937_operational_reporting.sql",
+          "ms": 29.931957999999895
+        },
+        {
+          "file": "20260925031136_audit_log.sql",
+          "ms": 35.68212500000004
+        },
+        {
+          "file": "20260925032928_product_analytics.sql",
+          "ms": 36.106624999999894
+        },
+        {
+          "file": "20260925033210_product_analytics_private_policies.sql",
+          "ms": 29.230749999999944
+        },
+        {
+          "file": "20260925035955_assets_and_platform.sql",
+          "ms": 42.676917
+        },
+        {
+          "file": "20260926020400_remove_sample_knowledge_articles.sql",
+          "ms": 30.59183299999995
+        },
+        {
+          "file": "20260926022032_protect_organization_references_on_delete.sql",
+          "ms": 30.820334000000003
+        },
+        {
+          "file": "20260926024852_category_team_routing.sql",
+          "ms": 32.20662500000003
+        },
+        {
+          "file": "20260926025012_ticket_routing_insert_permission.sql",
+          "ms": 28.855415999999877
+        },
+        {
+          "file": "20260927233229_universal_partial_search.sql",
+          "ms": 38.64274999999998
+        },
+        {
+          "file": "20261001014435_automation_rule_definitions.sql",
+          "ms": 39.96499999999992
+        },
+        {
+          "file": "20261001014436_automation_administration_audit.sql",
+          "ms": 30.04029199999991
+        },
+        {
+          "file": "20261001020338_durable_domain_events.sql",
+          "ms": 38.11766599999987
+        },
+        {
+          "file": "20261001022623_automation_execution_authority.sql",
+          "ms": 46.462958999999955
+        },
+        {
+          "file": "20261001023010_automation_ticket_commands.sql",
+          "ms": 35.61662500000011
+        },
+        {
+          "file": "20261001025400_automation_notification_kind.sql",
+          "ms": 28.456249999999727
+        },
+        {
+          "file": "20261001025401_automation_worker_delivery.sql",
+          "ms": 35.129249999999956
+        },
+        {
+          "file": "20261001025402_automation_notification_command.sql",
+          "ms": 32.51545799999985
+        },
+        {
+          "file": "20261001031036_automation_dry_run_reads.sql",
+          "ms": 33.461125000000266
+        },
+        {
+          "file": "20261001032617_automation_admin_reads.sql",
+          "ms": 31.856166999999914
+        },
+        {
+          "file": "20261001160233_automation_temporal_episodes.sql",
+          "ms": 34.53320900000017
+        },
+        {
+          "file": "20261001160248_automation_temporal_discovery.sql",
+          "ms": 38.54404199999999
+        },
+        {
+          "file": "20261001165514_automation_operations.sql",
+          "ms": 36.36416700000018
+        },
+        {
+          "file": "20261002202406_automation_guardrails.sql",
+          "ms": 38.54887499999995
+        },
+        {
+          "file": "20261003005804_automation_guardrails_corrections.sql",
+          "ms": 33.02137499999981
+        }
+      ],
+      "security": {
+        "helperExposed": false,
+        "ruleRls": true,
+        "capacityRls": true,
+        "capacityMutation": false
+      },
+      "executionCeiling": "PASS",
+      "recipientCeiling": "PASS",
+      "tenantNotificationCeiling": "PASS",
+      "deferralRefund": "PASS",
+      "processing": "f",
+      "result": "PASS",
+      "finishedAt": "2026-10-03T01:21:27.254Z"
+    },
+    "advisors": {
+      "mode": "advisors",
+      "scope": "Disposable local Supabase PostgreSQL; test Auth/Storage substrate, no PostgREST or hosted services",
+      "acceptance": {
+        "migrationMs": 300000,
+        "ordinaryMutationP95Ms": 1000,
+        "ordinaryMutationMaxMs": 2000
+      },
+      "startedAt": "2026-10-03T01:22:11.987Z",
+      "engine": "17.11",
+      "migrations": 41,
+      "timings": [
+        {
+          "file": "20260921005845_organization_identity_foundation.sql",
+          "ms": 53.51525000000004
+        },
+        {
+          "file": "20260921010019_harden_identity_policies.sql",
+          "ms": 44.99874999999997
+        },
+        {
+          "file": "20260921015452_ticketing_engine.sql",
+          "ms": 55.25691600000005
+        },
+        {
+          "file": "20260921015519_ticketing_foreign_key_indexes.sql",
+          "ms": 34.00454200000013
+        },
+        {
+          "file": "20260921020443_enable_customer_organization_signup.sql",
+          "ms": 30.51958300000001
+        },
+        {
+          "file": "20260921211804_first_class_support_chat.sql",
+          "ms": 79.27524999999991
+        },
+        {
+          "file": "20260925004637_employee_ticket_reopen.sql",
+          "ms": 58.31341700000007
+        },
+        {
+          "file": "20260925004643_ticket_sla_targets.sql",
+          "ms": 69.62287500000002
+        },
+        {
+          "file": "20260925010356_starter_ticket_categories.sql",
+          "ms": 65.46945800000003
+        },
+        {
+          "file": "20260925010358_enforce_mfa_and_server_owned_timestamps.sql",
+          "ms": 63.737167
+        },
+        {
+          "file": "20260925013051_ticket_notifications.sql",
+          "ms": 121.08649999999989
+        },
+        {
+          "file": "20260925013110_schedule_notification_sla.sql",
+          "ms": 59.46808299999998
+        },
+        {
+          "file": "20260925013145_harden_notification_dispatcher.sql",
+          "ms": 52.208250000000135
+        },
+        {
+          "file": "20260925014034_indexed_ticket_search.sql",
+          "ms": 59.75675000000001
+        },
+        {
+          "file": "20260925015718_knowledge_base.sql",
+          "ms": 68.09133399999996
+        },
+        {
+          "file": "20260925015806_restrict_knowledge_column_grants.sql",
+          "ms": 59.847082999999884
+        },
+        {
+          "file": "20260925025937_operational_reporting.sql",
+          "ms": 53.12608300000011
+        },
+        {
+          "file": "20260925031136_audit_log.sql",
+          "ms": 63.51458400000001
+        },
+        {
+          "file": "20260925032928_product_analytics.sql",
+          "ms": 65.44537499999979
+        },
+        {
+          "file": "20260925033210_product_analytics_private_policies.sql",
+          "ms": 48.60050000000001
+        },
+        {
+          "file": "20260925035955_assets_and_platform.sql",
+          "ms": 80.23129100000006
+        },
+        {
+          "file": "20260926020400_remove_sample_knowledge_articles.sql",
+          "ms": 54.56508399999984
+        },
+        {
+          "file": "20260926022032_protect_organization_references_on_delete.sql",
+          "ms": 54.95616700000028
+        },
+        {
+          "file": "20260926024852_category_team_routing.sql",
+          "ms": 56.17587500000036
+        },
+        {
+          "file": "20260926025012_ticket_routing_insert_permission.sql",
+          "ms": 48.22416599999997
+        },
+        {
+          "file": "20260927233229_universal_partial_search.sql",
+          "ms": 75.25716699999975
+        },
+        {
+          "file": "20261001014435_automation_rule_definitions.sql",
+          "ms": 74.01537499999995
+        },
+        {
+          "file": "20261001014436_automation_administration_audit.sql",
+          "ms": 55.997041999999965
+        },
+        {
+          "file": "20261001020338_durable_domain_events.sql",
+          "ms": 70.4191249999999
+        },
+        {
+          "file": "20261001022623_automation_execution_authority.sql",
+          "ms": 85.30249999999978
+        },
+        {
+          "file": "20261001023010_automation_ticket_commands.sql",
+          "ms": 61.74275000000034
+        },
+        {
+          "file": "20261001025400_automation_notification_kind.sql",
+          "ms": 68.10325000000012
+        },
+        {
+          "file": "20261001025401_automation_worker_delivery.sql",
+          "ms": 64.33937500000002
+        },
+        {
+          "file": "20261001025402_automation_notification_command.sql",
+          "ms": 56.23316700000032
+        },
+        {
+          "file": "20261001031036_automation_dry_run_reads.sql",
+          "ms": 79.20341699999972
+        },
+        {
+          "file": "20261001032617_automation_admin_reads.sql",
+          "ms": 58.70691600000009
+        },
+        {
+          "file": "20261001160233_automation_temporal_episodes.sql",
+          "ms": 59.944666999999754
+        },
+        {
+          "file": "20261001160248_automation_temporal_discovery.sql",
+          "ms": 67.8354589999999
+        },
+        {
+          "file": "20261001165514_automation_operations.sql",
+          "ms": 67.45012499999984
+        },
+        {
+          "file": "20261002202406_automation_guardrails.sql",
+          "ms": 68.44991699999991
+        },
+        {
+          "file": "20261003005804_automation_guardrails_corrections.sql",
+          "ms": 65.1900840000003
+        }
+      ],
+      "security": {
+        "helperExposed": false,
+        "ruleRls": true,
+        "capacityRls": true,
+        "capacityMutation": false
+      },
+      "advisors": "[\n  {\n    \"name\": \"auth_rls_initplan\",\n    \"title\": \"Auth RLS Initialization Plan\",\n    \"level\": \"WARN\",\n    \"facing\": \"EXTERNAL\",\n    \"categories\": [\n      \"PERFORMANCE\"\n    ],\n    \"description\": \"Detects if calls to `current_setting()` and `auth.\\u003cfunction\\u003e()` in RLS policies are being unnecessarily re-evaluated for each row\",\n    \"detail\": \"Table `public.assets` has a row level security policy `assets_read` that re-evaluates current_setting() or auth.\\u003cfunction\\u003e() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing `auth.\\u003cfunction\\u003e()` with `(select auth.\\u003cfunction\\u003e())`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.\",\n    \"remediation\": \"https://supabase.com/docs/guides/database/database-linter?lint=0003_auth_rls_initplan\",\n    \"metadata\": {\n      \"name\": \"assets\",\n      \"type\": \"table\",\n      \"schema\": \"public\"\n    },\n    \"cache_key\": \"auth_rls_init_plan_public_assets_assets_read\"\n  },\n  {\n    \"name\": \"multiple_permissive_policies\",\n    \"title\": \"Multiple Permissive Policies\",\n    \"level\": \"WARN\",\n    \"facing\": \"EXTERNAL\",\n    \"categories\": [\n      \"PERFORMANCE\"\n    ],\n    \"description\": \"Detects if multiple permissive row level security policies are present on a table for the same `role` and `action` (e.g. insert). Multiple permissive policies are suboptimal for performance as each policy must be executed for every relevant query.\",\n    \"detail\": \"Table `public.tickets` has multiple permissive policies for role `authenticated` for action `UPDATE`. Policies include `{\\\"Requesters can reopen resolved tickets\\\",\\\"Ticket workers can update tickets\\\"}`\",\n    \"remediation\": \"https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies\",\n    \"metadata\": {\n      \"name\": \"tickets\",\n      \"type\": \"table\",\n      \"schema\": \"public\"\n    },\n    \"cache_key\": \"multiple_permissive_policies_public_tickets_authenticated_UPDATE\"\n  },\n  {\n    \"name\": \"extension_in_public\",\n    \"title\": \"Extension in Public\",\n    \"level\": \"WARN\",\n    \"facing\": \"EXTERNAL\",\n    \"categories\": [\n      \"SECURITY\"\n    ],\n    \"description\": \"Detects extensions installed in the `public` schema.\",\n    \"detail\": \"Extension `pg_cron` is installed in the public schema. Move it to another schema.\",\n    \"remediation\": \"https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public\",\n    \"metadata\": {\n      \"name\": \"pg_cron\",\n      \"type\": \"extension\",\n      \"schema\": \"public\"\n    },\n    \"cache_key\": \"extension_in_public_pg_cron\"\n  }\n]\n",
+      "advisorExit": 0,
+      "processing": "f",
+      "result": "PASS",
+      "finishedAt": "2026-10-03T01:22:16.595Z"
+    },
+    "plans": {
+      "mode": "plans",
+      "scope": "Disposable local Supabase PostgreSQL; test Auth/Storage substrate, no PostgREST or hosted services",
+      "acceptance": {
+        "migrationMs": 300000,
+        "ordinaryMutationP95Ms": 1000,
+        "ordinaryMutationMaxMs": 2000
+      },
+      "startedAt": "2026-10-03T01:26:18.208Z",
+      "engine": "17.11",
+      "migrations": 41,
+      "timings": [
+        {
+          "file": "20260921005845_organization_identity_foundation.sql",
+          "ms": 49.28424999999993
+        },
+        {
+          "file": "20260921010019_harden_identity_policies.sql",
+          "ms": 42.46441699999991
+        },
+        {
+          "file": "20260921015452_ticketing_engine.sql",
+          "ms": 51.29958399999987
+        },
+        {
+          "file": "20260921015519_ticketing_foreign_key_indexes.sql",
+          "ms": 32.577625000000126
+        },
+        {
+          "file": "20260921020443_enable_customer_organization_signup.sql",
+          "ms": 31.301249999999982
+        },
+        {
+          "file": "20260921211804_first_class_support_chat.sql",
+          "ms": 43.34812499999998
+        },
+        {
+          "file": "20260925004637_employee_ticket_reopen.sql",
+          "ms": 32.38841700000012
+        },
+        {
+          "file": "20260925004643_ticket_sla_targets.sql",
+          "ms": 37.164124999999785
+        },
+        {
+          "file": "20260925010356_starter_ticket_categories.sql",
+          "ms": 33.628167000000076
+        },
+        {
+          "file": "20260925010358_enforce_mfa_and_server_owned_timestamps.sql",
+          "ms": 33.540917000000036
+        },
+        {
+          "file": "20260925013051_ticket_notifications.sql",
+          "ms": 37.21487499999989
+        },
+        {
+          "file": "20260925013110_schedule_notification_sla.sql",
+          "ms": 37.764666000000034
+        },
+        {
+          "file": "20260925013145_harden_notification_dispatcher.sql",
+          "ms": 39.644665999999916
+        },
+        {
+          "file": "20260925014034_indexed_ticket_search.sql",
+          "ms": 42.81941699999993
+        },
+        {
+          "file": "20260925015718_knowledge_base.sql",
+          "ms": 48.50695799999994
+        },
+        {
+          "file": "20260925015806_restrict_knowledge_column_grants.sql",
+          "ms": 30.692291999999952
+        },
+        {
+          "file": "20260925025937_operational_reporting.sql",
+          "ms": 45.354750000000195
+        },
+        {
+          "file": "20260925031136_audit_log.sql",
+          "ms": 44.84504199999992
+        },
+        {
+          "file": "20260925032928_product_analytics.sql",
+          "ms": 37.26166699999999
+        },
+        {
+          "file": "20260925033210_product_analytics_private_policies.sql",
+          "ms": 32.021792000000005
+        },
+        {
+          "file": "20260925035955_assets_and_platform.sql",
+          "ms": 50.97320800000011
+        },
+        {
+          "file": "20260926020400_remove_sample_knowledge_articles.sql",
+          "ms": 35.29316599999993
+        },
+        {
+          "file": "20260926022032_protect_organization_references_on_delete.sql",
+          "ms": 31.347292000000152
+        },
+        {
+          "file": "20260926024852_category_team_routing.sql",
+          "ms": 39.30779200000006
+        },
+        {
+          "file": "20260926025012_ticket_routing_insert_permission.sql",
+          "ms": 28.595540999999912
+        },
+        {
+          "file": "20260927233229_universal_partial_search.sql",
+          "ms": 38.58550000000014
+        },
+        {
+          "file": "20261001014435_automation_rule_definitions.sql",
+          "ms": 39.96629100000018
+        },
+        {
+          "file": "20261001014436_automation_administration_audit.sql",
+          "ms": 31.332584000000224
+        },
+        {
+          "file": "20261001020338_durable_domain_events.sql",
+          "ms": 37.843624999999975
+        },
+        {
+          "file": "20261001022623_automation_execution_authority.sql",
+          "ms": 45.57108300000027
+        },
+        {
+          "file": "20261001023010_automation_ticket_commands.sql",
+          "ms": 37.96670800000038
+        },
+        {
+          "file": "20261001025400_automation_notification_kind.sql",
+          "ms": 29.940500000000156
+        },
+        {
+          "file": "20261001025401_automation_worker_delivery.sql",
+          "ms": 35.18516700000009
+        },
+        {
+          "file": "20261001025402_automation_notification_command.sql",
+          "ms": 31.042167000000063
+        },
+        {
+          "file": "20261001031036_automation_dry_run_reads.sql",
+          "ms": 32.08583300000009
+        },
+        {
+          "file": "20261001032617_automation_admin_reads.sql",
+          "ms": 30.82466599999998
+        },
+        {
+          "file": "20261001160233_automation_temporal_episodes.sql",
+          "ms": 32.87133300000005
+        },
+        {
+          "file": "20261001160248_automation_temporal_discovery.sql",
+          "ms": 38.00237500000003
+        },
+        {
+          "file": "20261001165514_automation_operations.sql",
+          "ms": 37.29216600000018
+        },
+        {
+          "file": "20261002202406_automation_guardrails.sql",
+          "ms": 41.54816699999992
+        },
+        {
+          "file": "20261003005804_automation_guardrails_corrections.sql",
+          "ms": 37.264790999999605
+        }
+      ],
+      "security": {
+        "helperExposed": false,
+        "ruleRls": true,
+        "capacityRls": true,
+        "capacityMutation": false
+      },
+      "candidatePlan": [
+        {
+          "Plan": {
+            "Node Type": "LockRows",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Startup Cost": 269.39,
+            "Total Cost": 269.51,
+            "Plan Rows": 10,
+            "Plan Width": 254,
+            "Actual Startup Time": 0.309,
+            "Actual Total Time": 0.327,
+            "Actual Rows": 100,
+            "Actual Loops": 1,
+            "Shared Hit Blocks": 143,
+            "Shared Read Blocks": 0,
+            "Shared Dirtied Blocks": 0,
+            "Shared Written Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Dirtied Blocks": 0,
+            "Local Written Blocks": 0,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0,
+            "Plans": [
+              {
+                "Node Type": "Limit",
+                "Parent Relationship": "InitPlan",
+                "Subplan Name": "CTE candidates",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Startup Cost": 0.29,
+                "Total Cost": 35.56,
+                "Plan Rows": 100,
+                "Plan Width": 24,
+                "Actual Startup Time": 0.011,
+                "Actual Total Time": 0.028,
+                "Actual Rows": 100,
+                "Actual Loops": 1,
+                "Shared Hit Blocks": 5,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0,
+                "Plans": [
+                  {
+                    "Node Type": "Index Scan",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Scan Direction": "Forward",
+                    "Index Name": "automation_deliveries_pending_org",
+                    "Relation Name": "domain_event_deliveries",
+                    "Alias": "d_1",
+                    "Startup Cost": 0.29,
+                    "Total Cost": 353.04,
+                    "Plan Rows": 1000,
+                    "Plan Width": 24,
+                    "Actual Startup Time": 0.011,
+                    "Actual Total Time": 0.024,
+                    "Actual Rows": 100,
+                    "Actual Loops": 1,
+                    "Index Cond": "((organization_id = '20000000-0000-0000-0000-000000000402'::uuid) AND (available_at <= statement_timestamp()))",
+                    "Rows Removed by Index Recheck": 0,
+                    "Filter": "(consumer = 'automation'::text)",
+                    "Rows Removed by Filter": 0,
+                    "Shared Hit Blocks": 5,
+                    "Shared Read Blocks": 0,
+                    "Shared Dirtied Blocks": 0,
+                    "Shared Written Blocks": 0,
+                    "Local Hit Blocks": 0,
+                    "Local Read Blocks": 0,
+                    "Local Dirtied Blocks": 0,
+                    "Local Written Blocks": 0,
+                    "Temp Read Blocks": 0,
+                    "Temp Written Blocks": 0
+                  }
+                ]
+              },
+              {
+                "Node Type": "Sort",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Startup Cost": 233.83,
+                "Total Cost": 233.85,
+                "Plan Rows": 10,
+                "Plan Width": 254,
+                "Actual Startup Time": 0.303,
+                "Actual Total Time": 0.306,
+                "Actual Rows": 100,
+                "Actual Loops": 1,
+                "Sort Key": [
+                  "((d.attempts <= 0))",
+                  "d.available_at",
+                  "d.id"
+                ],
+                "Sort Method": "quicksort",
+                "Sort Space Used": 41,
+                "Sort Space Type": "Memory",
+                "Shared Hit Blocks": 43,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0,
+                "Plans": [
+                  {
+                    "Node Type": "Hash Join",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Join Type": "Inner",
+                    "Startup Cost": 43.28,
+                    "Total Cost": 233.66,
+                    "Plan Rows": 10,
+                    "Plan Width": 254,
+                    "Actual Startup Time": 0.114,
+                    "Actual Total Time": 0.274,
+                    "Actual Rows": 100,
+                    "Actual Loops": 1,
+                    "Inner Unique": false,
+                    "Hash Cond": "(d.id = candidates.id)",
+                    "Shared Hit Blocks": 32,
+                    "Shared Read Blocks": 0,
+                    "Shared Dirtied Blocks": 0,
+                    "Shared Written Blocks": 0,
+                    "Local Hit Blocks": 0,
+                    "Local Read Blocks": 0,
+                    "Local Dirtied Blocks": 0,
+                    "Local Written Blocks": 0,
+                    "Temp Read Blocks": 0,
+                    "Temp Written Blocks": 0,
+                    "Plans": [
+                      {
+                        "Node Type": "Bitmap Heap Scan",
+                        "Parent Relationship": "Outer",
+                        "Parallel Aware": false,
+                        "Async Capable": false,
+                        "Relation Name": "domain_event_deliveries",
+                        "Alias": "d",
+                        "Startup Cost": 40.03,
+                        "Total Cost": 226.53,
+                        "Plan Rows": 1000,
+                        "Plan Width": 213,
+                        "Actual Startup Time": 0.049,
+                        "Actual Total Time": 0.172,
+                        "Actual Rows": 1000,
+                        "Actual Loops": 1,
+                        "Recheck Cond": "(organization_id = '20000000-0000-0000-0000-000000000402'::uuid)",
+                        "Rows Removed by Index Recheck": 0,
+                        "Filter": "((status = ANY ('{pending,leased}'::text[])) AND (consumer = 'automation'::text) AND (available_at <= statement_timestamp()))",
+                        "Rows Removed by Filter": 0,
+                        "Exact Heap Blocks": 17,
+                        "Lossy Heap Blocks": 0,
+                        "Shared Hit Blocks": 27,
+                        "Shared Read Blocks": 0,
+                        "Shared Dirtied Blocks": 0,
+                        "Shared Written Blocks": 0,
+                        "Local Hit Blocks": 0,
+                        "Local Read Blocks": 0,
+                        "Local Dirtied Blocks": 0,
+                        "Local Written Blocks": 0,
+                        "Temp Read Blocks": 0,
+                        "Temp Written Blocks": 0,
+                        "Plans": [
+                          {
+                            "Node Type": "Bitmap Index Scan",
+                            "Parent Relationship": "Outer",
+                            "Parallel Aware": false,
+                            "Async Capable": false,
+                            "Index Name": "domain_event_deliveries_organization_id_id_key",
+                            "Startup Cost": 0,
+                            "Total Cost": 39.78,
+                            "Plan Rows": 1000,
+                            "Plan Width": 0,
+                            "Actual Startup Time": 0.045,
+                            "Actual Total Time": 0.045,
+                            "Actual Rows": 1000,
+                            "Actual Loops": 1,
+                            "Index Cond": "(organization_id = '20000000-0000-0000-0000-000000000402'::uuid)",
+                            "Shared Hit Blocks": 10,
+                            "Shared Read Blocks": 0,
+                            "Shared Dirtied Blocks": 0,
+                            "Shared Written Blocks": 0,
+                            "Local Hit Blocks": 0,
+                            "Local Read Blocks": 0,
+                            "Local Dirtied Blocks": 0,
+                            "Local Written Blocks": 0,
+                            "Temp Read Blocks": 0,
+                            "Temp Written Blocks": 0
+                          }
+                        ]
+                      },
+                      {
+                        "Node Type": "Hash",
+                        "Parent Relationship": "Inner",
+                        "Parallel Aware": false,
+                        "Async Capable": false,
+                        "Startup Cost": 2,
+                        "Total Cost": 2,
+                        "Plan Rows": 100,
+                        "Plan Width": 56,
+                        "Actual Startup Time": 0.057,
+                        "Actual Total Time": 0.058,
+                        "Actual Rows": 100,
+                        "Actual Loops": 1,
+                        "Hash Buckets": 1024,
+                        "Original Hash Buckets": 1024,
+                        "Hash Batches": 1,
+                        "Original Hash Batches": 1,
+                        "Peak Memory Usage": 17,
+                        "Shared Hit Blocks": 5,
+                        "Shared Read Blocks": 0,
+                        "Shared Dirtied Blocks": 0,
+                        "Shared Written Blocks": 0,
+                        "Local Hit Blocks": 0,
+                        "Local Read Blocks": 0,
+                        "Local Dirtied Blocks": 0,
+                        "Local Written Blocks": 0,
+                        "Temp Read Blocks": 0,
+                        "Temp Written Blocks": 0,
+                        "Plans": [
+                          {
+                            "Node Type": "CTE Scan",
+                            "Parent Relationship": "Outer",
+                            "Parallel Aware": false,
+                            "Async Capable": false,
+                            "CTE Name": "candidates",
+                            "Alias": "candidates",
+                            "Startup Cost": 0,
+                            "Total Cost": 2,
+                            "Plan Rows": 100,
+                            "Plan Width": 56,
+                            "Actual Startup Time": 0.016,
+                            "Actual Total Time": 0.044,
+                            "Actual Rows": 100,
+                            "Actual Loops": 1,
+                            "Shared Hit Blocks": 5,
+                            "Shared Read Blocks": 0,
+                            "Shared Dirtied Blocks": 0,
+                            "Shared Written Blocks": 0,
+                            "Local Hit Blocks": 0,
+                            "Local Read Blocks": 0,
+                            "Local Dirtied Blocks": 0,
+                            "Local Written Blocks": 0,
+                            "Temp Read Blocks": 0,
+                            "Temp Written Blocks": 0
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "Planning": {
+            "Shared Hit Blocks": 370,
+            "Shared Read Blocks": 0,
+            "Shared Dirtied Blocks": 0,
+            "Shared Written Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Dirtied Blocks": 0,
+            "Local Written Blocks": 0,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0
+          },
+          "Planning Time": 0.403,
+          "Triggers": [],
+          "Execution Time": 0.359
+        }
+      ],
+      "claimPlan": [
+        {
+          "Plan": {
+            "Node Type": "Function Scan",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Function Name": "claim_automation_events",
+            "Alias": "claim_automation_events",
+            "Startup Cost": 0.25,
+            "Total Cost": 10.25,
+            "Plan Rows": 1000,
+            "Plan Width": 76,
+            "Actual Startup Time": 8.704,
+            "Actual Total Time": 8.704,
+            "Actual Rows": 5,
+            "Actual Loops": 1,
+            "Shared Hit Blocks": 4079,
+            "Shared Read Blocks": 3,
+            "Shared Dirtied Blocks": 4,
+            "Shared Written Blocks": 3,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Dirtied Blocks": 0,
+            "Local Written Blocks": 0,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0
+          },
+          "Planning": {
+            "Shared Hit Blocks": 0,
+            "Shared Read Blocks": 0,
+            "Shared Dirtied Blocks": 0,
+            "Shared Written Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Dirtied Blocks": 0,
+            "Local Written Blocks": 0,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0
+          },
+          "Planning Time": 0.025,
+          "Triggers": [],
+          "Execution Time": 8.718
+        }
+      ],
+      "deliveries": 10000,
+      "indexes": [
+        {
+          "name": "automation_rules_active_trigger",
+          "definition": "CREATE INDEX automation_rules_active_trigger ON public.automation_rules USING btree (organization_id, trigger_type) WHERE (enabled AND (archived_at IS NULL))"
+        },
+        {
+          "name": "domain_event_deliveries_pkey",
+          "definition": "CREATE UNIQUE INDEX domain_event_deliveries_pkey ON private.domain_event_deliveries USING btree (id)"
+        },
+        {
+          "name": "automation_deliveries_pending_org",
+          "definition": "CREATE INDEX automation_deliveries_pending_org ON private.domain_event_deliveries USING btree (organization_id, available_at, id) WHERE (status = ANY (ARRAY['pending'::text, 'leased'::text]))"
+        },
+        {
+          "name": "automation_schedule_claim",
+          "definition": "CREATE INDEX automation_schedule_claim ON private.automation_tenant_schedule USING btree (last_claimed_at, organization_id)"
+        }
+      ],
+      "processing": "f",
+      "result": "PASS",
+      "finishedAt": "2026-10-03T01:26:29.293Z"
+    },
+    "restore-provenance": {
+      "mode": "restore-provenance",
+      "scope": "Disposable local Supabase PostgreSQL; test Auth/Storage substrate, no PostgREST or hosted services",
+      "acceptance": {
+        "migrationMs": 300000,
+        "ordinaryMutationP95Ms": 1000,
+        "ordinaryMutationMaxMs": 2000
+      },
+      "startedAt": "2026-10-03T01:39:44.243Z",
+      "engine": "17.11",
+      "migrations": 41,
+      "timings": [
+        {
+          "file": "20260921005845_organization_identity_foundation.sql",
+          "ms": 52.041541999999936
+        },
+        {
+          "file": "20260921010019_harden_identity_policies.sql",
+          "ms": 39.090875000000096
+        },
+        {
+          "file": "20260921015452_ticketing_engine.sql",
+          "ms": 53.9067500000001
+        },
+        {
+          "file": "20260921015519_ticketing_foreign_key_indexes.sql",
+          "ms": 45.60658400000011
+        },
+        {
+          "file": "20260921020443_enable_customer_organization_signup.sql",
+          "ms": 35.84758399999987
+        },
+        {
+          "file": "20260921211804_first_class_support_chat.sql",
+          "ms": 47.41291700000011
+        },
+        {
+          "file": "20260925004637_employee_ticket_reopen.sql",
+          "ms": 35.42374999999993
+        },
+        {
+          "file": "20260925004643_ticket_sla_targets.sql",
+          "ms": 39.629916000000094
+        },
+        {
+          "file": "20260925010356_starter_ticket_categories.sql",
+          "ms": 33.95491700000002
+        },
+        {
+          "file": "20260925010358_enforce_mfa_and_server_owned_timestamps.sql",
+          "ms": 38.12295900000004
+        },
+        {
+          "file": "20260925013051_ticket_notifications.sql",
+          "ms": 38.33341600000017
+        },
+        {
+          "file": "20260925013110_schedule_notification_sla.sql",
+          "ms": 37.22654200000011
+        },
+        {
+          "file": "20260925013145_harden_notification_dispatcher.sql",
+          "ms": 31.15300000000002
+        },
+        {
+          "file": "20260925014034_indexed_ticket_search.sql",
+          "ms": 38.76666599999999
+        },
+        {
+          "file": "20260925015718_knowledge_base.sql",
+          "ms": 41.63037499999996
+        },
+        {
+          "file": "20260925015806_restrict_knowledge_column_grants.sql",
+          "ms": 32.257791
+        },
+        {
+          "file": "20260925025937_operational_reporting.sql",
+          "ms": 33.259250000000065
+        },
+        {
+          "file": "20260925031136_audit_log.sql",
+          "ms": 37.41279200000008
+        },
+        {
+          "file": "20260925032928_product_analytics.sql",
+          "ms": 39.8855410000001
+        },
+        {
+          "file": "20260925033210_product_analytics_private_policies.sql",
+          "ms": 31.71833300000003
+        },
+        {
+          "file": "20260925035955_assets_and_platform.sql",
+          "ms": 44.58379100000002
+        },
+        {
+          "file": "20260926020400_remove_sample_knowledge_articles.sql",
+          "ms": 33.8270829999999
+        },
+        {
+          "file": "20260926022032_protect_organization_references_on_delete.sql",
+          "ms": 35.39104199999997
+        },
+        {
+          "file": "20260926024852_category_team_routing.sql",
+          "ms": 36.93791699999997
+        },
+        {
+          "file": "20260926025012_ticket_routing_insert_permission.sql",
+          "ms": 33.108417000000145
+        },
+        {
+          "file": "20260927233229_universal_partial_search.sql",
+          "ms": 41.86862499999984
+        },
+        {
+          "file": "20261001014435_automation_rule_definitions.sql",
+          "ms": 42.284042
+        },
+        {
+          "file": "20261001014436_automation_administration_audit.sql",
+          "ms": 32.25862499999994
+        },
+        {
+          "file": "20261001020338_durable_domain_events.sql",
+          "ms": 41.857416999999714
+        },
+        {
+          "file": "20261001022623_automation_execution_authority.sql",
+          "ms": 47.533957999999984
+        },
+        {
+          "file": "20261001023010_automation_ticket_commands.sql",
+          "ms": 39.078457999999955
+        },
+        {
+          "file": "20261001025400_automation_notification_kind.sql",
+          "ms": 31.937082999999802
+        },
+        {
+          "file": "20261001025401_automation_worker_delivery.sql",
+          "ms": 38.240208000000166
+        },
+        {
+          "file": "20261001025402_automation_notification_command.sql",
+          "ms": 32.88533400000006
+        },
+        {
+          "file": "20261001031036_automation_dry_run_reads.sql",
+          "ms": 34.28629200000023
+        },
+        {
+          "file": "20261001032617_automation_admin_reads.sql",
+          "ms": 32.38079099999959
+        },
+        {
+          "file": "20261001160233_automation_temporal_episodes.sql",
+          "ms": 33.19683299999997
+        },
+        {
+          "file": "20261001160248_automation_temporal_discovery.sql",
+          "ms": 39.3767499999999
+        },
+        {
+          "file": "20261001165514_automation_operations.sql",
+          "ms": 38.00412499999993
+        },
+        {
+          "file": "20261002202406_automation_guardrails.sql",
+          "ms": 37.36900000000014
+        },
+        {
+          "file": "20261003005804_automation_guardrails_corrections.sql",
+          "ms": 35.27779199999986
+        }
+      ],
+      "security": {
+        "helperExposed": false,
+        "ruleRls": true,
+        "capacityRls": true,
+        "capacityMutation": false
+      },
+      "sourceXid": "1355",
+      "targetXid": "742",
+      "originalFreshEligibility": "f",
+      "recoveredFreshEligibility": "PASS",
+      "oldPendingExcluded": "PASS",
+      "freshActionAndDeduplication": "PASS",
+      "immutableVersionsPreserved": "PASS",
+      "immutabilityGuardRestored": "PASS",
+      "targetProcessing": "OFF",
+      "processing": "f",
+      "result": "PASS",
+      "finishedAt": "2026-10-03T01:39:49.987Z"
+    },
+    "postgrest": {
+      "scope": "Local PG17/PostgREST 16.4, signed synthetic JWT/MFA-factor fixtures; not Auth login or deployed application",
+      "checks": {
+        "legacyRepositoryRead": "PASS",
+        "legacyLifecycleAndStrictWrite": "PASS",
+        "dryRunStrictAndZeroSideEffects": "PASS",
+        "tenantRoleMfaClaimBoundaries": "PASS",
+        "workerPostgrestGuardrailClassification": "PASS"
+      },
+      "postgres": "17.11",
+      "readinessStatus": 200,
+      "processing": "OFF",
+      "result": "PASS"
+    },
+    "native-results": {
+      "mode": "verify",
+      "concurrentEnable": "PASS",
+      "concurrentClaimCounts": [
+        0,
+        5
+      ],
+      "overlappingClaims": "PASS",
+      "actionIdempotency": "PASS",
+      "legacyTemporalAndWorker": "PASS",
+      "processing": "f"
+    }
+  },
+  "capacitySummary": {
+    "scope": "Local PG17 + actual TypeScript worker over independent SQL RPC sessions; not HTTP/hosted",
+    "cadenceSeconds": 60,
+    "batch": 5,
+    "steadyMinutes": 60,
+    "ordinarySteadyArrivals": 240,
+    "steadyDeliveries": 253,
+    "steadyCompleted": 253,
+    "steadyDeliveriesPerMinute": 4.216666666666667,
+    "maximumSteadyPending": 0,
+    "maximumSteadyOldestSeconds": 0,
+    "burstOrdinaryArrivals": 20,
+    "burstDeliveriesIncludingTemporal": 21,
+    "burstDrainCadences": 5,
+    "maximumBurstPendingAfterTick": 15,
+    "maximumBurstOldestSecondsAfterTick": 241.050933,
+    "allTenantCompleted": [
+      15,
+      157,
+      15,
+      14,
+      15,
+      28,
+      15,
+      15
+    ],
+    "failures": 0,
+    "retries": 0,
+    "capacityDeferrals": 0,
+    "maximumCycleMs": 8443.055582999717,
+    "finalProcessing": "OFF",
+    "finishedAt": "2026-10-03T02:22:17.883Z"
+  },
+  "capacitySamples": {
+    "scope": "Local PG17 + actual TypeScript worker over independent SQL RPC sessions; not HTTP/hosted",
+    "configuration": {
+      "cadenceSeconds": 60,
+      "batch": 5,
+      "steadyMinutes": 60,
+      "burst": 20
+    },
+    "startedAt": "2026-10-03T01:17:17.377Z",
+    "samples": [
+      {
+        "phase": "steady",
+        "minute": 0,
+        "at": "2026-10-03T01:17:18.471Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 0,
+          "duplicates": 0,
+          "invocationId": "9b188db1-16de-450f-9592-88e205bb8dbc"
+        },
+        "queue": {
+          "total": 4,
+          "pending": 0,
+          "acknowledged": 4,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 3,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 1
+          }
+        },
+        "elapsedMs": 981.601334
+      },
+      {
+        "phase": "steady",
+        "minute": 1,
+        "at": "2026-10-03T01:18:18.916Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 1,
+          "duplicates": 0,
+          "invocationId": "fe25bff9-76ad-47fd-a699-1fd8dc69d77c"
+        },
+        "queue": {
+          "total": 8,
+          "pending": 0,
+          "acknowledged": 8,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 1,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 6,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 1
+          }
+        },
+        "elapsedMs": 1372.6042089999974
+      },
+      {
+        "phase": "steady",
+        "minute": 2,
+        "at": "2026-10-03T01:19:18.592Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 1,
+          "duplicates": 1,
+          "invocationId": "d5548ee2-f89c-44e5-86ac-18e23894a614"
+        },
+        "queue": {
+          "total": 12,
+          "pending": 0,
+          "acknowledged": 12,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 1,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 1,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 1,
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 1,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 8
+          }
+        },
+        "elapsedMs": 998.6421249999985
+      },
+      {
+        "phase": "steady",
+        "minute": 3,
+        "at": "2026-10-03T01:20:18.568Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 1,
+          "duplicates": 1,
+          "invocationId": "b23ef450-4752-4030-9457-8794cf8c9f70"
+        },
+        "queue": {
+          "total": 16,
+          "pending": 0,
+          "acknowledged": 16,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 1,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 10,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 1,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 1,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 1,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 1,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 1
+          }
+        },
+        "elapsedMs": 973.6236249999783
+      },
+      {
+        "phase": "steady",
+        "minute": 4,
+        "at": "2026-10-03T01:21:18.601Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 1,
+          "duplicates": 1,
+          "invocationId": "1cc1b301-36bf-4c82-8b7c-0faa269cdb07"
+        },
+        "queue": {
+          "total": 20,
+          "pending": 0,
+          "acknowledged": 20,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 1,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 12,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 1,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 1,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 1,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 1,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 1,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 2
+          }
+        },
+        "elapsedMs": 1002.546291000006
+      },
+      {
+        "phase": "steady",
+        "minute": 5,
+        "at": "2026-10-03T01:22:19.159Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 2,
+          "duplicates": 1,
+          "invocationId": "83568070-68fe-45bd-9058-c260e947ad11"
+        },
+        "queue": {
+          "total": 25,
+          "pending": 0,
+          "acknowledged": 25,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 2,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 15,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 1,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 1,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 1,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 2,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 1,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 2
+          }
+        },
+        "elapsedMs": 1621.5033750000293
+      },
+      {
+        "phase": "steady",
+        "minute": 6,
+        "at": "2026-10-03T01:23:18.574Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 2,
+          "duplicates": 2,
+          "invocationId": "0f80d37a-0b38-4838-acc0-ef616be6502d"
+        },
+        "queue": {
+          "total": 29,
+          "pending": 0,
+          "acknowledged": 29,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 2,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 18,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 1,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 1,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 2,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 2,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 1,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 2
+          }
+        },
+        "elapsedMs": 1023.1026660000207
+      },
+      {
+        "phase": "steady",
+        "minute": 7,
+        "at": "2026-10-03T01:24:18.634Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 2,
+          "duplicates": 2,
+          "invocationId": "4877f865-cb52-4225-a57c-554a23edb96b"
+        },
+        "queue": {
+          "total": 33,
+          "pending": 0,
+          "acknowledged": 33,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 2,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 2,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 1,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 2,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 2,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 2,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 20,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 2
+          }
+        },
+        "elapsedMs": 1031.4695410000277
+      },
+      {
+        "phase": "steady",
+        "minute": 8,
+        "at": "2026-10-03T01:25:18.599Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 2,
+          "duplicates": 2,
+          "invocationId": "10f9b059-2f3a-48f3-9f3c-46bd95cf405d"
+        },
+        "queue": {
+          "total": 37,
+          "pending": 0,
+          "acknowledged": 37,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 2,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 2,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 2,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 2,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 3,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 2,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 22,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 2
+          }
+        },
+        "elapsedMs": 1000.5868330000085
+      },
+      {
+        "phase": "steady",
+        "minute": 9,
+        "at": "2026-10-03T01:26:18.774Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 3,
+          "duplicates": 2,
+          "invocationId": "a9431178-6374-4ef5-9e19-63b2caab396c"
+        },
+        "queue": {
+          "total": 42,
+          "pending": 0,
+          "acknowledged": 42,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 3,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 2,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 2,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 2,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 4,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 2,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 24,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 3
+          }
+        },
+        "elapsedMs": 1173.848291000002
+      },
+      {
+        "phase": "steady",
+        "minute": 10,
+        "at": "2026-10-03T01:27:18.560Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 3,
+          "duplicates": 3,
+          "invocationId": "26615c9d-a1a8-4060-b2e6-261289c1ac80"
+        },
+        "queue": {
+          "total": 46,
+          "pending": 0,
+          "acknowledged": 46,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 3,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 2,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 2,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 3,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 4,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 2,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 27,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 3
+          }
+        },
+        "elapsedMs": 1013.5717500000028
+      },
+      {
+        "phase": "steady",
+        "minute": 11,
+        "at": "2026-10-03T01:28:18.566Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 3,
+          "duplicates": 3,
+          "invocationId": "85f1cee9-b0f9-493c-81a4-e4284c9b81a4"
+        },
+        "queue": {
+          "total": 50,
+          "pending": 0,
+          "acknowledged": 50,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 3,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 30,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 3,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 2,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 3,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 4,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 2,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 3
+          }
+        },
+        "elapsedMs": 1020.8554580000928
+      },
+      {
+        "phase": "steady",
+        "minute": 12,
+        "at": "2026-10-03T01:29:18.641Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 3,
+          "duplicates": 3,
+          "invocationId": "f8254295-e6ca-4484-a7b0-5ba079e8b1f7"
+        },
+        "queue": {
+          "total": 54,
+          "pending": 0,
+          "acknowledged": 54,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 3,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 32,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 3,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 3,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 3,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 4,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 3,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 3
+          }
+        },
+        "elapsedMs": 1023.456041000085
+      },
+      {
+        "phase": "steady",
+        "minute": 13,
+        "at": "2026-10-03T01:30:18.614Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 3,
+          "duplicates": 3,
+          "invocationId": "596bfd61-52c5-4b6a-b5d5-8eaef1f70b51"
+        },
+        "queue": {
+          "total": 58,
+          "pending": 0,
+          "acknowledged": 58,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 3,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 34,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 3,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 3,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 3,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 5,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 3,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 4
+          }
+        },
+        "elapsedMs": 1020.46545899997
+      },
+      {
+        "phase": "steady",
+        "minute": 14,
+        "at": "2026-10-03T01:31:18.782Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 4,
+          "duplicates": 3,
+          "invocationId": "476703a6-39d0-4b2a-843b-eb0a83772f84"
+        },
+        "queue": {
+          "total": 63,
+          "pending": 0,
+          "acknowledged": 63,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 4,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 36,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 3,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 3,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 4,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 6,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 3,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 4
+          }
+        },
+        "elapsedMs": 1178.5892499999609
+      },
+      {
+        "phase": "steady",
+        "minute": 15,
+        "at": "2026-10-03T01:32:18.565Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 4,
+          "duplicates": 4,
+          "invocationId": "1b86ecf8-78b5-4ae8-a6c0-fd52969818cf"
+        },
+        "queue": {
+          "total": 67,
+          "pending": 0,
+          "acknowledged": 67,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 4,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 39,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 4,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 3,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 4,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 6,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 3,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 4
+          }
+        },
+        "elapsedMs": 1021.6668749999953
+      },
+      {
+        "phase": "steady",
+        "minute": 16,
+        "at": "2026-10-03T01:33:18.574Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 4,
+          "duplicates": 4,
+          "invocationId": "3513022d-e2ae-4110-9d9e-e2cf3bef88d9"
+        },
+        "queue": {
+          "total": 71,
+          "pending": 0,
+          "acknowledged": 71,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 4,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 42,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 4,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 3,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 4,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 6,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 4,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 4
+          }
+        },
+        "elapsedMs": 1025.8486670000711
+      },
+      {
+        "phase": "steady",
+        "minute": 17,
+        "at": "2026-10-03T01:34:18.608Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 4,
+          "duplicates": 4,
+          "invocationId": "5723bef3-a049-4897-849a-6de0f881342b"
+        },
+        "queue": {
+          "total": 75,
+          "pending": 0,
+          "acknowledged": 75,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 4,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 44,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 4,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 4,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 4,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 7,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 4,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 4
+          }
+        },
+        "elapsedMs": 1009.0695000000997
+      },
+      {
+        "phase": "steady",
+        "minute": 18,
+        "at": "2026-10-03T01:35:18.792Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 5,
+          "duplicates": 4,
+          "invocationId": "488d4a68-2cdd-4d52-ade1-d25e0759a88a"
+        },
+        "queue": {
+          "total": 80,
+          "pending": 0,
+          "acknowledged": 80,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 5,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 4,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 4,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 4,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 8,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 4,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 46,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 5
+          }
+        },
+        "elapsedMs": 1188.7616670001298
+      },
+      {
+        "phase": "steady",
+        "minute": 19,
+        "at": "2026-10-03T01:36:18.578Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 5,
+          "duplicates": 5,
+          "invocationId": "4df00173-d916-46ec-b2a3-6192ed64abd2"
+        },
+        "queue": {
+          "total": 84,
+          "pending": 0,
+          "acknowledged": 84,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 5,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 48,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 5,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 4,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 5,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 8,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 4,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 5
+          }
+        },
+        "elapsedMs": 979.4965830000583
+      },
+      {
+        "phase": "steady",
+        "minute": 20,
+        "at": "2026-10-03T01:37:18.580Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 5,
+          "duplicates": 5,
+          "invocationId": "71d73678-e053-49a4-9ab7-7e861576ecf5"
+        },
+        "queue": {
+          "total": 88,
+          "pending": 0,
+          "acknowledged": 88,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 5,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 51,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 5,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 4,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 5,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 8,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 5,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 5
+          }
+        },
+        "elapsedMs": 1027.3083750000224
+      },
+      {
+        "phase": "steady",
+        "minute": 21,
+        "at": "2026-10-03T01:38:18.574Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 5,
+          "duplicates": 5,
+          "invocationId": "52d4c797-7440-40d3-90f4-0e1a722f56ba"
+        },
+        "queue": {
+          "total": 92,
+          "pending": 0,
+          "acknowledged": 92,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 5,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 54,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 5,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 5,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 5,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 8,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 5,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 5
+          }
+        },
+        "elapsedMs": 1027.3233330000658
+      },
+      {
+        "phase": "steady",
+        "minute": 22,
+        "at": "2026-10-03T01:39:33.899Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 5,
+          "duplicates": 5,
+          "invocationId": "c51aaca4-7be7-4051-a1f1-cc2ec6d94f51"
+        },
+        "queue": {
+          "total": 96,
+          "pending": 0,
+          "acknowledged": 96,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 5,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 56,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 5,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 5,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 5,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 9,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 5,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 6
+          }
+        },
+        "elapsedMs": 6174.055542000104
+      },
+      {
+        "phase": "steady",
+        "minute": 23,
+        "at": "2026-10-03T01:40:18.622Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 5,
+          "duplicates": 5,
+          "invocationId": "5bf35ec4-c012-4719-8a2c-5d9ea1acecc8"
+        },
+        "queue": {
+          "total": 100,
+          "pending": 0,
+          "acknowledged": 100,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 6,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 58,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 5,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 5,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 6,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 9,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 5,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 6
+          }
+        },
+        "elapsedMs": 1021.3609160000924
+      },
+      {
+        "phase": "steady",
+        "minute": 24,
+        "at": "2026-10-03T01:41:18.798Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 6,
+          "duplicates": 5,
+          "invocationId": "4c2bed89-bf3f-4ac8-9a7d-3285ceca1e06"
+        },
+        "queue": {
+          "total": 105,
+          "pending": 0,
+          "acknowledged": 105,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 6,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 60,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 6,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 5,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 6,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 10,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 6,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 6
+          }
+        },
+        "elapsedMs": 1190.4257500001695
+      },
+      {
+        "phase": "steady",
+        "minute": 25,
+        "at": "2026-10-03T01:42:18.572Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 6,
+          "duplicates": 6,
+          "invocationId": "b7d205ec-15a5-472b-b580-505aa0f077cc"
+        },
+        "queue": {
+          "total": 109,
+          "pending": 0,
+          "acknowledged": 109,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 6,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 63,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 6,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 6,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 6,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 10,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 6,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 6
+          }
+        },
+        "elapsedMs": 1018.0441250000149
+      },
+      {
+        "phase": "steady",
+        "minute": 26,
+        "at": "2026-10-03T01:43:18.583Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 6,
+          "duplicates": 6,
+          "invocationId": "be2bd679-662e-46c3-b89c-c827a3c2cf29"
+        },
+        "queue": {
+          "total": 113,
+          "pending": 0,
+          "acknowledged": 113,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 6,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 66,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 6,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 6,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 6,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 11,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 6,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 6
+          }
+        },
+        "elapsedMs": 1034.355959000066
+      },
+      {
+        "phase": "steady",
+        "minute": 27,
+        "at": "2026-10-03T01:44:18.793Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 7,
+          "duplicates": 6,
+          "invocationId": "e8cfb21f-7615-4282-9da7-1c4b97a47a5e"
+        },
+        "queue": {
+          "total": 118,
+          "pending": 0,
+          "acknowledged": 118,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 7,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 68,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 6,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 6,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 6,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 12,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 6,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 7
+          }
+        },
+        "elapsedMs": 1192.9670830001123
+      },
+      {
+        "phase": "steady",
+        "minute": 28,
+        "at": "2026-10-03T01:45:18.639Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 7,
+          "duplicates": 7,
+          "invocationId": "86fc60c3-8220-469e-9e4d-156d1a48aac0"
+        },
+        "queue": {
+          "total": 122,
+          "pending": 0,
+          "acknowledged": 122,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 7,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 70,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 7,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 6,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 7,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 12,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 6,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 7
+          }
+        },
+        "elapsedMs": 1036.7294580000453
+      },
+      {
+        "phase": "steady",
+        "minute": 29,
+        "at": "2026-10-03T01:46:18.622Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 7,
+          "duplicates": 7,
+          "invocationId": "58c158b1-03c4-4758-9421-973a203de8af"
+        },
+        "queue": {
+          "total": 126,
+          "pending": 0,
+          "acknowledged": 126,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 7,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 72,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 7,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 7,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 7,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 12,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 7,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 7
+          }
+        },
+        "elapsedMs": 1015.907542000059
+      },
+      {
+        "phase": "steady",
+        "minute": 30,
+        "at": "2026-10-03T01:47:18.609Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 7,
+          "duplicates": 7,
+          "invocationId": "fbe1c8b2-4b58-4a55-a938-576c0261ec57"
+        },
+        "queue": {
+          "total": 130,
+          "pending": 0,
+          "acknowledged": 130,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 7,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 75,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 7,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 7,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 7,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 13,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 7,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 7
+          }
+        },
+        "elapsedMs": 1051.4909999999218
+      },
+      {
+        "phase": "steady",
+        "minute": 31,
+        "at": "2026-10-03T01:48:18.773Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 8,
+          "duplicates": 7,
+          "invocationId": "1a636337-ce6b-42f0-8870-5cdf128850ef"
+        },
+        "queue": {
+          "total": 135,
+          "pending": 0,
+          "acknowledged": 135,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 7,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 78,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 7,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 7,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 7,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 14,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 7,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 8
+          }
+        },
+        "elapsedMs": 1215.5938750000205
+      },
+      {
+        "phase": "steady",
+        "minute": 32,
+        "at": "2026-10-03T01:49:18.642Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 8,
+          "duplicates": 8,
+          "invocationId": "6b036ccb-d6c6-4266-8c0f-bfe684deebae"
+        },
+        "queue": {
+          "total": 139,
+          "pending": 0,
+          "acknowledged": 139,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 8,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 80,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 7,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 7,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 8,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 14,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 7,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 8
+          }
+        },
+        "elapsedMs": 1034.2517909999005
+      },
+      {
+        "phase": "steady",
+        "minute": 33,
+        "at": "2026-10-03T01:50:48.478Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 8,
+          "duplicates": 8,
+          "invocationId": "b9266cb8-bc71-4693-9ea5-1ec91a9e0158"
+        },
+        "queue": {
+          "total": 143,
+          "pending": 0,
+          "acknowledged": 143,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 8,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 82,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 8,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 7,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 8,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 14,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 8,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 8
+          }
+        },
+        "elapsedMs": 1004.474250000203
+      },
+      {
+        "phase": "steady",
+        "minute": 34,
+        "at": "2026-10-03T01:51:37.129Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 8,
+          "duplicates": 8,
+          "invocationId": "371d757d-6893-4f0b-a5a1-90a108a05d1d"
+        },
+        "queue": {
+          "total": 147,
+          "pending": 0,
+          "acknowledged": 147,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 8,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 84,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 8,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 8,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 8,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 15,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 8,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 8
+          }
+        },
+        "elapsedMs": 985.811791999964
+      },
+      {
+        "phase": "steady",
+        "minute": 35,
+        "at": "2026-10-03T01:52:47.656Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 9,
+          "duplicates": 8,
+          "invocationId": "4c11bc6f-1b46-48f5-8094-5439ce8c42fe"
+        },
+        "queue": {
+          "total": 152,
+          "pending": 0,
+          "acknowledged": 152,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 8,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 87,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 8,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 8,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 8,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 16,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 8,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 9
+          }
+        },
+        "elapsedMs": 5985.720416999888
+      },
+      {
+        "phase": "steady",
+        "minute": 36,
+        "at": "2026-10-03T01:53:40.283Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 9,
+          "duplicates": 9,
+          "invocationId": "c3f562f7-448f-4163-bf6e-87ba6d590d0b"
+        },
+        "queue": {
+          "total": 156,
+          "pending": 0,
+          "acknowledged": 156,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 9,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 90,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 8,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 8,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 8,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 16,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 8,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 9
+          }
+        },
+        "elapsedMs": 1005.0854579997249
+      },
+      {
+        "phase": "steady",
+        "minute": 37,
+        "at": "2026-10-03T01:54:45.754Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 9,
+          "duplicates": 9,
+          "invocationId": "80d59f0a-57d3-4614-8f83-825bdcfa5dcd"
+        },
+        "queue": {
+          "total": 160,
+          "pending": 0,
+          "acknowledged": 160,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 9,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 92,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 9,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 8,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 9,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 16,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 8,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 9
+          }
+        },
+        "elapsedMs": 978.7967920000665
+      },
+      {
+        "phase": "steady",
+        "minute": 38,
+        "at": "2026-10-03T01:55:19.037Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 9,
+          "duplicates": 9,
+          "invocationId": "9ef58513-82e3-4c51-8074-accaae2f5f8d"
+        },
+        "queue": {
+          "total": 164,
+          "pending": 0,
+          "acknowledged": 164,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 9,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 94,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 9,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 9,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 9,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 16,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 9,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 9
+          }
+        },
+        "elapsedMs": 1056.7162499995902
+      },
+      {
+        "phase": "steady",
+        "minute": 39,
+        "at": "2026-10-03T01:56:18.643Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 9,
+          "duplicates": 9,
+          "invocationId": "b66e0b88-8e9f-4667-9b33-8adca1bae869"
+        },
+        "queue": {
+          "total": 168,
+          "pending": 0,
+          "acknowledged": 168,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 9,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 96,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 9,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 9,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 9,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 17,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 9,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 10
+          }
+        },
+        "elapsedMs": 1034.9754999997094
+      },
+      {
+        "phase": "steady",
+        "minute": 40,
+        "at": "2026-10-03T01:57:18.754Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 10,
+          "duplicates": 9,
+          "invocationId": "ad556a5d-f7d8-4477-baad-4423b2d15bdb"
+        },
+        "queue": {
+          "total": 173,
+          "pending": 0,
+          "acknowledged": 173,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 10,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 99,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 9,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 9,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 9,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 18,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 9,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 10
+          }
+        },
+        "elapsedMs": 1194.8768329997547
+      },
+      {
+        "phase": "steady",
+        "minute": 41,
+        "at": "2026-10-03T01:58:18.585Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 10,
+          "duplicates": 10,
+          "invocationId": "ca38790f-01c7-4f20-88e5-7431158030d6"
+        },
+        "queue": {
+          "total": 177,
+          "pending": 0,
+          "acknowledged": 177,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 10,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 102,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 9,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 9,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 10,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 18,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 9,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 10
+          }
+        },
+        "elapsedMs": 1032.6744999997318
+      },
+      {
+        "phase": "steady",
+        "minute": 42,
+        "at": "2026-10-03T01:59:18.592Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 10,
+          "duplicates": 10,
+          "invocationId": "50c81c47-7a26-468c-be72-a845df418f23"
+        },
+        "queue": {
+          "total": 181,
+          "pending": 0,
+          "acknowledged": 181,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 10,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 104,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 10,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 9,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 10,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 18,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 10,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 10
+          }
+        },
+        "elapsedMs": 996.5099579999223
+      },
+      {
+        "phase": "steady",
+        "minute": 43,
+        "at": "2026-10-03T02:00:18.637Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 10,
+          "duplicates": 10,
+          "invocationId": "dacc83ed-a299-4bd5-ae3d-6058c87fe5b9"
+        },
+        "queue": {
+          "total": 185,
+          "pending": 0,
+          "acknowledged": 185,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 10,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 106,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 10,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 10,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 10,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 19,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 10,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 10
+          }
+        },
+        "elapsedMs": 1029.4044590000995
+      },
+      {
+        "phase": "steady",
+        "minute": 44,
+        "at": "2026-10-03T02:01:18.810Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 11,
+          "duplicates": 10,
+          "invocationId": "e8a98f57-0aca-4c77-9cd8-12fe8a5aefbd"
+        },
+        "queue": {
+          "total": 190,
+          "pending": 0,
+          "acknowledged": 190,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 11,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 108,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 10,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 10,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 10,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 20,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 10,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 11
+          }
+        },
+        "elapsedMs": 1207.7443329999223
+      },
+      {
+        "phase": "steady",
+        "minute": 45,
+        "at": "2026-10-03T02:02:18.584Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 11,
+          "duplicates": 11,
+          "invocationId": "b147b169-7a3d-4bad-bb1a-608367475ea0"
+        },
+        "queue": {
+          "total": 194,
+          "pending": 0,
+          "acknowledged": 194,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 11,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 111,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 10,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 10,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 11,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 20,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 10,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 11
+          }
+        },
+        "elapsedMs": 1027.8256250000559
+      },
+      {
+        "phase": "steady",
+        "minute": 46,
+        "at": "2026-10-03T02:03:18.551Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 11,
+          "duplicates": 11,
+          "invocationId": "f225fda7-ecb4-4bb3-8cdf-f7358ef72db2"
+        },
+        "queue": {
+          "total": 198,
+          "pending": 0,
+          "acknowledged": 198,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 11,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 114,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 11,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 10,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 11,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 20,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 10,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 11
+          }
+        },
+        "elapsedMs": 1009.1825829995796
+      },
+      {
+        "phase": "steady",
+        "minute": 47,
+        "at": "2026-10-03T02:04:18.619Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 11,
+          "duplicates": 11,
+          "invocationId": "eb5d7c94-8c06-4ca3-bdc8-a92b4b1c9603"
+        },
+        "queue": {
+          "total": 202,
+          "pending": 0,
+          "acknowledged": 202,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 11,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 116,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 11,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 11,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 11,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 20,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 11,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 11
+          }
+        },
+        "elapsedMs": 1018.4660829999484
+      },
+      {
+        "phase": "steady",
+        "minute": 48,
+        "at": "2026-10-03T02:05:18.610Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 11,
+          "duplicates": 11,
+          "invocationId": "41108686-16cd-4133-99fa-91beea756a7e"
+        },
+        "queue": {
+          "total": 206,
+          "pending": 0,
+          "acknowledged": 206,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 11,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 118,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 11,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 11,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 11,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 21,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 11,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 12
+          }
+        },
+        "elapsedMs": 1001.9634169996716
+      },
+      {
+        "phase": "steady",
+        "minute": 49,
+        "at": "2026-10-03T02:06:18.817Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 12,
+          "duplicates": 11,
+          "invocationId": "6ad03be3-7b3e-4f4a-96b9-c879579e5e41"
+        },
+        "queue": {
+          "total": 211,
+          "pending": 0,
+          "acknowledged": 211,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 12,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 120,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 11,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 11,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 12,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 22,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 11,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 12
+          }
+        },
+        "elapsedMs": 1209.6050830003805
+      },
+      {
+        "phase": "steady",
+        "minute": 50,
+        "at": "2026-10-03T02:07:18.572Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 12,
+          "duplicates": 12,
+          "invocationId": "6a2014a4-c219-46bf-bec6-a68f8fbd3726"
+        },
+        "queue": {
+          "total": 215,
+          "pending": 0,
+          "acknowledged": 215,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 12,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 123,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 12,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 11,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 12,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 22,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 11,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 12
+          }
+        },
+        "elapsedMs": 1012.111417000182
+      },
+      {
+        "phase": "steady",
+        "minute": 51,
+        "at": "2026-10-03T02:08:37.250Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 12,
+          "duplicates": 12,
+          "invocationId": "53556f5f-4c70-4b63-85fe-4dbd1ecc969e"
+        },
+        "queue": {
+          "total": 219,
+          "pending": 0,
+          "acknowledged": 219,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 12,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 126,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 12,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 11,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 12,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 22,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 12,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 12
+          }
+        },
+        "elapsedMs": 8443.055582999717
+      },
+      {
+        "phase": "steady",
+        "minute": 52,
+        "at": "2026-10-03T02:09:31.783Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 12,
+          "duplicates": 12,
+          "invocationId": "fdc4ef78-8d60-40b5-a93d-16f20f89c7a1"
+        },
+        "queue": {
+          "total": 223,
+          "pending": 0,
+          "acknowledged": 223,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 12,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 128,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 12,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 12,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 12,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 23,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 12,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 12
+          }
+        },
+        "elapsedMs": 4742.82595800003
+      },
+      {
+        "phase": "steady",
+        "minute": 53,
+        "at": "2026-10-03T02:10:39.033Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 13,
+          "duplicates": 12,
+          "invocationId": "faf9cd1e-95d2-4d2b-9067-f1be1077aebc"
+        },
+        "queue": {
+          "total": 228,
+          "pending": 0,
+          "acknowledged": 228,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 13,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 130,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 12,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 12,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 12,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 24,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 12,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 13
+          }
+        },
+        "elapsedMs": 7143.456375000067
+      },
+      {
+        "phase": "steady",
+        "minute": 54,
+        "at": "2026-10-03T02:11:33.878Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 13,
+          "duplicates": 13,
+          "invocationId": "9713e8e4-ae79-4b3b-960f-b694d73f7bb5"
+        },
+        "queue": {
+          "total": 232,
+          "pending": 0,
+          "acknowledged": 232,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 13,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 132,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 13,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 12,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 13,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 24,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 12,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 13
+          }
+        },
+        "elapsedMs": 2542.548291000072
+      },
+      {
+        "phase": "steady",
+        "minute": 55,
+        "at": "2026-10-03T02:12:36.968Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 13,
+          "duplicates": 13,
+          "invocationId": "8c0296a4-482d-410b-9a13-ee23819684f4"
+        },
+        "queue": {
+          "total": 236,
+          "pending": 0,
+          "acknowledged": 236,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 13,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 135,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 13,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 12,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 13,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 24,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 13,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 13
+          }
+        },
+        "elapsedMs": 6532.302791000344
+      },
+      {
+        "phase": "steady",
+        "minute": 56,
+        "at": "2026-10-03T02:13:18.583Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 13,
+          "duplicates": 13,
+          "invocationId": "a099218e-8598-4666-a1fa-bd840c982467"
+        },
+        "queue": {
+          "total": 240,
+          "pending": 0,
+          "acknowledged": 240,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 13,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 138,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 13,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 13,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 13,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 24,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 13,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 13
+          }
+        },
+        "elapsedMs": 1027.3386670001782
+      },
+      {
+        "phase": "steady",
+        "minute": 57,
+        "at": "2026-10-03T02:14:18.651Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 13,
+          "duplicates": 13,
+          "invocationId": "eef6e623-f3ec-49d2-8604-523144862367"
+        },
+        "queue": {
+          "total": 244,
+          "pending": 0,
+          "acknowledged": 244,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 13,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 140,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 13,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 13,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 13,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 25,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 13,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 14
+          }
+        },
+        "elapsedMs": 1039.3724580002017
+      },
+      {
+        "phase": "steady",
+        "minute": 58,
+        "at": "2026-10-03T02:15:18.798Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 14,
+          "duplicates": 13,
+          "invocationId": "abd2b3b3-aaf6-4cb3-8916-529b1254a30b"
+        },
+        "queue": {
+          "total": 249,
+          "pending": 0,
+          "acknowledged": 249,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 14,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 142,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 13,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 13,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 14,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 26,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 13,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 14
+          }
+        },
+        "elapsedMs": 1189.684957999736
+      },
+      {
+        "phase": "steady",
+        "minute": 59,
+        "at": "2026-10-03T02:16:18.611Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 4,
+          "acknowledged": 4,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 14,
+          "duplicates": 14,
+          "invocationId": "51f335c9-71eb-4c69-88d0-bf073d7fdd9c"
+        },
+        "queue": {
+          "total": 253,
+          "pending": 0,
+          "acknowledged": 253,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 14,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 144,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 14,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 13,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 14,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 26,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 14,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 14
+          }
+        },
+        "elapsedMs": 1000.7757080001757
+      },
+      {
+        "phase": "steady-drain",
+        "minute": 60,
+        "at": "2026-10-03T02:17:17.620Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 0,
+          "acknowledged": 0,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 14,
+          "duplicates": 14,
+          "invocationId": "7af68d4c-11c5-402c-98c1-583eafa10e51"
+        },
+        "queue": {
+          "total": 253,
+          "pending": 0,
+          "acknowledged": 253,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 14,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 144,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 14,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 13,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 14,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 26,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 14,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 14
+          }
+        },
+        "elapsedMs": 194.44350000005215
+      },
+      {
+        "phase": "burst-drain",
+        "minute": 61,
+        "at": "2026-10-03T02:18:18.723Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 14,
+          "duplicates": 14,
+          "invocationId": "e78c6dc4-9769-481d-b3b8-ffb33f518482"
+        },
+        "queue": {
+          "total": 273,
+          "pending": 15,
+          "acknowledged": 258,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 61.059854,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 15,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 144,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 14,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 14,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 15,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 27,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 14,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 15
+          }
+        },
+        "elapsedMs": 1298.2238330002874
+      },
+      {
+        "phase": "burst-drain",
+        "minute": 62,
+        "at": "2026-10-03T02:19:18.672Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 1,
+          "examined": 15,
+          "duplicates": 14,
+          "invocationId": "5ff78026-6a4c-44df-abcd-768fa2c280bc"
+        },
+        "queue": {
+          "total": 274,
+          "pending": 11,
+          "acknowledged": 263,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 121.00664,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 15,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 146,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 15,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 14,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 15,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 28,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 15,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 15
+          }
+        },
+        "elapsedMs": 1246.248041999992
+      },
+      {
+        "phase": "burst-drain",
+        "minute": 63,
+        "at": "2026-10-03T02:20:18.714Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 15,
+          "duplicates": 15,
+          "invocationId": "9220b584-abed-4745-821b-99de92559200"
+        },
+        "queue": {
+          "total": 274,
+          "pending": 6,
+          "acknowledged": 268,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 181.047311,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 15,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 151,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 15,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 14,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 15,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 28,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 15,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 15
+          }
+        },
+        "elapsedMs": 1288.2508749999106
+      },
+      {
+        "phase": "burst-drain",
+        "minute": 64,
+        "at": "2026-10-03T02:21:18.719Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 5,
+          "acknowledged": 5,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 15,
+          "duplicates": 15,
+          "invocationId": "5b836cfc-e75a-4468-98ab-30e415ac5c80"
+        },
+        "queue": {
+          "total": 274,
+          "pending": 1,
+          "acknowledged": 273,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 241.050933,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 15,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 156,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 15,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 14,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 15,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 28,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 15,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 15
+          }
+        },
+        "elapsedMs": 1293.7215829999186
+      },
+      {
+        "phase": "burst-drain",
+        "minute": 65,
+        "at": "2026-10-03T02:22:17.848Z",
+        "worker": {
+          "disabled": false,
+          "claimed": 1,
+          "acknowledged": 1,
+          "retried": 0,
+          "failed": 0,
+          "deferred": 0,
+          "capacityDeferred": 0
+        },
+        "discovery": {
+          "rules": 3,
+          "emitted": 0,
+          "examined": 15,
+          "duplicates": 15,
+          "invocationId": "6986f792-8c91-4f51-ae8f-f98ab380bbd2"
+        },
+        "queue": {
+          "total": 274,
+          "pending": 0,
+          "acknowledged": 274,
+          "dead": 0,
+          "capacityDeferred": 0,
+          "oldestSeconds": 0,
+          "perTenant": {
+            "ae0038d6-edda-4efd-8128-62ae6b2c81e9": 15,
+            "98093b8d-7436-4263-8d31-82d5dddbbf36": 157,
+            "5ba93267-167c-45de-8de1-a5c177ad55ae": 15,
+            "66380a06-a310-49a1-8737-03fac92c4f10": 14,
+            "021681a5-23c1-4663-b7a2-591550189ffa": 15,
+            "d095245b-915d-4bfa-a0b9-1e18fc59570e": 28,
+            "82bcd0fc-5e5d-4148-9d1d-ecd4e100136f": 15,
+            "e82bfc4e-97b1-4359-b54d-c9df9d3a4c99": 15
+          }
+        },
+        "elapsedMs": 422.35841599991545
+      }
+    ],
+    "arrivals": 260,
+    "result": "PASS",
+    "finalProcessingActive": false,
+    "finishedAt": "2026-10-03T02:22:17.883Z"
+  },
+  "restore": {
+    "mode": "restore",
+    "scope": "Disposable local Supabase PostgreSQL; test Auth/Storage substrate, no PostgREST or hosted services",
+    "acceptance": {
+      "migrationMs": 300000,
+      "ordinaryMutationP95Ms": 1000,
+      "ordinaryMutationMaxMs": 2000
+    },
+    "startedAt": "2026-10-03T02:22:37.748Z",
+    "engine": "17.11",
+    "before": {
+      "rules": "e8566915ccff13aa7e88cb6459781aa6",
+      "versions": "db1ebaeba4d6f52f7a1f16bfe58bc86e",
+      "executions": "7bf552642b3dfcd9f96fc3a388a3487d",
+      "steps": "51a5fe0b890915627a1bc86d8fb8a642",
+      "events": "2d811732029dd22795a95508c5a36176",
+      "deliveries": "7ee211c40cec5789bc680890bcd2145e",
+      "processing": {
+        "active": false,
+        "singleton": true,
+        "generation": 2,
+        "activated_at": "2026-10-03T01:17:17.402848+00:00",
+        "activation_transaction": "1534"
+      }
+    },
+    "backupBytes": 992553,
+    "restoreMs": 474.6457919999998,
+    "after": {
+      "rules": "e8566915ccff13aa7e88cb6459781aa6",
+      "versions": "db1ebaeba4d6f52f7a1f16bfe58bc86e",
+      "executions": "7bf552642b3dfcd9f96fc3a388a3487d",
+      "steps": "51a5fe0b890915627a1bc86d8fb8a642",
+      "events": "2d811732029dd22795a95508c5a36176",
+      "deliveries": "7ee211c40cec5789bc680890bcd2145e",
+      "processing": {
+        "active": false,
+        "singleton": true,
+        "generation": 2,
+        "activated_at": "2026-10-03T01:17:17.402848+00:00",
+        "activation_transaction": "1534"
+      }
+    },
+    "oversizedRules": 2,
+    "validatedCheck": "t",
+    "preservation": "PASS",
+    "processing": "f",
+    "result": "PASS",
+    "finishedAt": "2026-10-03T02:22:39.385Z"
+  },
+  "statisticsMid": {
+    "at": "2026-10-03T01:42:04.695212+00:00",
+    "processingActive": true,
+    "relations": {
+      "notifications": {
+        "tableBytes": 16384,
+        "indexBytes": 90112,
+        "estimatedRows": 28,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "notification_email_outbox": {
+        "tableBytes": 16384,
+        "indexBytes": 49152,
+        "estimatedRows": 28,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "domain_events": {
+        "tableBytes": 221184,
+        "indexBytes": 139264,
+        "estimatedRows": 121,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "domain_event_deliveries": {
+        "tableBytes": 65536,
+        "indexBytes": 98304,
+        "estimatedRows": 121,
+        "deadRows": 50,
+        "lastAutovacuum": "2026-10-03T01:36:07.376602+00:00"
+      },
+      "automation_executions": {
+        "tableBytes": 114688,
+        "indexBytes": 262144,
+        "estimatedRows": 219,
+        "deadRows": 15,
+        "lastAutovacuum": null
+      },
+      "automation_execution_steps": {
+        "tableBytes": 90112,
+        "indexBytes": 188416,
+        "estimatedRows": 231,
+        "deadRows": 13,
+        "lastAutovacuum": null
+      },
+      "automation_temporal_occurrences": {
+        "tableBytes": 16384,
+        "indexBytes": 81920,
+        "estimatedRows": 8,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "automation_missed_windows": {
+        "tableBytes": 8192,
+        "indexBytes": 24576,
+        "estimatedRows": 0,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "automation_capacity": {
+        "tableBytes": 49152,
+        "indexBytes": 16384,
+        "estimatedRows": 30,
+        "deadRows": 39,
+        "lastAutovacuum": "2026-10-03T01:19:06.782137+00:00"
+      },
+      "automation_tenant_schedule": {
+        "tableBytes": 40960,
+        "indexBytes": 49152,
+        "estimatedRows": 11,
+        "deadRows": 62,
+        "lastAutovacuum": "2026-10-03T01:38:07.424569+00:00"
+      }
+    },
+    "executionLatency": {
+      "count": 119,
+      "p50Ms": 39,
+      "p95Ms": 53.099999999999994,
+      "maxMs": 221
+    },
+    "currentLockWaiters": 0,
+    "database": {
+      "commits": 2746,
+      "rollbacks": 2,
+      "deadlocks": 0,
+      "blocksRead": 658,
+      "blocksHit": 2369714,
+      "tempBytes": 0
+    }
+  },
+  "statisticsFinal": {
+    "at": "2026-10-03T02:22:36.209155+00:00",
+    "processingActive": false,
+    "relations": {
+      "notifications": {
+        "tableBytes": 57344,
+        "indexBytes": 114688,
+        "estimatedRows": 73,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "notification_email_outbox": {
+        "tableBytes": 49152,
+        "indexBytes": 49152,
+        "estimatedRows": 73,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "domain_events": {
+        "tableBytes": 483328,
+        "indexBytes": 221184,
+        "estimatedRows": 290,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "domain_event_deliveries": {
+        "tableBytes": 98304,
+        "indexBytes": 204800,
+        "estimatedRows": 290,
+        "deadRows": 32,
+        "lastAutovacuum": "2026-10-03T02:18:29.251211+00:00"
+      },
+      "automation_executions": {
+        "tableBytes": 237568,
+        "indexBytes": 458752,
+        "estimatedRows": 548,
+        "deadRows": 28,
+        "lastAutovacuum": null
+      },
+      "automation_execution_steps": {
+        "tableBytes": 172032,
+        "indexBytes": 319488,
+        "estimatedRows": 560,
+        "deadRows": 29,
+        "lastAutovacuum": null
+      },
+      "automation_temporal_occurrences": {
+        "tableBytes": 16384,
+        "indexBytes": 81920,
+        "estimatedRows": 17,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "automation_runs": {
+        "tableBytes": 8192,
+        "indexBytes": 32768,
+        "estimatedRows": 0,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "automation_missed_windows": {
+        "tableBytes": 8192,
+        "indexBytes": 24576,
+        "estimatedRows": 0,
+        "deadRows": 0,
+        "lastAutovacuum": null
+      },
+      "automation_capacity": {
+        "tableBytes": 49152,
+        "indexBytes": 16384,
+        "estimatedRows": 30,
+        "deadRows": 26,
+        "lastAutovacuum": "2026-10-03T01:19:06.782137+00:00"
+      },
+      "automation_tenant_schedule": {
+        "tableBytes": 40960,
+        "indexBytes": 49152,
+        "estimatedRows": 11,
+        "deadRows": 9,
+        "lastAutovacuum": "2026-10-03T02:21:29.333278+00:00"
+      }
+    },
+    "executionLatency": {
+      "count": 288,
+      "p50Ms": 39,
+      "p95Ms": 190.64999999999998,
+      "maxMs": 364
+    },
+    "currentLockWaiters": 0,
+    "database": {
+      "commits": 5488,
+      "rollbacks": 2,
+      "deadlocks": 0,
+      "blocksRead": 663,
+      "blocksHit": 5363655,
+      "tempBytes": 0
+    }
+  },
+  "productionAccessed": false,
+  "productionModified": false,
+  "deployed": false,
+  "newBillableInfrastructure": false,
+  "remainingGates": [
+    "Hosted/provider-specific application, authentication and actual cron",
+    "Complete responsive/keyboard/200%/reduced-motion matrix and real screen-reader audit",
+    "Managed-provider recovery/PITR/Storage/Auth rehearsal; multi-hour resource and mixed retry/SLA envelope"
+  ],
+  "cleanup": {
+    "sourceProcessingReadback": "OFF",
+    "sourceDisposableContainerRemoved": true,
+    "restoreTargetRemoved": true,
+    "preexistingVolumesPreserved": true,
+    "voiceOverUsed": false
+  }
+}

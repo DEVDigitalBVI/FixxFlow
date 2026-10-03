@@ -1,7 +1,7 @@
 import type { AutomationAction, ConditionResult, ValidationIssue } from './model';
 import type { AutomationRegistry } from './registries';
 import { evaluateConditions } from './conditions';
-import { actionReferences, validateEvent, validateRule, validateSnapshotField } from './validation';
+import { actionReferences, validateEvent, validateRule, validateStoredRule, validateSnapshotField } from './validation';
 import { isUuid } from './values';
 
 export type AutomationPlan = {
@@ -17,8 +17,15 @@ export type AutomationPlan = {
 
 /** Pure planning only. The caller supplies a trusted tenant context, not form data. */
 export function planAutomation(ruleInput: unknown, eventInput: unknown, registry: AutomationRegistry, organizationId: string): AutomationPlan {
+  return planWithValidator(ruleInput, eventInput, registry, organizationId, validateRule);
+}
+/** Same planner for persisted worker input; SQL remains the execution authority. */
+export function planStoredAutomation(ruleInput: unknown, eventInput: unknown, registry: AutomationRegistry, organizationId: string): AutomationPlan {
+  return planWithValidator(ruleInput, eventInput, registry, organizationId, validateStoredRule);
+}
+function planWithValidator(ruleInput: unknown, eventInput: unknown, registry: AutomationRegistry, organizationId: string, validate: typeof validateRule): AutomationPlan {
   const base: AutomationPlan = { status: 'invalid_rule', triggerCompatible: null, conditions: [], actions: [], issues: [], validationScope: 'structural_only', failurePolicy: 'stop' };
-  const rule = validateRule(ruleInput, registry);
+  const rule = validate(ruleInput, registry);
   if (!rule.valid) return { ...base, issues: rule.issues };
   const event = validateEvent(eventInput);
   if (!event.valid) return { ...base, status: 'invalid_event', issues: event.issues };

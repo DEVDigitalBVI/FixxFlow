@@ -30,7 +30,7 @@ test('Stage 12 serialized UTF-8 boundary is exact and typed',()=>{
 async function fill(db,resource,used,tenant=ids.org,recipient='00000000-0000-0000-0000-000000000000'){
  await owner(db);await db.query('insert into private.automation_capacity(organization_id,resource,subject,window_started_at,used) values($1,$2,$3,clock_timestamp(),$4) on conflict(organization_id,resource,subject) do update set used=$4,window_started_at=clock_timestamp()',[tenant,resource,recipient,used]);await service(db);
 }
-async function recover(db){await owner(db);await db.exec("update private.automation_capacity set window_started_at=clock_timestamp()-interval '61 seconds'; update private.domain_event_deliveries set available_at=clock_timestamp()-interval '1 second' where status='pending'");await service(db);}
+async function recover(db){await owner(db);await db.exec("update private.automation_capacity set window_started_at=clock_timestamp()-interval '61 seconds'; update private.domain_event_deliveries set available_at=clock_timestamp()-interval '1 second' where status='pending' and available_at>clock_timestamp()");await service(db);}
 async function count(db,table){await owner(db);return (await db.query(`select count(*)::int n from ${table}`)).rows[0].n;}
 async function safeReject(db,sql,args,code){await db.exec('savepoint rejected');try{await assert.rejects(db.query(sql,args),{code});}finally{await db.exec('rollback to savepoint rejected; release savepoint rejected');}}
 test('Stage 12 migrated durable guardrails',async t=>{

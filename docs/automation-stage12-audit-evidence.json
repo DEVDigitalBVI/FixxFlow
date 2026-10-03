@@ -1,0 +1,70 @@
+{
+  "testedCommit": "048a16280310b65838192d5ac1aef8100a5bd6bc",
+  "scope": "Stage 12 implementation and unchanged Stage 12B application code; Stage 12C artifacts preserved",
+  "verification": {
+    "node": "24.21.0",
+    "applicationTests": {
+      "passed": 707,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 22115.526
+    },
+    "typecheck": "PASS",
+    "eslintZeroWarnings": "PASS",
+    "build": "PASS; processing OFF, loopback Supabase URL and non-secret placeholder keys"
+  },
+  "pgliteReproductions": {
+    "legacyControls": {
+      "bytes": 270665,
+      "preUpgradeCreation": "accepted",
+      "disable": "FF004",
+      "archive": "FF004"
+    },
+    "legacyDiscovery": {
+      "failures": [
+        "FF004",
+        "FF004",
+        "FF004"
+      ],
+      "tenantScheduleUnchanged": true,
+      "healthyTenantScans": 0
+    },
+    "ineligibleTenantUtilization": {
+      "claimed": [
+        2,
+        3,
+        2,
+        1
+      ],
+      "requestedSlots": 20,
+      "completed": 8
+    },
+    "historyClassification": {
+      "summaryActionFailed": 0,
+      "summaryGuardrailTerminated": 1,
+      "actionFailedFilterRows": 1,
+      "errorCode": "notification_fanout_limit"
+    },
+    "finalProcessingActive": false
+  },
+  "postgres17Reproductions": {
+    "archive": "FF004",
+    "disable": "FF004",
+    "postgres": "17.11",
+    "processingActive": false,
+    "healthyTenantScans": 0,
+    "legacyDefinitionBytes": 270665,
+    "failedDiscoveryInvocations": 3
+  },
+  "isolation": {
+    "productionAccessed": false,
+    "auditContainer": "network none; no host ports or existing volumes; stopped and removed",
+    "authBoundary": "native audit uses test-only Auth/Storage/Realtime substrate, not PostgREST",
+    "priorStage12CVolumes": "untouched"
+  },
+  "files": {
+    "supabase/migrations/20261002202406_automation_guardrails.sql": "baf23a60dfcf7002369a4924f4b6c8be878fc30e6735571cdcdd5abd99dcfd9a",
+    "tests/helpers/automation-stage12-audit.mjs": "6b6dce6c3bdefa9d5790873100adc03c56cf781630d828c740d6b5b08777eb5f",
+    "tests/helpers/automation-stage12-audit-native.mjs": "2e43b6bc057659324e0539d15098a95db1e8ad5af550f85f6fa9a54296bf3020"
+  }
+}

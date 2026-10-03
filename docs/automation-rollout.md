@@ -1,4 +1,110 @@
-# Automation rollout runbook — Stage 8
+# Automation rollout runbook
+
+## Current release gate — Stage 12C
+
+The [Stage 12C verification record](automation-stage12c-verification.md) is the
+current release-readiness ledger. The owner selected Docker instead of paid
+staging and requested production only after verification passes. Stage12C now
+has representative local migration and restore evidence. Its original sustained
+capacity failure is retained as historical evidence; the corrective candidate and
+new measurements are recorded below. The full screen-reader audit remains open.
+Hosted cron and provider behavior remain unverified. The condition for proceeding
+to production has not been met. Do not access production to refresh historical facts below.
+
+The repository baseline for Stage 12C is `048a162`, with 40 migrations through
+`20261002202406_automation_guardrails.sql`. The Stage 8 dates, observed production
+state, backup blockers, ten-file pending list and 36-file readback below are
+historical evidence, not a current deployment prescription. Preserve the prepared
+production backup. A future separately authorized deployment must compare its exact
+release manifest with a freshly verified production ledger, apply only pending
+immutable files in order and verify the resulting complete manifest. Never assume
+the historical pending list still applies or repair history to match it.
+
+Use the Stage 12C hosted acceptance criteria and measured locking results before
+selecting a maintenance procedure. Both processing gates must remain OFF throughout
+migration/deployment. Verify both worker and temporal discovery cron, their separate
+processing controls, ordinary ticket operations and Administration; activation is
+a later approval with explicit global-gate and backlog-cutoff semantics.
+
+## Stage 12 corrective release candidate
+
+Read [the corrective verification report](automation-stage12-corrections.md)
+before using the older Stage 12C results. The working candidate contains **41**
+migrations, ending in `20261003005804_automation_guardrails_corrections.sql`.
+The four audit findings are corrected without changing batch size, cron cadence,
+throughput ceilings, authorization, processing cutoffs or immutable history.
+This does not close the hosted/actual-cron or full accessibility release gates.
+
+For a separately authorized future rollout:
+
+1. Pin the corrected application commit and all migration hashes. Finish the
+   outstanding deployment-specific and accessibility gates. Confirm a recoverable
+   backup using the approved provider procedure; preserve the prepared backup.
+2. Keep both processing controls OFF. Pause Automation administration briefly,
+   allow transactions using `automation_rules` to finish, and set a short migration
+   lock timeout. The correction's validated CHECK holds an exclusive table lock;
+   local 4,000-rule validation took about 6.2 seconds. Ordinary ticket writes did
+   not block in that test, but this is not a production guarantee.
+3. Apply only missing immutable migrations in order, including both the original
+   Stage 12 migration and its correction. Do not edit the original migration or
+   repair the ledger. A lock timeout must abort/roll back, then be investigated;
+   never remove the timeout and wait indefinitely during live traffic.
+4. Deploy the corrected Node 24 application with environment processing OFF.
+   Verify legacy read/disable/archive, strict create/edit/reenable/dry-run errors,
+   tenant/MFA denials, Operations safety filters and invocation tracing.
+5. Verify OFF, ordinary ticket operations, rule/version preservation and complete
+   migration hashes. Record the deployment and stop; activation is separate.
+6. Only after a later approved activation plan, start with a small synthetic
+   canary and a bounded arrival rate below the **measured** supported capacity.
+   A database false→true creates the existing activation cutoff/generation and
+   does not replay old unadmitted work. The global gate is not tenant-specific:
+   inventory every enabled rule before using it. A canary is safe only when the
+   approval also covers all other enabled rules and eligible traffic; otherwise
+   leave the global gate OFF. Observe actual cron, backlog,
+   delay/failure/exhaustion, receipt deduplication and temporal lag, with a named
+   operator able to switch OFF immediately.
+
+Rollback keeps processing OFF. Do not drop counters, receipts or the new CHECK,
+rewrite pinned definitions, or replay a pre-correction schema over preserved
+history. Prefer a tested forward correction; an older application alone can
+reintroduce legacy-definition read/planning failures.
+
+## Logical restore transaction provenance
+
+Row digests alone do not close the restore gate. Transaction IDs and snapshots
+are cluster-local. A new logical target may retain the source's numeric markers
+but interpret them against different transaction history, blocking fresh events.
+The Stage 12 corrective rehearsal reproduced and resolved this in an isolated
+PG17 target. It does not authorize production recovery operations.
+
+For a separately approved **full logical restore into an empty target**, with
+workers/discovery disconnected and processing OFF:
+
+1. Retain the complete untouched backup, including original transaction markers.
+   Create the required roles and provider-compatible schema substrate.
+2. Build an explicit `pg_restore --list` selection omitting only the `TABLE DATA
+   private automation_version_visibility` entry. Do not omit its schema or any
+   immutable public rule/version/event/execution/step history.
+3. Restore pre-data and data. Before post-data triggers, run the guarded
+   [visibility initialization](sql/automation-logical-restore-visibility.sql).
+   It inserts target-cluster markers into an empty derived table; it never
+   disables an installed guard or updates an existing history row.
+4. Restore all post-data constraints, triggers, indexes, policies and grants.
+   Compare original application/history digests; record the deliberate derived
+   marker regeneration separately. Confirm append-only guards reject updates,
+   tenant/MFA access remains correct and processing is still OFF.
+5. In the isolated rehearsal only, activate a fresh generation and prove a new
+   ticket executes once and duplicate commands return receipts. Confirm old
+   pending events remain excluded under the established new activation cutoff.
+   Turn processing OFF again. A production recovery requires a separate approved
+   canary and activation plan; never automatically replay old queued work.
+
+A failure in any phase leaves the isolated target unavailable and OFF for
+investigation. Do not weaken constraints or repair migration history to proceed.
+For physical/PITR recovery that preserves cluster transaction history, **do not**
+regenerate visibility markers; follow the provider's verified recovery procedure.
+
+## Historical Stage 8 preparation
 
 The subsequent [production alignment preflight](automation-production-preflight.md)
 verified matching SQL bodies and reconciled two repository filenames to the existing

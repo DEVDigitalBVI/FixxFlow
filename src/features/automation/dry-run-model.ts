@@ -29,4 +29,4 @@ export type DryRunResult = {
   actions: readonly { id: string; type: string; label: string; position: number; configuration: Readonly<Record<string, JsonValue>>; validation: 'valid' | 'invalid' | 'blocked'; explanation: string }[];
   plannerStatus: AutomationPlan['status']; wouldProceed: boolean; warnings: readonly string[];
 };
-export type DryRunResponse = { ok: true; value: DryRunResult } | { ok: false; sideEffectsPerformed: false; notice: 'No changes were made.'; error: { code: 'forbidden' | 'invalid_input' | 'invalid_definition' | 'not_found' | 'unavailable'; message: string; issues?: readonly ValidationIssue[] } };
+export type DryRunResponse = { ok: true; value: DryRunResult } | { ok: false; sideEffectsPerformed: false; notice: 'No changes were made.'; error: { code: 'forbidden' | 'invalid_input' | 'invalid_definition' | 'definition_limit_exceeded' | 'not_found' | 'unavailable'; message: string; issues?: readonly ValidationIssue[] } };

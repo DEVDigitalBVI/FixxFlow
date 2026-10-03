@@ -9,7 +9,7 @@ import { persistenceRegistry } from './persistence-contract';
 import { validateDefinition } from './validation';
 import { hasOnly, isBoundedJson, isRecord, isUuid } from './values';
 
-const messages = { forbidden: 'Administrator access and required verification are needed.', invalid_input: 'Check the ticket, rule version and test context.', invalid_definition: 'Check the structured automation definition.', not_found: 'The selected test source is unavailable.', unavailable: 'Automation testing is temporarily unavailable.' };
+const messages = { definition_limit_exceeded: 'The saved definition exceeds the 256 KiB safety limit. Shorten notes or condition values before testing.', forbidden: 'Administrator access and required verification are needed.', invalid_input: 'Check the ticket, rule version and test context.', invalid_definition: 'Check the structured automation definition.', not_found: 'The selected test source is unavailable.', unavailable: 'Automation testing is temporarily unavailable.' };
 const failure = (code: keyof typeof messages): DryRunResponse => ({ ok: false, sideEffectsPerformed: false, notice: 'No changes were made.', error: { code, message: messages[code] } });
 function validRequest(input: unknown): input is DryRunRequest {
   if (!isBoundedJson(input) || !isRecord(input) || !hasOnly(input, ['ticketId', 'definition', 'source']) || !isUuid(input.ticketId) || !isRecord(input.definition) || !isRecord(input.source)) return false;
@@ -35,7 +35,7 @@ export async function testAutomation(input: unknown): Promise<DryRunResponse> {
     const context = await dryRunRepository(await createClient(), viewer.organizationId).read(request);
     return { ok: true, value: evaluateDryRun(context, ticketDryRunEvent(context, request.source), request.source, persistenceRegistry) };
   } catch (error) {
-    if (error instanceof DryRunReadError) return failure(error.code === '42501' ? 'forbidden' : error.code === 'P0002' ? 'not_found' : error.code === '22023' ? 'invalid_definition' : 'unavailable');
+    if (error instanceof DryRunReadError) return failure(error.code === '42501' ? 'forbidden' : error.code === 'P0002' ? 'not_found' : error.code === 'FF004' ? 'definition_limit_exceeded' : error.code === '22023' ? 'invalid_definition' : 'unavailable');
     throw error;
   }
 }

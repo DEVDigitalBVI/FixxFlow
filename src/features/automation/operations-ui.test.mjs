@@ -28,7 +28,7 @@ test('Operations pages expose native filters, no-failures state and bounded curs
  const allMocks={...mocks,'@/features/automation/operations-service':services};
  const page=load('src/app/app/administration/automations/operations/page.tsx',allMocks).default;assert.match(render(await page()),/No execution failures/);
  const history=load('src/app/app/administration/automations/operations/history/page.tsx',allMocks).default;
- const html=render(await history({searchParams:Promise.resolve({q:'Network'})}));for(const label of ['Automation name','Result','Trigger','Ticket number','From date','Through date','Older results'])assert.ok(html.includes(label));assert.match(html,/name="q"[^>]*value="Network"/);assert.match(html,/cursor=/);assert.match(html,/until=/);assert.match(html,/since=/);
+ const html=render(await history({searchParams:Promise.resolve({q:'Network',result:'guardrail'})}));for(const label of ['Automation name','Result','Trigger','Ticket number','From date','Through date','Older results'])assert.ok(html.includes(label));assert.match(html,/name="q"[^>]*value="Network"/);assert.match(html,/cursor=/);assert.match(html,/until=/);assert.match(html,/since=/);assert.match(html,/<label for="operations-result">Result<\/label>/);assert.match(html,/<select id="operations-result"/);assert.match(html,/<option value="guardrail" selected="">Safety limit reached<\/option>/);assert.match(html,/result=guardrail/);
 });
 test('server reads derive organization from authorization and mask database activation when deployment is OFF',async()=>{
  const calls=[];let denied=false;const prior=process.env.AUTOMATION_PROCESSING_ENABLED;delete process.env.AUTOMATION_PROCESSING_ENABLED;
@@ -39,7 +39,7 @@ test('server reads derive organization from authorization and mask database acti
 test('Stage 12 capacity delay has distinct text, tenant counts and no noisy live region',()=>{
  const data={...overview,processingActive:true,queue:{...overview.queue,capacityDeferred:7,notificationDeferred:2,oldestCapacityDeferredAt:overview.now}};
  const html=render(React.createElement(OperationsOverviewView,{data}));
- for(const label of ['Delayed by capacity','Notification capacity delay','Oldest capacity delay','No work has been lost','Delayed','Retry exhausted','Action failed','Safety limit reached','does not make the service degraded'])assert.ok(html.includes(label),label);
+ for(const label of ['Delayed by capacity','Notification capacity delay','Oldest capacity delay','No work has been lost','Delayed','Retry exhausted','Action failed','Safety limit reached','Chain safety limit reached','does not make the service degraded'])assert.ok(html.includes(label),label);
  assert.doesNotMatch(html,/aria-live|role="alert"/);
  const {queueHealth}=load('src/features/automation/operations-model.ts');assert.equal(queueHealth(true,data.queue,data.now),'delayed');assert.equal(queueHealth(false,data.queue,data.now),'disabled');
 });

@@ -38,7 +38,7 @@ test('queue warnings distinguish partial unknown readings, old work, terminal fa
  const q={truncated:false,oldestEligibleAt:null,recent:{failed:0,exhausted:0}};
  assert.equal(queueHealth(true,q,now),'healthy');assert.equal(queueHealth(true,{...q,truncated:true},now),'unknown');
  assert.equal(queueHealth(true,{...q,oldestEligibleAt:'2026-10-01T11:56:59Z'},now),'delayed');
- assert.equal(queueHealth(true,{...q,recent:{failed:0,exhausted:1}},now),'degraded');assert.equal(queueHealth(false,q,now),'disabled');
+ assert.equal(queueHealth(true,{...q,recent:{failed:0,exhausted:1}},now),'degraded');assert.equal(queueHealth(false,q,now),'disabled');assert.equal(queueHealth(true,{...q,recent:{failed:0,exhausted:0,guardrailTerminated:1}},now),'degraded');
 });
 test('invocation telemetry preserves worker results/failures and never converts telemetry errors into execution failures',async()=>{
  const calls=[];const {observeAutomationRun}=load('src/features/automation/operations-telemetry.ts',{'server-only':{}});
@@ -54,4 +54,13 @@ test('history filters validate dates, cursor, ticket number and preserve filter 
  const {operationsHistoryFilters}=load('src/features/automation/operations-service.ts',{'server-only':{},'./ui-service':{},'@/lib/supabase/server':{}});
  const f=operationsHistoryFilters({q:' Route ',from:'2026-09-01',to:'2026-09-30',result:'retry_exhausted',ticket:'1842'});assert.equal(f.error,'');assert.equal(f.query,'Route');assert.equal(f.until,'2026-10-01T00:00:00.000Z');
  for(const filters of [{from:'bad'},{from:'2026-02-30'},{from:'2026-01-01',to:'2026-12-31'},{before:now},{cursor:'bad'},{ticket:'-1'},{result:'secret'}])assert.ok(operationsHistoryFilters(filters).error);
+ assert.equal(operationsHistoryFilters({result:'guardrail'}).error,'');
+});
+
+test('operational invocation identity is available to worker/discovery logging',async()=>{
+ const {observeAutomationRun}=load('src/features/automation/operations-telemetry.ts',{'server-only':{}});
+ let observed;
+ const client={rpc:async name=>({data:name==='start_automation_run'?'test-invocation':true,error:null})};
+ await observeAutomationRun(client,'worker',async id=>{observed=id;return 1;},()=>({claimed:1}));
+ assert.equal(observed,'test-invocation');
 });

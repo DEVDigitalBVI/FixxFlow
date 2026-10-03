@@ -20,7 +20,7 @@ export function approachingWindow(threshold: string, deadline: string, observed:
   if (micros(observed) >= micros(deadline)) return 'missed_window';
   return micros(observed) - micros(threshold) > BigInt(operationsPolicy.intervalSeconds) * 1000000n ? 'late_before_deadline' : 'within_window';
 }
-export type QueueHealth = { capacityDeferred?: number; notificationDeferred?: number; oldestCapacityDeferredAt?: string | null; sampled: number; truncated: boolean; ready: number; leased: number; retryScheduled: number; ineligiblePending: number; oldestEligibleAt: string | null; recent: { acknowledged: number; recovered: number; exhausted: number; failed: number; truncated: boolean } };
+export type QueueHealth = { capacityDeferred?: number; notificationDeferred?: number; oldestCapacityDeferredAt?: string | null; sampled: number; truncated: boolean; ready: number; leased: number; retryScheduled: number; ineligiblePending: number; oldestEligibleAt: string | null; recent: { guardrailTerminated?: number; acknowledged: number; recovered: number; exhausted: number; failed: number; truncated: boolean } };
 export type ExecutionSummary = { guardrailTerminated?: number; total: number; completed: number; skipped: number; running: number; actionFailed: number; retryExhausted: number; deliveryFailed: number; truncated: boolean };
 export type OperationsHistoryRow = { id: string; rule_id: string; rule_version: number; rule_name: string; trigger_type: string; entity_id: string; ticket_number: number | null; started_at: string; status: string; error_code: string | null; duration_ms: number | null; completed_actions: number; total_actions: number };
 export type OperationsOverview = {
@@ -31,7 +31,7 @@ export type OperationsOverview = {
 };
 export function queueHealth(active: boolean, queue: QueueHealth, now: string): HealthState {
   if (!active) return 'disabled';
-  if (queue.recent.exhausted || queue.recent.failed) return 'degraded';
+  if (queue.recent.exhausted || queue.recent.failed || queue.recent.guardrailTerminated) return 'degraded';
   if (queue.capacityDeferred) return 'delayed';
   if (queue.oldestEligibleAt && Date.parse(now)-Date.parse(queue.oldestEligibleAt)>operationsPolicy.intervalSeconds*(1+operationsPolicy.graceIntervals)*1000) return 'delayed';
   return queue.truncated || queue.recent.truncated ? 'unknown' : 'healthy';

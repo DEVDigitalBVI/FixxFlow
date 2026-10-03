@@ -4,7 +4,7 @@ import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
 import { normalizeSearch } from '@/lib/search';
 import { isUuid } from './values';
-import { validateDefinition, actionReferences } from './validation';
+import { validateStoredDefinition, actionReferences } from './validation';
 import { persistenceRegistry } from './persistence-contract';
 import type { AutomationDefinition } from './model';
 import type { Choice, Labels } from './ui-model';
@@ -99,7 +99,7 @@ export async function automationExecution(ruleId: string, executionId: string) {
     client.from('automation_execution_steps').select('*').eq('organization_id',viewer.organizationId).eq('execution_id',executionId).order('position').limit(20),
     automationChoices('tickets','',1,[execution.entity_id]),
   ]);
-  if(revision.error||steps.error) throw unavailable(); const definition=validateDefinition(revision.data.definition,persistenceRegistry); if(!definition.valid) throw unavailable();
+  if(revision.error||steps.error) throw unavailable(); const definition=validateStoredDefinition(revision.data.definition,persistenceRegistry); if(!definition.valid) throw unavailable();
   return {execution,steps:steps.data,definition:definition.value,labels:await automationLabels(definition.value),ticketLabel:ticket.rows[0]?.label.split(' · ')[0] ?? 'Ticket unavailable'};
 }
 export async function automationResultLabels(result: import('./dry-run-model').DryRunResult) {

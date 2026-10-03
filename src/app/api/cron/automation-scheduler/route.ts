@@ -15,8 +15,11 @@ export async function GET(request: Request) {
   if (process.env.AUTOMATION_PROCESSING_ENABLED !== 'true') return Response.json({ disabled: true });
   try {
     const client = createAdminClient();
-    const result = await observeAutomationRun(client, 'discovery', () => discoverTemporalAutomation(client), result => { const data = result as RunMetrics; return { rules: data.rules ?? 0, examined: data.examined ?? 0, emitted: data.emitted ?? 0, duplicates: data.duplicates ?? 0 }; });
-    console.info(JSON.stringify({ component: 'automation_scheduler', result }));
+    const result = await observeAutomationRun(client, 'discovery', async operationsRunId => {
+      const result = await discoverTemporalAutomation(client);
+      console.info(JSON.stringify({ component: 'automation_scheduler', operationsRunId, result }));
+      return result;
+    }, result => { const data = result as RunMetrics; return { rules: data.rules ?? 0, examined: data.examined ?? 0, emitted: data.emitted ?? 0, duplicates: data.duplicates ?? 0 }; });
     return Response.json(result);
   } catch (error) {
     console.error(JSON.stringify({ component: 'automation_scheduler', result: 'worker_unavailable', code: classifyWorkerFailure(error).code }));

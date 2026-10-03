@@ -1,0 +1,4211 @@
+{
+  "postgrest": {
+    "engine": "17.11",
+    "gates": {
+      "real_auth_mfa_aal2_and_insufficient_aal1_denial": "PASS",
+      "create_edit_duplicate_enable_disable_archive_and_revision_conflict": "PASS",
+      "technician_employee_cross_tenant_rules_references_dry_run_history_operations_denial": "PASS",
+      "dry_run_structural_validation_zero_runtime_side_effects": "PASS",
+      "independent_http_enable_race_ceiling_and_disabled_creation": "PASS"
+    },
+    "processing": "OFF"
+  },
+  "app-boundaries": {
+    "environment": "Local production-mode Next + Docker GoTrue/PostgREST",
+    "checks": [
+      {
+        "role": "administrator AAL2",
+        "route": "",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL2",
+        "route": "/new",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL2",
+        "route": "/import",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL2",
+        "route": "/operations",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL2",
+        "route": "/operations/history",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL2",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL2",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a/history",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL2",
+        "route": "export",
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL1",
+        "route": "",
+        "status": 307,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL1",
+        "route": "/new",
+        "status": 307,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL1",
+        "route": "/import",
+        "status": 307,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL1",
+        "route": "/operations",
+        "status": 307,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL1",
+        "route": "/operations/history",
+        "status": 307,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL1",
+        "route": "/choices?resource=teams",
+        "status": 307,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL1",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a",
+        "status": 307,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL1",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a/history",
+        "status": 307,
+        "result": "PASS"
+      },
+      {
+        "role": "administrator AAL1",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a/export",
+        "status": 307,
+        "result": "PASS"
+      },
+      {
+        "role": "technician",
+        "route": "",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "technician",
+        "route": "/new",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "technician",
+        "route": "/import",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "technician",
+        "route": "/operations",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "technician",
+        "route": "/operations/history",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "technician",
+        "route": "/choices?resource=teams",
+        "status": 404,
+        "result": "PASS"
+      },
+      {
+        "role": "technician",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "technician",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a/history",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "technician",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a/export",
+        "status": 404,
+        "result": "PASS"
+      },
+      {
+        "role": "end_user",
+        "route": "",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "end_user",
+        "route": "/new",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "end_user",
+        "route": "/import",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "end_user",
+        "route": "/operations",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "end_user",
+        "route": "/operations/history",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "end_user",
+        "route": "/choices?resource=teams",
+        "status": 404,
+        "result": "PASS"
+      },
+      {
+        "role": "end_user",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "end_user",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a/history",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "end_user",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a/export",
+        "status": 404,
+        "result": "PASS"
+      },
+      {
+        "role": "other tenant administrator",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "other tenant administrator",
+        "route": "/c3c65bd8-5904-4dd4-9413-bd6653684a5a/history",
+        "status": 200,
+        "result": "PASS"
+      },
+      {
+        "role": "other tenant administrator",
+        "route": "export",
+        "result": "PASS, denied"
+      },
+      {
+        "role": "other tenant administrator",
+        "route": "selected references and Operations",
+        "result": "PASS, no sibling data"
+      }
+    ]
+  },
+  "capacity": {
+    "scope": "Local Docker Supabase PG17 and production-mode Next HTTP endpoints; not hosted capacity",
+    "engine": "17.11",
+    "startedAt": "2026-10-02T23:50:39.689Z",
+    "configuration": {
+      "cadenceSeconds": 60,
+      "batch": 5,
+      "steadyMinutes": 60,
+      "burst": 80
+    },
+    "tenants": [
+      "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb",
+      "5176f944-30dc-45f1-b7e9-348be2ff94ab",
+      "e22f6181-b380-46ee-996f-38baf62052df",
+      "86251be5-ca89-49d6-9b5b-ec6d91eb68d3",
+      "69e1a49e-6219-4510-9b49-65f6e99801fc",
+      "f91fcd8f-79ec-48bd-a192-66634b3589fc",
+      "ef2cb788-9182-4108-b5e1-d64143afb61f",
+      "c181d3c4-87ec-4817-8c93-22e0cad7c325"
+    ],
+    "samples": [
+      {
+        "at": "2026-10-02T23:50:41.056Z",
+        "phase": "steady",
+        "minute": 0,
+        "discovery": {
+          "elapsedMs": 36.79054099999985,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 0,
+            "duplicates": 0,
+            "invocationId": "272ee72d-f95d-42dc-a7de-7f8b457ead8e"
+          }
+        },
+        "worker": {
+          "elapsedMs": 79.44020799999998,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 4,
+          "leased": 0,
+          "pending": 1,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 1,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 2
+          },
+          "acknowledged": 3,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 0.193748
+        }
+      },
+      {
+        "at": "2026-10-02T23:51:41.149Z",
+        "phase": "steady",
+        "minute": 1,
+        "discovery": {
+          "elapsedMs": 35.567166000000725,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 0,
+            "duplicates": 0,
+            "invocationId": "ce591219-6819-4746-8552-ff7c3dbcb1a7"
+          }
+        },
+        "worker": {
+          "elapsedMs": 100.39812499999971,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 8,
+          "leased": 0,
+          "pending": 2,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 1,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 4,
+            "e22f6181-b380-46ee-996f-38baf62052df": 1
+          },
+          "acknowledged": 6,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 0.251157
+        }
+      },
+      {
+        "at": "2026-10-02T23:52:41.232Z",
+        "phase": "steady",
+        "minute": 2,
+        "discovery": {
+          "elapsedMs": 37.821458000005805,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 0,
+            "duplicates": 0,
+            "invocationId": "33071c86-e702-4a31-a59e-e7e46a2edc62"
+          }
+        },
+        "worker": {
+          "elapsedMs": 138.2864580000023,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 12,
+          "leased": 0,
+          "pending": 2,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 1,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 1,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 1,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 6,
+            "e22f6181-b380-46ee-996f-38baf62052df": 1
+          },
+          "acknowledged": 10,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 0.334865
+        }
+      },
+      {
+        "at": "2026-10-02T23:53:41.136Z",
+        "phase": "steady",
+        "minute": 3,
+        "discovery": {
+          "elapsedMs": 20.485375000018394,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 0,
+            "duplicates": 0,
+            "invocationId": "8a410345-da85-44ea-a2cf-59abd2cef8c3"
+          }
+        },
+        "worker": {
+          "elapsedMs": 103.94316699999035,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 16,
+          "leased": 0,
+          "pending": 3,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 1,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 1,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 1,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 7,
+            "e22f6181-b380-46ee-996f-38baf62052df": 1,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 1,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 1
+          },
+          "acknowledged": 13,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 60.23614
+        }
+      },
+      {
+        "at": "2026-10-02T23:54:41.177Z",
+        "phase": "steady",
+        "minute": 4,
+        "discovery": {
+          "elapsedMs": 32.46683399999165,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 0,
+            "duplicates": 0,
+            "invocationId": "b21b2f47-14e2-45c8-b3d3-5e01ffe1aadc"
+          }
+        },
+        "worker": {
+          "elapsedMs": 107.41733300001943,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 20,
+          "leased": 0,
+          "pending": 3,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 2,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 1,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 1,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 9,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 1,
+            "e22f6181-b380-46ee-996f-38baf62052df": 1,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 1,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 1
+          },
+          "acknowledged": 17,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 60.301843
+        }
+      },
+      {
+        "at": "2026-10-02T23:55:41.112Z",
+        "phase": "steady",
+        "minute": 5,
+        "discovery": {
+          "elapsedMs": 20.524208999995608,
+          "result": {
+            "rules": 1,
+            "emitted": 1,
+            "examined": 1,
+            "duplicates": 0,
+            "invocationId": "ee93f532-f79e-4278-9340-ca3f57be2f45"
+          }
+        },
+        "worker": {
+          "elapsedMs": 111.26499999995576,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 25,
+          "leased": 0,
+          "pending": 5,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 2,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 1,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 1,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 10,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 2,
+            "e22f6181-b380-46ee-996f-38baf62052df": 2,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 1,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 1
+          },
+          "acknowledged": 20,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 60.23066
+        }
+      },
+      {
+        "at": "2026-10-02T23:56:41.127Z",
+        "phase": "steady",
+        "minute": 6,
+        "discovery": {
+          "elapsedMs": 30.77812500001164,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 1,
+            "duplicates": 1,
+            "invocationId": "0d12cc4c-776d-4c78-ace8-c7d5746a9bbd"
+          }
+        },
+        "worker": {
+          "elapsedMs": 111.02175000001444,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 29,
+          "leased": 0,
+          "pending": 6,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 2,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 1,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 2,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 12,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 2,
+            "e22f6181-b380-46ee-996f-38baf62052df": 2,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 1,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 1
+          },
+          "acknowledged": 23,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 60.247095
+        }
+      },
+      {
+        "at": "2026-10-02T23:57:41.182Z",
+        "phase": "steady",
+        "minute": 7,
+        "discovery": {
+          "elapsedMs": 19.475957999995444,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 1,
+            "duplicates": 1,
+            "invocationId": "cd6b9aeb-7840-4340-affc-aa4c950a887b"
+          }
+        },
+        "worker": {
+          "elapsedMs": 116.60258399997838,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 33,
+          "leased": 0,
+          "pending": 6,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 2,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 2,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 2,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 14,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 2,
+            "e22f6181-b380-46ee-996f-38baf62052df": 2,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 1,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 2
+          },
+          "acknowledged": 27,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 120.29989
+        }
+      },
+      {
+        "at": "2026-10-02T23:58:41.174Z",
+        "phase": "steady",
+        "minute": 8,
+        "discovery": {
+          "elapsedMs": 30.85625000001164,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 1,
+            "duplicates": 1,
+            "invocationId": "0c5b226b-0ec2-449b-8591-8c0647982c90"
+          }
+        },
+        "worker": {
+          "elapsedMs": 104.69312499999069,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 37,
+          "leased": 0,
+          "pending": 7,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 2,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 2,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 2,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 15,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 3,
+            "e22f6181-b380-46ee-996f-38baf62052df": 2,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 2,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 2
+          },
+          "acknowledged": 30,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 120.292522
+        }
+      },
+      {
+        "at": "2026-10-02T23:59:41.204Z",
+        "phase": "steady",
+        "minute": 9,
+        "discovery": {
+          "elapsedMs": 34.02887499995995,
+          "result": {
+            "rules": 1,
+            "emitted": 1,
+            "examined": 2,
+            "duplicates": 1,
+            "invocationId": "0cddce5e-aa16-47a8-90e1-6d964d25f818"
+          }
+        },
+        "worker": {
+          "elapsedMs": 129.11887500004377,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 42,
+          "leased": 0,
+          "pending": 8,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 3,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 2,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 2,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 16,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 4,
+            "e22f6181-b380-46ee-996f-38baf62052df": 3,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 2,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 2
+          },
+          "acknowledged": 34,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 180.323788
+        }
+      },
+      {
+        "at": "2026-10-03T00:00:41.118Z",
+        "phase": "steady",
+        "minute": 10,
+        "discovery": {
+          "elapsedMs": 29.954040999989957,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 2,
+            "duplicates": 2,
+            "invocationId": "32d3d9f9-80aa-49f6-8a23-e15eca50dc60"
+          }
+        },
+        "worker": {
+          "elapsedMs": 105.6624170000432,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 46,
+          "leased": 0,
+          "pending": 9,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 3,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 2,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 3,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 18,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 4,
+            "e22f6181-b380-46ee-996f-38baf62052df": 3,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 2,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 2
+          },
+          "acknowledged": 37,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 180.234828
+        }
+      },
+      {
+        "at": "2026-10-03T00:01:41.115Z",
+        "phase": "steady",
+        "minute": 11,
+        "discovery": {
+          "elapsedMs": 31.79066599998623,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 2,
+            "duplicates": 2,
+            "invocationId": "22fe7141-9612-4ec9-b99c-eed599ce8586"
+          }
+        },
+        "worker": {
+          "elapsedMs": 101.30741699994542,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 50,
+          "leased": 0,
+          "pending": 10,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 3,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 3,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 3,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 20,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 4,
+            "e22f6181-b380-46ee-996f-38baf62052df": 3,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 2,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 2
+          },
+          "acknowledged": 40,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 180.234074
+        }
+      },
+      {
+        "at": "2026-10-03T00:02:41.187Z",
+        "phase": "steady",
+        "minute": 12,
+        "discovery": {
+          "elapsedMs": 32.6066250000149,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 2,
+            "duplicates": 2,
+            "invocationId": "5afafd0a-094e-4ec1-b149-75d21b1f55f6"
+          }
+        },
+        "worker": {
+          "elapsedMs": 116.59716600005049,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 54,
+          "leased": 0,
+          "pending": 10,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 3,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 3,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 3,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 22,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 4,
+            "e22f6181-b380-46ee-996f-38baf62052df": 3,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 3,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 3
+          },
+          "acknowledged": 44,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 180.300365
+        }
+      },
+      {
+        "at": "2026-10-03T00:03:41.172Z",
+        "phase": "steady",
+        "minute": 13,
+        "discovery": {
+          "elapsedMs": 33.232791999937035,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 2,
+            "duplicates": 2,
+            "invocationId": "b09bdb70-f500-4bad-a56d-b682f43bf54e"
+          }
+        },
+        "worker": {
+          "elapsedMs": 106.65512499993201,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 58,
+          "leased": 0,
+          "pending": 11,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 4,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 3,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 3,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 23,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 5,
+            "e22f6181-b380-46ee-996f-38baf62052df": 3,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 3,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 3
+          },
+          "acknowledged": 47,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 240.282628
+        }
+      },
+      {
+        "at": "2026-10-03T00:04:41.158Z",
+        "phase": "steady",
+        "minute": 14,
+        "discovery": {
+          "elapsedMs": 18.4818329999689,
+          "result": {
+            "rules": 1,
+            "emitted": 1,
+            "examined": 3,
+            "duplicates": 2,
+            "invocationId": "c924b5e6-15ac-4ee8-a6fb-71b53279844f"
+          }
+        },
+        "worker": {
+          "elapsedMs": 109.9268330000341,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 63,
+          "leased": 0,
+          "pending": 12,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 4,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 3,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 4,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 24,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 6,
+            "e22f6181-b380-46ee-996f-38baf62052df": 4,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 3,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 3
+          },
+          "acknowledged": 51,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 240.275701
+        }
+      },
+      {
+        "at": "2026-10-03T00:05:41.153Z",
+        "phase": "steady",
+        "minute": 15,
+        "discovery": {
+          "elapsedMs": 40.24124999996275,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 3,
+            "duplicates": 3,
+            "invocationId": "a4a83ded-4b91-4624-ae9d-79091c3b96e0"
+          }
+        },
+        "worker": {
+          "elapsedMs": 119.15841699996963,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 67,
+          "leased": 0,
+          "pending": 13,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 4,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 4,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 4,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 26,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 6,
+            "e22f6181-b380-46ee-996f-38baf62052df": 4,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 3,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 3
+          },
+          "acknowledged": 54,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 300.267785
+        }
+      },
+      {
+        "at": "2026-10-03T00:06:41.113Z",
+        "phase": "steady",
+        "minute": 16,
+        "discovery": {
+          "elapsedMs": 18.64145799994003,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 3,
+            "duplicates": 3,
+            "invocationId": "f562804d-d2bd-4132-b5d4-f469416a8dde"
+          }
+        },
+        "worker": {
+          "elapsedMs": 111.80275000003166,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 71,
+          "leased": 0,
+          "pending": 14,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 4,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 4,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 4,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 28,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 6,
+            "e22f6181-b380-46ee-996f-38baf62052df": 4,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 3,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 4
+          },
+          "acknowledged": 57,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 300.230523
+        }
+      },
+      {
+        "at": "2026-10-03T00:07:41.216Z",
+        "phase": "steady",
+        "minute": 17,
+        "discovery": {
+          "elapsedMs": 38.18816699995659,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 3,
+            "duplicates": 3,
+            "invocationId": "47db8275-1719-466f-985c-97828b15432c"
+          }
+        },
+        "worker": {
+          "elapsedMs": 133.9558749999851,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 75,
+          "leased": 0,
+          "pending": 14,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 4,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 4,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 4,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 30,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 7,
+            "e22f6181-b380-46ee-996f-38baf62052df": 4,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 4,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 4
+          },
+          "acknowledged": 61,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 300.330784
+        }
+      },
+      {
+        "at": "2026-10-03T00:08:41.205Z",
+        "phase": "steady",
+        "minute": 18,
+        "discovery": {
+          "elapsedMs": 39.505459000123665,
+          "result": {
+            "rules": 1,
+            "emitted": 1,
+            "examined": 4,
+            "duplicates": 3,
+            "invocationId": "09e9ef21-c9da-4174-912b-97a1d795dec5"
+          }
+        },
+        "worker": {
+          "elapsedMs": 130.55087499995716,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 80,
+          "leased": 0,
+          "pending": 15,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 5,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 4,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 4,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 31,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 8,
+            "e22f6181-b380-46ee-996f-38baf62052df": 5,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 4,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 4
+          },
+          "acknowledged": 65,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 360.317349
+        }
+      },
+      {
+        "at": "2026-10-03T00:09:41.189Z",
+        "phase": "steady",
+        "minute": 19,
+        "discovery": {
+          "elapsedMs": 34.36829199991189,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 4,
+            "duplicates": 4,
+            "invocationId": "573a0485-ed02-47f6-a7e5-6c7351bca7b6"
+          }
+        },
+        "worker": {
+          "elapsedMs": 103.76233299984597,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 84,
+          "leased": 0,
+          "pending": 16,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 5,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 5,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 5,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 32,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 8,
+            "e22f6181-b380-46ee-996f-38baf62052df": 5,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 4,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 4
+          },
+          "acknowledged": 68,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 360.309237
+        }
+      },
+      {
+        "at": "2026-10-03T00:10:41.130Z",
+        "phase": "steady",
+        "minute": 20,
+        "discovery": {
+          "elapsedMs": 39.89058299991302,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 4,
+            "duplicates": 4,
+            "invocationId": "c085ed0c-d01d-4987-889c-ca806e5a69f2"
+          }
+        },
+        "worker": {
+          "elapsedMs": 124.86737499991432,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 88,
+          "leased": 0,
+          "pending": 17,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 5,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 5,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 5,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 34,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 8,
+            "e22f6181-b380-46ee-996f-38baf62052df": 5,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 4,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 5
+          },
+          "acknowledged": 71,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 360.255582
+        }
+      },
+      {
+        "at": "2026-10-03T00:11:41.123Z",
+        "phase": "steady",
+        "minute": 21,
+        "discovery": {
+          "elapsedMs": 33.82483299984597,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 4,
+            "duplicates": 4,
+            "invocationId": "4cacab33-ecdf-4737-bb4a-0491ae8af8b6"
+          }
+        },
+        "worker": {
+          "elapsedMs": 101.7206250000745,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 92,
+          "leased": 0,
+          "pending": 18,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 5,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 5,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 5,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 36,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 8,
+            "e22f6181-b380-46ee-996f-38baf62052df": 5,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 5,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 5
+          },
+          "acknowledged": 74,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 360.239142
+        }
+      },
+      {
+        "at": "2026-10-03T00:12:41.215Z",
+        "phase": "steady",
+        "minute": 22,
+        "discovery": {
+          "elapsedMs": 38.51812499994412,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 4,
+            "duplicates": 4,
+            "invocationId": "50290f8c-a96f-46b6-b220-e63daaad14fd"
+          }
+        },
+        "worker": {
+          "elapsedMs": 127.89712499990128,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 96,
+          "leased": 0,
+          "pending": 18,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 6,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 5,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 5,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 38,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 9,
+            "e22f6181-b380-46ee-996f-38baf62052df": 5,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 5,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 5
+          },
+          "acknowledged": 78,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 420.3295
+        }
+      },
+      {
+        "at": "2026-10-03T00:13:41.193Z",
+        "phase": "steady",
+        "minute": 23,
+        "discovery": {
+          "elapsedMs": 36.33049999992363,
+          "result": {
+            "rules": 1,
+            "emitted": 1,
+            "examined": 5,
+            "duplicates": 4,
+            "invocationId": "01b1cecd-9cce-4b51-a783-70ace5948654"
+          }
+        },
+        "worker": {
+          "elapsedMs": 116.89350000000559,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 101,
+          "leased": 0,
+          "pending": 19,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 6,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 5,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 6,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 39,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 10,
+            "e22f6181-b380-46ee-996f-38baf62052df": 6,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 5,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 5
+          },
+          "acknowledged": 82,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 420.313954
+        }
+      },
+      {
+        "at": "2026-10-03T00:14:41.219Z",
+        "phase": "steady",
+        "minute": 24,
+        "discovery": {
+          "elapsedMs": 37.31899999990128,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 5,
+            "duplicates": 5,
+            "invocationId": "fe7f3b96-6dfd-4623-9c11-94aa707f3c4d"
+          }
+        },
+        "worker": {
+          "elapsedMs": 111.41975000011735,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 105,
+          "leased": 0,
+          "pending": 20,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 6,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 6,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 6,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 40,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 10,
+            "e22f6181-b380-46ee-996f-38baf62052df": 6,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 5,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 6
+          },
+          "acknowledged": 85,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 480.335905
+        }
+      },
+      {
+        "at": "2026-10-03T00:15:41.178Z",
+        "phase": "steady",
+        "minute": 25,
+        "discovery": {
+          "elapsedMs": 23.155749999918044,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 5,
+            "duplicates": 5,
+            "invocationId": "841b5f15-6da7-4cc1-8834-83925b1e8702"
+          }
+        },
+        "worker": {
+          "elapsedMs": 130.20758399995975,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 109,
+          "leased": 0,
+          "pending": 21,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 6,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 6,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 6,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 42,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 10,
+            "e22f6181-b380-46ee-996f-38baf62052df": 6,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 6,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 6
+          },
+          "acknowledged": 88,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 480.289816
+        }
+      },
+      {
+        "at": "2026-10-03T00:16:41.197Z",
+        "phase": "steady",
+        "minute": 26,
+        "discovery": {
+          "elapsedMs": 43.04779199999757,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 5,
+            "duplicates": 5,
+            "invocationId": "c3f4f6e9-cd56-4292-823c-421ea7f3ffbe"
+          }
+        },
+        "worker": {
+          "elapsedMs": 135.3874169997871,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 113,
+          "leased": 0,
+          "pending": 22,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 6,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 6,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 6,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 44,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 11,
+            "e22f6181-b380-46ee-996f-38baf62052df": 6,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 6,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 6
+          },
+          "acknowledged": 91,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 480.314903
+        }
+      },
+      {
+        "at": "2026-10-03T00:17:41.197Z",
+        "phase": "steady",
+        "minute": 27,
+        "discovery": {
+          "elapsedMs": 19.114667000016198,
+          "result": {
+            "rules": 1,
+            "emitted": 1,
+            "examined": 6,
+            "duplicates": 5,
+            "invocationId": "3236e4e6-9584-49ea-991e-b6cf0aa666d8"
+          }
+        },
+        "worker": {
+          "elapsedMs": 111.92004100000486,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 118,
+          "leased": 0,
+          "pending": 23,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 7,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 6,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 6,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 45,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 12,
+            "e22f6181-b380-46ee-996f-38baf62052df": 7,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 6,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 6
+          },
+          "acknowledged": 95,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 540.313232
+        }
+      },
+      {
+        "at": "2026-10-03T00:18:41.225Z",
+        "phase": "steady",
+        "minute": 28,
+        "discovery": {
+          "elapsedMs": 36.872082999907434,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 6,
+            "duplicates": 6,
+            "invocationId": "9d398da5-721b-48cc-b253-a88bb6cc4915"
+          }
+        },
+        "worker": {
+          "elapsedMs": 120.00354199996218,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 122,
+          "leased": 0,
+          "pending": 23,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 7,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 7,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 7,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 47,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 12,
+            "e22f6181-b380-46ee-996f-38baf62052df": 7,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 6,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 6
+          },
+          "acknowledged": 99,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 540.330492
+        }
+      },
+      {
+        "at": "2026-10-03T00:19:41.229Z",
+        "phase": "steady",
+        "minute": 29,
+        "discovery": {
+          "elapsedMs": 37.11083300015889,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 6,
+            "duplicates": 6,
+            "invocationId": "4a703242-3c41-4c89-8f5f-0403a1937423"
+          }
+        },
+        "worker": {
+          "elapsedMs": 118.56587500008754,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 126,
+          "leased": 0,
+          "pending": 24,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 7,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 7,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 7,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 48,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 12,
+            "e22f6181-b380-46ee-996f-38baf62052df": 7,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 7,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 7
+          },
+          "acknowledged": 102,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 540.357603
+        }
+      },
+      {
+        "at": "2026-10-03T00:20:41.162Z",
+        "phase": "steady",
+        "minute": 30,
+        "discovery": {
+          "elapsedMs": 37.60449999989942,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 6,
+            "duplicates": 6,
+            "invocationId": "d83370a7-5d67-46bd-90ac-d38c1f8df490"
+          }
+        },
+        "worker": {
+          "elapsedMs": 107.62187499995343,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 130,
+          "leased": 0,
+          "pending": 25,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 7,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 7,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 7,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 50,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 13,
+            "e22f6181-b380-46ee-996f-38baf62052df": 7,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 7,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 7
+          },
+          "acknowledged": 105,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 600.287593
+        }
+      },
+      {
+        "at": "2026-10-03T00:21:41.097Z",
+        "phase": "steady",
+        "minute": 31,
+        "discovery": {
+          "elapsedMs": 33.781458999961615,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 6,
+            "duplicates": 6,
+            "invocationId": "f9eed2df-e124-4bc5-b67e-b0c641e5883f"
+          }
+        },
+        "worker": {
+          "elapsedMs": 103.76454100012779,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 134,
+          "leased": 0,
+          "pending": 26,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 7,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 7,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 52,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 13,
+            "e22f6181-b380-46ee-996f-38baf62052df": 7,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 7,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 7
+          },
+          "acknowledged": 108,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 600.210912
+        }
+      },
+      {
+        "at": "2026-10-03T00:22:41.231Z",
+        "phase": "steady",
+        "minute": 32,
+        "discovery": {
+          "elapsedMs": 36.332625000039116,
+          "result": {
+            "rules": 1,
+            "emitted": 1,
+            "examined": 7,
+            "duplicates": 6,
+            "invocationId": "920b15ee-184c-4c06-ac12-a1486af27cc7"
+          }
+        },
+        "worker": {
+          "elapsedMs": 125.04845799994655,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 139,
+          "leased": 0,
+          "pending": 27,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 7,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 53,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 14,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 7,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 7
+          },
+          "acknowledged": 112,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.343228
+        }
+      },
+      {
+        "at": "2026-10-03T00:23:41.440Z",
+        "phase": "steady",
+        "minute": 33,
+        "discovery": {
+          "elapsedMs": 46.940750000067055,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 7,
+            "duplicates": 7,
+            "invocationId": "76b108b2-e3b7-4b5e-8c10-c3bed85db352"
+          }
+        },
+        "worker": {
+          "elapsedMs": 221.984167000046,
+          "result": {
+            "disabled": false,
+            "claimed": 4,
+            "acknowledged": 4,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 143,
+          "leased": 0,
+          "pending": 27,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 55,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 14,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 7,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 116,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.536807
+        }
+      },
+      {
+        "at": "2026-10-03T00:24:41.215Z",
+        "phase": "steady",
+        "minute": 34,
+        "discovery": {
+          "elapsedMs": 33.16124999988824,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 7,
+            "duplicates": 7,
+            "invocationId": "7e53000f-3f3b-4c9d-aa5b-8687b50813ca"
+          }
+        },
+        "worker": {
+          "elapsedMs": 106.00004200008698,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 147,
+          "leased": 0,
+          "pending": 28,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 56,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 15,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 119,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.317107
+        }
+      },
+      {
+        "at": "2026-10-03T00:25:41.510Z",
+        "phase": "early-failure-drain",
+        "minute": 1,
+        "discovery": {
+          "elapsedMs": 65.08083299999998,
+          "result": {
+            "rules": 1,
+            "emitted": 1,
+            "examined": 8,
+            "duplicates": 7,
+            "invocationId": "bf537fc6-678e-4068-a73a-1a4b861d3b52"
+          }
+        },
+        "worker": {
+          "elapsedMs": 107.39833299999918,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 26,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 58,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 122,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.602485
+        }
+      },
+      {
+        "at": "2026-10-03T00:26:41.493Z",
+        "phase": "early-failure-drain",
+        "minute": 2,
+        "discovery": {
+          "elapsedMs": 42.778707999998005,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "f5f47ef4-6d5a-4819-afdd-ff91e8aa2b37"
+          }
+        },
+        "worker": {
+          "elapsedMs": 120.35624999999709,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 23,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 61,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 125,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.591229
+        }
+      },
+      {
+        "at": "2026-10-03T00:27:41.486Z",
+        "phase": "early-failure-drain",
+        "minute": 3,
+        "discovery": {
+          "elapsedMs": 42.180749999999534,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "4af3ce39-b5ad-46ec-9a76-458ca843ceb1"
+          }
+        },
+        "worker": {
+          "elapsedMs": 106.13450000000012,
+          "result": {
+            "disabled": false,
+            "claimed": 2,
+            "acknowledged": 2,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 21,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 63,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 127,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.581859
+        }
+      },
+      {
+        "at": "2026-10-03T00:28:41.484Z",
+        "phase": "early-failure-drain",
+        "minute": 4,
+        "discovery": {
+          "elapsedMs": 40.49654200000805,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "8fd1dd22-f7d9-4a62-bd50-0dfd2b4ca5ae"
+          }
+        },
+        "worker": {
+          "elapsedMs": 117.36624999999185,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 18,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 66,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 130,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.5804
+        }
+      },
+      {
+        "at": "2026-10-03T00:29:41.469Z",
+        "phase": "early-failure-drain",
+        "minute": 5,
+        "discovery": {
+          "elapsedMs": 40.987458000017796,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "09d9c46f-2c18-4eab-a75c-eea46df54c1e"
+          }
+        },
+        "worker": {
+          "elapsedMs": 97.56433300001663,
+          "result": {
+            "disabled": false,
+            "claimed": 2,
+            "acknowledged": 2,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 16,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 68,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 132,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.563595
+        }
+      },
+      {
+        "at": "2026-10-03T00:30:41.500Z",
+        "phase": "early-failure-drain",
+        "minute": 6,
+        "discovery": {
+          "elapsedMs": 45.40020799997728,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "06737ffd-71d7-4c32-9fb6-445359dc8ae8"
+          }
+        },
+        "worker": {
+          "elapsedMs": 124.08299999998417,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 13,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 71,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 135,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.58735
+        }
+      },
+      {
+        "at": "2026-10-03T00:31:41.482Z",
+        "phase": "early-failure-drain",
+        "minute": 7,
+        "discovery": {
+          "elapsedMs": 44.00029200001154,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "1956e015-ccfc-4201-989f-1fe58e03baec"
+          }
+        },
+        "worker": {
+          "elapsedMs": 104.57220799999777,
+          "result": {
+            "disabled": false,
+            "claimed": 2,
+            "acknowledged": 2,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 11,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 73,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 137,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.571936
+        }
+      },
+      {
+        "at": "2026-10-03T00:32:41.498Z",
+        "phase": "early-failure-drain",
+        "minute": 8,
+        "discovery": {
+          "elapsedMs": 43.651666999969166,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "ad81c431-aaa2-4682-9d4d-549ae10723b2"
+          }
+        },
+        "worker": {
+          "elapsedMs": 124.55016699997941,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 8,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 76,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 140,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.614995
+        }
+      },
+      {
+        "at": "2026-10-03T00:33:41.474Z",
+        "phase": "early-failure-drain",
+        "minute": 9,
+        "discovery": {
+          "elapsedMs": 40.900749999971595,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "18b952ba-a4c7-410d-954c-bdf16c2e5399"
+          }
+        },
+        "worker": {
+          "elapsedMs": 105.23600000003353,
+          "result": {
+            "disabled": false,
+            "claimed": 2,
+            "acknowledged": 2,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 6,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 78,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 142,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.565477
+        }
+      },
+      {
+        "at": "2026-10-03T00:34:41.488Z",
+        "phase": "early-failure-drain",
+        "minute": 10,
+        "discovery": {
+          "elapsedMs": 42.99050000007264,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "dfe18eed-11a5-4b7d-bbf4-9caf071ee202"
+          }
+        },
+        "worker": {
+          "elapsedMs": 117.74475000007078,
+          "result": {
+            "disabled": false,
+            "claimed": 3,
+            "acknowledged": 3,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 3,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 81,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 145,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.595824
+        }
+      },
+      {
+        "at": "2026-10-03T00:35:41.466Z",
+        "phase": "early-failure-drain",
+        "minute": 11,
+        "discovery": {
+          "elapsedMs": 43.82387500000186,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "b0171995-fa42-4e3d-bfea-79e386e4cd97"
+          }
+        },
+        "worker": {
+          "elapsedMs": 100.6182920000283,
+          "result": {
+            "disabled": false,
+            "claimed": 2,
+            "acknowledged": 2,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 1,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 83,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 147,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 660.548375
+        }
+      },
+      {
+        "at": "2026-10-03T00:36:41.449Z",
+        "phase": "early-failure-drain",
+        "minute": 12,
+        "discovery": {
+          "elapsedMs": 41.49854200007394,
+          "result": {
+            "rules": 1,
+            "emitted": 0,
+            "examined": 8,
+            "duplicates": 8,
+            "invocationId": "6da4ea6e-5ab8-4c09-9492-3e209dc28ebc"
+          }
+        },
+        "worker": {
+          "elapsedMs": 82.97804199997336,
+          "result": {
+            "disabled": false,
+            "claimed": 1,
+            "acknowledged": 1,
+            "retried": 0,
+            "failed": 0,
+            "deferred": 0,
+            "capacityDeferred": 0
+          }
+        },
+        "queue": {
+          "dead": 0,
+          "total": 148,
+          "leased": 0,
+          "pending": 0,
+          "perTenant": {
+            "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+            "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+            "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+            "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 84,
+            "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+            "e22f6181-b380-46ee-996f-38baf62052df": 8,
+            "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+            "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+          },
+          "acknowledged": 148,
+          "retryPending": 0,
+          "capacityDeferred": 0,
+          "oldestActionableSeconds": 0
+        }
+      }
+    ],
+    "arrivalBatches": [
+      {
+        "at": "2026-10-02T23:50:40.863Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 43.845124999999825
+      },
+      {
+        "at": "2026-10-02T23:50:40.904Z",
+        "tenant": 1,
+        "count": 1,
+        "elapsedMs": 41.83004200000005
+      },
+      {
+        "at": "2026-10-02T23:51:40.902Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 83.57970800000476
+      },
+      {
+        "at": "2026-10-02T23:51:40.961Z",
+        "tenant": 2,
+        "count": 1,
+        "elapsedMs": 58.27229099999386
+      },
+      {
+        "at": "2026-10-02T23:52:40.901Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 79.28804099999252
+      },
+      {
+        "at": "2026-10-02T23:52:40.962Z",
+        "tenant": 3,
+        "count": 1,
+        "elapsedMs": 60.78100000000268
+      },
+      {
+        "at": "2026-10-02T23:52:41.018Z",
+        "tenant": 4,
+        "count": 1,
+        "elapsedMs": 55.72166600001219
+      },
+      {
+        "at": "2026-10-02T23:53:40.875Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 53.346374999993714
+      },
+      {
+        "at": "2026-10-02T23:53:40.920Z",
+        "tenant": 5,
+        "count": 1,
+        "elapsedMs": 44.661833999998635
+      },
+      {
+        "at": "2026-10-02T23:53:40.965Z",
+        "tenant": 6,
+        "count": 1,
+        "elapsedMs": 44.74920900000143
+      },
+      {
+        "at": "2026-10-02T23:54:40.884Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 61.94933299999684
+      },
+      {
+        "at": "2026-10-02T23:54:40.940Z",
+        "tenant": 7,
+        "count": 1,
+        "elapsedMs": 55.63895899997442
+      },
+      {
+        "at": "2026-10-02T23:54:40.992Z",
+        "tenant": 1,
+        "count": 1,
+        "elapsedMs": 52.16004200000316
+      },
+      {
+        "at": "2026-10-02T23:55:40.882Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 59.72137500002282
+      },
+      {
+        "at": "2026-10-02T23:55:40.936Z",
+        "tenant": 2,
+        "count": 1,
+        "elapsedMs": 53.84516700002132
+      },
+      {
+        "at": "2026-10-02T23:56:40.883Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 60.70854100002907
+      },
+      {
+        "at": "2026-10-02T23:56:40.939Z",
+        "tenant": 3,
+        "count": 1,
+        "elapsedMs": 55.602292000025045
+      },
+      {
+        "at": "2026-10-02T23:57:40.886Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 62.71624999999767
+      },
+      {
+        "at": "2026-10-02T23:57:40.939Z",
+        "tenant": 4,
+        "count": 1,
+        "elapsedMs": 53.14566700003343
+      },
+      {
+        "at": "2026-10-02T23:57:40.992Z",
+        "tenant": 5,
+        "count": 1,
+        "elapsedMs": 53.540499999944586
+      },
+      {
+        "at": "2026-10-02T23:58:40.883Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 61.137291999999434
+      },
+      {
+        "at": "2026-10-02T23:58:40.937Z",
+        "tenant": 6,
+        "count": 1,
+        "elapsedMs": 53.38120799994795
+      },
+      {
+        "at": "2026-10-02T23:58:40.991Z",
+        "tenant": 7,
+        "count": 1,
+        "elapsedMs": 54.39341700001387
+      },
+      {
+        "at": "2026-10-02T23:59:40.891Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 67.21037500002421
+      },
+      {
+        "at": "2026-10-02T23:59:40.945Z",
+        "tenant": 1,
+        "count": 1,
+        "elapsedMs": 53.85720800003037
+      },
+      {
+        "at": "2026-10-02T23:59:40.998Z",
+        "tenant": 2,
+        "count": 1,
+        "elapsedMs": 52.83179199998267
+      },
+      {
+        "at": "2026-10-03T00:00:40.886Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 61.51983400003519
+      },
+      {
+        "at": "2026-10-03T00:00:40.939Z",
+        "tenant": 3,
+        "count": 1,
+        "elapsedMs": 53.35154200007673
+      },
+      {
+        "at": "2026-10-03T00:01:40.884Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 59.22170900006313
+      },
+      {
+        "at": "2026-10-03T00:01:40.937Z",
+        "tenant": 4,
+        "count": 1,
+        "elapsedMs": 53.13166700000875
+      },
+      {
+        "at": "2026-10-03T00:02:40.889Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 64.78179200005252
+      },
+      {
+        "at": "2026-10-03T00:02:40.945Z",
+        "tenant": 5,
+        "count": 1,
+        "elapsedMs": 55.957000000053085
+      },
+      {
+        "at": "2026-10-03T00:02:40.994Z",
+        "tenant": 6,
+        "count": 1,
+        "elapsedMs": 49.592791000031866
+      },
+      {
+        "at": "2026-10-03T00:03:40.883Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 58.964124999940395
+      },
+      {
+        "at": "2026-10-03T00:03:40.936Z",
+        "tenant": 7,
+        "count": 1,
+        "elapsedMs": 53.13804099999834
+      },
+      {
+        "at": "2026-10-03T00:03:40.990Z",
+        "tenant": 1,
+        "count": 1,
+        "elapsedMs": 54.075916999951005
+      },
+      {
+        "at": "2026-10-03T00:04:40.877Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 52.75237499992363
+      },
+      {
+        "at": "2026-10-03T00:04:40.930Z",
+        "tenant": 2,
+        "count": 1,
+        "elapsedMs": 53.022875000024214
+      },
+      {
+        "at": "2026-10-03T00:04:40.984Z",
+        "tenant": 3,
+        "count": 1,
+        "elapsedMs": 53.9521249999525
+      },
+      {
+        "at": "2026-10-03T00:05:40.888Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 63.22695800010115
+      },
+      {
+        "at": "2026-10-03T00:05:40.946Z",
+        "tenant": 4,
+        "count": 1,
+        "elapsedMs": 58.851917000021785
+      },
+      {
+        "at": "2026-10-03T00:06:40.884Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 58.47308299993165
+      },
+      {
+        "at": "2026-10-03T00:06:40.937Z",
+        "tenant": 5,
+        "count": 1,
+        "elapsedMs": 53.38925000000745
+      },
+      {
+        "at": "2026-10-03T00:07:40.891Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 65.9029580000788
+      },
+      {
+        "at": "2026-10-03T00:07:40.946Z",
+        "tenant": 6,
+        "count": 1,
+        "elapsedMs": 54.95191599999089
+      },
+      {
+        "at": "2026-10-03T00:07:40.997Z",
+        "tenant": 7,
+        "count": 1,
+        "elapsedMs": 51.31358399998862
+      },
+      {
+        "at": "2026-10-03T00:08:40.884Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 59.354209000011906
+      },
+      {
+        "at": "2026-10-03T00:08:40.938Z",
+        "tenant": 1,
+        "count": 1,
+        "elapsedMs": 53.929709000047296
+      },
+      {
+        "at": "2026-10-03T00:08:40.989Z",
+        "tenant": 2,
+        "count": 1,
+        "elapsedMs": 50.96291700005531
+      },
+      {
+        "at": "2026-10-03T00:09:40.896Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 70.28074999991804
+      },
+      {
+        "at": "2026-10-03T00:09:40.951Z",
+        "tenant": 3,
+        "count": 1,
+        "elapsedMs": 55.42312500020489
+      },
+      {
+        "at": "2026-10-03T00:09:41.002Z",
+        "tenant": 4,
+        "count": 1,
+        "elapsedMs": 50.79704099986702
+      },
+      {
+        "at": "2026-10-03T00:10:40.874Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 49.637166999978945
+      },
+      {
+        "at": "2026-10-03T00:10:40.924Z",
+        "tenant": 5,
+        "count": 1,
+        "elapsedMs": 49.134624999947846
+      },
+      {
+        "at": "2026-10-03T00:11:40.890Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 63.186958000063896
+      },
+      {
+        "at": "2026-10-03T00:11:40.943Z",
+        "tenant": 6,
+        "count": 1,
+        "elapsedMs": 52.747083000140265
+      },
+      {
+        "at": "2026-10-03T00:12:40.895Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 64.00895899999887
+      },
+      {
+        "at": "2026-10-03T00:12:40.947Z",
+        "tenant": 7,
+        "count": 1,
+        "elapsedMs": 51.47812499990687
+      },
+      {
+        "at": "2026-10-03T00:12:40.999Z",
+        "tenant": 1,
+        "count": 1,
+        "elapsedMs": 52.268458999926224
+      },
+      {
+        "at": "2026-10-03T00:13:40.901Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 70.45074999984354
+      },
+      {
+        "at": "2026-10-03T00:13:40.958Z",
+        "tenant": 2,
+        "count": 1,
+        "elapsedMs": 56.80320800002664
+      },
+      {
+        "at": "2026-10-03T00:13:41.008Z",
+        "tenant": 3,
+        "count": 1,
+        "elapsedMs": 49.775582999922335
+      },
+      {
+        "at": "2026-10-03T00:14:40.913Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 82.1963330002036
+      },
+      {
+        "at": "2026-10-03T00:14:40.972Z",
+        "tenant": 4,
+        "count": 1,
+        "elapsedMs": 59.34274999983609
+      },
+      {
+        "at": "2026-10-03T00:14:41.024Z",
+        "tenant": 5,
+        "count": 1,
+        "elapsedMs": 51.894708999898285
+      },
+      {
+        "at": "2026-10-03T00:15:40.905Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 73.58241699985228
+      },
+      {
+        "at": "2026-10-03T00:15:40.973Z",
+        "tenant": 6,
+        "count": 1,
+        "elapsedMs": 67.94195799995214
+      },
+      {
+        "at": "2026-10-03T00:16:40.908Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 75.89066699985415
+      },
+      {
+        "at": "2026-10-03T00:16:40.970Z",
+        "tenant": 7,
+        "count": 1,
+        "elapsedMs": 61.89854199998081
+      },
+      {
+        "at": "2026-10-03T00:17:40.909Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 76.73095900006592
+      },
+      {
+        "at": "2026-10-03T00:17:40.970Z",
+        "tenant": 1,
+        "count": 1,
+        "elapsedMs": 60.59908300009556
+      },
+      {
+        "at": "2026-10-03T00:17:41.022Z",
+        "tenant": 2,
+        "count": 1,
+        "elapsedMs": 52.035334000131115
+      },
+      {
+        "at": "2026-10-03T00:18:40.910Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 78.09324999991804
+      },
+      {
+        "at": "2026-10-03T00:18:40.969Z",
+        "tenant": 3,
+        "count": 1,
+        "elapsedMs": 59.11937500000931
+      },
+      {
+        "at": "2026-10-03T00:18:41.021Z",
+        "tenant": 4,
+        "count": 1,
+        "elapsedMs": 51.79275000002235
+      },
+      {
+        "at": "2026-10-03T00:19:40.914Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 81.42162500019185
+      },
+      {
+        "at": "2026-10-03T00:19:40.971Z",
+        "tenant": 5,
+        "count": 1,
+        "elapsedMs": 57.08083300013095
+      },
+      {
+        "at": "2026-10-03T00:19:41.025Z",
+        "tenant": 6,
+        "count": 1,
+        "elapsedMs": 53.60458300006576
+      },
+      {
+        "at": "2026-10-03T00:20:40.913Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 81.06975000002421
+      },
+      {
+        "at": "2026-10-03T00:20:40.970Z",
+        "tenant": 7,
+        "count": 1,
+        "elapsedMs": 56.943915999960154
+      },
+      {
+        "at": "2026-10-03T00:21:40.883Z",
+        "tenant": 0,
+        "count": 3,
+        "elapsedMs": 50.25466699991375
+      },
+      {
+        "at": "2026-10-03T00:21:40.926Z",
+        "tenant": 1,
+        "count": 1,
+        "elapsedMs": 43.12879200000316
+      },
+      {
+        "at": "2026-10-03T00:22:40.913Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 79.53745899978094
+      },
+      {
+        "at": "2026-10-03T00:22:40.972Z",
+        "tenant": 2,
+        "count": 1,
+        "elapsedMs": 58.81233300012536
+      },
+      {
+        "at": "2026-10-03T00:22:41.021Z",
+        "tenant": 3,
+        "count": 1,
+        "elapsedMs": 49.719042000127956
+      },
+      {
+        "at": "2026-10-03T00:23:40.895Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 60.97925000009127
+      },
+      {
+        "at": "2026-10-03T00:23:40.964Z",
+        "tenant": 4,
+        "count": 1,
+        "elapsedMs": 68.59312500013039
+      },
+      {
+        "at": "2026-10-03T00:23:41.065Z",
+        "tenant": 5,
+        "count": 1,
+        "elapsedMs": 101.67895799991675
+      },
+      {
+        "at": "2026-10-03T00:24:40.920Z",
+        "tenant": 0,
+        "count": 2,
+        "elapsedMs": 86.01062500011176
+      },
+      {
+        "at": "2026-10-03T00:24:40.978Z",
+        "tenant": 6,
+        "count": 1,
+        "elapsedMs": 58.18237500009127
+      },
+      {
+        "at": "2026-10-03T00:24:41.027Z",
+        "tenant": 7,
+        "count": 1,
+        "elapsedMs": 49.09779100003652
+      }
+    ],
+    "processing": "OFF",
+    "result": "FAIL",
+    "unauthorizedEndpoints": "PASS",
+    "externalEmail": "Unconfigured: dispatcher refuses before enqueue/send",
+    "before": {
+      "domain_events": {
+        "indexBytes": 98304,
+        "tableBytes": 16384,
+        "rowsEstimate": 1
+      },
+      "notifications": {
+        "indexBytes": 49152,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      },
+      "automation_runs": {
+        "indexBytes": 32768,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      },
+      "ticket_messages": {
+        "indexBytes": 73728,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      },
+      "automation_rules": {
+        "indexBytes": 155648,
+        "tableBytes": 237568,
+        "rowsEstimate": 122
+      },
+      "automation_chains": {
+        "indexBytes": 8192,
+        "tableBytes": 0,
+        "rowsEstimate": 0
+      },
+      "automation_capacity": {
+        "indexBytes": 8192,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      },
+      "automation_executions": {
+        "indexBytes": 81920,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      },
+      "automation_chain_claims": {
+        "indexBytes": 16384,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      },
+      "domain_event_deliveries": {
+        "indexBytes": 90112,
+        "tableBytes": 16384,
+        "rowsEstimate": 1
+      },
+      "automation_rule_versions": {
+        "indexBytes": 57344,
+        "tableBytes": 180224,
+        "rowsEstimate": 243
+      },
+      "automation_missed_windows": {
+        "indexBytes": 24576,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      },
+      "automation_execution_steps": {
+        "indexBytes": 49152,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      },
+      "automation_tenant_schedule": {
+        "indexBytes": 49152,
+        "tableBytes": 8192,
+        "rowsEstimate": 10
+      },
+      "automation_command_contexts": {
+        "indexBytes": 8192,
+        "tableBytes": 0,
+        "rowsEstimate": 0
+      },
+      "automation_processing_state": {
+        "indexBytes": 16384,
+        "tableBytes": 8192,
+        "rowsEstimate": 1
+      },
+      "automation_temporal_cursors": {
+        "indexBytes": 8192,
+        "tableBytes": 0,
+        "rowsEstimate": 0
+      },
+      "automation_version_visibility": {
+        "indexBytes": 40960,
+        "tableBytes": 49152,
+        "rowsEstimate": 243
+      },
+      "automation_temporal_occurrences": {
+        "indexBytes": 40960,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      }
+    },
+    "failure": "Steady workload exceeded 180-second actionable age and accumulated backlog; stopped arrivals early to measure same-generation drain.",
+    "handoff": {
+      "at": "2026-10-03T00:25:33.964Z",
+      "generation": "1",
+      "inputTickets": 140,
+      "arrivalIntervals": 35,
+      "plannedSteadyMinutes": 60,
+      "actualSampleSpanSeconds": 2040.159,
+      "queue": {
+        "dead": 0,
+        "total": 147,
+        "leased": 0,
+        "pending": 28,
+        "perTenant": {
+          "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+          "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+          "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+          "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 56,
+          "c181d3c4-87ec-4817-8c93-22e0cad7c325": 15,
+          "e22f6181-b380-46ee-996f-38baf62052df": 8,
+          "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+          "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+        },
+        "acknowledged": 119,
+        "retryPending": 0,
+        "capacityDeferred": 0,
+        "oldestActionableSeconds": 713.103472
+      },
+      "processing": "ON, preserved for drain"
+    },
+    "unexecuted": [
+      "Remaining portion of planned 60-minute arrival phase",
+      "80-ticket additional burst"
+    ],
+    "drain": {
+      "result": "PASS",
+      "elapsedSeconds": 667.442984166,
+      "queue": {
+        "dead": 0,
+        "total": 148,
+        "leased": 0,
+        "pending": 0,
+        "perTenant": {
+          "5176f944-30dc-45f1-b7e9-348be2ff94ab": 8,
+          "69e1a49e-6219-4510-9b49-65f6e99801fc": 8,
+          "86251be5-ca89-49d6-9b5b-ec6d91eb68d3": 8,
+          "8f06e48a-60d3-4dbd-8b4d-92d1a72181fb": 84,
+          "c181d3c4-87ec-4817-8c93-22e0cad7c325": 16,
+          "e22f6181-b380-46ee-996f-38baf62052df": 8,
+          "ef2cb788-9182-4108-b5e1-d64143afb61f": 8,
+          "f91fcd8f-79ec-48bd-a192-66634b3589fc": 8
+        },
+        "acknowledged": 148,
+        "retryPending": 0,
+        "capacityDeferred": 0,
+        "oldestActionableSeconds": 0
+      },
+      "generationUnchanged": true
+    },
+    "executions": {
+      "skipped": 140,
+      "succeeded": 148
+    },
+    "actionLatency": {
+      "max": 10,
+      "p50": 3,
+      "p95": 4,
+      "p99": 5.53,
+      "count": 148
+    },
+    "durableEventsAndUniqueSteps": "PASS",
+    "finishedAt": "2026-10-03T00:36:41.679Z",
+    "after": {
+      "domain_events": {
+        "indexBytes": 147456,
+        "tableBytes": 253952,
+        "rowsEstimate": 149
+      },
+      "notifications": {
+        "indexBytes": 90112,
+        "tableBytes": 49152,
+        "rowsEstimate": 40
+      },
+      "automation_runs": {
+        "indexBytes": 65536,
+        "tableBytes": 73728,
+        "rowsEstimate": 92
+      },
+      "ticket_messages": {
+        "indexBytes": 212992,
+        "tableBytes": 57344,
+        "rowsEstimate": 107
+      },
+      "automation_rules": {
+        "indexBytes": 155648,
+        "tableBytes": 237568,
+        "rowsEstimate": 126
+      },
+      "automation_chains": {
+        "indexBytes": 16384,
+        "tableBytes": 49152,
+        "rowsEstimate": 147
+      },
+      "automation_capacity": {
+        "indexBytes": 16384,
+        "tableBytes": 49152,
+        "rowsEstimate": 24
+      },
+      "automation_executions": {
+        "indexBytes": 360448,
+        "tableBytes": 155648,
+        "rowsEstimate": 286
+      },
+      "automation_chain_claims": {
+        "indexBytes": 98304,
+        "tableBytes": 98304,
+        "rowsEstimate": 286
+      },
+      "domain_event_deliveries": {
+        "indexBytes": 122880,
+        "tableBytes": 73728,
+        "rowsEstimate": 149
+      },
+      "automation_rule_versions": {
+        "indexBytes": 57344,
+        "tableBytes": 188416,
+        "rowsEstimate": 251
+      },
+      "automation_missed_windows": {
+        "indexBytes": 24576,
+        "tableBytes": 8192,
+        "rowsEstimate": 0
+      },
+      "automation_execution_steps": {
+        "indexBytes": 237568,
+        "tableBytes": 122880,
+        "rowsEstimate": 286
+      },
+      "automation_tenant_schedule": {
+        "indexBytes": 49152,
+        "tableBytes": 40960,
+        "rowsEstimate": 10
+      },
+      "automation_command_contexts": {
+        "indexBytes": 16384,
+        "tableBytes": 24576,
+        "rowsEstimate": 0
+      },
+      "automation_processing_state": {
+        "indexBytes": 16384,
+        "tableBytes": 8192,
+        "rowsEstimate": 1
+      },
+      "automation_temporal_cursors": {
+        "indexBytes": 16384,
+        "tableBytes": 8192,
+        "rowsEstimate": 1
+      },
+      "automation_version_visibility": {
+        "indexBytes": 40960,
+        "tableBytes": 49152,
+        "rowsEstimate": 251
+      },
+      "automation_temporal_occurrences": {
+        "indexBytes": 81920,
+        "tableBytes": 16384,
+        "rowsEstimate": 8
+      }
+    },
+    "derivedMeasurements": {
+      "steadyArrivalRatePerMinute": 4.205554567070507,
+      "steadyCompletionRatePerMinute": 3.4114988096516004,
+      "rateMethod": "First-to-last steady sample counter deltas divided by elapsed minutes; first immediate batch excluded from rate numerator",
+      "workerHttpMaxMs": 221.984167000046,
+      "runtimeRelationGrowth": {
+        "domain_events": {
+          "tableBytes": 237568,
+          "indexBytes": 49152
+        },
+        "notifications": {
+          "tableBytes": 40960,
+          "indexBytes": 40960
+        },
+        "automation_runs": {
+          "tableBytes": 65536,
+          "indexBytes": 32768
+        },
+        "ticket_messages": {
+          "tableBytes": 49152,
+          "indexBytes": 139264
+        },
+        "automation_rules": {
+          "tableBytes": 0,
+          "indexBytes": 0
+        },
+        "automation_chains": {
+          "tableBytes": 49152,
+          "indexBytes": 8192
+        },
+        "automation_capacity": {
+          "tableBytes": 40960,
+          "indexBytes": 8192
+        },
+        "automation_executions": {
+          "tableBytes": 147456,
+          "indexBytes": 278528
+        },
+        "automation_chain_claims": {
+          "tableBytes": 90112,
+          "indexBytes": 81920
+        },
+        "domain_event_deliveries": {
+          "tableBytes": 57344,
+          "indexBytes": 32768
+        },
+        "automation_rule_versions": {
+          "tableBytes": 8192,
+          "indexBytes": 0
+        },
+        "automation_missed_windows": {
+          "tableBytes": 0,
+          "indexBytes": 0
+        },
+        "automation_execution_steps": {
+          "tableBytes": 114688,
+          "indexBytes": 188416
+        },
+        "automation_tenant_schedule": {
+          "tableBytes": 32768,
+          "indexBytes": 0
+        },
+        "automation_command_contexts": {
+          "tableBytes": 24576,
+          "indexBytes": 8192
+        },
+        "automation_processing_state": {
+          "tableBytes": 0,
+          "indexBytes": 0
+        },
+        "automation_temporal_cursors": {
+          "tableBytes": 8192,
+          "indexBytes": 8192
+        },
+        "automation_version_visibility": {
+          "tableBytes": 0,
+          "indexBytes": 0
+        },
+        "automation_temporal_occurrences": {
+          "tableBytes": 8192,
+          "indexBytes": 40960
+        }
+      }
+    }
+  },
+  "contention": {
+    "engine": "17.11",
+    "gates": {
+      "independent_execution_admission_120_and_capacity_attempt_refund": "PASS",
+      "recipient_contention_20_duplicate_receipt_and_rollback": "PASS",
+      "tenant_notification_capacity_defer_resume_and_no_repeated_completed_action": "PASS",
+      "overlapping_connections_action_idempotency_and_expired_lease_recovery": "PASS",
+      "independent_tenant_notification_contention_120": "PASS",
+      "retry_exhaustion_terminalizes_running_execution": "PASS"
+    },
+    "processing": "OFF"
+  },
+  "interruption": {
+    "engine": "17.11",
+    "scope": "Independent actual worker process; real 120-second lease; fixed isolated upgrade Docker stack",
+    "startedAt": "2026-10-03T00:18:09.833Z",
+    "interruptedAfterCommittedStep": "PASS",
+    "actualLeaseWaitMs": 120829,
+    "recoveredWithoutRepeatedCompletedStep": "PASS",
+    "oldTokenDenied": "PASS",
+    "batches": [
+      {
+        "disabled": false,
+        "claimed": 5,
+        "acknowledged": 5,
+        "retried": 0,
+        "failed": 0,
+        "deferred": 0,
+        "capacityDeferred": 0
+      }
+    ],
+    "result": "PASS",
+    "processing": "OFF",
+    "finishedAt": "2026-10-03T00:20:12.385Z"
+  },
+  "temporal": {
+    "engine": "17.11",
+    "scope": "Local PostgREST, real elapsed windows; synthetic future SLA deadline; immediate extra calls test cursor correctness, not scheduled throughput",
+    "startedAt": "2026-10-03T00:20:59.386Z",
+    "discovery": [
+      {
+        "rules": 2,
+        "emitted": 101,
+        "examined": 101,
+        "duplicates": 0,
+        "invocationId": "068cd40e-8439-47a8-a40c-9022a57a0c29"
+      },
+      {
+        "rules": 2,
+        "emitted": 100,
+        "examined": 101,
+        "duplicates": 1,
+        "invocationId": "14a9b536-9d22-4b8d-b3b6-b42800af93ca"
+      },
+      {
+        "rules": 2,
+        "emitted": 10,
+        "examined": 11,
+        "duplicates": 1,
+        "invocationId": "340c8999-5713-47c3-8a41-af333852c719"
+      },
+      {
+        "rules": 2,
+        "emitted": 0,
+        "examined": 101,
+        "duplicates": 101,
+        "invocationId": "ce52824e-d764-4e8f-b290-54ec79c5396e"
+      }
+    ],
+    "cursorRollbackRecovery": "PASS",
+    "smallTenantProgress": "PASS",
+    "occurrenceIdempotency": "PASS",
+    "worker": [
+      {
+        "disabled": false,
+        "claimed": 2,
+        "acknowledged": 2,
+        "retried": 0,
+        "failed": 0,
+        "deferred": 0,
+        "capacityDeferred": 0
+      }
+    ],
+    "operations": {
+      "lag": {
+        "sampled": 1,
+        "truncated": false,
+        "maxSeconds": 31.227509,
+        "missedWindow": 1,
+        "withinWindow": 1,
+        "latestSeconds": 31.227509,
+        "missedTruncated": false,
+        "lateBeforeDeadline": 0
+      },
+      "now": "2026-10-03T00:23:11.491372+00:00",
+      "queue": {
+        "ready": 0,
+        "leased": 0,
+        "recent": {
+          "failed": 0,
+          "exhausted": 0,
+          "recovered": 0,
+          "truncated": false,
+          "acknowledged": 1
+        },
+        "sampled": 2,
+        "truncated": false,
+        "retryScheduled": 0,
+        "capacityDeferred": 0,
+        "oldestEligibleAt": null,
+        "ineligiblePending": 2,
+        "notificationDeferred": 0,
+        "oldestCapacityDeferredAt": null
+      },
+      "worker": {
+        "latestResult": null,
+        "lastStartedAt": null,
+        "lastCompletedAt": null,
+        "latestStartedAt": null,
+        "lastSuccessfulAt": null,
+        "latestCompletedResult": null
+      },
+      "discovery": {
+        "latestResult": null,
+        "lastStartedAt": null,
+        "lastCompletedAt": null,
+        "latestStartedAt": null,
+        "lastSuccessfulAt": null,
+        "latestCompletedResult": null
+      },
+      "executions": {
+        "total": 1,
+        "running": 0,
+        "skipped": 0,
+        "completed": 1,
+        "truncated": false,
+        "actionFailed": 0,
+        "deliveryFailed": 0,
+        "retryExhausted": 0,
+        "guardrailTerminated": 0
+      },
+      "temporalRules": [
+        {
+          "id": "586258a4-caf3-449b-8e43-efde9eba7da7",
+          "name": "Route requests",
+          "atRisk": false,
+          "trigger": "ticket.sla_approaching",
+          "version": 2,
+          "lastScannedAt": "2026-10-03T00:23:11.352047+00:00",
+          "durationMinutes": 1
+        }
+      ],
+      "processingActive": true,
+      "temporalRulesTruncated": false
+    },
+    "missedWindowObservable": "PASS",
+    "result": "PASS",
+    "processing": "OFF",
+    "finishedAt": "2026-10-03T00:23:11.542Z"
+  },
+  "controls": {
+    "engine": "17.11",
+    "scope": "Separate production-mode Next HTTP server and Docker recovery database; real SSR cookie session",
+    "startedAt": "2026-10-03T00:23:39.296Z",
+    "environmentOffPreservesPendingWork": "PASS",
+    "databaseOffPreservesPendingWorkAndAdmin": "PASS",
+    "oldUnadmittedWorkPreservedUnderActivationCutoff": "PASS",
+    "recoveryBatches": [
+      {
+        "disabled": false,
+        "claimed": 3,
+        "acknowledged": 3,
+        "retried": 0,
+        "failed": 0,
+        "deferred": 0,
+        "capacityDeferred": 0
+      }
+    ],
+    "newGenerationWorkExecutesOnce": "PASS",
+    "result": "PASS",
+    "processing": "OFF",
+    "server": "stopped",
+    "finishedAt": "2026-10-03T00:23:44.205Z"
+  },
+  "upgrade": {
+    "scope": "Local Supabase PG17; synthetic owner-seeded history for constraint scans, not executed action effects",
+    "engine": "17.11",
+    "startedAt": "2026-10-02T23:51:45.643Z",
+    "samples": [
+      [
+        {
+          "wait": "PgSleep",
+          "waitType": "Timeout",
+          "blockedBy": [],
+          "queryAgeMs": 176.642,
+          "application": "stage12c-reader"
+        },
+        {
+          "wait": "relation",
+          "waitType": "Lock",
+          "blockedBy": [
+            703
+          ],
+          "queryAgeMs": 132.774,
+          "application": "stage12c-blocked-migration"
+        }
+      ],
+      [
+        {
+          "wait": "PgSleep",
+          "waitType": "Timeout",
+          "blockedBy": [],
+          "queryAgeMs": 336.784,
+          "application": "stage12c-reader"
+        },
+        {
+          "wait": "relation",
+          "waitType": "Lock",
+          "blockedBy": [
+            703
+          ],
+          "queryAgeMs": 292.916,
+          "application": "stage12c-blocked-migration"
+        }
+      ],
+      [
+        {
+          "wait": "PgSleep",
+          "waitType": "Timeout",
+          "blockedBy": [],
+          "queryAgeMs": 493.199,
+          "application": "stage12c-reader"
+        },
+        {
+          "wait": "relation",
+          "waitType": "Lock",
+          "blockedBy": [
+            703
+          ],
+          "queryAgeMs": 449.333,
+          "application": "stage12c-blocked-migration"
+        }
+      ],
+      [
+        {
+          "wait": "PgSleep",
+          "waitType": "Timeout",
+          "blockedBy": [],
+          "queryAgeMs": 639.929,
+          "application": "stage12c-reader"
+        },
+        {
+          "wait": "relation",
+          "waitType": "Lock",
+          "blockedBy": [
+            703
+          ],
+          "queryAgeMs": 596.06,
+          "application": "stage12c-blocked-migration"
+        }
+      ],
+      [
+        {
+          "wait": "PgSleep",
+          "waitType": "Timeout",
+          "blockedBy": [],
+          "queryAgeMs": 793.532,
+          "application": "stage12c-reader"
+        },
+        {
+          "wait": "relation",
+          "waitType": "Lock",
+          "blockedBy": [
+            703
+          ],
+          "queryAgeMs": 749.663,
+          "application": "stage12c-blocked-migration"
+        }
+      ],
+      [
+        {
+          "wait": "PgSleep",
+          "waitType": "Timeout",
+          "blockedBy": [],
+          "queryAgeMs": 949.665,
+          "application": "stage12c-reader"
+        },
+        {
+          "wait": "relation",
+          "waitType": "Lock",
+          "blockedBy": [
+            703
+          ],
+          "queryAgeMs": 905.796,
+          "application": "stage12c-blocked-migration"
+        }
+      ],
+      [
+        {
+          "wait": "PgSleep",
+          "waitType": "Timeout",
+          "blockedBy": [],
+          "queryAgeMs": 1104.524,
+          "application": "stage12c-reader"
+        }
+      ],
+      [
+        {
+          "wait": "PgSleep",
+          "waitType": "Timeout",
+          "blockedBy": [],
+          "queryAgeMs": 1257.184,
+          "application": "stage12c-reader"
+        }
+      ]
+    ],
+    "mutationMs": [
+      49.12237499999901,
+      45.39054199999373,
+      43.54908299999806,
+      50.352624999999534,
+      62.48220899999433,
+      62.74412499999744
+    ],
+    "before": {
+      "rules": "1ce2b6d3743ae0baa96664bdba726a3e",
+      "steps": "4a4ab1462a6516ce99b185a37da8977d",
+      "versions": "5b92c29b936b53c4c474851746c789d1",
+      "executions": "31f68e6083ee9861e52c9194f8a6bf39",
+      "processing": {
+        "active": false,
+        "singleton": true,
+        "generation": 0,
+        "activated_at": null,
+        "activation_transaction": null
+      }
+    },
+    "volume": {
+      "steps": 200000,
+      "events": 100000,
+      "tickets": 100000,
+      "relations": {
+        "automation_executions": {
+          "indexBytes": 58286080,
+          "tableBytes": 30375936
+        },
+        "domain_event_deliveries": {
+          "indexBytes": 31629312,
+          "tableBytes": 13467648
+        },
+        "automation_execution_steps": {
+          "indexBytes": 71745536,
+          "tableBytes": 34906112
+        }
+      },
+      "deliveries": 100000,
+      "executions": 100000
+    },
+    "lockTimeoutRollback": "PASS",
+    "migrationMs": 874.9278339999946,
+    "after": {
+      "rules": "1ce2b6d3743ae0baa96664bdba726a3e",
+      "steps": "4a4ab1462a6516ce99b185a37da8977d",
+      "versions": "5b92c29b936b53c4c474851746c789d1",
+      "executions": "31f68e6083ee9861e52c9194f8a6bf39",
+      "processing": {
+        "active": false,
+        "singleton": true,
+        "generation": 0,
+        "activated_at": null,
+        "activation_transaction": null
+      }
+    },
+    "legacyEnabled": 101,
+    "furtherEnableDenied": "PASS",
+    "preservation": "PASS",
+    "mutationLatency": {
+      "count": 6,
+      "p95Ms": 62.74412499999744,
+      "maxMs": 62.74412499999744
+    },
+    "noMaintenanceWindowTarget": "PASS, local tested volume only",
+    "processing": "OFF",
+    "finishedAt": "2026-10-02T23:52:39.512Z"
+  },
+  "restore": {
+    "engine": "17.11",
+    "method": "Supabase CLI schema/data/history; replica-mode transaction; managed vector tables excluded",
+    "tablesCompared": 49,
+    "rowDigests": "PASS",
+    "migrationLedger": 40,
+    "enabledRules": 101,
+    "tickets": 100006,
+    "processing": "OFF",
+    "scope": "Isolated local restore; no hosted platform configuration or Storage object bytes restored"
+  },
+  "observability": {
+    "scope": "Local Next server log and PostgreSQL stdout/stderr log sample; not provider-wide log sinks",
+    "checkedAt": "2026-10-03T00:37:58.753Z",
+    "logs": {
+      "app": {
+        "bytes": 329208,
+        "sensitiveCanariesAbsent": true
+      },
+      "database": {
+        "bytes": 1001297,
+        "sensitiveCanariesAbsent": true
+      }
+    },
+    "trace": {
+      "ruleId": "414eee8a-66fa-4451-bd93-bc2800a91385",
+      "status": "succeeded",
+      "stepId": "12ec7484-4cd9-4c38-8c99-f9d8f54df348",
+      "eventId": "ee455ca9-2266-4e7f-bac3-0aeee45120a8",
+      "deliveryId": "0a1ed2f9-bebf-4823-824f-dcd7cfbb810b",
+      "causationId": null,
+      "executionId": "2f5328b9-d1da-470e-a45d-c5dee91e4289",
+      "rootEventId": "ee455ca9-2266-4e7f-bac3-0aeee45120a8",
+      "ruleVersion": 2,
+      "correlationId": "bffb21c6-8dcc-4b0f-b622-8ae7e46825ef"
+    },
+    "workerLogEntries": 732,
+    "safeActionTrace": "PASS",
+    "invocations": [
+      {
+        "id": "c8cff0c6-7c68-4a8f-90a5-a69e0a945d51",
+        "kind": "worker",
+        "outcome": "succeeded",
+        "startedAt": "2026-10-03T00:36:41.322858+00:00"
+      },
+      {
+        "id": "580e58df-e6c1-40a6-a621-f4c5b0562a2b",
+        "kind": "discovery",
+        "outcome": "succeeded",
+        "startedAt": "2026-10-03T00:36:41.288546+00:00"
+      }
+    ],
+    "workerInvocationLink": "PARTIAL: worker step logs omit the automation_runs UUID; associate by bounded invocation time, not an exact persisted foreign key",
+    "discoveryInvocationIds": [
+      "272ee72d-f95d-42dc-a7de-7f8b457ead8e",
+      "ce591219-6819-4746-8552-ff7c3dbcb1a7",
+      "33071c86-e702-4a31-a59e-e7e46a2edc62",
+      "8a410345-da85-44ea-a2cf-59abd2cef8c3",
+      "b21b2f47-14e2-45c8-b3d3-5e01ffe1aadc",
+      "ee93f532-f79e-4278-9340-ca3f57be2f45",
+      "0d12cc4c-776d-4c78-ace8-c7d5746a9bbd",
+      "cd6b9aeb-7840-4340-affc-aa4c950a887b",
+      "0c5b226b-0ec2-449b-8591-8c0647982c90",
+      "0cddce5e-aa16-47a8-90e1-6d964d25f818",
+      "32d3d9f9-80aa-49f6-8a23-e15eca50dc60",
+      "22fe7141-9612-4ec9-b99c-eed599ce8586",
+      "5afafd0a-094e-4ec1-b149-75d21b1f55f6",
+      "b09bdb70-f500-4bad-a56d-b682f43bf54e",
+      "c924b5e6-15ac-4ee8-a6fb-71b53279844f",
+      "a4a83ded-4b91-4624-ae9d-79091c3b96e0",
+      "f562804d-d2bd-4132-b5d4-f469416a8dde",
+      "47db8275-1719-466f-985c-97828b15432c",
+      "09e9ef21-c9da-4174-912b-97a1d795dec5",
+      "573a0485-ed02-47f6-a7e5-6c7351bca7b6",
+      "c085ed0c-d01d-4987-889c-ca806e5a69f2",
+      "4cacab33-ecdf-4737-bb4a-0491ae8af8b6",
+      "50290f8c-a96f-46b6-b220-e63daaad14fd",
+      "01b1cecd-9cce-4b51-a783-70ace5948654",
+      "fe7f3b96-6dfd-4623-9c11-94aa707f3c4d",
+      "841b5f15-6da7-4cc1-8834-83925b1e8702",
+      "c3f4f6e9-cd56-4292-823c-421ea7f3ffbe",
+      "3236e4e6-9584-49ea-991e-b6cf0aa666d8",
+      "9d398da5-721b-48cc-b253-a88bb6cc4915",
+      "4a703242-3c41-4c89-8f5f-0403a1937423",
+      "d83370a7-5d67-46bd-90ac-d38c1f8df490",
+      "f9eed2df-e124-4bc5-b67e-b0c641e5883f",
+      "920b15ee-184c-4c06-ac12-a1486af27cc7",
+      "76b108b2-e3b7-4b5e-8c10-c3bed85db352",
+      "7e53000f-3f3b-4c9d-aa5b-8687b50813ca",
+      "bf537fc6-678e-4068-a73a-1a4b861d3b52",
+      "f5f47ef4-6d5a-4819-afdd-ff91e8aa2b37",
+      "4af3ce39-b5ad-46ec-9a76-458ca843ceb1",
+      "8fd1dd22-f7d9-4a62-bd50-0dfd2b4ca5ae",
+      "09d9c46f-2c18-4eab-a75c-eea46df54c1e",
+      "06737ffd-71d7-4c32-9fb6-445359dc8ae8",
+      "1956e015-ccfc-4201-989f-1fe58e03baec",
+      "ad81c431-aaa2-4682-9d4d-549ae10723b2",
+      "18b952ba-a4c7-410d-954c-bdf16c2e5399",
+      "dfe18eed-11a5-4b7d-bbf4-9caf071ee202",
+      "b0171995-fa42-4e3d-bfea-79e386e4cd97",
+      "6da4ea6e-5ab8-4c09-9492-3e209dc28ebc"
+    ],
+    "externalLogSinks": "Not inspected; no hosted environment"
+  },
+  "cleanup": {
+    "activeStage12CContainers": [],
+    "activeStage12CHelperProcesses": [],
+    "preservedLocalVolumes": [
+      "supabase_db_fixxflow-stage12c-local",
+      "supabase_db_fixxflow-stage12c-restore",
+      "supabase_db_fixxflow-stage12c-upgrade",
+      "supabase_edge_runtime_fixxflow-stage12c-local",
+      "supabase_storage_fixxflow-stage12c-local",
+      "supabase_storage_fixxflow-stage12c-restore",
+      "supabase_storage_fixxflow-stage12c-upgrade"
+    ],
+    "newBillableResources": 0,
+    "productionSupabaseAccessed": false,
+    "productionModified": false,
+    "localTestPortsClosed": {
+      "3100": true,
+      "3101": true,
+      "3102": true
+    }
+  },
+  "baseline": {
+    "commit": "048a16280310b65838192d5ac1aef8100a5bd6bc",
+    "node": "24.21.0",
+    "applicationSourceUnchanged": true,
+    "workingTreeInitiallyClean": true,
+    "suite": {
+      "tests": 707,
+      "passed": 707,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 22843.897292
+    },
+    "typecheck": "PASS",
+    "eslintZeroWarnings": "PASS",
+    "processingOffProductionBuild": "PASS",
+    "migrations": 40
+  },
+  "migrationManifest": [
+    {
+      "file": "20260921005845_organization_identity_foundation.sql",
+      "sha256": "7d28801934bc41bdcd9732333913e8160b1a937e067ef693f1bec2988934204f"
+    },
+    {
+      "file": "20260921010019_harden_identity_policies.sql",
+      "sha256": "e3a9a2ff009ed8fb6f42f0055684544460e2e1a925e6ff1a1711ad17aac589f6"
+    },
+    {
+      "file": "20260921015452_ticketing_engine.sql",
+      "sha256": "4a4f93b88746a77872c5388834f732e54efbb611b7ad334bd757039f2fec9bc8"
+    },
+    {
+      "file": "20260921015519_ticketing_foreign_key_indexes.sql",
+      "sha256": "de3a251d0ed87592b4dadb9a6cdc04670d7f93cd6f889a31b168da78ad86add8"
+    },
+    {
+      "file": "20260921020443_enable_customer_organization_signup.sql",
+      "sha256": "865d48537813dee99b10135a9f80f57a2bda22df2dee65708fc9ad219acbf70c"
+    },
+    {
+      "file": "20260921211804_first_class_support_chat.sql",
+      "sha256": "dafe2166a3d62eb0e385894f36a1da4baeb353eb72500bfe3c33054fd7189cea"
+    },
+    {
+      "file": "20260925004637_employee_ticket_reopen.sql",
+      "sha256": "d304a2673f072d4f19a4c5506c91bdc4e178dc2c33f3663089c5ff13658ef483"
+    },
+    {
+      "file": "20260925004643_ticket_sla_targets.sql",
+      "sha256": "4008fbf36a967d9d5b968fb953bd286e80d01640b2e449e9f9e95eb29ad8c063"
+    },
+    {
+      "file": "20260925010356_starter_ticket_categories.sql",
+      "sha256": "874501ecd6f506301a3bc3bc14b8c88eca782468d3453fda588d5c5aabdc34d6"
+    },
+    {
+      "file": "20260925010358_enforce_mfa_and_server_owned_timestamps.sql",
+      "sha256": "f46fbffb27eeafb1efebb0bc6929911f9e9b29f75d1f01932408b9e4857fdd4f"
+    },
+    {
+      "file": "20260925013051_ticket_notifications.sql",
+      "sha256": "dd047825235ed60f89ea97173c856f03aacf35bee5508d6909ce7af274d2f232"
+    },
+    {
+      "file": "20260925013110_schedule_notification_sla.sql",
+      "sha256": "9ba45bfc9ef84e2cf613221b4b055f2b3076009120e7cbd5729f92ab63d78d94"
+    },
+    {
+      "file": "20260925013145_harden_notification_dispatcher.sql",
+      "sha256": "65c519a2caaab1ca5212c0617c1d2f745d1934249fdcf6bfd45cf5a4b88db979"
+    },
+    {
+      "file": "20260925014034_indexed_ticket_search.sql",
+      "sha256": "c713c05842478b2f293749503ef92d0cbe8c2964269d3e7a1f7c682b96584939"
+    },
+    {
+      "file": "20260925015718_knowledge_base.sql",
+      "sha256": "16f37843802cae32b7b4fc51f5133afdb5769a2381d1b7899422aad0ce18aa87"
+    },
+    {
+      "file": "20260925015806_restrict_knowledge_column_grants.sql",
+      "sha256": "4070300bec42b7bc7eb9854cca48691f97d340a5c321c31ce87c67f6e21c4c13"
+    },
+    {
+      "file": "20260925025937_operational_reporting.sql",
+      "sha256": "867b025fc7ddd81ce227627d185717a315d9ad7d21b3a70d34d13291f6d02508"
+    },
+    {
+      "file": "20260925031136_audit_log.sql",
+      "sha256": "9ac8f05a05be9c4cb6b2624035c708a4f90c34c2ddc67d6baac7b6cb4d28df16"
+    },
+    {
+      "file": "20260925032928_product_analytics.sql",
+      "sha256": "2572d1dac155bc445a2ff06244d065bca1519a1b00d5c5cffc878e0fa003f45b"
+    },
+    {
+      "file": "20260925033210_product_analytics_private_policies.sql",
+      "sha256": "03b74e2b573f653007454d49605cfa26777ce80e02c5b5b751eb89347d8fe27d"
+    },
+    {
+      "file": "20260925035955_assets_and_platform.sql",
+      "sha256": "3c436a0cb500a16870fb53b63c5e226d8c23a135bbd75bef9185beb1fd2c7486"
+    },
+    {
+      "file": "20260926020400_remove_sample_knowledge_articles.sql",
+      "sha256": "6822f2ee115b7c60bb4d5eb85bc333e2789e1d0d6f2644fe051fe0aba38fd62d"
+    },
+    {
+      "file": "20260926022032_protect_organization_references_on_delete.sql",
+      "sha256": "0bf99501e01101c830231c2fc33fa14f6e28a79e844d2cb863480944229c9497"
+    },
+    {
+      "file": "20260926024852_category_team_routing.sql",
+      "sha256": "775a5bc41b737f59bab2d8a52d675941efe2b1d39e79a32e0d22421183cc5a54"
+    },
+    {
+      "file": "20260926025012_ticket_routing_insert_permission.sql",
+      "sha256": "701a6b59bbee9e1cbed419fbd44c62f667ec0722ea5b797f360e22eec3289438"
+    },
+    {
+      "file": "20260927233229_universal_partial_search.sql",
+      "sha256": "f265cc381b7a81a1d76d96a8eb0d7c9a4a90522642406ae9bf50619f59c52cd5"
+    },
+    {
+      "file": "20261001014435_automation_rule_definitions.sql",
+      "sha256": "7a5781ef6c3d08e15548f6c918c66ef18e47c004cfd2682fe8f5240fdf5a0379"
+    },
+    {
+      "file": "20261001014436_automation_administration_audit.sql",
+      "sha256": "621f90798308713203b069593f2fc92c89ba0c5e6177e24fc7db4e3243b21924"
+    },
+    {
+      "file": "20261001020338_durable_domain_events.sql",
+      "sha256": "255fc7c55d86bb6d95f65fac3402990034f55dcd135237dd937f950fa3d3a632"
+    },
+    {
+      "file": "20261001022623_automation_execution_authority.sql",
+      "sha256": "502864308b148f76cc9b8688b12d01d17e79cad779f8ecccfd21753bb4cd41b4"
+    },
+    {
+      "file": "20261001023010_automation_ticket_commands.sql",
+      "sha256": "085529598746c0234f437668db7889c8716f8945402e81f87ac1e28f08d7ff13"
+    },
+    {
+      "file": "20261001025400_automation_notification_kind.sql",
+      "sha256": "0a989be93641d7103bd5f311180e65a14d0241f3339aa9fc4ba34086be8a881d"
+    },
+    {
+      "file": "20261001025401_automation_worker_delivery.sql",
+      "sha256": "48f06eada8767f892d4035b7a709326345991f9b71aeeddb24235fce865d64f5"
+    },
+    {
+      "file": "20261001025402_automation_notification_command.sql",
+      "sha256": "a3ade26c636d2603bd8a9faf8a561b0686aed06be7fe05907d2dbc37c4773957"
+    },
+    {
+      "file": "20261001031036_automation_dry_run_reads.sql",
+      "sha256": "1a6e035bcb1f484fac98fd8ab25fd515cf8236fb270d3745984e453f6fdc206b"
+    },
+    {
+      "file": "20261001032617_automation_admin_reads.sql",
+      "sha256": "a2cf3f89670dbc917e06917c2b916429b93e015619abc705759df9a7e06199d8"
+    },
+    {
+      "file": "20261001160233_automation_temporal_episodes.sql",
+      "sha256": "c9b40a6c90ebe9d6a58f4d99ef31009fdcc3425f1c20a1bb9a269cf8841576f2"
+    },
+    {
+      "file": "20261001160248_automation_temporal_discovery.sql",
+      "sha256": "82e0e3a5848a68a400aa9a5fb15056a44c9f31011a2c71bbe1dbe60624016141"
+    },
+    {
+      "file": "20261001165514_automation_operations.sql",
+      "sha256": "e44d2359734d1c053efe7a00051ba7df95e657b69ec1b819fc05d8196c3d0618"
+    },
+    {
+      "file": "20261002202406_automation_guardrails.sql",
+      "sha256": "baf23a60dfcf7002369a4924f4b6c8be878fc30e6735571cdcdd5abd99dcfd9a"
+    }
+  ],
+  "helperManifest": [
+    {
+      "file": "tests/helpers/automation-stage12c-app-boundaries.mjs",
+      "sha256": "d07d679c3451f56d3c9d74c5a29753c5375838f093b693c43097a5c0565cd6fd"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-app.mjs",
+      "sha256": "adad3bea7222c97943c67cdda760968649fae2ca01046f960ea59e401a776cc8"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-browser-session.mjs",
+      "sha256": "82bcc0a978c62230d6a22f4bb117cf78ecfb5d765f83186756546e43b784bb0b"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-capacity.mjs",
+      "sha256": "6c1d52f8019cda5d2b48e4927dc46727f7fbf38de3706f92026b921ae4a49164"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-contention.mjs",
+      "sha256": "e8104cd7379a932eb258c1954bc3f4a0fa851ca03cea612a7468e2878fdb139f"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-controls.mjs",
+      "sha256": "231e7f39524fab6cca76ad75911f4eb40ac312b0f5f450d10415343270760585"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-drain.mjs",
+      "sha256": "1ec674c2b4dbd9669c579a9bd4bc3091788890f027b7b4ea581e1af9123f9600"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-interruption.mjs",
+      "sha256": "dd9fd3fc1c6c158f1f93b2f3b4b561db1aa8b10e9996f3e1cce1df8e52d1cb62"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-local.mjs",
+      "sha256": "c6b07f01384dd1f9b99c0c87daeb2768315cc88604af7dfa85272571501a9232"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-observability.mjs",
+      "sha256": "b249b7cb502068e3a624a843e27abdae81405f0c7a205e63284aeb86e5b20156"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-postgrest.mjs",
+      "sha256": "a0dfb6b7046a0d190f8f82fe1d10557ee30e4912db2bad3aec7eea6edc534cc6"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-recovery-app.mjs",
+      "sha256": "6f966637af373a36b566478b6a7e417c660f2db4cf09f6626f6b609ec3310e9b"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-recovery-env.mjs",
+      "sha256": "7eb590ebc30b70602c0c168b2495d3373dc9ea7e7d594d1b8861055e7aae476e"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-restore.mjs",
+      "sha256": "ead11cecfd3e87ae71d407ef52ed159deb3b5be433ae92face1e98366c5ed6ad"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-temporal.mjs",
+      "sha256": "aace9dd97ca9abd0c77f26016f1dd273979de3570c0f287e8d273272c51adb81"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-ui-conflict.mjs",
+      "sha256": "2fce7e85d9b04a6e7cfaa034820b839c24a5fd6c0e622bacde5898d74705d37d"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-ui-snapshot.mjs",
+      "sha256": "1d9375e1721a4301b7b464d4588081f956a8112c94c527dfa130743da85cf597"
+    },
+    {
+      "file": "tests/helpers/automation-stage12c-upgrade.mjs",
+      "sha256": "d69a1bd3514c3511aabec048f5749030d93224084098af3d8938e2c3c56f83f4"
+    }
+  ],
+  "finalDatabaseControls": {
+    "local": {
+      "version": "17.11",
+      "migrations": 40,
+      "processingActive": false
+    },
+    "upgrade": {
+      "version": "17.11",
+      "migrations": 40,
+      "processingActive": false
+    },
+    "restore": {
+      "version": "17.11",
+      "migrations": 40,
+      "processingActive": false
+    }
+  },
+  "finalHttpControls": {
+    "automation": {
+      "disabled": true
+    },
+    "automation-scheduler": {
+      "disabled": true
+    }
+  },
+  "resourceSnapshot": [
+    {
+      "BlockIO": "110MB / 262MB",
+      "CPUPerc": "0.25%",
+      "Container": "supabase_db_fixxflow-stage12c-local",
+      "ID": "e7286c333ba6",
+      "MemPerc": "2.53%",
+      "MemUsage": "200.7MiB / 7.746GiB",
+      "Name": "supabase_db_fixxflow-stage12c-local",
+      "NetIO": "21.9MB / 18.5MB",
+      "PIDs": "36"
+    },
+    {
+      "BlockIO": "198MB / 4.01GB",
+      "CPUPerc": "0.02%",
+      "Container": "supabase_db_fixxflow-stage12c-upgrade",
+      "ID": "431f55006572",
+      "MemPerc": "3.05%",
+      "MemUsage": "241.8MiB / 7.746GiB",
+      "Name": "supabase_db_fixxflow-stage12c-upgrade",
+      "NetIO": "4.18MB / 373MB",
+      "PIDs": "20"
+    },
+    {
+      "BlockIO": "224MB / 4.33GB",
+      "CPUPerc": "0.45%",
+      "Container": "supabase_db_fixxflow-stage12c-restore",
+      "ID": "9a2c181484a3",
+      "MemPerc": "2.97%",
+      "MemUsage": "235.4MiB / 7.746GiB",
+      "Name": "supabase_db_fixxflow-stage12c-restore",
+      "NetIO": "1.49MB / 1.06MB",
+      "PIDs": "17"
+    }
+  ],
+  "logHashes": {
+    "tests": "7dbf8e91a557be93e577bae2664645576e9c547cc9d509f209f2be0002832a65",
+    "typecheck": "a2c7b7e1ee76f143a3d8492a241f5610286005b3081e7dc226b020b0817ef436",
+    "lint": "4ba2912161da4c8ef5e3ec0caa9adcaeb180af0ec73fd1dd643d17c3dd246c00",
+    "build": "2cdcc3cad4953d7481b5c0270600dccf334d65e1972c469c10861c9648ffccd4"
+  },
+  "recordedAt": "2026-10-03T00:39:43.194382+00:00",
+  "releaseDecision": "BLOCKED: steady workload fails; hosted-specific, full UI/screen-reader and operational-matrix gaps remain; no activation",
+  "ui": {
+    "scope": "Real local Safari; documented manual observations",
+    "viewports": [
+      1440,
+      834,
+      390
+    ],
+    "operationsZoomPercent": 200,
+    "fullMatrix": "PARTIAL",
+    "screenReader": "BLOCKED; incomplete spoken workflow audit; VoiceOver OFF at owner request",
+    "applicationUiCodeChanged": false
+  }
+}

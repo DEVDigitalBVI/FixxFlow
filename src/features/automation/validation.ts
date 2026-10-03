@@ -40,9 +40,18 @@ export function validateCondition(input: unknown, registry: AutomationRegistry, 
   return { valid: true, value: copyJson(input) as AutomationCondition };
 }
 
+/** New drafts/writes obey the current byte ceiling. */
 export function validateDefinition(input: unknown, registry: AutomationRegistry): ValidationResult<AutomationDefinition> {
+  return validateDefinitionWithPolicy(input, registry, true);
+}
+/** Read/execute only: retain all original structural bounds for immutable data.
+ * This does not confer persistence or execution authority. */
+export function validateStoredDefinition(input: unknown, registry: AutomationRegistry): ValidationResult<AutomationDefinition> {
+  return validateDefinitionWithPolicy(input, registry, false);
+}
+function validateDefinitionWithPolicy(input: unknown, registry: AutomationRegistry, enforceWriteLimit: boolean): ValidationResult<AutomationDefinition> {
   if (!isBoundedJson(input) || !isRecord(input) || !hasOnly(input, ['schemaVersion', 'name', 'description', 'trigger', 'conditions', 'actions'])) return invalid('definition', 'invalid_definition', 'Provide a bounded structured automation definition.');
-  if (new TextEncoder().encode(JSON.stringify(input)).length > automationLimits.definitionBytes) return invalid('definition', 'definition_limit_exceeded', 'The automation definition exceeds the 256 KiB safety limit. Shorten notes or condition values.');
+  if (enforceWriteLimit && new TextEncoder().encode(JSON.stringify(input)).length > automationLimits.definitionBytes) return invalid('definition', 'definition_limit_exceeded', 'The automation definition exceeds the 256 KiB safety limit. Shorten notes or condition values.');
   const issues: ValidationIssue[] = [];
   if (input.schemaVersion !== 1) issues.push(issue('schemaVersion', 'unsupported_version', 'Only definition schema version 1 is supported.'));
   if (!matchesValue(input.name, { kind: 'string', minLength: 1, maxLength: automationLimits.name })) issues.push(issue('name', 'invalid_name', 'Enter an automation name of 1–120 characters.'));
@@ -102,10 +111,16 @@ export function validateDefinition(input: unknown, registry: AutomationRegistry)
 }
 
 export function validateRule(input: unknown, registry: AutomationRegistry): ValidationResult<AutomationRule> {
+  return validateRuleWithPolicy(input, registry, validateDefinition);
+}
+export function validateStoredRule(input: unknown, registry: AutomationRegistry): ValidationResult<AutomationRule> {
+  return validateRuleWithPolicy(input, registry, validateStoredDefinition);
+}
+function validateRuleWithPolicy(input: unknown, registry: AutomationRegistry, validate: typeof validateDefinition): ValidationResult<AutomationRule> {
   if (!isBoundedJson(input) || !isRecord(input) || !hasOnly(input, ['id', 'organizationId', 'enabled', 'version', 'createdBy', 'createdAt', 'updatedAt', 'definition']) || !isUuid(input.id) || !isUuid(input.organizationId) || !isUuid(input.createdBy) || typeof input.enabled !== 'boolean' || !positiveInteger(input.version) || !isTimestamp(input.createdAt) || !isTimestamp(input.updatedAt) || Date.parse(input.updatedAt) < Date.parse(input.createdAt)) {
     return invalid('rule', 'invalid_rule', 'Provide valid tenant-scoped rule metadata.');
   }
-  const definition = validateDefinition(input.definition, registry);
+  const definition = validate(input.definition, registry);
   if (!definition.valid) return definition;
   return { valid: true, value: { ...copyJson(input) as AutomationRule, definition: definition.value } };
 }

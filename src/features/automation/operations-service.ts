@@ -26,7 +26,7 @@ export function operationsHistoryFilters(input: OperationsFilters) {
   if (since && until && (Date.parse(since)>=Date.parse(until) || Date.parse(until)-Date.parse(since)>31*86400000)) error = 'Choose a time range of up to 31 days.';
   if (Boolean(beforeAt)!==Boolean(beforeId) || (beforeId && !isUuid(beforeId))) error = 'This history page is unavailable. Start from the newest results.';
   if (number && (!/^\d+$/.test(number) || !Number.isSafeInteger(Number(number)) || Number(number)<1)) error = 'Enter a valid ticket number.';
-  if (!['all','succeeded','skipped','running','action_failed','retry_exhausted','delivery_failed','failures'].includes(result)) error = 'Choose an available execution result.';
+  if (!['all','succeeded','skipped','running','action_failed','retry_exhausted','delivery_failed','guardrail','failures'].includes(result)) error = 'Choose an available execution result.';
   return { query, trigger, result, from, to, ticket: number, since, until, beforeAt: beforeAt || null, beforeId: beforeId || null, error };
 }
 export async function automationOperationsHistory(input: OperationsFilters) {

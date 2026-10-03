@@ -1,5 +1,11 @@
 # Automation Stage 12 — guardrails, resource protection and backpressure
 
+**Corrective implementation:** the four findings in the
+[Stage 12 audit](automation-stage12-audit.md) are addressed by a forward migration
+and scoped application changes. See the [correction verification report](automation-stage12-corrections.md)
+for current evidence and remaining release gates. Historical Stage 12/12B/12C
+results below are not approval of a different application revision.
+
 Stage 12 adds safety controls, not Automation capabilities or subscription tiers.
 Processing remains OFF. No production Supabase query, remote migration, backup
 change, deployment or activation is part of this work. Tests activate only fresh,
@@ -35,7 +41,7 @@ configuration. Changing a ceiling requires a reviewed code/schema change.
 | Runtime action attempts per chain | 100 | Existing action authority; unchanged |
 | Delivery attempts | 8 total lease attempts | Existing terminal retry exhaustion and exponential backoff 30s–3,600s |
 | Action step receipts | At most one committed attempt | Retransmission returns receipt; rolled-back infrastructure/capacity work costs no action attempt |
-| Claim request | Default 5; maximum 20; lease 30–900s (default 120s) | Stage 5 worker RPC; Stage 12 adds tenant rotation and at most 100 candidate eligibility checks per slot |
+| Claim request | Default 5; maximum 20; lease 30–900s (default 120s) | Successful leases, separately bounded by 20 tenant visits, 100 cheap candidates per visit and batch size × 100 eligibility checks per invocation |
 | Legacy transport claim RPC | Default 20; maximum 100 | Stage 3 service-only transport contract retained; not used by the Automation worker. Execution and notification admission still enforce tenant safety independently |
 | Rule discovery page | 50 | Existing keyset pagination, preserved |
 | Worker time | 45s cooperative budget; route ceiling 60s | Existing worker |
@@ -50,8 +56,21 @@ can conservatively retain numeric scale supplied by direct SQL callers; normal
 application/import serialization uses canonical JS numbers. Whitespace in text
 values remains part of the size. Exact UTF-8 boundary and Unicode tests cover the
 normal application contract. No existing rule is rewritten or silently disabled.
-An existing oversized definition can be disabled/archived and edited smaller;
-new writes/enables must pass current validation.
+Previously valid saved definitions retain the original Stage 1–11 structural
+bounds for reads, immutable history and runtime planning/discovery. They are not
+silently invalidated by the later byte policy. An existing oversized definition
+can be disabled/archived and edited smaller. Create, edit, duplicate, import and
+reenable must pass the current byte ceiling; dry run and portable export validation
+also apply that ceiling. Legacy runtime compatibility is not an import/export
+exception to the current package validator.
+The table CHECK uses the original structural validator. A separate write trigger
+adds the byte policy on inserts, definition changes and disabled→enabled changes,
+in addition to RPC validation. This separation also permits complete logical
+restores in schema/data/post-data order. Cross-cluster logical recovery also needs
+the runbook’s guarded target-cluster visibility initialization; numeric source
+transaction markers cannot be treated as portable authority. Data-only restores into an already
+triggered schema need a separately reviewed procedure; never disable production
+triggers casually. No private helper is exposed as a public write bypass.
 
 ## New throughput ceilings
 
@@ -66,7 +85,8 @@ new writes/enables must pass current validation.
 
 These are safety ceilings, not promised throughput. One minute cron with a
 five-delivery batch normally handles at most five deliveries per minute platform
-wide, fewer when a slot examines ineligible work or defers capacity. Actual
+wide, fewer when the bounded scan budget, capacity deferral or worker time budget
+prevents filling the batch. Empty visits no longer count as successful leases. Actual
 execution throughput depends on matching rules, action latency, time budgets and
 tenant count. The higher tenant claim ceiling protects overlapping authorized
 workers without changing the production cadence.
@@ -137,16 +157,29 @@ would require a separate design preserving action/receipt semantics.
 
 A private tenant schedule row tracks last claim/discovery service. Workers select
 the least recently serviced eligible tenant with `FOR UPDATE SKIP LOCKED`, then
-one delivery. Every slot advances the tenant timestamp, including capacity denial.
+one delivery. Every visit advances the tenant timestamp, including capacity denial.
 A large tenant cannot retain first place by adding older work. Within a tenant,
 fresh/retry preference alternates even after a retry-capacity refusal.
 
-Only the first 100 ready delivery candidates beyond a durable scan cursor undergo
-eligibility checks in a slot. If none are actionable, the cursor advances beyond
-that sample; at the end it resets. This avoids rescanning an unbounded prefix of
-ineligible historical events. It can take multiple invocations to discover work
-beyond that prefix. Empty/ineligible tenant visits consume slots, so fairness is
-reasonable eventual progress, not perfect utilization or latency fairness.
+The successful lease budget is distinct from the inspection budget. Each invocation
+visits at most **20 tenants** (including repeated visits to tenants still producing
+work); each visit materializes at most **100 cheap candidate IDs** beyond the durable
+cursor. Eligibility is evaluated lazily until the first actionable candidate, with
+at most **batch size × 100 eligibility evaluations** total (500 at the default batch).
+Thus at most 2,000 cheap candidate IDs can be read, although no more than 500 undergo
+eligibility checks at the default. The preceding indexed tenant selection and rule
+lookups have their own database costs; these bounds are not a constant query-time
+guarantee. No batch, cadence, lease or tenant throughput ceiling is increased.
+
+A visit finding no actionable candidate advances its cursor and excludes that
+tenant for the remainder of the invocation. The cursor resets after its tail.
+Capacity-saturated tenants are likewise excluded after overall claim admission
+fails. Many inactive tenants or a long historical prefix can still require several
+invocations; this is bounded eventual progress, not a latency guarantee. Fresh/retry
+preference operates inside each candidate page. Retry-capacity refusal delays that
+candidate without charging a failure attempt and lets other candidates progress.
+Overlapping workers may legitimately claim zero when another holds a tenant's
+schedule row; subsequent invocations resume through the durable queue.
 
 Discovery applies the same durable tenant rotation, then least-scanned eligible
 rule within that tenant. Each rule is visited at most once per invocation. The
@@ -164,6 +197,12 @@ All queue metrics remain scoped to the authorized administrator's organization.
 Capacity deferred count, notification-deferred subset and oldest deferred time are
 separate from retries, action failures and retry exhaustion. New terminal fanout /
 chain safety outcomes have a separate execution count and readable labels.
+History's **Safety limit reached** filter selects those outcomes; **Action failed**
+excludes them, and **All failures** retains its inclusive meaning. Chain admission
+termination before an execution exists appears separately under recent delivery
+outcomes. Worker log entries include their Operations invocation ID; discovery logs
+link the Operations run ID to the database discovery invocation ID. These are safe
+identifiers, not message bodies or tenant information exposed to other tenants.
 Capacity-only worker invocations count as successful service operation; the tenant
 queue reports Delayed. Platform heartbeat contains no tenant counts or identities.
 Metrics refresh with the page; no repetitive live-region announcements are added.
@@ -262,6 +301,17 @@ execution/step/context tables require locks. A future production rollout must
 measure table size, constraint scan and lock durations; stage validation or use a
 maintenance window/appropriate validated-constraint strategy. No remote migration
 or hosted advisor call was made.
+
+The forward correction `20261003005804_automation_guardrails_corrections.sql`
+replaces the saved-definition CHECK and the affected functions; it does not rewrite
+original migration files or data. Its constraint validation holds the table lock
+until commit. A local 4,000-rule upgrade took about 6.2 seconds; ticket writes
+continued (61 samples, maximum about 56 ms), but Automation administration can block.
+Use a short planned administration pause, a bounded deployment lock timeout and
+abort/retry on contention. This local measurement is not a production lock estimate.
+No new index is required: the corrected claim page uses the existing tenant/availability
+index and existing delivery key indexes. Full source, restore and query evidence belongs in
+the correction report.
 
 Missing/malformed external safety configuration cannot mean unlimited work: none
 is accepted. A missing/invalid counter ceiling fails with capacity deferral.

@@ -5,8 +5,8 @@ import type { DomainEvent } from '@/lib/events/model';
 import type { DomainDeliveryFailure } from '@/lib/events/delivery';
 import type { AutomationExecutionRow, AutomationExecutionStepRow } from '@/types/automation-execution-database';
 import { persistenceRegistry } from './persistence-contract';
-import { planAutomation } from './planner';
-import { validateEvent, validateRule } from './validation';
+import { planStoredAutomation } from './planner';
+import { validateEvent, validateStoredRule } from './validation';
 import { AutomationWorkerError, classifyWorkerFailure } from './worker-failures';
 
 export type WorkerDelivery = { deliveryId: string; leaseToken: string; leaseExpiresAt: string; attempts: number; event: unknown };
@@ -51,11 +51,11 @@ export async function runAutomationWorker(store: AutomationWorkerStore, options:
         checkTime(); const rules = await store.discover(delivery, cursor);
         for (const candidate of rules) {
           checkTime();
-          const checkedRule = validateRule(candidate.rule, persistenceRegistry);
+          const checkedRule = validateStoredRule(candidate.rule, persistenceRegistry);
           if (!checkedRule.valid) throw new AutomationWorkerError('invalid_configuration');
           const rule = checkedRule.value;
           context = { ...context, ruleId: rule.id, ruleVersion: rule.version, executionId: undefined };
-          const plan = planAutomation(rule, event, persistenceRegistry, event.organizationId);
+          const plan = planStoredAutomation(rule, event, persistenceRegistry, event.organizationId);
           if (!['ready', 'conditions_failed', 'condition_error'].includes(plan.status)) throw new AutomationWorkerError(plan.status === 'tenant_mismatch' ? 'authorization_failed' : ['invalid_event', 'incompatible_trigger'].includes(plan.status) ? 'invalid_event' : 'invalid_configuration');
           let execution: AutomationExecutionRow;
           try { execution = await store.begin(delivery, rule); }

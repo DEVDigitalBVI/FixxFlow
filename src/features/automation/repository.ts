@@ -5,20 +5,20 @@ import type { AutomationRuleRow, AutomationVersionRow } from '@/types/automation
 import type { AutomationDefinition } from './model';
 import type { AutomationRuleVersion, PersistedAutomationRule } from './persistence-model';
 import { persistenceRegistry } from './persistence-contract';
-import { validateDefinition, validateRule } from './validation';
+import { validateStoredDefinition, validateStoredRule } from './validation';
 
 export class AutomationPersistenceError extends Error {
   constructor(readonly code: string) { super('Automation persistence failed'); }
 }
 
 function readRule(row: AutomationRuleRow, organizationId: string): PersistedAutomationRule {
-  const rule = validateRule({ id: row.id, organizationId: row.organization_id, enabled: row.enabled, version: row.version,
+  const rule = validateStoredRule({ id: row.id, organizationId: row.organization_id, enabled: row.enabled, version: row.version,
     createdBy: row.created_by, createdAt: row.created_at, updatedAt: row.updated_at, definition: row.definition }, persistenceRegistry);
   if (row.organization_id !== organizationId || !rule.valid || (row.archived_at !== null && row.enabled)) throw new AutomationPersistenceError('invalid_storage');
   return { rule: rule.value, updatedBy: row.updated_by, enabledAt: row.enabled_at, archivedAt: row.archived_at };
 }
 function readVersion(row: AutomationVersionRow, organizationId: string, ruleId: string): AutomationRuleVersion {
-  const definition = validateDefinition(row.definition, persistenceRegistry);
+  const definition = validateStoredDefinition(row.definition, persistenceRegistry);
   if (row.organization_id !== organizationId || row.rule_id !== ruleId || !definition.valid) throw new AutomationPersistenceError('invalid_storage');
   return { organizationId, ruleId, version: row.version, definition: definition.value, enabled: row.enabled,
     enabledAt: row.enabled_at, archivedAt: row.archived_at, createdBy: row.created_by, createdAt: row.created_at };
