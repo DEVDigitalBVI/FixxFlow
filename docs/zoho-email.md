@@ -55,6 +55,12 @@ Inline styles and presentation tables support mail clients; a fixed light surfac
 keeps the primary artwork legible. Client-forced dark mode and font availability
 can still affect rendering. The app uses system fallbacks when Inter is unavailable.
 
+The layout uses a compact, proportional logo and a decorative blue-to-cyan top
+rule (solid blue in clients without gradient support). Semantic email purposes
+provide workspace, account access, security, and notification labels. Security
+alerts place recovery guidance in a warning-tinted panel with a written heading;
+actions remain solid blue. Utility links retain underlines and full fallback URLs.
+
 Run `node scripts/generate-email-templates.mjs` to regenerate the 13 Supabase HTML
 templates in `supabase/templates/`. Paste these into the corresponding hosted
 Supabase Auth email template source editors. This does not enable disabled security

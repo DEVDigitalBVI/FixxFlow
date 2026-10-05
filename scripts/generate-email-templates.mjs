@@ -18,5 +18,7 @@ export const templates = [
 ];
 mkdirSync('supabase/templates', { recursive: true });
 for (const [slug, title, message, action, note] of templates) {
- writeFileSync(`supabase/templates/${slug}.html`, renderEmail({ title, message, action, note, href: action ? '{{ .ConfirmationURL }}' : undefined, code: slug === 'reauthentication' ? '{{ .Token }}' : undefined }));
+ const purpose = ['confirm-sign-up', 'invite-user'].includes(slug) ? 'workspace'
+  : action || slug === 'reauthentication' ? 'account-access' : 'security-alert';
+ writeFileSync(`supabase/templates/${slug}.html`, renderEmail({ title, message, action, note, purpose, href: action ? '{{ .ConfirmationURL }}' : undefined, code: slug === 'reauthentication' ? '{{ .Token }}' : undefined }));
 }

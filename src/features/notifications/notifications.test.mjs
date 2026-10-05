@@ -6,6 +6,35 @@ import fs from 'node:fs';
 const {sendNotificationEmail} = load('src/features/notifications/email.ts');
 const item = {notification_id:'notice-1',recipient_email:'recipient@example.test',title:'Ticket #1 resolved',ticket_id:'ticket-1',conversation_id:null};
 const config = {apiKey:'mock-key',from:'FixxFlow <support@example.test>',siteUrl:'https://example.test'};
+const {renderEmail} = load('src/features/notifications/template.ts');
+
+test('security guidance is distinguished by a written heading and preserves escaped content',()=>{
+ const html=renderEmail({title:'Password changed',message:'Your password changed.',purpose:'security-alert',note:'Contact support <script>alert(1)</script> & reset your password.'});
+ assert.match(html,/Account security/);
+ assert.match(html,/<h2[^>]*>Security notice<\/h2>/);
+ assert.match(html,/&lt;script&gt;alert\(1\)&lt;\/script&gt; &amp; reset/);
+ assert.doesNotMatch(html,/<script>/);
+ const notification=renderEmail({title:'New reply',message:'Open your workspace.',note:'Sign in to view.'});
+ assert.match(notification,/Workspace update/);
+ assert.doesNotMatch(notification,/Security notice/);
+});
+
+test('generated email purposes keep invitations distinct from security changes',()=>{
+ for(const file of ['confirm-sign-up','invite-user']) {
+  const html=fs.readFileSync(`supabase/templates/${file}.html`,'utf8');
+  assert.match(html,/Your workspace/);
+  assert.doesNotMatch(html,/Security notice/);
+ }
+ for(const file of ['reset-password','magic-link-or-otp','change-email-address','reauthentication']) {
+  assert.match(fs.readFileSync(`supabase/templates/${file}.html`,'utf8'),/Account access/);
+ }
+ for(const file of ['password-changed','email-address-changed','phone-number-changed','sign-in-method-linked','sign-in-method-removed','mfa-method-added','mfa-method-removed']) {
+  const html=fs.readFileSync(`supabase/templates/${file}.html`,'utf8');
+  assert.match(html,/Account security/);
+  assert.match(html,/<h2[^>]*>Security notice<\/h2>/);
+ }
+});
+
 test('auth templates retain Supabase tokens and accessible email branding',()=>{
  for(const file of fs.readdirSync('supabase/templates').filter(name=>name.endsWith('.html'))){
   const html=fs.readFileSync(`supabase/templates/${file}`,'utf8');
