@@ -7,6 +7,7 @@ import { ArticleContent } from "./article-content";
 import { blockTypes, knowledgeCategories, parseArticleContent, type ArticleBlock } from "./content";
 import type { KnowledgeArticle, KnowledgeAsset } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
+import { uploadAndRegister } from "@/lib/uploads";
 
 const assetTypes = ["image/jpeg", "image/png", "image/webp", "application/pdf", "text/plain", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
 export function ArticleEditor({ article, organizationId, assets: initialAssets, related, isNew = false }: {
@@ -49,11 +50,23 @@ export function ArticleEditor({ article, organizationId, assets: initialAssets, 
     const database = createClient(); const id = crypto.randomUUID();
     const storagePath = `${organizationId}/${article.id}/${id}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "-").slice(-100)}`;
     try {
-      const uploaded = await database.storage.from("knowledge-assets").upload(storagePath, file, { contentType: file.type, upsert: false });
-      if (uploaded.error) throw new Error();
-      const saved = await database.from("knowledge_attachments").insert({ id, organization_id: organizationId, article_id: article.id, storage_path: storagePath, file_name: file.name.slice(0,255), content_type: file.type, size_bytes: file.size }).select("*").single();
-      if (saved.error || !saved.data) { await database.storage.from("knowledge-assets").remove([storagePath]); throw new Error(); }
-      setAssets(items => [...items, saved.data]); setUploadMessage("File added. Images are now available in image blocks.");
+      const bucket = database.storage.from("knowledge-assets");
+      let savedAsset: KnowledgeAsset | null = null;
+      const result = await uploadAndRegister({
+        upload: () => bucket.upload(storagePath, file, { contentType: file.type, upsert: false }),
+        register: async () => {
+          const saved = await database.from("knowledge_attachments").insert({ id, organization_id: organizationId, article_id: article.id, storage_path: storagePath, file_name: file.name.slice(0,255), content_type: file.type, size_bytes: file.size }).select("*").single();
+          savedAsset = saved.data;
+          return { error: saved.error ?? (!saved.data ? new Error("Registration could not be confirmed") : null) };
+        },
+        remove: () => bucket.remove([storagePath]),
+      });
+      if (result === "saved" && savedAsset) {
+        const asset = savedAsset;
+        setAssets(items => [...items, asset]); setUploadMessage("File added. Images are now available in image blocks.");
+      } else if (result === "unconfirmed") {
+        setUploadMessage("We could not confirm the file. Check the attachment list in a separate tab before retrying; your article changes are still here.");
+      } else setUploadMessage("Upload failed. Please select the file again to retry.");
     } catch { setUploadMessage("Upload failed. Please select the file again to retry."); }
     finally { setUploading(false); }
   }
