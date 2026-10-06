@@ -100,3 +100,31 @@ test('cron fails closed when secret is missing or wrong without accessing the qu
   assert.equal((await GET(new Request('https://example.test',{headers:{authorization:'Bearer incorrect'}}))).status,401);
  } finally {if(before===undefined)delete process.env.CRON_SECRET;else process.env.CRON_SECRET=before;}
 });
+
+test('network errors, timeouts and malformed provider responses never count as accepted delivery',async()=>{
+ for (const failure of [new TypeError('fetch failed'), new DOMException('Request timed out','TimeoutError')]) {
+  await assert.rejects(sendNotificationEmail(item,config,async(_url,options)=>{
+   assert.ok(options.signal instanceof AbortSignal);
+   throw failure;
+  }),error=>error===failure);
+ }
+ await assert.rejects(sendNotificationEmail(item,config,async()=>new Response('not JSON',{status:200})),SyntaxError);
+ for(const data of [null,[],[null],[{code:'EM_104'},{code:'EM_104'}],[{code:'EM_103'}]]) {
+  await assert.rejects(sendNotificationEmail(item,config,async()=>Response.json({request_id:'unaccepted',data})),/did not accept/);
+ }
+});
+
+test('chat and fallback email links retain the configured origin',async()=>{
+ for(const [target,path] of [
+  [{ticket_id:null,conversation_id:'chat/1'},'/app/chat/chat%2F1'],
+  [{ticket_id:null,conversation_id:null},'/app/notifications'],
+ ]) {
+  await sendNotificationEmail({...item,...target},{...config,siteUrl:'https://example.test/ignored/path'},async(_url,options)=>{
+   const body=JSON.parse(options.body);
+   assert.ok(body.textbody.includes(`https://example.test${path}`));
+   assert.ok(body.htmlbody.includes(`href="https://example.test${path}"`));
+   assert.deepEqual(body.reply_to,[{address:'support@fixxflow.app',name:'FixxFlow Support'}]);
+   return Response.json({request_id:'accepted',data:[{code:'EM_104'}]});
+  });
+ }
+});
