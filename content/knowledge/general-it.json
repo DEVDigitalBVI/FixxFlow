@@ -1014,6 +1014,1276 @@
         "password",
         "request-support"
       ]
+    },
+    {
+      "key": "teams-join-chat",
+      "category": "Software",
+      "title": "Join a Teams meeting and use meeting chat",
+      "summary": "Find the right invitation, join with your work account, and understand meeting-chat access.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For employees attending Microsoft Teams meetings where Teams is an approved work service. Invitations, guest access, and chat availability depend on the organizer’s settings."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Open the original invitation"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the meeting link in your calendar invitation. Confirm the organizer and meeting before opening an unexpected link. If prompted, choose the approved Teams app or browser option."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check your account and devices"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use your work account when required. Before joining, check your microphone, speaker, and camera choices. Join a few minutes early; a lobby means the organizer may need to admit you."
+        },
+        {
+          "type": "heading",
+          "text": "3. Use chat appropriately"
+        },
+        {
+          "type": "paragraph",
+          "text": "Select Chat in the meeting controls to read or send messages. Keep confidential information within the intended audience. Guest and anonymous participants may have limited chat access, including after leaving."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm you can hear the meeting and that your message appears in the intended meeting chat."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact the organizer for lobby, invitation, or presenter permissions. Contact IT for repeated sign-in or joining failures; include the error, device, app or browser, and time. Never send meeting passcodes in a public ticket."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Join a Teams meeting",
+          "url": "https://support.microsoft.com/en-us/teams/meetings/join-a-meeting-in-microsoft-teams"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Access meeting chat",
+          "url": "https://support.microsoft.com/en-us/teams/meetings/access-meeting-chat-in-microsoft-teams"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "teams-audio",
+        "teams-camera",
+        "teams-screen-sharing",
+        "outlook-meetings"
+      ]
+    },
+    {
+      "key": "teams-audio",
+      "category": "Hardware",
+      "title": "Fix microphone or speaker problems in Teams",
+      "summary": "Check mute controls and the selected audio devices before reconnecting.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For approved Teams meetings on a computer. A room system or managed headset may require IT assistance."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Check both mute controls"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check the Teams microphone control and any physical headset mute switch or raised microphone boom. Confirm your headset is connected, charged, and not being used by another device."
+        },
+        {
+          "type": "heading",
+          "text": "2. Select the correct devices"
+        },
+        {
+          "type": "paragraph",
+          "text": "In Teams settings, open Devices and choose the intended speaker and microphone. During a meeting, open the audio settings from the microphone menu. Check device volume too. Avoid joining nearby devices with their speakers and microphones active because this can cause echo."
+        },
+        {
+          "type": "heading",
+          "text": "3. Check permissions and reconnect"
+        },
+        {
+          "type": "paragraph",
+          "text": "If the microphone is blocked, check the app or browser microphone permission when allowed by company policy. Reconnect an external headset. Save other work before restarting Teams. If available in desktop Teams, use the test-call option."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ask another participant to confirm they hear you and confirm you hear them. A test call is not available in every Teams client."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If permissions are managed or audio still fails, give IT the headset model, client version, error, and whether the built-in microphone works. Do not install an unapproved audio driver."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Microphone troubleshooting",
+          "url": "https://support.microsoft.com/en-us/teams/meetings/my-microphone-isn-t-working-in-microsoft-teams"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Speaker troubleshooting",
+          "url": "https://support.microsoft.com/en-us/teams/meetings/my-speaker-isn-t-working-in-microsoft-teams"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "teams-join-chat",
+        "mouse-keyboard",
+        "request-support"
+      ]
+    },
+    {
+      "key": "teams-camera",
+      "category": "Hardware",
+      "title": "Fix a camera that will not work in Teams",
+      "summary": "Check the camera selection, privacy shutter, and allowed permissions.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For computer cameras in approved Teams meetings. Managed privacy settings should be handled by IT."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Check the physical camera"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the privacy shutter if fitted. Reconnect an external camera and check its cable. Close other applications that may be using the camera."
+        },
+        {
+          "type": "heading",
+          "text": "2. Choose the right camera"
+        },
+        {
+          "type": "paragraph",
+          "text": "In Teams device settings or meeting video settings, choose your intended camera and inspect the preview. Turn the camera on in the meeting controls if you want to appear on video."
+        },
+        {
+          "type": "heading",
+          "text": "3. Review allowed permissions"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check camera permission for Teams or the meeting website. On a Mac, camera access is under System Settings, Privacy & Security, Camera. Restart Teams after an allowed permission change. Do not bypass a managed restriction."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the preview shows the intended view and another participant can see you when video is enabled."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT if the camera is missing, permissions are locked, or the preview remains blank. Include the camera model and whether another approved app can use it."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Teams camera troubleshooting",
+          "url": "https://support.microsoft.com/en-us/teams/meetings/my-camera-isn-t-working-in-microsoft-teams"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "teams-audio",
+        "teams-join-chat",
+        "request-support"
+      ]
+    },
+    {
+      "key": "teams-screen-sharing",
+      "category": "Software",
+      "title": "Share a screen or window in a Teams meeting",
+      "summary": "Present the intended content while keeping unrelated information out of view.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For approved Teams meetings. Sharing may be restricted to presenters by the organizer."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Prepare the content"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the document or application you need. Close unrelated windows and sensitive notifications. Check who is in the meeting before showing customer or employee information."
+        },
+        {
+          "type": "heading",
+          "text": "2. Choose what to share"
+        },
+        {
+          "type": "paragraph",
+          "text": "Select Share in the meeting controls. Choose a single window when it is enough, or your screen when needed. A shared screen can expose other windows you open. Include computer audio only when needed and available."
+        },
+        {
+          "type": "heading",
+          "text": "3. Stop sharing when finished"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm participants see the intended content, then select Stop sharing before moving to unrelated work. If Share is unavailable, ask the organizer about your presenter role. Browser and Mac screen-recording permissions may also affect sharing; use approved settings."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ask a participant to confirm the shared view is readable and that sharing stops when you finish."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT if an allowed presenter still cannot share. Include your client or browser, operating system, and permission error. Do not grant remote control to an unknown participant."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Present content in Teams",
+          "url": "https://support.microsoft.com/en-us/teams/meetings/present-content-in-microsoft-teams-meetings"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "teams-join-chat",
+        "display",
+        "secure-file-sharing"
+      ]
+    },
+    {
+      "key": "office-save-recovery",
+      "category": "Software",
+      "title": "Save and recover work in Word, Excel, and PowerPoint",
+      "summary": "Understand AutoSave, preserve copies, and check recovery after a crash.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For approved Microsoft Office desktop apps. AutoSave availability depends on the app, license, file format, and storage location."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Save a named working file"
+        },
+        {
+          "type": "paragraph",
+          "text": "Save to the approved work location and check the filename. Use Save a Copy before experimenting with an existing document so changes do not replace the original."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check AutoSave rather than assuming"
+        },
+        {
+          "type": "paragraph",
+          "text": "Supported Microsoft 365 files in OneDrive or SharePoint Online can use AutoSave. A local file may not. Check the AutoSave state and save regularly when it is off. AutoRecover helps after a crash but is not a backup or a guarantee."
+        },
+        {
+          "type": "heading",
+          "text": "3. Review recovery carefully"
+        },
+        {
+          "type": "paragraph",
+          "text": "After an unexpected closure, reopen the app and review Document Recovery if offered. Open recovered versions and save the useful one under a clear name. For an approved cloud file, check version history before replacing work. Keep the existing and recovered copies until verified."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Reopen the saved file from its intended folder and check the latest changes are present."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT promptly if work is missing or the file will not open. Give the filename, storage location, app, and approximate last successful save. Do not delete recovery files or promise a recoverable version exists."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: AutoSave",
+          "url": "https://support.microsoft.com/en-us/office/collab-files/what-is-autosave"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Save, back up, and recover",
+          "url": "https://support.microsoft.com/en-us/office/collab-files/save-back-up-and-recover-a-file-in-microsoft-office"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "onedrive-sync",
+        "cloud-file-recovery",
+        "secure-file-sharing"
+      ]
+    },
+    {
+      "key": "word-pdf",
+      "category": "Software",
+      "title": "Export a Word document to PDF",
+      "summary": "Keep the editable original and check the exported file before sharing.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For Microsoft Word desktop on Windows or Mac. Menu names vary between versions."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Review the document"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the audience, page layout, and any comments or tracked changes. Resolve or exclude review markup as appropriate; hiding text is not a reliable way to redact confidential information."
+        },
+        {
+          "type": "heading",
+          "text": "2. Save a separate PDF"
+        },
+        {
+          "type": "paragraph",
+          "text": "Keep the editable Word file. Use File, Save As or Save a Copy, then choose PDF as the file type. Select the intended folder and save. On Windows, export options may let you choose pages and whether markup is included."
+        },
+        {
+          "type": "heading",
+          "text": "3. Inspect the output"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the PDF independently. Check page breaks, tables, links, and any signatures. Ensure it contains only the intended pages and review markup before sending it through an approved channel."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the recipient can read the final PDF and the editable original is still available."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT if export fails or the output loses important content. Provide the Word version and error; share the source document only with authorized support staff."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Save or convert to PDF",
+          "url": "https://support.microsoft.com/en-us/office/collab-files/save-or-convert-to-pdf-or-xps-in-office-desktop-apps"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: PDF export on Mac",
+          "url": "https://support.microsoft.com/en-us/word/save-or-convert-to-pdf-on-your-mac"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "office-save-recovery",
+        "secure-file-sharing"
+      ]
+    },
+    {
+      "key": "excel-formulas",
+      "category": "Software",
+      "title": "Troubleshoot Excel formulas and unexpected results",
+      "summary": "Distinguish displayed formulas, text cells, and calculation errors.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For approved Excel workbooks. Financial, operational, and shared calculations should be reviewed with the workbook owner before changing their logic."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Identify the symptom"
+        },
+        {
+          "type": "paragraph",
+          "text": "If many cells show formulas instead of results, check Formulas, Show Formulas. If only one cell shows formula text, check whether it is formatted as Text or has a leading apostrophe. Preserve a copy before making corrections."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check the formula and inputs"
+        },
+        {
+          "type": "paragraph",
+          "text": "Formulas normally begin with an equals sign. Inspect referenced cells and the exact error. A missing reference, invalid input, or division by zero requires fixing its cause; replacing every error with zero can hide a real problem."
+        },
+        {
+          "type": "heading",
+          "text": "3. Check calculation settings with the owner"
+        },
+        {
+          "type": "paragraph",
+          "text": "If results seem stale, review calculation settings. A workbook may deliberately use manual calculation. Ask the owner before switching to automatic calculation or changing formulas in a shared workbook. For a text-formatted formula, correcting the format may also require re-entering the formula."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Compare a small, known example with the expected result and have the workbook owner review important calculations."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT for app failures or access problems; contact the workbook owner for formula logic. Include the error, cell reference, and Excel version without exposing unrelated confidential data."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Display or hide formulas",
+          "url": "https://support.microsoft.com/en-us/excel/display-or-hide-formulas"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Avoid broken formulas",
+          "url": "https://support.microsoft.com/en-gb/excel/how-to-avoid-broken-formulas-in-excel"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "office-save-recovery",
+        "software-access"
+      ]
+    },
+    {
+      "key": "outlook-meetings",
+      "category": "Email",
+      "title": "Create and update an Outlook meeting invitation",
+      "summary": "Invite attendees, check the time zone, and send changes to participants.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For Outlook with an approved work account. Teams meeting options and availability information depend on account support and organization configuration."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Create a meeting with attendees"
+        },
+        {
+          "type": "paragraph",
+          "text": "In new Outlook, create a New event and invite attendees. In classic Outlook, use New Meeting. A personal appointment without attendees does not invite coworkers. Add a useful subject, date, start and end times, and location."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check time and meeting details"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the calendar time zone, especially for participants in other countries. Use Scheduling Assistant when available, but external availability may be unknown. If your account supports it, enable the Teams meeting option for an online meeting. Review attendees and details before selecting Send."
+        },
+        {
+          "type": "heading",
+          "text": "3. Send updates from the original meeting"
+        },
+        {
+          "type": "paragraph",
+          "text": "As organizer, open the original meeting to change its details, then send the update when prompted. Cancel through the meeting so attendees receive the cancellation; simply deleting your own view may not inform them."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the meeting appears in your calendar with the intended attendees and online details. Ask an attendee to confirm receipt if delivery is in doubt."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT if invitations fail, an expected Teams option is unavailable, or calendar times remain inconsistent. Provide the Outlook client and error; avoid posting private invitation links."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Schedule a meeting or event",
+          "url": "https://support.microsoft.com/en-us/outlook/calendar/schedule-a-meeting-or-event-in-outlook"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "teams-join-chat",
+        "email",
+        "missing-email"
+      ]
+    },
+    {
+      "key": "onedrive-sync",
+      "category": "Software",
+      "title": "Troubleshoot a file that will not sync with OneDrive",
+      "summary": "Check the account, sync status, and space before changing files.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For an approved work OneDrive account. A file on your computer is not necessarily uploaded to the cloud."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Preserve your latest work"
+        },
+        {
+          "type": "paragraph",
+          "text": "Save open files. Note which copy contains the latest changes before renaming, moving, or replacing anything. Check the OneDrive icon and its status or error message."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check the connection and account"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm internet access and the intended work account. If syncing is paused, resume it when appropriate. Check for a storage-full warning or an item requiring attention. Follow the specific displayed error instead of deleting files to force a sync."
+        },
+        {
+          "type": "heading",
+          "text": "3. Compare the cloud copy"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open OneDrive on the web using your work account and inspect the expected folder. Compare names and modification times. Keep unsynced work until you confirm it is safely uploaded. Do not unlink the account, reset OneDrive, or reinstall it on a managed device without IT guidance."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm OneDrive reports the item is synced and the web copy contains the expected latest changes."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT if sync errors persist or the copies disagree. Include the status message, affected filename, account type, and time. Do not send passwords or private share links."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Fix OneDrive sync problems",
+          "url": "https://support.microsoft.com/en-us/onedrive/fix-onedrive-sync-problems"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "office-save-recovery",
+        "cloud-file-recovery",
+        "wifi"
+      ]
+    },
+    {
+      "key": "cloud-file-recovery",
+      "category": "Software",
+      "title": "Find or restore a deleted cloud file",
+      "summary": "Check the correct account, recycle bin, and file owner without deleting other copies.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For approved OneDrive or Google Drive storage. Recovery depends on ownership, retention policies, and how the file was deleted."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Look in the right place"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check the account, search the filename, and inspect the original folder. A shared file may have been moved or your access may have changed. Ask its owner before creating a replacement."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check the cloud recycle bin"
+        },
+        {
+          "type": "paragraph",
+          "text": "For OneDrive, open the web recycle bin and restore the intended item if available. For Google Drive, open Trash, select the file, and choose Restore. An online-only file may not be in the computer’s recycle bin."
+        },
+        {
+          "type": "heading",
+          "text": "3. Verify the recovered copy"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the restored file and check its contents and location. Keep other copies until you know which is current. Do not empty the bin or permanently delete items while recovery is being investigated. Retention windows vary, so report missing important work promptly."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the correct version opens and intended colleagues still have appropriate access."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT immediately if the file is not in the bin, belongs to another person, or contains critical work. Include its name, owner, service, and approximate deletion time. Recovery is not guaranteed."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Delete and restore OneDrive files",
+          "url": "https://support.microsoft.com/en-us/office/delete-and-restore-files-video-bef769c1-0771-4a01-bcaa-2d72461672e5"
+        },
+        {
+          "type": "link",
+          "text": "Google: Recover a deleted Drive file",
+          "url": "https://support.google.com/drive/answer/1716222?hl=en"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "onedrive-sync",
+        "secure-file-sharing",
+        "office-save-recovery"
+      ]
+    },
+    {
+      "key": "secure-file-sharing",
+      "category": "Security",
+      "title": "Share a work file with the right people",
+      "summary": "Use named recipients and the minimum access needed for approved cloud storage.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For approved OneDrive, SharePoint, or Google Drive files. Company rules determine what may be shared externally."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Confirm the audience"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check whether the document contains customer, employee, or other restricted information. Verify recipients and external-sharing approval before granting access."
+        },
+        {
+          "type": "heading",
+          "text": "2. Choose specific access"
+        },
+        {
+          "type": "paragraph",
+          "text": "In Microsoft sharing settings, use Specific people when available. In Google Drive, keep General access Restricted and add the intended people. Give viewing access when editing is unnecessary. A folder or shared drive may confer inherited access that an individual-file setting does not remove."
+        },
+        {
+          "type": "heading",
+          "text": "3. Review and remove access"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check the sharing or Manage access view after sending. Ask the intended recipient to confirm access. Review permissions when work ends and remove access you are authorized to remove. Avoid Anyone links for sensitive work."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the intended recipient can access the file at the correct permission level. Check the actual permission list rather than assuming a copied link is private."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT if external sharing is blocked, inherited permissions are unclear, or a file was exposed accidentally. Report the file and unintended audience promptly; never share login details as a workaround."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Guest sharing and permissions",
+          "url": "https://support.microsoft.com/en-us/sharepoint/lists/sharepoint-sharing-and-permissions/external-or-guest-sharing-in-onedrive-sharepoint-and-lists"
+        },
+        {
+          "type": "link",
+          "text": "Google: Share Drive files",
+          "url": "https://support.google.com/a/users/answer/9310248?hl=en"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "software-access",
+        "phishing",
+        "cloud-file-recovery"
+      ]
+    },
+    {
+      "key": "windows-performance",
+      "category": "Hardware",
+      "title": "Check a Windows computer that is running slowly",
+      "summary": "Save work, check storage, and describe the slowdown before making major changes.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For Windows work computers. Managed maintenance and software removal should remain with IT."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Save work and narrow the problem"
+        },
+        {
+          "type": "paragraph",
+          "text": "Note whether one app or the whole computer is slow, when it began, and whether colleagues are affected. Save documents, close unused apps, and restart at a suitable time."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check free space"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Settings, System, Storage to inspect available space. Review cleanup recommendations carefully. Do not select Downloads or other folders without checking their contents, and do not delete system files or shared work. Ask IT if you are unsure what can be removed."
+        },
+        {
+          "type": "heading",
+          "text": "3. Compare after restarting"
+        },
+        {
+          "type": "paragraph",
+          "text": "Try the same task again. Note unusually high fan activity, overheating, repeated crashes, or a nearly full drive. Avoid registry cleaners, unapproved optimization tools, and disabling security software."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the same task completes more reliably; record how long it takes if the slowdown continues."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT for repeated freezes, overheating, storage warnings, or a sudden unexplained slowdown. Include the device tag, affected apps, and steps tried."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Improve PC performance",
+          "url": "https://support.microsoft.com/en-us/windows/experience/performance-optimization/tips-to-improve-pc-performance-in-windows"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Windows storage settings",
+          "url": "https://support.microsoft.com/en-us/windows/experience/storage-filemanagement/storage-settings-in-windows"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "approved-updates",
+        "browser",
+        "request-support"
+      ]
+    },
+    {
+      "key": "approved-updates",
+      "category": "Software",
+      "title": "Install approved updates on a work computer",
+      "summary": "Plan for restarts and follow managed Windows or Mac update settings.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For work Windows 11 or Mac devices. Company-managed update schedules take priority over general vendor guidance."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Prepare for the restart"
+        },
+        {
+          "type": "paragraph",
+          "text": "Save open work, connect power, and choose a time that will not interrupt a meeting or critical task. Confirm important work is stored in the approved backed-up location."
+        },
+        {
+          "type": "heading",
+          "text": "2. Use the built-in update settings"
+        },
+        {
+          "type": "paragraph",
+          "text": "On Windows 11, open Settings, Windows Update. On a Mac, open System Settings, General, Software Update. Review the available update and any company instructions. Let IT handle locked settings or administrator prompts you are not authorized to approve."
+        },
+        {
+          "type": "heading",
+          "text": "3. Complete and check"
+        },
+        {
+          "type": "paragraph",
+          "text": "Follow the approved update process and any required restart. Do not interrupt an installation by forcing power off. Major operating-system upgrades, beta releases, and unapproved drivers should be discussed with IT first."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "After restarting, confirm you can sign in and use your key work apps. Check whether a further restart is required."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT for repeated update errors, a prolonged installation without progress, or broken work apps afterward. Include the device, update name or error, and time; do not bypass managed controls."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Install Windows updates",
+          "url": "https://support.microsoft.com/en-us/windows/deployment/updates-lifecycle/install-windows-updates"
+        },
+        {
+          "type": "link",
+          "text": "Apple: Update macOS",
+          "url": "https://support.apple.com/en-us/108382"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "windows-performance",
+        "software-access"
+      ]
+    },
+    {
+      "key": "mouse-keyboard",
+      "category": "Hardware",
+      "title": "Troubleshoot a mouse or keyboard that stops responding",
+      "summary": "Check power, cables, and the intended wireless connection.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For approved USB or Bluetooth input devices, especially on Windows work computers."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Check simple connections"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check the cable, power switch, and batteries or charge. Reconnect a USB device or its receiver to an available port. If using a dock, check the dock’s power and connection too."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check the wireless target"
+        },
+        {
+          "type": "paragraph",
+          "text": "Keep a Bluetooth device close to the computer and confirm it is connected to the intended device. Some accessories switch between computers. Review Bluetooth settings if allowed; avoid removing a working pairing without a way to complete setup again."
+        },
+        {
+          "type": "heading",
+          "text": "3. Compare carefully"
+        },
+        {
+          "type": "paragraph",
+          "text": "If available, try another approved input device or port. Save work before restarting. Do not download drivers from an unknown site or change managed settings to force the device to work."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm typing or pointer movement works consistently in an ordinary app."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT if the device remains unresponsive, pairing is blocked, or several USB accessories fail together. Include device models, connection type, and whether another port or approved device works."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Mouse and keyboard problems",
+          "url": "https://support.microsoft.com/en-au/windows/hardware/input-devices/mouse-and-keyboard-problems-in-windows"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Bluetooth connection troubleshooting",
+          "url": "https://support.microsoft.com/en-us/windows/hardware/bluetooth/troubleshoot-bluetooth-not-connecting-in-windows"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "display",
+        "teams-audio",
+        "request-support"
+      ]
+    },
+    {
+      "key": "tech-support-scams",
+      "category": "Security",
+      "title": "Respond to a fake technical-support warning",
+      "summary": "Recognize unsolicited repair demands and report any interaction promptly.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For unexpected calls, emails, or browser warnings claiming your work device needs urgent repair."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Pause before acting"
+        },
+        {
+          "type": "paragraph",
+          "text": "A scary warning does not establish that the device is infected. Do not call a number displayed in a suspicious pop-up, pay for a repair, or install a remote-access tool at a stranger’s request."
+        },
+        {
+          "type": "heading",
+          "text": "2. Use a trusted support route"
+        },
+        {
+          "type": "paragraph",
+          "text": "Do not enter credentials or security codes into the warning. Close the suspicious page if possible without interacting with its buttons. Contact your known IT team through FixxFlow or another established company channel."
+        },
+        {
+          "type": "heading",
+          "text": "3. Report any interaction"
+        },
+        {
+          "type": "paragraph",
+          "text": "Tell IT promptly if you entered information, paid, downloaded software, or granted remote access. Record the approximate time and what happened. Preserve useful evidence without reopening malicious links. Follow IT’s instructions for the affected device and accounts."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the warning is no longer being interacted with and IT has the details needed to assess any exposure."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT immediately after credentials, payment information, or remote control were shared. Do not conceal the interaction or attempt to erase evidence. IT can coordinate recovery based on what happened."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft: Protect yourself from tech-support scams",
+          "url": "https://support.microsoft.com/en-us/office/protect-yourself-from-tech-support-scams"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "phishing",
+        "password",
+        "request-support"
+      ]
+    },
+    {
+      "key": "official-help-directory",
+      "category": "Software",
+      "title": "Find official help articles and service-status information",
+      "summary": "Start with trusted support libraries and use status pages as one troubleshooting clue.",
+      "reviewedOn": "2026-10-06",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For employees looking for general guidance about approved Microsoft, Google, or Apple products. Public advice does not override company policy."
+        },
+        {
+          "type": "heading",
+          "text": "What to do"
+        },
+        {
+          "type": "heading",
+          "text": "1. Choose the product’s official library"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Microsoft Support for Teams, Outlook, Word, Excel, PowerPoint, OneDrive, and Windows. Google Workspace Learning Center covers approved Google work tools. Apple Support covers Mac and Apple devices. Search with the product name and exact error; match the app version where possible."
+        },
+        {
+          "type": "heading",
+          "text": "2. Check the relevant status page"
+        },
+        {
+          "type": "paragraph",
+          "text": "Google Workspace Status Dashboard reports supported Google service incidents. Microsoft’s public status page covers selected services; an organization’s Microsoft 365 business health may require its administrator to check the admin center. A clear public page does not prove your account or network is healthy."
+        },
+        {
+          "type": "heading",
+          "text": "3. Bring useful findings to IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Record the official article or incident link, affected service, time, and steps tried. Do not install repair tools from advertisements or assume every internet workaround is approved. Ask IT before changing managed configuration."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Confirm the article applies to your product and account type. Compare its result with what you actually see."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT if a guide does not fit, access is blocked, or your work remains affected. Include the error and relevant official link; IT can check tenant-specific health and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "Further reading"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft Support",
+          "url": "https://support.microsoft.com/en-us/"
+        },
+        {
+          "type": "link",
+          "text": "Google Workspace Learning Center",
+          "url": "https://support.google.com/a/users/"
+        },
+        {
+          "type": "link",
+          "text": "Apple Support",
+          "url": "https://support.apple.com/"
+        },
+        {
+          "type": "link",
+          "text": "Google Workspace Status Dashboard",
+          "url": "https://www.google.com/appsstatus/dashboard/"
+        },
+        {
+          "type": "link",
+          "text": "Microsoft public service status",
+          "url": "https://status.cloud.microsoft/Office"
+        },
+        {
+          "type": "paragraph",
+          "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
+        }
+      ],
+      "related": [
+        "request-support",
+        "teams-join-chat",
+        "onedrive-sync",
+        "email"
+      ]
     }
-  ]
+  ],
+  "updatedOn": "2026-10-06"
 }
