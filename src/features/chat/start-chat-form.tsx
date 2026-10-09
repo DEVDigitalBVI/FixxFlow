@@ -1,12 +1,13 @@
 'use client';
 
+import { SubmissionKey } from '@/components/ui/submission-key';
 import { useActionState, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { startChat, type StartChatState } from '@/app/app/chat/actions';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 
-export function StartChatForm({ initialError }: { initialError?: string }) {
+export function StartChatForm({ initialError, submissionKey }: { initialError?: string; submissionKey: string }) {
   const [state, action, pending] = useActionState(startChat, { error: initialError } as StartChatState);
   const [topic, setTopic] = useState('');
   const [message, setMessage] = useState('');
@@ -14,6 +15,7 @@ export function StartChatForm({ initialError }: { initialError?: string }) {
   useEffect(() => { if (state.error) feedback.current?.focus(); }, [state]);
 
   return <form action={action} className="settings-card chat-intake-form" aria-labelledby="chat-compose-title" aria-busy={pending}>
+    <SubmissionKey value={submissionKey}/>
     <div className="chat-recipient">
       <span className="chat-intake-icon"><NavigationIcon name="support"/></span>
       <div><span className="muted">New conversation with</span><h2 id="chat-compose-title">IT support</h2></div>

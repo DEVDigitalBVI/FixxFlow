@@ -1,3 +1,5 @@
+import { ActionForm } from "@/components/ui/action-form";
+import { SubmissionKey } from "@/components/ui/submission-key";
 import { randomUUID } from 'node:crypto';
 import { PermissionsForm } from '@/features/inventory/forms';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
@@ -59,12 +61,13 @@ export default async function PeoplePage({ searchParams }: Props) {
     {message.success && <div className="alert alert-success" role="status">{message.success}</div>}
     {canManage && message.invite === '1' && <section id="invite-member" className="settings-card people-invitation" aria-labelledby="invite-heading">
       <div><span className="section-kicker">Grow your workspace</span><h2 id="invite-heading">Invite someone to FixxFlow</h2><p className="muted">They’ll receive an email to set up their account. Choose the access they need.</p></div>
-      <form action={inviteMember} className="people-invite-form">
+      <ActionForm action={inviteMember} className="people-invite-form">
+        <SubmissionKey value={randomUUID()}/>
         <div className="field"><label htmlFor="invite-name">Full name</label><input id="invite-name" className="input" name="displayName" autoComplete="name" autoFocus required maxLength={120}/></div>
         <div className="field"><label htmlFor="invite-email">Work email</label><input id="invite-email" className="input" name="email" type="email" autoComplete="email" placeholder="name@company.com" required/></div>
         <div className="field"><label htmlFor="invite-role">Workspace role</label><select id="invite-role" className="input" name="role" defaultValue={technicians ? 'technician' : 'end_user'}>{Object.entries(rolePresentation).map(([role, item]) => <option key={role} value={role}>{item.label}</option>)}</select></div>
         <div className="people-invite-actions"><SubmitButton className="button button-primary" pendingLabel="Sending invitation…">Send invitation</SubmitButton><Link className="button button-quiet" href={directoryHref}>Cancel</Link></div>
-      </form>
+      </ActionForm>
     </section>}
     <section className="people-directory" aria-labelledby="people-directory-heading">
       <header className="people-directory-heading"><div><h2 id="people-directory-heading">{search ? 'Search results' : technicians ? 'Your technicians' : 'Your workspace'}</h2><p>{search ? 'People matching your search' : technicians ? 'Members with the Technician role' : 'Everyone with access to this workspace'}</p></div>

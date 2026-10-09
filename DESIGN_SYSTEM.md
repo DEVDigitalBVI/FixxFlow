@@ -277,6 +277,7 @@ The employee portal is intentionally simpler than the agent workspace.
 - Use server-side filtering, sorting, pagination, and authorization for operational datasets.
 - Prefer optimistic UI only when rollback is clear and the action is low risk. Otherwise show immediate pending feedback and reconcile with the server response.
 - Prevent duplicate submissions with idempotent server behavior as well as UI state.
+- Keep each mounted creation draft's retry key stable across errors and background refreshes. For revision-checked editors, keep the expected revision with the draft; refreshes must not silently advance it. Offer review in a separate tab and an explicit, confirmed reload before discarding edits.
 - Loading and error boundaries should match the affected region; do not blank the whole application for a local update.
 
 ### 9.4 Styling

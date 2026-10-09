@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { profileLabels } from "@/features/lookups/labels";
 import { PageHeader } from "@/components/ui/page-header";
 import { StartChatForm, ChatIntakeGuide } from "@/features/chat/start-chat-form";
@@ -13,7 +14,7 @@ export default async function ChatPage({ searchParams }: { searchParams: Promise
   const { error: message, view, start } = await searchParams;
   if (start === "1" || message) return <div className={viewer.role === "end_user" ? "portal-page chat-intake-page" : "page chat-intake-page"}>
     <PageHeader title="Start a chat" eyebrow="Your IT support" description="Tell us what’s happening. We’ll take it from here." back={{ href: "/app/chat", label: "Back to chats" }}/>
-    <div className="chat-intake-layout"><StartChatForm initialError={message}/><ChatIntakeGuide/></div>
+    <div className="chat-intake-layout"><StartChatForm submissionKey={randomUUID()} initialError={message}/><ChatIntakeGuide/></div>
   </div>;
   const supabase = await createClient();
   let query = supabase.from("chat_conversations").select("id, topic, requester_id, assigned_technician_id, status, ticket_id, updated_at").eq("organization_id", viewer.organizationId).order("updated_at", { ascending: false }).limit(100);

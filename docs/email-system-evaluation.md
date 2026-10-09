@@ -1,4 +1,47 @@
-# Email system evaluation — October 6, 2026
+# Email system evaluation
+
+## October 9 follow-up — delivery still unresolved
+
+The user authorized exactly two new tests to `jhodge@peterisland.net` and
+confirmed that neither arrived, including junk/quarantine. Their email team also
+reported no incoming messages from FixxFlow. Current evidence does not establish
+where external delivery failed. Do not attribute this attempt to the recipient's
+gateway without the new provider delivery trace.
+
+| Test | BVI time (UTC−04:00) | Verified result |
+| --- | --- | --- |
+| Supabase password recovery | 12:32:12 PM | Auth API accepted the request with no error; inbox delivery failed according to the user |
+| Production notification dispatcher | 12:33:47 PM | Outbox marked `sent`, one attempt, provider ID present, no queue error; inbox delivery failed according to the user |
+
+- Closed synthetic test ticket: `7aa2f1c9-6075-40e9-bfbf-fdf84884c409`.
+- Notification: `6f2068c6-8973-48b0-98b5-a6bff33b5a61`.
+- Notification event key: `pilot-email-check:2026-10-09:authorized`.
+- Zoho notification request ID:
+  `2d6f.1fa3bc90069e1389.m1.33c807a1-c3ff-11f1-b1e1-765e7256bde4.1a121837d1a`.
+- Auth request used the configured public project and site URL, without completing
+  a password change. The notification went through the production outbox and
+  scheduled dispatcher. No sending credentials were copied into the checkout.
+- Public DNS lookup found SPF `v=spf1 include:zohomail.com ~all` and no DMARC TXT
+  answer at `_dmarc.fixxflow.app`. These observations alone do not establish the
+  failure: the actual envelope sender, DKIM signature and SMTP delivery trace
+  remain unverified for this attempt.
+- Computer control failed with `Sky Computer Use native pipe startup failed`,
+  including after a session reset, and exposed no apps/tabs. The open Zoho console
+  could not be inspected. No current bounce status or SMTP rejection is claimed.
+
+Next, inspect Zoho's processed-email record for the exact request ID, including
+external-delivery status, timestamps, destination MX/IP, outbound sending IP,
+SMTP response, and whether delivery was attempted. Check Agent/domain approval,
+sandbox mode, shutdown state and recipient suppression. Zoho documents that
+[sandbox Agents do not deliver to recipients](https://www.zoho.com/cpaas/help/agents.html)
+and provides [request-ID-filtered delivery logs](https://www.zoho.com/cpaas/help/api/get-email-logs.html)
+using OAuth read scopes; the existing send token is not evidence of log access.
+These are checks to perform, not findings about the current Agent.
+
+Email remains a pilot blocker. No additional messages or DNS changes have been
+made to guess at the cause.
+
+## October 6 evaluation
 
 ## Result
 

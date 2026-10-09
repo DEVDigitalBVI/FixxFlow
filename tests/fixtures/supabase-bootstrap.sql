@@ -10,7 +10,7 @@ grant usage on schema public,auth,storage,realtime,extensions to anon,authentica
 alter default privileges in schema public grant all on tables to anon,authenticated,service_role;
 alter default privileges in schema public grant all on sequences to anon,authenticated,service_role;
 alter default privileges in schema public grant execute on functions to anon,authenticated,service_role;
-create table auth.users(id uuid primary key, email text, email_confirmed_at timestamptz, raw_user_meta_data jsonb default '{}');
+create table auth.users(id uuid primary key, email text, email_confirmed_at timestamptz, invited_at timestamptz, raw_user_meta_data jsonb default '{}');
 create table auth.mfa_factors(id uuid primary key, user_id uuid references auth.users, factor_type text, status text, created_at timestamptz, updated_at timestamptz);
 create table auth.sessions(id uuid primary key, user_id uuid references auth.users, not_after timestamptz);
 create function auth.jwt() returns jsonb language sql stable as $$ select coalesce(nullif(current_setting('request.jwt.claims',true),''),'{}')::jsonb $$;

@@ -20,8 +20,11 @@ export async function startChat(_previous: StartChatState, formData: FormData): 
   if (topic.length < 3 || topic.length > 180) fields.topic = "Enter a subject between 3 and 180 characters.";
   if (!message || message.length > 20000) fields.message = "Enter a message of up to 20,000 characters.";
   if (Object.keys(fields).length) return { error: "Check the highlighted fields before starting your chat.", fields };
+  const submissionKey = String(formData.get("submissionKey") ?? "");
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(submissionKey)) return { error: "Reload the chat form before submitting. Your message is still here." };
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("start_support_chat", { target_organization_id: viewer.organizationId, chat_topic: topic, first_message: message });
+  const { data, error } = await supabase.rpc("submit_support_request", { org: viewer.organizationId, token: submissionKey, kind: "chat", payload: { topic, message } });
+  if (error?.code === "PT409") return { error: "This chat was already started with different details. Check your chats before starting another." };
   if (error || !data) return { error: "Chat could not be started. Your message is still here. Please try again." };
   revalidatePath("/app/chat");
   redirect(chatPath(data!));

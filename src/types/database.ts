@@ -64,6 +64,9 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
     };
     Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails' | 'search_tickets'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & AutomationAdminFunctions & InventoryFunctions & {
       search_tickets: Omit<Functions['search_tickets'], 'Returns'> & { Returns: (Functions['search_tickets']['Returns'][number] & { request_kind: 'support' | 'inventory' })[] };
+      prepare_member_invitation: { Args: { org: string; token: string; email: string; display_name: string; member_role: AppRole; actor: string }; Returns: { id: string; userId: string | null; completed: boolean } };
+      complete_member_invitation: { Args: { org: string; token: string; invited_user: string; actor: string }; Returns: undefined };
+      submit_support_request: { Args: { org: string; token: string; kind: 'ticket' | 'equipment' | 'chat'; payload: import('./database.generated').Json }; Returns: string };
       lookup_choices: { Args: { org: string; resource: string; query?: string; after_label?: string | null; after_id?: string | null; selected?: string | null; parent?: string | null; active_only?: boolean }; Returns: import('@/features/lookups/model').LookupChoice[] };
       start_automation_run: { Args: { kind: string }; Returns: string };
       finish_automation_run: { Args: { run_id: string; outcome: string; metrics: import('./database.generated').Json }; Returns: boolean };

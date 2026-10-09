@@ -20,7 +20,7 @@ test('audit query scopes and paginates, passes literal search to the shared RPC 
 });
 test('invitation registration takes actor from the verified viewer, not the form',async()=>{
  let args;
- const {inviteMember}=load('src/app/app/people/actions.ts',{'next/cache':{revalidatePath:()=>{}},'next/navigation':{redirect:path=>{throw Error(path);}},'@/lib/auth/viewer':{requireViewer:async()=>({id:'verified-admin',organizationId:'org',role:'administrator'})},'@/lib/supabase/server':{createClient:async()=>{}},'@/lib/supabase/admin':{createAdminClient:()=>({auth:{admin:{inviteUserByEmail:async()=>({data:{user:{id:'invited-user'}},error:null})}},rpc:async(name,value)=>{assert.equal(name,'register_invited_member');args=value;return {error:null};}})}});
- const data=new FormData();for(const [k,v] of Object.entries({email:'new@example.test',displayName:'New User',role:'end_user',invited_by:'spoofed'}))data.set(k,v);
- await assert.rejects(()=>inviteMember(data),/Invitation sent/);assert.equal(args.invited_by,'verified-admin');assert.equal(args.invited_user_id,'invited-user');
+ const {inviteMember}=load('src/app/app/people/actions.ts',{'next/cache':{revalidatePath:()=>{}},'next/navigation':{redirect:path=>{throw Error(path);}},'@/lib/auth/viewer':{requireViewer:async()=>({id:'verified-admin',organizationId:'org',role:'administrator'})},'@/lib/supabase/server':{createClient:async()=>{}},'@/lib/supabase/admin':{createAdminClient:()=>({auth:{admin:{inviteUserByEmail:async()=>({data:{user:{id:'invited-user'}},error:null})}},rpc:async(name,value)=>{if(name==='prepare_member_invitation')return {data:{id:'invitation-id',userId:null,completed:false},error:null};assert.equal(name,'complete_member_invitation');args=value;return {error:null};}})}});
+ const data=new FormData();for(const [k,v] of Object.entries({submissionKey:'90000000-0000-4000-8000-000000000001',email:'new@example.test',displayName:'New User',role:'end_user',invited_by:'spoofed'}))data.set(k,v);
+ assert.ok((await inviteMember(data)).success);assert.equal(args.actor,'verified-admin');assert.equal(args.invited_user,'invited-user');
 });

@@ -1,6 +1,7 @@
 "use server";
 import { reportServerError } from "@/lib/server-errors";
 
+import { parseDeadline } from "@/features/tickets/deadlines";
 import { ticketStatuses, ticketPriorities } from "@/features/tickets/presentation";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -36,6 +37,10 @@ export async function createTicket(formData: FormData) {
   const priority = String(formData.get("priority") ?? "normal") as TicketPriority;
   const requesterId = viewer.role === "end_user" ? viewer.id : optional(formData.get("requesterId")) ?? viewer.id;
   if (title.length < 3 || title.length > 180 || !description || description.length > 20000 || !Object.hasOwn(ticketPriorities, priority)) return { error: "Enter a subject of 3–180 characters, a description of up to 20,000 characters, and a valid priority." };
+  const submissionKey = String(formData.get("submissionKey") ?? "");
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(submissionKey)) return { error: "Reload the request form before submitting. Your entries are preserved." };
+  const dueAt = viewer.role === "end_user" ? null : parseDeadline(String(formData.get("dueAt") ?? ""));
+  if (dueAt === undefined) return { error: "Enter a valid manual due date in British Virgin Islands time (UTC−4)." };
   const supabase = await createClient();
   if (formData.has("lookupLoadError")) return { error: "Choices could not load. Your entries are preserved; retry the lookup before saving." };
   if (formData.has("categoryLoadError")) return { error: "Categories could not be loaded. Refresh the page and try again." };
@@ -44,29 +49,37 @@ export async function createTicket(formData: FormData) {
   if (categoryError) return { error: categoryError };
   const assetId = viewer.role === "end_user" ? optional(formData.get("assetId")) : null;
   if (assetId) {
-    const {data: equipmentTicket,error: equipmentError} = await supabase.rpc('create_equipment_ticket',{org:viewer.organizationId,asset:assetId,subject:title,body:description,category:classification.categoryId});
+    const {data: equipmentTicket,error: equipmentError} = await supabase.rpc('submit_support_request',{org:viewer.organizationId,token:submissionKey,kind:'equipment',payload:{asset:assetId,title,description,category_id:classification.categoryId}});
+    if(equipmentError?.code === 'PT409') return { error: 'This equipment request was already saved with different details. Check your tickets before starting a new request.' };
     if(equipmentError || !equipmentTicket) return { error: 'Your equipment request could not be sent. Check that the equipment is still assigned to you and try again.' };
     return { redirectTo: `/app/tickets/${equipmentTicket}?success=Request sent.` };
   }
   const automaticRouting = viewer.role === "end_user" || !formData.has("teamId") || formData.get("teamId") === "automatic";
-  const { data, error } = await supabase.from("tickets").insert({ organization_id: viewer.organizationId, requester_id: requesterId, title, description, priority, routing_mode: automaticRouting ? "automatic" : "manual", team_id: automaticRouting ? null : optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: viewer.role === "end_user" ? null : optional(formData.get("dueAt")) }).select("id").single();
+  const { data, error } = await supabase.rpc("submit_support_request", { org: viewer.organizationId, token: submissionKey, kind: "ticket", payload: { requester_id: requesterId, title, description, priority, routing_mode: automaticRouting ? "automatic" : "manual", team_id: automaticRouting ? null : optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: dueAt } });
+  if (error?.code === "PT409") return { error: "This request was already saved with different details. Check your tickets before starting a new request." };
   if (error || !data) { reportServerError("ticket.create", error); return { error: "Your request could not be sent. Your entries are preserved; please try again." }; }
-  return { redirectTo: `/app/tickets/${data.id}?success=Request sent.` };
+  return { redirectTo: `/app/tickets/${data}?success=Request sent.` };
 }
 
-export async function updateTicket(formData: FormData) {
+export async function updateTicket(formData: FormData): Promise<{ error?: string; success?: string; revision?: number; conflict?: boolean }> {
   const viewer = await requireViewer();
   const ticketId = String(formData.get("ticketId") ?? "");
   if (viewer.role === "end_user") return { error: "Only ticket workers can update ticket details." };
+  const revision = Number(formData.get("revision"));
+  if (!Number.isSafeInteger(revision) || revision < 1) return { error: "Reload the latest ticket details before saving. Your draft is preserved." };
+  const dueAt = parseDeadline(String(formData.get("dueAt") ?? ""));
+  if (dueAt === undefined) return { error: "Enter a valid manual due date in British Virgin Islands time (UTC−4)." };
   const status = String(formData.get("status") ?? "") as TicketStatus;
   const priority = String(formData.get("priority") ?? "") as TicketPriority;
   if (!ticketId || !Object.hasOwn(ticketStatuses, status) || !Object.hasOwn(ticketPriorities, priority)) return { error: "Choose a valid status and priority." };
   if (formData.has("lookupLoadError") || ["assignedTechnicianId", "teamId", "locationId"].some(name => !formData.has(name))) return { error: "Choices could not load. Your entries are preserved; retry the lookup before saving." };
   const supabase = await createClient();
   if (formData.has("categoryLoadError") || !formData.has("categoryId") || !formData.has("subcategoryId")) return { error: "Categories could not be loaded. Refresh the page and try again." };
-  const { data: currentTicket, error: currentError } = await supabase.from("tickets").select("category_id, subcategory_id").eq("organization_id", viewer.organizationId).eq("id", ticketId).maybeSingle();
+  const { data: currentTicket, error: currentError } = await supabase.from("tickets").select("category_id, subcategory_id, revision").eq("organization_id", viewer.organizationId).eq("id", ticketId).maybeSingle();
   if (currentError) { reportServerError("ticket.load", currentError); return { error: "The ticket could not load. Your entries are preserved; please try again." }; }
   if (!currentTicket) return { error: "The ticket could not be loaded. Refresh and try again." };
+  const conflict = { conflict: true, error: "This ticket changed while you were editing. Your draft is preserved. Review the latest details before saving again." };
+  if (currentTicket.revision !== revision) return conflict;
   const classification = { categoryId: optional(formData.get("categoryId")), subcategoryId: optional(formData.get("subcategoryId")) };
   const categoryError = await classificationError(supabase, viewer.organizationId, classification, { categoryId: currentTicket.category_id, subcategoryId: currentTicket.subcategory_id });
   if (categoryError) return { error: categoryError };
@@ -76,10 +89,11 @@ export async function updateTicket(formData: FormData) {
     if (workerError) { reportServerError("ticket.references", workerError); return { error: "The technician could not be verified. Your entries are preserved; please try again." }; }
     if (!worker) return { error: "Choose an active technician." };
   }
-  const { data, error } = await supabase.from("tickets").update({ status, priority, assigned_technician_id: assignee, team_id: optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), due_at: optional(formData.get("dueAt")) }).eq("organization_id", viewer.organizationId).eq("id", ticketId).select("id").maybeSingle();
+  const { data, error } = await supabase.from("tickets").update({ status, priority, assigned_technician_id: assignee, team_id: optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), due_at: dueAt }).eq("organization_id", viewer.organizationId).eq("id", ticketId).eq("revision", revision).select("id, revision").maybeSingle();
+  if (!error && !data) return conflict;
   if (error || !data) { const reference = reportServerError("ticket.save", error); return { error: `The ticket could not be updated. Your entries are preserved. Reference: ${reference}` }; }
   revalidatePath(`/app/tickets/${ticketId}`); revalidatePath("/app/tickets");
-  return { success: "Ticket updated." };
+  return { success: "Ticket updated.", revision: data.revision };
 }
 
 export async function addTicketMessage(formData: FormData) {

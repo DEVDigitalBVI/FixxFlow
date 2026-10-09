@@ -17,7 +17,7 @@ function load(file, { role = 'administrator', responses = [{ data: { id: 'row' }
   };
   return { actions: loadModule(file, mocks), calls };
 }
-const form = values => { const data = new FormData(); for (const [key, value] of Object.entries(values)) data.set(key, value); return data; };
+const form = values => { const data = new FormData(); data.set('submissionKey','90000000-0000-4000-8000-000000000001'); for (const [key, value] of Object.entries(values)) data.set(key, value); return data; };
 const settings = 'src/app/app/administration/actions.ts';
 const organization = 'src/app/app/organization/actions.ts';
 const people = 'src/app/app/people/actions.ts';
@@ -90,11 +90,11 @@ test('ticket creation returns recoverable errors instead of redirecting away fro
 });
 
 test('employee intake uses own identity, ignores staff-only fields and returns a durable request link', async () => {
-  const { actions, calls } = load(tickets, { role: 'end_user', responses: [{ data: { id: 'ticket-id' }, error: null }] });
+  const { actions, calls } = load(tickets, { role: 'end_user', responses: [{ data: 'ticket-id', error: null }] });
   const result = await actions.createTicket(form({ title: 'Wi-Fi issue', description: 'Details', requesterId: 'someone-else', teamId: 'foreign-team', assignedTechnicianId: 'worker', dueAt: 'tomorrow', locationId: 'location' }));
   assert.match(result.redirectTo, /\/app\/tickets\/ticket-id/);
-  const inserted = calls.find(call => call[0] === 'insert')[1];
-  assert.equal(inserted.organization_id, 'our-org'); assert.equal(inserted.requester_id, 'viewer');
+  const inserted = calls.find(call => call[0] === 'rpc' && call[1] === 'submit_support_request')[2].payload;
+  assert.equal(calls.find(call => call[0] === 'rpc' && call[1] === 'submit_support_request')[2].org, 'our-org'); assert.equal(inserted.requester_id, 'viewer');
   assert.equal(inserted.team_id, null); assert.equal(inserted.assigned_technician_id, null); assert.equal(inserted.due_at, null); assert.equal(inserted.location_id, 'location');
 });
 
@@ -103,7 +103,7 @@ test('equipment ticket failure retains the form; success retains the atomic equi
   assert.match((await failed.actions.createTicket(form({ title: 'Laptop issue', description: 'Details', assetId: 'asset' }))).error, /equipment request could not be sent/);
   const success = load(tickets, { role: 'end_user', responses: [{ data: 'ticket-id', error: null }] });
   assert.match((await success.actions.createTicket(form({ title: 'Laptop issue', description: 'Details', assetId: 'asset' }))).redirectTo, /ticket-id/);
-  assert.ok(success.calls.some(call => call[0] === 'rpc' && call[1] === 'create_equipment_ticket' && call[2].org === 'our-org'));
+  assert.ok(success.calls.some(call => call[0] === 'rpc' && call[1] === 'submit_support_request' && call[2].kind === 'equipment' && call[2].org === 'our-org'));
   assert.ok(!success.calls.some(call => call[0] === 'insert'));
 });
 
@@ -112,7 +112,7 @@ test('staff intake distinguishes automatic, manual team and explicitly unassigne
   for (const [team, mode, assigned] of [['automatic','automatic',null],['','manual',null],['team','manual','team']]) {
     const { actions, calls } = load(tickets);
     await actions.createTicket(form({title:'Connection issue',description:'Details',teamId:team}));
-    const inserted=calls.find(call=>call[0]==='insert')[1];
+    const inserted=calls.find(call=>call[0]==='rpc'&&call[1]==='submit_support_request')[2].payload;
     assert.equal(inserted.routing_mode,mode); assert.equal(inserted.team_id,assigned);
   }
 });

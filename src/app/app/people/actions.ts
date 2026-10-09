@@ -40,36 +40,37 @@ function peopleError(message: string): never {
   redirect(`/app/people?${new URLSearchParams({ error: message })}`);
 }
 
-export async function inviteMember(formData: FormData) {
+export async function inviteMember(formData: FormData): Promise<ActionResult> {
   const viewer = await requireViewer();
-  if (viewer.role !== "administrator") peopleError("Only administrators can invite members.");
+  if (viewer.role !== "administrator") return { error: "Only administrators can invite members." };
 
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const displayName = String(formData.get("displayName") ?? "").trim();
   const role = String(formData.get("role") ?? "end_user") as AppRole;
-  if (!email || !displayName || !allowedRoles.includes(role)) peopleError("Enter a name, email, and valid role.");
+  const token = String(formData.get("submissionKey") ?? "");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || !displayName || displayName.length > 120 || !allowedRoles.includes(role)) return { error: "Enter a name of up to 120 characters, a valid email, and a valid role." };
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)) return { error: "Reload the invitation form before sending. Your entries are preserved." };
 
   let admin: ReturnType<typeof createAdminClient>;
   try {
     admin = createAdminClient();
   } catch {
-    peopleError("Invitations are not configured yet. Add the Supabase server secret to the deployment.");
+    return { error: "Invitations are not configured yet. Contact your workspace administrator." };
   }
-  const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/callback?next=/auth/update-password`;
-  const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo });
-  if (error || !data.user) peopleError("The invitation could not be sent.");
-
-  const { error: registrationError } = await admin.rpc("register_invited_member", {
-    target_organization_id: viewer.organizationId,
-    invited_user_id: data.user.id,
-    invited_role: role,
-    invited_name: displayName,
-    invited_email: email,
-    invited_by: viewer.id,
-  });
-  if (registrationError) peopleError("The email invitation was sent, but workspace access could not be created. Please contact an administrator.");
-
-  redirect("/app/people?success=Invitation sent.");
+  const { data: invitation, error: prepareError } = await admin.rpc("prepare_member_invitation", { org: viewer.organizationId, token, email, display_name: displayName, member_role: role, actor: viewer.id });
+  if (prepareError || !invitation) return { error: prepareError?.code === "PT429" ? "An invitation is already being sent. Your entries are preserved; retry in two minutes." : prepareError?.code === "PT409" ? "This account or invitation already exists. Retry with the original invitation details, or manage the member in People." : "The invitation could not be prepared. Your entries are preserved; please try again." };
+  if (invitation.completed) return { success: "This invitation is already registered. Manage the member’s access in People." };
+  let userId = invitation.userId;
+  if (!userId) {
+    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/callback?next=/auth/update-password`;
+    const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo });
+    if (error || !data.user) return { error: "We could not confirm the invitation email. Your entries are preserved. Retry in two minutes; any account already invited will be recovered without sending a duplicate." };
+    userId = data.user.id;
+  }
+  const { error: registrationError } = await admin.rpc("complete_member_invitation", { org: viewer.organizationId, token: invitation.id, invited_user: userId, actor: viewer.id });
+  if (registrationError) return { error: "The invitation email was accepted, but workspace access needs repair. Your entries are preserved. Send again to repair access; another invitation email will not be sent." };
+  revalidatePath("/app/people");
+  return { success: invitation.userId ? "Workspace access repaired. The existing invitation email can be used; request a password reset if its link has expired." : "Invitation email accepted and workspace access created." };
 }
 
 export async function updateMemberRole(formData: FormData) {

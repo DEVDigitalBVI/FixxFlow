@@ -12,7 +12,7 @@ function actionSetup(result = { data: 'chat-id', error: null }) {
   '@/lib/auth/viewer': { requireViewer: async () => { calls.push(['viewer']); return { organizationId: 'trusted-org' }; } },
   '@/lib/supabase/server': { createClient: async () => ({ rpc: async (...args) => { calls.push(['rpc', ...args]); return result; } }) },
  });
- const form = (topic, message) => { const data = new FormData(); data.set('topic', topic); data.set('message', message); data.set('organizationId', 'other-org'); return data; };
+ const form = (topic, message) => { const data = new FormData(); data.set('submissionKey','90000000-0000-4000-8000-000000000001'); data.set('topic', topic); data.set('message', message); data.set('organizationId', 'other-org'); return data; };
  return { calls, submit: (topic, message) => startChat({}, form(topic, message)) };
 }
 
@@ -31,7 +31,7 @@ test('chat intake validates trimmed fields without writes and returns field-leve
 test('chat creation preserves trusted organization context and redirects only on success', async () => {
  const { calls, submit } = actionSetup();
  await assert.rejects(submit(' VPN problem ', ' Cannot connect '), /REDIRECT:\/app\/chat\/chat-id/);
- assert.deepEqual(calls, [['viewer'], ['rpc', 'start_support_chat', { target_organization_id: 'trusted-org', chat_topic: 'VPN problem', first_message: 'Cannot connect' }], ['revalidate', '/app/chat']]);
+ assert.deepEqual(calls, [['viewer'], ['rpc', 'submit_support_request', { org: 'trusted-org', token: '90000000-0000-4000-8000-000000000001', kind: 'chat', payload: { topic: 'VPN problem', message: 'Cannot connect' } }], ['revalidate', '/app/chat']]);
 });
 
 test('chat creation failure returns safe retry feedback instead of discarding the form through a redirect', async () => {

@@ -1,3 +1,6 @@
+import { randomUUID } from "node:crypto";
+import { SubmissionKey } from "@/components/ui/submission-key";
+import { TICKET_TIMEZONE_LABEL } from "@/features/tickets/deadlines";
 import { LookupSelect } from "@/features/lookups/lookup-select";
 import { TicketSuggestions } from "@/features/knowledge/ticket-suggestions";
 import { ActionForm } from "@/components/ui/action-form";
@@ -20,6 +23,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
     {staff ? <PageHeader title="New ticket" eyebrow="Ticket queue" description="Capture the issue and get it to the right people."/> : <header className="portal-page-heading"><div><h1>Open a ticket</h1><p>Tell IT what is happening. We’ll keep you updated here.</p></div></header>}
     {message.error && <div className="alert alert-error page-alert" role="alert">{message.error}</div>}
     <ActionForm action={createTicket} className={`ticket-create-form${staff ? "" : " portal-request-form"}`}>
+      <SubmissionKey value={randomUUID()}/>
       <div className="ticket-create-intro"><p>Fields marked <span aria-hidden="true">*</span><span className="sr-only">with an asterisk</span> are required. Everything else can be added later.</p></div>
       {equipment?.data && <div className="ticket-create-equipment"><input type="hidden" name="assetId" value={equipment.data.id}/><span className="muted">Request for your equipment</span><strong>{equipment.data.name}</strong><span>{equipment.data.tag}</span></div>}
       <section className="ticket-create-section" aria-labelledby="request-details-heading">
@@ -46,7 +50,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
         <div className="ticket-create-fields">
           <LookupSelect resource="teams" name="teamId" label="Team" defaultValue="automatic" emptyLabel="Leave unassigned" specialOptions={[{id:"automatic",label:"Automatic · use category default"}]} describedBy="ticket-routing-hint"/>
           <LookupSelect resource="technicians" name="assignedTechnicianId" label="Technician" emptyLabel="Unassigned"/>
-          <div className="field"><label htmlFor="dueAt">Manual due date</label><input className="input" id="dueAt" name="dueAt" type="datetime-local" aria-describedby="ticket-due-hint"/><small id="ticket-due-hint" className="muted">Optional. SLA targets are calculated separately.</small></div>
+          <div className="field"><label htmlFor="dueAt">Manual due date</label><input className="input" id="dueAt" name="dueAt" type="datetime-local" aria-describedby="ticket-due-hint"/><small id="ticket-due-hint" className="muted">{TICKET_TIMEZONE_LABEL}. Optional. SLA targets are calculated separately.</small></div>
         </div>
       </details>}
       <div className="ticket-create-help"><TicketSuggestions articles={articlesResult.data ?? []} categories={[]} unavailable={!!articlesResult.error}/></div>

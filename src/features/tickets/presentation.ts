@@ -1,3 +1,4 @@
+import { TICKET_TIMEZONE } from "./deadlines";
 import type { TicketPriority, TicketStatus } from "@/types/database";
 
 export const ticketStatuses: Record<TicketStatus, { label: string; tone: string }> = {
@@ -12,7 +13,7 @@ export const ticketPriorities: Record<TicketPriority, { label: string; tone: str
   high: { label: "High", tone: "amber" }, critical: { label: "Critical", tone: "red" },
 };
 
-const ticketDateFormatter = new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" });
+const ticketDateFormatter = new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short", timeZone: TICKET_TIMEZONE });
 
 export const formatTicketDate = (value: string | null) => value
   ? ticketDateFormatter.format(new Date(value))
