@@ -50,13 +50,25 @@ export function IssueForm({ request, units, token }: { request: InventoryRequest
  </ActionForm>;
 }
 export function PermissionsForm({ id, name, departments, grants, manager, token }: { id: string; name: string; departments: { id: string; name: string; is_active: boolean }[]; grants: string[]; manager: boolean; token: string }) {
- return <ActionForm action={inventoryMutation} className="stack inventory-editor"><CommandFields command="permissions" id={id} token={token}/>
-  <fieldset className="stack"><legend>Inventory capabilities for {name}</legend>
-   <label><input type="checkbox" name="manager" defaultChecked={manager}/> Manage inventory and fulfill requests</label>
-   <fieldset className="stack"><legend>Request department inventory</legend><p className="muted">Select every department this person may request for. Uncheck to revoke access.</p>
-    {departments.filter(d => d.is_active).map(d => <label key={d.id}><input type="checkbox" name="departments" value={d.id} defaultChecked={grants.includes(d.id)}/> {d.name}</label>)}
-    {!departments.some(d => d.is_active) && <p>No active departments. Add a department in Administration.</p>}
-   </fieldset>
-  </fieldset><SubmitButton className="button button-secondary">Save inventory permissions</SubmitButton>
- </ActionForm>;
+ const activeDepartments = departments.filter(d => d.is_active);
+ const grantedDepartments = departments.filter(d => grants.includes(d.id));
+ return <section className="person-inventory-access" aria-labelledby={`inventory-access-${id}`}>
+  <header className="inventory-access-heading"><div><h4 id={`inventory-access-${id}`}>Inventory access</h4><p className="muted">Control stock management and department requests independently of workspace role.</p></div></header>
+  <dl className="inventory-access-summary">
+   <div><dt>Stock management</dt><dd>{manager ? 'Can manage and fulfill requests' : 'No management access'}</dd></div>
+   <div><dt>Department requests</dt><dd>{grantedDepartments.length ? grantedDepartments.map(d => `${d.name}${d.is_active ? '' : ' (inactive)'}`).join(', ') : 'No departments assigned'}</dd></div>
+  </dl>
+  <details className="inventory-access-editor"><summary className="button button-secondary">Edit inventory access<span className="sr-only"> for {name}</span><span aria-hidden="true">⌄</span></summary>
+   <ActionForm action={inventoryMutation} className="inventory-permissions-form"><CommandFields command="permissions" id={id} token={token}/>
+    <fieldset className="inventory-permission-group"><legend>Stock management<span className="sr-only"> for {name}</span></legend>
+     <label className="inventory-permission-option"><input type="checkbox" name="manager" defaultChecked={manager}/><span><strong>Manage inventory and fulfill requests</strong><span>Receive and correct stock, review requests, and issue items across departments.</span></span></label>
+    </fieldset>
+    <fieldset className="inventory-permission-group" aria-describedby={`inventory-departments-hint-${id}`}><legend>Request department inventory<span className="sr-only"> for {name}</span></legend>
+     <p className="muted" id={`inventory-departments-hint-${id}`}>Choose the departments this person can request items for. Uncheck a department to remove access.</p>
+     {activeDepartments.length ? <div className="inventory-department-options">{activeDepartments.map(d => <label className="inventory-permission-option" key={d.id}><input type="checkbox" name="departments" value={d.id} defaultChecked={grants.includes(d.id)}/><span>{d.name}</span></label>)}</div> : <p className="inventory-permissions-empty">No active departments. Add a department in Administration to enable requests.</p>}
+    </fieldset>
+    <div className="inventory-permissions-footer"><p className="muted">Changes apply when you save.</p><SubmitButton className="button button-primary" pendingLabel="Saving permissions…">Save inventory permissions<span className="sr-only"> for {name}</span></SubmitButton></div>
+   </ActionForm>
+  </details>
+ </section>;
 }

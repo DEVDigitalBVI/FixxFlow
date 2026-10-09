@@ -34,6 +34,13 @@ test('access changes require a separate contextual confirmation; own deactivatio
   const inactive = render(React.createElement(PersonCard, { ...person, status: 'inactive' }));
   assert.match(inactive, /Restore Alex Rivers’s workspace access/); assert.match(inactive, /name="status" value="active"/);
 });
+test('inventory access follows profile and workspace access, within the existing management disclosure', () => {
+  const html = render(React.createElement(PersonCard, { ...person, inventoryPermissions: React.createElement('section', {className: 'person-inventory-access'}, 'Inventory access') }));
+  assert.ok(html.indexOf('Profile details') < html.indexOf('Workspace access'));
+  assert.ok(html.indexOf('Workspace access') < html.indexOf('Inventory access'));
+  const readOnly = render(React.createElement(PersonCard, { ...person, canManage: false, inventoryPermissions: 'Inventory access' }));
+  assert.doesNotMatch(readOnly, /Inventory access/);
+});
 test('read-only directory exposes no role/status forms or management controls', () => {
   const html = render(React.createElement(PersonCard, { ...person, canManage: false }));
   assert.match(html, /Technician/); assert.match(html, /Active/);

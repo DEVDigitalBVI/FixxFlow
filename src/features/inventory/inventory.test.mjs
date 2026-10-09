@@ -32,7 +32,18 @@ test('decline and questions require a reason; approval uses individual equipment
 });
 test('people permissions are distinct capabilities with multiple department choices',()=>{
  const markup=html('PermissionsForm',{id:'person',name:'Pat',departments:[{id:'a',name:'A',is_active:true},{id:'b',name:'B',is_active:true}],grants:['a','b'],manager:false});
- assert.match(markup,/<legend>Inventory capabilities for Pat/);assert.match(markup,/Manage inventory and fulfill requests/);assert.equal((markup.match(/name="departments"/g)||[]).length,2);assert.equal((markup.match(/checked=""/g)||[]).length,2);
+ assert.match(markup,/aria-labelledby="inventory-access-person"/);assert.match(markup,/Edit inventory access<span class="sr-only"> for Pat/);assert.match(markup,/Manage inventory and fulfill requests/);assert.equal((markup.match(/name="departments"/g)||[]).length,2);assert.equal((markup.match(/checked=""/g)||[]).length,2);
+ assert.match(markup,/<dt>Department requests<\/dt><dd>A, B<\/dd>/);
+ assert.match(markup,/aria-describedby="inventory-departments-hint-person"/);
+ assert.doesNotMatch(markup,/<details[^>]* open/);
+});
+test('inventory permissions summarize restricted access, label inactive grants, and explain empty choices',()=>{
+ const markup=html('PermissionsForm',{id:'person',name:'Pat',departments:[{id:'old',name:'Former department',is_active:false}],grants:['old'],manager:true});
+ assert.match(markup,/Can manage and fulfill requests/);assert.match(markup,/Former department \(inactive\)/);
+ assert.doesNotMatch(markup,/name="departments"/);assert.match(markup,/No active departments/);
+ const empty=html('PermissionsForm',{id:'other',name:'Alex',departments:[],grants:[],manager:false});
+ assert.match(empty,/No management access/);assert.match(empty,/No departments assigned/);
+ assert.match(empty,/id="inventory-access-other"/);
 });
 test('inventory table has headers, a keyboard-focusable scroll region, compact labels and available stock arithmetic',()=>{
  const {InventoryTable}=load('src/features/inventory/inventory-table.tsx',{'next/link':{default:({children,...props})=>React.createElement('a',props,children)}});
