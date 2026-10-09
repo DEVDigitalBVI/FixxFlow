@@ -1,3 +1,4 @@
+import { Timestamp } from '@/features/timezones/provider';
 import { randomUUID } from "node:crypto";
 import { profileLabels } from "@/features/lookups/labels";
 import { PageHeader } from "@/components/ui/page-header";
@@ -7,7 +8,6 @@ import Link from "next/link";
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
 import { LiveChatQueue } from "@/features/chat/live-queue";
-import { formatTicketDate } from "@/features/tickets/presentation";
 
 export default async function ChatPage({ searchParams }: { searchParams: Promise<{ error?: string; view?: string; start?: string }> }) {
   const viewer = await requireViewer();
@@ -25,7 +25,7 @@ export default async function ChatPage({ searchParams }: { searchParams: Promise
   const { data: chats, error } = await query;
   const profiles = viewer.role === "end_user" ? [] : await profileLabels(supabase, viewer.organizationId, (chats ?? []).slice(0, 50).flatMap(chat => [chat.requester_id, chat.assigned_technician_id]));
   const names = new Map((profiles ?? []).map(p => [p.user_id, p.display_name]));
-  if (viewer.role === "end_user") return <div className="portal-page portal-form-page"><header className="portal-page-heading"><div><Link className="button button-quiet page-back-link" href="/app">← Home</Link><h1>My chats</h1><p>Read replies or start a new conversation with IT.</p></div><Link className="button button-primary" href="/app/chat?start=1">Start a chat</Link></header><section className="chat-history-list"><h2>Your conversations</h2>{error ? <p role="alert">Conversations could not be loaded. Refresh to try again.</p> : chats?.length ? <ul>{chats.map(chat => <li key={chat.id}><Link href={`/app/chat/${chat.id}`}><strong>{chat.topic}</strong><span>{chat.status === "open" ? "Open" : "Closed"} · {formatTicketDate(chat.updated_at)}</span></Link></li>)}</ul> : <p>No chats yet. Choose “Start a chat” to send your first message to IT.</p>}</section></div>;
+  if (viewer.role === "end_user") return <div className="portal-page portal-form-page"><header className="portal-page-heading"><div><Link className="button button-quiet page-back-link" href="/app">← Home</Link><h1>My chats</h1><p>Read replies or start a new conversation with IT.</p></div><Link className="button button-primary" href="/app/chat?start=1">Start a chat</Link></header><section className="chat-history-list"><h2>Your conversations</h2>{error ? <p role="alert">Conversations could not be loaded. Refresh to try again.</p> : chats?.length ? <ul>{chats.map(chat => <li key={chat.id}><Link href={`/app/chat/${chat.id}`}><strong>{chat.topic}</strong><span>{chat.status === "open" ? "Open" : "Closed"} · <Timestamp value={chat.updated_at}/></span></Link></li>)}</ul> : <p>No chats yet. Choose “Start a chat” to send your first message to IT.</p>}</section></div>;
   const activeView = ["mine", "unassigned", "all"].includes(view ?? "") ? view : "open";
   return <div className="page chat-page">
     <PageHeader title="Chats" eyebrow={viewer.organizationName} description="Keep conversations moving, from the first question to the next step." actions={<Link className="button button-primary" href="/app/chat?start=1">Start a chat</Link>}/>

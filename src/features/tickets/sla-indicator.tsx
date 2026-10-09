@@ -1,7 +1,7 @@
 "use client";
+import { Timestamp } from '@/features/timezones/provider';
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { formatTicketDate } from "./presentation";
 import { ticketSla, type SlaTicket, type SlaResult, type SlaState } from "./sla";
 
 const Clock = createContext(0);
@@ -26,8 +26,8 @@ function Objective({ label, result, compact }: { label: string; result: SlaResul
   return <div className={`sla-objective sla-${style.tone}`}>
     <strong>{label} SLA</strong>
     <div className="sla-label"><span aria-hidden="true">{style.icon}</span><span>{result.label}</span></div>
-    {result.deadline && <time className={compact ? "sr-only" : "sla-date"} dateTime={result.deadline}>Due {formatTicketDate(result.deadline)}</time>}
-    {!compact && result.completedAt && <time className="sla-date" dateTime={result.completedAt}>Completed {formatTicketDate(result.completedAt)}</time>}
+    {result.deadline && <time className={compact ? "sr-only" : "sla-date"} dateTime={result.deadline}>Due <Timestamp value={result.deadline}/></time>}
+    {!compact && result.completedAt && <time className="sla-date" dateTime={result.completedAt}>Completed <Timestamp value={result.completedAt}/></time>}
   </div>;
 }
 export function SlaIndicator({ ticket, compact = false }: { ticket: SlaTicket; compact?: boolean }) {

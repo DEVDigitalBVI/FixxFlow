@@ -9,12 +9,12 @@ import { updateTicket } from '@/app/app/tickets/actions';
 import type { Database } from '@/types/database';
 import { CategoryFields } from './category-fields';
 import { ticketPriorities, ticketStatuses } from './presentation';
-import { deadlineInputValue, TICKET_TIMEZONE_LABEL } from './deadlines';
+import { DeadlineField } from './deadline-field';
 
 type TicketDetails = Pick<Database['public']['Tables']['tickets']['Row'],
   'id' | 'revision' | 'status' | 'priority' | 'assigned_technician_id' | 'team_id' | 'category_id' | 'subcategory_id' | 'location_id' | 'due_at'>;
 
-export function TicketDetailsForm({ ticket }: { ticket: TicketDetails }) {
+export function TicketDetailsForm({ ticket, timeZone }: { ticket: TicketDetails; timeZone: string }) {
   // Realtime page refreshes must never advance the draft's revision or reset its fields.
   const [draft] = useState(ticket);
   const [revision, setRevision] = useState(ticket.revision);
@@ -49,8 +49,7 @@ export function TicketDetailsForm({ ticket }: { ticket: TicketDetails }) {
     <LookupSelect resource="teams" name="teamId" label="Team" defaultValue={draft.team_id ?? ''}/>
     <CategoryFields categoryId={draft.category_id ?? ''} subcategoryId={draft.subcategory_id ?? ''}/>
     <LookupSelect resource="locations" name="locationId" label="Location" defaultValue={draft.location_id ?? ''}/>
-    <label>Manual due date<input className="input" name="dueAt" type="datetime-local" defaultValue={deadlineInputValue(draft.due_at)} aria-describedby="ticket-details-due-hint"/></label>
-    <small className="muted" id="ticket-details-due-hint">{TICKET_TIMEZONE_LABEL}. SLA targets are calculated separately.</small>
+    <DeadlineField timeZone={timeZone} value={draft.due_at}/>
     <SubmitButton className="button button-primary">Save changes</SubmitButton>
   </ActionForm>;
 }

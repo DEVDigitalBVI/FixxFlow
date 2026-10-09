@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import {createRequire} from 'node:module';
 import ts from 'typescript';
 import React from 'react';
+import { load as loadModule } from '../../../tests/helpers/load-module.mjs';
 import {renderToStaticMarkup} from 'react-dom/server';
 const require=createRequire(import.meta.url);
 const id='30000000-0000-0000-0000-000000000181';
@@ -17,6 +18,7 @@ function action({role='administrator',result={data:{id},error:null}}={}) {
  const calls=[];
  const query={delete(){calls.push(['delete']);return this;},eq(...args){calls.push(['eq',...args]);return this;},select(...args){calls.push(['select',...args]);return this;},maybeSingle:async()=>result};
  const actions=load('src/app/app/organization/actions.ts',{
+  '@/features/timezones/model':loadModule('src/features/timezones/model.ts'),
   'next/cache':{revalidatePath:path=>calls.push(['revalidate',path])},
   'next/navigation':{redirect:url=>{throw Error(decodeURIComponent(url));}},
   '@/lib/auth/viewer':{requireViewer:async()=>({role,organizationId:'own-org'})},

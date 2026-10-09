@@ -3,7 +3,7 @@ import test from 'node:test';
 import { componentHarness } from '../../../tests/helpers/component-harness.mjs';
 const initial={id:'ticket',revision:1,status:'open',priority:'normal',assigned_technician_id:null,team_id:null,category_id:null,subcategory_id:null,location_id:null,due_at:'2026-10-09T13:00:00Z'};
 function editor(result={success:'Saved',revision:2}){
- const props={ticket:{...initial}};let refreshes=0;
+ const props={ticket:{...initial},timeZone:'America/Tortola'};let refreshes=0;
  const harness=componentHarness('src/features/tickets/ticket-details-form.tsx','TicketDetailsForm',props,{
   'next/navigation':{useRouter:()=>({refresh:()=>refreshes++})},
   '@/app/app/tickets/actions':{updateTicket:async()=>result},
@@ -13,10 +13,10 @@ function editor(result={success:'Saved',revision:2}){
 test('realtime refresh preserves the draft fields and expected revision while exposing review and explicit reload',()=>{
  const {harness:h,props}=editor();
  try{
-  assert.equal(h.find(n=>n.props.name==='dueAt').props.defaultValue,'2026-10-09T09:00');
+  assert.equal(h.find(n=>n.props.timeZone==='America/Tortola').props.value,initial.due_at);
   props.ticket={...initial,revision:2,status:'closed',due_at:null};h.render();
   assert.equal(h.find(n=>n.props.name==='revision').props.value,1);assert.equal(h.find(n=>n.props.name==='status').props.defaultValue,'open');
-  assert.equal(h.find(n=>n.props.name==='dueAt').props.defaultValue,'2026-10-09T09:00');
+  assert.equal(h.find(n=>n.props.timeZone==='America/Tortola').props.value,initial.due_at);
   assert.equal(h.find(n=>n.type==='a').props.target,'_blank');
   assert.equal(h.find(n=>n.type==='button').props.type,'button');
   let reloaded=false;globalThis.window.location={reload:()=>reloaded=true};globalThis.window.confirm=()=>false;

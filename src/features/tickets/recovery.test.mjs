@@ -5,7 +5,7 @@ const id='10000000-0000-4000-8000-000000000001';
 function actions({role='technician',failTable='',failWrite=false,missing=false,revision=1,race=false}={}) {
  const calls=[],logged=[];
  const db={from(table){let writing=false;const query=new Proxy({},{get:(_,key)=>key==='then'?resolve=>Promise.resolve({data:table==='tickets'?missing?null:writing&&race?null:{id,category_id:null,subcategory_id:null,revision:writing?revision+1:revision}:table==='profiles'?{user_id:id}:null,error:table===failTable||(failWrite&&writing)?{code:'08006',message:'secret'}:null}).then(resolve):(...args)=>{if(key==='update')writing=true;calls.push([table,key,...args]);return query;}});return query;}};
- const mocks={'next/cache':{revalidatePath(){}},'next/navigation':{redirect(){throw Error('Failure must not redirect');}},'@/lib/auth/viewer':{requireViewer:async()=>({id,role,organizationId:'trusted-org'})},'@/lib/supabase/server':{createClient:async()=>db},'@/lib/server-errors':{reportServerError:(...args)=>{logged.push(args);return 'reference';}}};
+ const mocks={'next/cache':{revalidatePath(){}},'next/navigation':{redirect(){throw Error('Failure must not redirect');}},'@/lib/auth/viewer':{requireViewer:async()=>({id,role,organizationId:'trusted-org',timeZone:'America/Tortola'})},'@/lib/supabase/server':{createClient:async()=>db},'@/lib/server-errors':{reportServerError:(...args)=>{logged.push(args);return 'reference';}}};
  return {...load('src/app/app/tickets/actions.ts',mocks),...load('src/app/app/profile/actions.ts',mocks),calls,logged};
 }
 const form=()=>new Map(Object.entries({ticketId:id,revision:1,status:'open',priority:'normal',assignedTechnicianId:'',teamId:'',categoryId:'',subcategoryId:'',locationId:'',dueAt:''}));

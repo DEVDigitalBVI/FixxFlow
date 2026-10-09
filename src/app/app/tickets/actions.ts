@@ -39,8 +39,8 @@ export async function createTicket(formData: FormData) {
   if (title.length < 3 || title.length > 180 || !description || description.length > 20000 || !Object.hasOwn(ticketPriorities, priority)) return { error: "Enter a subject of 3–180 characters, a description of up to 20,000 characters, and a valid priority." };
   const submissionKey = String(formData.get("submissionKey") ?? "");
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(submissionKey)) return { error: "Reload the request form before submitting. Your entries are preserved." };
-  const dueAt = viewer.role === "end_user" ? null : parseDeadline(String(formData.get("dueAt") ?? ""));
-  if (dueAt === undefined) return { error: "Enter a valid manual due date in British Virgin Islands time (UTC−4)." };
+  const dueAt = viewer.role === "end_user" ? null : parseDeadline(String(formData.get("dueAt") ?? ""), String(formData.get("dueTimezone") ?? viewer.timeZone), String(formData.get("dueOccurrence") ?? ""));
+  if (dueAt === undefined) return { error: "Enter a valid manual due date in the displayed timezone. If the clock repeats this time, choose its first or second occurrence." };
   const supabase = await createClient();
   if (formData.has("lookupLoadError")) return { error: "Choices could not load. Your entries are preserved; retry the lookup before saving." };
   if (formData.has("categoryLoadError")) return { error: "Categories could not be loaded. Refresh the page and try again." };
@@ -67,8 +67,8 @@ export async function updateTicket(formData: FormData): Promise<{ error?: string
   if (viewer.role === "end_user") return { error: "Only ticket workers can update ticket details." };
   const revision = Number(formData.get("revision"));
   if (!Number.isSafeInteger(revision) || revision < 1) return { error: "Reload the latest ticket details before saving. Your draft is preserved." };
-  const dueAt = parseDeadline(String(formData.get("dueAt") ?? ""));
-  if (dueAt === undefined) return { error: "Enter a valid manual due date in British Virgin Islands time (UTC−4)." };
+  const dueAt = parseDeadline(String(formData.get("dueAt") ?? ""), String(formData.get("dueTimezone") ?? viewer.timeZone), String(formData.get("dueOccurrence") ?? ""));
+  if (dueAt === undefined) return { error: "Enter a valid manual due date in the displayed timezone. If the clock repeats this time, choose its first or second occurrence." };
   const status = String(formData.get("status") ?? "") as TicketStatus;
   const priority = String(formData.get("priority") ?? "") as TicketPriority;
   if (!ticketId || !Object.hasOwn(ticketStatuses, status) || !Object.hasOwn(ticketPriorities, priority)) return { error: "Choose a valid status and priority." };

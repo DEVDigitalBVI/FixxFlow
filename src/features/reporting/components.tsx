@@ -14,7 +14,7 @@ export function TodayMetrics({ report, title = "Tickets today" }: { report: Repo
     {label:'Avg response',value:s ? duration(s.response) : '—',hint:'First public IT replies sent today'},
     {label:'Avg resolution',value:s ? duration(s.resolution) : '—',hint:'Latest resolutions recorded today'},
   ];
-  return <section aria-labelledby="tickets-today" aria-busy={!report}><div className="tech-section-heading"><div><h2 id="tickets-today">{title}</h2><p>{report ? `${report.today} · British Virgin Islands time` : <span role="status">Loading today’s metrics…</span>}</p></div>{report && <span className="muted">Updated {new Intl.DateTimeFormat('en', {timeZone:report.timezone,hour:'numeric',minute:'2-digit'}).format(new Date(report.asOf))}</span>}</div><dl className="report-metrics">{metrics.map(m=><div className="settings-card" key={m.label}><dt>{m.label}</dt><dd><span>{m.value}</span><p>{m.hint}</p></dd></div>)}</dl></section>;
+  return <section aria-labelledby="tickets-today" aria-busy={!report}><div className="tech-section-heading"><div><h2 id="tickets-today">{title}</h2><p>{report ? `${report.today} · ${report.timezone}` : <span role="status">Loading today’s metrics…</span>}</p></div>{report && <span className="muted">Updated {new Intl.DateTimeFormat('en', {timeZone:report.timezone,hour:'numeric',minute:'2-digit'}).format(new Date(report.asOf))}</span>}</div><dl className="report-metrics">{metrics.map(m=><div className="settings-card" key={m.label}><dt>{m.label}</dt><dd><span>{m.value}</span><p>{m.hint}</p></dd></div>)}</dl></section>;
 }
 
 type Series = { label: string; values: (number | null)[] };

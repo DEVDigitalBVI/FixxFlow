@@ -1,4 +1,5 @@
 "use server";
+import { validTimezone } from '@/features/timezones/model';
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -24,8 +25,7 @@ export async function editOrganizationItem(form: FormData): Promise<ActionResult
     changes.country_code = optional("countryCode")?.toUpperCase() ?? null;
     changes.timezone = optional("timezone") ?? "";
     if (changes.country_code && !/^[A-Z]{2}$/.test(changes.country_code)) return { error: "Use a two-letter country code." };
-    try { if (!changes.timezone) throw new Error(); new Intl.DateTimeFormat("en", { timeZone: changes.timezone }); }
-    catch { return { error: "Enter a valid timezone, such as America/Tortola." }; }
+    if (!validTimezone(changes.timezone)) return { error: "Enter a valid named timezone, such as America/New_York." };
   }
   const supabase = await createClient();
   const query = kind === "departments"
@@ -66,9 +66,10 @@ export async function addLocation(formData: FormData) {
   const city = String(formData.get("city") ?? "").trim() || null;
   const region = String(formData.get("region") ?? "").trim() || null;
   const countryCode = String(formData.get("countryCode") ?? "").trim().toUpperCase() || null;
-  const timezone = String(formData.get("timezone") ?? "America/Tortola").trim();
+  const timezone = String(formData.get("timezone") ?? viewer.organizationTimezone).trim();
   if (!name || name.length > 100 || (countryCode && !/^[A-Z]{2}$/.test(countryCode))) fail("Enter valid location details.");
   const supabase = await createClient();
+  if (!validTimezone(timezone)) redirect("/app/organization?error=Enter a valid named timezone.");
   const { error } = await supabase.from("locations").insert({ organization_id: viewer.organizationId, name, city, region, country_code: countryCode, timezone });
   if (error) fail("The location could not be added. Its name may already exist.");
   revalidatePath("/app/organization");

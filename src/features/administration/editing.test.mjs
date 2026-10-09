@@ -11,7 +11,7 @@ function load(file, { role = 'administrator', responses = [{ data: { id: 'row' }
   const mocks = {
     'next/cache': { revalidatePath: (...args) => calls.push(['revalidate', ...args]) },
     'next/navigation': { redirect: path => { throw new Error(`Unexpected redirect: ${path}`); } },
-    '@/lib/auth/viewer': { requireViewer: async () => ({ id: 'viewer', role, organizationId: 'our-org' }) },
+    '@/lib/auth/viewer': { requireViewer: async () => ({ id: 'viewer', role, organizationId: 'our-org', timeZone: 'America/Tortola' }) },
     '@/lib/supabase/server': { createClient: async () => ({ from: table => { calls.push(['from', table]); return query; }, rpc: (...args) => { calls.push(['rpc', ...args]); return query; } }) },
     '@/lib/supabase/admin': { createAdminClient: () => { throw new Error('Unexpected elevated client'); } },
   };

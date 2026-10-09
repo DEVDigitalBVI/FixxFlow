@@ -1,4 +1,5 @@
 "use server";
+import { validTimezone } from '@/features/timezones/model';
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -6,6 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAssurance } from "@/lib/auth/assurance";
 
 export async function bootstrapOrganization(formData: FormData) {
+  if (!validTimezone(String(formData.get("timezone") ?? "UTC"))) redirect("/account/unassigned?error=Choose a valid timezone.");
   const organizationName = String(formData.get("organizationName") ?? "").trim();
   const organizationSlug = String(formData.get("organizationSlug") ?? "").trim().toLowerCase();
   const administratorName = String(formData.get("administratorName") ?? "").trim();
@@ -28,6 +30,7 @@ export async function bootstrapOrganization(formData: FormData) {
       organization_slug: organizationSlug,
       administrator_name: administratorName,
       administrator_user_id: userId,
+      organization_timezone: String(formData.get("timezone") ?? "UTC"),
     }));
   } catch {
     redirect(`/account/unassigned?${new URLSearchParams({ error: "Organization setup requires the Supabase server secret." })}`);

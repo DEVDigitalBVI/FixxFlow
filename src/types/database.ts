@@ -43,7 +43,9 @@ type NullableArgs<Name extends keyof Functions, Keys extends keyof Functions[Nam
 export type Database = Omit<GeneratedDatabase, 'public'> & {
   public: Omit<Schema, 'Tables' | 'Functions' | 'Enums'> & {
     Enums: Omit<Schema['Enums'], 'notification_kind'> & { notification_kind: NotificationKind };
-    Tables: Omit<Tables, 'assets' | 'tickets' | 'ticket_messages' | 'notifications'> & AutomationTables & AutomationExecutionTables & InventoryTables & {
+    Tables: Omit<Tables, 'organizations' | 'profiles' | 'assets' | 'tickets' | 'ticket_messages' | 'notifications'> & AutomationTables & AutomationExecutionTables & InventoryTables & {
+      organizations: Omit<Tables['organizations'], 'Row' | 'Insert' | 'Update'> & { Row: Tables['organizations']['Row'] & { timezone: string }; Insert: Tables['organizations']['Insert'] & { timezone?: string }; Update: Tables['organizations']['Update'] & { timezone?: string } };
+      profiles: Omit<Tables['profiles'], 'Row' | 'Insert' | 'Update'> & { Row: Tables['profiles']['Row'] & { timezone: string | null }; Insert: Tables['profiles']['Insert'] & { timezone?: string | null }; Update: Tables['profiles']['Update'] & { timezone?: string | null } };
       notifications: Omit<Tables['notifications'], 'Row'> & { Row: Notification };
       ticket_messages: Omit<Tables['ticket_messages'], 'Row'> & {
         Row: Omit<Tables['ticket_messages']['Row'], 'author_id'> & {
@@ -62,7 +64,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
         Update: Omit<Tables['assets']['Update'], keyof AssetFields> & Partial<AssetFields>;
       };
     };
-    Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails' | 'search_tickets'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & AutomationAdminFunctions & InventoryFunctions & {
+    Functions: Omit<Functions, 'bootstrap_organization' | 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails' | 'search_tickets'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & AutomationAdminFunctions & InventoryFunctions & {
       search_tickets: Omit<Functions['search_tickets'], 'Returns'> & { Returns: (Functions['search_tickets']['Returns'][number] & { request_kind: 'support' | 'inventory' })[] };
       prepare_member_invitation: { Args: { org: string; token: string; email: string; display_name: string; member_role: AppRole; actor: string }; Returns: { id: string; userId: string | null; completed: boolean } };
       complete_member_invitation: { Args: { org: string; token: string; invited_user: string; actor: string }; Returns: undefined };
@@ -75,8 +77,9 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
       discover_temporal_automation: { Args: { rule_limit?: number; ticket_limit?: number }; Returns: import('./database.generated').Json };
       create_equipment_ticket: NullableArgs<'create_equipment_ticket', 'category'>;
       record_product_usage: NullableArgs<'record_product_usage', 'org' | 'target_id' | 'event_token'>;
+      bootstrap_organization: Omit<Functions['bootstrap_organization'], 'Args'> & { Args: Functions['bootstrap_organization']['Args'] & { organization_timezone: string } };
       manage_customer: Omit<Functions['manage_customer'], 'Args'> & {
-        Args: { target: string | null; customer_name: string; customer_slug?: string | null; admin_email?: string | null; admin_name?: string | null };
+        Args: { target: string | null; customer_name: string; customer_slug?: string | null; admin_email?: string | null; admin_name?: string | null; organization_timezone?: string };
       };
       finish_notification_email: NullableArgs<'finish_notification_email', 'provider_message_id' | 'failure'>;
       claim_notification_emails: Omit<Functions['claim_notification_emails'], 'Returns'> & { Returns: NotificationEmail[] };

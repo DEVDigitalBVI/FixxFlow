@@ -1,3 +1,4 @@
+import { Timestamp } from '@/features/timezones/provider';
 import { randomUUID } from 'node:crypto';
 import Link from 'next/link';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -20,7 +21,7 @@ export async function InventoryRequestPanel({ ticketId }: { ticketId: string }) 
   <p>Requested by {contextLabel(request.context,'requester')}. For {contextLabel(request.context,'recipient') || 'departmental use'} · {request.destination}</p>
   {contextLabel(request.context,'printer') && <p>Printer: {contextLabel(request.context,'printer')}</p>}
   {request.decision_reason && <p>Review note: {request.decision_reason}</p>}
-  {request.issued_at && <p>Issued {new Date(request.issued_at).toLocaleString('en-US')}</p>}
+  {request.issued_at && <p>Issued <Timestamp value={request.issued_at}/></p>}
   <p className="muted">Closing an unfinished ticket cancels fulfillment and releases stock. Reopening continues the conversation without reserving or issuing again.</p>
   {access.manager && <Link className="button button-secondary" href={`/app/inventory/${request.item_id}`}>View inventory and usage history</Link>}
   {access.manager && !final && <>

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { SubmissionKey } from "@/components/ui/submission-key";
-import { TICKET_TIMEZONE_LABEL } from "@/features/tickets/deadlines";
+import { DeadlineField } from "@/features/tickets/deadline-field";
 import { LookupSelect } from "@/features/lookups/lookup-select";
 import { TicketSuggestions } from "@/features/knowledge/ticket-suggestions";
 import { ActionForm } from "@/components/ui/action-form";
@@ -50,7 +50,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
         <div className="ticket-create-fields">
           <LookupSelect resource="teams" name="teamId" label="Team" defaultValue="automatic" emptyLabel="Leave unassigned" specialOptions={[{id:"automatic",label:"Automatic · use category default"}]} describedBy="ticket-routing-hint"/>
           <LookupSelect resource="technicians" name="assignedTechnicianId" label="Technician" emptyLabel="Unassigned"/>
-          <div className="field"><label htmlFor="dueAt">Manual due date</label><input className="input" id="dueAt" name="dueAt" type="datetime-local" aria-describedby="ticket-due-hint"/><small id="ticket-due-hint" className="muted">{TICKET_TIMEZONE_LABEL}. Optional. SLA targets are calculated separately.</small></div>
+          <DeadlineField timeZone={viewer.timeZone}/>
         </div>
       </details>}
       <div className="ticket-create-help"><TicketSuggestions articles={articlesResult.data ?? []} categories={[]} unavailable={!!articlesResult.error}/></div>

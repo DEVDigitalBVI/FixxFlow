@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { resolveTimezone, TIMEZONE_COOKIE } from "@/features/timezones/model";
 import { reportServerError } from "@/lib/server-errors";
 import { redirect } from "next/navigation";
 import { cache } from "react";
@@ -15,6 +17,9 @@ export type Viewer = {
   role: AppRole;
   status: MembershipStatus;
   usageSharing: boolean;
+  organizationTimezone: string;
+  timezonePreference: string | null;
+  timeZone: string;
 };
 
 export const requireViewer = cache(async (): Promise<Viewer> => {
@@ -44,14 +49,18 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
   if (membership.status !== "active") redirect("/account/inactive");
 
   const [{ data: organization, error: organizationError }, { data: profile, error: profileError }, {data: usagePreference, error: usageError}] = await Promise.all([
-    supabase.from("organizations").select("name").eq("id", membership.organization_id).single(),
-    supabase.from("profiles").select("display_name, avatar_path").eq("organization_id", membership.organization_id).eq("user_id", userId).maybeSingle(),
+    supabase.from("organizations").select("name, timezone").eq("id", membership.organization_id).single(),
+    supabase.from("profiles").select("display_name, avatar_path, timezone").eq("organization_id", membership.organization_id).eq("user_id", userId).maybeSingle(),
     supabase.from("product_usage_preferences").select("enabled").eq("user_id", userId).maybeSingle(),
   ]);
 
   if (organizationError || profileError || usageError) { reportServerError("viewer.details", organizationError || profileError || usageError); throw new Error("Workspace details could not load. Please try again."); }
 
+  const deviceTimezone = (await cookies()).get(TIMEZONE_COOKIE)?.value;
   return {
+    organizationTimezone: organization?.timezone ?? "UTC",
+    timezonePreference: profile?.timezone ?? null,
+    timeZone: resolveTimezone(profile?.timezone, deviceTimezone, organization?.timezone),
     id: userId,
     email: typeof claims.claims.email === "string" ? claims.claims.email : "",
     organizationId: membership.organization_id,

@@ -14,7 +14,7 @@ export default async function ReportsPage() {
     <PageHeader title="Reports" eyebrow={viewer.organizationName} description="Understand your workload, service levels and support trends." actions={<Link className="button button-secondary" href="/app/tickets">Open ticket queue</Link>}/>
     {report ? <>
       <section className="settings-card report-toolbar" aria-labelledby="report-period-title">
-        <div><h2 id="report-period-title">Last 30 days</h2><p>Includes today · British Virgin Islands time</p><span className="muted">Current workload is shown separately.</span></div>
+        <div><h2 id="report-period-title">Last 30 days</h2><p>Includes today · {report.timezone}</p><span className="muted">Current workload is shown separately.</span></div>
         <ReportDownload/>
       </section>
       <TodayMetrics report={report} title="At a glance"/>

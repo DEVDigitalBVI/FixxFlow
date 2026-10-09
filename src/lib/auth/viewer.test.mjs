@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import fs from 'node:fs';
 import ts from 'typescript';
+import { load } from '../../../tests/helpers/load-module.mjs';
 
 function deferred() {
   let resolve;
@@ -28,6 +29,8 @@ function setup({ assurance, membership, claimsError = null, avatarPath = null, s
     rpc: async () => ({ data: 'none' }),
   };
   const mocks = {
+    'next/headers': { cookies: async () => ({ get: () => undefined }) },
+    '@/features/timezones/model': load('src/features/timezones/model.ts'),
     "@/lib/server-errors": { reportServerError: (operation) => calls.push(["failure",operation]) },
     react: { cache: fn => fn },
     'next/navigation': { redirect: path => { throw Error(path); } },

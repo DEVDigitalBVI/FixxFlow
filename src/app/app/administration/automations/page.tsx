@@ -1,3 +1,4 @@
+import { Timestamp } from '@/features/timezones/provider';
 import Link from 'next/link';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { automationList } from '@/features/automation/ui-service';
@@ -5,7 +6,6 @@ import { automationPath, executionLabel, triggerLabel, triggerOptions } from '@/
 import { AutomationHeader, AutomationPages } from '@/features/automation/page-parts';
 import { AutomationListEmptyState } from '@/features/automation/list-empty-state';
 import { RuleActions } from '@/features/automation/rule-actions';
-import { formatTicketDate } from '@/features/tickets/presentation';
 import { normalizeSearch } from '@/lib/search';
 import { pageNumber } from '@/lib/pagination';
 
@@ -41,8 +41,8 @@ export default async function AutomationsPage({searchParams}:{searchParams:Promi
           <tbody>{data.rows.map(row=><tr key={row.id}>
             <th scope="row" data-label="Automation"><div className="automation-list-identity"><strong>{row.name}</strong><span>{triggerLabel(row.trigger_type)}</span></div></th>
             <td data-label="Status"><span className={`badge ${!row.archived_at&&row.enabled?'badge-active':'badge-inactive'}`}>{row.archived_at?'Archived':row.enabled?'Enabled':'Disabled'}</span></td>
-            <td data-label="Activity"><div className="automation-list-activity"><strong>{row.last_run?executionLabel(row.last_run.status,row.last_run.error_code):'Not run yet'}</strong><span>{row.last_run?<>Last run <time dateTime={row.last_run.started_at}>{formatTicketDate(row.last_run.started_at)}</time></>:'No execution history'}</span><span>Run count: {row.run_count}</span></div></td>
-            <td data-label="Updated"><time dateTime={row.updated_at}>{formatTicketDate(row.updated_at)}</time></td>
+            <td data-label="Activity"><div className="automation-list-activity"><strong>{row.last_run?executionLabel(row.last_run.status,row.last_run.error_code):'Not run yet'}</strong><span>{row.last_run?<>Last run <time dateTime={row.last_run.started_at}><Timestamp value={row.last_run.started_at}/></time></>:'No execution history'}</span><span>Run count: {row.run_count}</span></div></td>
+            <td data-label="Updated"><time dateTime={row.updated_at}><Timestamp value={row.updated_at}/></time></td>
             <td data-label="Actions" className="automation-list-actions">
               <div className="automation-inline"><Link className="button button-secondary" href={`${automationPath}/${row.id}`}>{row.archived_at?'View':'Edit'}<span className="sr-only"> {row.name}</span></Link><Link className="button button-secondary" href={`${automationPath}/${row.id}/history`}>History<span className="sr-only"> for {row.name}</span></Link></div>
               {!row.archived_at&&<details className="automation-list-manage"><summary className="button button-quiet">Manage<span className="sr-only"> {row.name}</span><span aria-hidden="true">⌄</span></summary><RuleActions id={row.id} name={row.name} version={row.version} enabled={row.enabled} processingActive={data.processingActive}/></details>}

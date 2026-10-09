@@ -1,6 +1,6 @@
+import { Timestamp } from '@/features/timezones/provider';
 import Link from 'next/link';
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
-import { formatTicketDate } from '@/features/tickets/presentation';
 
 type Chat = { id: string; topic: string; requester_id: string; assigned_technician_id: string | null; status: string; ticket_id: string | null; updated_at: string };
 const views: Record<string, { title: string; empty: string; hint: string }> = {
@@ -17,7 +17,7 @@ export function ChatQueue({ chats, names, view, failed }: { chats: Chat[]; names
     {failed ? <div className="empty-state" role="alert"><strong>Chats couldn’t be loaded</strong><p>Please try again. Your conversations haven’t been changed.</p><Link className="button button-secondary" href={view === 'open' ? '/app/chat' : `/app/chat?view=${view}`}>Try again</Link></div>
       : chats.length ? <ul className="chat-inbox-list">{chats.map(chat => <li key={chat.id}>
         <span className="chat-requester-avatar" aria-hidden="true">{(names.get(chat.requester_id) ?? 'Employee').trim().slice(0, 1).toLocaleUpperCase()}</span>
-        <div className="chat-inbox-topic"><h3>{chat.topic}</h3><p>{names.get(chat.requester_id) ?? 'Employee'} <span>· Updated <time dateTime={chat.updated_at}>{formatTicketDate(chat.updated_at)}</time></span></p>
+        <div className="chat-inbox-topic"><h3>{chat.topic}</h3><p>{names.get(chat.requester_id) ?? 'Employee'} <span>· Updated <time dateTime={chat.updated_at}><Timestamp value={chat.updated_at}/></time></span></p>
           <div className="chat-inbox-meta"><span>{chat.assigned_technician_id ? `Assigned to ${names.get(chat.assigned_technician_id) ?? 'a technician'}` : 'No technician assigned'}</span>{chat.ticket_id && <span>Linked to a ticket</span>}</div>
         </div>
         <div className="chat-inbox-actions"><span className={`ticket-badge tone-${chat.status === 'open' ? 'blue' : 'slate'}`}>{chat.status === 'open' ? 'Open' : 'Closed'}</span><Link className="button button-secondary" href={`/app/chat/${chat.id}`} aria-label={`Open chat: ${chat.topic}`}>Open chat</Link></div>

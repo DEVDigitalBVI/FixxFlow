@@ -1,9 +1,10 @@
+import { Timestamp } from '@/features/timezones/provider';
 import { inventoryAccess } from '@/features/inventory/access';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
-import { activityLabels, formatTicketDate } from '@/features/tickets/presentation';
+import { activityLabels } from '@/features/tickets/presentation';
 import { activityAuthorName, messageAuthorName, type MessageAuthor } from '@/features/tickets/authorship';
 import { HISTORY_PAGE_SIZE, historyFilter, historyPage } from './history';
 
@@ -47,7 +48,7 @@ export async function HistoryBrowser({ kind, id, filters }: {
     const urls = new Map((signed.data ?? []).map(file => [file.path, file.signedUrl ?? undefined]));
     content = page.items.length ? <ul className="attachment-list">{page.items.map(file => <li key={file.id}>
       {urls.get(file.storage_path) ? <a href={urls.get(file.storage_path)} target="_blank" rel="noreferrer">{file.file_name}</a> : <span>{file.file_name} · Link unavailable; refresh to retry</span>}
-      <p>{Math.ceil(file.size_bytes / 1024)} KB · <time dateTime={file.created_at}>{formatTicketDate(file.created_at)}</time></p>
+      <p>{Math.ceil(file.size_bytes / 1024)} KB · <time dateTime={file.created_at}><Timestamp value={file.created_at}/></time></p>
     </li>)}</ul> : <p>No files in this part of the history.</p>;
   } else if (view === 'activity') {
     let query = db.from('ticket_activity').select('id, actor_id, action, details, created_at').eq('organization_id', org).eq('ticket_id', id)
@@ -60,7 +61,7 @@ export async function HistoryBrowser({ kind, id, filters }: {
     const names = await authorNames(page.items.flatMap(row => row.actor_id ? [row.actor_id] : []));
     content = page.items.length ? <ol className="management-list">{page.items.map(row => <li key={row.id}>
       <strong>{activityAuthorName(row.actor_id, row.details, names)}</strong> {activityLabels[row.action] ?? row.action.replaceAll('_', ' ')}
-      <p><time dateTime={row.created_at}>{formatTicketDate(row.created_at)}</time></p>
+      <p><time dateTime={row.created_at}><Timestamp value={row.created_at}/></time></p>
     </li>)}</ol> : <p>No activity in this part of the history.</p>;
   } else {
     const source = kind === 'ticket'
@@ -76,7 +77,7 @@ export async function HistoryBrowser({ kind, id, filters }: {
     older = page.older;
     const names = await authorNames(page.items.flatMap(row => row.author_id ? [row.author_id] : []));
     content = page.items.length ? <ol className="ticket-conversation">{page.items.toReversed().map(row => <li className={`conversation-item${row.kind === 'internal_note' ? ' conversation-item-note' : ''}`} key={row.id}>
-      <article className="conversation-bubble"><header><strong>{messageAuthorName(row, names, viewer.id)}</strong><time dateTime={row.created_at}>{formatTicketDate(row.created_at)}</time></header>
+      <article className="conversation-bubble"><header><strong>{messageAuthorName(row, names, viewer.id)}</strong><time dateTime={row.created_at}><Timestamp value={row.created_at}/></time></header>
         {staff && <p>{row.kind === 'internal_note' ? 'Internal note · IT staff only' : 'Public reply'}</p>}<p>{row.body}</p>
       </article>
     </li>)}</ol> : <p>No messages in this part of the history.</p>;
