@@ -1,6 +1,6 @@
 # Department inventory
 
-Inventory is available at `/app/inventory`. Apply the additive `20261009020306_department_inventory.sql` migration before deploying the application. The migration creates no stock or permission grants, and does not reclassify, duplicate, or reassign existing assets. Existing tickets receive the `support` classification without activity or audit events.
+Inventory is available at `/app/inventory`. Apply the additive `20261009024259_department_inventory.sql` migration before deploying the application. The migration creates no stock or permission grants, and does not reclassify, duplicate, or reassign existing assets. Existing tickets receive the `support` classification without activity or audit events.
 
 Administrators grant **Manage inventory and fulfill requests** and **Request department inventory** in each person's Manage panel in People. These capabilities are independent of Employee, Technician, and Administrator roles. Administrators must explicitly grant themselves inventory management if they need it. Request permission accepts several departments, with several people per department. Deactivated memberships and revoked grants stop subsequent inventory commands. Requesters retain read access to their own historical requests.
 
@@ -54,7 +54,7 @@ This version excludes procurement, incoming orders, supplier management, shoppin
 
 ### Implementation verification (October 2026)
 
-`npm test` passed all 788 tests; lint, TypeScript checking, the production build and the production proxy build check also passed. The migration was replayed successfully only in disposable test databases (PGlite and native PostgreSQL 18.4); it has **not** been applied to the application's Supabase database or deployed. Native multi-session tests passed all five contention/retry scenarios. Supabase advisors reported no newly introduced warnings; the existing pair of ticket UPDATE policies still produces a performance warning.
+`npm test` passed all 788 tests; lint, TypeScript checking, the production build and the production proxy build check also passed. The migration was first replayed successfully in disposable test databases (PGlite and native PostgreSQL 18.4). It was subsequently applied to the hosted application Supabase database on October 9, 2026 UTC, to repair a workspace-loading failure after the inventory code was deployed without its schema. Its filename now matches the migration version recorded by Supabase. The existing signed-in session was reloaded in Safari and the hosted support overview loaded successfully. No stock or capability grants were created. Native multi-session tests passed all five contention/retry scenarios. Supabase advisors reported no newly introduced warnings; the existing pair of ticket UPDATE policies still produces a performance warning.
 
 Browser checks used the isolated fixture, not a signed-in production session: desktop and 375px/768px layouts, light/dark surfaces, 200% page zoom, keyboard focus, and simulated failure → retained draft → successful retry. The new inventory layouts add no animation and inherit the shared reduced-motion rules. Real hosted authentication, realtime delivery and outgoing email were not exercised.
 
