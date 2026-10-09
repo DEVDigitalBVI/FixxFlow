@@ -1,5 +1,90 @@
 # Email system evaluation
 
+## October 9 provider trace — verified in the Zoho console
+
+Computer control became available later on October 9. Both exact test records
+were inspected in `FixxFlow_Agent` (`1fa59851bee65ea3`), account `940864046`.
+Both reached Zoho and subsequently hard-bounced; neither was marked delivered.
+
+| Path | Queued (BVI, UTC−04:00) | Hard bounce (BVI) | UTC interval |
+| --- | --- | --- | --- |
+| Password recovery, SMTP | 12:32:12 PM | 12:32:22 PM | 16:32:12–16:32:22Z |
+| Notification, API | 12:33:47 PM | 12:33:51 PM | 16:33:47–16:33:51Z |
+
+Both show category `Others`, reason `uncategorized-bounce`, and message:
+
+> #5.7.1 Your access to submit messages to this e-mail system has been rejected.
+
+- Recovery request ID:
+  `2d6f.1fa3bc90069e1389.s1.fb07fbf1-c3fe-11f1-9921-52540044fbd2.1a121820929`.
+- Notification request ID:
+  `2d6f.1fa3bc90069e1389.m1.33c807a1-c3ff-11f1-b1e1-765e7256bde4.1a121837d1a`.
+- Envelope bounce addresses are `noreply@bounce-zem.fixxflow.app` and
+  `notifications@bounce-zem.fixxflow.app`, respectively.
+- Request-triggered IPs are `44.253.234.29` (SMTP) and `44.234.117.248`
+  (API). These identify callers submitting to Zoho, **not the outbound Zoho
+  delivery IPs**. Do not use them as recipient allowlist targets.
+- Agent and account suppression views show no email-address or domain entries.
+  Agent Allowed IPs has no configured restrictions.
+- Zoho shows the domain, DKIM selector `2616349`, and bounce CNAME verified.
+  Public DNS independently resolves `bounce-zem.fixxflow.app` to
+  `cluster89.zeptomail.com` and SPF `v=spf1 include:zeptomail.net -all`;
+  the DKIM public key is published. These records do not prove per-message
+  authentication passed. Root-domain SPF and missing DMARC are not established
+  causes of this rejection.
+- Dashboard shows remaining email credit; these two tests are hard bounces,
+  rather than process failures. A September 26 message to `support@fixxflow.app`
+  is marked delivered, establishing historical delivery to a different domain.
+- An October 6 request for two dedicated IPs is shown as rejected. This does not
+  establish the cause of ordinary shared-IP delivery failure.
+- The accessibility tree contains “This Agent has been shutdown,” but the
+  corresponding warning is not visibly displayed. Activity history contains no
+  shutdown event. Shutdown status is **unconfirmed** and requires provider
+  confirmation; the accessibility string alone is insufficient evidence.
+
+The basic bounce details/timeline do not expose the actual outbound IP,
+destination MX/IP, or SMTP command at rejection. Recipient MX records point to
+Cisco-style `iphmx.com` hosts. Connection-level rejection is a plausible
+explanation for an empty sender/domain message search, not a proven cause.
+[Cisco's troubleshooting guide](https://www.cisco.com/c/en/us/support/docs/security/cloud-email-security/222887-troubleshoot-issues-related-to-stopped.html)
+directs administrators to search rejected connections by sender IP and inspect
+`mail_logs` and the matched sender group. The correct IP must come from Zoho.
+
+The application also has an observability gap: outbox `sent` means Zoho accepted
+the submission, not recipient delivery. No bounce reconciliation currently
+changes that state. No code or provider settings were changed during this trace.
+
+### Prepared Zoho escalation — not sent
+
+Recipient: `support@zohocpaas.com` (address published in
+[Zoho's processed-email documentation](https://www.zoho.com/cpaas/help/processed-emails.html)).
+
+Subject: FixxFlow delivery investigation: two accepted messages hard-bounced,
+recipient administrator finds no inbound messages
+
+Please investigate account 940864046, Agent FixxFlow_Agent
+(1fa59851bee65ea3), sending domain fixxflow.app. On 2026-10-09 two messages to
+jhodge@peterisland.net were accepted and then hard-bounced with category Others,
+uncategorized-bounce, and the response quoted above. The recipient and their
+mail administrator report no received messages or inbound matches.
+
+1. Password recovery: noreply@fixxflow.app, SMTP, queued 16:32:12Z,
+   bounced 16:32:22Z. Request ID:
+   `2d6f.1fa3bc90069e1389.s1.fb07fbf1-c3fe-11f1-9921-52540044fbd2.1a121820929`.
+2. Notification: notifications@fixxflow.app, API, queued 16:33:47Z,
+   bounced 16:33:51Z. Request ID:
+   `2d6f.1fa3bc90069e1389.m1.33c807a1-c3ff-11f1-b1e1-765e7256bde4.1a121837d1a`.
+
+For each request, please provide the outbound delivery IP and hostname, actual
+destination MX and IP, precise attempt time, SMTP command/stage of rejection,
+full remote SMTP response, and whether that response came from the recipient MX
+or a Zoho/internal relay. Please confirm whether any Zoho reputation, account,
+domain, suppression, sandbox, blocked-agent or shutdown restriction applied at
+the time and applies now. If shutdown applies, provide its initiation timestamp
+and cause. Please investigate shared sending-IP reputation and specify the
+correct remediation rather than asking the recipient to allowlist submission
+caller IPs. Do not send additional tests without authorization.
+
 ## October 9 follow-up — delivery still unresolved
 
 The user authorized exactly two new tests to `jhodge@peterisland.net` and
