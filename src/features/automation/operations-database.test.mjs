@@ -32,7 +32,13 @@ test('Stage 10 durable health and bounded tenant operational reads',async t=>{
    await denied(db,"select public.finish_automation_run($1,'failed','{\"failures\":-1}')",[second],'22023');
    const discovery=(await db.query("select public.start_automation_run('discovery') id")).rows[0].id;await db.query("select public.finish_automation_run($1,'failed','{\"failures\":1}')",[discovery]);
    await identity(db);const result=await overview(db);assert.equal(result.worker.latestCompletedResult,'succeeded');assert.equal(result.discovery.latestCompletedResult,'failed');
-   assert.doesNotMatch(JSON.stringify(result),/999|888|SECRET|metrics|claimed|invocationId/);assert.equal(result.executions.total,0);
+   assert.doesNotMatch(JSON.stringify(result),/SECRET|"metrics"|"claimed"|"invocationId"/);
+   // Check numeric telemetry separately: timestamp milliseconds can contain 999.
+   const inspectCounts=value=>{
+    if(typeof value==='number')assert.ok(value!==999&&value!==888,'Global heartbeat counts must not leak');
+    else if(value&&typeof value==='object')Object.values(value).forEach(inspectCounts);
+   };
+   inspectCounts(result);assert.equal(result.executions.total,0);
   });
   await scenario('queue states, retries, oldest work, completion and exhaustion are distinguished',async()=>{
    await activate(db);await createRule(db);const targets=[];for(let i=0;i<5;i++)targets.push(await ticket(db));await service(db);
