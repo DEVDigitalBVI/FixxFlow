@@ -54,13 +54,17 @@ The application also has an observability gap: outbox `sent` means Zoho accepted
 the submission, not recipient delivery. No bounce reconciliation currently
 changes that state. No code or provider settings were changed during this trace.
 
-### Prepared Zoho escalation — not sent
+### Zoho escalation — sent October 9
+
+The user explicitly authorized sending the prepared escalation. Zoho Mail showed
+`Mail sent` at approximately 18:20 UTC (2:20 PM BVI) on October 9, 2026, from
+`support@fixxflow.app` to `support@zohocpaas.com`. No additional test emails were
+sent. Provider receipt and a support case number are not yet confirmed.
 
 Recipient: `support@zohocpaas.com` (address published in
 [Zoho's processed-email documentation](https://www.zoho.com/cpaas/help/processed-emails.html)).
 
-Subject: FixxFlow delivery investigation: two accepted messages hard-bounced,
-recipient administrator finds no inbound messages
+Sent subject: FixxFlow: SMTP trace needed for two hard-bounced emails on October 9
 
 Please investigate account 940864046, Agent FixxFlow_Agent
 (1fa59851bee65ea3), sending domain fixxflow.app. On 2026-10-09 two messages to
