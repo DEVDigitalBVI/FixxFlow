@@ -24,10 +24,12 @@ export async function lookupChoices(params: URLSearchParams): Promise<LookupPage
     } catch { throw new LookupInputError(); }
   }
   const db = await createClient();
+  const inventory = resource.startsWith('inventory_');
+  const rpc = inventory ? 'inventory_choices' : 'lookup_choices';
   const base = { org: viewer.organizationId, resource, parent, active_only: params.get('active') !== 'all' };
   const [page, current] = await Promise.all([
-    db.rpc('lookup_choices', { ...base, query: normalizeSearch(params.get('q') ?? ''), after_label: afterLabel, after_id: afterId }),
-    selected ? db.rpc('lookup_choices', { ...base, selected }) : { data: [], error: null },
+    db.rpc(rpc, { ...base, query: normalizeSearch(params.get('q') ?? ''), after_label: afterLabel, after_id: afterId }),
+    selected ? db.rpc(rpc, { ...base, selected }) : { data: [], error: null },
   ]);
   if (page.error || current.error || !page.data || !current.data) {
     throw page.error || current.error || new Error('Choices unavailable');

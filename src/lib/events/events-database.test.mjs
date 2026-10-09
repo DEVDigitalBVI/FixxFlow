@@ -281,7 +281,7 @@ test('revision migration initializes existing tickets without artificial events,
   } });
   try {
     const current = (await db.query('select * from public.tickets where id=$1', [original.id])).rows[0];
-    assert.deepEqual(current, { ...original, revision: 1, unassigned_since: null, unassigned_episode_id: null, waiting_on_user_since: null, waiting_on_user_episode_id: null });
+    assert.deepEqual(current, { ...original, request_kind: 'support', revision: 1, unassigned_since: null, unassigned_episode_id: null, waiting_on_user_since: null, waiting_on_user_episode_id: null });
     assert.equal((await db.query('select count(*)::integer n from public.audit_events')).rows[0].n, auditCount);
     assert.equal((await db.query('select count(*)::integer n from private.domain_events')).rows[0].n, 0);
     assert.equal((await db.query('select count(*)::integer n from private.domain_event_deliveries')).rows[0].n, 0);

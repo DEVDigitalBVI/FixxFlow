@@ -1,3 +1,4 @@
+import { inventoryAccess } from '@/features/inventory/access';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -15,10 +16,12 @@ export async function HistoryBrowser({ kind, id, filters }: {
   const viewer = await requireViewer();
   const db = await createClient();
   const org = viewer.organizationId;
-  const parent = await db.from(kind === 'ticket' ? 'tickets' : 'chat_conversations')
-    .select('id, requester_id').eq('organization_id', org).eq('id', id).maybeSingle();
+  const parent = kind === 'ticket'
+    ? await db.from('tickets').select('id, requester_id, request_kind').eq('organization_id', org).eq('id', id).maybeSingle()
+    : await db.from('chat_conversations').select('id, requester_id').eq('organization_id', org).eq('id', id).maybeSingle();
   if (parent.error) throw new Error('History is unavailable. Please try again.');
-  if (!parent.data || (viewer.role === 'end_user' && parent.data.requester_id !== viewer.id)) notFound();
+  if (!parent.data) notFound();
+  if (viewer.role === 'end_user' && parent.data.requester_id !== viewer.id && !(kind === 'ticket' && 'request_kind' in parent.data && parent.data.request_kind === 'inventory' && (await inventoryAccess(viewer)).manager)) notFound();
   const staff = viewer.role !== 'end_user';
   const view = filters.view === 'files' ? 'files' : filters.view === 'activity' && staff && kind === 'ticket' ? 'activity' : 'messages';
   let filter: string | null;

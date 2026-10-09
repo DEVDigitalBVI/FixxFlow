@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+import { PermissionsForm } from '@/features/inventory/forms';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { pageNumber } from "@/lib/pagination";
 import { normalizeSearch, SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
@@ -35,6 +37,11 @@ export default async function PeoplePage({ searchParams }: Props) {
     ? await supabase.from("profiles").select("user_id, display_name, email, job_title, avatar_path, department_id, location_id, updated_at").eq("organization_id", viewer.organizationId).in("user_id", memberships.map(member => member.user_id))
     : { data: [], error: null };
   if (profilesError || departments.error || locations.error) throw new Error("Unable to load member details. Please try again.");
+  const [inventoryManagers, inventoryRequesters] = viewer.role === 'administrator' && memberships?.length ? await Promise.all([
+    supabase.from('inventory_managers').select('user_id').eq('organization_id',viewer.organizationId).in('user_id',memberships.map(m=>m.user_id)),
+    supabase.from('inventory_requesters').select('user_id,department_id').eq('organization_id',viewer.organizationId).in('user_id',memberships.map(m=>m.user_id)),
+  ]) : [{data:[],error:null},{data:[],error:null}];
+  if (inventoryManagers.error || inventoryRequesters.error) throw new Error('Inventory permissions could not load. Try again.');
   const pageHref = (target: number) => `/app/people?${new URLSearchParams({ page: String(target), q: search, ...(message.view === 'technicians' ? { view: 'technicians' } : {}) })}`;
   const profilesByUser = new Map((profiles ?? []).map((profile) => [profile.user_id, profile]));
   const avatarPaths = (profiles ?? []).flatMap((profile) => profile.avatar_path ? [profile.avatar_path] : []);
@@ -71,7 +78,7 @@ export default async function PeoplePage({ searchParams }: Props) {
       </LiveSearchForm><span className="sr-only" id="people-search-hint">{SEARCH_HINT}</span></div>
       {memberships?.length ? <ul className="people-list">{memberships.map(member => {
         const profile = profilesByUser.get(member.user_id), name = profile?.display_name ?? 'Profile incomplete';
-        return <PersonCard key={member.user_id} id={member.user_id} name={name} email={profile?.email ?? (member.user_id === viewer.id ? 'Your account' : 'Invitation pending')} avatarUrl={profile?.avatar_path ? avatarsByPath.get(profile.avatar_path) : null} role={member.role} status={member.status} isSelf={member.user_id === viewer.id} canManage={canManage} profile={profile} departments={departments.data ?? []} locations={locations.data ?? []} updateRole={updateMemberRole} updateStatus={updateMemberStatus}/>;
+        return <PersonCard inventoryPermissions={canManage ? <section className="stack"><h4>Inventory access</h4><PermissionsForm id={member.user_id} name={name} departments={departments.data ?? []} grants={(inventoryRequesters.data ?? []).filter(r=>r.user_id===member.user_id).map(r=>r.department_id)} manager={(inventoryManagers.data ?? []).some(m=>m.user_id===member.user_id)} token={randomUUID()}/></section> : undefined} key={member.user_id} id={member.user_id} name={name} email={profile?.email ?? (member.user_id === viewer.id ? 'Your account' : 'Invitation pending')} avatarUrl={profile?.avatar_path ? avatarsByPath.get(profile.avatar_path) : null} role={member.role} status={member.status} isSelf={member.user_id === viewer.id} canManage={canManage} profile={profile} departments={departments.data ?? []} locations={locations.data ?? []} updateRole={updateMemberRole} updateStatus={updateMemberStatus}/>;
       })}</ul> : <div className="empty-state people-empty"><h3>{search ? 'No people match your search' : technicians ? 'No technicians here yet' : page > 1 ? 'No people on this page' : 'Bring your people together'}</h3><p>{search ? 'Try another name, email or job title, or clear your search.' : technicians ? 'Members with the Technician role will appear here.' : 'Workspace members and their access will appear here.'}</p><Link className="button button-secondary" href={search ? (technicians ? '/app/people?view=technicians' : '/app/people') : canManage && !technicians && page === 1 ? inviteHref : '/app/people'}>{search ? 'Clear search' : canManage && !technicians && page === 1 ? 'Invite your first member' : 'View all people'}</Link></div>}
       <footer className="people-directory-footer"><span className="muted">{count ? `${Math.min((page - 1) * 25 + 1, count)}–${Math.min(page * 25, count)} of ${count}` : 'No results'}</span><nav className="people-pagination" aria-label="People pages">{page > 1 && <Link className="button button-secondary" href={pageHref(page - 1)}>Previous</Link>}<span>Page {page}</span>{page * 25 < (count ?? 0) && <Link className="button button-secondary" href={pageHref(page + 1)}>Next</Link>}</nav></footer>
     </section>

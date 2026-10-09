@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { NotificationLink } from "@/features/notifications/notification-link";
 import type { AppRole } from "@/types/database";
 
-export function WorkspaceNav({ role, organizationId, userId, platform = false, workspaceAvailable = true }: { platform?: boolean; workspaceAvailable?: boolean; role: AppRole; organizationId: string; userId: string }) {
+export function WorkspaceNav({ role, organizationId, userId, platform = false, workspaceAvailable = true, inventoryAccess = false }: { platform?: boolean; workspaceAvailable?: boolean; inventoryAccess?: boolean; role: AppRole; organizationId: string; userId: string }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -23,6 +23,7 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     { href: "/app/tickets", label: role === "end_user" ? "My tickets" : "Tickets", icon: <NavigationIcon name="tickets" />, visible: true },
     { href: "/app/chat", label: role === "end_user" ? "My chats" : "Chats", icon: <NavigationIcon name="chat" />, visible: true },
     { href: "/app/help", label: role === "end_user" ? "Help articles" : "Knowledge base", icon: <NavigationIcon name="knowledge" />, visible: true },
+    { href: "/app/inventory", label: role === "end_user" ? "Request an item" : "Inventory", icon: <NavigationIcon name="assets" />, visible: inventoryAccess },
     { href: "/app/assets", label: role === "end_user" ? "My equipment" : "Assets", icon: <NavigationIcon name="assets" />, visible: true },
     { href: "/app/reports", label: "Reports", icon: <NavigationIcon name="reports" />, visible: role !== "end_user" },
     { href: "/app/people", label: "People", icon: <NavigationIcon name="people" />, visible: role !== "end_user" },

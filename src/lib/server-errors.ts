@@ -1,7 +1,7 @@
 import 'server-only';
 import { randomUUID } from 'node:crypto';
 
-export type FailureOperation = 'viewer.membership' | 'viewer.platform' | 'viewer.details' | 'profile.load' | 'profile.save' | 'lookup.load' | 'ticket.references' | 'ticket.load' | 'ticket.save' | 'ticket.create' | 'chat.assign' | 'notification.dispatch' | 'notification.send' | 'report.export';
+export type FailureOperation = 'inventory.mutation' | 'viewer.membership' | 'viewer.platform' | 'viewer.details' | 'profile.load' | 'profile.save' | 'lookup.load' | 'ticket.references' | 'ticket.load' | 'ticket.save' | 'ticket.create' | 'chat.assign' | 'notification.dispatch' | 'notification.send' | 'report.export';
 
 /** Allowlisted metadata only. Never serialize errors, request data, tokens or PII. */
 export function reportServerError(operation: FailureOperation, error?: unknown, correlationId = randomUUID()) {

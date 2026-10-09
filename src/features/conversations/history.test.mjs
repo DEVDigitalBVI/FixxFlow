@@ -34,7 +34,7 @@ test('cursors preserve full precision and reject injected filters and repeated p
   assert.match(historyFilter(`${timestamp}|123`), /id.lt.123/);
 });
 
-function setup(role, parent = { data: { id: 'parent', requester_id: 'viewer' }, error: null }) {
+function setup(role, parent = { data: { id: 'parent', requester_id: 'viewer' }, error: null }, manager = false) {
   const calls = [];
   let signed = 0;
   const query = table => {
@@ -46,6 +46,7 @@ function setup(role, parent = { data: { id: 'parent', requester_id: 'viewer' }, 
     return builder;
   };
   const { HistoryBrowser } = load('src/features/conversations/history-browser.tsx', {
+    '@/features/inventory/access': { inventoryAccess: async () => ({ manager, departments: [] }) },
     'next/link': { default: props => React.createElement('a', props) },
     'next/navigation': { notFound: () => { throw Error('NOT_FOUND'); } },
     '@/lib/auth/viewer': { requireViewer: async () => ({ role, organizationId: 'org', id: 'viewer' }) },
@@ -81,4 +82,13 @@ test('file history signs only the displayed page and provides an archive cursor'
   assert.equal(signed(), 50);
   assert.match(html, /Earlier files/);
   assert.match(html, /Link unavailable/);
+});
+
+test('employee inventory managers can read linked inventory history without internal notes or unrelated support access', async () => {
+  const allowed = setup('end_user', {data:{id:'parent',requester_id:'other',request_kind:'inventory'},error:null}, true);
+  const html = renderToStaticMarkup(await allowed.render());
+  assert.ok(allowed.calls.some(call => call[0] === 'ticket_messages' && call[1] === 'neq' && call[3] === 'internal_note'));
+  assert.doesNotMatch(html, />Activity</);
+  await assert.rejects(setup('end_user', {data:{requester_id:'other',request_kind:'support'},error:null}, true).render(), /NOT_FOUND/);
+  await assert.rejects(setup('end_user', {data:{requester_id:'other',request_kind:'inventory'},error:null}, false).render(), /NOT_FOUND/);
 });

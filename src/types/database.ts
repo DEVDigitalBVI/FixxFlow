@@ -1,3 +1,4 @@
+import type { InventoryTables, InventoryFunctions } from './inventory-database';
 import type { Database as GeneratedDatabase } from './database.generated';
 import type { AutomationFunctions, AutomationTables } from './automation-database';
 import type { DomainEventFunctions } from './domain-event-database';
@@ -42,7 +43,7 @@ type NullableArgs<Name extends keyof Functions, Keys extends keyof Functions[Nam
 export type Database = Omit<GeneratedDatabase, 'public'> & {
   public: Omit<Schema, 'Tables' | 'Functions' | 'Enums'> & {
     Enums: Omit<Schema['Enums'], 'notification_kind'> & { notification_kind: NotificationKind };
-    Tables: Omit<Tables, 'assets' | 'tickets' | 'ticket_messages' | 'notifications'> & AutomationTables & AutomationExecutionTables & {
+    Tables: Omit<Tables, 'assets' | 'tickets' | 'ticket_messages' | 'notifications'> & AutomationTables & AutomationExecutionTables & InventoryTables & {
       notifications: Omit<Tables['notifications'], 'Row'> & { Row: Notification };
       ticket_messages: Omit<Tables['ticket_messages'], 'Row'> & {
         Row: Omit<Tables['ticket_messages']['Row'], 'author_id'> & {
@@ -52,7 +53,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
       };
       // BEFORE INSERT triggers assign the number and SLA deadlines.
       tickets: Omit<Tables['tickets'], 'Row' | 'Insert'> & {
-        Row: Tables['tickets']['Row'] & { revision: number; unassigned_since: string | null; unassigned_episode_id: string | null; waiting_on_user_since: string | null; waiting_on_user_episode_id: string | null };
+        Row: Tables['tickets']['Row'] & { request_kind: 'support' | 'inventory'; revision: number; unassigned_since: string | null; unassigned_episode_id: string | null; waiting_on_user_since: string | null; waiting_on_user_episode_id: string | null };
         Insert: Omit<Tables['tickets']['Insert'], 'ticket_number' | 'response_sla_due_at' | 'resolution_sla_due_at'>;
       };
       assets: Omit<Tables['assets'], 'Row' | 'Insert' | 'Update'> & {
@@ -61,7 +62,8 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
         Update: Omit<Tables['assets']['Update'], keyof AssetFields> & Partial<AssetFields>;
       };
     };
-    Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & AutomationAdminFunctions & {
+    Functions: Omit<Functions, 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails' | 'search_tickets'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & AutomationAdminFunctions & InventoryFunctions & {
+      search_tickets: Omit<Functions['search_tickets'], 'Returns'> & { Returns: (Functions['search_tickets']['Returns'][number] & { request_kind: 'support' | 'inventory' })[] };
       lookup_choices: { Args: { org: string; resource: string; query?: string; after_label?: string | null; after_id?: string | null; selected?: string | null; parent?: string | null; active_only?: boolean }; Returns: import('@/features/lookups/model').LookupChoice[] };
       start_automation_run: { Args: { kind: string }; Returns: string };
       finish_automation_run: { Args: { run_id: string; outcome: string; metrics: import('./database.generated').Json }; Returns: boolean };

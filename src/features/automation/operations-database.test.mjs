@@ -12,7 +12,7 @@ test('Stage 10 durable health and bounded tenant operational reads',async t=>{
  const db=await migratedPostgres();const scenario=(name,fn)=>t.test(name,async()=>{await db.exec('begin');await seed(db);try{await fn();}finally{await db.exec('rollback');}});
  try{
   await scenario('empty/OFF read is safe, tenant scoped and creates no audit or ticket changes',async()=>{
-   const before=await snapshot(db);await identity(db);const data=await overview(db);assert.equal(data.processingActive,false);assert.equal(data.worker.lastSuccessfulAt,null);assert.equal(data.executions.total,0);assert.equal(data.queue.sampled,0);assert.equal(data.temporalRules.length,0);assert.deepEqual((await history(db)).rows,[]);assert.deepEqual(await snapshot(db),before);
+   const before=await snapshot(db);await identity(db);const data=await overview(db);assert.equal(data.processingActive,false);assert.equal(data.worker.lastSuccessfulAt,null);assert.equal(data.executions.total,0);assert.equal(data.queue.sampled,0);assert.equal(data.temporalRules.length,0);assert.deepEqual((await history(db)).rows,[]);assert.deepEqual(await snapshot(db),{...before,tickets:before.tickets.map(ticket=>({...ticket,request_kind:'support'}))});
   });
   await scenario('administrator allowed; technicians, end users, platform-only, MFA and cross-tenant access denied',async()=>{
    await identity(db);await overview(db);await denied(db,'select public.read_automation_operations($1)',[ids.otherOrg]);await denied(db,'select public.read_automation_operations_history($1)',[ids.otherOrg]);
@@ -78,7 +78,7 @@ test('Stage 10 durable health and bounded tenant operational reads',async t=>{
    await db.query("update public.tickets set resolution_sla_due_at=clock_timestamp()+interval '1 second' where id=$1",[near.id]);await db.exec('alter table public.tickets enable trigger tickets_sla_prepare');
    assert.equal((await discover()).emitted,1);await new Promise(resolve=>setTimeout(resolve,1100));assert.equal((await discover()).emitted,0);
    await identity(db);assert.equal((await overview(db)).lag.missedWindow,1);
-   await identity(db);const before=await snapshot(db);await identity(db);await overview(db);await history(db);assert.deepEqual(await snapshot(db),before);
+   await identity(db);const before=await snapshot(db);await identity(db);await overview(db);await history(db);assert.deepEqual(await snapshot(db),{...before,tickets:before.tickets.map(ticket=>({...ticket,request_kind:'support'}))});
   });
   await scenario('queue summary has a hard candidate cap and labels incomplete data',async()=>{
    await owner(db);await db.query("select set_config('request.jwt.claims',$1,true)",[JSON.stringify({sub:ids.admin,role:'authenticated',aal:'aal1'})]);
@@ -91,5 +91,5 @@ test('Stage 10 durable health and bounded tenant operational reads',async t=>{
  test('Stage 10 upgrade preserves existing ticket/runtime records and processing OFF',async()=>{
  let before;
  const db=await migratedPostgres({beforeMigration:async(db,name)=>{if(name!=='20261001165514_automation_operations.sql')return;await db.exec('begin');await seed(db);await createRule(db);await ticket(db);before=await snapshot(db);await db.exec('commit');}});
- try{await db.exec('begin');assert.deepEqual(await snapshot(db),before);await identity(db);assert.equal((await overview(db)).processingActive,false);await owner(db);assert.equal((await db.query('select count(*)::int n from private.automation_runs')).rows[0].n,0);}finally{await db.close();}
+ try{await db.exec('begin');assert.deepEqual(await snapshot(db),{...before,tickets:before.tickets.map(ticket=>({...ticket,request_kind:'support'}))});await identity(db);assert.equal((await overview(db)).processingActive,false);await owner(db);assert.equal((await db.query('select count(*)::int n from private.automation_runs')).rows[0].n,0);}finally{await db.close();}
  });

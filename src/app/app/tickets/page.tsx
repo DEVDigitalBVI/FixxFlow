@@ -23,7 +23,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const { view, sort, search, page, rows, error, profiles, teams, knowledgeCount } = await loadTicketQueue(viewer, filters);
   const pageHref = (next: number) => {
     const params = new URLSearchParams();
-    for (const key of ["q", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) if (filters[key]) params.set(key, filters[key]);
+    for (const key of ["q", "kind", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) if (filters[key]) params.set(key, filters[key]);
     params.set("page", String(next));
     return `/app/tickets?${params}`;
   };
@@ -35,7 +35,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const relatedArticles = search && <p className="queue-count"><Link href={`/app/help?q=${encodeURIComponent(search)}`}>Search knowledge articles{knowledgeCount ? ` (${knowledgeCount} ${knowledgeCount === 1 ? "match" : "matches"})` : ""}</Link></p>;
   const names = new Map((profiles ?? []).map(p => [p.user_id, p.display_name]));
   const teamNames = new Map((teams ?? []).map(t => [t.id, t.name]));
-  if (viewer.role === "end_user") return <div className="portal-page">{usage}<header className="portal-page-heading"><div><Link className="button button-quiet page-back-link" href="/app">← Home</Link><h1>My tickets</h1><p>See updates and continue a conversation with IT.</p></div><Link className="button button-primary" href="/app/tickets/new">Submit a request</Link></header><LiveSearchForm action="/app/tickets" className="portal-search" label="Search requests" resultSummary={searchSummary}><label htmlFor="ticket-search">Search requests</label><div><input id="ticket-search" className="input" name="q" defaultValue={search} type="search" maxLength={SEARCH_LIMIT} aria-describedby="ticket-search-hint" placeholder="Words or #ticket number"/><button className="button button-secondary">Search</button></div>{search&&<Link className="button button-quiet queue-clear" href="/app/tickets">Clear search</Link>}</LiveSearchForm><p id="ticket-search-hint" className="muted">{SEARCH_HINT} Use # for an exact ticket number.</p>{relatedArticles}{error ? <div className="alert alert-error" role="alert">Requests could not be loaded. Refresh the page.</div> : tickets?.length ? <ul className="portal-ticket-list">{tickets.map(ticket => <li key={ticket.id}><Link href={`/app/tickets/${ticket.id}`}><span className="portal-ticket-main"><strong>{ticket.title}</strong><small>#{ticket.ticket_number} · Updated {formatTicketDate(ticket.updated_at)}</small></span><span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span><span aria-hidden="true">→</span></Link></li>)}</ul> : <div className="portal-empty"><h2>No requests found</h2><p>{filters.q ? "Try a different search." : "When you contact IT, your requests will appear here."}</p><Link href="/app/tickets/new" className="button button-primary">Submit a request</Link></div>}{!error && pagination}</div>;
+  if (viewer.role === "end_user") return <div className="portal-page">{usage}<header className="portal-page-heading"><div><Link className="button button-quiet page-back-link" href="/app">← Home</Link><h1>My tickets</h1><p>See updates and continue a conversation with IT.</p></div><Link className="button button-primary" href="/app/tickets/new">Submit a request</Link></header><nav aria-label="Request types"><Link className="button button-secondary" href="/app/tickets?kind=inventory">Inventory requests</Link><Link className="button button-quiet" href="/app/tickets">All my tickets</Link></nav><LiveSearchForm action="/app/tickets" className="portal-search" label="Search requests" resultSummary={searchSummary}>{filters.kind === "inventory" && <input type="hidden" name="kind" value="inventory"/>}<label htmlFor="ticket-search">Search requests</label><div><input id="ticket-search" className="input" name="q" defaultValue={search} type="search" maxLength={SEARCH_LIMIT} aria-describedby="ticket-search-hint" placeholder="Words or #ticket number"/><button className="button button-secondary">Search</button></div>{search&&<Link className="button button-quiet queue-clear" href="/app/tickets">Clear search</Link>}</LiveSearchForm><p id="ticket-search-hint" className="muted">{SEARCH_HINT} Use # for an exact ticket number.</p>{relatedArticles}{error ? <div className="alert alert-error" role="alert">Requests could not be loaded. Refresh the page.</div> : tickets?.length ? <ul className="portal-ticket-list">{tickets.map(ticket => <li key={ticket.id}><Link href={`/app/tickets/${ticket.id}`}><span className="portal-ticket-main"><strong>{ticket.title}</strong>{ticket.request_kind === "inventory" && <small>Inventory request</small>}<small>#{ticket.ticket_number} · Updated {formatTicketDate(ticket.updated_at)}</small></span><span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span><span aria-hidden="true">→</span></Link></li>)}</ul> : <div className="portal-empty"><h2>No requests found</h2><p>{filters.q ? "Try a different search." : "When you contact IT, your requests will appear here."}</p><Link href="/app/tickets/new" className="button button-primary">Submit a request</Link></div>}{!error && pagination}</div>;
   const views = [
     { value: "mine", label: "My tickets", description: "Active support work assigned to you." },
     { value: "unassigned", label: "Unassigned", description: "Active tickets ready for someone to pick up." },
@@ -46,12 +46,13 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const clearHref = `/app/tickets?view=${view}`;
   const withoutFilter = (key: keyof TicketQueueFilters) => {
     const params = new URLSearchParams();
-    for (const name of ["q", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) {
+    for (const name of ["q", "kind", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) {
       if (name !== key && filters[name]) params.set(name, filters[name]);
     }
     return `/app/tickets?${params}`;
   };
   const filterChips = [
+    { key: "kind", label: filters.kind === "inventory" ? "Inventory requests" : null },
     { key: "q", label: search ? `Search: ${search}` : null },
     { key: "status", label: Object.entries(ticketStatuses).find(([key]) => key === filters.status)?.[1].label },
     { key: "priority", label: Object.entries(ticketPriorities).find(([key]) => key === filters.priority)?.[1].label },
@@ -71,10 +72,10 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
         <div><h2 id="ticket-queue-heading">{currentView.label}</h2><p>{currentView.description}</p></div>
         <span className="ticket-queue-page-count">{error ? "Queue unavailable" : `${tickets?.length ?? 0} on this page`}</span>
       </header>
-      <nav className="queue-views" aria-label="Ticket views">{views.map(item => <Link key={item.value} href={`/app/tickets?view=${item.value}`} aria-current={view === item.value ? "page" : undefined}>{item.label}</Link>)}</nav>
+      <nav className="queue-views" aria-label="Ticket views"><Link href="/app/tickets?view=all&kind=inventory" aria-current={filters.kind === "inventory" ? "page" : undefined}>Inventory requests</Link>{views.map(item => <Link key={item.value} href={`/app/tickets?view=${item.value}`} aria-current={view === item.value ? "page" : undefined}>{item.label}</Link>)}</nav>
       <div className="ticket-queue-toolbar">
         <LiveSearchForm action="/app/tickets" className="queue-filters" label="Search tickets" resultSummary={searchSummary}>
-          <input type="hidden" name="view" value={view}/>
+          {filters.kind === "inventory" && <input type="hidden" name="kind" value="inventory"/>}<input type="hidden" name="view" value={view}/>
           <label className="ticket-queue-search">Search tickets<input className="input" name="q" defaultValue={search} type="search" maxLength={SEARCH_LIMIT} aria-describedby="ticket-search-hint" placeholder="Search by subject, person or #ticket number…"/></label>
           <button className="button button-secondary" type="submit">Search tickets</button>
           {(appliedFilters.length > 0 || sort !== "updated") && <Link href={clearHref} className="button button-quiet queue-clear">Clear filters</Link>}
@@ -108,7 +109,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
             <thead><tr><th scope="col"><span className="sr-only">Select</span></th><th scope="col">Ticket</th><th scope="col">Status</th><th scope="col">Priority</th><th scope="col">Requester</th><th scope="col">Assigned to</th><th scope="col">SLA</th><th scope="col">Updated</th></tr></thead>
             <tbody>{tickets.map(ticket => <tr key={ticket.id}>
               <td data-label="Select"><input className="queue-row-check" type="checkbox" name="ticketIds" value={ticket.id} aria-label={`Select ticket ${ticket.ticket_number}`}/></td>
-              <td data-label="Ticket"><Link className="ticket-link" href={`/app/tickets/${ticket.id}`}><strong>{ticket.title}</strong><span>#{ticket.ticket_number} · {ticket.team_id ? teamNames.get(ticket.team_id) ?? "Team" : "No team"}{ticket.due_at && new Date(ticket.due_at) < new Date() && active.includes(ticket.status) ? " · Overdue" : ""}</span></Link></td>
+              <td data-label="Ticket"><Link className="ticket-link" href={`/app/tickets/${ticket.id}`}><strong>{ticket.title}</strong>{ticket.request_kind === "inventory" && <small>Inventory request</small>}<span>#{ticket.ticket_number} · {ticket.team_id ? teamNames.get(ticket.team_id) ?? "Team" : "No team"}{ticket.due_at && new Date(ticket.due_at) < new Date() && active.includes(ticket.status) ? " · Overdue" : ""}</span></Link></td>
               <td data-label="Status"><span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span></td>
               <td data-label="Priority"><span className={`ticket-badge tone-${ticketPriorities[ticket.priority].tone}`}>{ticketPriorities[ticket.priority].label}</span></td>
               <td data-label="Requester">{names.get(ticket.requester_id) ?? "Unknown"}</td>

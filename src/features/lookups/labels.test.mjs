@@ -35,3 +35,19 @@ test('profile lookup outages cannot silently turn known queue names into missing
   await assert.rejects(q.loadTicketQueue({ role: 'technician', organizationId: 'verified-org' }, {}), /Names could not load/);
   assert.equal(q.logged[0][0], 'ticket.references');
 });
+
+test('inventory queue keeps staff filters and employee support ownership distinct', async () => {
+  const staff = queue();
+  await staff.loadTicketQueue({role:'technician',id:'worker',organizationId:'verified-org'}, {kind:'inventory',view:'mine',overdue:'1'});
+  assert.ok(staff.calls.some(c => c[1] === 'eq' && c[2] === 'request_kind' && c[3] === 'inventory'));
+  assert.ok(staff.calls.some(c => c[1] === 'eq' && c[2] === 'assigned_technician_id' && c[3] === 'worker'));
+  assert.ok(staff.calls.some(c => c[1] === 'lt' && c[2] === 'due_at'));
+  const support = queue();
+  await support.loadTicketQueue({role:'end_user',id:'employee',organizationId:'verified-org'}, {view:'mine'});
+  assert.ok(support.calls.some(c => c[1] === 'eq' && c[2] === 'requester_id' && c[3] === 'employee'));
+  assert.ok(!support.calls.some(c => c[1] === 'eq' && c[2] === 'assigned_technician_id'));
+  const inventory = queue();
+  await inventory.loadTicketQueue({role:'end_user',id:'employee',organizationId:'verified-org'}, {kind:'inventory'});
+  assert.ok(inventory.calls.some(c => c[1] === 'eq' && c[2] === 'request_kind' && c[3] === 'inventory'));
+  assert.ok(!inventory.calls.some(c => c[1] === 'eq' && c[2] === 'requester_id'));
+});
