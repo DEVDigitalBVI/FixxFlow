@@ -2,6 +2,7 @@ import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import vm from 'node:vm';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -129,7 +130,13 @@ test('shared logos use the approved theme pair at their original proportions', (
     assert.match(html, /aria-label="FixxFlow home"/);
     assert.doesNotMatch(html, /raster-master|icon-primary/);
   }
-  for (const name of ['primary', 'dark-mode']) {
-    assert.deepEqual(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`), fs.readFileSync(`brand/fixxflow/logo/fixxflow-logo-${name}.png`));
+  // Fingerprints of the approved originals; the local brand staging folder is
+  // intentionally ignored and is absent from clean checkouts and CI.
+  const approved = {
+    primary: '35216b27154bbe0997b54aec8e99d4fca5dc1e4e1e5c605f7d07515de8a05314',
+    'dark-mode': '6d1d839e11c4de70aa0be2161aa992a8962ec3c1c3c484f0254f6b287ff8325e',
+  };
+  for (const [name, fingerprint] of Object.entries(approved)) {
+    assert.equal(createHash('sha256').update(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`)).digest('hex'), fingerprint);
   }
 });

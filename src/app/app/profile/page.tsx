@@ -61,7 +61,7 @@ export default async function ProfilePage({ searchParams }: Props) {
       </ActionForm>
     </section>
 
-    <section className="settings-card profile-card"><h2>Timezone</h2><p className="muted">Ticket, chat and activity times follow your device unless you choose a timezone. Reports use the organization timezone.</p><p className="muted">Currently showing times in {viewer.timeZone}.</p><TimezoneSettingsForm scope="personal" initial={viewer.timezonePreference ?? ""}><TimezoneSelect personal value={viewer.timezonePreference ?? ""}/></TimezoneSettingsForm></section>
+    <section className="settings-card profile-card timezone-settings" aria-labelledby="timezone-heading"><div className="profile-section-heading"><h2 id="timezone-heading">Timezone</h2><p className="muted">Ticket, chat and activity times follow your device unless you choose a timezone. Reports use the organization timezone.</p><p className="muted">Currently showing times in {viewer.timeZone}.</p></div><TimezoneSettingsForm scope="personal" initial={viewer.timezonePreference ?? ""}><TimezoneSelect personal value={viewer.timezonePreference ?? ""}/></TimezoneSettingsForm></section>
     <section className="settings-card profile-card appearance-settings" aria-labelledby="appearance-heading">
       <div className="profile-section-heading"><div><h2 id="appearance-heading">Appearance</h2><p className="muted">Choose light or dark mode, or follow your device. Changes apply immediately and are remembered on this browser.</p></div></div>
       <ThemeControl />
