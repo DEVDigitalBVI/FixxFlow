@@ -20,7 +20,7 @@ const env = {
   NEXT_PUBLIC_SITE_URL: 'http://localhost:3100', SUPABASE_SECRET_KEY: local.SERVICE_ROLE_KEY,
   AUTOMATION_PROCESSING_ENABLED: !building && process.argv[2] === 'controlled-test' ? 'true' : 'false',
   CRON_SECRET: readFileSync(secretFile, 'utf8'),
-  ZOHO_CPAAS_API_KEY: '', NOTIFICATIONS_FROM_EMAIL: '',
+  RESEND_API_KEY: '', NOTIFICATIONS_FROM_EMAIL: '',
 };
 const child = spawn(process.execPath, [`${directory}/node_modules/next/dist/bin/next`,
   ...(building ? ['build', '--webpack'] : ['start', '-H', '127.0.0.1', '-p', '3100'])],

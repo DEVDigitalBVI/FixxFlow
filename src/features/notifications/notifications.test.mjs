@@ -47,45 +47,46 @@ test('auth templates retain Supabase tokens and accessible email branding',()=>{
   if(file==='reauthentication.html')assert.match(html,/\{\{ \.Token \}\}/);
  }
 });
-test('Zoho receives a correlation reference and authenticated link without conversation content',async()=>{
+test('Resend receives an idempotency key and authenticated link without conversation content',async()=>{
  let sent;
- assert.equal(await sendNotificationEmail(item,config,async(url,options)=>{sent={url,...options};return Response.json({request_id:'provider-1',data:[{code:'EM_104'}]});}), 'provider-1');
- assert.equal(sent.url,'https://cpaas.zoho.com/v1.1/email');
- assert.equal(sent.headers.Authorization,'Zoho-enczapikey mock-key');
+ assert.equal(await sendNotificationEmail(item,config,async(url,options)=>{sent={url,...options};return Response.json({id:'provider-1'});}), 'provider-1');
+ assert.equal(sent.url,'https://api.resend.com/emails');
+ assert.equal(sent.headers.Authorization,'Bearer mock-key');
  const body=JSON.parse(sent.body);
- assert.deepEqual(body.to,[{email_address:{address:'recipient@example.test'}}]);
- assert.equal(body.client_reference,'notification/notice-1');
- assert.deepEqual(body.from,{address:'support@example.test',name:'FixxFlow'});
- assert.equal(body.track_clicks,false);
- assert.equal(body.track_opens,false);
- assert.match(body.textbody,/https:\/\/example.test\/app\/tickets\/ticket-1/);
- assert.match(body.htmlbody,/fixxflow-logo-primary.png/);
- assert.match(body.htmlbody,/View update/);
- assert.match(body.htmlbody,/font-family:Inter,ui-sans-serif,system-ui/);
+ assert.deepEqual(body.to,['recipient@example.test']);
+ assert.equal(sent.headers['Idempotency-Key'],'notification/notice-1');
+ assert.equal(body.from,'FixxFlow <support@example.test>');
+ assert.equal(body.reply_to,'support@fixxflow.app');
+ assert.deepEqual(Object.keys(body).sort(),['from','html','reply_to','subject','text','to']);
+ assert.match(body.text,/https:\/\/example.test\/app\/tickets\/ticket-1/);
+ assert.match(body.html,/fixxflow-logo-primary.png/);
+ assert.match(body.html,/View update/);
+ assert.match(body.html,/font-family:Inter,ui-sans-serif,system-ui/);
 });
 test('HTML notification titles are escaped and plain text remains available',async()=>{
  await sendNotificationEmail({...item,title:'<img src=x onerror=alert(1)> & update'},config,async(_url,options)=>{
   const body=JSON.parse(options.body);
-  assert.match(body.htmlbody,/&lt;img src=x onerror=alert\(1\)&gt; &amp; update/);
-  assert.doesNotMatch(body.htmlbody,/<img src=x/);
-  assert.match(body.textbody,/<img src=x/);
-  return Response.json({request_id:'safe',data:[{code:'EM_104'}]});
+  assert.match(body.html,/&lt;img src=x onerror=alert\(1\)&gt; &amp; update/);
+  assert.doesNotMatch(body.html,/<img src=x/);
+  assert.match(body.text,/<img src=x/);
+  return Response.json({id:'safe'});
  });
 });
 test('provider failures and missing IDs are not acknowledged as sent',async()=>{
  await assert.rejects(sendNotificationEmail(item,config,async()=>new Response('private error',{status:429})),/HTTP 429/);
  await assert.rejects(sendNotificationEmail(item,config,async()=>Response.json({})),/no delivery ID/);
- await assert.rejects(sendNotificationEmail(item,config,async()=>Response.json({request_id:'bad',data:[{code:'ERROR'}]})),/did not accept/);
+ for(const id of [undefined,null,42,'','   ']) await assert.rejects(sendNotificationEmail(item,config,async()=>Response.json({id})),/no delivery ID/);
+ await assert.rejects(sendNotificationEmail(item,config,async()=>Response.json({request_id:'legacy',data:[{code:'EM_104'}]})),/no delivery ID/);
  await assert.rejects(sendNotificationEmail(item,{...config,siteUrl:'http://unsafe.test'}),/Invalid/);
 });
-test('copied Zoho authorization values are not double-prefixed and invalid senders never send',async()=>{
+test('Resend uses bearer authentication and invalid senders never send',async()=>{
  let calls=0;
  const request=async(_url,options)=>{
   calls++;
-  assert.equal(options.headers.Authorization,'Zoho-enczapikey copied-key');
-  return Response.json({request_id:'provider-2',data:[{code:'EM_104'}]});
+  assert.equal(options.headers.Authorization,'Bearer copied-key');
+  return Response.json({id:'provider-2'});
  };
- await sendNotificationEmail(item,{...config,apiKey:'Zoho-enczapikey copied-key'},request);
+ await sendNotificationEmail(item,{...config,apiKey:'copied-key'},request);
  await assert.rejects(sendNotificationEmail(item,{...config,from:'invalid'},request),/Invalid notification sender/);
  await assert.rejects(sendNotificationEmail(item,{...config,from:'support@example.test\r\nBcc: private@example.test'},request),/Invalid notification sender/);
  assert.equal(calls,1);
@@ -109,8 +110,8 @@ test('network errors, timeouts and malformed provider responses never count as a
   }),error=>error===failure);
  }
  await assert.rejects(sendNotificationEmail(item,config,async()=>new Response('not JSON',{status:200})),SyntaxError);
- for(const data of [null,[],[null],[{code:'EM_104'},{code:'EM_104'}],[{code:'EM_103'}]]) {
-  await assert.rejects(sendNotificationEmail(item,config,async()=>Response.json({request_id:'unaccepted',data})),/did not accept/);
+ for(const result of [null,[],{name:'validation_error',message:'private details'}]) {
+  await assert.rejects(sendNotificationEmail(item,config,async()=>Response.json(result)),/no delivery ID/);
  }
 });
 
@@ -121,10 +122,25 @@ test('chat and fallback email links retain the configured origin',async()=>{
  ]) {
   await sendNotificationEmail({...item,...target},{...config,siteUrl:'https://example.test/ignored/path'},async(_url,options)=>{
    const body=JSON.parse(options.body);
-   assert.ok(body.textbody.includes(`https://example.test${path}`));
-   assert.ok(body.htmlbody.includes(`href="https://example.test${path}"`));
-   assert.deepEqual(body.reply_to,[{address:'support@fixxflow.app',name:'FixxFlow Support'}]);
-   return Response.json({request_id:'accepted',data:[{code:'EM_104'}]});
+   assert.ok(body.text.includes(`https://example.test${path}`));
+   assert.ok(body.html.includes(`href="https://example.test${path}"`));
+   assert.equal(body.reply_to,'support@fixxflow.app');
+   return Response.json({id:'accepted'});
   });
  }
+});
+
+
+test('ambiguous failures reuse the same idempotency key and payload across queue leases',async()=>{
+ const attempts=[];
+ const request=async(_url,options)=>{
+  attempts.push({key:options.headers['Idempotency-Key'],body:options.body});
+  if(attempts.length===1) throw new TypeError('response lost after acceptance');
+  return Response.json({id:'accepted-once'});
+ };
+ await assert.rejects(sendNotificationEmail({...item,lease_token:'first'},config,request),/response lost/);
+ assert.equal(await sendNotificationEmail({...item,lease_token:'retry'},config,request),'accepted-once');
+ assert.deepEqual(attempts[0],attempts[1]);
+ await sendNotificationEmail({...item,notification_id:'notice-2'},config,request);
+ assert.notEqual(attempts[1].key,attempts[2].key);
 });

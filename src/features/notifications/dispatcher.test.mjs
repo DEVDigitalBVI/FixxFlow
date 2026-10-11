@@ -3,7 +3,7 @@ import test from 'node:test';
 import { load } from '../../../tests/helpers/load-module.mjs';
 
 const environment = {
-  ZOHO_CPAAS_API_KEY: 'fixture-token',
+  RESEND_API_KEY: 'fixture-token',
   NOTIFICATIONS_FROM_EMAIL: 'FixxFlow <notifications@example.test>',
   NEXT_PUBLIC_SITE_URL: 'https://app.example.test',
   CRON_SECRET: 'fixture-cron-secret',
@@ -32,7 +32,7 @@ async function dispatch({ batch = items, send = async () => 'provider-id', rpcEr
       } }) },
       '@/features/notifications/email': { sendNotificationEmail: async (item, config) => {
         calls.push({ name: 'send', item });
-        assert.equal(config.apiKey, environment.ZOHO_CPAAS_API_KEY);
+        assert.equal(config.apiKey, environment.RESEND_API_KEY);
         return send(item);
       } },
     });

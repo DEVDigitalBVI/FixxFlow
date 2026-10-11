@@ -1,5 +1,10 @@
 # Zoho email delivery
 
+Historical Zoho CPaaS configuration. The application now targets Resend for
+automated sending; see [Resend email delivery](resend-email.md) for cutover and
+verification. The support inbox remains in Zoho Mail. This historical record
+does not establish that the Resend production cutover is complete.
+
 The support mailbox lives in Zoho Mail. Automated email uses Zoho CPaaS
 (formerly ZeptoMail), since Zoho Mail excludes automated transactional sending.
 

@@ -125,7 +125,7 @@ processing gates starting OFF. Protect cron with a new secret, test unauthorized
 requests, and verify actual scheduled invocations of all three configured routes.
 Do not copy shared/team production environment values into the new project.
 
-Only synthetic `example.invalid` users/recipients are allowed. Keep Zoho delivery
+Only synthetic `example.invalid` users/recipients are allowed. Keep Resend delivery
 credentials and sender configuration absent: the notification dispatcher returns
 503 before claiming/sending mail. Disable public signups and create confirmed
 test users through the staging administrator API; do not invoke real-user Auth

@@ -50,27 +50,27 @@ test('fixed SLA presentation matches the database deadline function',()=>{
   for(const target of fixedSlaTargets) assert.ok(sql.includes(`when '${target.priority}' then case when response then ${target.response} else ${target.resolution} end`));
 });
 
-test('email status uses Zoho dispatcher readiness without exposing credentials', async () => {
+test('email status uses Resend dispatcher readiness without exposing credentials', async () => {
   const environment = {
-    ZOHO_CPAAS_API_KEY: 'fixture-provider-secret', NOTIFICATIONS_FROM_EMAIL: 'support@example.test',
+    RESEND_API_KEY: 'fixture-provider-secret', NOTIFICATIONS_FROM_EMAIL: 'support@example.test',
     NEXT_PUBLIC_SITE_URL: 'https://app.example.test', CRON_SECRET: 'fixture-cron-secret',
-    SUPABASE_SECRET_KEY: 'fixture-database-secret', RESEND_API_KEY: 'fixture-legacy-secret',
+    SUPABASE_SECRET_KEY: 'fixture-database-secret', ZOHO_CPAAS_API_KEY: 'fixture-legacy-secret',
   };
   const previous = Object.fromEntries(Object.keys(environment).map(key => [key, process.env[key]]));
   try {
     Object.assign(process.env, environment);
     const render = async () => renderToStaticMarkup(await load(detail, 'administrator').render(props('notifications')));
     const configured = await render();
-    assert.match(configured, /Zoho configured; delivery depends on provider availability/);
+    assert.match(configured, /Resend configured; delivery depends on provider availability/);
     assert.match(configured, /href="\/app\/notifications"/);
     for (const value of Object.values(environment)) assert.ok(!configured.includes(value));
-    for (const key of Object.keys(environment).filter(key => key !== 'RESEND_API_KEY')) {
+    for (const key of Object.keys(environment).filter(key => key !== 'ZOHO_CPAAS_API_KEY')) {
       delete process.env[key];
-      assert.match(await render(), /Zoho setup incomplete/);
+      assert.match(await render(), /Resend setup incomplete/);
       process.env[key] = environment[key];
     }
     process.env.NEXT_PUBLIC_SITE_URL = 'http://localhost:3000';
-    assert.match(await render(), /Zoho setup incomplete/);
+    assert.match(await render(), /Resend setup incomplete/);
   } finally {
     for (const [key, value] of Object.entries(previous)) {
       if (value === undefined) delete process.env[key]; else process.env[key] = value;

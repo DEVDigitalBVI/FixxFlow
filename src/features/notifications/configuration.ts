@@ -15,7 +15,7 @@ export function parseNotificationEmailConfiguration(config: NotificationEmailCon
 
 /** Call only with server environment values; a configured provider is not a delivery health check. */
 export function getNotificationEmailConfiguration(environment: Record<string, string | undefined>): NotificationEmailConfiguration | null {
-  const apiKey = environment.ZOHO_CPAAS_API_KEY?.trim();
+  const apiKey = environment.RESEND_API_KEY?.trim();
   const from = environment.NOTIFICATIONS_FROM_EMAIL;
   const siteUrl = environment.NEXT_PUBLIC_SITE_URL;
   if (!apiKey || !from || !siteUrl || !environment.CRON_SECRET?.trim() || !environment.SUPABASE_SECRET_KEY?.trim()) return null;

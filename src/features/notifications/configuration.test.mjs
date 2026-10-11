@@ -4,20 +4,20 @@ import { load } from '../../../tests/helpers/load-module.mjs';
 
 const { getNotificationEmailConfiguration } = load('src/features/notifications/configuration.ts');
 const environment = {
-  ZOHO_CPAAS_API_KEY: 'fixture-zoho-token',
+  RESEND_API_KEY: 'fixture-resend-token',
   NOTIFICATIONS_FROM_EMAIL: 'FixxFlow <support@example.test>',
   NEXT_PUBLIC_SITE_URL: 'https://app.example.test',
   CRON_SECRET: 'fixture-cron-secret',
   SUPABASE_SECRET_KEY: 'fixture-server-key',
 };
 
-test('notification readiness requires each dispatcher setting and ignores legacy Resend credentials', () => {
+test('notification readiness requires each dispatcher setting and ignores legacy Zoho credentials', () => {
   assert.deepEqual(getNotificationEmailConfiguration(environment), {
-    apiKey: environment.ZOHO_CPAAS_API_KEY, from: environment.NOTIFICATIONS_FROM_EMAIL, siteUrl: environment.NEXT_PUBLIC_SITE_URL,
+    apiKey: environment.RESEND_API_KEY, from: environment.NOTIFICATIONS_FROM_EMAIL, siteUrl: environment.NEXT_PUBLIC_SITE_URL,
   });
   for (const key of Object.keys(environment)) {
     for (const missing of [undefined, '', '   ']) {
-      assert.equal(getNotificationEmailConfiguration({ ...environment, [key]: missing, RESEND_API_KEY: 'legacy-token' }), null, key);
+      assert.equal(getNotificationEmailConfiguration({ ...environment, [key]: missing, ZOHO_CPAAS_API_KEY: 'legacy-token' }), null, key);
     }
   }
 });
