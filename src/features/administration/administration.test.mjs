@@ -54,7 +54,7 @@ test('email status uses Resend dispatcher readiness without exposing credentials
   const environment = {
     RESEND_API_KEY: 'fixture-provider-secret', NOTIFICATIONS_FROM_EMAIL: 'support@example.test',
     NEXT_PUBLIC_SITE_URL: 'https://app.example.test', CRON_SECRET: 'fixture-cron-secret',
-    SUPABASE_SECRET_KEY: 'fixture-database-secret', ZOHO_CPAAS_API_KEY: 'fixture-legacy-secret',
+    SUPABASE_SECRET_KEY: 'fixture-database-secret',
   };
   const previous = Object.fromEntries(Object.keys(environment).map(key => [key, process.env[key]]));
   try {
@@ -64,7 +64,7 @@ test('email status uses Resend dispatcher readiness without exposing credentials
     assert.match(configured, /Resend configured; delivery depends on provider availability/);
     assert.match(configured, /href="\/app\/notifications"/);
     for (const value of Object.values(environment)) assert.ok(!configured.includes(value));
-    for (const key of Object.keys(environment).filter(key => key !== 'ZOHO_CPAAS_API_KEY')) {
+    for (const key of Object.keys(environment)) {
       delete process.env[key];
       assert.match(await render(), /Resend setup incomplete/);
       process.env[key] = environment[key];

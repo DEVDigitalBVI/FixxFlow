@@ -1,4 +1,7 @@
-# Email system evaluation
+# Historical email delivery investigation
+
+Archived after the migration to Resend. This is an incident evidence record,
+not current setup guidance. See [Resend email delivery](../resend-email.md).
 
 ## October 9 provider trace — verified in the Zoho console
 

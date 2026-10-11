@@ -11,13 +11,13 @@ const environment = {
   SUPABASE_SECRET_KEY: 'fixture-server-key',
 };
 
-test('notification readiness requires each dispatcher setting and ignores legacy Zoho credentials', () => {
+test('notification readiness requires each Resend dispatcher setting', () => {
   assert.deepEqual(getNotificationEmailConfiguration(environment), {
     apiKey: environment.RESEND_API_KEY, from: environment.NOTIFICATIONS_FROM_EMAIL, siteUrl: environment.NEXT_PUBLIC_SITE_URL,
   });
   for (const key of Object.keys(environment)) {
     for (const missing of [undefined, '', '   ']) {
-      assert.equal(getNotificationEmailConfiguration({ ...environment, [key]: missing, ZOHO_CPAAS_API_KEY: 'legacy-token' }), null, key);
+      assert.equal(getNotificationEmailConfiguration({ ...environment, [key]: missing }), null, key);
     }
   }
 });
