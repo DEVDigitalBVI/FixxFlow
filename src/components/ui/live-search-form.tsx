@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { normalizeSearch } from '@/lib/search';
+import { confirmDiscardChanges } from './unsaved-changes';
 
 export const SEARCH_DELAY = 300;
 
@@ -96,6 +97,10 @@ export function LiveSearchForm({ action, label, className, children, resultSumma
     const next = searchHref(action, new FormData(form.current));
     const retry = next === currentHref.current && requestedHref.current === null;
     if (!force && (retry || next === requestedHref.current)) return;
+    if (!retry && !confirmDiscardChanges()) {
+      restoreSearchForm(form.current, new URLSearchParams(params));
+      return;
+    }
     requestedHref.current = next;
     setSearched(true);
     startTransition(() => {

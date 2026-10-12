@@ -92,7 +92,7 @@ export async function HistoryBrowser({ kind, id, filters }: {
   }
 
   return <div className={staff ? 'page stack' : 'portal-page stack'}>
-    <header className="page-header"><div><Link href={base}>Back to conversation</Link><h1>Conversation history</h1><p>Up to {HISTORY_PAGE_SIZE} entries per page. Live replies remain in the conversation.</p></div></header>
+    <header className="page-header"><div><Link className="button button-quiet page-back-link" href={base}>Back to conversation</Link><h1>Conversation history</h1><p>Up to {HISTORY_PAGE_SIZE} entries per page. Live replies remain in the conversation.</p></div></header>
     <nav className="queue-views" aria-label="History sections">{['messages', 'files', ...(staff && kind === 'ticket' ? ['activity'] : [])].map(section => <Link key={section} href={href(section)} aria-current={section === view ? 'page' : undefined}>{section === 'messages' ? 'Messages' : section === 'files' ? 'Files' : 'Activity'}</Link>)}</nav>
     <section className="settings-card" aria-label={`${view} history`}>{content}</section>
     <nav className="notification-pagination" aria-label="History pages">{filters.before && <Link className="button button-secondary" href={href(view)}>Latest entries</Link>}{older && <Link className="button button-secondary" href={href(view, older)}>Earlier {view}</Link>}</nav>

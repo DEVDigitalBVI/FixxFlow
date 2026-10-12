@@ -138,7 +138,7 @@ test("switching live chat audience keeps independent drafts", () => {
 const { WorkspaceNav } = load("src/components/navigation/workspace-nav.tsx", {
   "@/features/theme/theme-control": { ThemeControl: () => null },
   "@/features/notifications/notification-link": { NotificationLink: () => null },
-  "next/navigation": { usePathname: () => "/app/tickets" },
+  "next/navigation": { useRouter: () => ({push(){}}), usePathname: () => "/app/tickets" },
   "next/link": { default: props => React.createElement("a", props) },
 });
 test("collapsed navigation retains explicit accessible names and current page", () => {

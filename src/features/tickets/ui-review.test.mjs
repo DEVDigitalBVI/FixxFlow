@@ -5,17 +5,17 @@ import fs from 'node:fs';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-const navMocks={'@/features/theme/theme-control':{ThemeControl:()=>null},'next/navigation':{usePathname:()=>'/app/tickets'},'next/link':{default:props=>React.createElement('a',props)},'@/features/notifications/notification-link':{NotificationLink:()=>React.createElement('a',{href:'/app/notifications'},'Notifications')}};
+const navMocks={'@/features/search/global-search':{GlobalSearch:()=>null},'@/features/theme/theme-control':{ThemeControl:()=>null},'next/navigation':{useRouter:()=>({push(){}}),usePathname:()=>'/app/tickets'},'next/link':{default:props=>React.createElement('a',props)},'@/features/notifications/notification-link':{NotificationLink:()=>React.createElement('a',{href:'/app/notifications'},'Notifications')}};
 test('employee navigation keeps employee labels and excludes staff destinations',()=>{
  const {WorkspaceNav}=load('src/components/navigation/workspace-nav.tsx',navMocks);
  const html=renderToStaticMarkup(React.createElement(WorkspaceNav,{role:'end_user',organizationId:'org',userId:'user'}));
- for(const text of ['Home','My tickets','My chats','Help articles','Account','Security'])assert.ok(html.includes(text));
+ for(const text of ['Home','My requests','My chats','Help articles','Account','Security'])assert.ok(html.includes(text));
  assert.doesNotMatch(html,/href="\/app\/(administration|people)"/);
  assert.match(html,/aria-label="Employee navigation"/);
 });
 test('mobile menu contains a close control, locks background, traps focus and restores state',()=>{
  let effect,cleanup,closed=false,buttonFocused=false,firstFocused=false,lastFocused=false;
- const first={focus:()=>{firstFocused=true;}},last={focus:()=>{lastFocused=true;}};
+ const first={getClientRects:()=>[{}],focus:()=>{firstFocused=true;}},last={getClientRects:()=>[{}],focus:()=>{lastFocused=true;}};
  const main={inert:false},doc={body:{style:{overflow:'auto'}},getElementById:()=>main,activeElement:last};
  const handlers={};const media={matches:false,addEventListener:(key,fn)=>handlers.resize=fn,removeEventListener:()=>{}};
  const win={requestAnimationFrame:fn=>{fn();return 1;},cancelAnimationFrame:()=>{},matchMedia:()=>media,addEventListener:(key,fn)=>handlers[key]=fn,removeEventListener:()=>{}};
@@ -94,7 +94,8 @@ test('desktop navigation does not move focus to the hidden mobile menu button',(
  const tree=WorkspaceNav({role:'technician',organizationId:'org',userId:'user'});
  const panel=tree.props.children[2];
  const nav=React.Children.toArray(panel.props.children).find(child=>child.type==='nav');
- const firstLink=nav.props.children.props.children[0][0].props.children;
+ const list=React.Children.toArray(nav.props.children).find(child=>child.type==='ul');
+ const firstLink=React.Children.toArray(list.props.children)[0].props.children;
  firstLink.props.onClick();
  assert.equal(focused,false);
 });

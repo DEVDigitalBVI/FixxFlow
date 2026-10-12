@@ -1,5 +1,6 @@
 'use client';
 
+import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ActionForm } from '@/components/ui/action-form';
@@ -38,7 +39,7 @@ export function TicketDetailsForm({ ticket, timeZone }: { ticket: TicketDetails;
       <p>The saved ticket may have changed. Your draft is still here.</p>
       <a className="button button-secondary" href={`/app/tickets/${draft.id}#ticket-details`} target="_blank" rel="noopener noreferrer">Review saved details (opens in a new tab)</a>
       <button className="button button-secondary" type="button" onClick={() => {
-        if (window.confirm('Reload the latest ticket details? This discards your unsaved changes on this page.')) window.location.reload();
+        if (confirmDiscardChanges(true)) window.location.reload();
       }}>Reload latest details</button>
     </div>}
     <input type="hidden" name="ticketId" value={draft.id}/>

@@ -31,7 +31,7 @@ test('server markup remains a labeled GET form with a submit button and a polite
   assert.doesNotMatch(html, /disabled|autofocus/i);
 });
 
-function harness(t, initial = '/app/assets?status=repair') {
+function harness(t, initial = '/app/assets?status=repair', confirm = () => true) {
   t.mock.timers.enable({ apis: ['setTimeout'] });
   const hooks = []; let cursor = 0; let effects = []; let href = initial; let pending = false; let summary = '2 matching assets.';
   const calls = [];
@@ -66,7 +66,7 @@ function harness(t, initial = '/app/assets?status=repair') {
     useEffect(fn, deps) { const i = cursor++; if (changed(hooks[i]?.deps, deps)) effects.push(() => { hooks[i]?.cleanup?.(); hooks[i] = { deps, cleanup: fn() }; }); },
     useTransition: () => [pending, fn => { pending = true; fn(); }],
   };
-  const { LiveSearchForm: Form } = load(modulePath, { react, 'next/navigation': {
+  const { LiveSearchForm: Form } = load(modulePath, { react, './unsaved-changes': { confirmDiscardChanges: confirm }, 'next/navigation': {
     useRouter: () => router, usePathname: () => href.split('?')[0], useSearchParams: () => new URLSearchParams(href.split('?')[1]),
   } });
   const render = () => {
@@ -163,4 +163,14 @@ test('whitespace-only changes to the same query do not refetch, but manual retry
   const h = harness(t, '/app/assets?q=12345');
   h.type('12345 '); h.tick(); assert.equal(h.calls.length, 0);
   h.submit(); assert.deepEqual(h.calls, [['refresh']]);
+});
+
+
+test('declining a queue search keeps the ticket draft mounted and restores committed search controls', t => {
+  let allowed = false;
+  const h = harness(t, '/app/assets?q=old', () => allowed);
+  h.type('new'); h.tick();
+  assert.deepEqual(h.calls, []); assert.equal(h.form.values.get('q'), 'old');
+  allowed = true; h.type('new'); h.tick();
+  assert.equal(h.calls.length, 1); assert.match(h.calls[0][1], /q=new/);
 });

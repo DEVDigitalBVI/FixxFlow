@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { GlobalSearch } from '@/features/search/global-search';
 import { NavigationIcon } from "./navigation-icon";
 import { ThemeControl } from "@/features/theme/theme-control";
 import { usePathname } from "next/navigation";
@@ -20,7 +21,7 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     { href: "/app", label: "My workspace", icon: <NavigationIcon name="tickets" />, visible: workspaceAvailable },
   ] : [
     { href: "/app", label: role === "end_user" ? "Home" : "Overview", icon: <NavigationIcon name="overview" />, visible: true },
-    { href: "/app/tickets", label: role === "end_user" ? "My tickets" : "Tickets", icon: <NavigationIcon name="tickets" />, visible: true },
+    { href: "/app/tickets", label: role === "end_user" ? "My requests" : "Tickets", icon: <NavigationIcon name="tickets" />, visible: true },
     { href: "/app/chat", label: role === "end_user" ? "My chats" : "Chats", icon: <NavigationIcon name="chat" />, visible: true },
     { href: "/app/help", label: role === "end_user" ? "Help articles" : "Knowledge base", icon: <NavigationIcon name="knowledge" />, visible: true },
     { href: "/app/inventory", label: role === "end_user" ? "Request an item" : "Inventory", icon: <NavigationIcon name="assets" />, visible: inventoryAccess },
@@ -49,7 +50,7 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     const desktop = window.matchMedia("(min-width: 768px)");
     const onResize = () => { if (desktop.matches) setIsOpen(false); };
     desktop.addEventListener("change", onResize);
-    const focusable = panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled]), select:not([disabled])");
+    const focusable = panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled]), select:not([disabled]), summary");
     const focusFrame = window.requestAnimationFrame(() => focusable?.[0]?.focus());
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -60,7 +61,7 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
       if (event.key !== "Tab" || !focusable?.length) return;
       // Cycle explicitly: Safari can omit links from its native Tab order.
       event.preventDefault();
-      const controls = Array.from(focusable);
+      const controls = Array.from(focusable).filter(control => control.getClientRects().length > 0);
       const current = controls.indexOf(document.activeElement as HTMLElement);
       const next = current < 0
         ? (event.shiftKey ? controls.length - 1 : 0)
@@ -77,6 +78,12 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     };
   }, [isOpen]);
 
+  function links(secondary: boolean) {
+    return items.filter(item => item.visible && (role !== 'end_user' || secondary === !['/app', '/app/tickets', '/app/help'].includes(item.href))).map(item => {
+      const active = item.href === '/app' ? pathname === item.href : pathname.startsWith(item.href) || (item.href === '/app/administration' && pathname.startsWith('/app/organization'));
+      return <li key={item.href} className={item.href === '/app/profile' ? 'nav-account-start' : undefined}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? 'page' : undefined} onClick={closeMenu}>{item.icon}<span>{item.label}</span></Link></li>;
+    });
+  }
   return <>
     <button ref={menuButtonRef} className="mobile-nav-toggle" type="button" aria-controls="workspace-navigation" aria-expanded={isOpen} aria-label={isOpen ? "Close navigation" : "Open navigation"} onClick={() => setIsOpen((open) => !open)}>
       <span aria-hidden="true" />
@@ -84,6 +91,6 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
       <span aria-hidden="true" />
     </button>
     {isOpen && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" tabIndex={-1} onClick={closeMenu} />}
-    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}><ul className="nav-list">{items.filter((item) => item.visible).map((item) => { const active = item.href === "/app" ? pathname === item.href : (pathname.startsWith(item.href) || (item.href === "/app/administration" && pathname.startsWith("/app/organization"))); return <li key={item.href} className={item.href === "/app/profile" ? "nav-account-start" : undefined}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? "page" : undefined} onClick={closeMenu}>{item.icon}<span>{item.label}</span></Link></li>; })}{!platform && <li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu} /></li>}</ul></nav><ThemeControl /></div>
+    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><GlobalSearch role={role} inventoryAccess={inventoryAccess} onOpen={closeMenu} platform={platform} workspaceAvailable={workspaceAvailable}/><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}><ul className="nav-list">{links(false)}{role !== 'end_user' && !platform && <li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li>}</ul>{role === 'end_user' && <details className="employee-more-nav" key={pathname} open={!['/app', '/app/tickets', '/app/help'].some(path => path === '/app' ? pathname === path : pathname.startsWith(path))}><summary className="button button-quiet">Account &amp; more</summary><ul className="nav-list">{links(true)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></details>}</nav><ThemeControl /></div>
   </>;
 }

@@ -1,8 +1,9 @@
+import { RetryButton } from '@/components/ui/retry-button';
 import Link from 'next/link';
 import { duration, topRows, type Report } from './model';
 
 export function ReportUnavailable() {
-  return <div className="alert alert-error" role="alert"><strong>Reporting is temporarily unavailable.</strong><p>Your tickets are still available. Refresh this page to try again.</p><Link className="button button-secondary" href="/app/tickets">Open ticket queue</Link></div>;
+  return <div className="alert alert-error" role="alert"><strong>Reporting is temporarily unavailable.</strong><p>Your tickets are still available. Try loading the report again.</p><RetryButton/><Link className="button button-secondary" href="/app/tickets">Open ticket queue</Link></div>;
 }
 export function TodayMetrics({ report, title = "Tickets today" }: { report: Report | null; title?: string }) {
   const s = report?.summary;

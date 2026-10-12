@@ -4,23 +4,29 @@ import { useEffect, useRef, useState, useTransition, type ReactNode } from "reac
 import { useRouter } from "next/navigation";
 import { FormPendingContext } from "./form-pending";
 import type { ActionResult } from "@/lib/action-result";
+import { useUnsavedChanges } from './unsaved-changes';
 
 /** Keep the mounted controls (including dependent selects) intact on failure. */
-export function ActionForm({ action, children, className, resetOnSuccess = false, id }: {
+export function ActionForm({ action, children, className, resetOnSuccess = false, protectDraft = true, id }: {
   action: (data: FormData) => Promise<ActionResult>;
   children: ReactNode;
   className?: string;
   id?: string;
   resetOnSuccess?: boolean;
+  protectDraft?: boolean;
 }) {
   const [result, setResult] = useState<ActionResult>({});
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const busy = useRef(false);
   const feedback = useRef<HTMLDivElement>(null);
+  const baseline = useRef<string | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const releaseDraft = useUnsavedChanges(dirty && protectDraft);
+  const snapshot = (form: HTMLFormElement) => JSON.stringify(Array.from(new FormData(form)).filter(([name]) => !['submissionKey', 'revision', 'lookupLoadError'].includes(name)));
   useEffect(() => { if (result.error) feedback.current?.focus(); }, [result]);
 
-  return <form id={id} method="post" className={className} aria-busy={pending} onSubmit={event => {
+  return <form id={id} method="post" className={className} aria-busy={pending} onFocusCapture={event => { if (!dirty) baseline.current = snapshot(event.currentTarget); }} onChange={event => { setDirty(protectDraft && (baseline.current === null || baseline.current !== snapshot(event.currentTarget))); }} onSubmit={event => {
     event.preventDefault();
     if (busy.current) return;
     const form = event.currentTarget;
@@ -31,6 +37,7 @@ export function ActionForm({ action, children, className, resetOnSuccess = false
       try {
         const next = await action(data);
         setResult(next);
+        if (next.success || next.redirectTo) { releaseDraft(); setDirty(false); baseline.current = null; }
         if (next.redirectTo) { router.push(next.redirectTo); return; }
         if (next.success && resetOnSuccess) form.reset();
       } catch {

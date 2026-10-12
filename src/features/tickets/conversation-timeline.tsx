@@ -1,4 +1,5 @@
 "use client";
+import { RetryButton } from '@/components/ui/retry-button';
 import { Timestamp } from '@/features/timezones/provider';
 
 import { useRef, useState } from "react";
@@ -14,7 +15,7 @@ export function ConversationTimeline({ messages, names, viewerId, requesterId, s
   const [seen, setSeen] = useState(() => new Set(messages.map(message => message.id)));
   const list = useRef<HTMLOListElement>(null);
   const newCount = messages.filter(message => !seen.has(message.id) && (staff || message.kind === "reply")).length;
-  if (error) return <p className="alert alert-error" role="alert">Conversation could not be loaded. Refresh the page to try again.</p>;
+  if (error) return <p className="alert alert-error" role="alert">Conversation could not be loaded. <RetryButton/></p>;
   const visible = staff ? messages : messages.filter(message => message.kind === "reply");
   if (!visible.length) return <p className="conversation-empty">No messages yet. Replies from IT will appear here.</p>;
   return <><div role="status">{newCount > 0 && <button type="button" className="button button-secondary" onClick={() => { setSeen(new Set(messages.map(message => message.id))); const last = list.current?.lastElementChild?.firstElementChild as HTMLElement | null; last?.focus({ preventScroll: true }); last?.scrollIntoView({ block: "nearest" }); }}>{newCount} new message{newCount === 1 ? "" : "s"} · View latest</button>}</div><ol ref={list} className="ticket-conversation" aria-label="Ticket messages">{visible.map(message => {

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { confirmDiscardChanges, useUnsavedChanges } from '@/components/ui/unsaved-changes';
 import { useRouter } from "next/navigation";
 import { saveArticle } from "@/app/app/help/actions";
 import { ArticleContent } from "./article-content";
@@ -20,12 +21,7 @@ export function ArticleEditor({ article, organizationId, assets: initialAssets, 
   const [uploadMessage, setUploadMessage] = useState(""); const [dirty, setDirty] = useState(false);
   const errorRef = useRef<HTMLParagraphElement>(null);
   const textareas = useRef<(HTMLTextAreaElement | null)[]>([]);
-  useEffect(() => {
-    if (!dirty) return;
-    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [dirty]);
+  const releaseDraft = useUnsavedChanges(dirty);
   const update = (index: number, patch: Partial<ArticleBlock>) => { setDirty(true); setBlocks(items => items.map((item, i) => i === index ? { ...item, ...patch } : item)); };
   const format = (index: number, marker: string) => {
     const area = textareas.current[index]; if (!area) return;
@@ -39,7 +35,7 @@ export function ArticleEditor({ article, organizationId, assets: initialAssets, 
     try {
       const result = await saveArticle(form);
       if (result.error || !result.id) { setError(result.error ?? "Could not save."); requestAnimationFrame(() => errorRef.current?.focus()); }
-      else { setDirty(false); router.push(`/app/help/${result.id}${isNew ? "/edit" : ""}`); router.refresh(); }
+      else { releaseDraft(); setDirty(false); router.push(`/app/help/${result.id}${isNew ? "/edit" : ""}`); router.refresh(); }
     } catch { setError("Could not save. Your work is still here; please retry."); }
     finally { setBusy(false); }
   }
@@ -95,7 +91,7 @@ export function ArticleEditor({ article, organizationId, assets: initialAssets, 
         <button type="button" className="button button-secondary" disabled={blocks.length >= 100} onClick={() => { setDirty(true); setBlocks(items => [...items, { type: "paragraph", text: "" }]); }}>Add content block</button>
       </fieldset>
       <fieldset disabled={busy}><legend>Related articles</legend><p className="muted">Choose up to eight. Readers only see articles they have access to.</p><div className="knowledge-related-options">{related.map(a => <label key={a.id}><input type="checkbox" name="related" value={a.id} defaultChecked={article.related_article_ids.includes(a.id)}/>{a.title}</label>)}</div></fieldset>
-      <div className="knowledge-actions"><button className="button button-primary" disabled={busy || uploading}>{busy ? "Saving…" : isNew ? "Create article" : "Save article"}</button><button type="button" className="button button-secondary" onClick={() => { if (!dirty || window.confirm("Discard unsaved article changes?")) router.push(isNew ? "/app/help" : `/app/help/${article.id}`); }}>Cancel</button></div>
+      <div className="knowledge-actions"><button className="button button-primary" disabled={busy || uploading}>{busy ? "Saving…" : isNew ? "Create article" : "Save article"}</button><button type="button" className="button button-secondary" onClick={() => { if (!dirty || confirmDiscardChanges()) router.push(isNew ? "/app/help" : `/app/help/${article.id}`); }}>Cancel</button></div>
     </form>
     <section className="settings-card"><h2>Images and attachments</h2>{isNew ? <p>Create the article first, then upload files.</p> : <><p>Files added here are available to anyone who can read this article.</p><label className="knowledge-file">Upload a file (up to 6 MB)<input type="file" accept={assetTypes.join(",")} disabled={uploading || busy} onChange={e => { void upload(e.target.files?.[0]); e.target.value=""; }}/></label>{uploadMessage && <p role="status">{uploadMessage}</p>}<ul>{assets.map(a => <li key={a.id}><a href={`/app/help/assets/${a.id}?download=1`}>{a.file_name}</a></li>)}</ul></>}</section>
     <section className="settings-card"><h2>Content preview</h2><ArticleContent content={blocks} images={images}/></section>

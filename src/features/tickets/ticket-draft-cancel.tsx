@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import type { MouseEvent } from 'react';
 import { useContext } from 'react';
 import { FormPendingContext } from '@/components/ui/form-pending';
@@ -13,7 +14,7 @@ export function TicketDraftCancel({ href }: { href: string }) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const form = event.currentTarget.closest('form');
     const hasDraft = ['title', 'description'].some(name => form?.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${name}"]`)?.value.trim());
-    if (hasDraft && !window.confirm('Discard this ticket draft? Your written details will not be saved.')) {
+    if (hasDraft && !confirmDiscardChanges(Boolean(hasDraft))) {
       event.preventDefault();
       event.currentTarget.focus();
     }

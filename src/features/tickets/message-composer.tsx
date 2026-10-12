@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { TicketMessageKind } from "@/types/database";
 import { messageKinds } from "./message-presentation";
+import { useUnsavedChanges } from '@/components/ui/unsaved-changes';
 
 export type MessageResult = { error?: string; success?: string };
 
@@ -21,6 +22,7 @@ export function MessageComposer({ ticketId, action, staff = true }: {
   const requestId = useRef<string | null>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
   const mode = messageKinds[kind];
+  useUnsavedChanges(Boolean(drafts.reply.trim() || drafts.internal_note.trim()));
 
   async function send(formData: FormData) {
     if (inFlight.current) return;

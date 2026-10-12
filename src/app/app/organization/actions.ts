@@ -49,30 +49,40 @@ async function requireAdministrator() {
   return viewer;
 }
 
-export async function addDepartment(formData: FormData) {
-  const viewer = await requireAdministrator();
-  const name = String(formData.get("name") ?? "").trim();
-  const description = String(formData.get("description") ?? "").trim() || null;
-  if (!name || name.length > 100) fail("Enter a valid department name.");
+export async function addDepartment(formData: FormData): Promise<ActionResult> {
+  const viewer = await requireViewer();
+  if (viewer.role !== 'administrator') return { error: 'Only administrators can manage organization settings.' };
+  const name = String(formData.get('name') ?? '').trim();
+  const description = String(formData.get('description') ?? '').trim() || null;
+  if (!name || name.length > 100) return { error: 'Review the department name.', fieldErrors: { name: 'Enter a name between 1 and 100 characters.' } };
+  if ((description?.length ?? 0) > 2000) return { error: 'Review the description.', fieldErrors: { description: 'Keep the description within 2,000 characters.' } };
   const supabase = await createClient();
-  const { error } = await supabase.from("departments").insert({ organization_id: viewer.organizationId, name, description });
-  if (error) fail("The department could not be added. Its name may already exist.");
-  revalidatePath("/app/organization");
+  const { error } = await supabase.from('departments').insert({ organization_id: viewer.organizationId, name, description });
+  if (error?.code === '23505') return { error: 'That department name already exists.', fieldErrors: { name: 'Choose a different name.' } };
+  if (error) return { error: 'The department could not be added. Your entries are preserved; try again.' };
+  revalidatePath('/app/organization');
+  return { success: 'Department added.' };
 }
 
-export async function addLocation(formData: FormData) {
-  const viewer = await requireAdministrator();
-  const name = String(formData.get("name") ?? "").trim();
-  const city = String(formData.get("city") ?? "").trim() || null;
-  const region = String(formData.get("region") ?? "").trim() || null;
-  const countryCode = String(formData.get("countryCode") ?? "").trim().toUpperCase() || null;
-  const timezone = String(formData.get("timezone") ?? viewer.organizationTimezone).trim();
-  if (!name || name.length > 100 || (countryCode && !/^[A-Z]{2}$/.test(countryCode))) fail("Enter valid location details.");
+export async function addLocation(formData: FormData): Promise<ActionResult> {
+  const viewer = await requireViewer();
+  if (viewer.role !== 'administrator') return { error: 'Only administrators can manage organization settings.' };
+  const name = String(formData.get('name') ?? '').trim();
+  const city = String(formData.get('city') ?? '').trim() || null;
+  const region = String(formData.get('region') ?? '').trim() || null;
+  const countryCode = String(formData.get('countryCode') ?? '').trim().toUpperCase() || null;
+  const timezone = String(formData.get('timezone') ?? viewer.organizationTimezone).trim();
+  const fieldErrors: Record<string, string> = {};
+  if (!name || name.length > 100) fieldErrors.name = 'Enter a name between 1 and 100 characters.';
+  if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) fieldErrors.countryCode = 'Use a two-letter country code.';
+  if (!validTimezone(timezone)) fieldErrors.timezone = 'Enter a named timezone, such as America/Tortola.';
+  if (Object.keys(fieldErrors).length) return { error: 'Review the location details.', fieldErrors };
   const supabase = await createClient();
-  if (!validTimezone(timezone)) redirect("/app/organization?error=Enter a valid named timezone.");
-  const { error } = await supabase.from("locations").insert({ organization_id: viewer.organizationId, name, city, region, country_code: countryCode, timezone });
-  if (error) fail("The location could not be added. Its name may already exist.");
-  revalidatePath("/app/organization");
+  const { error } = await supabase.from('locations').insert({ organization_id: viewer.organizationId, name, city, region, country_code: countryCode, timezone });
+  if (error?.code === '23505') return { error: 'That location name already exists.', fieldErrors: { name: 'Choose a different name.' } };
+  if (error) return { error: 'The location could not be added. Your entries are preserved; try again.' };
+  revalidatePath('/app/organization');
+  return { success: 'Location added.' };
 }
 
 export async function toggleDepartment(formData: FormData) {

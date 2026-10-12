@@ -1,4 +1,5 @@
 'use client';
+import { useUnsavedChanges, confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import { automationSafetyLimits } from './limits';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -32,13 +33,7 @@ export function AutomationBuilder({initial,initialLabels={},draft,template,impor
   const dirty=JSON.stringify(definition)!==saved;
   const choices=useCallback((rows:Choice[])=>setLabels(previous=>({...previous,...Object.fromEntries(rows.map(row=>[row.id,row.label]))})),[]);
   useLayoutEffect(()=>{if(focus.current){document.getElementById(focus.current)?.focus();focus.current=null;}},[definition]);
-  useEffect(()=>{
-    if(!dirty)return;
-    const unload=(event:BeforeUnloadEvent)=>event.preventDefault();
-    const navigate=(event:MouseEvent)=>{const link=event.target instanceof Element?event.target.closest<HTMLAnchorElement>('a[href]'):null;if(link && link.target!=='_blank' && !event.metaKey && !event.ctrlKey && !link.hash && !window.confirm('Discard unsaved automation changes?'))event.preventDefault();};
-    window.addEventListener('beforeunload',unload);document.addEventListener('click',navigate,true);
-    return()=>{window.removeEventListener('beforeunload',unload);document.removeEventListener('click',navigate,true);};
-  },[dirty]);
+  const releaseDraft = useUnsavedChanges(dirty);
   const change=(value:AutomationDefinition)=>{setDefinition(value);setIssues([]);};
   const editCondition=(index:number,value:AutomationCondition)=>change({...definition,conditions:{...definition.conditions,children:definition.conditions.children.map((item,i)=>i===index?value:item)}});
   const editAction=(index:number,value:AutomationAction)=>change({...definition,actions:definition.actions.map((item,i)=>i===index?value:item)});
@@ -47,13 +42,14 @@ export function AutomationBuilder({initial,initialLabels={},draft,template,impor
   const review=validateDefinition(definition,persistenceRegistry);
   const needsSetup=(path:string)=>Boolean(template&&!review.valid&&review.issues.some(issue=>issue.path===path||issue.path.startsWith(`${path}.`)));
   return <div ref={root} className="stack automation-builder">
-    {onChooseTemplate&&<div><button type="button" className="button button-quiet" onClick={()=>{if(!dirty||window.confirm('Discard unsaved automation changes?'))onChooseTemplate();}}>{imported?'← Back to import review':'← Choose another starting point'}</button></div>}
+    {onChooseTemplate&&<div><button type="button" className="button button-quiet" onClick={()=>{if(!dirty||confirmDiscardChanges())onChooseTemplate();}}>{imported?'← Back to import review':'← Choose another starting point'}</button></div>}
     {template&&<aside className="alert alert-info"><strong>Starting from {template.name}.</strong> {template.guidance} Customize this draft before saving. Nothing is enabled.</aside>}
-    <ActionForm className="stack" action={async()=>{
+    <ActionForm protectDraft={false} className="stack" action={async()=>{
       const valid=validateDefinition(definition,persistenceRegistry);
       if(!valid.valid){setIssues(valid.issues);return {};}
       const result=await saveAutomationDraft(identity?.id??null,identity?.version??null,valid.value);
       if(!result.ok){setIssues(result.error.issues??[]);return {error:result.error.code==='conflict'?'Another administrator changed this automation. Your draft is preserved. Open the saved version in a new tab to compare before reloading.':result.error.message};}
+      releaseDraft();
       setIdentity({id:result.value.rule.id,version:result.value.rule.version});setSaved(JSON.stringify(result.value.rule.definition));setDefinition(result.value.rule.definition);setIssues([]);
       if(!identity)router.replace(`${automationPath}/${result.value.rule.id}?saved=${imported?'imported':'disabled'}`);
       return {success:identity?'Changes saved. Rule enablement was not changed.':imported?'Automation imported as disabled. Review and test it before enabling.':'Automation saved as disabled. It will not run until enabled. Global processing must also be active.'};
@@ -85,7 +81,7 @@ export function AutomationBuilder({initial,initialLabels={},draft,template,impor
         {issues.some(issue=>issue.path==='actions')&&messages('actions','actions-error')}<button id="add-action" type="button" className="button button-secondary" disabled={definition.actions.length>=automationSafetyLimits.structural.actions} onClick={()=>{const item=newAction(crypto.randomUUID(),definition.actions.length);focus.current=`action-${item.id}`;change({...definition,actions:[...definition.actions,item]});}}>+ Add action</button>
       </section>
       <section className="settings-card stack" aria-labelledby="automation-review-heading"><h2 id="automation-review-heading">Review</h2><p className="automation-summary">{automationSummary(definition,labels)}</p><p className="muted">{review.valid?'Ready to test and save.':'Complete the selections above before saving or testing.'} Saving does not enable a new rule.</p></section>
-      <div className="automation-inline"><SubmitButton className="button button-primary">{identity?'Save changes':'Save as disabled'}</SubmitButton><button className="button button-secondary" type="button" onClick={()=>setTesting(true)}>Test Automation</button><button className="button button-quiet" type="button" onClick={()=>{if(!dirty||window.confirm('Discard unsaved automation changes?'))router.push(automationPath);}}>Cancel</button><span className="muted">{dirty?'Unsaved changes':identity?`Saved · version ${identity.version}`:'New automation · disabled'}</span></div>
+      <div className="automation-inline"><SubmitButton className="button button-primary">{identity?'Save changes':'Save as disabled'}</SubmitButton><button className="button button-secondary" type="button" onClick={()=>setTesting(true)}>Test Automation</button><button className="button button-quiet" type="button" onClick={()=>{if(!dirty||confirmDiscardChanges())router.push(automationPath);}}>Cancel</button><span className="muted">{dirty?'Unsaved changes':identity?`Saved · version ${identity.version}`:'New automation · disabled'}</span></div>
     </ActionForm>
     {identity&&<a className="button button-quiet" href={`${automationPath}/${identity.id}`} target="_blank" rel="noreferrer">View saved version in a new tab</a>}
     <p className="sr-only" aria-live="polite" aria-atomic="true">{announcement}</p>

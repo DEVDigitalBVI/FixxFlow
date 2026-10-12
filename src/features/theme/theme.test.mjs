@@ -83,7 +83,7 @@ test('signed-in navigation exposes appearance after notifications for every role
   const { ThemeControl } = load('src/features/theme/theme-control.tsx', { './theme': theme });
   const { WorkspaceNav } = load('src/components/navigation/workspace-nav.tsx', {
     '@/features/theme/theme-control': { ThemeControl },
-    'next/navigation': { usePathname: () => '/app' },
+    'next/navigation': { useRouter: () => ({push(){}}), usePathname: () => '/app' },
     'next/link': { default: props => React.createElement('a', props) },
     '@/features/notifications/notification-link': { NotificationLink: () => React.createElement('a', { href: '/app/notifications' }, 'Notifications') },
   });

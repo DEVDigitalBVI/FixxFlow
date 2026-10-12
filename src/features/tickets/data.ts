@@ -8,7 +8,7 @@ import { ticketPriorities, ticketStatuses } from './presentation';
 import { normalizeQueueFilters } from './queue-filters';
 import { pageNumber } from '@/lib/pagination';
 
-export type TicketQueueFilters = { page?: string; kind?: string; view?: string; team?: string; status?: string; priority?: string; q?: string; sort?: string; overdue?: string; sla?: string; success?: string; error?: string };
+export type TicketQueueFilters = { ticket?: string; page?: string; kind?: string; view?: string; team?: string; status?: string; priority?: string; q?: string; sort?: string; overdue?: string; sla?: string; success?: string; error?: string };
 const active: TicketStatus[] = ["new", "open", "in_progress", "waiting_on_user", "on_hold"];
 
 export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilters) {
