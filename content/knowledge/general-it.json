@@ -2283,7 +2283,2977 @@
         "onedrive-sync",
         "email"
       ]
+    },
+    {
+      "key": "fixxflow-start",
+      "category": "Accounts",
+      "title": "FixxFlow: get started and find the right feature",
+      "summary": "For everyone. Learn where to request help, manage work, and find feature instructions.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/components/navigation/workspace-nav.tsx",
+        "src/app/app/page.tsx",
+        "PLATFORM_ARCHITECTURE.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Learn where to request help, manage work, and find feature instructions. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Check your workspace"
+        },
+        {
+          "type": "paragraph",
+          "text": "Sign in using your work account. Confirm that the organization shown is yours. Employees see Home and their own requests, chats, and equipment; technicians and administrators see the support workspace. An invitation or an existing account is not permission to access another organization."
+        },
+        {
+          "type": "heading",
+          "text": "2. Choose the task"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Open a ticket or Submit a request for an issue that needs tracking. Use Start a chat for a conversation, Help articles for self-service, and My equipment for assigned devices. Request an item appears when inventory access has been granted."
+        },
+        {
+          "type": "heading",
+          "text": "3. Find staff and administrator tools"
+        },
+        {
+          "type": "paragraph",
+          "text": "Technicians use Ticket queue, Chats, Assets, People, Knowledge base, and Reports. Administrators also use Administration for workspace settings, access, routing, audit, and automations. Inventory management is a separate permission, including for administrators."
+        },
+        {
+          "type": "heading",
+          "text": "4. Find a how-to"
+        },
+        {
+          "type": "paragraph",
+          "text": "Search the knowledge base for FixxFlow followed by the task, such as bulk, inventory, or automation. Follow Related articles at the end of each guide. Platform-owner guides describe a separate console; customer administrator access does not grant owner access."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "You can identify your workspace and open the feature that matches your task. These guides describe existing permissions; reading a guide does not grant access."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If the organization or available access looks wrong, contact your workspace administrator. For a sign-in problem, use the existing password-reset and authenticator guides. Do not create a second organization to work around missing access."
+        }
+      ],
+      "related": [
+        "fixxflow-account",
+        "fixxflow-find",
+        "fixxflow-chat",
+        "fixxflow-help",
+        "fixxflow-queue",
+        "fixxflow-admin",
+        "fixxflow-platform",
+        "fixxflow-recovery"
+      ]
+    },
+    {
+      "key": "fixxflow-account",
+      "category": "Accounts",
+      "title": "FixxFlow: update your profile, timezone, and appearance",
+      "summary": "For everyone. Keep contact details current and choose how FixxFlow looks and displays time.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/app/app/profile/page.tsx",
+        "src/features/timezones/settings-form.tsx",
+        "src/features/theme/theme-control.tsx",
+        "src/app/app/security/page.tsx"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Keep contact details current and choose how FixxFlow looks and displays time. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open your account"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Profile in the staff workspace or Account in the employee navigation. Update your display name, job title, phone, department, and location, then choose Save profile. The email field is managed by sign-in settings and is not editable here."
+        },
+        {
+          "type": "heading",
+          "text": "2. Add a profile photo"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose a JPG, PNG, or WebP image up to 5 MB in Profile photo. Wait for the upload result. If it fails, choose the file again; a photo is optional."
+        },
+        {
+          "type": "heading",
+          "text": "3. Choose your timezone"
+        },
+        {
+          "type": "paragraph",
+          "text": "In Timezone, keep the device-based setting or choose your preferred timezone and save that setting. Ticket, chat, and activity times use your display preference. Reports use the organization timezone; changing your preference does not move saved deadlines."
+        },
+        {
+          "type": "heading",
+          "text": "4. Set appearance and optional sharing"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose System, Light, or Dark under Appearance; the choice applies immediately and is remembered on this browser. Under Help improve FixxFlow, choose whether to Share product usage counts and select Save usage preference. Sharing is off by default and separate from organization reports and audit history."
+        },
+        {
+          "type": "heading",
+          "text": "5. Protect your sign-in"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Security to manage Multi-factor authentication. Follow Set up an authenticator for FixxFlow before adding a factor, and verify a backup factor before removing a primary one. Use the password-reset guide if you cannot sign in; Profile does not directly edit your sign-in email or reset your password."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Your saved contact details appear when you reopen Profile. Confirm the displayed timezone and selected appearance. Optional sharing changes future collection; previously combined counts cannot be removed per person."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If a department or location is missing, ask an administrator to check its availability. If saving fails, keep the form open, correct the reported field, and retry."
+        }
+      ],
+      "related": [
+        "fixxflow-notifications",
+        "fixxflow-find",
+        "fixxflow-recovery",
+        "password",
+        "authenticator"
+      ]
+    },
+    {
+      "key": "fixxflow-find",
+      "category": "Software",
+      "title": "FixxFlow: search the workspace and navigate with the keyboard",
+      "summary": "For everyone. Find permitted tickets, articles, people, and navigation destinations.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/features/search/global-search.tsx",
+        "src/features/search/service.ts",
+        "SEARCH.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Find permitted tickets, articles, people, and navigation destinations. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open Search"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Search in navigation, or press Command+K on Mac or Ctrl+K on other keyboards. On a small screen, open navigation first if you want to use the Search button."
+        },
+        {
+          "type": "heading",
+          "text": "2. Search for the task or record"
+        },
+        {
+          "type": "paragraph",
+          "text": "Type a few useful words. Results are grouped as Navigation, Tickets, People, and Articles. Employee searches omit People and restrict tickets to the requester; permissions still apply when opening any result. Platform Search finds console destinations rather than customer records."
+        },
+        {
+          "type": "heading",
+          "text": "3. Open a result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the Up and Down arrow keys to choose a result, then Enter to open it. Escape or Close search closes the dialog. Normal links can also be opened in a separate tab using your browser shortcut."
+        },
+        {
+          "type": "heading",
+          "text": "4. Broaden or recover a search"
+        },
+        {
+          "type": "paragraph",
+          "text": "Only a small set of workspace matches is shown. Open the relevant feature for its full search and pagination. If workspace results fail, navigation remains available; choose Retry search. For an exact ticket number, use the ticket queue search with a leading #, such as #123."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The result opens in the correct feature, and closing search returns focus to an available navigation control. Search never makes otherwise restricted records accessible."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If you cannot find a record, remove extra words, check feature filters, and confirm that you are in the correct organization. Ask the record owner or administrator about access rather than sharing someone else’s account."
+        }
+      ],
+      "related": [
+        "fixxflow-queue",
+        "fixxflow-help",
+        "fixxflow-account"
+      ]
+    },
+    {
+      "key": "fixxflow-notifications",
+      "category": "Accounts",
+      "title": "FixxFlow: read and manage ticket and chat notifications",
+      "summary": "For everyone. Find updates, open the relevant conversation, and mark notifications read.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/app/app/notifications/page.tsx",
+        "src/features/notifications/read-button.tsx",
+        "docs/resend-email.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Find updates, open the relevant conversation, and mark notifications read. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open your updates"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Notifications from navigation. All updates shows read and unread items; Unread shows items still needing attention. Each item names its update type, time, and read state."
+        },
+        {
+          "type": "heading",
+          "text": "2. Follow the update"
+        },
+        {
+          "type": "paragraph",
+          "text": "Select the notification title to open the ticket or chat. Read the current conversation before replying; the underlying record may have changed since the notification was created."
+        },
+        {
+          "type": "heading",
+          "text": "3. Clear the unread state"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the read control for one notification or the page’s mark-all control. This changes your notification read state, not the ticket status. Use Older and Newer to browse other pages."
+        },
+        {
+          "type": "heading",
+          "text": "4. Handle email separately"
+        },
+        {
+          "type": "paragraph",
+          "text": "In-app notifications and email delivery are separate. Missing email does not mean an in-app update is absent. Read or reply inside FixxFlow; replies to notification email go to the support inbox and are not automatically appended to the ticket."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The item is marked Read and leaves the Unread view after the page updates. The ticket or chat remains accessible through its normal feature."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Try again if the list fails to load. If an expected email is missing, check junk mail and ask IT to investigate delivery; avoid repeatedly requesting the same notification."
+        }
+      ],
+      "related": [
+        "fixxflow-email",
+        "fixxflow-chat",
+        "fixxflow-ticket-files"
+      ]
+    },
+    {
+      "key": "fixxflow-chat",
+      "category": "Accounts",
+      "title": "FixxFlow: start a support chat and continue the conversation",
+      "summary": "For everyone. Ask IT a question, share evidence, and return to the same chat later.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/app/app/chat/page.tsx",
+        "src/features/chat/chat-room.tsx",
+        "src/app/app/chat/[conversationId]/page.tsx"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Ask IT a question, share evidence, and return to the same chat later. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Start the conversation"
+        },
+        {
+          "type": "paragraph",
+          "text": "From Home choose Start a chat, or open My chats/Chats and use the creation action. Enter a clear topic and first message, then submit. Chat replies may not be immediate."
+        },
+        {
+          "type": "heading",
+          "text": "2. Write and send messages"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the conversation and use the message box. Enter adds a new line; use the send button to submit. Keep related updates in the same conversation. Employees send public messages; staff must check whether Reply or Internal note is selected."
+        },
+        {
+          "type": "heading",
+          "text": "3. Add evidence and watch connection state"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the attachment control for a supported nonempty image, PDF, text, Word, or Excel file up to 10 MB. Remove unrelated private details first. Live or Reconnecting describes connection state; another participant being online does not guarantee that they have read your message."
+        },
+        {
+          "type": "heading",
+          "text": "4. Return or find earlier messages"
+        },
+        {
+          "type": "paragraph",
+          "text": "Reopen the chat from My chats/Chats. Browse earlier messages opens history in a separate tab so your draft stays mounted. If staff link a ticket, use View linked ticket to continue tracking the work there. A closed conversation cannot accept new messages."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Your message appears in the conversation and the composer reports success. An upload must appear in the file list before you rely on it."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If sending cannot be confirmed, keep the draft and inspect the conversation before retrying. For urgent incidents, also use your workplace’s established contact method. Ask IT about a closed conversation that needs further work."
+        }
+      ],
+      "related": [
+        "fixxflow-chat-manage",
+        "fixxflow-ticket-files",
+        "fixxflow-notifications",
+        "fixxflow-recovery"
+      ]
+    },
+    {
+      "key": "fixxflow-ticket-files",
+      "category": "Accounts",
+      "title": "FixxFlow: add ticket attachments and browse earlier history",
+      "summary": "For everyone. Share useful evidence and find older messages without losing a draft.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/features/tickets/attachment-upload.tsx",
+        "src/features/tickets/ticket-detail.tsx",
+        "src/app/app/tickets/[ticketId]/history/page.tsx"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Share useful evidence and find older messages without losing a draft. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open the saved ticket"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open My requests/My tickets as an employee, or Ticket queue as staff, then select the ticket. Submit the initial request before adding files; attachments are added from the saved ticket."
+        },
+        {
+          "type": "heading",
+          "text": "2. Upload one useful file"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Add attachment and select a supported nonempty image, PDF, text, Word, or Excel file up to 10 MB. Wait for Attachment added and check the file list. Remove passwords, reset links, and unrelated personal details from evidence."
+        },
+        {
+          "type": "heading",
+          "text": "3. Find older records"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Browse earlier messages for older conversation pages. Staff can also use Browse all activity for ticket changes. History pages separate messages, files, and staff-only activity; use the available paging controls."
+        },
+        {
+          "type": "heading",
+          "text": "4. Keep your draft safe"
+        },
+        {
+          "type": "paragraph",
+          "text": "Conversation history links open in a new tab. Leave the original ticket tab open while reviewing earlier messages. If an upload response is uncertain, refresh or inspect the file list before selecting the same file again."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The attachment is listed on the correct ticket. History shows the older page requested, while the original composer retains its unsent text."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If a file is rejected, check its type and size. If the file list or history fails, use its retry control. Report the ticket number and error text to IT without sending account secrets."
+        }
+      ],
+      "related": [
+        "fixxflow-my-equipment",
+        "fixxflow-messages",
+        "fixxflow-recovery"
+      ]
+    },
+    {
+      "key": "fixxflow-my-equipment",
+      "category": "Hardware",
+      "title": "FixxFlow: view your equipment and request help for a device",
+      "summary": "For employees. Find assigned equipment and create a request linked to the right asset.",
+      "reviewedOn": "2026-10-12",
+      "audience": "employees",
+      "sourcePaths": [
+        "src/app/app/assets/page.tsx",
+        "src/app/app/assets/[assetId]/page.tsx",
+        "PLATFORM_ARCHITECTURE.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For employees. Find assigned equipment and create a request linked to the right asset. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open My equipment"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use My equipment in employee navigation. This list contains equipment assigned to your active account, not every item in the organization."
+        },
+        {
+          "type": "heading",
+          "text": "2. Identify the device"
+        },
+        {
+          "type": "paragraph",
+          "text": "Search or open an item and compare its asset tag, serial number, model, and location with the physical device. Include the tag when discussing the issue with IT."
+        },
+        {
+          "type": "heading",
+          "text": "3. Start a device request"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the request action from the equipment detail page. Describe the symptom and impact, then submit. FixxFlow links the saved ticket to that asset and uses the asset’s recorded location."
+        },
+        {
+          "type": "heading",
+          "text": "4. Follow the request"
+        },
+        {
+          "type": "paragraph",
+          "text": "Keep the ticket number and return through My requests/My tickets. Add updates or screenshots to that ticket instead of creating repeated requests for the same issue."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The saved request references the intended equipment. Your equipment list continues to show devices assigned to you; requesting support does not change ownership or lifecycle."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If a device is missing or its assignment is wrong, ask IT to correct the asset record. For a lost or stolen device, follow your workplace security process promptly as well as recording a request."
+        }
+      ],
+      "related": [
+        "fixxflow-inventory-request",
+        "fixxflow-ticket-files",
+        "fixxflow-notifications"
+      ]
+    },
+    {
+      "key": "fixxflow-inventory-request",
+      "category": "Hardware",
+      "title": "FixxFlow: request department equipment or supplies",
+      "summary": "For authorized inventory requesters. Request an item for an approved department and track fulfillment in a ticket.",
+      "reviewedOn": "2026-10-12",
+      "audience": "authorized inventory requesters",
+      "sourcePaths": [
+        "src/features/inventory/forms.tsx",
+        "src/app/app/inventory/page.tsx",
+        "docs/inventory.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For authorized inventory requesters. Request an item for an approved department and track fulfillment in a ticket. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Choose the department and item"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Request an item/Inventory and choose a department you are authorized to request for. Open the required item and review available stock. Inventory access is separate from your Employee, Technician, or Administrator role."
+        },
+        {
+          "type": "heading",
+          "text": "2. Describe the handover"
+        },
+        {
+          "type": "paragraph",
+          "text": "Enter Quantity, an Intended employee if appropriate, and Recipient or destination details. Add a reason; consumable requests can optionally identify a printer. Equipment requests are limited to 100 units. The requester and intended recipient can be different people."
+        },
+        {
+          "type": "heading",
+          "text": "3. Submit and follow the ticket"
+        },
+        {
+          "type": "paragraph",
+          "text": "Select Submit inventory request. Submission creates a linked ticket but does not reserve stock. Use My request history or the Inventory requests filter in Tickets to check progress and answer questions in the public conversation."
+        },
+        {
+          "type": "heading",
+          "text": "4. Understand the outcome"
+        },
+        {
+          "type": "paragraph",
+          "text": "Approved means the full quantity is reserved; Issued means handover was recorded. More information needed, Declined, and Cancelled have separate meanings from the ordinary ticket status. Issued, declined, or cancelled requests require a new request if more supplies are needed."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "One ticket and an inventory fulfillment record appear for the requested item, quantity, department, and destination. Availability can change before approval."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If no departments or items appear, ask an administrator to check your request grants and stock setup. If submission is uncertain, inspect request history before trying again."
+        }
+      ],
+      "related": [
+        "fixxflow-fulfill",
+        "fixxflow-my-equipment",
+        "fixxflow-ticket-files"
+      ]
+    },
+    {
+      "key": "fixxflow-help",
+      "category": "Software",
+      "title": "FixxFlow: find help articles and give useful feedback",
+      "summary": "For everyone. Browse topics, search guides, and tell IT whether an answer helped.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/app/app/help/page.tsx",
+        "src/app/app/help/[articleId]/page.tsx",
+        "src/features/knowledge/article-feedback.tsx"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Browse topics, search guides, and tell IT whether an answer helped. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Browse or search"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Help articles/Knowledge base. Choose a topic or search with a few distinctive words. Clear the search or category to broaden results, and use pagination to see more guides."
+        },
+        {
+          "type": "heading",
+          "text": "2. Follow the article"
+        },
+        {
+          "type": "paragraph",
+          "text": "Read the audience and scope before following the steps. Use On this page to jump to a section and Related articles for the next task. Feature guides whose titles begin FixxFlow describe the product; administrator and owner steps require those roles."
+        },
+        {
+          "type": "heading",
+          "text": "3. Use files and feedback"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open relevant article attachments only when expected. Choose the helpful/not-helpful feedback control after trying the guide. Your current vote can be changed; feedback is not a support request or a chat message."
+        },
+        {
+          "type": "heading",
+          "text": "4. Ask for support when needed"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Submit a request if the guide does not solve the issue. Include the guide title and the step that failed. Ticket intake may suggest related guides; suggestions are optional and do not prevent submission."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "You find a guide that matches the task and can tell whether the expected result occurred. Employees only see published articles they can access."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If a guide is outdated, tell IT which article and step needs correction. If a download or article becomes unavailable, ask staff to check publication and access rather than reusing an old file link."
+        }
+      ],
+      "related": [
+        "fixxflow-kb-author",
+        "fixxflow-kb-maintain",
+        "fixxflow-start"
+      ]
+    },
+    {
+      "key": "fixxflow-queue",
+      "category": "Software",
+      "title": "FixxFlow: triage tickets with queue views, filters, and detail panels",
+      "summary": "For technicians and administrators. Prioritize support work while keeping your place in the ticket queue.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/app/app/tickets/page.tsx",
+        "src/features/tickets/queue-context.tsx",
+        "SEARCH.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Prioritize support work while keeping your place in the ticket queue. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Choose the working view"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Ticket queue. Use the personal, unassigned, team, or all-ticket view for the work you need. All tickets includes resolved and closed history unless a status filter narrows it."
+        },
+        {
+          "type": "heading",
+          "text": "2. Narrow and sort the list"
+        },
+        {
+          "type": "paragraph",
+          "text": "Search by subject, person, or ticket number; prefix a number with # for exact lookup. Open Filters to choose status, priority, team, sort, Manual date overdue, or SLA breached. Manual due dates and SLA deadlines are different clocks."
+        },
+        {
+          "type": "heading",
+          "text": "3. Open contextual details"
+        },
+        {
+          "type": "paragraph",
+          "text": "On a suitable wide screen, open a ticket from the queue to use its detail panel. Open full ticket is available for deeper work; compact screens use the full detail route. Close the panel or return to the queue to resume your filters, scroll position, and page selections."
+        },
+        {
+          "type": "heading",
+          "text": "4. Recover an empty result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Remove an applied filter or choose Clear filters to broaden the queue. Use pagination for other results. A queue failure needs retry, not a conclusion that no tickets exist."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The queue shows the intended view and sort. Opening and closing ticket details keeps the queue context, and unsaved edits must be addressed before leaving."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If an expected ticket is missing, check All tickets, active filters, and organization membership. Share the ticket reference with an administrator if visibility remains incorrect."
+        }
+      ],
+      "related": [
+        "fixxflow-ticket-details",
+        "fixxflow-messages",
+        "fixxflow-bulk",
+        "fixxflow-chat-manage",
+        "fixxflow-assets",
+        "fixxflow-reports",
+        "fixxflow-sla",
+        "fixxflow-recovery"
+      ]
+    },
+    {
+      "key": "fixxflow-ticket-details",
+      "category": "Software",
+      "title": "FixxFlow: assign, classify, resolve, or reopen a ticket",
+      "summary": "For technicians and administrators. Update ticket ownership and status without overwriting another person’s work.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/features/tickets/ticket-details-form.tsx",
+        "src/features/tickets/ticket-detail.tsx",
+        "src/features/tickets/presentation.ts"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Update ticket ownership and status without overwriting another person’s work. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Review the context"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the ticket and read its description, public conversation, internal notes, linked assets/chat, service levels, and recent activity. Confirm that the ticket is in the correct workspace."
+        },
+        {
+          "type": "heading",
+          "text": "2. Edit Ticket details"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Status, Priority, Technician, Team, Category, Subcategory, Location, or the manual due date as needed, then select Save changes. Search reference pickers when a choice is not on the current page. Changing category can clear an incompatible subcategory."
+        },
+        {
+          "type": "heading",
+          "text": "3. Use status deliberately"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the available status that matches the actual work, such as waiting on the requester or on hold. Explain resolutions in a public reply so the requester knows the outcome. Reopening returns a resolved/closed ticket to active work; it does not restart its original SLA clock."
+        },
+        {
+          "type": "heading",
+          "text": "4. Handle a concurrent edit"
+        },
+        {
+          "type": "paragraph",
+          "text": "If the saved ticket changed, your draft stays visible. Use Review saved details in a separate tab, compare changes, and coordinate with the other worker. Reload latest details discards the local draft after confirmation; do not repeatedly submit a stale version."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The saved values appear on the ticket and meaningful changes appear in Activity. A successful save is required; changing a select alone does not save the ticket."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If a reference is inactive or missing, ask an administrator to review configuration. Preserve the draft and report a persistent conflict or failure with the ticket number."
+        }
+      ],
+      "related": [
+        "fixxflow-messages",
+        "fixxflow-sla",
+        "fixxflow-audit",
+        "fixxflow-recovery",
+        "fixxflow-new-ticket"
+      ]
+    },
+    {
+      "key": "fixxflow-messages",
+      "category": "Software",
+      "title": "FixxFlow: send public replies and keep internal notes separate",
+      "summary": "For technicians and administrators. Choose the correct audience before posting ticket or chat messages.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/features/tickets/message-composer.tsx",
+        "src/features/chat/chat-room.tsx",
+        "src/features/tickets/presentation.ts"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Choose the correct audience before posting ticket or chat messages. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Choose the audience"
+        },
+        {
+          "type": "paragraph",
+          "text": "In the composer, select the public reply mode for information the requester should see, or Internal note for staff-only troubleshooting. Read the audience text beside the composer before typing or sending."
+        },
+        {
+          "type": "heading",
+          "text": "2. Keep useful context"
+        },
+        {
+          "type": "paragraph",
+          "text": "Write the next action, result, or clear question. Internal notes are for staff context, not passwords or tokens. Ticket and chat attachments are not a substitute for a private note; do not assume an attachment is staff-only."
+        },
+        {
+          "type": "heading",
+          "text": "3. Send explicitly"
+        },
+        {
+          "type": "paragraph",
+          "text": "Enter adds a new line. Use the reply or note send button to post. Switching message type keeps separate drafts, so check the selected mode again before sending."
+        },
+        {
+          "type": "heading",
+          "text": "4. Verify before retrying"
+        },
+        {
+          "type": "paragraph",
+          "text": "Wait for success and inspect the posted message. If a network error leaves the result uncertain, keep your draft and check the conversation before retrying. Cancel a navigation prompt to retain unfinished work."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The message appears with the intended public or internal label. A public staff reply can satisfy first-response timing; an internal note cannot."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If sensitive information was posted to the wrong audience, contact your administrator promptly. Do not assume switching the composer mode changes a message already sent."
+        }
+      ],
+      "related": [
+        "fixxflow-ticket-files",
+        "fixxflow-chat-manage",
+        "fixxflow-sla",
+        "fixxflow-recovery"
+      ]
+    },
+    {
+      "key": "fixxflow-bulk",
+      "category": "Software",
+      "title": "FixxFlow: change multiple tickets from the queue",
+      "summary": "For technicians and administrators. Apply one status, priority, or assignment change to selected tickets.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/app/app/tickets/page.tsx",
+        "src/app/app/tickets/actions.ts",
+        "src/features/tickets/bulk-select-all.tsx"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Apply one status, priority, or assignment change to selected tickets. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Filter before selecting"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Ticket queue and narrow the result set. Inspect the subjects and ticket numbers before selecting rows."
+        },
+        {
+          "type": "heading",
+          "text": "2. Select the current page"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check individual tickets or use Select page. The selection count reveals how many rows the bulk tools will affect. Select page does not mean every ticket matching the search across all pages."
+        },
+        {
+          "type": "heading",
+          "text": "3. Choose one operation"
+        },
+        {
+          "type": "paragraph",
+          "text": "In the bulk tools, select the required status, priority, or assignment and use the corresponding action button. Check that the selected value and ticket count match the intended change."
+        },
+        {
+          "type": "heading",
+          "text": "4. Review the response"
+        },
+        {
+          "type": "paragraph",
+          "text": "Wait for the result and check the changed tickets. Clear the selection before starting a different batch. If a batch reports failure or uncertain completion, inspect the records before repeating the operation."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The intended tickets show the new saved value and their activity reflects meaningful changes. Unselected tickets were not part of the batch."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ask an administrator about repeated authorization or stale-record failures. For a mistaken batch, review each ticket’s history and coordinate corrective changes rather than applying a blind reversal."
+        }
+      ],
+      "related": [
+        "fixxflow-queue",
+        "fixxflow-ticket-details",
+        "fixxflow-audit"
+      ]
+    },
+    {
+      "key": "fixxflow-chat-manage",
+      "category": "Software",
+      "title": "FixxFlow: assign chats, link tickets, and close conversations",
+      "summary": "For technicians and administrators. Turn a support conversation into tracked work without losing its history.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/app/app/chat/[conversationId]/page.tsx",
+        "src/app/app/chat/actions.ts"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Turn a support conversation into tracked work without losing its history. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open and assign the chat"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Chats and select the conversation. In Conversation tools, choose Assigned technician and Save assignment. Read the history before taking ownership."
+        },
+        {
+          "type": "heading",
+          "text": "2. Create or link the ticket"
+        },
+        {
+          "type": "paragraph",
+          "text": "If no ticket is linked, choose Create ticket from chat for new work, or choose an available existing ticket and select Link ticket. Check the ticket number and subject before linking."
+        },
+        {
+          "type": "heading",
+          "text": "3. Continue with the linked record"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use View linked ticket. The ticket presents linked chat history so the earlier discussion remains available. Linking is not permission to expose internal notes to the employee."
+        },
+        {
+          "type": "heading",
+          "text": "4. Close when the conversation is finished"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Close conversation when no more chat messages are needed. A closed chat does not accept further messages; ticket status and chat status are separate, so update the ticket separately if required."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The assigned technician or linked ticket appears on the chat. Repeatedly converting an already linked chat should not create a separate work item."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If the desired ticket is not in the selector, check it through Ticket queue and ask an administrator about linking. Preserve a failed assignment draft and review any success notice before repeating an action."
+        }
+      ],
+      "related": [
+        "fixxflow-chat",
+        "fixxflow-ticket-details",
+        "fixxflow-messages"
+      ]
+    },
+    {
+      "key": "fixxflow-assets",
+      "category": "Hardware",
+      "title": "FixxFlow: register, assign, and maintain equipment records",
+      "summary": "For technicians and administrators. Keep asset identity, lifecycle, location, and linked support work accurate.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/app/app/assets/new/page.tsx",
+        "src/app/app/assets/[assetId]/page.tsx",
+        "PLATFORM_ARCHITECTURE.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Keep asset identity, lifecycle, location, and linked support work accurate. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Find or create the asset"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Assets and search by tag, name, serial, or model before adding equipment. Use Add asset for a new record. Enter a unique asset tag and name, then complete the available type, lifecycle, serial/model, location, purchase, and warranty fields."
+        },
+        {
+          "type": "heading",
+          "text": "2. Assign and maintain equipment"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose the employee assignment and correct lifecycle: Available, In use, Under repair, or Retired. Save changes. Retirement requires unassignment and preserves history; there is no destructive asset-delete workflow."
+        },
+        {
+          "type": "heading",
+          "text": "3. Link support work"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the relevant ticket and use Linked assets to associate or remove an equipment link. Verify the tag first. Removing a ticket association does not delete the asset."
+        },
+        {
+          "type": "heading",
+          "text": "4. Respect inventory and edit protections"
+        },
+        {
+          "type": "paragraph",
+          "text": "Equipment held or reserved in department inventory cannot have protected lifecycle, assignment, or location fields changed through the asset editor. Use the inventory handover workflow. If another worker saved first, review the latest record before retrying a stale edit."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The asset appears with the correct tag, lifecycle, employee, and location, and linked tickets reference the intended equipment. Employees can read their assigned equipment details, so do not place secrets in those fields."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ask an inventory manager about stored/reserved equipment changes. Report duplicate tags, unexpected assignment, or persistent save conflicts before creating replacement records."
+        }
+      ],
+      "related": [
+        "fixxflow-asset-import",
+        "fixxflow-my-equipment",
+        "fixxflow-stock",
+        "fixxflow-ticket-details"
+      ]
+    },
+    {
+      "key": "fixxflow-asset-import",
+      "category": "Hardware",
+      "title": "FixxFlow: import equipment from a spreadsheet",
+      "summary": "For technicians and administrators. Preview and validate a batch of new assets before importing it.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "docs/asset-import.md",
+        "src/app/app/assets/import/page.tsx",
+        "src/features/assets/import.test.mjs"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Preview and validate a batch of new assets before importing it. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Prepare the template"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Assets → Import spreadsheet and download the CSV template. Required columns are tag and name. Optional fields include kind, status, serial_number, model, assigned_email, location, purchased_on, and warranty_until. Keep tags and serials as text to preserve leading zeroes."
+        },
+        {
+          "type": "heading",
+          "text": "2. Choose and preview the file"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use UTF-8 CSV, XLSX, or XLS up to 2 MB, with at most 500 data rows. For a workbook with several sheets, select the intended sheet and preview again. Use YYYY-MM-DD or Excel date cells for dates."
+        },
+        {
+          "type": "heading",
+          "text": "3. Correct every row error"
+        },
+        {
+          "type": "paragraph",
+          "text": "Review normalized values. Formulas, merged cells, unknown/duplicate headers, duplicate or existing tags, invalid dates, and unmatched/ambiguous employee or active-location references block import. Correct the original file and preview it again."
+        },
+        {
+          "type": "heading",
+          "text": "4. Import once and verify"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Import assets after the preview passes. The batch saves together or is rejected together, and only creates new assets. After an interrupted response, search Assets by tag before retrying; imports do not update existing records."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The expected new tags appear in Assets with the correct assignments and dates. The spreadsheet is parsed in the browser; its validated row data is submitted for saving."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If validation keeps failing, ask IT to review the template and exact row error. Do not work around an existing tag by changing it unless the equipment is genuinely a different asset."
+        }
+      ],
+      "related": [
+        "fixxflow-assets",
+        "fixxflow-stock",
+        "fixxflow-recovery"
+      ]
+    },
+    {
+      "key": "fixxflow-reports",
+      "category": "Software",
+      "title": "FixxFlow: read service reports and download Excel, CSV, or PDF",
+      "summary": "For technicians and administrators. Understand current workload and the displayed 30-day service period.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/app/app/reports/page.tsx",
+        "src/features/reporting/report-download.tsx",
+        "src/features/reporting/export-model.ts"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Understand current workload and the displayed 30-day service period. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open Reports and check the period"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Reports. Read Last 30 days and the displayed organization timezone. Today’s metrics and current workload snapshots have different scopes from historical trend panels."
+        },
+        {
+          "type": "heading",
+          "text": "2. Read definitions with the numbers"
+        },
+        {
+          "type": "paragraph",
+          "text": "Review created/resolved counts, response and resolution averages, workload, backlog age, and category/department/location breakdowns. Timing uses elapsed calendar minutes. No data means no completed timing samples, not a zero-minute response."
+        },
+        {
+          "type": "heading",
+          "text": "3. Inspect exact values"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the chart text and expandable data tables to inspect values. SLA compliance includes completed targets in the reporting period; pending or missing targets are excluded. Reopened tickets are excluded from completed resolution timing until resolved again."
+        },
+        {
+          "type": "heading",
+          "text": "4. Download the report"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Excel (.xlsx), CSV (.csv), or PDF (.pdf) under File format and select Download report. Downloads refresh the data and include summary, all 30 days, SLA, and breakdowns. Values can differ from a page loaded earlier."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The downloaded file opens in the chosen format and its period/timezone match the report. Current workload should not be interpreted as reconstructed historical backlog."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If Reports is unavailable, retry or reload Reports. Share the period, format, and error reference with an administrator. Employees do not have the staff reporting route."
+        }
+      ],
+      "related": [
+        "fixxflow-sla",
+        "fixxflow-queue",
+        "fixxflow-platform-analytics"
+      ]
+    },
+    {
+      "key": "fixxflow-kb-author",
+      "category": "Software",
+      "title": "FixxFlow: create a knowledge article with images and attachments",
+      "summary": "For technicians and administrators. Write a structured guide, preview it, and publish only when ready.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/features/knowledge/article-editor.tsx",
+        "src/app/app/help/new/page.tsx",
+        "KNOWLEDGE_BASE.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Write a structured guide, preview it, and publish only when ready. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Create the draft"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Knowledge base and choose New article. Enter Title, Category, Summary, and Visibility. Choose Draft for staff-only work in progress; Published articles can be read by active organization members."
+        },
+        {
+          "type": "heading",
+          "text": "2. Build clear content blocks"
+        },
+        {
+          "type": "paragraph",
+          "text": "Add headings, paragraphs, lists, quotes, code, links, or image blocks as needed. Use the visible Move up, Move down, and Remove buttons to arrange blocks. Bold and italic use the editor’s formatting controls or its supported markers. Use full HTTP(S) URLs for links."
+        },
+        {
+          "type": "heading",
+          "text": "3. Save before uploading files"
+        },
+        {
+          "type": "paragraph",
+          "text": "Create the article first. In Images and attachments, add a JPG, PNG, WebP, PDF, text, Word, or Excel file up to 6 MB. Choose an uploaded image in an image block and write a meaningful image description. Files follow the article’s access."
+        },
+        {
+          "type": "heading",
+          "text": "4. Preview and publish"
+        },
+        {
+          "type": "paragraph",
+          "text": "Review Content preview, choose up to eight Related articles, and save. When ready, set Visibility to Published and save again. An uploaded file alone does not save unsent edits to article text."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The article renders with readable headings, correct links, and useful image descriptions. Staff can reopen the draft; employees see it only after publication."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If saving conflicts with another edit, preserve your text and coordinate before reloading. If upload completion is uncertain, check the attachment list in another tab before retrying."
+        }
+      ],
+      "related": [
+        "fixxflow-kb-maintain",
+        "fixxflow-help",
+        "fixxflow-recovery"
+      ]
+    },
+    {
+      "key": "fixxflow-kb-maintain",
+      "category": "Software",
+      "title": "FixxFlow: review feedback and update or archive a guide",
+      "summary": "For technicians and administrators. Keep published guidance accurate without exposing unfinished revisions.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/app/app/help/[articleId]/page.tsx",
+        "src/features/knowledge/article-editor.tsx",
+        "KNOWLEDGE_BASE.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Keep published guidance accurate without exposing unfinished revisions. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Find the article"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Knowledge base and use the staff view that includes drafts. Search the title and open the guide. Review Article insights for daily-reader views and current helpful/not-helpful votes."
+        },
+        {
+          "type": "heading",
+          "text": "2. Choose how to revise"
+        },
+        {
+          "type": "paragraph",
+          "text": "Editing a Published article changes the live article when saved; there is no separate unpublished revision. If changes must remain private while being developed, set Visibility to Draft and save before editing further."
+        },
+        {
+          "type": "heading",
+          "text": "3. Review content and access"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check steps, screenshots, links, attachments, and Related articles against the current workflow. Avoid private operational information in a Published guide. Existing attachment links stop working for readers who lose article access."
+        },
+        {
+          "type": "heading",
+          "text": "4. Publish or archive deliberately"
+        },
+        {
+          "type": "paragraph",
+          "text": "Save the updated article and review its rendered page. Set Published when ready, or Archived when it should no longer be employee guidance. Draft and Archived articles remain staff-only; archiving does not delete history."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The article has the intended visibility and corrected content. Current vote totals are feedback signals, not proof that every reader completed the task."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Coordinate if another editor saved a newer revision. If article access or file visibility is wrong, ask an administrator to investigate before republishing."
+        }
+      ],
+      "related": [
+        "fixxflow-kb-author",
+        "fixxflow-help",
+        "fixxflow-audit"
+      ]
+    },
+    {
+      "key": "fixxflow-admin",
+      "category": "Accounts",
+      "title": "FixxFlow: find administration tools and understand access",
+      "summary": "For administrators. Choose the right workspace setting and distinguish role access from inventory permissions.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/administration/administration-hub.tsx",
+        "src/features/administration/sections.ts",
+        "src/app/app/administration/[section]/page.tsx"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Choose the right workspace setting and distinguish role access from inventory permissions. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open Administration"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Administration from staff navigation. Workspace groups organization, people/access, and assets. Support workflows groups automations, teams/routing, and knowledge. Policies & oversight groups SLAs, notifications, and security/audit."
+        },
+        {
+          "type": "heading",
+          "text": "2. Follow the task link"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Organization details for departments, locations, and timezone; Users & invitations for membership; Teams or Categories for routing; and Manage articles or Manage assets for those features. Some cards link to the existing feature rather than a second settings editor."
+        },
+        {
+          "type": "heading",
+          "text": "3. Recognize read-only policy pages"
+        },
+        {
+          "type": "paragraph",
+          "text": "View SLA targets and View notification setup describe the current configuration. A Fixed or Current configuration label is not an editable policy control. Security settings links to the available account protection and audit tools."
+        },
+        {
+          "type": "heading",
+          "text": "4. Grant only the needed access"
+        },
+        {
+          "type": "paragraph",
+          "text": "Employee, Technician, and Administrator roles control workspace features. Manage inventory and fulfill requests and Request department inventory are separate capabilities. A customer administrator is not automatically a platform owner."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "You reach the existing tool for the task without expecting controls on fixed-policy pages. Access changes should be verified in People and recorded in the audit stream where supported."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If an expected administration feature is absent, confirm your active Administrator membership. Ask the platform operator about account access; do not use another administrator’s sign-in."
+        }
+      ],
+      "related": [
+        "fixxflow-people",
+        "fixxflow-organization",
+        "fixxflow-routing",
+        "fixxflow-inventory-access",
+        "fixxflow-audit",
+        "fixxflow-email",
+        "fixxflow-auto-create",
+        "fixxflow-sla"
+      ]
+    },
+    {
+      "key": "fixxflow-people",
+      "category": "Accounts",
+      "title": "FixxFlow: invite members and manage roles or workspace access",
+      "summary": "For administrators. Invite colleagues, update their details, and safely deactivate or restore access.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/app/app/people/page.tsx",
+        "src/features/administration/person-card.tsx",
+        "src/app/app/people/actions.ts"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Invite colleagues, update their details, and safely deactivate or restore access. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Find the person first"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open People, or Administration → Users & invitations. Search by name, email, or job title before sending an invitation. Use the Technicians view when reviewing staff access and paging controls for more members."
+        },
+        {
+          "type": "heading",
+          "text": "2. Invite a new member"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Invite member, enter Full name and Work email, select the intended Workspace role, and choose Send invitation. The recipient receives an account-setup email. Verify the address and grant the least access required."
+        },
+        {
+          "type": "heading",
+          "text": "3. Manage existing members"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Manage on the person’s card. Use Save role for role changes and Edit details for job title, department, and location. These are separate saves. Inventory permissions are managed in their own controls."
+        },
+        {
+          "type": "heading",
+          "text": "4. Deactivate or restore access"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Deactivate access, read the confirmation, and confirm only after arranging any outstanding work. Existing records are retained. Restore access restores the current role. You cannot deactivate your own account, and the application protects the last active administrator."
+        },
+        {
+          "type": "heading",
+          "text": "5. Handle partial invitation failures"
+        },
+        {
+          "type": "paragraph",
+          "text": "Read the exact result before retrying. An email may have been sent even if workspace registration failed. There is no general resend/revoke invitation workflow here; ask the operator to reconcile a partial failure rather than repeatedly inviting the same address."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The member card shows the intended role, details, and active/inactive state. Invitation success is an application result; recipient delivery and completed setup are separate checks."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact the workspace/platform operator for a partial invitation, a person already associated with another workspace, or an unexpected access failure. Avoid changing roles merely to work around a temporary error."
+        }
+      ],
+      "related": [
+        "fixxflow-inventory-access",
+        "fixxflow-organization",
+        "fixxflow-audit",
+        "fixxflow-email"
+      ]
+    },
+    {
+      "key": "fixxflow-organization",
+      "category": "Accounts",
+      "title": "FixxFlow: manage departments, locations, and organization timezone",
+      "summary": "For administrators. Maintain workplace reference data while preserving historical links.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/app/app/organization/page.tsx",
+        "src/features/administration/organization-item-actions.tsx",
+        "src/features/administration/organization-item-editor.tsx"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Maintain workplace reference data while preserving historical links. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open Organization"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Administration → Organization details. Review the Timezone, Departments, and Locations sections. Organization timezone governs shared reporting days; personal display preferences are managed in Profile."
+        },
+        {
+          "type": "heading",
+          "text": "2. Add or edit a reference"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Add department or Add location and complete the labeled fields. Open Edit on an existing entry to rename it or update its details, then Save changes. Use a valid timezone when configuring a location."
+        },
+        {
+          "type": "heading",
+          "text": "3. Choose availability before deletion"
+        },
+        {
+          "type": "paragraph",
+          "text": "Deactivate a department or location to stop new use while keeping linked profiles, tickets, and equipment intact. Activate it again if needed. Deactivation is usually appropriate when the reference has history."
+        },
+        {
+          "type": "heading",
+          "text": "4. Delete only an unused entry"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Delete, read the named entry, check the explicit permanent-deletion confirmation, and submit. Referenced entries cannot be deleted; historical links can still block deletion. Cancel leaves the entry in place."
+        },
+        {
+          "type": "heading",
+          "text": "5. Save timezone intentionally"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose the organization timezone and save its setting. Existing deadlines keep their saved instant. Verify reporting date boundaries after a timezone change rather than assuming the change rewrites historical events."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The entry shows the intended name and availability, and existing historical references remain intact. Invalid values or concurrent edits produce a recoverable error."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If deletion is blocked, use deactivation or ask an administrator to review the references. Do not remove historical tickets or equipment just to make a location deletable."
+        }
+      ],
+      "related": [
+        "fixxflow-people",
+        "fixxflow-routing",
+        "fixxflow-stock",
+        "fixxflow-account"
+      ]
+    },
+    {
+      "key": "fixxflow-routing",
+      "category": "Software",
+      "title": "FixxFlow: manage teams, categories, subcategories, and default routing",
+      "summary": "For administrators. Keep classification choices clear and route new requests to an active team.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/administration/classification-editor.tsx",
+        "src/app/app/administration/[section]/page.tsx",
+        "README.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Keep classification choices clear and route new requests to an active team. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Create or maintain teams"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Administration → Teams. Add a team or open an existing team to rename it or change Availability, then save. This settings screen manages team choices; it does not provide a team-membership editor."
+        },
+        {
+          "type": "heading",
+          "text": "2. Maintain categories and children"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Administration → Categories. Add or edit a category, then use its Subcategories section for child choices. Keep labels distinct and understandable to employees. Set unused values inactive rather than deleting history."
+        },
+        {
+          "type": "heading",
+          "text": "3. Set the default team"
+        },
+        {
+          "type": "paragraph",
+          "text": "In the category editor, choose Default team for new tickets and save. Choose No default to leave automatic routing unassigned. Only active teams receive automatic assignments; an inactive category does not route new requests."
+        },
+        {
+          "type": "heading",
+          "text": "4. Check the scope of the change"
+        },
+        {
+          "type": "paragraph",
+          "text": "Defaults apply to new employee and equipment requests. Staff can use automatic routing, choose another team, or leave a new ticket unassigned. Existing tickets are not rerouted when a default changes; ticket Activity records automatic routing with the team name captured at creation."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The category displays the intended active default team and available subcategories. Confirm routing on the next legitimate request rather than assuming old tickets will move."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If a selected team is inactive or unavailable, choose an active destination or remove the default. Ask an administrator to resolve conflicting edits before changing routing again."
+        }
+      ],
+      "related": [
+        "fixxflow-ticket-details",
+        "fixxflow-auto-create",
+        "fixxflow-organization"
+      ]
+    },
+    {
+      "key": "fixxflow-inventory-access",
+      "category": "Accounts",
+      "title": "FixxFlow: grant department request and inventory management permissions",
+      "summary": "For administrators. Set inventory capabilities independently of a person’s workspace role.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/inventory/forms.tsx",
+        "src/features/inventory/access.ts",
+        "docs/inventory.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Set inventory capabilities independently of a person’s workspace role. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open the member’s access controls"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open People, find the person, and open Manage. Review Inventory access and select Edit inventory access."
+        },
+        {
+          "type": "heading",
+          "text": "2. Choose stock-management access"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check Manage inventory and fulfill requests only for people who should receive/correct stock, review requests, and record issuance across departments. Administrator role alone does not grant this capability; administrators who perform inventory work also need it."
+        },
+        {
+          "type": "heading",
+          "text": "3. Choose request departments"
+        },
+        {
+          "type": "paragraph",
+          "text": "Under Request department inventory, select each active department the person may request items for. Several departments can be granted to one person, and several people may request for the same department."
+        },
+        {
+          "type": "heading",
+          "text": "4. Save and verify"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Save inventory permissions and review the summary. Uncheck a department to remove request access. Revoked grants or inactive workspace access stop subsequent commands; a requester can still read their own historical requests."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The summary shows the intended management state and authorized departments. The person’s Employee/Technician/Administrator role is unchanged by these controls."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If no departments are listed, create or activate the relevant department first. If permissions do not appear to match the feature access, ask the person to reload and report the exact failing operation."
+        }
+      ],
+      "related": [
+        "fixxflow-inventory-request",
+        "fixxflow-stock",
+        "fixxflow-fulfill",
+        "fixxflow-people"
+      ]
+    },
+    {
+      "key": "fixxflow-stock",
+      "category": "Hardware",
+      "title": "FixxFlow: receive equipment or consumables and correct stored stock",
+      "summary": "For inventory managers. Record physical receipts and stock corrections for a department allocation.",
+      "reviewedOn": "2026-10-12",
+      "audience": "inventory managers",
+      "sourcePaths": [
+        "src/features/inventory/forms.tsx",
+        "src/app/app/inventory/[itemId]/page.tsx",
+        "docs/inventory.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For inventory managers. Record physical receipts and stock corrections for a department allocation. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Prepare the item and equipment"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Department inventory. For equipment, first create available, unassigned records in Assets. An inventory item identifies one tracking type, department allocation, and physical storage location; allocation is separate from employee assignment."
+        },
+        {
+          "type": "heading",
+          "text": "2. Choose or create the stock bucket"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open an existing item to receive another delivery, or expand Add a received item type. Enter Item name, Tracking type, Department allocation, and Physical storage location, then Continue to receive stock. Creating the item type alone does not add stock."
+        },
+        {
+          "type": "heading",
+          "text": "3. Record the physical receipt"
+        },
+        {
+          "type": "paragraph",
+          "text": "Enter Quantity received. For equipment, select each existing available asset; up to 100 units can be received at a time. Consumables use integer quantities without individual asset records. Add a receipt reference or note and choose Record received stock."
+        },
+        {
+          "type": "heading",
+          "text": "4. Correct a count carefully"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the item’s correction form, enter the signed quantity change, and provide the required correction reason. Follow any equipment-selection instructions. You cannot reduce stock below reserved quantity or remove equipment already reserved for handover."
+        },
+        {
+          "type": "heading",
+          "text": "5. Review the ledger"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check stock, reserved, and available quantities and the movement history. Available equals stock minus reserved. The receiving user and time are recorded automatically. Department transfers and returns after issuance are outside this workflow."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The physical receipt/correction is reflected once in stock and the movement ledger, with the correct allocation and storage location. Receiving equipment does not issue it to an employee."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If equipment is assigned, reserved, or in the wrong lifecycle, resolve that state through the correct workflow. After an uncertain response, inspect movements before repeating the receipt."
+        }
+      ],
+      "related": [
+        "fixxflow-fulfill",
+        "fixxflow-assets",
+        "fixxflow-asset-import",
+        "fixxflow-inventory-access"
+      ]
+    },
+    {
+      "key": "fixxflow-fulfill",
+      "category": "Hardware",
+      "title": "FixxFlow: review, reserve, and issue an inventory request",
+      "summary": "For inventory managers. Separate the approval decision from the physical handover of stock.",
+      "reviewedOn": "2026-10-12",
+      "audience": "inventory managers",
+      "sourcePaths": [
+        "src/features/inventory/request-panel.tsx",
+        "src/features/inventory/forms.tsx",
+        "docs/inventory.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For inventory managers. Separate the approval decision from the physical handover of stock. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Review the linked request"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Inventory requests from Department inventory or the ticket queue’s inventory filter. Read the requested item, department, quantity, recipient/destination, and conversation. The fulfillment state is separate from ticket status."
+        },
+        {
+          "type": "heading",
+          "text": "2. Ask, decline, or approve"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Ask for more information with a clear question, Decline request with a reason, or Approve and reserve. Equipment approval requires selecting the exact stored assets. Availability is rechecked at approval; submitting a request did not reserve stock."
+        },
+        {
+          "type": "heading",
+          "text": "3. Verify before handover"
+        },
+        {
+          "type": "paragraph",
+          "text": "For an approved request, check the full approved quantity and recipient or destination. Confirm each reserved equipment tag/serial and the actual handover checkbox. Add an optional handover note and choose Mark as issued only after the items have actually been handed over."
+        },
+        {
+          "type": "heading",
+          "text": "4. Understand the stock change"
+        },
+        {
+          "type": "paragraph",
+          "text": "Approval increases reservations; issuance reduces stock and reserved quantity and assigns equipment to the intended employee where applicable. There is no partial fulfillment or silent substitution. Issued, declined, and cancelled requests are final."
+        },
+        {
+          "type": "heading",
+          "text": "5. Handle cancellation and ticket status"
+        },
+        {
+          "type": "paragraph",
+          "text": "Asking for information, declining, or cancelling releases an existing reservation. Resolving/closing a ticket before issue cancels fulfillment and releases stock. Reopening never reserves or issues again, and closing an issued ticket does not debit stock twice."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The request shows the correct fulfillment outcome and movement history. Issued equipment remains in Assets with its service history, while consumable issuance is recorded in the usage ledger."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If stock changed or a reserved unit is unavailable, stop and reconcile with the inventory manager. After a lost response, inspect the request and movements before retrying a handover."
+        }
+      ],
+      "related": [
+        "fixxflow-inventory-request",
+        "fixxflow-stock",
+        "fixxflow-ticket-details"
+      ]
+    },
+    {
+      "key": "fixxflow-sla",
+      "category": "Software",
+      "title": "FixxFlow: understand priority, service targets, and overdue indicators",
+      "summary": "For technicians and administrators. Distinguish response targets, resolution targets, and manual due dates.",
+      "reviewedOn": "2026-10-12",
+      "audience": "technicians and administrators",
+      "sourcePaths": [
+        "src/features/tickets/sla-policy.ts",
+        "src/features/tickets/ticket-detail.tsx",
+        "README.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For technicians and administrators. Distinguish response targets, resolution targets, and manual due dates. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open Service levels"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open a ticket and review Service levels. Expand SLA targets, or use Administration → View SLA targets if you are an administrator. Both response and resolution objectives show text and exact deadlines as well as state colors."
+        },
+        {
+          "type": "heading",
+          "text": "2. Read the fixed targets"
+        },
+        {
+          "type": "paragraph",
+          "text": "Critical targets are 15 minutes for first public staff response and 4 hours for resolution; High is 1 hour and 8 hours; Normal is 4 hours and 24 hours; Low is 8 hours and 48 hours. These are fixed calendar-time targets, including nights and weekends."
+        },
+        {
+          "type": "heading",
+          "text": "3. Understand what stops a clock"
+        },
+        {
+          "type": "paragraph",
+          "text": "A public staff reply satisfies first response; internal notes and requester replies do not. Resolving/closing stops resolution. Waiting-on-user and on-hold time still count. Reopening resumes the existing resolution deadline rather than starting a fresh allowance."
+        },
+        {
+          "type": "heading",
+          "text": "4. Prioritize with the correct filter"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use SLA breached or SLA sorting for service targets. Manual date overdue is based on the separate due date. Changing priority recalculates unfinished SLA targets from creation; it does not restart the clock at the change time."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "You can explain which objective is approaching or breached and why. A missed target remains a recorded outcome; changing labels does not erase elapsed time."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Raise incorrect timing with an administrator using the ticket number and displayed deadline. Custom business-hours calendars and pause rules are not editable in the current fixed-policy UI."
+        }
+      ],
+      "related": [
+        "fixxflow-reports",
+        "fixxflow-ticket-details",
+        "fixxflow-auto-scheduled"
+      ]
+    },
+    {
+      "key": "fixxflow-audit",
+      "category": "Security",
+      "title": "FixxFlow: review who changed workspace records",
+      "summary": "For administrators. Use the organization audit log to inspect recorded business changes.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/audit/presentation.ts",
+        "src/app/app/administration/[section]/page.tsx",
+        "AUDIT_LOG.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Use the organization audit log to inspect recorded business changes. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open the audit log"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Administration → Security & audit → Audit log. This organization history is separate from a ticket’s Activity and from the platform-owner audit console."
+        },
+        {
+          "type": "heading",
+          "text": "2. Find the relevant event"
+        },
+        {
+          "type": "paragraph",
+          "text": "Search by actor or item, choose area/action filters, and use pagination for older events. Check the target label, actor, timestamp, and operation before drawing a conclusion."
+        },
+        {
+          "type": "heading",
+          "text": "3. Read the change details"
+        },
+        {
+          "type": "paragraph",
+          "text": "Inspect the before/after values for allowlisted fields. Multiple meaningful field changes can appear in one event. System marks automatic changes without an authenticated actor; later renames do not rewrite stored event labels."
+        },
+        {
+          "type": "heading",
+          "text": "4. Recognize the limits"
+        },
+        {
+          "type": "paragraph",
+          "text": "The log records events from enablement onward, not a full backfill. Message/article bodies are represented by change markers. Sign-ins, password/MFA changes, email delivery outcomes, and settings outside the recorded tables are not covered by this stream. Normal application users cannot edit or delete entries."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "You can identify the recorded change and distinguish the organization audit event from ticket conversation content or email delivery evidence."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If an event is missing, check filters and whether the operation is within the recorded scope. Report unexplained access or changes through your workplace security process."
+        }
+      ],
+      "related": [
+        "fixxflow-ticket-details",
+        "fixxflow-people",
+        "fixxflow-email",
+        "fixxflow-platform-analytics"
+      ]
+    },
+    {
+      "key": "fixxflow-email",
+      "category": "Email",
+      "title": "FixxFlow: check notification email behavior and contact FixxFlow support",
+      "summary": "For everyone. Know where email replies go and what the support action actually does.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/app/app/support/page.tsx",
+        "docs/resend-email.md",
+        "NOTIFICATIONS.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Know where email replies go and what the support action actually does. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Check the app first"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Notifications and the ticket or chat directly for current updates. In-app records and email delivery are separate. Marking a notification read does not change ticket status."
+        },
+        {
+          "type": "heading",
+          "text": "2. Reply in the right place"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the FixxFlow ticket/chat composer to keep the conversation on the record. Notification email replies go to the support inbox; they are not automatically added to the ticket."
+        },
+        {
+          "type": "heading",
+          "text": "3. Use Contact support deliberately"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Contact support when you need help with FixxFlow itself. The email action opens your email application with a draft; the message is sent only when you choose Send there. If no email app opens, use the displayed support@fixxflow.app address. Workplace IT issues should normally use Submit a request."
+        },
+        {
+          "type": "heading",
+          "text": "4. Investigate delivery without repeated sends"
+        },
+        {
+          "type": "paragraph",
+          "text": "Check the recipient address and junk/quarantine folders for an expected invitation or reset. Administrators can review Administration’s notification setup, but configured/sent indicators do not prove inbox delivery. A platform operator must investigate provider delivery records."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Your workplace issue is on the correct ticket, or your support email has actually been sent from your email application. Opening an email draft alone is not a sent support request."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact your administrator for missing account emails or recurring delivery issues. Include the time and message purpose, but never forward reset links, passwords, or authenticator codes."
+        }
+      ],
+      "related": [
+        "fixxflow-notifications",
+        "fixxflow-people",
+        "fixxflow-recovery"
+      ]
+    },
+    {
+      "key": "fixxflow-auto-create",
+      "category": "Software",
+      "title": "FixxFlow: create a ticket automation from a template or scratch",
+      "summary": "For administrators. Build a named rule, review its trigger and actions, and save it disabled.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/automation/create-automation.tsx",
+        "src/features/automation/builder.tsx",
+        "src/features/automation/templates.ts"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Build a named rule, review its trigger and actions, and save it disabled. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open Automations"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Administration → Manage automations and the new-rule action. Choose a Popular template or Start from scratch. Templates are starting points, not ready-made rules for your organization."
+        },
+        {
+          "type": "heading",
+          "text": "2. Name the workflow and choose When"
+        },
+        {
+          "type": "paragraph",
+          "text": "Enter a clear Name and optional Description. Under When, choose the ticket event that should start evaluation. Examples include creation, assignment, status/priority changes, resolution, and supported time thresholds."
+        },
+        {
+          "type": "heading",
+          "text": "3. Complete If and Then"
+        },
+        {
+          "type": "paragraph",
+          "text": "Under If, set the conditions that must match. Under Then, choose actions and current organization references. Replace every empty template choice, such as the team or category. Review existing category routing and notifications to avoid conflicting or duplicate work."
+        },
+        {
+          "type": "heading",
+          "text": "4. Review, test, and save disabled"
+        },
+        {
+          "type": "paragraph",
+          "text": "Read the Review summary, run Test Automation against a representative ticket, and correct errors. Select Save as disabled for a new rule. Saving and testing do not enable it or activate global processing."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The saved rule page shows its name, version, and Disabled state. No live ticket action is caused by a dry-run test or by saving a new disabled rule."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If validation highlights missing choices, follow the error links and complete the selections. Ask the operator about unavailable global processing rather than assuming that creating a rule makes it run."
+        }
+      ],
+      "related": [
+        "fixxflow-auto-conditions",
+        "fixxflow-auto-test",
+        "fixxflow-auto-manage",
+        "fixxflow-auto-scheduled",
+        "fixxflow-auto-ops",
+        "fixxflow-auto-portable"
+      ]
+    },
+    {
+      "key": "fixxflow-auto-conditions",
+      "category": "Software",
+      "title": "FixxFlow: set automation conditions and order ticket actions",
+      "summary": "For administrators. Define exactly which tickets match and what happens first.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/automation/builder.tsx",
+        "src/features/automation/domains/tickets/actions.ts",
+        "src/features/automation/ui-model.ts"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Define exactly which tickets match and what happens first. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Choose explicit conditions"
+        },
+        {
+          "type": "paragraph",
+          "text": "In an automation’s If section, select Field, Comparison, and the required value. All conditions must match. With no conditions, every ticket compatible with the trigger matches; do not leave the section empty accidentally."
+        },
+        {
+          "type": "heading",
+          "text": "2. Use current references"
+        },
+        {
+          "type": "paragraph",
+          "text": "Select people, teams, or categories from the available reference controls. Choose active destinations for actions. A saved name or old imported reference does not guarantee that the destination is still available when execution happens."
+        },
+        {
+          "type": "heading",
+          "text": "3. Order the actions"
+        },
+        {
+          "type": "paragraph",
+          "text": "In Then, add and arrange the available actions: assign technician/team, set priority/status/category, add an internal note, or send the standard ticket update notification. Actions run top to bottom; if one fails, later actions do not run."
+        },
+        {
+          "type": "heading",
+          "text": "4. Check side effects and test"
+        },
+        {
+          "type": "paragraph",
+          "text": "Changing priority can recalculate unfinished SLA targets. A status action can resolve/close work, and notes must not contain secrets. Standard notification text is not a custom email editor. Read Review and test both a matching and nonmatching example before saving changes."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Test results show the intended passed/failed conditions and proposed actions in the expected order. A match is a dry-run result, not proof of future successful execution."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If a comparison or destination is unavailable, choose one supported by the field or ask an administrator to correct configuration. Do not broaden conditions simply to make an invalid test pass."
+        }
+      ],
+      "related": [
+        "fixxflow-auto-test",
+        "fixxflow-auto-create",
+        "fixxflow-routing",
+        "fixxflow-sla"
+      ]
+    },
+    {
+      "key": "fixxflow-auto-test",
+      "category": "Software",
+      "title": "FixxFlow: test an automation without changing tickets",
+      "summary": "For administrators. Inspect condition results and proposed actions before enabling a rule.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/automation/dry-run-panel.tsx",
+        "src/features/automation/dry-run-model.ts",
+        "docs/automation-dry-run.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Inspect condition results and proposed actions before enabling a rule. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open Test Automation"
+        },
+        {
+          "type": "paragraph",
+          "text": "In the builder, complete the draft and choose Test Automation. You can test unsaved changes; testing does not save, enable, execute actions, create threshold events, or send notifications."
+        },
+        {
+          "type": "heading",
+          "text": "2. Choose the ticket and context"
+        },
+        {
+          "type": "paragraph",
+          "text": "Select Ticket to test. Current ticket is a hypothetical creation or time-threshold evaluation using current values. Retained ticket event uses a selected recorded event. Simulated status or priority change lets you provide the supported after-values."
+        },
+        {
+          "type": "heading",
+          "text": "3. Run and inspect the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "Run the test and read each condition’s result, proposed actions, current-reference validation, and warnings. Retained events may differ from the ticket today; testing one does not replay it for real."
+        },
+        {
+          "type": "heading",
+          "text": "4. Retest after changes"
+        },
+        {
+          "type": "paragraph",
+          "text": "Change the draft or test context as needed and run again. A prior result becomes stale when the tested draft/context changes. Try an expected match and a nonmatch, then save the intended version separately."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The result explains whether the draft would proceed for that context and why, while the real ticket remains unchanged. Future execution still requires an enabled rule, eligible events, active processing, and successful runtime checks."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If events cannot load or a test fails, retry and check the selected ticket and current references. Share a safe correlation reference with the operator for recurring errors."
+        }
+      ],
+      "related": [
+        "fixxflow-auto-create",
+        "fixxflow-auto-conditions",
+        "fixxflow-auto-manage",
+        "fixxflow-auto-ops"
+      ]
+    },
+    {
+      "key": "fixxflow-auto-manage",
+      "category": "Software",
+      "title": "FixxFlow: enable, disable, duplicate, or archive an automation",
+      "summary": "For administrators. Control a reviewed rule while retaining its versions and execution history.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/automation/rule-actions.tsx",
+        "src/app/app/administration/automations/[ruleId]/page.tsx",
+        "docs/automation-administration-ui.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Control a reviewed rule while retaining its versions and execution history. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Find and review the rule"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Automations and filter by name, status, or trigger. Open the rule, check its saved version and summary, and test the intended definition before enabling."
+        },
+        {
+          "type": "heading",
+          "text": "2. Enable deliberately"
+        },
+        {
+          "type": "paragraph",
+          "text": "Expand Enable, read the trigger and action summary, check the named confirmation, and choose Enable rule. Global processing must also be active. If the UI says processing is disabled, enabling the rule does not cause it to execute."
+        },
+        {
+          "type": "heading",
+          "text": "3. Disable or duplicate"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Disable rule to stop this rule from starting new work. Use Duplicate and provide a name to create a disabled copy for a variant. Review and test the copy before enabling; duplication is not activation."
+        },
+        {
+          "type": "heading",
+          "text": "4. Archive retired workflows"
+        },
+        {
+          "type": "paragraph",
+          "text": "Expand Archive, read the warning, check the explicit confirmation, and choose Archive automation. Archived rules cannot run or be edited; historical versions and execution history remain. Archiving is not undo for actions already performed."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The rule shows the intended Enabled, Disabled, or Archived state and version. Use View History and Automation Operations to inspect actual execution; status alone is not evidence of a run."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If another administrator changed the rule, review the newer version before retrying. Contact the operator for processing health; do not assume disabling/archive reverses in-flight or completed changes."
+        }
+      ],
+      "related": [
+        "fixxflow-auto-test",
+        "fixxflow-auto-ops",
+        "fixxflow-auto-portable"
+      ]
+    },
+    {
+      "key": "fixxflow-auto-scheduled",
+      "category": "Software",
+      "title": "FixxFlow: configure time-based and SLA automation triggers",
+      "summary": "For administrators. Use elapsed-time thresholds and stored SLA deadlines with clear eligibility limits.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/automation/temporal-controls.tsx",
+        "src/features/automation/domains/tickets/temporal.ts",
+        "docs/automation-temporal.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Use elapsed-time thresholds and stored SLA deadlines with clear eligibility limits. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Choose a supported time trigger"
+        },
+        {
+          "type": "paragraph",
+          "text": "In When, choose the appropriate open-duration, unassigned-duration, waiting-on-user-duration, SLA-approaching, or SLA-breached trigger. For SLA triggers choose First response or Resolution."
+        },
+        {
+          "type": "heading",
+          "text": "2. Set the threshold"
+        },
+        {
+          "type": "paragraph",
+          "text": "When Duration is available, choose Minutes, Hours, or Days and enter an amount equal to whole minutes, from 1 minute to 365 days. SLA breached uses the stored SLA deadline rather than a separate duration. These are elapsed-time rules, not business-hours schedules."
+        },
+        {
+          "type": "heading",
+          "text": "3. Understand the starting point"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open age starts at ticket creation; reopening does not reset it, and resolved/closed tickets are excluded. Unassigned means no technician; assigning only a team does not end that period. Legacy tickets with an unknown state-start time become eligible after leaving and entering the state again."
+        },
+        {
+          "type": "heading",
+          "text": "4. Test and monitor future crossings"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Test Automation for a hypothetical current threshold or available retained event. Only future threshold crossings after enablement and processing activation qualify. An already-old ticket is not a promise of immediate catch-up. Review discovery lag and SLA window risk in Automation Operations."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The Review summary expresses the intended threshold and objective. Test results and operations observations are distinct from guaranteed delivery at an exact wall-clock moment."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If a narrow SLA-approaching window is missed or discovery lag is high, ask the operator to inspect service health. Increasing or changing a rule is not a replay mechanism for missed historical events."
+        }
+      ],
+      "related": [
+        "fixxflow-auto-test",
+        "fixxflow-auto-ops",
+        "fixxflow-sla"
+      ]
+    },
+    {
+      "key": "fixxflow-auto-ops",
+      "category": "Software",
+      "title": "FixxFlow: inspect automation operations and execution failures",
+      "summary": "For administrators. Separate rule matching, queue progress, action outcomes, and service availability.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/automation/operations-view.tsx",
+        "src/app/app/administration/automations/operations/page.tsx",
+        "docs/automation-operations.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Separate rule matching, queue progress, action outcomes, and service availability. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open the operations page"
+        },
+        {
+          "type": "paragraph",
+          "text": "From Automations open Automation Operations and choose Refresh status. Read the timestamp and processing/service availability before interpreting the queue. A saved enabled rule can coexist with processing off."
+        },
+        {
+          "type": "heading",
+          "text": "2. Read queue states carefully"
+        },
+        {
+          "type": "paragraph",
+          "text": "Review ready/expired-lease work, leased work, retry scheduling, capacity delays, and pending items without current eligibility. Capacity deferral is not the same as an action failure. Bounded or truncated samples are lower bounds, not complete counts."
+        },
+        {
+          "type": "heading",
+          "text": "3. Inspect a real execution"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Execution history, Recent failures, or a rule’s View History. Open the execution to inspect the immutable rule version, ticket, trigger, condition results, and ordered action outcomes. Distinguish a no-match, safety outcome, stale state, or failure."
+        },
+        {
+          "type": "heading",
+          "text": "4. Review temporal health"
+        },
+        {
+          "type": "paragraph",
+          "text": "For time-based rules, inspect Discovery lag and SLA windows. A window-risk warning is not proof that a specific ticket was missed. No observations or no pending work is not proof that all expected future events will run."
+        },
+        {
+          "type": "heading",
+          "text": "5. Escalate with safe references"
+        },
+        {
+          "type": "paragraph",
+          "text": "Record the rule name/version, execution reference, observed time, and safe error/correlation identifier. Do not copy tokens or private message bodies into a support request. A dry run or page refresh does not retry a historical execution."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "You can describe whether work is disabled, waiting, deferred, evaluated without matching, or failing, with the execution evidence available. Email acceptance still does not prove recipient delivery."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact the platform operator for repeated failures, growing eligible backlog, or unhealthy processing. Avoid duplicate rules or manual replays until the original outcome is understood."
+        }
+      ],
+      "related": [
+        "fixxflow-auto-manage",
+        "fixxflow-auto-scheduled",
+        "fixxflow-email"
+      ]
+    },
+    {
+      "key": "fixxflow-auto-portable",
+      "category": "Software",
+      "title": "FixxFlow: export and import an automation between workspaces",
+      "summary": "For administrators. Move a rule definition while explicitly mapping destination references.",
+      "reviewedOn": "2026-10-12",
+      "audience": "administrators",
+      "sourcePaths": [
+        "src/features/automation/export-button.tsx",
+        "src/features/automation/import-automation.tsx",
+        "docs/automation-portability.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For administrators. Move a rule definition while explicitly mapping destination references. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Export a reviewed rule"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open the source automation and choose Export. Save the downloaded JSON package securely and review its text before sharing; rule descriptions and internal-note text may contain organization-specific information."
+        },
+        {
+          "type": "heading",
+          "text": "2. Import in the destination workspace"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Automations → Import and choose the automation package. Read the preview, which uses source-package names. Source organization identifiers are not reused as destination permissions or record identities."
+        },
+        {
+          "type": "heading",
+          "text": "3. Map every reference"
+        },
+        {
+          "type": "paragraph",
+          "text": "Under Map to your organization, explicitly choose the destination person, team, category, or other reference. Find a suggested match only proposes a choice; use Confirm suggested match or select the correct destination yourself. Page through all mappings."
+        },
+        {
+          "type": "heading",
+          "text": "4. Review, test, and save disabled"
+        },
+        {
+          "type": "paragraph",
+          "text": "Continue to the builder, verify text, conditions, actions, and order, then test against a destination ticket. Imported rules are saved disabled. Review the saved rule and global processing separately before any enablement."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The imported rule uses the intended destination references and is Disabled. Export/import does not move ticket records or execution history, and does not activate processing."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If the package or mapping is rejected, correct the reported issue and retry. Ask the source administrator about missing or ambiguous definitions; never guess a destination that broadens access."
+        }
+      ],
+      "related": [
+        "fixxflow-auto-test",
+        "fixxflow-auto-manage",
+        "fixxflow-auto-create"
+      ]
+    },
+    {
+      "key": "fixxflow-platform",
+      "category": "Accounts",
+      "title": "FixxFlow: open the owner console and manage customer organizations",
+      "summary": "For provisioned platform owners. Use the separate owner console without assuming access to customer workspaces.",
+      "reviewedOn": "2026-10-12",
+      "audience": "provisioned platform owners",
+      "sourcePaths": [
+        "src/app/platform/customers/page.tsx",
+        "src/app/platform/access/page.tsx",
+        "PLATFORM_ARCHITECTURE.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For provisioned platform owners. Use the separate owner console without assuming access to customer workspaces. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Complete owner sign-in and MFA"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the platform console only with an explicitly provisioned owner account and a verified MFA session. An organization Administrator role does not grant owner access. Owners without a customer membership are routed to the console; owners with a membership can use the Profile owner-console link."
+        },
+        {
+          "type": "heading",
+          "text": "2. Find a customer"
+        },
+        {
+          "type": "paragraph",
+          "text": "Open Customers and search the organization list. Review the organization name and active member count before selecting an operation. Owner access does not impersonate a customer or grant access to its tickets, chats, articles, or assets."
+        },
+        {
+          "type": "heading",
+          "text": "3. Create a customer organization"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the new-organization form with the requested organization name/slug and a verified account that is not already assigned to a customer as its administrator. Review the identity carefully and submit once. This operation does not send an invitation email."
+        },
+        {
+          "type": "heading",
+          "text": "4. Rename and verify"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use the available organization-name editor for a rename and save. Confirm the result in Customers and the platform audit. Billing, suspension, impersonation, and owner-delegation interfaces are not part of this console."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The organization appears with the intended identity and administrator association. Access to its customer workspace still requires a separate active customer membership."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact the platform operator for owner provisioning, unavailable MFA, or an account already assigned to another workspace. Do not change customer memberships to work around owner-console authentication."
+        }
+      ],
+      "related": [
+        "fixxflow-platform-analytics",
+        "fixxflow-people",
+        "fixxflow-admin"
+      ]
+    },
+    {
+      "key": "fixxflow-platform-analytics",
+      "category": "Software",
+      "title": "FixxFlow: review product analytics and platform audit",
+      "summary": "For provisioned platform owners. Understand aggregate opted-in usage and recorded owner operations.",
+      "reviewedOn": "2026-10-12",
+      "audience": "provisioned platform owners",
+      "sourcePaths": [
+        "src/app/platform/analytics/page.tsx",
+        "src/app/platform/audit/page.tsx",
+        "PRODUCT_ANALYTICS.md"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For provisioned platform owners. Understand aggregate opted-in usage and recorded owner operations. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open Product analytics"
+        },
+        {
+          "type": "paragraph",
+          "text": "In the owner console choose Product analytics and a 7-, 30-, or 90-day UTC window. Read event and role breakdowns for the selected period."
+        },
+        {
+          "type": "heading",
+          "text": "2. Interpret usage counts correctly"
+        },
+        {
+          "type": "paragraph",
+          "text": "Counts cover opted-in product usage, not all customers or all work. They exclude message content and search words and do not provide a per-person or per-customer journey. Zero is a valid empty state. These counts are not billing, compliance, or customer service-level evidence."
+        },
+        {
+          "type": "heading",
+          "text": "3. Open Platform audit"
+        },
+        {
+          "type": "paragraph",
+          "text": "Choose Platform audit to review the latest recorded owner operations with actor and time. Organization record changes commit with their platform audit events. This is separate from each customer’s Administration → Audit log."
+        },
+        {
+          "type": "heading",
+          "text": "4. Use the correct reporting surface"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use customer Reports, with an authorized customer membership, for that organization’s service workload and SLA outcomes. Product analytics cannot substitute for customer operational reports or reconstruct a user’s activity history."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The selected window and aggregate event counts are visible, and owner changes can be checked in the platform audit within its displayed history. No customer record content is exposed by analytics."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ask the platform operator about unavailable analytics, missing audit operations, or access failures. Do not enable usage sharing for other users to fill an empty chart."
+        }
+      ],
+      "related": [
+        "fixxflow-platform",
+        "fixxflow-reports",
+        "fixxflow-audit",
+        "fixxflow-account"
+      ]
+    },
+    {
+      "key": "fixxflow-recovery",
+      "category": "Software",
+      "title": "FixxFlow: recover from failed saves and protect unfinished work",
+      "summary": "For everyone. Keep drafts while resolving errors, stale edits, and uncertain network responses.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/components/ui/action-form.tsx",
+        "src/components/ui/unsaved-changes.ts",
+        "src/features/tickets/ticket-details-form.tsx"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Keep drafts while resolving errors, stale edits, and uncertain network responses. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Read the result before leaving"
+        },
+        {
+          "type": "paragraph",
+          "text": "After a save, send, or upload, look for the success or error message. Pending means wait; it is not success. If the connection failed after submission, the operation may have committed even if a response was lost."
+        },
+        {
+          "type": "heading",
+          "text": "2. Keep and correct the draft"
+        },
+        {
+          "type": "paragraph",
+          "text": "Leave the editor open and follow field errors or the error summary. Supported forms keep entered values after failure. Avoid reloading while your unsaved work is the only copy; drafts are not a promise of permanent storage across tab closure or browser crashes."
+        },
+        {
+          "type": "heading",
+          "text": "3. Check uncertain completion"
+        },
+        {
+          "type": "paragraph",
+          "text": "Inspect the saved record, conversation, file list, or inventory history, ideally in a separate tab, before retrying. A successful record check is better evidence than clicking the same action repeatedly."
+        },
+        {
+          "type": "heading",
+          "text": "4. Handle navigation and conflicts"
+        },
+        {
+          "type": "paragraph",
+          "text": "If asked to discard unsaved changes, cancel to keep working or confirm only when ready to abandon them. For stale ticket details, Review saved details keeps the draft in the current tab; Reload latest details deliberately replaces it. Browser reload/close warnings depend on browser support."
+        },
+        {
+          "type": "heading",
+          "text": "5. Use the feature’s recovery action"
+        },
+        {
+          "type": "paragraph",
+          "text": "Use Retry, Try again, or Retry search for read failures. Reconnecting in chat is a connection state, not evidence that a new message was saved. If a page still fails, record the feature, time, and safe reference shown before contacting support."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "You have either a confirmed saved result or a retained draft with a clear next step. You have checked for an existing operation before risking a duplicate."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "Contact IT for persistent errors, unexpected loss of access, or a conflict you cannot reconcile. Include the ticket or feature reference and error text, excluding passwords, tokens, and private reset links."
+        }
+      ],
+      "related": [
+        "fixxflow-ticket-details",
+        "fixxflow-ticket-files",
+        "fixxflow-chat",
+        "fixxflow-account"
+      ]
+    },
+    {
+      "key": "fixxflow-new-ticket",
+      "category": "Accounts",
+      "title": "FixxFlow: create a ticket for yourself or another requester",
+      "summary": "For everyone. Record an issue clearly and use staff assignment controls when available.",
+      "reviewedOn": "2026-10-12",
+      "audience": "everyone",
+      "sourcePaths": [
+        "src/app/app/tickets/new/page.tsx",
+        "src/app/app/tickets/actions.ts"
+      ],
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "For everyone. Record an issue clearly and use staff assignment controls when available. Available controls depend on your workspace role and permissions."
+        },
+        {
+          "type": "heading",
+          "text": "1. Open the request form"
+        },
+        {
+          "type": "paragraph",
+          "text": "From Home choose Open a ticket, use Submit a request in the employee ticket list, or choose New ticket in the staff queue. For an assigned device, start from My equipment so the asset association is created with the request."
+        },
+        {
+          "type": "heading",
+          "text": "2. Describe the issue"
+        },
+        {
+          "type": "paragraph",
+          "text": "Enter a specific subject and description, including impact, location, exact errors, and checks already tried. Choose the closest category and optional location. Staff can also select the Requester and Priority; confirm that the requester is the person who needs help."
+        },
+        {
+          "type": "heading",
+          "text": "3. Set staff routing if needed"
+        },
+        {
+          "type": "paragraph",
+          "text": "Staff can expand Assignment & timing to choose a technician, team, and separate manual due date. Automatic uses the category default team; Leave unassigned deliberately bypasses that default. Employees do not need to set staff assignments."
+        },
+        {
+          "type": "heading",
+          "text": "4. Submit and keep the reference"
+        },
+        {
+          "type": "paragraph",
+          "text": "Read any suggested guides, then choose Open ticket or Create ticket. Suggestions are optional. Wait for a saved request link and ticket number. Add photos/files from the saved ticket; there is no attachment upload in the initial form."
+        },
+        {
+          "type": "heading",
+          "text": "Check the result"
+        },
+        {
+          "type": "paragraph",
+          "text": "The saved ticket has the intended requester and description, with the selected staff classification/assignment when applicable. Use its reference to follow progress and add updates."
+        },
+        {
+          "type": "heading",
+          "text": "When to contact IT"
+        },
+        {
+          "type": "paragraph",
+          "text": "If validation or saving fails, keep the form open and correct the reported fields. After an uncertain submission, check the ticket list before creating another request for the same issue."
+        }
+      ],
+      "related": [
+        "fixxflow-ticket-files",
+        "fixxflow-queue",
+        "fixxflow-ticket-details",
+        "fixxflow-my-equipment"
+      ]
     }
   ],
-  "updatedOn": "2026-10-06"
+  "updatedOn": "2026-10-12"
 }

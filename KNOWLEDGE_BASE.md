@@ -24,11 +24,34 @@ Checks: `npm test`, lint, typecheck, build; `supabase/tests/knowledge-regression
 
 ## Curated general IT collection
 
-`content/knowledge/general-it.json` contains 30 original employee guides. The original 14 cover FixxFlow requests, password resets, authenticators, connectivity, email, printers, displays, browsers, software access, phishing, and lost devices; they were reviewed against the FixxFlow implementation on September 25, 2026. Sixteen additional guides were reviewed against official vendor documentation on October 6, 2026, with an individual `reviewedOn` date. They cover Teams joining/chat, audio, cameras, screen sharing, Office saving/recovery, Word PDF export, Excel formulas, Outlook invitations, OneDrive sync, cloud-file recovery, secure sharing, Windows performance, approved updates, mouse/keyboard issues, and support scams. A directory links searchable official help libraries and service-status pages, explaining the limits of public status information for business accounts.
+`content/knowledge/general-it.json` contains 70 guides: the existing 30 employee/general IT guides plus 40 FixxFlow feature how-tos. The original 14 cover FixxFlow requests, password resets, authenticators, connectivity, email, printers, displays, browsers, software access, phishing, and lost devices; they were reviewed against the FixxFlow implementation on September 25, 2026. Sixteen additional guides were reviewed against official vendor documentation on October 6, 2026, with an individual `reviewedOn` date. They cover Teams joining/chat, audio, cameras, screen sharing, Office saving/recovery, Word PDF export, Excel formulas, Outlook invitations, OneDrive sync, cloud-file recovery, secure sharing, Windows performance, approved updates, mouse/keyboard issues, and support scams. A directory links searchable official help libraries and service-status pages, explaining the limits of public status information for business accounts.
 
 Relevant guides link to official Microsoft, Google, Apple, or NIST documentation. These are original practical summaries with source links, not copies of third-party articles or automated feeds. The collection-level `reviewedOn` retains the original review date; `updatedOn` records the expansion. Google Workspace Learning Center and Microsoft Support informed the topic-based organization; their text, branding, and layout were not copied.
 
 Each article defines its scope, practical steps, a result check, and when to contact IT. Company-specific network names, support hours, approvals, recovery guarantees, and software vendors are deliberately not assumed. Keep those details in locally maintained articles when confirmed. Staff can edit or archive every imported article using the normal editor.
+
+### FixxFlow feature how-tos
+
+The 40 feature guides were checked against repository implementation on October
+12, 2026. Search for **FixxFlow: get started and find the right feature**, then
+follow Related articles, or search **FixxFlow** plus the task name. Coverage includes
+account/security, navigation/search, notifications, ticket creation/history/work,
+chat, equipment/imports, department inventory and fulfillment, knowledge authoring,
+reports/exports, administration/access/routing/audit, automation creation/testing/
+time thresholds/operations/portability, and the separate owner console.
+
+Every guide names its audience and retains `sourcePaths` for future maintenance.
+Published guides are readable by organization members; administrator/owner
+instructions contain no private records or credentials and do not grant access.
+The existing category, rendering, heading navigation, and related-article components
+are reused; no UI or permission model changed. The original 30 source articles are
+unchanged, and the additive importer preserves existing workspace edits.
+
+Published to the Peter Island Resort and Spa workspace on October 12, 2026: 40
+guides added, all 30 existing articles preserved exactly, and 70 total articles.
+Post-import checks confirmed all 40 new bodies and related-link lists match the
+reviewed collection. A repeat import in a rolled-back transaction created zero
+articles. No schema, roles, permissions, or email configuration changed.
 
 The collection is explicitly imported per organization, never automatically seeded. Generate a reviewable SQL transaction with:
 

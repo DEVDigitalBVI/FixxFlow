@@ -42,6 +42,36 @@ test('published collection parses, covers all topics, and has valid related guid
   assert.doesNotMatch(html,/could not be displayed|<script>/);
  }
 });
+
+test('FixxFlow how-tos cover feature routes, identify audiences, and are reachable from getting started',()=>{
+ const collection=JSON.parse(fs.readFileSync('content/knowledge/general-it.json','utf8'));
+ const guides=collection.articles.filter(article=>article.key.startsWith('fixxflow-'));
+ const byKey=new Map(collection.articles.map(article=>[article.key,article]));
+ const sources=new Set(guides.flatMap(article=>article.sourcePaths));
+ for(const route of [
+  'src/app/app/profile/page.tsx','src/app/app/security/page.tsx',
+  'src/app/app/notifications/page.tsx','src/app/app/tickets/page.tsx',
+  'src/app/app/tickets/new/page.tsx','src/app/app/tickets/[ticketId]/history/page.tsx',
+  'src/app/app/chat/page.tsx','src/app/app/chat/[conversationId]/page.tsx',
+  'src/app/app/help/page.tsx','src/app/app/help/new/page.tsx',
+  'src/app/app/assets/page.tsx','src/app/app/assets/import/page.tsx',
+  'src/app/app/inventory/page.tsx','src/app/app/people/page.tsx',
+  'src/app/app/organization/page.tsx','src/app/app/reports/page.tsx',
+  'src/app/app/administration/[section]/page.tsx',
+  'src/app/app/administration/automations/[ruleId]/page.tsx',
+  'src/app/app/administration/automations/operations/page.tsx',
+  'src/app/platform/customers/page.tsx','src/app/platform/analytics/page.tsx',
+  'src/app/platform/audit/page.tsx',
+ ]) assert.ok(sources.has(route),`Missing how-to coverage: ${route}`);
+ for(const article of guides){
+  assert.ok(article.audience && article.content[0].text.includes(article.audience),article.key);
+  assert.match(article.reviewedOn,/^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(article.sourcePaths.length>0 && article.sourcePaths.every(path=>fs.existsSync(path)),article.key);
+ }
+ const reachable=new Set(),pending=['fixxflow-start'];
+ while(pending.length){const key=pending.pop();if(reachable.has(key))continue;reachable.add(key);pending.push(...byKey.get(key).related);}
+ for(const article of guides) assert.ok(reachable.has(article.key),`Unreachable how-to: ${article.key}`);
+});
 test('article contents links resolve to unique focusable headings, including repeated titles',()=>{
  const html=renderToStaticMarkup(React.createElement(ArticleContent,{showContents:true,content:[{type:'heading',text:'Check'},{type:'paragraph',text:'Details'},{type:'heading',text:'Check'}]}));
  assert.match(html,/aria-label="On this page"/);
