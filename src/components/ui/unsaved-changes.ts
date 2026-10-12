@@ -6,8 +6,13 @@ const guards = new Set<() => boolean>();
 let approvedUntil = 0;
 const warning = 'Discard unsaved changes? Your unfinished work on this page will not be saved.';
 
+function hasUnsavedChanges() {
+  for (const guard of guards) if (guard()) return true;
+  return false;
+}
+
 export function confirmDiscardChanges(force = false) {
-  if (Date.now() < approvedUntil || (!force && !Array.from(guards).some(guard => guard()))) return true;
+  if (Date.now() < approvedUntil || (!force && !hasUnsavedChanges())) return true;
   if (!window.confirm(warning)) return false;
   approvedUntil = Date.now() + 500;
   return true;
@@ -21,7 +26,6 @@ export function leavesDocument(destination: string, current: string) {
 /** Shared by all mounted drafts; one prompt covers the entire page. */
 function install() {
   if (!window.history) return () => {};
-  const dirty = () => Array.from(guards).some(guard => guard());
   const click = (event: MouseEvent) => {
     const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href]') : null;
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.download || (link.target && link.target !== '_self')) return;
@@ -30,7 +34,7 @@ function install() {
     }
   };
   const unload = (event: BeforeUnloadEvent) => {
-    if (dirty() && Date.now() >= approvedUntil) { event.preventDefault(); event.returnValue = ''; }
+    if (hasUnsavedChanges() && Date.now() >= approvedUntil) { event.preventDefault(); event.returnValue = ''; }
   };
   // Next's soft navigation uses the History API. Track entries without replacing
   // its router state; restore a declined traversal before Next handles popstate.
@@ -45,7 +49,7 @@ function install() {
   const pop = (event: PopStateEvent) => {
     if (restoring) { restoring = false; event.stopImmediatePropagation(); return; }
     const next = Number(event.state?.fixxflowEntry ?? index - 1);
-    if (dirty() && leavesDocument(window.location.href, currentUrl) && !confirmDiscardChanges()) {
+    if (hasUnsavedChanges() && leavesDocument(window.location.href, currentUrl) && !confirmDiscardChanges()) {
       event.stopImmediatePropagation(); restoring = true; history.go(index - next || 1);
     } else { index = next; currentUrl = window.location.href; }
   };

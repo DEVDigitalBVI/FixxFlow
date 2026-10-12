@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { load } from '../../../tests/helpers/load-module.mjs';
-const { searchDestinations, matchDestinations } = load('src/features/search/model.ts');
+const { searchDestinations, matchDestinations, groupSearchResults } = load('src/features/search/model.ts');
 test('navigation results match literal terms and respect role and inventory access', () => {
   const employee = searchDestinations('end_user', false);
   assert.equal(employee.some(row => ['/app/people', '/app/administration', '/app/inventory', '/app/reports'].includes(row.href)), false);
@@ -9,6 +9,18 @@ test('navigation results match literal terms and respect role and inventory acce
   assert.equal(searchDestinations('technician', true).some(row => row.href === '/app/administration'), false);
   assert.equal(matchDestinations(employee, 'HELP ART').length, 1);
   assert.equal(matchDestinations(employee, '%').length, 0);
+});
+test('grouped results retain selection indices, group order and duplicate IDs from different features', () => {
+  const results = [
+    { id: 'same', label: 'Ticket', href: '/app/tickets/same', group: 'Tickets' },
+    { id: 'same', label: 'Person', href: '/app/people/same', group: 'People' },
+    { id: 'other', label: 'Another ticket', href: '/app/tickets/other', group: 'Tickets' },
+  ];
+  const groups = groupSearchResults(results);
+  assert.deepEqual(groups.map(group => group.label), ['Tickets', 'People']);
+  assert.deepEqual(groups.map(group => group.entries.map(entry => entry.index)), [[0, 2], [1]]);
+  for (const group of groups) for (const entry of group.entries) assert.equal(entry.result, results[entry.index]);
+  assert.deepEqual(groupSearchResults([]), []);
 });
 function service(role = 'administrator', error = false) {
   const calls = [];

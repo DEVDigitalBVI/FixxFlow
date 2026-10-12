@@ -18,6 +18,14 @@ FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 - `src/types` — shared and generated TypeScript types
 - `supabase/migrations` — versioned database schema changes
 
+## Documentation
+
+- [Design system](DESIGN_SYSTEM.md) and [interface audit](docs/apple-interface-audit-2026-10-11.md): UI requirements, findings, verification evidence, and remaining browser checks.
+- [Architecture](PLATFORM_ARCHITECTURE.md) and [code review](docs/code-review.md): application boundaries, implementation history, and outstanding engineering/product work.
+- [Automation rollout](docs/automation-rollout.md): deployment status, release gates, recovery, and links to stage-specific runbooks.
+- [Email delivery](docs/resend-email.md), [notifications](NOTIFICATIONS.md), [inventory](docs/inventory.md), and [asset import](docs/asset-import.md): setup and operational behavior.
+- [Knowledge base](KNOWLEDGE_BASE.md), [search](SEARCH.md), [reporting](REPORTING.md), [analytics](PRODUCT_ANALYTICS.md), and [audit log](AUDIT_LOG.md): domain behavior and validation.
+
 ## Supabase types
 
 With the local Supabase stack running, regenerate database types with:
@@ -39,6 +47,12 @@ Never expose a Supabase secret or service-role key through a `NEXT_PUBLIC_` vari
 Apply `20260925010356_starter_ticket_categories.sql` through the normal migration workflow to seed Account / Access, Computer, Email, Network, Printer, Software, Security, Phone, and Other. New organizations receive these nine categories automatically. Existing organizations receive missing defaults; custom and legacy categories (including Hardware and Access), inactive settings, and ticket references are preserved.
 
 Employees can optionally choose a category when requesting support. Staff can categorize tickets on creation and in ticket details. Subcategories appear only when configured beneath the selected category; changing the parent clears the child selection. Existing inactive classifications remain visible on historical tickets.
+
+Administrators configure category default teams under Administration → Categories.
+New employee/equipment requests use the active default; staff can use automatic
+routing, choose a team, or leave a request unassigned. Changing defaults does not
+reroute existing tickets. Ticket history records automatic routing with the team
+name captured at creation; inactive categories/teams receive no automatic assignments.
 
 Later phase: administrator-managed Category → Subcategory → Issue Type. Keep tenant-scoped IDs and parent-child constraints for analytics and automation; archive used values instead of deleting history. Category and Subcategory tables exist today. The Issue Type model, administrator editor, and analytics/automation rules are future work.
 
@@ -63,13 +77,9 @@ Run the transactional SQL regression with `supabase db query --local --file supa
 
 ### Security and database verification
 
-On 1 October 2026, the two routing migration filenames were reconciled to the
-already-applied production identifiers: `20260926024852_category_team_routing.sql`
-and `20260926025012_ticket_routing_insert_permission.sql`. Their SQL is unchanged
-byte for byte. All 26 production identifiers now align; exactly ten Automation
-migrations remain pending. No production history repair or migration was performed.
-See [the production preflight](docs/automation-production-preflight.md) for the
-approved dry-run result and the outstanding fresh logical backup requirement.
+See the [Automation rollout runbook](docs/automation-rollout.md) for recorded
+migration deployments and release gates. Historical preflight reports describe
+their verification date; they do not establish the current state of a database.
 
 `20260925010358_enforce_mfa_and_server_owned_timestamps.sql` enforces verified MFA factors across all application tables, Storage and Realtime. Accounts without a verified factor can still use AAL1; enrolled accounts require AAL2. Authenticated callers cannot provide ticket/chat system timestamps or SLA completion fields. It also serializes administrator demotions and indexes chat foreign keys.
 

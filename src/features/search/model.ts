@@ -13,5 +13,19 @@ export function searchDestinations(role: AppRole, inventory: boolean): SearchRes
 }
 export function matchDestinations(results: SearchResult[], query: string) {
   const terms = query.toLocaleLowerCase().split(/\s+/).filter(Boolean);
-  return results.filter(result => terms.every(term => result.label.toLocaleLowerCase().includes(term)));
+  return results.filter(result => {
+    const label = result.label.toLocaleLowerCase();
+    return terms.every(term => label.includes(term));
+  });
+}
+
+/** Retain flat indices so grouped options and keyboard selection share IDs. */
+export function groupSearchResults(results: SearchResult[]) {
+  const groups = new Map<SearchResult['group'], { result: SearchResult; index: number }[]>();
+  results.forEach((result, index) => {
+    const entries = groups.get(result.group);
+    if (entries) entries.push({ result, index });
+    else groups.set(result.group, [{ result, index }]);
+  });
+  return [...groups].map(([label, entries]) => ({ label, entries }));
 }

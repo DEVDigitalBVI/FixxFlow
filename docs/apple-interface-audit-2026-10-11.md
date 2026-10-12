@@ -12,7 +12,21 @@ This is an Apple-principles review of an original web application. Apple’s gui
 - Source review: shared shell, navigation, tokens, forms, ticket creation/list/detail/conversation/history, chat room, knowledge editor, reports, assets list, inventory list, People, administration hub, account/support/security, signup, and platform navigation/dashboard/error handling. This is representative cross-app coverage, not execution of every route and mutation.
 - Current checks: **818/818 tests pass**, `npm run typecheck` passes, `npm run lint` passes. These checks do not certify visual usability or WCAG conformance.
 - No production mutations, messages, permission changes, or redesigns were performed for this audit.
-- Mobile/tablet rendering, 200% zoom, dark-mode rendering, forced colors, VoiceOver, slow/offline recovery, multi-user realtime behavior, employee sessions, and platform-owner sessions were **not newly verified live**. Existing CSS, tests, and the earlier `docs/design-review.md` provide supporting implementation evidence only. A local fixture server was available, but the independent in-app browser was unavailable; no fixture visual pass is claimed.
+- Mobile/tablet rendering, 200% zoom, dark-mode rendering, forced colors, VoiceOver, slow/offline recovery, multi-user realtime behavior, employee sessions, and platform-owner sessions were **not newly verified live**. Existing CSS, tests, and the earlier checks summarized below provide supporting implementation evidence only. A local fixture server was available, but the independent in-app browser was unavailable; no fixture visual pass is claimed.
+
+### Earlier responsive reviews (September 2026)
+
+The earlier design reports are consolidated here. Synthetic fixtures covered 49
+page/role combinations; representative Safari layouts covered 320–1920px and a
+400px-high desktop viewport. An authenticated administrator session covered
+mostly empty states, mobile navigation focus containment/restoration, and audit
+log reflow at 200% zoom. Later compact-screen checks covered employee home,
+administration, and chat creation. These were limited checks, not verification of
+every role or populated workflow. Screen-reader use, OS reduced-motion/forced-color
+settings, realtime recovery, and failing submissions remained unverified. Shared
+tokens, native controls, navigation, and responsive primitives were reused with no
+deliberate design-system exception. Current implementation requirements live in
+`DESIGN_SYSTEM.md`; the October follow-up below records subsequent verification.
 
 ## Prioritized findings
 

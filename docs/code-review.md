@@ -66,13 +66,27 @@ No framework, dependency, icon family, styling system, design token, database po
 
 ## Remaining work requiring further evidence
 
-1. **Migration reconciliation — resolved 1 October 2026.** Exact recorded SQL equality and application schema fingerprints were verified. The repository routing filenames now use production versions `20260926024852` / `20260926025012`, with SQL bytes unchanged. All 26 existing identifiers align; ten Automation migrations remain pending. No production history repair or migration was performed. See [the production preflight](automation-production-preflight.md) for the dry run and remaining backup requirement. The generated types alone are not proof of migration parity.
+1. **Migration reconciliation — resolved.** Routing migration filenames were aligned with recorded production versions on 1 October, with SQL bytes unchanged. Later migrations were applied on 3 October as recorded above. See the [rollout runbook](automation-rollout.md) for deployment and release gates; the generated types alone are not proof of migration parity.
 2. **Database regression and profiling.** Run the existing pgTAP and transactional SQL suites against a fully migrated local stack. Exercise archive queries with over 1,000 records and tied timestamps in PostgreSQL. Measure representative `EXPLAIN (ANALYZE, BUFFERS)` results before adding indexes or changing reporting RPCs. Neither Supabase CLI nor Docker was available in this environment.
 3. **Lookup scalability — primary workflows addressed 3 October 2026.** See the follow-up above. Administrative lookup editors and chat-to-ticket linking remain unchanged; broader conversion and production profiling can build on the new shared picker/RPC.
 4. **RPC scope.** `operational_report` computes daily/breakdown data even for summary-only callers. `platform_overview` returns organizations, usage, and audit data together for every platform section. Narrow or split these database contracts after measuring workloads and running database regressions; preserve owner/MFA checks.
 5. **Browser confidence.** Exercise authenticated employee/staff flows on compact and wide screens: archive paging, keyboard focus, announcements, draft preservation, uploads/retry, reconnects, and refreshes during incoming messages. Hook and server-render tests are useful but do not replace browser/assistive-technology checks.
 6. **Further decomposition and formatting.** Ticket detail, queue JSX, chat room, and article editor remain large. Extract focused presentation pieces when modifying those features. Avoid generic repository classes or global stores merely to relocate code. Split CSS by ownership only with visual coverage and preserve cascade order.
 7. **Delivery coverage.** The new application CI workflow still needs its first GitHub run. Database and authenticated browser jobs need separately provisioned fixtures and services. It does not deploy or alter databases.
+
+## Product follow-ups from the earlier feature review
+
+The former feature-rollout report is consolidated here. Administration editors,
+recoverable intake, category routing, and suggested guides are implemented. Queue
+drawers and permission-aware global search were subsequently added in the October
+interface follow-up. Other ideas remain candidates, not approved implementation:
+
+- Team membership, usage counts, invitation lifecycle/recovery, and offboarding reassignment.
+- Request templates, intake attachments, saved queues, reusable replies, resolution summaries, and creation retry idempotency.
+- Configurable SLA schedules/pause rules, escalations, notification preferences, and delivery health.
+- Article ownership/review/versioning/audience, inventory import/history, QR entry, and warranty reminders.
+- Reporting filters/drill-through/history, operational health, MFA policy/recovery, and audit exports.
+- Service catalog/approvals, linked outage communication, and satisfaction feedback.
 
 ## Deletion boundaries
 

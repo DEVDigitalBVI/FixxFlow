@@ -14,6 +14,12 @@ Published article views are recorded on client mount and deduplicated per signed
 
 Search uses Postgres full-text indexes across title, summary, and block text. Browsing is category-filtered with 24 articles per page. Ticket search links now query published knowledge articles rather than static data.
 
+Ticket intake suggests up to three guides by matching title, description, and
+category against up to 200 recently updated published article summaries from the
+same organization. Matching runs in the browser; guides open in a separate tab to
+preserve the draft. Missing or unavailable suggestions never prevent submission,
+and Browse all guides remains available.
+
 Checks: `npm test`, lint, typecheck, build; `supabase/tests/knowledge-regression.sql` verifies authoring, draft/storage confidentiality, publication, revision conflicts, analytics deduplication, membership isolation, and MFA. All SQL fixtures roll back. No test email delivery is required.
 
 ## Curated general IT collection

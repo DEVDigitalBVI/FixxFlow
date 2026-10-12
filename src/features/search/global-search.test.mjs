@@ -8,7 +8,7 @@ function fixture() {
   const slots = [], calls = [], original = globalThis.document;
   const body = {};
   globalThis.document = { body, activeElement: null, getElementById: () => null };
-  const hooks = { ...React, useEffect() {}, useRef(value) { const i = cursor++; return slots[i] ??= { current: value }; }, useState(value) { const i = cursor++; slots[i] ??= { value }; return [slots[i].value, next => { slots[i].value = typeof next === 'function' ? next(slots[i].value) : next; }]; } };
+  const hooks = { ...React, useEffect() {}, useMemo: compute => compute(), useRef(value) { const i = cursor++; return slots[i] ??= { current: value }; }, useState(value) { const i = cursor++; slots[i] ??= { value }; return [slots[i].value, next => { slots[i].value = typeof next === 'function' ? next(slots[i].value) : next; }]; } };
   const { GlobalSearch } = load('src/features/search/global-search.tsx', { react: hooks, 'react-dom': { createPortal: (child, target) => { portalTarget = target; return child; } }, 'next/navigation': { useRouter: () => ({ push: href => calls.push(href) }) }, '@/components/ui/unsaved-changes': { confirmDiscardChanges: () => approved } });
   const walk = (node, predicate) => {
     if (Array.isArray(node)) { for (const child of node) { const found = walk(child, predicate); if (found) return found; } }

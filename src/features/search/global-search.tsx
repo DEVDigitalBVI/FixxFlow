@@ -1,10 +1,10 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import { normalizeSearch, SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
-import { matchDestinations, searchDestinations, type SearchResult } from './model';
+import { groupSearchResults, matchDestinations, searchDestinations, type SearchResult } from './model';
 import type { AppRole } from '@/types/database';
 
 export function GlobalSearch({ role, inventoryAccess, onOpen, platform = false, workspaceAvailable = true }: { role: AppRole; inventoryAccess: boolean; onOpen: () => void; platform?: boolean; workspaceAvailable?: boolean }) {
@@ -13,14 +13,15 @@ export function GlobalSearch({ role, inventoryAccess, onOpen, platform = false, 
   const dialog = useRef<HTMLDialogElement>(null), input = useRef<HTMLInputElement>(null), trigger = useRef<HTMLButtonElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null), wasOpen = useRef(false);
   const composing = useRef(false), router = useRouter();
-  const destinations: SearchResult[] = platform ? [
+  const destinations = useMemo<SearchResult[]>(() => platform ? [
     { id: 'customers', label: 'Customers', href: '/platform/customers', group: 'Navigation' },
     { id: 'analytics', label: 'Product analytics', href: '/platform/analytics', group: 'Navigation' },
     { id: 'audit', label: 'Platform audit', href: '/platform/audit', group: 'Navigation' },
     ...(workspaceAvailable ? [{ id: 'workspace', label: 'My workspace', href: '/app', group: 'Navigation' as const }] : []),
-  ] : searchDestinations(role, inventoryAccess);
-  const results = [...matchDestinations(destinations, normalizeSearch(query)), ...remote];
-  const groups = [...new Set(results.map(result => result.group))];
+  ] : searchDestinations(role, inventoryAccess), [platform, workspaceAvailable, role, inventoryAccess]);
+  const normalizedQuery = normalizeSearch(query);
+  const results = useMemo(() => [...matchDestinations(destinations, normalizedQuery), ...remote], [destinations, normalizedQuery, remote]);
+  const groups = useMemo(() => groupSearchResults(results), [results]);
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k' && !event.isComposing) { event.preventDefault(); returnFocus.current = document.activeElement as HTMLElement; onOpen(); setOpen(true); }
@@ -38,19 +39,19 @@ export function GlobalSearch({ role, inventoryAccess, onOpen, platform = false, 
     }
   }, [open]);
   useEffect(() => {
-    if (!open || platform || !normalizeSearch(query)) return;
+    if (!open || platform || !normalizedQuery) return;
     const controller = new AbortController();
     const timer = window.setTimeout(async () => {
       if (composing.current) return;
       try {
-        const response = await fetch(`/app/search?${new URLSearchParams({ q: normalizeSearch(query) })}`, { signal: controller.signal, cache: 'no-store' });
+        const response = await fetch(`/app/search?${new URLSearchParams({ q: normalizedQuery })}`, { signal: controller.signal, cache: 'no-store' });
         if (!response.ok) throw new Error();
         const payload = await response.json();
         if (!controller.signal.aborted) { setRemote(payload.results); setStatus('idle'); setSelected(0); }
       } catch { if (!controller.signal.aborted) setStatus('error'); }
     }, 300);
     return () => { controller.abort(); window.clearTimeout(timer); };
-  }, [open, query, retry, platform]);
+  }, [open, query, normalizedQuery, retry, platform]);
   function change(value: string) { setQuery(value); setRemote([]); setSelected(0); setStatus(normalizeSearch(value) && !platform ? 'loading' : 'idle'); }
   function choose(result: SearchResult) { if (!confirmDiscardChanges()) return; setOpen(false); router.push(result.href); }
   return <>
@@ -67,7 +68,17 @@ export function GlobalSearch({ role, inventoryAccess, onOpen, platform = false, 
       <p className="form-note" id="global-search-hint">{SEARCH_HINT} Use ↑ and ↓ to choose, Enter to open, Escape to close.</p>
       <p role="status">{status === 'loading' ? 'Searching…' : `${results.length} results${remote.length >= 8 ? ' · Open a feature to see more' : ''}.`}</p>
       {status === 'error' && <div role="alert" className="alert alert-error">Workspace results could not load. Navigation is still available. <button type="button" className="button button-secondary" onClick={() => { setStatus('loading'); setRetry(value => value + 1); input.current?.focus(); }}>Retry search</button></div>}
-      <div id="global-search-results" role="listbox" aria-label="Search results" className="global-search-results">{groups.map(group => <div key={group} role="group" aria-label={group}>{results.map((result, index) => result.group === group && <a key={`${result.group}-${result.id}`} id={`global-result-${index}`} href={result.href} role="option" aria-selected={selected === index} tabIndex={-1} className="global-search-result" onMouseMove={() => setSelected(index)} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return; event.preventDefault(); choose(result); }}><small>{result.group}</small><strong>{result.label}</strong>{result.detail && <span>{result.detail}</span>}</a>)}</div>)}</div>
+      <div id="global-search-results" role="listbox" aria-label="Search results" className="global-search-results">
+        {groups.map(({ label, entries }) => <div key={label} role="group" aria-label={label}>
+          {entries.map(({ result, index }) => <a key={`${result.group}-${result.id}`} id={`global-result-${index}`} href={result.href} role="option" aria-selected={selected === index} tabIndex={-1} className="global-search-result" onMouseMove={() => setSelected(index)} onClick={event => {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+            event.preventDefault();
+            choose(result);
+          }}>
+            <small>{result.group}</small><strong>{result.label}</strong>{result.detail && <span>{result.detail}</span>}
+          </a>)}
+        </div>)}
+      </div>
       {!results.length && status === 'idle' && <p>No results. Try fewer words or a ticket number.</p>}
     </dialog>, document.body)}
   </>;

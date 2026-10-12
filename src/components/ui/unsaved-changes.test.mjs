@@ -50,3 +50,16 @@ test('reload and close retain native browser protection while dirty', () => {
   const f = fixture();
   try { const event = { preventDefault() { this.prevented = true; } }; f.listeners.beforeunload(event); assert.equal(event.prevented, true); assert.equal(event.returnValue, ''); } finally { f.close(); }
 });
+
+test('a saved draft does not release protection for another mounted editor', () => {
+  const f = fixture();
+  try {
+    const releaseOther = f.useUnsavedChanges(true);
+    f.release();
+    assert.equal(f.click('/app/help').prevented, true);
+    assert.equal(f.prompts(), 1);
+    releaseOther();
+    assert.equal(f.click('/app/help').prevented, undefined);
+    assert.equal(f.prompts(), 1);
+  } finally { f.close(); }
+});
