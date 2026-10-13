@@ -1,7 +1,10 @@
 import { exportFormats, type ExportFormat } from './export-model';
 
 export async function fetchReportDownload(format: ExportFormat, signal: AbortSignal) {
-  const response = await fetch(`/app/reports/export?format=${format}`, { cache: 'no-store', credentials: 'same-origin', signal });
+  return fetchReportDownloadUrl(`/app/reports/export?format=${format}`, format, signal);
+}
+export async function fetchReportDownloadUrl(url: string, format: ExportFormat, signal: AbortSignal) {
+  const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin', signal });
   if (response.redirected || response.headers.get('content-type')?.includes('text/html')) {
     throw new Error('Your session may have expired. Reload Reports, sign in if prompted, and try again.');
   }
@@ -12,6 +15,6 @@ export async function fetchReportDownload(format: ExportFormat, signal: AbortSig
   if (response.headers.get('content-type')?.split(';')[0] !== exportFormats[format].mime) {
     throw new Error('The report returned an unexpected file. Please try again.');
   }
-  const filename = response.headers.get('content-disposition')?.match(/filename="(fixxflow-report-[0-9-]+\.(?:xlsx|csv|pdf))"/)?.[1] ?? `fixxflow-report.${format}`;
+  const filename = response.headers.get('content-disposition')?.match(/filename="(fixxflow-(?:custom-)?report-[a-z0-9-]+\.(?:xlsx|csv|pdf))"/i)?.[1] ?? `fixxflow-report.${format}`;
   return { blob: await response.blob(), filename };
 }

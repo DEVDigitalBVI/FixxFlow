@@ -14,7 +14,7 @@ test('top categories preserve totals when grouping the tail',()=>{
 });
 test('employee cannot request reports and failures never masquerade as zeros',async()=>{
  let calls=0;
- const mocks={'next/link':{default:props=>React.createElement('a',props)},'next/navigation':{notFound:()=>{throw Error('NOT_FOUND');}},'@/lib/auth/viewer':{requireViewer:async()=>({role:'end_user',organizationId:'org'})},'@/features/reporting/data':{getReport:async()=>{calls++;return null;}},'@/features/reporting/components':{ReportUnavailable:()=>React.createElement('div',{role:'alert'},'Unavailable')}};
+ const mocks={'next/link':{default:props=>React.createElement('a',props)},'next/navigation':{notFound:()=>{throw Error('NOT_FOUND');}},'@/lib/auth/viewer':{requireViewer:async()=>({role:'end_user',organizationId:'org'})},'@/features/reporting/data':{getReport:async()=>{calls++;return null;}},'@/features/reporting/custom-data':{getSavedReports:async()=>[]},'@/features/reporting/custom-components':{SavedReportList:()=>React.createElement('section',null,'Saved reports')},'@/features/reporting/components':{ReportUnavailable:()=>React.createElement('div',{role:'alert'},'Unavailable')}};
  const page=()=>load('src/app/app/reports/page.tsx',mocks).default();
  await assert.rejects(page,/NOT_FOUND/);assert.equal(calls,0);
  mocks['@/lib/auth/viewer'].requireViewer=async()=>({role:'technician',organizationId:'org'});
@@ -127,6 +127,8 @@ test('reports page passes administrator-only SLA navigation without altering tec
    'next/navigation': { notFound: () => { throw Error('NOT_FOUND'); } },
    '@/lib/auth/viewer': { requireViewer: async () => ({ role, organizationId: 'org', organizationName: 'Workspace' }) },
    '@/features/reporting/data': { getReport: async () => reportFixture },
+   '@/features/reporting/custom-data': { getSavedReports: async () => [] },
+   '@/features/reporting/custom-components': { SavedReportList: () => React.createElement('section', {}, 'Saved reports') },
    '@/features/reporting/report-download': { ReportDownload: () => React.createElement('button', {}, 'Download report') },
   }).default;
   const html = renderToStaticMarkup(await page());

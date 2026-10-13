@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   outputFileTracingIncludes: {
     '/app/reports/export': ['./src/features/reporting/fonts/*.ttf', './public/brand/fixxflow/logo/fixxflow-logo-horizontal.png'],
+    '/app/reports/export/custom': ['./src/features/reporting/fonts/*.ttf', './public/brand/fixxflow/logo/fixxflow-logo-horizontal.png'],
+    '/api/cron/reports': ['./src/features/reporting/fonts/*.ttf', './public/brand/fixxflow/logo/fixxflow-logo-horizontal.png'],
   },
   images: {
     remotePatterns: [

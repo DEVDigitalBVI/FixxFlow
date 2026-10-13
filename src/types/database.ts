@@ -6,6 +6,7 @@ import type { AutomationExecutionFunctions, AutomationExecutionTables } from './
 import type { AutomationAdminFunctions } from './automation-admin-database';
 import type { AutomationDryRunFunctions } from './automation-dry-run-database';
 import type { AutomationWorkerFunctions } from './automation-worker-database';
+import type { CustomReportDefinition, ReportDelivery } from '@/features/reporting/custom-model';
 export type { Json } from './database.generated';
 
 type Schema = GeneratedDatabase['public'];
@@ -44,6 +45,18 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
   public: Omit<Schema, 'Tables' | 'Functions' | 'Enums'> & {
     Enums: Omit<Schema['Enums'], 'notification_kind'> & { notification_kind: NotificationKind };
     Tables: Omit<Tables, 'organizations' | 'profiles' | 'assets' | 'tickets' | 'ticket_messages' | 'notifications'> & AutomationTables & AutomationExecutionTables & InventoryTables & {
+      saved_reports: {
+        Row: { id: string; organization_id: string; owner_id: string; name: string; description: string | null; visibility: 'personal' | 'shared'; definition: CustomReportDefinition; created_at: string; updated_at: string };
+        Insert: { id?: string; organization_id: string; owner_id: string; name: string; description?: string | null; visibility?: 'personal' | 'shared'; definition: import('./database.generated').Json; created_at?: string; updated_at?: string };
+        Update: { name?: string; description?: string | null; visibility?: 'personal' | 'shared'; definition?: import('./database.generated').Json; updated_at?: string };
+        Relationships: [];
+      };
+      report_schedules: {
+        Row: { id: string; organization_id: string; report_id: string; created_by: string; frequency: 'weekly' | 'monthly'; weekday: number | null; monthday: number | null; run_hour: number; timezone: string; format: 'xlsx' | 'csv' | 'pdf'; recipient_emails: string[]; active: boolean; next_run_at: string; last_enqueued_at: string | null; created_at: string; updated_at: string };
+        Insert: { id?: string; organization_id: string; report_id: string; created_by: string; frequency: 'weekly' | 'monthly'; weekday?: number | null; monthday?: number | null; run_hour: number; timezone: string; format?: 'xlsx' | 'csv' | 'pdf'; recipient_emails: string[]; active?: boolean; next_run_at?: string; created_at?: string; updated_at?: string };
+        Update: { frequency?: 'weekly' | 'monthly'; weekday?: number | null; monthday?: number | null; run_hour?: number; timezone?: string; format?: 'xlsx' | 'csv' | 'pdf'; recipient_emails?: string[]; active?: boolean; next_run_at?: string; updated_at?: string };
+        Relationships: [];
+      };
       organizations: Omit<Tables['organizations'], 'Row' | 'Insert' | 'Update'> & { Row: Tables['organizations']['Row'] & { timezone: string }; Insert: Tables['organizations']['Insert'] & { timezone?: string }; Update: Tables['organizations']['Update'] & { timezone?: string } };
       profiles: Omit<Tables['profiles'], 'Row' | 'Insert' | 'Update'> & { Row: Tables['profiles']['Row'] & { timezone: string | null }; Insert: Tables['profiles']['Insert'] & { timezone?: string | null }; Update: Tables['profiles']['Update'] & { timezone?: string | null } };
       notifications: Omit<Tables['notifications'], 'Row'> & { Row: Notification };
@@ -83,6 +96,11 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
       };
       finish_notification_email: NullableArgs<'finish_notification_email', 'provider_message_id' | 'failure'>;
       claim_notification_emails: Omit<Functions['claim_notification_emails'], 'Returns'> & { Returns: NotificationEmail[] };
+      custom_report: { Args: { target_organization_id: string; report_config: import('./database.generated').Json }; Returns: import('./database.generated').Json };
+      enqueue_scheduled_report_deliveries: { Args: never; Returns: number };
+      claim_report_deliveries: { Args: { batch_size?: number; lease_seconds?: number }; Returns: { delivery_id: string; lease_token: string; organization_id: string; report_id: string; report_name: string; definition: CustomReportDefinition; recipient_email: string; format: 'xlsx' | 'csv' | 'pdf'; scheduled_for: string; attempts: number }[] };
+      finish_report_delivery: { Args: { target_id: string; token: string; provider_id?: string | null; failure_code?: string | null; snapshot?: string | null; report_summary?: import('./database.generated').Json | null }; Returns: boolean };
+      report_delivery_history: { Args: { target_report_id: string }; Returns: ReportDelivery[] };
     };
   };
 };
