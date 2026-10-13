@@ -72,7 +72,7 @@ The core brand-board palette is `#007AFF` primary blue, `#00C6FF` secondary cyan
 - The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its cyan-to-blue motion and deep navy folds express speed, continuity, and dependable technical support.
 - The product name is always written **FixxFlow** with two lowercase x characters and capital F characters. The primary tagline is **IT SUPPORT IN MOTION**.
 - Use the full primary or horizontal logo on authentication, onboarding, marketing, exported documents, and other brand-forward surfaces.
-- Use the approved theme-specific full logo in application sidebars and headers, scaled proportionally for compact screens. Existing favicon and app-launcher icons remain unchanged.
+- Use the approved theme-specific full logo in expanded application sidebars and headers. Use the approved standalone color mark for compact sidebar navigation. Existing favicon and app-launcher icons remain unchanged.
 - In light mode, use `logo/fixxflow-logo-primary.png`; in dark mode, use `logo/fixxflow-logo-dark-mode.png`. Do not recolor, stretch, rotate, outline, separate, or rearrange the F and wrench.
 - Keep clear space around the logo. At small sizes, drop the tagline before reducing legibility; use the icon rather than forcing the wordmark into a square.
 - The logo gradient belongs to brand artwork and occasional brand-forward moments. Functional controls should normally use solid semantic token colors, not gradients.
@@ -358,7 +358,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Offer a soft, rounded Appearance group with native icon buttons for System (monitor), Light (sun), and Dark (moon). Each button has an accessible name, tooltip, pressed state, and a selected dot in addition to color. Keep 44px targets and visible keyboard focus. Place these choices centered below Notifications in workspace navigation, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.
 - Keep the existing semantic tokens as the single color system. Dark mode uses navy surfaces, light text, brighter semantic foregrounds, and darker tinted status backgrounds. `--color-on-accent` controls text on filled actions; `--color-inverse` stays white for fixed navy brand panels. Chart series retain their distinct line styles and data tables.
 - Use native dark form controls via `color-scheme`. Keep focus outlines and control boundaries visible. Theme changes are immediate and introduce no animation.
-- All shared logos use the approved primary (light mode) and dark-mode (dark mode) full PNGs at their original 1353:1334 proportions, with no light backing, cropping, or recoloring. The authentication brand panel follows theme surfaces to keep the selected artwork legible.
+- Full shared logos use the approved primary (light mode) and dark-mode (dark mode) PNGs at their original 1353:1334 proportions; compact sidebar logos use the approved 1139:1151 color icon, with no light backing, cropping, or recoloring. The authentication brand panel follows theme surfaces to keep the selected artwork legible.
 
 ### Cross-screen consistency (October 2026)
 
@@ -370,3 +370,9 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Use `PageLoading` for route-level waits: a named heading, one polite status announcement and static, assistive-technology-hidden placeholders. Do not invent counts, percentages or skeleton data.
 - Template cards align their actions consistently. Builder sections keep brief guidance beside clearly separated fields. Operations uses neutral metric surfaces with written health states; color does not replace the meaning of a state.
 - These patterns apply the hierarchy, consistent controls and adaptable layout principles in Apple's [HIG layout](https://developer.apple.com/design/human-interface-guidelines/layout) and [buttons](https://developer.apple.com/design/human-interface-guidelines/buttons) guidance to FixxFlow's web interface.
+
+### Brand presence (October 2026)
+
+- Carry the approved ribbon palette into the shell: a blue-tinted sidebar introduction, solid blue selected navigation with contrasting text and an inset edge, and a 96px blue-to-cyan page-header rule. Keep the existing focus outline and forced-colors selected outline.
+- Administration cards use a cyan top edge and a shallow cyan-tinted surface, with solid blue icon tiles. Knowledge categories use cyan surfaces and readable cyan headings. These are destination accents, never workflow status colors; retain green, amber and red for semantic feedback.
+- The overview introduction uses a restrained navy-to-blue brand wash. Keep its text, action and keyboard focus readable across the entire panel. Expanded sidebar logos are 128px wide; compact sidebars show the standalone ribbon mark so the wordmark and tagline are never squeezed into a 44px target. Preserve all approved artwork without cropping or recoloring.

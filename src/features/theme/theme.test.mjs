@@ -117,18 +117,27 @@ test('profile offers an independent appearance control outside profile-save form
   assert.match(html, /role="group"/);
   assert.doesNotMatch(html, /<form/);
 });
-test('shared logos use the approved theme pair at their original proportions', () => {
+test('full logos follow the theme and compact navigation keeps the mark legible', () => {
   const { BrandLogo } = load('src/components/brand/brand-logo.tsx', {
     'next/link': { default: props => React.createElement('a', props) },
     'next/image': { default: props => React.createElement('img', props) },
   });
   for (const variant of ['full', 'compact']) {
     const html = renderToStaticMarkup(React.createElement(BrandLogo, { variant, href: '/app', priority: true }));
-    assert.match(html, /fixxflow-logo-primary\.png/);
-    assert.match(html, /fixxflow-logo-dark-mode\.png/);
-    assert.match(html, /width="1353" height="1334"/);
+    if (variant === 'full') {
+      assert.match(html, /fixxflow-logo-primary\.png/);
+      assert.match(html, /fixxflow-logo-dark-mode\.png/);
+      assert.match(html, /width="1353" height="1334"/);
+    } else {
+      assert.match(html, /fixxflow-icon-primary\.png/);
+      assert.match(html, /width="1139" height="1151"/);
+      assert.doesNotMatch(html, /fixxflow-logo-/);
+      const asset = fs.readFileSync('public/brand/fixxflow/icon/fixxflow-icon-primary.png');
+      assert.equal(asset.readUInt32BE(16), 1139);
+      assert.equal(asset.readUInt32BE(20), 1151);
+    }
     assert.match(html, /aria-label="FixxFlow home"/);
-    assert.doesNotMatch(html, /raster-master|icon-primary/);
+    assert.doesNotMatch(html, /raster-master/);
   }
   // Fingerprints of the approved originals; the local brand staging folder is
   // intentionally ignored and is absent from clean checkouts and CI.
@@ -138,5 +147,27 @@ test('shared logos use the approved theme pair at their original proportions', (
   };
   for (const [name, fingerprint] of Object.entries(approved)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`)).digest('hex'), fingerprint);
+  }
+});
+
+
+test('brand surfaces retain readable navigation, category copy and overview text in both themes', () => {
+  const css = fs.readFileSync('src/app/globals.css', 'utf8');
+  const light = css.match(/:root \{([^}]+)\}/)[1];
+  const dark = css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1];
+  const tokens = block => Object.fromEntries([...block.matchAll(/--color-([\w-]+): (#[\da-f]+);/g)].map(m => [m[1], m[2]]));
+  const base = tokens(light);
+  for (const theme of [base, { ...base, ...tokens(dark) }]) {
+    for (const [foreground, background] of [['on-accent','accent'], ['neutral','accent-subtle'], ['neutral','cyan-subtle'], ['cyan','cyan-subtle'], ['text','cyan-subtle']]) {
+      assert.ok(contrast(theme[foreground], theme[background]) >= 4.5, `${foreground} on ${background}`);
+    }
+  }
+  // Check the lighter end of the actual sRGB overview wash, not just navy.
+  const weight = Number(css.match(/color-mix\(in srgb, var\(--color-brand-primary\) (\d+)%/)[1]) / 100;
+  const channels = hex => hex.match(/[a-f\d]{2}/gi).map(v => parseInt(v, 16));
+  const blue = channels(base['brand-primary']), navy = channels(base['brand-navy']);
+  const end = '#' + blue.map((v, i) => Math.round(v * weight + navy[i] * (1 - weight)).toString(16).padStart(2, '0')).join('');
+  for (const foreground of ['inverse', 'brand-text-muted', 'brand-secondary']) {
+    assert.ok(contrast(base[foreground], end) >= 4.5, `${foreground} on overview wash`);
   }
 });
