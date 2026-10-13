@@ -122,7 +122,7 @@ test('brand logo variants use approved artwork at its original proportions', () 
     'next/link': { default: props => React.createElement('a', props) },
     'next/image': { default: props => React.createElement('img', props) },
   });
-  for (const variant of ['full', 'horizontal', 'compact']) {
+  for (const variant of ['full', 'horizontal', 'compact', 'navigation']) {
     const html = renderToStaticMarkup(React.createElement(BrandLogo, { variant, href: '/app', priority: true }));
     if (variant === 'full') {
       assert.match(html, /fixxflow-logo-primary\.png/);
@@ -134,13 +134,20 @@ test('brand logo variants use approved artwork at its original proportions', () 
       const asset = fs.readFileSync('public/brand/fixxflow/logo/fixxflow-logo-horizontal-full.png');
       assert.equal(asset.readUInt32BE(16), 2172);
       assert.equal(asset.readUInt32BE(20), 724);
-    } else {
+    } else if (variant === 'compact') {
       assert.match(html, /fixxflow-icon-primary\.png/);
       assert.match(html, /width="1139" height="1151"/);
       assert.doesNotMatch(html, /fixxflow-logo-/);
       const asset = fs.readFileSync('public/brand/fixxflow/icon/fixxflow-icon-primary.png');
       assert.equal(asset.readUInt32BE(16), 1139);
       assert.equal(asset.readUInt32BE(20), 1151);
+    } else {
+      assert.match(html, /brand-logo-navigation-icon/);
+      assert.match(html, /fixxflow-icon-primary\.png/);
+      assert.match(html, />Fixx</);
+      assert.match(html, />Flow</);
+      assert.match(html, /IT support in motion/);
+      assert.doesNotMatch(html, /fixxflow-logo-horizontal-full\.png/);
     }
     assert.match(html, /aria-label="FixxFlow home"/);
     assert.doesNotMatch(html, /raster-master/);

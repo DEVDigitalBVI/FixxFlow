@@ -129,6 +129,12 @@ img { display: block; max-width: 100%; }
 .brand-logo { aspect-ratio: 1353 / 1334; }
 .brand-logo-horizontal { aspect-ratio: 2172 / 724; }
 .brand-logo-compact { aspect-ratio: 1139 / 1151; }
+.brand-logo-navigation { width: fit-content; display: inline-flex; align-items: center; gap: 10px; aspect-ratio: auto; color: var(--color-text); text-decoration: none; }
+.brand-logo-navigation-icon { width: 44px; height: 44px; flex: 0 0 44px; object-fit: contain; }
+.brand-logo-navigation-copy { min-width: 0; display: grid; gap: 1px; }
+.brand-logo-navigation-wordmark { display: flex; align-items: baseline; color: var(--color-text); font-size: 22px; line-height: 23px; font-weight: 800; letter-spacing: -.055em; white-space: nowrap; }
+.brand-logo-navigation-wordmark span:last-child { color: var(--color-accent); }
+.brand-logo-navigation-tagline { color: var(--color-text-muted); font-size: 6px; line-height: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; white-space: nowrap; }
 :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
 .skip-link { position: fixed; left: 16px; top: -60px; z-index: 100; background: var(--color-brand-navy); color: white; padding: 10px 14px; border-radius: 8px; }
 .skip-link:focus { top: 16px; }
@@ -192,9 +198,8 @@ img { display: block; max-width: 100%; }
 .app-shell { min-height: 100vh; display: grid; grid-template-columns: 232px minmax(0, 1fr); }
 .sidebar { position: sticky; top: 0; height: 100vh; background: var(--color-surface); border-right: 1px solid var(--color-border); padding: 16px 12px 12px; display: flex; flex-direction: column; gap: 12px; }
 .sidebar::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: var(--brand-flow); }
-.sidebar-brand { min-height: 48px; display: flex; align-items: center; padding: 0 8px; }
-.sidebar-logo-full { width: min(158px, 100%); }
-.sidebar-logo-icon { display: none; width: 42px; }
+.sidebar-brand { min-height: 56px; display: flex; align-items: center; padding: 0 8px; }
+.sidebar-logo { max-width: 100%; }
 .nav-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .workspace-nav nav { display: grid; gap: 12px; }
 .nav-group { display: grid; gap: 4px; }
@@ -322,8 +327,7 @@ img { display: block; max-width: 100%; }
   .app-shell { grid-template-columns: 72px minmax(0, 1fr); }
   .sidebar { padding-inline: 10px; }
   .sidebar-brand { justify-content: center; padding: 0; }
-  .sidebar-logo-full { display: none; }
-  .sidebar-logo-icon { display: block; }
+  .sidebar .brand-logo-navigation-copy { display: none; }
   .nav-link { justify-content: center; padding-inline: 0; }
   .nav-link span, .account-copy { display: none; }
   .nav-group-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
@@ -347,7 +351,7 @@ img { display: block; max-width: 100%; }
   .app-shell { display: block; }
   .sidebar { position: sticky; z-index: 20; top: 0; width: 100%; height: calc(66px + env(safe-area-inset-top)); padding: calc(9px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 9px max(16px, env(safe-area-inset-left)); flex-direction: row; align-items: center; gap: 10px; box-shadow: 0 1px 8px rgb(15 23 42 / 6%); }
   .sidebar-brand { width: 44px; height: 44px; }
-  .sidebar-logo-icon { width: 40px; }
+  .sidebar .brand-logo-navigation-icon { width: 40px; height: 40px; flex-basis: 40px; }
   .mobile-nav-toggle { margin-left: auto; width: 44px; height: 44px; padding: 11px; display: grid; align-content: center; gap: 5px; border: 0; border-radius: var(--radius-control); color: var(--color-text); background: transparent; cursor: pointer; }
   .mobile-nav-toggle:hover, .mobile-nav-toggle[aria-expanded="true"] { background: var(--color-accent-subtle); }
   .mobile-nav-toggle span { display: block; height: 2px; border-radius: 2px; background: currentColor; }
@@ -427,8 +431,7 @@ img { display: block; max-width: 100%; }
 .portal-shell { min-height: 100dvh; background: var(--color-canvas); font-size: 16px; line-height: 24px; }
 .portal-header { min-height: 72px; padding: 10px max(24px, calc((100vw - 1120px)/2)); display: flex; align-items: center; gap: 24px; background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
 .portal-identity { min-width: 0; display: flex; align-items: center; gap: 16px; }
-.portal-logo { width: 164px; flex: none; }
-.portal-logo-icon { display: none; }
+.portal-logo { flex: none; }
 .portal-workspace-name { max-width: 220px; padding-left: 16px; border-left: 1px solid var(--color-border); color: var(--color-text-muted); font-size: 12px; line-height: 16px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .portal-header nav { display: flex; gap: 22px; margin-left: auto; }
 .portal-header nav a, .portal-signout { color: var(--color-text-muted); text-decoration: none; font-size: 14px; font-weight: 600; }
@@ -500,9 +503,8 @@ img { display: block; max-width: 100%; }
   .portal-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px 16px; }
   .portal-identity { margin-right: auto; }
   .portal-workspace-name { display: none; }
-  .portal-logo-full { display: none; }
-  .portal-logo-icon { display: block; }
-  .portal-logo { width: 118px; }
+  .portal-logo .brand-logo-navigation-copy { display: none; }
+  .portal-logo .brand-logo-navigation-icon { width: 40px; height: 40px; flex-basis: 40px; }
   .portal-header nav { order: 3; width: 100%; margin: 0; display: flex; justify-content: space-between; gap: 8px; overflow-x: auto; }
   .portal-header nav a { min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; font-size: 12px; }
   .portal-signout { margin-left: auto; }
@@ -914,7 +916,6 @@ img { display: block; max-width: 100%; }
   .portal-header .nav-link[aria-current="page"] { box-shadow: inset 3px 0 var(--color-on-accent); }
   .portal-header .nav-account-start { border-top: 1px solid var(--color-border); margin-top: 12px; padding-top: 12px; }
   .portal-header > form { margin-left: 0; }
-  .portal-logo { width: 118px; }
   .portal-signout { min-height: 44px; padding-inline: 8px; }
   .portal-page { padding-top: 24px; }
   .chat-thread { min-height: 220px; height: 45dvh; }
@@ -1473,7 +1474,7 @@ select.input-compact { height: 40px; }
   .portal-header .workspace-nav > .theme-control { margin-top: 20px; margin-bottom: 0; }
 }
 
-/* Approved full logos follow the resolved theme without recoloring or cropping. */
+/* Approved full logos follow the resolved theme; navigation uses one responsive lockup. */
 .brand-logo-image-dark { display: none; }
 :root[data-theme="dark"] .brand-logo-image-light { display: none; }
 :root[data-theme="dark"] .brand-logo-image-dark { display: block; }
@@ -1481,21 +1482,12 @@ select.input-compact { height: 40px; }
   :root:not([data-theme]) .brand-logo-image-light { display: none; }
   :root:not([data-theme]) .brand-logo-image-dark { display: block; }
 }
-.sidebar-brand { min-height: 48px; justify-content: flex-start; }
-.sidebar-logo-full { width: min(158px, 100%); }
-.portal-logo { width: 164px; }
+.sidebar-brand { min-height: 56px; justify-content: flex-start; }
 .auth-logo { padding: 8px 10px; border-radius: 10px; background: #f8fafc; }
 .auth-brand-copy p, .trust-note { color: var(--color-brand-text-muted); }
 .auth-brand .eyebrow { color: var(--color-brand-secondary); }
-:root[data-theme="dark"] .sidebar-logo-full, :root[data-theme="dark"] .portal-logo-full { display: none; }
-:root[data-theme="dark"] .sidebar-logo-icon, :root[data-theme="dark"] .portal-logo-icon { display: block; width: 42px; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .sidebar-logo-full, :root:not([data-theme]) .portal-logo-full { display: none; }
-  :root:not([data-theme]) .sidebar-logo-icon, :root:not([data-theme]) .portal-logo-icon { display: block; width: 42px; }
-}
 @media (max-width: 767px) {
   .sidebar-brand { width: 44px; height: 44px; }
-  .portal-logo { width: 44px; padding: 0; background: transparent; }
   .auth-mobile-brand { width: 48px; margin-bottom: 28px; }
 }
 
