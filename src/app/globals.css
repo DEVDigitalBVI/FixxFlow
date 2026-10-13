@@ -10,8 +10,8 @@
   --color-purple-subtle: #f1edff;
   --color-neutral: #526072;
   --color-neutral-subtle: #eef1f5;
-  --color-note-border: #f2d188;
-  --color-note-surface: #fff9ea;
+  --color-note-border: var(--color-accent);
+  --color-note-surface: var(--color-surface-subtle);
   --color-auth-tint: #f4f9ff;
 
   --color-brand-primary: #007aff;
@@ -77,8 +77,6 @@
   --color-purple-subtle: #30274a;
   --color-neutral: #b6c4d7;
   --color-neutral-subtle: #29354a;
-  --color-note-border: #8c733f;
-  --color-note-surface: #342b1c;
   --color-auth-tint: #1a2a43;
   --shadow-card: 0 1px 2px rgb(0 0 0 / 20%), 0 4px 12px rgb(0 0 0 / 16%);
   --shadow-overlay: 0 16px 40px rgb(0 0 0 / 48%);
@@ -113,8 +111,6 @@
   --color-purple-subtle: #30274a;
   --color-neutral: #b6c4d7;
   --color-neutral-subtle: #29354a;
-  --color-note-border: #8c733f;
-  --color-note-surface: #342b1c;
   --color-auth-tint: #1a2a43;
   --shadow-card: 0 1px 2px rgb(0 0 0 / 20%), 0 4px 12px rgb(0 0 0 / 16%);
   --shadow-overlay: 0 16px 40px rgb(0 0 0 / 48%);
@@ -305,7 +301,7 @@ img { display: block; max-width: 100%; }
 .ticket-topbar { display: flex; justify-content: space-between; margin-bottom: 22px; color: var(--color-text-muted); }.ticket-topbar a { text-decoration: none; }
 .ticket-heading { margin-bottom: 20px; }.ticket-heading h1 { margin-top: 9px; }.ticket-heading-badges { display: flex; gap: 7px; }
 .ticket-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: start; gap: 18px; }.ticket-main, .ticket-sidebar { display: grid; gap: 18px; }.ticket-main .settings-card h2, .ticket-sidebar .settings-card h2 { margin: 0 0 18px; font-size: 17px; }.ticket-description { margin: 10px 0 0; white-space: pre-wrap; font-size: 15px; line-height: 24px; }
-.conversation { display: grid; gap: 12px; margin-bottom: 18px; }.message { padding: 14px 16px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface-subtle); }.message-note { border-color: var(--color-note-border); background: var(--color-note-surface); }.message header { display: flex; justify-content: space-between; gap: 12px; }.message header span { color: var(--color-text-muted); font-size: 12px; }.message p { margin: 8px 0 0; white-space: pre-wrap; }.message-form { display: grid; gap: 10px; }.message-form .button { justify-self: end; }
+.conversation { display: grid; gap: 12px; margin-bottom: 18px; }.message { padding: 14px 16px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface-subtle); }.message-note { border-inline-start: 4px solid var(--color-note-border); background: var(--color-note-surface); }.message header { display: flex; justify-content: space-between; gap: 12px; }.message header span { color: var(--color-text-muted); font-size: 12px; }.message p { margin: 8px 0 0; white-space: pre-wrap; }.message-form { display: grid; gap: 10px; }.message-form .button { justify-self: end; }
 .ticket-update { display: grid; gap: 13px; }.ticket-update label { display: grid; gap: 6px; font-weight: 650; }.ticket-facts dl { margin: 0; display: grid; gap: 13px; }.ticket-facts dl div { display: flex; justify-content: space-between; gap: 12px; }.ticket-facts dt { color: var(--color-text-muted); }.ticket-facts dd { margin: 0; text-align: right; }
 .attachment-upload { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }.attachment-upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }.attachment-upload span { color: var(--color-text-muted); font-size: 12px; }.attachment-list { display: grid; border-top: 1px solid var(--color-border); }.attachment-list a { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--color-border); text-decoration: none; }.attachment-list span { color: var(--color-text-muted); font-size: 12px; }
 .activity { display: grid; }.activity > div { display: grid; grid-template-columns: 10px 1fr; gap: 9px; position: relative; padding-bottom: 15px; }.activity > div:not(:last-child)::before { content: ""; position: absolute; left: 4px; top: 10px; bottom: 0; width: 1px; background: var(--color-border); }.activity-dot { width: 9px; height: 9px; margin-top: 5px; border-radius: 50%; background: var(--color-accent); position: relative; z-index: 1; }.activity p { margin: 0; font-size: 13px; }.activity time { display: block; color: var(--color-text-muted); font-size: 11px; }
@@ -621,7 +617,7 @@ img { display: block; max-width: 100%; }
 .chat-thread { height: min(55vh, 520px); min-height: 280px; overflow-y: auto; overscroll-behavior: contain; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
 .chat-message { align-self: flex-start; max-width: min(82%, 560px); padding: 12px 15px; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface-subtle); }
 .chat-message-own { align-self: flex-end; background: var(--color-accent-subtle); border-color: color-mix(in srgb, var(--color-accent) 22%, var(--color-border)); }
-.chat-message-note { background: var(--color-warning-subtle); border-color: color-mix(in srgb, var(--color-warning) 24%, var(--color-border)); }
+.chat-message-note { background: var(--color-note-surface); border-color: var(--color-border); border-inline-start: 4px solid var(--color-note-border); }
 .chat-message-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; font-size: 12px; }
 .chat-message-meta time { color: var(--color-text-muted); }
 .chat-message p { white-space: pre-wrap; margin: 6px 0 0; }
@@ -659,37 +655,34 @@ img { display: block; max-width: 100%; }
   .chat-history-list li a { flex-direction: column; gap: 2px; }
 }
 
-/* Ticket conversations reuse the public/info and private/warning semantic tokens. */
+/* Internal notes use a blue edge, neutral surface and explicit audience labels. */
 .ticket-conversation { display: flex; flex-direction: column; gap: 20px; padding: 0; margin: 20px 0 24px; list-style: none; }
 .conversation-item { width: min(90%, 68ch); align-self: flex-start; min-width: 0; }
 .conversation-item-own { align-self: flex-end; }
 .conversation-bubble { padding: 16px; border: 1px solid var(--color-border); border-radius: 12px 12px 12px 0; background: var(--color-surface-subtle); overflow-wrap: anywhere; }
 .conversation-item-own .conversation-bubble { border-radius: 12px 12px 0 12px; background: var(--color-info-subtle); }
 .conversation-item-note { width: min(100%, 72ch); align-self: center; }
-.conversation-item-note .conversation-bubble { background: var(--color-warning-subtle); border: 1px solid var(--color-warning); border-inline-start-width: 4px; border-radius: 12px; }
+.conversation-item-note .conversation-bubble { background: var(--color-note-surface); border: 1px solid var(--color-border); border-inline-start: 4px solid var(--color-note-border); border-radius: 12px; }
 .conversation-bubble header { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
 .conversation-bubble header span, .conversation-bubble time { color: var(--color-text-muted); font-size: 12px; }
 .conversation-bubble time { margin-inline-start: auto; }
 .conversation-bubble p { white-space: pre-wrap; margin: 12px 0 0; }
 .message-visibility { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--color-info); margin-top: 8px; }
-.conversation-item-note .message-visibility { color: var(--color-warning); }
+.conversation-item-note .message-visibility { color: var(--color-accent); }
 .conversation-empty { padding: 24px 0; color: var(--color-text-muted); }
 .message-composer { display: grid; gap: 12px; padding: 16px; border: 1px solid var(--color-info); border-radius: 12px; background: var(--color-surface); }
-.composer-internal_note { border-color: var(--color-warning); border-top-width: 4px; background: var(--color-warning-subtle); }
+.composer-internal_note { border-color: var(--color-border-strong); border-top: 4px solid var(--color-note-border); background: var(--color-note-surface); }
 .composer-modes { display: flex; flex-wrap: wrap; gap: 8px; border: 0; padding: 0; margin: 0; min-width: 0; }
 .composer-modes legend { font-size: 12px; color: var(--color-text-muted); margin-bottom: 8px; }
 .composer-modes label { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px 12px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-control); background: var(--color-surface); cursor: pointer; }
-.composer-modes label:has(:checked) { border-color: currentColor; font-weight: 650; }
+.composer-modes label:has(:checked) { border-color: var(--color-accent); color: var(--color-accent); font-weight: 650; }
 .composer-modes input { accent-color: var(--color-info); }
-.composer-internal_note .composer-modes input { accent-color: var(--color-warning); }
 .composer-audience { display: grid; gap: 4px; color: var(--color-info); }
-.composer-internal_note .composer-audience { color: var(--color-warning); }
+.composer-internal_note .composer-audience { color: var(--color-accent); }
 .composer-audience span, .composer-footer small { font-size: 13px; }
 .composer-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .composer-footer small { color: var(--color-text-muted); flex: 1 1 200px; }
 .composer-footer .button { flex-shrink: 0; }
-.button-note { background: var(--color-warning); color: var(--color-surface); }
-.button-note:hover { box-shadow: inset 0 0 0 2px var(--color-text); }
 .composer-result { margin: 0; color: var(--color-success); }
 .composer-result:empty { display: none; }
 @media (max-width: 767px) {
@@ -717,8 +710,9 @@ img { display: block; max-width: 100%; }
 
 @media (max-width: 767px) { .ticket-table { min-width: 0; } }
 .sla-label { display: flex; align-items: baseline; gap: 4px; }
+.sla-label > span:last-child { color: var(--color-text); }
 
-.chat-composer-note { background: var(--color-warning-subtle); border-top-color: var(--color-warning); }
+.chat-composer-note { background: var(--color-note-surface); border-top: 4px solid var(--color-note-border); }
 
 /* Notification inbox reuses the shared surface, action, and focus tokens. */
 .notification-list { list-style: none; padding: 0; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }

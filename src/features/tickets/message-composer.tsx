@@ -61,7 +61,7 @@ export function MessageComposer({ ticketId, action, staff = true }: {
     <div className="composer-audience" id="message-audience" role="status"><strong>{staff ? mode.label : "Reply to IT"}</strong><span>{staff ? mode.audience : "Visible to you and IT support."}</span></div>
     <label htmlFor="message-body">{staff ? mode.label : "Your message"}</label>
     <textarea ref={textarea} id="message-body" className="input textarea" name="body" required rows={4} maxLength={20000} readOnly={pending} value={drafts[kind]} onChange={event => { setDrafts(current => ({ ...current, [kind]: event.target.value })); requestId.current = null; }} aria-describedby={`message-audience message-hint${result.error ? " message-error" : ""}`} placeholder={kind === "internal_note" ? "Share troubleshooting details with IT staff…" : "Write a message…"}/>
-    <div className="composer-footer"><small id="message-hint">Enter adds a new line. {staff && "Drafts stay separate for each message type."}</small><button className={`button ${kind === "internal_note" ? "button-note" : "button-primary"}`} type="submit" disabled={pending}>{pending ? "Sending…" : mode.action}</button></div>
+    <div className="composer-footer"><small id="message-hint">Enter adds a new line. {staff && "Drafts stay separate for each message type."}</small><button className="button button-primary" type="submit" disabled={pending}>{pending ? "Sending…" : mode.action}</button></div>
     {result.error && <p id="message-error" className="alert alert-error" role="alert">{result.error}</p>}
     <p className="composer-result" role="status">{result.success}</p>
   </form>;

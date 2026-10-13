@@ -224,7 +224,7 @@ Recommended initial priorities: Low, Normal, High, Urgent. Always display the wr
 ### 6.3 SLA and time
 
 - Express time in plain language in scanning contexts (“2h left,” “Breached 18m ago”) and expose the exact timestamp in a tooltip or detail view.
-- Distinguish warning from breach using label and icon as well as color.
+- SLA descriptions use normal text color; compact semantic color stays on the status icon and edge. Distinguish warning from breach using label and icon as well as color.
 - Relative times must update at a sensible interval and have an accessible exact-time representation.
 
 ## 7. Chat and conversation UI
@@ -232,7 +232,7 @@ Recommended initial priorities: Low, Normal, High, Urgent. Always display the wr
 - Treat chat as a continuous support conversation tied to ticket context, not a decorative messaging clone.
 - Clearly distinguish employee, agent, system event, and internal note using labels, alignment/surface treatment, and icons—not color alone.
 - Keep message width readable. Show sender and timestamp at logical group boundaries rather than repeating noisy metadata on every bubble.
-- Internal notes must be unmistakable before composition and after posting. The composer mode label and submit action must state “Internal note” when active.
+- Internal notes use a cool neutral surface with a solid blue edge and the shared blue primary action. Reserve amber for warnings, never for message visibility. Apply this treatment to ticket composers, timelines, live chat and linked history. Internal notes must be unmistakable before composition and after posting. The composer mode label and submit action must state “Internal note” when active.
 - The composer supports keyboard entry, attachments, drafts, sending progress, retry after failure, and multiline content. `Enter` versus `Shift+Enter` behavior must be visible or configurable; never surprise users with an accidental send.
 - New messages should not force-scroll a user who is reading history. Show a “new messages” affordance instead. Maintain focus and announce incoming messages politely.
 - System events such as assignment or status changes should be compact timeline items, not chat bubbles.
