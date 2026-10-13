@@ -17,6 +17,13 @@ test('custom definitions roundtrip URL fields and reject unsafe or incompatible 
  const long={...definition,startDate:'2024-01-01'};assert.equal(isCustomReportDefinition(long),false);
  assert.equal(isCustomReportDefinition({...definition,filters:{...definition.filters,categoryIds:['not-a-uuid']}}),false);
 });
+test('template navigation gives each definition a fresh stateful builder',()=>{
+ const {CustomReportBuilder}=load('src/features/reporting/custom-builder.tsx',{'@/features/tickets/presentation':{ticketStatuses:{},ticketPriorities:{}}});
+ const references={categories:[],subcategories:[],teams:[],technicians:[],departments:[],locations:[]};
+ const volume=CustomReportBuilder({definition:defaultReportDefinition('2026-10-13','volume'),references});
+ const backlog=CustomReportBuilder({definition:defaultReportDefinition('2026-10-13','backlog'),references});
+ assert.ok(volume.key);assert.ok(backlog.key);assert.notEqual(volume.key,backlog.key);
+});
 test('custom payload validation and formatting preserve zero, no-data, percentages and elapsed time',()=>{
  assert.equal(isCustomReport(report),true);assert.equal(isCustomReport({...report,rows:[{...report.rows[0],values:{created:'3'}}]}),false);
  assert.equal(formatCustomValue(null,'minutes'),'No data');assert.equal(formatCustomValue(0,'minutes'),'<1m');assert.equal(formatCustomValue(90,'minutes'),'1.5h');assert.equal(formatCustomValue(99.95,'percent'),'100.0%');

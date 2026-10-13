@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { intervalLabels, reportMetrics, reportTypes, groupLabels, type CustomReportDefinition, type CustomReportMetric, type CustomReportType, type ReportGroup, type ReportReferences } from './custom-model';
+import { definitionToQuery, intervalLabels, reportMetrics, reportTypes, groupLabels, type CustomReportDefinition, type CustomReportMetric, type CustomReportType, type ReportGroup, type ReportReferences } from './custom-model';
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 
 const metricsFor = (type: CustomReportType) => Object.entries(reportMetrics).filter(([, item]) => item.type === type).map(([key]) => key as CustomReportMetric);
@@ -10,12 +10,18 @@ const entityFilters: { key: keyof Pick<CustomReportDefinition['filters'],'catego
   { key: 'teamIds', label: 'Teams', source: 'teams' }, { key: 'technicianIds', label: 'Technicians', source: 'technicians' },
   { key: 'departmentIds', label: 'Requester departments', source: 'departments' }, { key: 'locationIds', label: 'Ticket locations', source: 'locations' },
 ];
-export function CustomReportBuilder({ definition, references, savedId }: { definition: CustomReportDefinition; references: ReportReferences; savedId?: string }) {
+type CustomReportBuilderProps = { definition: CustomReportDefinition; references: ReportReferences; savedId?: string };
+
+export function CustomReportBuilder(props: CustomReportBuilderProps) {
+  return <CustomReportBuilderForm key={definitionToQuery(props.definition).toString()} {...props}/>;
+}
+
+function CustomReportBuilderForm({ definition, references, savedId }: CustomReportBuilderProps) {
   const [type, setType] = useState(definition.reportType);
   const [metrics, setMetrics] = useState<CustomReportMetric[]>(definition.metrics);
   const [group, setGroup] = useState<ReportGroup>(definition.groupBy);
   const toggleMetric = (metric: CustomReportMetric, checked: boolean) => setMetrics(current => checked ? [...current, metric].slice(0, 3) : current.filter(item => item !== metric));
-  return <form action="/app/reports/custom" method="get" className="settings-card custom-report-builder">
+  return <form id="report-builder" action="/app/reports/custom" method="get" className="settings-card custom-report-builder" aria-label="Custom report builder">
     {savedId && <input type="hidden" name="saved" value={savedId}/>} 
     <fieldset><legend>1. What do you want to understand?</legend><div className="report-type-options">{Object.entries(reportTypes).map(([key,item]) => <label key={key} className="choice-card"><input type="radio" name="reportType" value={key} checked={type===key} onChange={() => {
       const next = key as CustomReportType; setType(next); setMetrics(metricsFor(next)); if (next === 'backlog' && group === 'time') setGroup('technician');
