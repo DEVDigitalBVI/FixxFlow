@@ -1,6 +1,7 @@
 # FixxFlow Product Design System
 
-Status: Initial source of truth  
+Status: Active source of truth
+
 Applies to: Admin/agent workspace, employee support portal, and shared product UI  
 Primary implementation target: React and Next.js
 
@@ -71,9 +72,9 @@ The core brand-board palette is `#007AFF` primary blue, `#00C6FF` secondary cyan
 
 - The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its cyan-to-blue motion and deep navy folds express speed, continuity, and dependable technical support.
 - The product name is always written **FixxFlow** with two lowercase x characters and capital F characters. The primary tagline is **IT SUPPORT IN MOTION**.
-- Use the full primary or horizontal logo on authentication, onboarding, marketing, exported documents, and other brand-forward surfaces.
-- Use the approved theme-specific full logo in expanded application sidebars and headers. Use the approved standalone color mark for compact sidebar navigation. Existing favicon and app-launcher icons remain unchanged.
-- In light mode, use `logo/fixxflow-logo-primary.png`; in dark mode, use `logo/fixxflow-logo-dark-mode.png`. Do not recolor, stretch, rotate, outline, separate, or rearrange the F and wrench.
+- Use the complete horizontal lockup in expanded application navigation, the employee portal header, authentication, and other wide brand placements. It preserves the name and tagline without spending the vertical space required by the stacked artwork.
+- Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Existing favicon and app-launcher icons remain unchanged.
+- Use `logo/fixxflow-logo-horizontal-full.png` for the complete horizontal lockup, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode.png` for the dark stacked lockup. When approved horizontal artwork has no dark-surface variant, place it on a small light neutral plate with sufficient clear space. Do not recolor, stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
 - Keep clear space around the logo. At small sizes, drop the tagline before reducing legibility; use the icon rather than forcing the wordmark into a square.
 - The logo gradient belongs to brand artwork and occasional brand-forward moments. Functional controls should normally use solid semantic token colors, not gradients.
 - Prefer motion cues that echo the mark's forward sweep: short horizontal reveals, progress movement, and directional transitions. Keep them subtle, 120–200ms, and fully compatible with reduced-motion settings.
@@ -83,7 +84,8 @@ The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its
 
 ### 3.3 Typography
 
-- Use a highly legible system-oriented sans-serif stack: `Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`.
+- Use the self-hosted Inter variable font, with `ui-sans-serif, system-ui, sans-serif` as the fallback stack. Ship normal and italic files locally so typography does not depend on a third-party request.
+- Use the 400, 500, 600, and 700 weight steps in product UI. Avoid synthetic in-between weights; they make hierarchy inconsistent across browsers.
 - Default body: 14px/20px in the agent workspace; 16px/24px in the employee portal and prose-heavy content.
 - Page title: 24–28px, 600–700 weight, tight but readable line height.
 - Section title: 16–18px, 600 weight.
@@ -209,9 +211,11 @@ Use a shared `TicketStatus` model and one presentation mapping everywhere. Recom
 
 | Status | Label treatment | Additional cue |
 |---|---|---|
-| New | neutral/info subtle badge | inbox/new icon or “New” text |
+| New | neutral subtle badge | inbox/new icon or “New” text |
 | Open | accent subtle badge | open-circle icon |
-| Pending | warning subtle badge | pause/clock icon |
+| In progress | accent subtle badge | progress icon or “In progress” text |
+| Waiting on user | warning subtle badge | pause/clock icon |
+| On hold | neutral subtle badge | pause icon or “On hold” text |
 | Resolved | success subtle badge | check icon |
 | Closed | neutral muted badge | lock/check icon |
 
@@ -373,6 +377,8 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Brand presence (October 2026)
 
-- Carry the approved ribbon palette into the shell: a blue-tinted sidebar introduction, solid blue selected navigation with contrasting text and an inset edge, and a 96px blue-to-cyan page-header rule. Keep the existing focus outline and forced-colors selected outline.
-- Administration cards use a cyan top edge and a shallow cyan-tinted surface, with solid blue icon tiles. Knowledge categories use cyan surfaces and readable cyan headings. These are destination accents, never workflow status colors; retain green, amber and red for semantic feedback.
-- The overview introduction uses a restrained navy-to-blue brand wash. Keep its text, action and keyboard focus readable across the entire panel. Expanded sidebar logos are 128px wide; compact sidebars show the standalone ribbon mark so the wordmark and tagline are never squeezed into a 44px target. Preserve all approved artwork without cropping or recoloring.
+- Keep the operational shell neutral and use a thin blue-to-cyan signature at the top of persistent navigation. Selected navigation uses a subtle blue surface, blue text, and an inset edge so the active location remains clear without turning the full control into a saturated block. Keep the existing focus outline and forced-colors selected outline.
+- Concentrate expressive brand color in a few deliberate moments: the staff overview introduction, the authentication brand panel, primary actions, selection, and small directional details. Standard page headers, settings rows, knowledge categories, tables, and form surfaces stay neutral. Cyan is a micro accent within brand artwork and signature rules, not a default card fill or workflow color.
+- Administration is a grouped settings index with bordered rows and lightweight destination links. Knowledge browsing uses neutral destination surfaces with blue interaction feedback. Green, amber, and red remain reserved for semantic feedback.
+- The overview introduction uses a restrained navy-to-blue brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded sidebars use the complete horizontal lockup; compact sidebars and mobile headers use the standalone ribbon mark. Preserve all approved artwork without cropping or recoloring.
+- Employee pages should feel warmer and simpler through larger type, plain-language tasks, and whitespace rather than additional decorative color. Authentication may carry the strongest brand panel because it has no competing operational data.

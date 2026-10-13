@@ -117,17 +117,23 @@ test('profile offers an independent appearance control outside profile-save form
   assert.match(html, /role="group"/);
   assert.doesNotMatch(html, /<form/);
 });
-test('full logos follow the theme and compact navigation keeps the mark legible', () => {
+test('brand logo variants use approved artwork at its original proportions', () => {
   const { BrandLogo } = load('src/components/brand/brand-logo.tsx', {
     'next/link': { default: props => React.createElement('a', props) },
     'next/image': { default: props => React.createElement('img', props) },
   });
-  for (const variant of ['full', 'compact']) {
+  for (const variant of ['full', 'horizontal', 'compact']) {
     const html = renderToStaticMarkup(React.createElement(BrandLogo, { variant, href: '/app', priority: true }));
     if (variant === 'full') {
       assert.match(html, /fixxflow-logo-primary\.png/);
       assert.match(html, /fixxflow-logo-dark-mode\.png/);
       assert.match(html, /width="1353" height="1334"/);
+    } else if (variant === 'horizontal') {
+      assert.match(html, /fixxflow-logo-horizontal-full\.png/);
+      assert.match(html, /width="2172" height="724"/);
+      const asset = fs.readFileSync('public/brand/fixxflow/logo/fixxflow-logo-horizontal-full.png');
+      assert.equal(asset.readUInt32BE(16), 2172);
+      assert.equal(asset.readUInt32BE(20), 724);
     } else {
       assert.match(html, /fixxflow-icon-primary\.png/);
       assert.match(html, /width="1139" height="1151"/);
@@ -144,6 +150,7 @@ test('full logos follow the theme and compact navigation keeps the mark legible'
   const approved = {
     primary: '35216b27154bbe0997b54aec8e99d4fca5dc1e4e1e5c605f7d07515de8a05314',
     'dark-mode': '6d1d839e11c4de70aa0be2161aa992a8962ec3c1c3c484f0254f6b287ff8325e',
+    'horizontal-full': '7d552841a4a7fca98dc22215a40dca25b0d8dfa35d4813515a5bfcfc17aa839a',
   };
   for (const [name, fingerprint] of Object.entries(approved)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`)).digest('hex'), fingerprint);

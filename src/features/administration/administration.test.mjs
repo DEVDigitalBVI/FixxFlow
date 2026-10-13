@@ -86,11 +86,11 @@ test('technician view filters memberships on the server and defaults invitations
   assert.match(html,/<option value="technician" selected="">/);
 });
 
-test('Administration landing navigation uses named button-style links and clear section landmarks',async()=>{
+test('Administration landing navigation uses named links and clear section landmarks',async()=>{
   const html=renderToStaticMarkup(await load(hub,'administrator').render());
   const links=[...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)];
   assert.ok(links.length>=15);
-  for(const [,attributes,label] of links){assert.match(attributes,/class="button /);assert.match(attributes,/href="/);assert.ok(label.trim());assert.doesNotMatch(attributes,/role="button"/);}
+  for(const [,attributes,label] of links){assert.match(attributes,/class="(?:button |administration-action-link)/);assert.match(attributes,/href="/);assert.ok(label.trim());assert.doesNotMatch(attributes,/role="button"/);}
   assert.equal((html.match(/<h1>/g)??[]).length,1);
   for(const id of ['workspace','support','governance']){
     assert.ok(html.includes(`href="#admin-${id}"`));assert.ok(html.includes(`aria-labelledby="admin-${id}-heading"`));

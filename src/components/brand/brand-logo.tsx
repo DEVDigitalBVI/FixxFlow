@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type BrandLogoProps = {
-  variant?: "full" | "compact";
+  variant?: "full" | "horizontal" | "compact";
   priority?: boolean;
   className?: string;
   href?: string;
@@ -20,6 +20,14 @@ export function BrandLogo({ variant = "full", priority = false, className, href 
         alt="FixxFlow"
         fetchPriority={priority ? "high" : undefined}
         sizes="44px"
+      /> : variant === "horizontal" ? <Image
+        className="brand-logo-image"
+        src="/brand/fixxflow/logo/fixxflow-logo-horizontal-full.png"
+        width={2172}
+        height={724}
+        alt="FixxFlow — IT Support in Motion"
+        fetchPriority={priority ? "high" : undefined}
+        sizes="(max-width: 767px) 44px, 176px"
       /> : (["light", "dark"] as const).map(theme => <Image
         key={theme}
         className={`brand-logo-image brand-logo-image-${theme}`}

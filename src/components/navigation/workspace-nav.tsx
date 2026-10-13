@@ -78,12 +78,19 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     };
   }, [isOpen]);
 
-  function links(secondary: boolean) {
-    return items.filter(item => item.visible && (role !== 'end_user' || secondary === !['/app', '/app/tickets', '/app/help'].includes(item.href))).map(item => {
+  function linksFor(hrefs?: readonly string[]) {
+    return items.filter(item => item.visible && (!hrefs || hrefs.includes(item.href))).map(item => {
       const active = item.href === '/app' ? pathname === item.href : pathname.startsWith(item.href) || (item.href === '/app/administration' && pathname.startsWith('/app/organization'));
       return <li key={item.href} className={item.href === '/app/profile' ? 'nav-account-start' : undefined}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? 'page' : undefined} onClick={closeMenu}>{item.icon}<span>{item.label}</span></Link></li>;
     });
   }
+  const employeePrimary = ['/app', '/app/tickets', '/app/help'];
+  const employeeSecondary = items.map(item => item.href).filter(href => !employeePrimary.includes(href));
+  const staffWork = ['/app', '/app/tickets', '/app/chat'];
+  const staffResources = ['/app/help', '/app/inventory', '/app/assets'];
+  const staffManage = ['/app/reports', '/app/people', '/app/administration'];
+  const staffAccount = ['/app/profile', '/app/security', '/app/support'];
+  const accountActive = staffAccount.some(path => pathname.startsWith(path));
   return <>
     <button ref={menuButtonRef} className="mobile-nav-toggle" type="button" aria-controls="workspace-navigation" aria-expanded={isOpen} aria-label={isOpen ? "Close navigation" : "Open navigation"} onClick={() => setIsOpen((open) => !open)}>
       <span aria-hidden="true" />
@@ -91,6 +98,11 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
       <span aria-hidden="true" />
     </button>
     {isOpen && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" tabIndex={-1} onClick={closeMenu} />}
-    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><GlobalSearch role={role} inventoryAccess={inventoryAccess} onOpen={closeMenu} platform={platform} workspaceAvailable={workspaceAvailable}/><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}><ul className="nav-list">{links(false)}{role !== 'end_user' && !platform && <li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li>}</ul>{role === 'end_user' && <details className="employee-more-nav" key={pathname} open={!['/app', '/app/tickets', '/app/help'].some(path => path === '/app' ? pathname === path : pathname.startsWith(path))}><summary className="button button-quiet">Account &amp; more</summary><ul className="nav-list">{links(true)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></details>}</nav><ThemeControl /></div>
+    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><GlobalSearch role={role} inventoryAccess={inventoryAccess} onOpen={closeMenu} platform={platform} workspaceAvailable={workspaceAvailable}/><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}>{platform ? <ul className="nav-list">{linksFor()}</ul> : role === 'end_user' ? <><ul className="nav-list">{linksFor(employeePrimary)}</ul><details className="employee-more-nav" key={pathname} open={employeeSecondary.some(path => path === '/app' ? pathname === path : pathname.startsWith(path))}><summary className="button button-quiet">Account &amp; more</summary><ul className="nav-list">{linksFor(employeeSecondary)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></details></> : <>
+      <div className="nav-group"><span className="nav-group-label">Work</span><ul className="nav-list">{linksFor(staffWork)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></div>
+      <div className="nav-group"><span className="nav-group-label">Resources</span><ul className="nav-list">{linksFor(staffResources)}</ul></div>
+      <div className="nav-group"><span className="nav-group-label">Manage</span><ul className="nav-list">{linksFor(staffManage)}</ul></div>
+      <details className="staff-more-nav" key={pathname} open={accountActive}><summary className="nav-link"><NavigationIcon name="profile" /><span>Account &amp; support</span></summary><ul className="nav-list">{linksFor(staffAccount)}</ul></details>
+    </>}</nav><ThemeControl /></div>
   </>;
 }

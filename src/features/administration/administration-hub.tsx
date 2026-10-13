@@ -36,9 +36,9 @@ const actionLabels: Partial<Record<Section,string>> = {
   automations: 'Manage automations', knowledge: 'Manage articles', slas: 'View SLA targets',
   notifications: 'View notification setup', security: 'Security settings', 'audit-log': 'Audit log',
 };
-function DestinationButton({ section }: { section: Section }) {
+function DestinationLink({ section }: { section: Section }) {
   const item = administrationSections.find(item => item.slug === section)!;
-  return <Link className="button button-secondary" href={'href' in item ? item.href : `/app/administration/${item.slug}`}>{actionLabels[section] ?? item.title}</Link>;
+  return <Link className="administration-action-link" href={'href' in item ? item.href : `/app/administration/${item.slug}`}><span>{actionLabels[section] ?? item.title}</span><span aria-hidden="true">→</span></Link>;
 }
 export function AdministrationHub({ organizationName }: { organizationName: string }) {
   return <div className="page administration-hub">
@@ -46,11 +46,10 @@ export function AdministrationHub({ organizationName }: { organizationName: stri
     <nav className="administration-jump-nav" aria-label="Administration sections">{groups.map(group => <a key={group.id} className="button button-quiet" href={`#admin-${group.id}`}>{group.title}</a>)}</nav>
     {groups.map(group => <section className="administration-hub-group" id={`admin-${group.id}`} key={group.id} aria-labelledby={`admin-${group.id}-heading`}>
       <header className="administration-section-heading"><h2 id={`admin-${group.id}-heading`}>{group.title}</h2><p>{group.description}</p></header>
-      <div className="administration-card-grid">{group.cards.map(card => <article className="settings-card administration-hub-card" key={card.title}>
-        <div className="administration-hub-card-heading"><span className="administration-card-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={iconPaths[card.icon]}/></svg></span><h3>{card.title}</h3></div>
-        <p className="administration-card-description">{card.description}</p>
-        {card.note && <span className="administration-card-note">{card.note}</span>}
-        <div className="administration-card-actions">{card.destinations.map(section => <DestinationButton key={section} section={section}/>)}{card.icon === 'knowledge' && <Link className="button button-secondary" href="/app/help/new">Write an article</Link>}</div>
+      <div className="administration-panel">{group.cards.map(card => <article className="administration-setting-row" key={card.title}>
+        <span className="administration-card-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={iconPaths[card.icon]}/></svg></span>
+        <div className="administration-setting-copy"><div className="administration-setting-title"><h3>{card.title}</h3>{card.note && <span className="administration-card-note">{card.note}</span>}</div><p>{card.description}</p></div>
+        <div className="administration-card-actions">{card.destinations.map(section => <DestinationLink key={section} section={section}/>)}{card.icon === 'knowledge' && <Link className="administration-action-link" href="/app/help/new"><span>Write an article</span><span aria-hidden="true">→</span></Link>}</div>
       </article>)}</div>
     </section>)}
   </div>;

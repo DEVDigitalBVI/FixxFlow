@@ -93,9 +93,9 @@ test('desktop navigation does not move focus to the hidden mobile menu button',(
  });
  const tree=WorkspaceNav({role:'technician',organizationId:'org',userId:'user'});
  const panel=tree.props.children[2];
- const nav=React.Children.toArray(panel.props.children).find(child=>child.type==='nav');
- const list=React.Children.toArray(nav.props.children).find(child=>child.type==='ul');
- const firstLink=React.Children.toArray(list.props.children)[0].props.children;
+ const findLink=node=>{if(!React.isValidElement(node))return null;if(node.props.href&&node.props.onClick)return node;for(const child of React.Children.toArray(node.props.children)){const match=findLink(child);if(match)return match;}return null;};
+ const firstLink=findLink(panel);
+ assert.ok(firstLink);
  firstLink.props.onClick();
  assert.equal(focused,false);
 });
