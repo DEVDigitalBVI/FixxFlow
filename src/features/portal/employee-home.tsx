@@ -17,25 +17,19 @@ type EmployeeHomeProps = {
 const actions = [
   {
     href: "/app/chat?start=1",
-    title: "Start a conversation",
-    description: "Message IT and keep the conversation in one place",
+    title: "Chat with IT",
+    description: "Best for a quick question or help you need right now",
     primary: true,
   },
   {
     href: "/app/tickets/new",
-    title: "Report an issue",
-    description: "Describe a problem or request something you need",
-  },
-  {
-    href: "/app/tickets",
-    title: "Track my requests",
-    description: "See replies, progress, and next steps",
-    quiet: true,
+    title: "Submit a request",
+    description: "Track an issue, access request, or equipment need",
   },
   {
     href: "/app/help",
-    title: "Find an answer",
-    description: "Browse practical help articles",
+    title: "Search help articles",
+    description: "Find a step-by-step answer before contacting IT",
     quiet: true,
   },
 ] as const;
@@ -46,7 +40,7 @@ export function EmployeeHome({ firstName, greeting, organizationName, recent }: 
       <span className="portal-kicker">{organizationName} IT support</span>
       <p className="portal-greeting">{greeting}, {firstName}</p>
       <h1 id="portal-home-heading">How can IT help today?</h1>
-      <p className="portal-home-summary">Start a conversation, report a problem, or find an answer. Your updates stay together here.</p>
+      <p className="portal-home-summary">Choose the kind of help you need. You can return here anytime to follow your requests.</p>
     </section>
     <div className="portal-actions">
       {actions.map(action => <Link

@@ -20,15 +20,15 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     { href: "/platform/audit", label: "Platform audit", icon: <NavigationIcon name="audit" />, visible: true },
     { href: "/app", label: "My workspace", icon: <NavigationIcon name="tickets" />, visible: workspaceAvailable },
   ] : [
-    { href: "/app", label: role === "end_user" ? "Home" : "Overview", icon: <NavigationIcon name="overview" />, visible: true },
+    { href: "/app", label: role === "end_user" ? "Home" : "Dashboard", icon: <NavigationIcon name="overview" />, visible: true },
     { href: "/app/tickets", label: role === "end_user" ? "My requests" : "Tickets", icon: <NavigationIcon name="tickets" />, visible: true },
-    { href: "/app/chat", label: role === "end_user" ? "My chats" : "Chats", icon: <NavigationIcon name="chat" />, visible: true },
+    { href: "/app/chat", label: role === "end_user" ? "My chats" : "Live chat", icon: <NavigationIcon name="chat" />, visible: true },
     { href: "/app/help", label: role === "end_user" ? "Help articles" : "Knowledge base", icon: <NavigationIcon name="knowledge" />, visible: true },
     { href: "/app/inventory", label: role === "end_user" ? "Request an item" : "Inventory", icon: <NavigationIcon name="assets" />, visible: inventoryAccess },
     { href: "/app/assets", label: role === "end_user" ? "My equipment" : "Assets", icon: <NavigationIcon name="assets" />, visible: true },
     { href: "/app/reports", label: "Reports", icon: <NavigationIcon name="reports" />, visible: role !== "end_user" },
     { href: "/app/people", label: "People", icon: <NavigationIcon name="people" />, visible: role !== "end_user" },
-    { href: "/app/administration", label: "Administration", icon: <NavigationIcon name="administration" />, visible: role === "administrator" },
+    { href: "/app/administration", label: "Settings", icon: <NavigationIcon name="administration" />, visible: role === "administrator" },
     { href: "/app/profile", label: role === "end_user" ? "Account" : "Profile", icon: <NavigationIcon name="profile" />, visible: true },
     { href: "/app/security", label: "Security", icon: <NavigationIcon name="security" />, visible: true },
     { href: "/app/support", label: "Contact support", icon: <NavigationIcon name="support" />, visible: true },
@@ -98,11 +98,11 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
       <span aria-hidden="true" />
     </button>
     {isOpen && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" tabIndex={-1} onClick={closeMenu} />}
-    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><GlobalSearch role={role} inventoryAccess={inventoryAccess} onOpen={closeMenu} platform={platform} workspaceAvailable={workspaceAvailable}/><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}>{platform ? <ul className="nav-list">{linksFor()}</ul> : role === 'end_user' ? <><ul className="nav-list">{linksFor(employeePrimary)}</ul><details className="employee-more-nav" key={pathname} open={employeeSecondary.some(path => path === '/app' ? pathname === path : pathname.startsWith(path))}><summary className="button button-quiet">Account &amp; more</summary><ul className="nav-list">{linksFor(employeeSecondary)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></details></> : <>
+    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><GlobalSearch role={role} inventoryAccess={inventoryAccess} onOpen={closeMenu} platform={platform} workspaceAvailable={workspaceAvailable}/><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}>{platform ? <ul className="nav-list">{linksFor()}</ul> : role === 'end_user' ? <><ul className="nav-list">{linksFor(employeePrimary)}</ul><details className="employee-more-nav" key={pathname} open={employeeSecondary.some(path => path === '/app' ? pathname === path : pathname.startsWith(path))}><summary className="button button-quiet">Account</summary><ul className="nav-list">{linksFor(employeeSecondary)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></details></> : <>
       <div className="nav-group"><span className="nav-group-label">Work</span><ul className="nav-list">{linksFor(staffWork)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></div>
       <div className="nav-group"><span className="nav-group-label">Resources</span><ul className="nav-list">{linksFor(staffResources)}</ul></div>
       <div className="nav-group"><span className="nav-group-label">Manage</span><ul className="nav-list">{linksFor(staffManage)}</ul></div>
-      <details className="staff-more-nav" key={pathname} open={accountActive}><summary className="nav-link"><NavigationIcon name="profile" /><span>Account &amp; support</span></summary><ul className="nav-list">{linksFor(staffAccount)}</ul></details>
+      <details className="staff-more-nav" key={pathname} open={accountActive}><summary className="nav-link"><NavigationIcon name="profile" /><span>Account</span></summary><ul className="nav-list">{linksFor(staffAccount)}</ul></details>
     </>}</nav><ThemeControl /></div>
   </>;
 }

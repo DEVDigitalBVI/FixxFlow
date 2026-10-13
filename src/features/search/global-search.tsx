@@ -20,7 +20,8 @@ export function GlobalSearch({ role, inventoryAccess, onOpen, platform = false, 
     ...(workspaceAvailable ? [{ id: 'workspace', label: 'My workspace', href: '/app', group: 'Navigation' as const }] : []),
   ] : searchDestinations(role, inventoryAccess), [platform, workspaceAvailable, role, inventoryAccess]);
   const normalizedQuery = normalizeSearch(query);
-  const results = useMemo(() => [...matchDestinations(destinations, normalizedQuery), ...remote], [destinations, normalizedQuery, remote]);
+  const navigationResults = useMemo(() => matchDestinations(destinations, normalizedQuery), [destinations, normalizedQuery]);
+  const results = useMemo(() => [...navigationResults, ...remote], [navigationResults, remote]);
   const groups = useMemo(() => groupSearchResults(results), [results]);
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
@@ -55,7 +56,7 @@ export function GlobalSearch({ role, inventoryAccess, onOpen, platform = false, 
   function change(value: string) { setQuery(value); setRemote([]); setSelected(0); setStatus(normalizeSearch(value) && !platform ? 'loading' : 'idle'); }
   function choose(result: SearchResult) { if (!confirmDiscardChanges()) return; setOpen(false); router.push(result.href); }
   return <>
-    <button ref={trigger} type="button" className="button button-secondary global-search-trigger" onClick={() => { returnFocus.current = trigger.current; onOpen(); setOpen(true); }} aria-haspopup="dialog"><span>Search</span><kbd aria-hidden="true">⌘/Ctrl K</kbd></button>
+    <button ref={trigger} type="button" className="button button-secondary global-search-trigger" onClick={() => { returnFocus.current = trigger.current; onOpen(); setOpen(true); }} aria-haspopup="dialog"><span className="global-search-label"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><span>Search</span></span><kbd aria-hidden="true">⌘/Ctrl K</kbd></button>
     {open && createPortal(<dialog ref={dialog} className="global-search-dialog" aria-labelledby="global-search-title" onCancel={() => setOpen(false)} onClick={event => { if (event.target === dialog.current) { const bounds = dialog.current.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) setOpen(false); } }}>
       <header className="search-dialog-heading"><h2 id="global-search-title">{platform ? 'Find a destination' : 'Search your workspace'}</h2><button type="button" className="button button-quiet" onClick={() => setOpen(false)}>Close search</button></header>
       <label htmlFor="global-search-input">{platform ? 'Search navigation' : 'Tickets, people, articles and navigation'}</label>
@@ -67,7 +68,8 @@ export function GlobalSearch({ role, inventoryAccess, onOpen, platform = false, 
       }}/>
       <p className="form-note" id="global-search-hint">{SEARCH_HINT} Use ↑ and ↓ to choose, Enter to open, Escape to close.</p>
       <p role="status">{status === 'loading' ? 'Searching…' : `${results.length} ${results.length === 1 ? 'result' : 'results'}${remote.length >= 8 ? ' · Open a feature to see more' : ''}.`}</p>
-      {status === 'error' && <div role="alert" className="alert alert-error">Workspace results could not load. Navigation is still available. <button type="button" className="button button-secondary" onClick={() => { setStatus('loading'); setRetry(value => value + 1); input.current?.focus(); }}>Retry search</button></div>}
+      {status === 'error' && navigationResults.length > 0 && <p className="form-note">Showing navigation results. Tickets, people, and articles are temporarily unavailable.</p>}
+      {status === 'error' && navigationResults.length === 0 && <div role="alert" className="alert alert-error">Workspace results could not load. <button type="button" className="button button-secondary" onClick={() => { setStatus('loading'); setRetry(value => value + 1); input.current?.focus(); }}>Retry search</button></div>}
       <div id="global-search-results" role="listbox" aria-label="Search results" className="global-search-results">
         {groups.map(({ label, entries }) => <div key={label} role="group" aria-label={label}>
           {entries.map(({ result, index }) => <a key={`${result.group}-${result.id}`} id={`global-result-${index}`} href={result.href} role="option" aria-selected={selected === index} tabIndex={-1} className="global-search-result" onMouseMove={() => setSelected(index)} onClick={event => {

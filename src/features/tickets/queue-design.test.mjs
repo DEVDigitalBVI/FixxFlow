@@ -36,7 +36,7 @@ test('queue empty, later-page and failure states offer useful recovery without f
 
 test('queue keeps selection and mutations out of the employee view and escapes long content',async()=>{
  const html=await renderTicketQueue({role:'end_user'});
- assert.match(html,/My tickets/);assert.doesNotMatch(html,/ticket-queue-panel|bulk-ticket-form|Filters and sort/);
+ assert.match(html,/My requests/);assert.doesNotMatch(html,/ticket-queue-panel|bulk-ticket-form|Filters and sort/);
  const long=await renderTicketQueue({rows:[{...queueRows[0],title:'<script>unsafe</script> '+ 'long'.repeat(100)}]});
  assert.match(long,/&lt;script&gt;unsafe&lt;\/script&gt;/);assert.doesNotMatch(long,/<script>unsafe/);
 });

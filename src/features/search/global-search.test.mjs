@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import React from 'react';
 import { load } from '../../../tests/helpers/load-module.mjs';
 
-function fixture() {
+function fixture(role = 'end_user') {
   let cursor = 0, tree, portalTarget, approved = true;
   const slots = [], calls = [], original = globalThis.document;
   const body = {};
@@ -14,9 +14,9 @@ function fixture() {
     if (Array.isArray(node)) { for (const child of node) { const found = walk(child, predicate); if (found) return found; } }
     else if (node?.props) { if (predicate(node)) return node; return walk(node.props.children, predicate); }
   };
-  const render = () => { cursor = 0; tree = GlobalSearch({ role: 'end_user', inventoryAccess: false, onOpen() {} }); };
+  const render = () => { cursor = 0; tree = GlobalSearch({ role, inventoryAccess: false, onOpen() {} }); };
   render();
-  return { body, calls, target: () => portalTarget, find: predicate => walk(tree, predicate), render, approve: value => { approved = value; }, close() { globalThis.document = original; } };
+  return { body, calls, target: () => portalTarget, find: predicate => walk(tree, predicate), render, state: (index, value) => { slots[index].value = value; }, approve: value => { approved = value; }, close() { globalThis.document = original; } };
 }
 
 test('search dialog mounts outside hidden mobile navigation and groups results for assistive technology', () => {
@@ -56,5 +56,17 @@ test('Escape closes search directly instead of only clearing the native search f
     let prevented = false, stopped = false;
     f.find(node => node.props.role === 'combobox').props.onKeyDown({ key: 'Escape', nativeEvent: {}, preventDefault() { prevented = true; }, stopPropagation() { stopped = true; } }); f.render();
     assert.equal(prevented, true); assert.equal(stopped, true); assert.equal(f.find(node => node.type === 'dialog'), undefined);
+  } finally { f.close(); }
+});
+
+test('a remote failure does not turn a usable navigation match into a retry error', () => {
+  const f = fixture('administrator');
+  try {
+    f.find(node => node.type === 'button').props.onClick(); f.render();
+    f.find(node => node.props.role === 'combobox').props.onChange({ target: { value: 'admin' } });
+    f.state(3, 'error'); f.render();
+    assert.equal(f.find(node => node.props.role === 'option')?.props.children[1]?.props.children, 'Settings');
+    assert.equal(f.find(node => node.type === 'button' && node.props.children === 'Retry search'), undefined);
+    assert.ok(f.find(node => node.type === 'p' && node.props.children === 'Showing navigation results. Tickets, people, and articles are temporarily unavailable.'));
   } finally { f.close(); }
 });

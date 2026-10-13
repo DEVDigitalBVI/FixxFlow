@@ -42,7 +42,7 @@ test('ticket search calls the permission-scoped RPC and preserves filters in pag
 test('employee ticket lists do not fetch staff-only lookup data', async () => {
  const { calls, Page } = setup('end_user');
  const html = renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }));
- assert.match(html, /My tickets/);
+ assert.match(html, /My requests/);
  assert.deepEqual(calls.filter(call => call[0] === 'from'), [['from', 'tickets']]);
  assert.ok(calls.some(call => call[0] === 'eq' && call[1] === 'requester_id' && call[2] === 'staff'));
  assert.ok(calls.some(call => call[0] === 'eq' && call[1] === 'organization_id' && call[2] === 'org'));

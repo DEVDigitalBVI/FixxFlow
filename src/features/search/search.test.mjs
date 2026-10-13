@@ -8,6 +8,7 @@ test('navigation results match literal terms and respect role and inventory acce
   assert.equal(searchDestinations('end_user', true).some(row => row.href === '/app/inventory'), true);
   assert.equal(searchDestinations('technician', true).some(row => row.href === '/app/administration'), false);
   assert.equal(matchDestinations(employee, 'HELP ART').length, 1);
+  assert.equal(matchDestinations(searchDestinations('administrator', true), 'admin')[0]?.label, 'Settings');
   assert.equal(matchDestinations(employee, '%').length, 0);
 });
 test('grouped results retain selection indices, group order and duplicate IDs from different features', () => {
