@@ -8,7 +8,8 @@ export async function searchWorkspace(raw: string) {
   const viewer = await requireViewer(), q = normalizeSearch(raw);
   if (!q) return [];
   const db = await createClient();
-  let tickets = db.rpc('search_tickets', { target_organization_id: viewer.organizationId, search_text: q }).select('id,ticket_number,title').eq('organization_id', viewer.organizationId);
+  // PostgREST orders RPC results after projection, so retain the sort column.
+  let tickets = db.rpc('search_tickets', { target_organization_id: viewer.organizationId, search_text: q }).select('id,ticket_number,title,updated_at').eq('organization_id', viewer.organizationId);
   if (viewer.role === 'end_user') tickets = tickets.eq('requester_id', viewer.id);
   const [ticketRows, articles, people] = await Promise.all([
     tickets.order('updated_at', { ascending: false }).order('id').limit(8),

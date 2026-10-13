@@ -66,7 +66,7 @@ export function GlobalSearch({ role, inventoryAccess, onOpen, platform = false, 
         if (event.key === 'Enter') { event.preventDefault(); if (results[selected]) choose(results[selected]); }
       }}/>
       <p className="form-note" id="global-search-hint">{SEARCH_HINT} Use ↑ and ↓ to choose, Enter to open, Escape to close.</p>
-      <p role="status">{status === 'loading' ? 'Searching…' : `${results.length} results${remote.length >= 8 ? ' · Open a feature to see more' : ''}.`}</p>
+      <p role="status">{status === 'loading' ? 'Searching…' : `${results.length} ${results.length === 1 ? 'result' : 'results'}${remote.length >= 8 ? ' · Open a feature to see more' : ''}.`}</p>
       {status === 'error' && <div role="alert" className="alert alert-error">Workspace results could not load. Navigation is still available. <button type="button" className="button button-secondary" onClick={() => { setStatus('loading'); setRetry(value => value + 1); input.current?.focus(); }}>Retry search</button></div>}
       <div id="global-search-results" role="listbox" aria-label="Search results" className="global-search-results">
         {groups.map(({ label, entries }) => <div key={label} role="group" aria-label={label}>
