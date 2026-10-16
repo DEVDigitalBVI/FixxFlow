@@ -48,12 +48,13 @@ Activated external controls (verified 2026-10-16):
 - Vercel's default high-severity owner alerts remain active. Project-scoped rule
   `FixxFlow production anomalies` (`ar_01a145f4-f5e8-7759-88b3-1943afc48fdd`)
   notifies the team owner for medium-or-higher production 5xx and usage anomalies.
+- Supabase production backup inventory shows eight consecutive completed daily
+  physical backups from 2026-10-09 through 2026-10-16 in `us-west-2`. PITR is disabled;
+  the observed rolling retention is approximately seven days. Evidence is recorded in
+  `docs/recovery-drills/2026-10-16-hosted-backup-inventory.md`.
 
 Recovery activation still required:
 
-- Use the Supabase Backups dashboard or Management API to record the production plan,
-  physical-backup/PITR mode, latest successful recovery point, and retention window.
-  Supabase management authentication is required for this confirmation.
 - Complete a provider-backed restore-to-new-project rehearsal. The local logical
   rehearsal completed on 2026-10-16 validates the application database chain but is
   not evidence that a hosted production backup can meet the approved RTO/RPO.
@@ -68,7 +69,7 @@ not a claim that every supporting provider control has already been verified:
 | Availability | 99.9% per calendar month | External uptime checks and Vercel function errors |
 | Error rate | Less than 1% 5xx over 5 minutes | Vercel logs/alerts |
 | User performance | p75 Core Web Vitals remain in the `good` range | Vercel Speed Insights |
-| Recovery point (RPO) | 24 hours | Supabase daily backup inventory |
+| Recovery point (RPO) | 24 hours | Verified daily physical backup inventory; PITR disabled |
 | Recovery time (RTO) | 4 hours | Timed disposable restore rehearsal |
 | Detection | Public or dependency failure detected within 25 minutes | Scheduled workflow plus provider alerts |
 
@@ -87,9 +88,10 @@ reconnection, and smoke test complete within it.
 
 Never point CI or automated fixtures at a hosted project. The accepted production-only
 model increases release risk because it has no persistent environment for provider
-integration testing. Compensating controls are required. Vercel must hold the immutable
-production candidate away from the custom domain while CI and `Deployment smoke` run
-against its exact generated URL. Promotion stops on any failed check. Destructive,
+integration testing. Compensating controls are required. GitHub holds merges until the
+application, database, and CodeQL checks pass; Vercel holds the immutable production
+candidate away from the custom domain until its native TypeCheck and Lint checks pass.
+Destructive,
 load, email, Storage, Auth-provider, and migration experiments remain prohibited
 against production; use disposable local resources or a separately approved ephemeral
 project. Pull-request previews intentionally cannot authenticate or read production
@@ -176,6 +178,12 @@ secrets or sending real customer notifications.
 Before each schema-changing release, record the provider backup point and retention.
 Database backups do not include Storage object bytes or all provider configuration;
 those need separate inventory and recovery procedures.
+
+The read-only inventory on 2026-10-16 confirmed PostgreSQL 17.6.1.166, daily physical
+backups, WAL-G enabled, PITR disabled, a newest completed recovery point at
+2026-10-16T11:39:05Z, and an oldest visible completed recovery point at
+2026-10-09T11:46:01Z. This supports the approved 24-hour RPO under normal backup
+operation but does not prove the four-hour RTO or cover Storage object bytes.
 
 At least quarterly, restore into a newly created disposable project, never production.
 Time the operation; verify migration history, row counts/digests, grants, RLS, MFA,
