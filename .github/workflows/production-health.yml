@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  issues: write
 concurrency:
   group: production-health
   cancel-in-progress: true
@@ -25,4 +26,33 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '24'
-      - run: npm run test:smoke
+      - name: Run production smoke
+        id: smoke
+        continue-on-error: true
+        run: npm run test:smoke
+      - name: Open or update production alert
+        if: steps.smoke.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERT_TITLE: '[Production alert] FixxFlow health check failing'
+        run: |
+          issue="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title $ALERT_TITLE" --json number --jq '.[0].number // empty')"
+          body="$(printf 'Automated production health verification failed at %s.\n\nRun: %s/%s/actions/runs/%s\n\nTreat this as SEV-2 until impact is assessed. Follow docs/incident-response.md and do not paste secrets or customer data into this issue.' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")"
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" --repo "$GITHUB_REPOSITORY" --body "$body"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$ALERT_TITLE" --body "$body" --assignee DEVDigitalBVI
+          fi
+      - name: Record apparent production recovery
+        if: steps.smoke.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERT_TITLE: '[Production alert] FixxFlow health check failing'
+        run: |
+          issue="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title $ALERT_TITLE" --json number --jq '.[0].number // empty')"
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" --repo "$GITHUB_REPOSITORY" --body "Production health verification passed at $(date -u +'%Y-%m-%dT%H:%M:%SZ'). A human owner must review the failed and recovery runs before closing this incident."
+          fi
+      - name: Fail unhealthy run
+        if: steps.smoke.outcome == 'failure'
+        run: exit 1

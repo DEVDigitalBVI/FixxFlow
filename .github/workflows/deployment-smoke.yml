@@ -3,17 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       deployment_url:
-        description: HTTPS URL of the exact Vercel deployment to verify
+        description: HTTPS URL of the exact production candidate deployment to verify
         required: true
         type: string
-      environment:
-        description: GitHub environment whose approval and secrets apply
-        required: true
-        default: staging
-        type: choice
-        options:
-          - staging
-          - production
       release_sha:
         description: Commit SHA expected in the deployment; defaults to the selected branch SHA
         required: false
@@ -21,14 +13,14 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: deployment-smoke-${{ inputs.environment }}
+  group: deployment-smoke-production
   cancel-in-progress: false
 jobs:
   smoke:
-    name: Verify ${{ inputs.environment }} deployment
+    name: Verify production candidate
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment: ${{ inputs.environment }}
+    environment: Production
     env:
       DEPLOYMENT_URL: ${{ inputs.deployment_url }}
       EXPECTED_RELEASE_SHA: ${{ inputs.release_sha || github.sha }}
@@ -51,7 +43,7 @@ jobs:
       - run: npm run test:smoke
       - uses: actions/upload-artifact@v6
         with:
-          name: deployment-evidence-${{ inputs.environment }}-${{ github.run_id }}
+          name: deployment-evidence-production-${{ github.run_id }}
           path: |
             smoke-evidence.json
             release-manifest.json

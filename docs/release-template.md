@@ -1,6 +1,6 @@
 # FixxFlow release record
 
-Copy this file for each staging or production release. Use UTC timestamps. Do not paste
+Copy this file for each production release. Use UTC timestamps. Do not paste
 credentials, tokens, raw customer data, ticket bodies, or unredacted provider errors.
 
 ## Identity and ownership
@@ -31,8 +31,8 @@ credentials, tokens, raw customer data, ticket bodies, or unredacted provider er
 - `Checks / application` run:
 - `Checks / database` run:
 - CodeQL / dependency review:
-- Staging deployment-smoke artifact:
-- Authenticated staging acceptance:
+- Held production-candidate smoke artifact:
+- Approved non-destructive candidate acceptance:
 - Accessibility/responsive acceptance:
 - Performance/error baseline:
 - Environment/configuration review:
@@ -44,6 +44,7 @@ credentials, tokens, raw customer data, ticket bodies, or unredacted provider er
 - Expected RPO and data-loss window:
 - Approved RTO:
 - Latest disposable restore rehearsal, duration, and result:
+- Production backup mode, retention, and latest successful recovery point:
 - Storage/provider-configuration recovery evidence:
 
 ## Deployment and observation

@@ -12,26 +12,28 @@ test("liveness is public, minimal and never cached", async () => {
 });
 
 test("readiness fails closed when its secret is missing or invalid", async () => {
-  const previous = process.env.CRON_SECRET;
+  const previous = { health: process.env.HEALTH_CHECK_SECRET, cron: process.env.CRON_SECRET };
   let databaseCalls = 0;
   const { GET } = load("src/app/api/health/ready/route.ts", {
     "@/lib/supabase/admin": { createAdminClient: () => { databaseCalls++; throw new Error("must not run"); } },
     "@/lib/server-errors": { reportServerError: () => "reference" },
   });
   try {
+    delete process.env.HEALTH_CHECK_SECRET;
     delete process.env.CRON_SECRET;
     assert.equal((await GET(new Request("https://example.test/api/health/ready"))).status, 503);
-    process.env.CRON_SECRET = "readiness-secret";
+    process.env.HEALTH_CHECK_SECRET = "readiness-secret";
     assert.equal((await GET(new Request("https://example.test/api/health/ready", { headers: { authorization: "Bearer wrong" } }))).status, 401);
     assert.equal(databaseCalls, 0);
   } finally {
-    if (previous === undefined) delete process.env.CRON_SECRET;
-    else process.env.CRON_SECRET = previous;
+    for (const [name, value] of [["HEALTH_CHECK_SECRET", previous.health], ["CRON_SECRET", previous.cron]]) {
+      if (value === undefined) delete process.env[name]; else process.env[name] = value;
+    }
   }
 });
 
 test("readiness verifies database access without returning records", async () => {
-  const previous = { secret: process.env.CRON_SECRET, release: process.env.VERCEL_GIT_COMMIT_SHA };
+  const previous = { secret: process.env.HEALTH_CHECK_SECRET, release: process.env.VERCEL_GIT_COMMIT_SHA };
   const calls = [];
   const query = {
     select(columns, options) { calls.push(["select", columns, options]); return this; },
@@ -43,7 +45,7 @@ test("readiness verifies database access without returning records", async () =>
     "@/lib/server-errors": { reportServerError: () => "reference" },
   });
   try {
-    process.env.CRON_SECRET = "readiness-secret";
+    process.env.HEALTH_CHECK_SECRET = "readiness-secret";
     process.env.VERCEL_GIT_COMMIT_SHA = "1234567890abcdef";
     const response = await GET(new Request("https://example.test/api/health/ready", { headers: { authorization: "Bearer readiness-secret" } }));
     assert.equal(response.status, 200);
@@ -51,14 +53,14 @@ test("readiness verifies database access without returning records", async () =>
     assert.deepEqual(calls.slice(0, 3), [["from", "organizations"], ["select", "id", { head: true, count: "exact" }], ["limit", 1]]);
   } finally {
     for (const [key, value] of Object.entries(previous)) {
-      const name = key === "secret" ? "CRON_SECRET" : "VERCEL_GIT_COMMIT_SHA";
+      const name = key === "secret" ? "HEALTH_CHECK_SECRET" : "VERCEL_GIT_COMMIT_SHA";
       if (value === undefined) delete process.env[name]; else process.env[name] = value;
     }
   }
 });
 
 test("readiness failures are correlated without exposing provider details", async () => {
-  const previous = process.env.CRON_SECRET;
+  const previous = process.env.HEALTH_CHECK_SECRET;
   const errors = [];
   const query = { select() { return this; }, limit() { return this; }, async abortSignal() { return { error: { message: "private database detail" } }; } };
   const { GET } = load("src/app/api/health/ready/route.ts", {
@@ -66,14 +68,33 @@ test("readiness failures are correlated without exposing provider details", asyn
     "@/lib/server-errors": { reportServerError: (operation, error) => { errors.push([operation, error.message]); return "safe-reference"; } },
   });
   try {
-    process.env.CRON_SECRET = "readiness-secret";
+    process.env.HEALTH_CHECK_SECRET = "readiness-secret";
     const response = await GET(new Request("https://example.test/api/health/ready", { headers: { authorization: "Bearer readiness-secret" } }));
     assert.equal(response.status, 503);
     assert.deepEqual(await response.json(), { status: "unavailable", reference: "safe-reference" });
     assert.equal(response.headers.get("x-correlation-id"), "safe-reference");
     assert.deepEqual(errors, [["health.readiness", "private database detail"]]);
   } finally {
-    if (previous === undefined) delete process.env.CRON_SECRET; else process.env.CRON_SECRET = previous;
+    if (previous === undefined) delete process.env.HEALTH_CHECK_SECRET; else process.env.HEALTH_CHECK_SECRET = previous;
+  }
+});
+
+test("readiness keeps CRON_SECRET as a rollout fallback", async () => {
+  const previous = { health: process.env.HEALTH_CHECK_SECRET, cron: process.env.CRON_SECRET };
+  const query = { select() { return this; }, limit() { return this; }, async abortSignal() { return { error: null }; } };
+  const { GET } = load("src/app/api/health/ready/route.ts", {
+    "@/lib/supabase/admin": { createAdminClient: () => ({ from: () => query }) },
+    "@/lib/server-errors": { reportServerError: () => "reference" },
+  });
+  try {
+    delete process.env.HEALTH_CHECK_SECRET;
+    process.env.CRON_SECRET = "cron-secret";
+    const response = await GET(new Request("https://example.test/api/health/ready", { headers: { authorization: "Bearer cron-secret" } }));
+    assert.equal(response.status, 200);
+  } finally {
+    for (const [name, value] of [["HEALTH_CHECK_SECRET", previous.health], ["CRON_SECRET", previous.cron]]) {
+      if (value === undefined) delete process.env[name]; else process.env[name] = value;
+    }
   }
 });
 
