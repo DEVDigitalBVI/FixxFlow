@@ -281,11 +281,12 @@ img { display: block; max-width: 100%; }
 .empty-state strong { display: block; color: var(--color-text); font-size: 16px; }
 .empty-state p { margin-bottom: 0; }
 .empty-icon { width: 42px; height: 42px; margin: 0 auto 12px; display: grid; place-items: center; border-radius: 50%; color: var(--color-accent); background: var(--color-accent-subtle); font-size: 24px; }
-.link-button { border: 0; background: none; color: inherit; padding: 8px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.link-button { min-height: 40px; display: inline-flex; align-items: center; border: 0; background: none; color: inherit; padding: 8px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .management-form { margin-bottom: 16px; padding: 16px; display: grid; grid-template-columns: minmax(150px, 1.1fr) repeat(2, minmax(150px, 1fr)) minmax(150px, .8fr) auto; align-items: end; gap: 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
 .settings-card { padding: 22px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
 .settings-card > h2 { margin: 0 0 6px; font-size: 18px; }
 .settings-card > .muted { margin: 0 0 22px; }
+.settings-card > details > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 .settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }
 .form-actions { grid-column: 1 / -1; }
@@ -838,7 +839,7 @@ img { display: block; max-width: 100%; }
 .portal-articles h2 { line-height: 1.4; margin: 8px 0; }
 .portal-articles h2 a { color: var(--color-text); text-decoration: none; }
 .portal-articles h2 a:hover { color: var(--color-accent); text-decoration: underline; }
-.knowledge-file input { max-width: 100%; }
+.knowledge-file input { min-height: 40px; max-width: 100%; }
 .knowledge-editor fieldset fieldset { background: var(--color-surface); }
 .notification-pagination { margin-top: 20px; flex-wrap: wrap; }
 .queue-views { flex-wrap: wrap; }

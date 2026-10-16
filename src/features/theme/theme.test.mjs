@@ -118,9 +118,13 @@ test('profile offers an independent appearance control outside profile-save form
   assert.doesNotMatch(html, /<form/);
 });
 test('brand logo variants use approved artwork at its original proportions', () => {
+  const imageProps = [];
   const { BrandLogo } = load('src/components/brand/brand-logo.tsx', {
     'next/link': { default: props => React.createElement('a', props) },
-    'next/image': { default: props => React.createElement('img', props) },
+    'next/image': { default: ({ preload, ...props }) => {
+      imageProps.push({ ...props, preload });
+      return React.createElement('img', props);
+    } },
   });
   for (const variant of ['full', 'horizontal', 'compact', 'navigation']) {
     const html = renderToStaticMarkup(React.createElement(BrandLogo, { variant, href: '/app', priority: true }));
@@ -150,6 +154,7 @@ test('brand logo variants use approved artwork at its original proportions', () 
       assert.doesNotMatch(html, /fixxflow-logo-horizontal-full\.png/);
     }
     assert.match(html, /aria-label="FixxFlow home"/);
+    if (variant !== 'full') assert.equal(imageProps.at(-1).preload, true);
     assert.doesNotMatch(html, /raster-master/);
   }
   // Fingerprints of the approved originals; the local brand staging folder is
@@ -161,6 +166,19 @@ test('brand logo variants use approved artwork at its original proportions', () 
   };
   for (const [name, fingerprint] of Object.entries(approved)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`)).digest('hex'), fingerprint);
+  }
+});
+
+test('product surfaces source FixxFlow artwork through the shared brand component', () => {
+  const visit = directory => fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+    const path = `${directory}/${entry.name}`;
+    return entry.isDirectory() ? visit(path) : entry.name.endsWith('.tsx') ? [path] : [];
+  });
+  for (const file of visit('src').filter(file => file !== 'src/components/brand/brand-logo.tsx')) {
+    assert.doesNotMatch(fs.readFileSync(file, 'utf8'), /\/brand\/fixxflow\/(?:logo|icon)\//, file);
+  }
+  for (const file of ['src/app/(auth)/layout.tsx', 'src/app/app/layout.tsx', 'src/app/platform/layout.tsx']) {
+    assert.doesNotMatch(fs.readFileSync(file, 'utf8'), /<BrandLogo(?![^>]*\bpriority\b)[^>]*>/, `${file} should preload its above-the-fold logo`);
   }
 });
 

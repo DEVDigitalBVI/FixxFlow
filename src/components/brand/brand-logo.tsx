@@ -17,7 +17,7 @@ export function BrandLogo({ variant = "full", priority = false, className, href 
       width={1139}
       height={1151}
       alt=""
-      fetchPriority={priority ? "high" : undefined}
+      preload={priority}
       sizes="44px"
     />
     <span className="brand-logo-navigation-copy" aria-hidden="true">
@@ -33,7 +33,7 @@ export function BrandLogo({ variant = "full", priority = false, className, href 
         width={1139}
         height={1151}
         alt="FixxFlow"
-        fetchPriority={priority ? "high" : undefined}
+        preload={priority}
         sizes="44px"
       /> : variant === "horizontal" ? <Image
         className="brand-logo-image"
@@ -41,7 +41,7 @@ export function BrandLogo({ variant = "full", priority = false, className, href 
         width={2172}
         height={724}
         alt="FixxFlow — IT Support in Motion"
-        fetchPriority={priority ? "high" : undefined}
+        preload={priority}
         sizes="(max-width: 767px) 44px, 176px"
       /> : (["light", "dark"] as const).map(theme => <Image
         key={theme}

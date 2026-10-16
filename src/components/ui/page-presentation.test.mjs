@@ -21,8 +21,9 @@ test('shared page heading separates native back navigation, title and primary ac
   assert.doesNotMatch(html, /role="button"/);
 });
 test('minimal headings do not render empty navigation, descriptions or action groups', () => {
-  const html = render(React.createElement(PageHeader, { title: 'Security' }));
+  const html = render(React.createElement(PageHeader, { title: 'Security', className: 'security-heading' }));
   assert.match(html, /<h1>Security<\/h1>/);
+  assert.match(html, /class="page-header security-heading"/);
   assert.doesNotMatch(html, /<a |<p>|page-header-actions|page-eyebrow/);
 });
 test('shared loading state announces the wait once without fake data or animated controls', () => {
@@ -42,6 +43,26 @@ test('navigation and pagination controls retain button treatment without inherit
   assert.match(css, /\.queue-views a\[aria-current="page"\][^}]*font-weight: 700/);
   assert.match(css, /\.button-quiet \{[^}]*min-height: 44px/);
   assert.match(css, /\.button-secondary:hover:not\(:disabled\)/);
+  assert.match(css, /\.link-button \{[^}]*min-height: 40px/);
+  assert.match(css, /\.settings-card > details > summary \{[^}]*min-height: 44px/);
+  assert.match(css, /\.knowledge-file input \{[^}]*min-height: 40px/);
   assert.match(css, /@media \(forced-colors: active\)/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+});
+test('workspace screens use the shared page header instead of duplicating its structure', () => {
+  const screens = [
+    'src/app/app/page.tsx',
+    'src/app/app/notifications/page.tsx',
+    'src/app/app/organization/page.tsx',
+    'src/app/app/administration/[section]/page.tsx',
+    'src/app/platform/access/page.tsx',
+    'src/features/administration/administration-hub.tsx',
+    'src/features/conversations/history-browser.tsx',
+    'src/features/platform/dashboard.tsx',
+  ];
+  for (const file of screens) {
+    const source = fs.readFileSync(file, 'utf8');
+    assert.match(source, /<PageHeader\b/, file);
+    assert.doesNotMatch(source, /<header className=["']page-header(?:\s|["'])/, file);
+  }
 });

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { administrationSections } from './sections';
+import { PageHeader } from '@/components/ui/page-header';
 
 type Section = typeof administrationSections[number]['slug'];
 type HubCard = { title: string; description: string; icon: keyof typeof iconPaths; destinations: readonly Section[]; note?: string };
@@ -42,7 +43,7 @@ function DestinationLink({ section }: { section: Section }) {
 }
 export function AdministrationHub({ organizationName }: { organizationName: string }) {
   return <div className="page administration-hub">
-    <header className="page-header administration-hub-header"><div><span className="page-eyebrow">Workspace settings</span><h1>Administration</h1><p>Manage your workspace and how support gets done.</p></div><span className="badge administration-workspace-name">{organizationName}</span></header>
+    <PageHeader className="administration-hub-header" title="Administration" eyebrow="Workspace settings" description="Manage your workspace and how support gets done." actions={<span className="badge administration-workspace-name">{organizationName}</span>}/>
     <nav className="administration-jump-nav" aria-label="Administration sections">{groups.map(group => <a key={group.id} className="button button-quiet" href={`#admin-${group.id}`}>{group.title}</a>)}</nav>
     {groups.map(group => <section className="administration-hub-group" id={`admin-${group.id}`} key={group.id} aria-labelledby={`admin-${group.id}-heading`}>
       <header className="administration-section-heading"><h2 id={`admin-${group.id}-heading`}>{group.title}</h2><p>{group.description}</p></header>
