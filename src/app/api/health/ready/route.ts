@@ -16,7 +16,7 @@ function authorized(request: Request, secret: string) {
 }
 
 export async function GET(request: Request) {
-  const secret = process.env.CRON_SECRET?.trim();
+  const secret = process.env.HEALTH_CHECK_SECRET?.trim() || process.env.CRON_SECRET?.trim();
   if (!secret) return Response.json({ status: "unavailable" }, { status: 503, headers });
   if (!authorized(request, secret)) return Response.json({ error: "Unauthorized" }, { status: 401, headers });
 

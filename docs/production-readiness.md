@@ -6,8 +6,10 @@ Feature-specific runbooks may add stricter requirements but cannot weaken these.
 
 ## Current status
 
-Repository controls are implemented. A production release is not certified until
-the external activation items below are configured and a release record is complete.
+Repository controls are implemented. FixxFlow intentionally uses a production-only
+hosted environment; the product owner accepted the lack of a persistent staging
+environment on 2026-10-16. A production release is not certified until the remaining
+external activation items below are configured and a release record is complete.
 Historical evidence in other documents must not be treated as current production
 state.
 
@@ -25,28 +27,41 @@ Implemented in this repository:
 - Dependabot for npm and GitHub Actions, plus CodeQL JavaScript/TypeScript scanning.
 - An application release record, rollback procedure, incident process, and scheduled
   production smoke workflow.
+- Protected `main` requiring current application, database, and CodeQL checks, linear
+  history, resolved conversations, and no administrator force-push or deletion.
+- Scheduled health failures create or update a durable GitHub incident issue assigned
+  to `DEVDigitalBVI`; a successful recovery check adds evidence but requires human
+  review before closure.
+- Production-only candidate smoke and promotion evidence. No workflow implies that a
+  separate staging environment exists.
 
-External activation still required:
+Activated external controls (verified 2026-10-16):
 
-- Create or nominate a separate Supabase PostgreSQL 17 staging project and Vercel
-  staging project. This can create cost and requires owner approval.
-- Configure GitHub `staging` and `production` environments. Require a reviewer for
-  production and add `HEALTH_CHECK_SECRET`; its value must match that environment's
-  Vercel `CRON_SECRET`. Add `VERCEL_AUTOMATION_BYPASS_SECRET` only when preview
-  deployment protection requires it.
-- Add repository secret `HEALTH_CHECK_SECRET` for scheduled production monitoring
-  and repository variable `PRODUCTION_URL` if the canonical URL changes.
-- Protect `main` and require `Checks / application`, `Checks / database`, and the
-  eligible CodeQL check. Configure Vercel Deployment Checks or manual promotion so a
-  failed smoke run prevents production promotion.
-- Configure alert recipients in GitHub Actions and Vercel. If the plan supports
-  Vercel Alerts, notify the on-call owner for 5xx/error and usage anomalies.
-- Approve recovery objectives, verify current backup retention, and complete a
-  disposable restore rehearsal before certifying the first release.
+- Matching encrypted GitHub repository/`Production` environment and Vercel production
+  secrets named `HEALTH_CHECK_SECRET`, plus repository variable `PRODUCTION_URL` set to
+  `https://www.fixxflow.app`. `CRON_SECRET` remains a compatibility fallback and was
+  not copied, disclosed, or rotated.
+- GitHub protects `main` with strict application, database, and CodeQL checks before
+  merge. Vercel's native TypeCheck and Lint checks target production and use
+  `blocks=deployment-alias`, so a failed native check cannot receive the production
+  domain.
+- Vercel's default high-severity owner alerts remain active. Project-scoped rule
+  `FixxFlow production anomalies` (`ar_01a145f4-f5e8-7759-88b3-1943afc48fdd`)
+  notifies the team owner for medium-or-higher production 5xx and usage anomalies.
 
-## Initial service objectives
+Recovery activation still required:
 
-These are provisional engineering targets until the product owner records approval:
+- Use the Supabase Backups dashboard or Management API to record the production plan,
+  physical-backup/PITR mode, latest successful recovery point, and retention window.
+  Supabase management authentication is required for this confirmation.
+- Complete a provider-backed restore-to-new-project rehearsal. The local logical
+  rehearsal completed on 2026-10-16 validates the application database chain but is
+  not evidence that a hosted production backup can meet the approved RTO/RPO.
+
+## Approved service objectives
+
+The product owner approved these targets on 2026-10-16. They are operational targets,
+not a claim that every supporting provider control has already been verified:
 
 | Objective | Initial target | Evidence |
 | --- | --- | --- |
@@ -58,38 +73,27 @@ These are provisional engineering targets until the product owner records approv
 | Detection | Public or dependency failure detected within 25 minutes | Scheduled workflow plus provider alerts |
 
 Daily backups can support only an approximately 24-hour RPO. A tighter RPO requires
-approved PITR or another supported backup mechanism. The four-hour RTO is unverified
-until a full restore, application reconnection, and smoke test complete within it.
+approved PITR or another supported backup mechanism. The four-hour RTO remains
+unverified for the hosted system until a provider-backed restore, application
+reconnection, and smoke test complete within it.
 
 ## Environment model
 
 | Environment | Application | Database | Data and integrations |
 | --- | --- | --- | --- |
 | Local/CI | Local Next.js build | Supabase CLI, PostgreSQL 17 | Synthetic seed data; Mailpit; no external email |
-| Staging | Separate Vercel project/domain | Separate Supabase PG17 project | Synthetic users in two tenants; isolated secrets; Resend test/sandbox delivery or disabled email |
+| Pull request preview | Vercel build/preview URL | None | Nonfunctional public Supabase placeholders; compile and static review only |
 | Production | Canonical Vercel project/domain | Production Supabase project | Real data and production integrations |
 
-Never point CI or automated fixtures at a hosted project. Never copy production rows,
-credentials, Storage objects, or Auth identities into staging. Match runtime version,
-database major version, regions, cron cadence, environment variable names, and provider
-features. Record unavoidable size or plan differences in the release record.
-
-Staging setup sequence:
-
-1. Obtain cost approval and create the isolated projects.
-2. Record project IDs, owner, region, PostgreSQL exact version, plan, and cleanup policy.
-3. Apply the complete immutable migration chain to the empty staging database. Never
-   seed production; staging uses synthetic fixtures only.
-4. Configure the environment variables listed in `.env.example`, with unique staging
-   values. Keep `AUTOMATION_PROCESSING_ENABLED=false` and the database automation gate
-   off until its separate canary is approved.
-5. Configure Auth URLs, MFA, email capture/test delivery, cron authentication, Storage,
-   Realtime, and Vercel deployment protection.
-6. Run authenticated acceptance for administrator, technician, employee, platform
-   owner, cross-tenant denial, AAL1/AAL2, scheduled jobs, email, uploads, Realtime,
-   accessibility, responsive layouts, and failure recovery.
-7. Run the `Deployment smoke` workflow against the exact staging deployment and retain
-   its 90-day evidence artifact.
+Never point CI or automated fixtures at a hosted project. The accepted production-only
+model increases release risk because it has no persistent environment for provider
+integration testing. Compensating controls are required. Vercel must hold the immutable
+production candidate away from the custom domain while CI and `Deployment smoke` run
+against its exact generated URL. Promotion stops on any failed check. Destructive,
+load, email, Storage, Auth-provider, and migration experiments remain prohibited
+against production; use disposable local resources or a separately approved ephemeral
+project. Pull-request previews intentionally cannot authenticate or read production
+data and are not substitutes for end-to-end acceptance.
 
 ## Release gates
 
@@ -99,8 +103,8 @@ Staging setup sequence:
    database recovery owner, incident commander, and rollback decision maker.
 2. Pin the commit. Require clean CI application, database, dependency, and CodeQL
    results. Review Dependabot and security alerts; do not force a breaking audit fix.
-3. Confirm the staging deployment passed smoke and critical authenticated flows using
-   the exact candidate and migration set.
+3. Confirm the held production candidate passed smoke and approved non-destructive
+   critical flows using the exact candidate and migration set.
 4. Verify environment variable names without printing values. Confirm server secrets
    are not prefixed `NEXT_PUBLIC_`, the site URL is HTTPS, and automation stays off
    unless separately approved.
@@ -141,8 +145,10 @@ Staging setup sequence:
 ## Monitoring and alerts
 
 The scheduled `Production health` workflow runs four times an hour and fails on public
-availability, database readiness, or security-header regression. GitHub notifications
-must reach the on-call owner. It is a safety net, not a substitute for provider alerts;
+availability, database readiness, or security-header regression. A failure creates or
+updates a GitHub issue assigned to `DEVDigitalBVI`; recovery comments on the issue and
+a human owner decides when to close it. The owner must keep GitHub issue/assignment
+notifications enabled. This is a safety net, not a substitute for provider alerts;
 scheduled Actions can be delayed.
 
 Vercel is the centralized source for the JSON events `application.failure`,
@@ -179,6 +185,13 @@ confirms completion.
 
 If the rehearsal exceeds the RTO or cannot meet the RPO, mark production readiness
 blocked and either revise the approved objectives or improve the backup tier/process.
+
+The 2026-10-16 local logical recovery drill is recorded in
+`docs/recovery-drills/2026-10-16-local.md`. It verified schema, migration history,
+critical synthetic records, grants, and RLS in a separate PostgreSQL 17 container. It
+does not replace the required provider-backed restore-to-new-project rehearsal because
+it did not originate from a production physical backup and did not test Storage,
+provider configuration, production data volume, DNS, or application reconnection.
 
 ## Rollback rules
 
