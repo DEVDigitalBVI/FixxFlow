@@ -126,11 +126,15 @@ test('brand logo variants use approved artwork at its original proportions', () 
       return React.createElement('img', props);
     } },
   });
-  for (const variant of ['full', 'horizontal', 'compact', 'navigation']) {
+  for (const variant of ['full', 'full-inverse', 'horizontal', 'compact', 'navigation']) {
     const html = renderToStaticMarkup(React.createElement(BrandLogo, { variant, href: '/app', priority: true }));
     if (variant === 'full') {
       assert.match(html, /fixxflow-logo-primary\.png/);
       assert.match(html, /fixxflow-logo-dark-mode\.png/);
+      assert.match(html, /width="1353" height="1334"/);
+    } else if (variant === 'full-inverse') {
+      assert.match(html, /fixxflow-logo-dark-mode\.png/);
+      assert.doesNotMatch(html, /fixxflow-logo-primary\.png/);
       assert.match(html, /width="1353" height="1334"/);
     } else if (variant === 'horizontal') {
       assert.match(html, /fixxflow-logo-horizontal-full\.png/);
@@ -180,6 +184,10 @@ test('product surfaces source FixxFlow artwork through the shared brand componen
   for (const file of ['src/app/(auth)/layout.tsx', 'src/app/app/layout.tsx', 'src/app/platform/layout.tsx']) {
     assert.doesNotMatch(fs.readFileSync(file, 'utf8'), /<BrandLogo(?![^>]*\bpriority\b)[^>]*>/, `${file} should preload its above-the-fold logo`);
   }
+  const authLayout = fs.readFileSync('src/app/(auth)/layout.tsx', 'utf8');
+  const css = fs.readFileSync('src/app/globals.css', 'utf8');
+  assert.match(authLayout, /<BrandLogo[^>]*variant="full-inverse"[^>]*priority/);
+  assert.doesNotMatch(css.match(/\.auth-logo \{[^}]+\}/)?.[0] ?? '', /background|padding|border-radius/);
 });
 
 

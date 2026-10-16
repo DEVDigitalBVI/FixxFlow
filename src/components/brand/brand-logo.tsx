@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type BrandLogoProps = {
-  variant?: "full" | "horizontal" | "compact" | "navigation";
+  variant?: "full" | "full-inverse" | "horizontal" | "compact" | "navigation";
   priority?: boolean;
   className?: string;
   href?: string;
@@ -27,7 +27,15 @@ export function BrandLogo({ variant = "full", priority = false, className, href 
   </Link>;
   return (
     <Link className={classes} href={href} aria-label="FixxFlow home">
-      {variant === "compact" ? <Image
+      {variant === "full-inverse" ? <Image
+        className="brand-logo-image"
+        src="/brand/fixxflow/logo/fixxflow-logo-dark-mode.png"
+        width={1353}
+        height={1334}
+        alt="FixxFlow — IT Support in Motion"
+        preload={priority}
+        sizes="(max-width: 767px) 180px, 220px"
+      /> : variant === "compact" ? <Image
         className="brand-logo-image"
         src="/brand/fixxflow/icon/fixxflow-icon-primary.png"
         width={1139}

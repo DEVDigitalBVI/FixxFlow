@@ -38,6 +38,7 @@ The raw control heuristic reported wrapping-label inputs and native checkbox/fil
 5. Raised the onboarding text action and card disclosure summaries to the 40/44px control rhythm.
 6. Raised the knowledge-editor file input to the 40px workspace control target.
 7. Moved the platform customer count and primary action into the shared header action area so desktop alignment and mobile stacking match the rest of the product.
+8. Removed the light logo plaque from the navy authentication panel and replaced its light-surface horizontal artwork with the approved transparent dark-surface full lockup. The compact mobile mark remains unchanged.
 
 ## Regression coverage
 
