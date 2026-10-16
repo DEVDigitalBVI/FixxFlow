@@ -82,6 +82,7 @@ reconnection, and smoke test complete within it.
 | Environment | Application | Database | Data and integrations |
 | --- | --- | --- | --- |
 | Local/CI | Local Next.js build | Supabase CLI, PostgreSQL 17 | Synthetic seed data; Mailpit; no external email |
+| Pull request preview | Vercel build/preview URL | None | Nonfunctional public Supabase placeholders; compile and static review only |
 | Production | Canonical Vercel project/domain | Production Supabase project | Real data and production integrations |
 
 Never point CI or automated fixtures at a hosted project. The accepted production-only
@@ -91,7 +92,8 @@ production candidate away from the custom domain while CI and `Deployment smoke`
 against its exact generated URL. Promotion stops on any failed check. Destructive,
 load, email, Storage, Auth-provider, and migration experiments remain prohibited
 against production; use disposable local resources or a separately approved ephemeral
-project.
+project. Pull-request previews intentionally cannot authenticate or read production
+data and are not substitutes for end-to-end acceptance.
 
 ## Release gates
 
