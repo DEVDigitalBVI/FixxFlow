@@ -25,8 +25,30 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - run: npm audit --omit=dev --audit-level=high
       - run: npm run lint -- --max-warnings=0
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
       - run: npm run test:build
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Start isolated Supabase stack
+        run: npm exec -- supabase start --exclude studio,imgproxy,edge-runtime,logflare,vector
+      - name: Run database lint and regression suites
+        run: npm run test:database
+      - name: Stop isolated Supabase stack
+        if: always()
+        run: npm exec -- supabase stop --no-backup

@@ -12,7 +12,7 @@ const matches = pathname => proxy.matchers.some(({ regexp }) => new RegExp(regex
 for (const pathname of ['/app', '/app/tickets', '/auth/callback', '/login', '/platform']) {
   assert.ok(matches(pathname), `Built proxy must match ${pathname}`);
 }
-for (const pathname of ['/_next/static/chunk.js', '/_next/image', '/favicon.ico', '/brand/logo.png']) {
+for (const pathname of ['/_next/static/chunk.js', '/_next/image', '/favicon.ico', '/brand/logo.png', '/api/health/live', '/api/health/ready', '/api/cron/notifications']) {
   assert.ok(!matches(pathname), `Built proxy must exclude ${pathname}`);
 }
 console.log('Production session-refresh proxy and route matchers verified.');

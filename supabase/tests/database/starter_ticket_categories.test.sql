@@ -30,14 +30,23 @@ select extensions.throws_ok(
     where organization_id = '20000000-0000-0000-0000-000000000021' and name = 'Email'$$,
   '23503', null, 'a subcategory cannot use a category from a different organization'
 );
--- Re-run the migration with custom data to exercise the existing-organization backfill.
+-- Replay the migration's idempotent backfill statement. Supabase runs pgTAP in a
+-- container that mounts the test directory but not the migrations directory, so
+-- this must stay self-contained instead of using psql's \ir command.
 create temporary table original_email as
 select id from public.ticket_categories
 where organization_id = '20000000-0000-0000-0000-000000000021' and name = 'Email';
 update public.ticket_categories set is_active = false where id in (select id from original_email);
 insert into public.ticket_categories (organization_id, name)
 values ('20000000-0000-0000-0000-000000000021', 'Custom category');
-\ir ../../migrations/20260925010356_starter_ticket_categories.sql
+insert into public.ticket_categories (organization_id, name)
+select organization.id, category.name
+from public.organizations organization
+cross join (values
+  ('Account / Access'), ('Computer'), ('Email'), ('Network'), ('Printer'),
+  ('Software'), ('Security'), ('Phone'), ('Other')
+) category(name)
+on conflict (organization_id, name) do nothing;
 select extensions.is(
   (select count(*)::integer from public.ticket_categories where organization_id = '20000000-0000-0000-0000-000000000021'),
   10, 'backfill is idempotent and preserves custom categories'

@@ -23,6 +23,7 @@ FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 - [Design system](DESIGN_SYSTEM.md) and [interface audit](docs/apple-interface-audit-2026-10-11.md): UI requirements, findings, verification evidence, and remaining browser checks.
 - [Architecture](PLATFORM_ARCHITECTURE.md) and [code review](docs/code-review.md): application boundaries, implementation history, and outstanding engineering/product work.
 - [Automation rollout](docs/automation-rollout.md): deployment status, release gates, recovery, and links to stage-specific runbooks.
+- [Production readiness](docs/production-readiness.md), [release record](docs/release-template.md), and [incident response](docs/incident-response.md): application-wide deployment gates, staging, monitoring, rollback, and recovery.
 - [Email delivery](docs/resend-email.md), [notifications](NOTIFICATIONS.md), [inventory](docs/inventory.md), and [asset import](docs/asset-import.md): setup and operational behavior.
 - [Knowledge base](KNOWLEDGE_BASE.md), [search](SEARCH.md), [reporting](REPORTING.md), [analytics](PRODUCT_ANALYTICS.md), and [audit log](AUDIT_LOG.md): domain behavior and validation.
 
@@ -107,7 +108,8 @@ realtime events with a 60-second reconciliation interval; disconnected chats ret
 a shorter fallback. Focus and visibility changes reconcile promptly. Background
 refreshes coalesce event bursts and avoid overlapping route transitions.
 
-The GitHub Checks workflow runs Node 24, lockfile installation, lint, typecheck,
-unit/component tests, and the production build. It uses placeholder public Supabase
-configuration, requires no production secrets, and does not deploy or run migrations.
-Database regression tests still require a separately provisioned local Supabase stack.
+The GitHub Checks workflow runs Node 24, lockfile installation, production dependency
+audit, lint, generated route types, typecheck, unit/component tests, the production
+build, and the production proxy check. Its isolated database job starts the local
+Supabase stack and runs database lint, pgTAP, and every transactional SQL regression.
+It uses synthetic local data and never links to or mutates a hosted project.
