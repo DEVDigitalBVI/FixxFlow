@@ -47,7 +47,7 @@ of the invitation template, which now depends on the corrected callback.
   https://github.com/DEVDigitalBVI/FixxFlow/actions/runs/39035148396
 - Permanent monitor configuration and canonical smoke passed:
   https://github.com/DEVDigitalBVI/FixxFlow/actions/runs/39035345397
-- Final observation smoke:
+- Final observation smoke passed:
   https://github.com/DEVDigitalBVI/FixxFlow/actions/runs/39037074114
 - Operational monitoring commit: `821940f` on PR #7. It adds the optional protected
   workflow setup, credential-safe monitor script, documentation and example variable
@@ -90,14 +90,15 @@ RLS and trigger checks, local app reconnection, synthetic ticket, Storage bytes,
 fresh MFA. See `docs/recovery-drills/2026-10-17-hosted-logical.md` for limitations and
 the required recovery procedure corrections. Production had no object bytes to recover.
 
-Production observation began around 13:05 UTC. Initial Vercel runtime-error and HTTP
-5xx queries returned zero records. Final observation and canonical smoke status must
-be read back before closing this record. This low-traffic window does not establish
-a statistically meaningful latency or Core Web Vitals baseline.
+Production observation covered 13:05–13:36 UTC. Final Vercel runtime-error and HTTP
+5xx queries returned zero records, and the final canonical smoke passed. Both
+permanent monitors were UP at 13:36 UTC with zero open incidents. This low-traffic
+window does not establish a statistically meaningful latency or Core Web Vitals
+baseline. Sanitized machine-readable evidence is retained in
+`docs/pilot-release-2026-10-17-results.json`.
 
 ## Remaining items
 
-- Read back final smoke and the full 30-minute production observation.
 - Retain physical-backup recovery as an explicit open gate; do not claim the logical
   rehearsal proves it. Product owner decides the acceptable pilot risk.
 - Obtain owner cleanup confirmation for the paid disposable recovery project after
