@@ -95,11 +95,19 @@
       "data.sql": "4f4bd85334bb66ac6713ac3c732aedb46e149e40bbff4a3fd24b37410e5830e1",
       "history-schema.sql": "ae56295c7e66a8b46ab50df6f00cf57f7866f2478a17fbe3910d9def39e836ab",
       "history-data.sql": "61ccb0a5de595192eddbbefe48262edf4c56d95e832cf046e41505880a24d7eb"
+    },
+    "cleanup": {
+      "target": "twxpybtezuposrmrekud",
+      "name": "FixxFlow isolated recovery 2026-10-17",
+      "ownerApproved": true,
+      "deletionAcceptedAt": "2026-10-17T13:40:26.562Z",
+      "httpStatus": 200,
+      "targetAbsentFromInventory": true,
+      "productionStatus": "ACTIVE_HEALTHY"
     }
   },
   "openGates": [
     "provider physical-backup recovery and complete production RTO",
-    "disposable recovery project cleanup pending owner confirmation",
     "PR #7 merge pending authorization"
   ],
   "uiUxChangesMade": false

@@ -89,6 +89,9 @@ Hosted logical recovery passed, including 90-table integrity comparison, exact g
 RLS and trigger checks, local app reconnection, synthetic ticket, Storage bytes, and
 fresh MFA. See `docs/recovery-drills/2026-10-17-hosted-logical.md` for limitations and
 the required recovery procedure corrections. Production had no object bytes to recover.
+After retaining evidence, the owner approved deletion of the disposable project.
+Supabase accepted deletion at 13:40 UTC; the target disappeared from inventory and
+production remained `ACTIVE_HEALTHY`. The Gmail pilot account remains active.
 
 Production observation covered 13:05–13:36 UTC. Final Vercel runtime-error and HTTP
 5xx queries returned zero records, and the final canonical smoke passed. Both
@@ -101,7 +104,5 @@ baseline. Sanitized machine-readable evidence is retained in
 
 - Retain physical-backup recovery as an explicit open gate; do not claim the logical
   rehearsal proves it. Product owner decides the acceptable pilot risk.
-- Obtain owner cleanup confirmation for the paid disposable recovery project after
-  evidence retention. Keep the production Gmail pilot account and its test activity.
 - Review/merge PR #7 through normal protected-main checks when authorized.
 - Address the owner's UI/UX and notification-presentation feedback after checks.

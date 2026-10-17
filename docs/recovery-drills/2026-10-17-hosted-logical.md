@@ -81,9 +81,12 @@ Private exports, credentials and detailed digests are held in the mode-0700 temp
 directory `/private/tmp/fixxflow-hosted-recovery-20261017/`, with sensitive files 0600.
 They must not be committed or treated as a durable independent backup.
 
-The paid target cannot be paused. Retain it only until the owner confirms cleanup,
-as required by `docs/production-readiness.md`. The production Gmail pilot account
-and its conversation/tickets are explicitly retained for the owner's UI/UX testing.
+The paid target could not be paused. After evidence retention, the owner explicitly
+approved deletion under `docs/production-readiness.md`. Supabase accepted deletion
+at `2026-10-17T13:40:26.562Z` (HTTP 200); a fresh inventory omitted the target and
+confirmed production `ACTIVE_HEALTHY`. The local recovered app was stopped. The
+production Gmail pilot account and its conversation/tickets are explicitly retained
+for the owner's UI/UX testing; its active end-user membership was verified again.
 
 The physical-backup restore gate remains open because provider cloning starts copied
 cron jobs immediately. This logical drill must not be substituted for that evidence.
