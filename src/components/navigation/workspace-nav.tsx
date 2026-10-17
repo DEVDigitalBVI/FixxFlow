@@ -102,7 +102,6 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
       <div className="nav-group"><span className="nav-group-label">Work</span><ul className="nav-list">{linksFor(staffWork)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></div>
       <div className="nav-group"><span className="nav-group-label">Resources</span><ul className="nav-list">{linksFor(staffResources)}</ul></div>
       <div className="nav-group"><span className="nav-group-label">Manage</span><ul className="nav-list">{linksFor(staffManage)}</ul></div>
-      <details className="staff-more-nav" key={pathname} open={accountActive}><summary className="nav-link"><NavigationIcon name="profile" /><span>Account</span></summary><ul className="nav-list">{linksFor(staffAccount)}</ul></details>
-    </>}</nav><ThemeControl /></div>
+    </>}</nav>{!platform && role !== 'end_user' && <details className="staff-more-nav" key={pathname} open={accountActive}><summary className="nav-link" aria-label="Account" title="Account" data-active={accountActive || undefined}><NavigationIcon name="profile" /><span>Account</span></summary><ul className="nav-list">{linksFor(staffAccount)}</ul></details>}<ThemeControl /></div>
   </>;
 }
