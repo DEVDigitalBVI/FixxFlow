@@ -1,6 +1,23 @@
 # Product usage analytics V1
 
-This is a first-party aggregate usage stream for the FixxFlow software owner. It is separate from tenant reports, article insights and the administrative audit log. No external analytics SDK or destination is used.
+This is a first-party aggregate usage stream for the FixxFlow software owner. It is separate from tenant reports, article insights and the administrative audit log. This stream does not use an external analytics SDK or destination.
+
+## Vercel Web Analytics
+
+The root layout also mounts `@vercel/analytics/next` through `WebAnalytics`, alongside
+Speed Insights. It reports page views to Vercel after Web Analytics is enabled for
+the project and the application is deployed. Development uses the SDK's automatic
+development mode, with debug logging disabled. No custom events or user properties
+are added.
+
+The `beforeSend` filter removes query strings and fragments and replaces UUID path
+segments with `[id]`, keeping search terms, auth parameters, and individual record
+IDs out of tracked URLs. This traffic stream is separate from Profile → Help improve
+FixxFlow, which continues to control only the first-party product-usage events below.
+
+Enable Web Analytics in the Vercel project's Analytics dashboard, deploy this
+integration, and visit the deployed app to verify page views in that dashboard.
+See the [Vercel setup guide](https://vercel.com/docs/analytics/quickstart).
 
 ## Consent and data minimization
 

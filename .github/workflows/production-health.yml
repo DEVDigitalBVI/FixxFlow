@@ -37,7 +37,7 @@ jobs:
           ALERT_TITLE: '[Production alert] FixxFlow health check failing'
         run: |
           issue="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title $ALERT_TITLE" --json number --jq '.[0].number // empty')"
-          body="$(printf 'Automated production health verification failed at %s.\n\nRun: %s/%s/actions/runs/%s\n\nTreat this as SEV-2 until impact is assessed. Follow docs/incident-response.md and do not paste secrets or customer data into this issue.' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")"
+          body="$(printf 'Automated production health verification failed at %s.\n\nRun: %s/%s/actions/runs/%s\n\nTreat this as SEV-2 until impact is assessed. Follow docs/operations/incident-response.md and do not paste secrets or customer data into this issue.' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")"
           if [ -n "$issue" ]; then
             gh issue comment "$issue" --repo "$GITHUB_REPOSITORY" --body "$body"
           else

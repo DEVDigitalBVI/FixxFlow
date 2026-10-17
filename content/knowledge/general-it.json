@@ -2454,7 +2454,7 @@
       "sourcePaths": [
         "src/features/search/global-search.tsx",
         "src/features/search/service.ts",
-        "SEARCH.md"
+        "docs/features/search.md"
       ],
       "content": [
         {
@@ -2526,7 +2526,7 @@
       "sourcePaths": [
         "src/app/app/notifications/page.tsx",
         "src/features/notifications/read-button.tsx",
-        "docs/resend-email.md"
+        "docs/features/notifications.md"
       ],
       "content": [
         {
@@ -2815,7 +2815,7 @@
       "sourcePaths": [
         "src/features/inventory/forms.tsx",
         "src/app/app/inventory/page.tsx",
-        "docs/inventory.md"
+        "docs/features/inventory.md"
       ],
       "content": [
         {
@@ -2959,7 +2959,7 @@
       "sourcePaths": [
         "src/app/app/tickets/page.tsx",
         "src/features/tickets/queue-context.tsx",
-        "SEARCH.md"
+        "docs/features/search.md"
       ],
       "content": [
         {
@@ -3397,7 +3397,7 @@
       "reviewedOn": "2026-10-12",
       "audience": "technicians and administrators",
       "sourcePaths": [
-        "docs/asset-import.md",
+        "docs/features/asset-import.md",
         "src/app/app/assets/import/page.tsx",
         "src/features/assets/import.test.mjs"
       ],
@@ -3543,7 +3543,7 @@
       "sourcePaths": [
         "src/features/knowledge/article-editor.tsx",
         "src/app/app/help/new/page.tsx",
-        "KNOWLEDGE_BASE.md"
+        "docs/features/knowledge-base.md"
       ],
       "content": [
         {
@@ -3615,7 +3615,7 @@
       "sourcePaths": [
         "src/app/app/help/[articleId]/page.tsx",
         "src/features/knowledge/article-editor.tsx",
-        "KNOWLEDGE_BASE.md"
+        "docs/features/knowledge-base.md"
       ],
       "content": [
         {
@@ -3998,7 +3998,7 @@
       "sourcePaths": [
         "src/features/inventory/forms.tsx",
         "src/features/inventory/access.ts",
-        "docs/inventory.md"
+        "docs/features/inventory.md"
       ],
       "content": [
         {
@@ -4071,7 +4071,7 @@
       "sourcePaths": [
         "src/features/inventory/forms.tsx",
         "src/app/app/inventory/[itemId]/page.tsx",
-        "docs/inventory.md"
+        "docs/features/inventory.md"
       ],
       "content": [
         {
@@ -4152,7 +4152,7 @@
       "sourcePaths": [
         "src/features/inventory/request-panel.tsx",
         "src/features/inventory/forms.tsx",
-        "docs/inventory.md"
+        "docs/features/inventory.md"
       ],
       "content": [
         {
@@ -4304,7 +4304,7 @@
       "sourcePaths": [
         "src/features/audit/presentation.ts",
         "src/app/app/administration/[section]/page.tsx",
-        "AUDIT_LOG.md"
+        "docs/features/audit-log.md"
       ],
       "content": [
         {
@@ -4376,8 +4376,7 @@
       "audience": "everyone",
       "sourcePaths": [
         "src/app/app/support/page.tsx",
-        "docs/resend-email.md",
-        "NOTIFICATIONS.md"
+        "docs/features/notifications.md"
       ],
       "content": [
         {
@@ -4597,7 +4596,7 @@
       "sourcePaths": [
         "src/features/automation/dry-run-panel.tsx",
         "src/features/automation/dry-run-model.ts",
-        "docs/automation-dry-run.md"
+        "docs/automation/dry-run.md"
       ],
       "content": [
         {
@@ -4670,7 +4669,7 @@
       "sourcePaths": [
         "src/features/automation/rule-actions.tsx",
         "src/app/app/administration/automations/[ruleId]/page.tsx",
-        "docs/automation-administration-ui.md"
+        "docs/automation/administration.md"
       ],
       "content": [
         {
@@ -4742,7 +4741,7 @@
       "sourcePaths": [
         "src/features/automation/temporal-controls.tsx",
         "src/features/automation/domains/tickets/temporal.ts",
-        "docs/automation-temporal.md"
+        "docs/automation/temporal.md"
       ],
       "content": [
         {
@@ -4814,7 +4813,7 @@
       "sourcePaths": [
         "src/features/automation/operations-view.tsx",
         "src/app/app/administration/automations/operations/page.tsx",
-        "docs/automation-operations.md"
+        "docs/automation/operations.md"
       ],
       "content": [
         {
@@ -4894,7 +4893,7 @@
       "sourcePaths": [
         "src/features/automation/export-button.tsx",
         "src/features/automation/import-automation.tsx",
-        "docs/automation-portability.md"
+        "docs/automation/portability.md"
       ],
       "content": [
         {
@@ -5038,7 +5037,7 @@
       "sourcePaths": [
         "src/app/platform/analytics/page.tsx",
         "src/app/platform/audit/page.tsx",
-        "PRODUCT_ANALYTICS.md"
+        "docs/features/product-analytics.md"
       ],
       "content": [
         {

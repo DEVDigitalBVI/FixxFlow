@@ -64,7 +64,7 @@ notification delivery, and an independent Better Stack alert email. Permanent
 availability and protected database-readiness monitors check every three minutes.
 An approved disposable hosted logical restore passed data, grants, policies, app
 reconnection, Storage roundtrip and fresh MFA checks. These results are recorded in
-`docs/pilot-release-2026-10-17.md` and
+`docs/releases/2026-10-17-pilot.md` and
 `docs/recovery-drills/2026-10-17-hosted-logical.md`; physical-backup recovery remains
 an open gate. Retain the owner's production Gmail end-user account for UI/UX testing.
 
@@ -110,7 +110,7 @@ data and are not substitutes for end-to-end acceptance.
 
 ### Before deployment
 
-1. Create a release record from `docs/release-template.md` and name the release owner,
+1. Create a release record from `docs/operations/release-template.md` and name the release owner,
    database recovery owner, incident commander, and rollback decision maker.
 2. Pin the commit. Require clean CI application, database, dependency, and CodeQL
    results. Review Dependabot and security alerts; do not force a breaking audit fix.
@@ -201,7 +201,7 @@ Minimum alerts:
 - cost/usage anomaly.
 
 Every alert needs a named recipient, severity, acknowledgement expectation, escalation
-path, and link to `docs/incident-response.md`. Test routing quarterly without exposing
+path, and link to `docs/operations/incident-response.md`. Test routing quarterly without exposing
 secrets or sending real customer notifications.
 
 ## Backup and recovery
@@ -244,5 +244,5 @@ provider configuration, production data volume, DNS, or application reconnection
 - External side effects such as sent email cannot be undone by application or database
   rollback. Preserve receipts and communicate impact.
 
-Use `docs/incident-response.md` for command authority, severity, evidence, recovery,
+Use `docs/operations/incident-response.md` for command authority, severity, evidence, recovery,
 communications, and post-incident review.

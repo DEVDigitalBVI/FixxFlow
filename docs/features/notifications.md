@@ -1,11 +1,23 @@
-# Resend email delivery
+# Notifications and email
+
+In-app notifications cover ticket assignment/reassignment, public responses, requester replies, new chats, chat responses, resolution/reopening, and approaching response/resolution SLAs. Internal notes and a person's own actions are silent. Active staff receive unassigned conversations. Recipient access is checked through RLS, including enrolled MFA assurance.
+
+SLA warnings run every minute through Supabase pg_cron, independently of email. The warning starts in the final 20% of the target, capped at 30 minutes, and is deduplicated per recipient/objective/deadline. Time remains calendar-based.
 
 Automated notifications use the Resend API. Supabase Auth uses Resend SMTP for
 account emails. The support inbox remains in Zoho Mail at `support@fixxflow.app`.
 Notification replies go to that inbox; receiving a reply does not automatically
 append it to a ticket.
 
-## Production cutover
+## Queue behavior and configuration checks
+
+The administration status screen and email endpoint share the same configuration check: all five settings are required, the application URL must use HTTPS without embedded credentials, and the sender must be valid. Incomplete or invalid configuration returns 503 before the endpoint claims queued mail; missing or incorrect cron authorization returns 401. In-app alerts continue working. “Configured” confirms settings, not provider health or successful delivery. Automated tests use mocks and do not send real email.
+
+Emails use verified Supabase Auth addresses and include generic event text plus an authenticated application link, never conversation bodies. Read alerts and unauthorized/inactive/unverified recipients are skipped. Reply bursts share an email within a five-minute bucket; all events remain in the inbox. Delivery waits at least one minute, processes five emails per cron, uses five-minute queue leases, and retries up to six times. Events older than 24 hours expire. Notification preferences are deferred.
+
+The private `notification_email_outbox` table records pending/sending/sent/skipped/failed state and sanitized failures. Failed mail never blocks ticket transactions. Monitor this table and Vercel cron failures when enabling email. Queue throughput and retention should be revisited as usage grows.
+
+## Production email setup
 
 1. Confirm `fixxflow.app` is verified in Resend. Keep open and click tracking off
    in the Resend domain configuration. These are provider settings, not send-API
@@ -16,6 +28,7 @@ append it to a ticket.
    access to the verified domain. Keep
    `NOTIFICATIONS_FROM_EMAIL=FixxFlow <notifications@fixxflow.app>`, the existing
    `CRON_SECRET`, `SUPABASE_SECRET_KEY`, and HTTPS `NEXT_PUBLIC_SITE_URL`.
+   For a new setup, generate a random `CRON_SECRET` of at least 32 characters.
    Check the actual production site URL rather than changing it during cutover.
 3. In the hosted Supabase project's Authentication email SMTP settings, use:
 
@@ -35,6 +48,7 @@ append it to a ticket.
 4. Deploy the application change after the production API key is configured.
    The existing Vercel cron continues invoking `/api/cron/notifications` every
    minute. Incomplete configuration returns 503 before claiming queued mail.
+   This schedule requires a Vercel plan supporting per-minute cron.
 5. Use an authorized pilot recipient for one account-email test and one app
    notification test. Confirm both in Resend's email records and in the actual
    recipient inbox. Verify the notification reply-to reaches Zoho support, the
@@ -103,33 +117,15 @@ wording. This metadata never grants access; organization memberships remain the
 authorization source. To release this change, deploy the action and update the
 hosted **Invite user** template from `supabase/templates/invite-user.html`.
 
-## References and checks
+## Validation
 
-### October 11, 2026 production verification
-
-- Resend application migration `ee54dfd` deployed successfully through Vercel.
-- Hosted Auth SMTP settings persisted after reload: `smtp.resend.com`, port
-  `465`, username `resend`, sender `noreply@fixxflow.app` / `FixxFlow`.
-- Vercel confirmed deletion of the obsolete sending variable. Local environment
-  files, application source, tests, scripts, and Supabase configuration contain
-  no legacy sending keys or legacy provider endpoints.
-- The user authorized one password-reset test and one clearly labeled notification
-  test to `jhodge@peterisland.net`. Resend reports both **Delivered**, and the
-  user confirmed that both arrived in the recipient inbox.
-- The scheduled dispatcher accepted the notification on its first attempt at
-  `2026-10-11 16:23:47Z`, without a recorded error. Notification ID:
-  `7979f0ba-e7ce-4ca7-8ed8-1f45209a04f3`; Resend email ID:
-  `01a12bc7-0d5b-75ad-b9ba-27fb4386a59c`.
-- The prior provider investigation is retained under `docs/archive/` as historical
-  evidence. It is not current sending configuration. The obsolete setup guide
-  was removed, and its provider-independent template instructions were moved here.
+`npm test`, `npm run lint`, `npm run typecheck`, and `npm run build` validate application changes. `supabase/tests/notification-regression.sql` is a transactional database regression suite that rolls all fixtures back. It covers routing, confidentiality, RLS/MFA, read behavior, coalescing, lease exclusion, acknowledgement, chat deduplication, and SLA deduplication.
 
 ### Provider documentation
+
 
 - [Resend send API](https://resend.com/docs/api-reference/emails/send-email)
 - [Resend SMTP](https://resend.com/docs/send-with-smtp)
 - [Resend idempotency](https://resend.com/docs/dashboard/emails/idempotency-keys)
 - [Supabase custom SMTP](https://supabase.com/docs/guides/auth/auth-smtp)
 
-Run `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build`.
-Automated sender tests mock the network and send no real email.

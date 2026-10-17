@@ -23,7 +23,7 @@ but command and authorization must remain explicit.
    compatible deployment. Preserve receipts and immutable history.
 4. Communicate acknowledgement and the next update time. Do not speculate or include
    customer data, secrets, private logs, or exploit details in broad channels.
-5. Recover using `docs/production-readiness.md`. Database restore, credential rotation,
+5. Recover using `docs/operations/production-readiness.md`. Database restore, credential rotation,
    destructive cleanup, or paid capacity changes require the named authority.
 6. Verify canonical production smoke, authenticated critical workflows, error/latency
    recovery, cron/queue health, data integrity, and alert clearance before resolution.

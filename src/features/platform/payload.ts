@@ -1,11 +1,5 @@
 import type { PlatformData } from './model';
-
-function record(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-function number(value: unknown): value is number {
-  return typeof value === 'number' && Number.isFinite(value);
-}
+import { isObjectRecord as record, isFiniteNumber as number } from '@/lib/validation';
 function timestamp(value: unknown) {
   return typeof value === 'string' && Number.isFinite(Date.parse(value));
 }

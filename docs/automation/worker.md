@@ -1,6 +1,6 @@
 # Automation worker — Stage 5
 
-Stage 12 adds [guardrails and capacity backpressure](automation-guardrails.md); its
+Stage 12 adds [guardrails and capacity backpressure](guardrails.md); its
 limits, scheduling and capacity-state semantics extend this stage's contracts.
 
 

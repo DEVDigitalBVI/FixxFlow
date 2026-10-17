@@ -6,7 +6,7 @@ FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 
 1. Install Node.js 24.x.
 2. Copy `.env.example` to `.env.local` and add the project URL and publishable key from the Supabase Connect dialog.
-3. Install packages with `npm install`.
+3. Install the locked packages with `npm ci`.
 4. Start the app with `npm run dev`.
 
 ## Project structure
@@ -16,16 +16,24 @@ FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 - `src/features` — domain-oriented product modules
 - `src/lib` — infrastructure and service clients
 - `src/types` — shared and generated TypeScript types
+- `tests` — shared test helpers and fixtures; feature tests live beside their source
+- `scripts` — development, release, and operational commands
+- `content/knowledge` — curated knowledge article sources
+- `public/brand` — approved brand assets, fonts, and licenses
 - `supabase/migrations` — versioned database schema changes
+- `docs` — indexed architecture, feature guides, operating procedures, and release evidence
 
 ## Documentation
 
-- [Design system](DESIGN_SYSTEM.md) and [interface audit](docs/apple-interface-audit-2026-10-11.md): UI requirements, findings, verification evidence, and remaining browser checks.
-- [Architecture](PLATFORM_ARCHITECTURE.md) and [code review](docs/code-review.md): application boundaries, implementation history, and outstanding engineering/product work.
-- [Automation rollout](docs/automation-rollout.md): deployment status, release gates, recovery, and links to stage-specific runbooks.
-- [Production readiness](docs/production-readiness.md), [release record](docs/release-template.md), and [incident response](docs/incident-response.md): application-wide deployment gates, staging, monitoring, rollback, and recovery.
-- [Email delivery](docs/resend-email.md), [notifications](NOTIFICATIONS.md), [inventory](docs/inventory.md), and [asset import](docs/asset-import.md): setup and operational behavior.
-- [Knowledge base](KNOWLEDGE_BASE.md), [search](SEARCH.md), [reporting](REPORTING.md), [analytics](PRODUCT_ANALYTICS.md), and [audit log](AUDIT_LOG.md): domain behavior and validation.
+Start with the [documentation index](docs/README.md). Keep implementation rules in
+`AGENTS.md` and the authoritative design specification in `DESIGN_SYSTEM.md`.
+
+- [Design system](DESIGN_SYSTEM.md): authoritative UI requirements and shared interaction patterns.
+- [Architecture](PLATFORM_ARCHITECTURE.md) and [code review](docs/architecture/code-review.md): application boundaries, implementation history, and outstanding engineering/product work.
+- [Automation rollout](docs/automation/rollout.md): deployment status, release gates, recovery, and links to stage-specific runbooks.
+- [Production readiness](docs/operations/production-readiness.md), [release record](docs/operations/release-template.md), and [incident response](docs/operations/incident-response.md): application-wide deployment gates, staging, monitoring, rollback, and recovery.
+- [Notifications and email](docs/features/notifications.md), [inventory](docs/features/inventory.md), and [asset import](docs/features/asset-import.md): setup and operational behavior.
+- [Knowledge base](docs/features/knowledge-base.md), [search](docs/features/search.md), [reporting](docs/features/reporting.md), [analytics](docs/features/product-analytics.md), and [audit log](docs/features/audit-log.md): domain behavior and validation.
 
 ## Supabase types
 
@@ -78,7 +86,7 @@ Run the transactional SQL regression with `supabase db query --local --file supa
 
 ### Security and database verification
 
-See the [Automation rollout runbook](docs/automation-rollout.md) for recorded
+See the [Automation rollout runbook](docs/automation/rollout.md) for recorded
 migration deployments and release gates. Historical preflight reports describe
 their verification date; they do not establish the current state of a database.
 

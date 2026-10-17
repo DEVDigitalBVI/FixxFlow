@@ -234,7 +234,7 @@ New migrations are named above. New modules:
   `temporal-ui.test.mjs`: Stage 9 checks.
 - `tests/helpers/automation-temporal-concurrency.mjs`: isolated independent-session
   verification.
-- `docs/automation-temporal.md`: this design and verification record.
+- `docs/automation/temporal.md`: this design and verification record.
 
 Modified modules:
 
@@ -247,7 +247,7 @@ Modified modules:
   allowlist and assert new columns remain NULL on legacy rows.
 - `tests/helpers/automation-ui-preview.mjs`: temporal synthetic context.
 - `vercel.json`: minute discovery endpoint schedule (still gated OFF).
-- `docs/automation-administration-ui.md`: link to Stage 9 behavior.
+- `docs/automation/administration.md`: link to Stage 9 behavior.
 
 No design-system exceptions or new UI tokens were introduced. Before any future
 rollout, review index/unique-constraint lock duration on representative ticket/event
