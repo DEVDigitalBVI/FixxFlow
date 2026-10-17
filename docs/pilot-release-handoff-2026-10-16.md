@@ -1,7 +1,9 @@
-# Pilot release handoff — paused at the owner's request
+# Pilot release handoff — historical pause checkpoint
 
-Paused on 17 October 2026 UTC (16 October in America/Tortola). The owner requested
-that work continue tomorrow. Do not resume deployment or testing until requested.
+Paused on 17 October 2026 UTC (16 October in America/Tortola), then resumed on the
+owner's explicit request. The checkpoint below records the earlier pause and is not
+current status. See `docs/pilot-release-2026-10-17.md` and
+`docs/recovery-drills/2026-10-17-hosted-logical.md` for the resumed results.
 
 ## Completed
 

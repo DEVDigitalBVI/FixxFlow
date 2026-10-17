@@ -59,6 +59,15 @@ Recovery activation still required:
   rehearsal completed on 2026-10-16 validates the application database chain but is
   not evidence that a hosted production backup can meet the approved RTO/RPO.
 
+On 2026-10-17, the owner confirmed real invitation/password sign-in, application
+notification delivery, and an independent Better Stack alert email. Permanent
+availability and protected database-readiness monitors check every three minutes.
+An approved disposable hosted logical restore passed data, grants, policies, app
+reconnection, Storage roundtrip and fresh MFA checks. These results are recorded in
+`docs/pilot-release-2026-10-17.md` and
+`docs/recovery-drills/2026-10-17-hosted-logical.md`; physical-backup recovery remains
+an open gate. Retain the owner's production Gmail end-user account for UI/UX testing.
+
 ## Approved service objectives
 
 The product owner approved these targets on 2026-10-16. They are operational targets,
