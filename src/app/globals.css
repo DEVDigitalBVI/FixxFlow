@@ -2020,7 +2020,7 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
 /* Workspace navigation: a calm identity header, grouped destinations, and an optional icon rail. */
 .sidebar-heading { display: flex; align-items: center; gap: 4px; flex-shrink: 0; min-width: 0; }
 .sidebar-identity { min-width: 0; flex: 1; }
-.sidebar-workspace { display: block; padding: 0 8px; margin-top: 4px; font-size: 12px; line-height: 20px; color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-workspace { display: block; padding: 0 8px; margin-top: 8px; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sidebar-collapse { display: none; width: 44px; height: 44px; flex: 0 0 44px; align-items: center; justify-content: center; border: 0; border-radius: var(--radius-control); color: var(--color-text-muted); background: transparent; cursor: pointer; }
 .sidebar-collapse:hover { color: var(--color-text); background: var(--color-surface-subtle); }
 .sidebar-collapse:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
