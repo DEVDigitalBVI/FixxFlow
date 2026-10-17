@@ -8,6 +8,25 @@ const item = {notification_id:'notice-1',recipient_email:'recipient@example.test
 const config = {apiKey:'mock-key',from:'FixxFlow <support@example.test>',siteUrl:'https://example.test'};
 const {renderEmail} = load('src/features/notifications/template.ts');
 
+test('invitation overview has three semantic role lists before its primary action',()=>{
+ const html=fs.readFileSync('supabase/templates/invite-user.html','utf8');
+ assert.match(html,/What you can do in FixxFlow/);
+ assert.match(html,/\{\{ \.Data.invited_by \}\}/);
+ assert.match(html,/\{\{ \.Data.workspace_name \}\}/);
+ const branches=html.match(/\{\{ if eq \.Data.invitation_role "administrator" \}\}([\s\S]*?)\{\{ else if eq \.Data.invitation_role "technician" \}\}([\s\S]*?)\{\{ else \}\}([\s\S]*?)\{\{ end \}\}/);
+ assert.ok(branches,'Role branches include an employee fallback for missing metadata');
+ for(const branch of branches.slice(1)) {
+  assert.match(branch,/<ul[^>]*>/);
+  assert.equal((branch.match(/<li /g)||[]).length,3);
+  assert.doesNotMatch(branch,/<a /);
+ }
+ assert.match(branches[1],/manage workspace access/);
+ assert.match(branches[2],/internal notes/);
+ assert.match(branches[3],/Submit IT requests/);
+ assert.ok(html.indexOf('What you can do')<html.indexOf('>Accept invitation</a>'));
+ assert.doesNotMatch(fs.readFileSync('supabase/templates/reset-password.html','utf8'),/What you can do/);
+});
+
 test('security guidance is distinguished by a written heading and preserves escaped content',()=>{
  const html=renderEmail({title:'Password changed',message:'Your password changed.',purpose:'security-alert',note:'Contact support <script>alert(1)</script> & reset your password.'});
  assert.match(html,/Account security/);

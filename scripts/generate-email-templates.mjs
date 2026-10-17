@@ -4,7 +4,7 @@ import { renderEmail } from '../src/features/notifications/template.ts';
 export const templates = [
  ['reset-password', 'Reset your password', 'Choose a new password to get back to your FixxFlow workspace.', 'Reset password', 'If you did not request this, you can safely ignore this email. Your password will stay the same.'],
  ['confirm-sign-up', 'Welcome to FixxFlow', 'Confirm your email address to finish setting up your FixxFlow account.', 'Confirm email address', 'If you did not create this account, you can safely ignore this email.'],
- ['invite-user', 'You are invited to FixxFlow', 'Your team has invited you to join its FixxFlow workspace. Accept your invitation to get started.', 'Accept invitation', 'If you were not expecting this invitation, contact your workspace administrator.'],
+ ['invite-user', 'You are invited to FixxFlow', 'FixxFlow brings your team’s IT support into one place. Accept your invitation to get started.', 'Accept invitation', 'If you were not expecting this invitation, contact your workspace administrator.'],
  ['magic-link-or-otp', 'Your FixxFlow sign-in link', 'Use the secure link below to sign in to your FixxFlow account.', 'Sign in to FixxFlow', 'If you did not request this link, you can safely ignore this email. Do not share this link.'],
  ['change-email-address', 'Confirm your email change', 'Confirm the change of your FixxFlow account email address to {{ .NewEmail }}.', 'Confirm email change', 'If you did not request this change, contact support@fixxflow.app.'],
  ['reauthentication', 'Verify your identity', 'Enter this one-time code in FixxFlow to confirm your identity.', '', 'Do not share this code. If you did not request it, contact support@fixxflow.app.'],
@@ -20,5 +20,5 @@ mkdirSync('supabase/templates', { recursive: true });
 for (const [slug, title, message, action, note] of templates) {
  const purpose = ['confirm-sign-up', 'invite-user'].includes(slug) ? 'workspace'
   : action || slug === 'reauthentication' ? 'account-access' : 'security-alert';
- writeFileSync(`supabase/templates/${slug}.html`, renderEmail({ title, message, action, note, purpose, href: action ? '{{ .ConfirmationURL }}' : undefined, code: slug === 'reauthentication' ? '{{ .Token }}' : undefined }));
+ writeFileSync(`supabase/templates/${slug}.html`, renderEmail({ title, message, action, note, purpose, invitation: slug === 'invite-user', href: action ? '{{ .ConfirmationURL }}' : undefined, code: slug === 'reauthentication' ? '{{ .Token }}' : undefined }));
 }

@@ -89,6 +89,15 @@ notifications. Keep `{{ .ConfirmationURL }}` and `{{ .Token }}` intact; Supabase
 substitutes and escapes template variables. Notification HTML escapes dynamic
 titles and retains a plain-text alternative. No tracking pixels are included.
 
+Invitations include three role-specific feature bullets before the acceptance
+button. The People invitation action supplies `invitation_role`, `invited_by`,
+and `workspace_name` as email personalization metadata. Supabase's template
+conditions select administrator, technician, or employee copy; missing or unknown
+roles use the employee overview, and missing inviter/workspace details use generic
+wording. This metadata never grants access; organization memberships remain the
+authorization source. To release this change, deploy the action and update the
+hosted **Invite user** template from `supabase/templates/invite-user.html`.
+
 ## References and checks
 
 ### October 11, 2026 production verification
