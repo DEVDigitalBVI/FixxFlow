@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { WebAnalytics } from "@/features/product-analytics/web-analytics";
 import { themeScript } from "@/features/theme/theme";
 import { ThemeController } from "@/features/theme/theme-control";
 import "./globals.css";
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         {children}
         <ThemeController />
         <SpeedInsights />
+        <WebAnalytics />
       </body>
     </html>
   );
