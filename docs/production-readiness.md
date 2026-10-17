@@ -146,6 +146,28 @@ data and are not substitutes for end-to-end acceptance.
 
 ## Monitoring and alerts
 
+Better Stack is the permanent independent uptime provider. Use the same account for
+two production monitors, each checking every 180 seconds with email alerts:
+
+- `https://www.fixxflow.app/api/health/live` checks application availability.
+- `https://www.fixxflow.app/api/health/ready` checks application configuration and a
+  bounded read-only database query. It requires `Authorization: Bearer` with the
+  existing `HEALTH_CHECK_SECRET`.
+
+Keep `BETTER_STACK_UPTIME_API_TOKEN` and `HEALTH_CHECK_SECRET` in the GitHub
+`Production` environment. Run `Deployment smoke` against the canonical production
+URL with `configure_monitors=true` to create or update these monitors after smoke
+passes. The workflow uses `scripts/configure-monitoring.mjs`, reuses existing monitors
+by URL, verifies their settings, disables redirects, and emits only sanitized evidence.
+Do not put credentials in URLs, browser code, logs, or committed configuration.
+Once configured, Better Stack runs independently of GitHub and application deployments;
+it does not need a runtime SDK or agent installed in the application.
+
+Database readiness checks establish connectivity, not database resource health or
+recoverability. Continue Supabase CPU, disk, connection, and backup monitoring. Keep
+processing disabled during recovery drills and test alert delivery separately from
+monitor configuration before certifying the detection objective.
+
 The scheduled `Production health` workflow runs four times an hour and fails on public
 availability, database readiness, or security-header regression. A failure creates or
 updates a GitHub issue assigned to `DEVDigitalBVI`; recovery comments on the issue and
