@@ -167,7 +167,7 @@ Created:
 - `src/lib/events/events-database.test.mjs`
 - `src/types/domain-event-database.ts`
 - `tests/fixtures/domain-events.sql`
-- `docs/durable-ticket-events.md`
+- `docs/architecture/durable-ticket-events.md`
 
 Modified:
 

@@ -1,8 +1,8 @@
 # Automation Stage 12 — guardrails, resource protection and backpressure
 
 **Corrective implementation:** the four findings in the
-[Stage 12 audit](automation-stage12-audit.md) are addressed by a forward migration
-and scoped application changes. See the [correction verification report](automation-stage12-corrections.md)
+[Stage 12 audit](evidence/stage12-audit-evidence.json) are addressed by a forward migration
+and scoped application changes. See the [correction evidence](evidence/stage12-corrections-evidence.json)
 for current evidence and remaining release gates. Historical Stage 12/12B/12C
 results below are not approval of a different application revision.
 
@@ -323,7 +323,7 @@ flags retain the existing exact-`true` requirement; unset/malformed remains OFF.
 
 ## Stage 12B verification and release preparation
 
-The [Stage 12B gate report](automation-stage12b-verification.md) records fresh
+The [Stage 12B gate evidence](evidence/stage12b-evidence.json) records fresh
 Node 24 checks, real local Supabase PostgreSQL 17.11 clean/upgrade replay, Auth/MFA
 and PostgREST checks, independent contention, a measured default-cadence smoke
 workload, temporal discovery and a synthetic isolated restore. Hosted staging and

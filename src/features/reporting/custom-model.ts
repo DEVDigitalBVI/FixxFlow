@@ -1,4 +1,5 @@
 import type { Json, TicketPriority, TicketStatus } from '@/types/database';
+import { isObjectRecord as record } from '@/lib/validation';
 
 export const reportTypes = {
   volume: { label: 'Ticket volume', description: 'Created, resolved and reopened tickets.' },
@@ -77,7 +78,6 @@ export function dateInTimezone(timeZone: string, value = new Date()) {
 }
 const isDate = (value: unknown): value is string => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(Date.parse(`${value}T00:00:00Z`));
 const isUuid = (value: unknown): value is string => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
-const record = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
 const stringArray = (value: unknown, predicate: (item: unknown) => boolean) => Array.isArray(value) && value.length <= 20 && value.every(predicate);
 const statuses = new Set<TicketStatus>(['new', 'open', 'in_progress', 'waiting_on_user', 'on_hold', 'resolved', 'closed']);
 const priorities = new Set<TicketPriority>(['low', 'normal', 'high', 'critical']);

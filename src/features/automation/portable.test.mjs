@@ -116,7 +116,7 @@ test('filenames cannot contain traversal, control characters, quotes or source i
 });
 
 test('documented sanitized package parses and requires destination review', () => {
-  const example=fs.readFileSync('docs/automation-portability.md','utf8').match(/```json\n([\s\S]*?)\n```/)[1];
+  const example=fs.readFileSync('docs/automation/portability.md','utf8').match(/```json\n([\s\S]*?)\n```/)[1];
   const pkg=p.parsePortablePackage(example);
   assert.equal(pkg.references[0].kind,'team');assert.doesNotMatch(example,/[0-9a-f]{8}-[0-9a-f]{4}/i);
   assert.throws(()=>p.resolvePortableDraft(pkg,{}),/Select a destination team/);

@@ -2,11 +2,11 @@
 
 ## Database deployment update — 3 October 2026
 
-Under the user's subsequent explicit instruction to apply needed remaining migrations, Stage 12 and its corrective migration were applied to FixxFlow with processing OFF. All 42 current repository versions, including lookup pagination, are recorded remotely. The final dry run has no pending migrations. See [the deployment and recovery record](code-review.md#remaining-migration-deployment--3-october-2026) for backup, test, function-match, permissions, and OFF-state evidence. No application deployment or automation activation was performed. Historical verification reports below remain unchanged; active-processing/hosted and accessibility acceptance work is still separate.
+Under the user's subsequent explicit instruction to apply needed remaining migrations, Stage 12 and its corrective migration were applied to FixxFlow with processing OFF. All 42 current repository versions, including lookup pagination, are recorded remotely. The final dry run has no pending migrations. See [the deployment and recovery record](../architecture/code-review.md#remaining-migration-deployment--3-october-2026) for backup, test, function-match, permissions, and OFF-state evidence. No application deployment or automation activation was performed. Historical verification reports below remain unchanged; active-processing/hosted and accessibility acceptance work is still separate.
 
 ## Current release gate — Stage 12C
 
-The [Stage 12C verification record](automation-stage12c-verification.md) is the
+The [Stage 12C verification record](evidence/stage12c-evidence.json) is the
 current release-readiness ledger. The owner selected Docker instead of paid
 staging and requested production only after verification passes. Stage12C now
 has representative local migration and restore evidence. Its original sustained
@@ -32,7 +32,7 @@ a later approval with explicit global-gate and backlog-cutoff semantics.
 
 ## Stage 12 corrective release candidate
 
-Read [the corrective verification report](automation-stage12-corrections.md)
+Read [the corrective verification evidence](evidence/stage12-corrections-evidence.json)
 before using the older Stage 12C results. The working candidate contains **41**
 migrations, ending in `20261003005804_automation_guardrails_corrections.sql`.
 The four audit findings are corrected without changing batch size, cron cadence,
@@ -90,7 +90,7 @@ workers/discovery disconnected and processing OFF:
    private automation_version_visibility` entry. Do not omit its schema or any
    immutable public rule/version/event/execution/step history.
 3. Restore pre-data and data. Before post-data triggers, run the guarded
-   [visibility initialization](sql/automation-logical-restore-visibility.sql).
+   [visibility initialization](../sql/automation-logical-restore-visibility.sql).
    It inserts target-cluster markers into an empty derived table; it never
    disables an installed guard or updates an existing history row.
 4. Restore all post-data constraints, triggers, indexes, policies and grants.
@@ -110,7 +110,7 @@ regenerate visibility markers; follow the provider's verified recovery procedure
 
 ## Historical Stage 8 preparation
 
-The subsequent [production alignment preflight](automation-production-preflight.md)
+The subsequent [production alignment preflight](evidence/production-preflight.json)
 verified matching SQL bodies and reconciled two repository filenames to the existing
 production identifiers with explicit approval. All 26 applied IDs now align, and an
 approved CLI dry run proposes exactly ten Automation migrations. No real push or

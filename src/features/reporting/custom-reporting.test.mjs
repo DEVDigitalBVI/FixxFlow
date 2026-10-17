@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx';
 import { PDFDocument } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { load } from '../../../tests/helpers/load-module.mjs';
-import { defaultReportDefinition, definitionFromInput, definitionToQuery, formatCustomValue, isCustomReport, isCustomReportDefinition } from './custom-model.ts';
+const { defaultReportDefinition, definitionFromInput, definitionToQuery, formatCustomValue, isCustomReport, isCustomReportDefinition } = load('src/features/reporting/custom-model.ts');
 
 const definition={...defaultReportDefinition('2026-10-13'),filters:{statuses:['open'],priorities:['high'],categoryIds:['50000000-0000-0000-0000-000000000401'],subcategoryIds:[],teamIds:[],technicianIds:[],departmentIds:[],locationIds:[]}};
 const report={asOf:'2026-10-13T12:00:00Z',timezone:'America/Tortola',startDate:'2026-09-14',endDate:'2026-10-13',reportType:'volume',groupBy:'time',interval:'day',metrics:[{key:'created',label:'Created',unit:'tickets',description:'Created tickets.'},{key:'resolved',label:'Resolved',unit:'tickets',description:'Resolved tickets.'}],summary:[{key:'created',label:'Created',unit:'tickets',value:3,samples:3},{key:'resolved',label:'Resolved',unit:'tickets',value:1,samples:1}],rows:[{key:'2026-10-12',label:'2026-10-12',values:{created:2,resolved:0},samples:{created:2,resolved:0}},{key:'2026-10-13',label:'2026-10-13',values:{created:1,resolved:1},samples:{created:1,resolved:1}}]};
