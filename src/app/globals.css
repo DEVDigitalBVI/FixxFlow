@@ -2094,3 +2094,34 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
 @media (forced-colors: active) {
   .app-shell[data-sidebar] .nav-link[data-active] { outline: 2px solid Highlight; outline-offset: -2px; }
 }
+
+/* Brand color stays concentrated around navigation and selection. */
+.app-shell[data-sidebar] .sidebar {
+  background: linear-gradient(180deg, var(--color-accent-subtle) 0%, var(--color-surface) 60%);
+  border-right-color: color-mix(in srgb, var(--color-accent) 20%, var(--color-border));
+}
+.app-shell[data-sidebar] .sidebar::before { height: 4px; }
+.app-shell[data-sidebar] .sidebar-collapse { color: var(--color-accent); background: var(--color-surface); }
+.app-shell[data-sidebar] .sidebar-collapse:hover { background: var(--color-accent-subtle); }
+.app-shell[data-sidebar] .nav-link > svg { color: var(--color-accent); }
+.app-shell[data-sidebar] .nav-link:hover { color: var(--color-accent-hover); background: var(--color-accent-subtle); }
+.app-shell[data-sidebar] .nav-link[aria-current="page"],
+.app-shell[data-sidebar] .nav-link[data-active] {
+  color: var(--color-accent-hover);
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-accent-subtle));
+  box-shadow: inset 3px 0 var(--color-accent), inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 24%, transparent);
+}
+.app-shell[data-sidebar] .sidebar .global-search-trigger {
+  background: var(--color-surface);
+  border-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-border));
+}
+.app-shell[data-sidebar] .sidebar .global-search-trigger:hover:not(:disabled) { border-color: var(--color-accent); }
+.app-shell[data-sidebar] .sidebar .global-search-label svg { color: var(--color-accent); }
+.app-shell[data-sidebar] .nav-group-label { color: var(--color-accent-hover); }
+@media (min-width: 768px) {
+  .app-shell[data-sidebar] .sidebar-heading { border-bottom-color: color-mix(in srgb, var(--color-accent) 20%, var(--color-border)); }
+  .app-shell[data-sidebar] .nav-group-label::before { content: ""; display: inline-block; width: 12px; height: 2px; margin: 0 8px 3px 0; background: var(--color-accent); border-radius: 2px; }
+}
+@media (max-width: 767px) {
+  .app-shell[data-sidebar] .workspace-nav { background: linear-gradient(180deg, var(--color-accent-subtle), var(--color-surface) 60%); }
+}
