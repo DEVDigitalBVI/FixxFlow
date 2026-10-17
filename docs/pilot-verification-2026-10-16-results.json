@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-10-17T02:46:09.671Z",
+  "base": "http://localhost:3000",
+  "results": [
+    {
+      "name": "Password login rejects incorrect credentials and recovers",
+      "status": "pass",
+      "durationMs": 519
+    },
+    {
+      "name": "Employee creates a real ticket through the production form",
+      "status": "pass",
+      "durationMs": 1202
+    },
+    {
+      "name": "Ticket attachment uploads, registers, and downloads with matching bytes",
+      "status": "pass",
+      "durationMs": 98
+    },
+    {
+      "name": "Technician assigns ticket and saves its details",
+      "status": "pass",
+      "durationMs": 1119
+    },
+    {
+      "name": "Public staff reply reaches employee and internal note stays private",
+      "status": "pass",
+      "durationMs": 991
+    },
+    {
+      "name": "Employee receives in-app notification for staff reply",
+      "status": "pass",
+      "durationMs": 53
+    },
+    {
+      "name": "Stale staff edits preserve draft and prevent overwrite",
+      "status": "pass",
+      "durationMs": 1220
+    },
+    {
+      "name": "Technician resolves and employee reopens the request",
+      "status": "pass",
+      "durationMs": 1170
+    },
+    {
+      "name": "Chat exchanges messages between two independent sessions",
+      "status": "pass",
+      "durationMs": 686
+    },
+    {
+      "name": "Chat reconnect reconciles messages and preserves an unsent draft",
+      "status": "pass",
+      "durationMs": 1132
+    },
+    {
+      "name": "Mobile employee pages reflow and retain keyboard navigation",
+      "status": "pass",
+      "durationMs": 100
+    },
+    {
+      "name": "Administrator invitation reaches local mailbox and creates membership",
+      "status": "pass",
+      "durationMs": 648
+    },
+    {
+      "name": "MFA enrollment enforces challenge and recovers from a rejected code",
+      "status": "pass",
+      "durationMs": 515
+    },
+    {
+      "name": "Local password reset email, PKCE callback, password update and sign-in",
+      "status": "pass",
+      "checkedAt": "2026-10-17T02:47:37.801Z"
+    }
+  ],
+  "baselineCommit": "ccb52ced264da5ba31d4f58868715027008bbfd3",
+  "scope": "Synthetic local Supabase and production Next.js build with uncommitted pilot corrections; not hosted acceptance"
+}

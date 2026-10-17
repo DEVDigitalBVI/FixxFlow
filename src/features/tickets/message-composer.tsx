@@ -48,7 +48,12 @@ export function MessageComposer({ ticketId, action, staff = true }: {
     }
   }
 
-  return <form action={send} className={`message-composer composer-${kind}`} aria-busy={pending}>
+  // React form actions reset native radio controls after success. Keep submission
+  // under our control so the selected audience and its separate draft stay aligned.
+  return <form method="post" onSubmit={event => {
+    event.preventDefault();
+    void send(new FormData(event.currentTarget));
+  }} className={`message-composer composer-${kind}`} aria-busy={pending}>
     <input type="hidden" name="ticketId" value={ticketId}/>
     <input type="hidden" name="kind" value={kind}/>
     {staff && <fieldset className="composer-modes" disabled={pending}>

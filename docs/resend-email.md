@@ -85,7 +85,12 @@ actions remain solid blue. Utility links retain underlines and full fallback URL
 Run `node scripts/generate-email-templates.mjs` to regenerate the 13 Supabase HTML
 templates in `supabase/templates/`. Paste these into the corresponding hosted
 Supabase Auth email template source editors. This does not enable disabled security
-notifications. Keep `{{ .ConfirmationURL }}` and `{{ .Token }}` intact; Supabase
+notifications. Invitations use `{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=invite`
+so the server can verify the one-use invitation and establish the cookie session
+before password setup. Deploy the matching callback before updating the hosted
+**Invite user** template. Default invitation `ConfirmationURL` links return their
+session in a URL fragment and cannot be exchanged by the server's PKCE callback.
+Other templates retain `{{ .ConfirmationURL }}` and `{{ .Token }}`; Supabase
 substitutes and escapes template variables. Notification HTML escapes dynamic
 titles and retains a plain-text alternative. No tracking pixels are included.
 

@@ -62,7 +62,11 @@ test('auth templates retain Supabase tokens and accessible email branding',()=>{
   assert.match(html,/role="presentation"/);
   assert.match(html,/mailto:support@fixxflow.app/);
   assert.doesNotMatch(html,/<script|onerror=/i);
-  if(['reset-password.html','confirm-sign-up.html','invite-user.html','magic-link-or-otp.html','change-email-address.html'].includes(file))assert.match(html,/href="\{\{ \.ConfirmationURL \}\}"/);
+  if(['reset-password.html','confirm-sign-up.html','magic-link-or-otp.html','change-email-address.html'].includes(file))assert.match(html,/href="\{\{ \.ConfirmationURL \}\}"/);
+  if(file==='invite-user.html') {
+   assert.match(html,/href="\{\{ \.SiteURL \}\}\/auth\/callback\?token_hash=\{\{ \.TokenHash \}\}&amp;type=invite"/);
+   assert.doesNotMatch(html,/\.ConfirmationURL/);
+  }
   if(file==='reauthentication.html')assert.match(html,/\{\{ \.Token \}\}/);
  }
 });

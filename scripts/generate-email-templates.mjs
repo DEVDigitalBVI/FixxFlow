@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { renderEmail } from '../src/features/notifications/template.ts';
+import { invitationConfirmationHref, renderEmail } from '../src/features/notifications/template.ts';
 
 export const templates = [
  ['reset-password', 'Reset your password', 'Choose a new password to get back to your FixxFlow workspace.', 'Reset password', 'If you did not request this, you can safely ignore this email. Your password will stay the same.'],
@@ -20,5 +20,5 @@ mkdirSync('supabase/templates', { recursive: true });
 for (const [slug, title, message, action, note] of templates) {
  const purpose = ['confirm-sign-up', 'invite-user'].includes(slug) ? 'workspace'
   : action || slug === 'reauthentication' ? 'account-access' : 'security-alert';
- writeFileSync(`supabase/templates/${slug}.html`, renderEmail({ title, message, action, note, purpose, invitation: slug === 'invite-user', href: action ? '{{ .ConfirmationURL }}' : undefined, code: slug === 'reauthentication' ? '{{ .Token }}' : undefined }));
+ writeFileSync(`supabase/templates/${slug}.html`, renderEmail({ title, message, action, note, purpose, invitation: slug === 'invite-user', href: slug === 'invite-user' ? invitationConfirmationHref : action ? '{{ .ConfirmationURL }}' : undefined, code: slug === 'reauthentication' ? '{{ .Token }}' : undefined }));
 }

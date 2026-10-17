@@ -1,4 +1,6 @@
 // Email-safe equivalents of DESIGN_SYSTEM.md tokens; inline styles survive mail clients.
+export const invitationConfirmationHref = '{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=invite';
+
 export function escapeEmailHtml(value: string): string {
   return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 }
@@ -33,7 +35,7 @@ export function renderEmail({ title, message, action, href, code, note, invitati
   const e = escapeEmailHtml;
   const origin = new URL(siteUrl).origin;
   if (!origin.startsWith('https://')) throw new Error('Email assets require HTTPS');
-  if (href && href !== '{{ .ConfirmationURL }}' && !/^https:\/\//.test(href)) throw new Error('Invalid email action URL');
+  if (href && href !== '{{ .ConfirmationURL }}' && href !== invitationConfirmationHref && !/^https:\/\//.test(href)) throw new Error('Invalid email action URL');
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${e(title)} | FixxFlow</title></head>
 <body style="margin:0;padding:0;background:#f8fafc;color:#0f172a;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:16px;line-height:24px">
