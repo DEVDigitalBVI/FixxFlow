@@ -1,0 +1,114 @@
+{
+  "checkedAt": "2026-10-17T13:38:44.891681+00:00",
+  "applicationCommit": "723ad87ffac09087fd9f7067b9f5ff5ff269e177",
+  "deploymentId": "dpl_5LUY1r6nF6xnW3tMg5vvR9qvbM56",
+  "permanentMonitoring": {
+    "checkedAt": "2026-10-17T13:36:44.495Z",
+    "monitors": [
+      {
+        "id": "5086284",
+        "url": "https://www.fixxflow.app/api/health/live",
+        "status": "up",
+        "checkedAt": "2026-10-17T13:36:38.000Z",
+        "frequency": 180,
+        "email": true
+      },
+      {
+        "id": "5086296",
+        "url": "https://www.fixxflow.app/api/health/ready",
+        "status": "up",
+        "checkedAt": "2026-10-17T13:36:38.000Z",
+        "frequency": 180,
+        "email": true
+      }
+    ],
+    "incidents": [
+      {
+        "monitorId": "5086284",
+        "openIncidents": 0
+      },
+      {
+        "monitorId": "5086296",
+        "openIncidents": 0
+      }
+    ]
+  },
+  "productionObservation": {
+    "startedAt": "2026-10-17T13:05:00Z",
+    "completedAt": "2026-10-17T13:36:41.409Z",
+    "checks": [
+      {
+        "name": "runtime-errors",
+        "returnedErrorRecords": 0
+      },
+      {
+        "name": "server-errors",
+        "returnedErrorRecords": 0
+      }
+    ]
+  },
+  "ownerConfirmed": {
+    "invitationPasswordAndSignIn": true,
+    "applicationNotificationInboxDelivery": true,
+    "betterStackAlertInboxDelivery": true,
+    "keepGmailEndUserAccount": true,
+    "deferUiUxChanges": true
+  },
+  "logicalRecovery": {
+    "target": "twxpybtezuposrmrekud",
+    "tablesCompared": 90,
+    "allSourceColumnsAndRowsMatch": true,
+    "normalizedGrants": {
+      "sourceRows": 306,
+      "targetRows": 306,
+      "missing": [],
+      "extra": []
+    },
+    "matchingDefaultPrivilegeEntries": 96,
+    "matchingPolicies": 134,
+    "matchingTriggers": 76,
+    "publicTablesWithoutRls": 0,
+    "migrationCount": 49,
+    "latestMigration": "20261016120000",
+    "sourceStorageObjects": 0,
+    "browser": [
+      {
+        "name": "Recovered app authenticates a synthetic user",
+        "status": "pass"
+      },
+      {
+        "name": "Recovered app creates and opens a synthetic ticket",
+        "status": "pass"
+      },
+      {
+        "name": "Restored Storage policy permits upload and exact byte download",
+        "status": "pass"
+      },
+      {
+        "name": "Recovered Auth supports fresh MFA enrollment and browser challenge",
+        "status": "pass"
+      }
+    ],
+    "exportHashes": {
+      "roles.sql": "168a95a9c745af5ed4679751f90419ac9dc434240a213b03e32a06d5664c2308",
+      "schema.sql": "aa56671abe0ac1c1836188bb0c42fa7aa166d2e617f649ec9e29a9ac6e346783",
+      "data.sql": "4f4bd85334bb66ac6713ac3c732aedb46e149e40bbff4a3fd24b37410e5830e1",
+      "history-schema.sql": "ae56295c7e66a8b46ab50df6f00cf57f7866f2478a17fbe3910d9def39e836ab",
+      "history-data.sql": "61ccb0a5de595192eddbbefe48262edf4c56d95e832cf046e41505880a24d7eb"
+    },
+    "cleanup": {
+      "target": "twxpybtezuposrmrekud",
+      "name": "FixxFlow isolated recovery 2026-10-17",
+      "ownerApproved": true,
+      "deletionAcceptedAt": "2026-10-17T13:40:26.562Z",
+      "httpStatus": 200,
+      "targetAbsentFromInventory": true,
+      "productionStatus": "ACTIVE_HEALTHY"
+    }
+  },
+  "openGates": [
+    "provider physical-backup recovery and complete production RTO",
+    "PR #7 merge pending authorization"
+  ],
+  "uiUxChangesMade": false
+}

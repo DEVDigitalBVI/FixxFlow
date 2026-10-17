@@ -8,6 +8,7 @@ import { administrationSections, fixedSlaTargets, formatMinutes } from '@/featur
 import { AuditLog, type AuditFilters } from '@/features/audit/audit-log';
 import { ticketPriorities } from '@/features/tickets/presentation';
 import { getNotificationEmailConfiguration } from '@/features/notifications/configuration';
+import { PageHeader } from '@/components/ui/page-header';
 
 export default async function AdministrationSection({ params, searchParams }: { params: Promise<{ section: string }>; searchParams: Promise<AuditFilters> }) {
   const viewer = await requireViewer();
@@ -57,7 +58,7 @@ export default async function AdministrationSection({ params, searchParams }: { 
   } else {
     content = <p>Asset inventory is available. Manage equipment, employee assignments and ticket history from Assets.</p>;
   }
-  return <div className="page"><Link className="button button-quiet" href="/app/administration">Back to Administration</Link><header className="page-header"><div><span className="page-eyebrow">Administration · {item.status}</span><h1>{item.title}</h1><p>{item.description}</p></div></header><section className="settings-card">{content}</section></div>;
+  return <div className="page"><PageHeader title={item.title} eyebrow={`Administration · ${item.status}`} description={item.description} back={{href:'/app/administration',label:'Back to Administration'}}/><section className="settings-card">{content}</section></div>;
 }
 function Pagination({ section, page, hasNext }: { section: string; page: number; hasNext: boolean }) {
   return <nav className="queue-views" aria-label="Administration pages">{page > 1 && <Link className="button button-secondary" href={`/app/administration/${section}?page=${page - 1}`}>Previous</Link>}<span>Page {page}</span>{hasNext && <Link className="button button-secondary" href={`/app/administration/${section}?page=${page + 1}`}>Next</Link>}</nav>;

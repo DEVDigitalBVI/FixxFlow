@@ -10,6 +10,11 @@ on:
         description: Commit SHA expected in the deployment; defaults to the selected branch SHA
         required: false
         type: string
+      configure_monitors:
+        description: Configure Better Stack production monitors after successful canonical smoke
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 concurrency:
@@ -49,3 +54,22 @@ jobs:
             release-manifest.json
           if-no-files-found: error
           retention-days: 90
+  monitoring:
+    name: Configure independent monitoring
+    needs: smoke
+    if: inputs.configure_monitors && inputs.deployment_url == 'https://www.fixxflow.app'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: Production
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Configure and verify monitors
+        env:
+          BETTER_STACK_UPTIME_API_TOKEN: ${{ secrets.BETTER_STACK_UPTIME_API_TOKEN }}
+          HEALTH_CHECK_SECRET: ${{ secrets.HEALTH_CHECK_SECRET }}
+        run: node scripts/configure-monitoring.mjs

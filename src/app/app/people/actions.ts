@@ -63,7 +63,11 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
   let userId = invitation.userId;
   if (!userId) {
     const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/callback?next=/auth/update-password`;
-    const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo });
+    const { data, error } = await admin.auth.admin.inviteUserByEmail(email, {
+      redirectTo,
+      // Email personalization only; authorization comes from organization_memberships.
+      data: { invitation_role: role, invited_by: viewer.displayName, workspace_name: viewer.organizationName },
+    });
     if (error || !data.user) return { error: "We could not confirm the invitation email. Your entries are preserved. Retry in two minutes; any account already invited will be recovered without sending a duplicate." };
     userId = data.user.id;
   }

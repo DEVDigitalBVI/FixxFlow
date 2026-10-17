@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { componentHarness } from '../../../tests/helpers/component-harness.mjs';
 
 function load(file, mocks = {}) {
   return loadModule(file, {
@@ -43,6 +44,59 @@ test("employee composer exposes only public replies", () => {
   const html = renderToStaticMarkup(React.createElement(MessageComposer, { ticketId: "ticket", staff: false, action: async () => ({}) }));
   assert.match(html, /name="kind" value="reply"/);
   assert.doesNotMatch(html, /type="radio"|Internal note/);
+});
+test("successful replies retain their audience and preserve the other draft", async () => {
+  const submitted = [];
+  let complete;
+  const harness = componentHarness('src/features/tickets/message-composer.tsx', 'MessageComposer', {
+    ticketId: id,
+    action: data => { submitted.push(data); return new Promise(resolve => { complete = resolve; }); },
+  }, {
+    'next/navigation': { useRouter: () => ({ refresh() {} }) },
+    '@/components/ui/unsaved-changes': { useUnsavedChanges() {} },
+  });
+  const NativeFormData = globalThis.FormData;
+  // The harness supplies submitted fields in place of a browser HTMLFormElement.
+  globalThis.FormData = class extends NativeFormData {
+    constructor(form) { super(); if (form) for (const [key, value] of form.entries()) this.set(key, value); }
+  };
+  const textarea = () => harness.find(node => node.type === 'textarea');
+  const choose = kind => {
+    harness.find(node => node.type === 'input' && node.props.type === 'radio' && node.props.value === kind).props.onChange();
+    harness.render();
+  };
+  try {
+    textarea().props.onChange({ target: { value: 'Private diagnostic draft' } });
+    choose('reply');
+    textarea().props.onChange({ target: { value: 'Public update' } });
+    harness.render();
+    const form = harness.find(node => node.type === 'form');
+    assert.equal(form.props.action, undefined, 'Native action reset must not change the visible audience');
+    let prevented = false;
+    const event = { preventDefault() { prevented = true; }, currentTarget: messageForm('reply', 'Public update') };
+    form.props.onSubmit(event);
+    form.props.onSubmit(event);
+    assert.equal(prevented, true);
+    assert.equal(submitted.length, 1, 'Pending submissions must not duplicate a message');
+    complete({ success: 'Public reply sent.' });
+    await new Promise(resolve => setImmediate(resolve));
+    harness.render();
+    assert.equal(textarea().props.value, '');
+    assert.equal(harness.find(node => node.type === 'input' && node.props.type === 'radio' && node.props.value === 'reply').props.checked, true);
+    assert.equal(harness.find(node => node.type === 'input' && node.props.name === 'kind').props.value, 'reply');
+    choose('internal_note');
+    assert.equal(textarea().props.value, 'Private diagnostic draft');
+    harness.find(node => node.type === 'form').props.onSubmit({ preventDefault() {}, currentTarget: messageForm('internal_note', 'Private diagnostic draft') });
+    assert.equal(submitted[1].get('kind'), 'internal_note');
+    assert.equal(submitted[1].get('body'), 'Private diagnostic draft');
+    complete({ error: 'Temporary failure' });
+    await new Promise(resolve => setImmediate(resolve));
+    harness.render();
+    assert.equal(textarea().props.value, 'Private diagnostic draft');
+  } finally {
+    globalThis.FormData = NativeFormData;
+    harness.close();
+  }
 });
 test("message text is escaped instead of rendered as HTML", () => {
   const html = renderToStaticMarkup(React.createElement(ConversationTimeline, { messages: [{ ...messages[0], body: "<script>alert(1)</script>" }], names: new Map(), viewerId: "requester", requesterId: "requester", staff: true, error: false }));
