@@ -35,14 +35,46 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const returnTo = pageHref(page);
   const detailHref = (id: string) => ticketDetailHref(id, returnTo);
   const tickets = rows?.slice(0, 50);
-  const searchSummary = error ? "Tickets could not load. Use Search to try again." : `${tickets?.length ?? 0} tickets on this page${(rows?.length ?? 0) > 50 ? ", with more results available" : ""}.`;
+  const searchNoun = viewer.role === "end_user" ? "requests" : "tickets";
+  const searchSummary = error ? `${viewer.role === "end_user" ? "Requests" : "Tickets"} could not load. Use Search to try again.` : `${tickets?.length ?? 0} ${searchNoun} on this page${(rows?.length ?? 0) > 50 ? ", with more results available" : ""}.`;
   const hasMore = (rows?.length ?? 0) > 50;
   const pagination = <nav className="notification-pagination" aria-label="Ticket pages">{page > 1 && <Link className="button button-secondary" href={pageHref(page - 1)}>Previous</Link>}<span>Page {page}</span>{hasMore && <Link className="button button-secondary" href={pageHref(page + 1)}>Next</Link>}</nav>;
   const usage = viewer.usageSharing && search && !error && page === 1 ? <UsageEvent key={search} event="search_performed" surface="tickets"/> : null;
   const relatedArticles = search && <p className="queue-count"><Link href={`/app/help?q=${encodeURIComponent(search)}`}>Search knowledge articles{knowledgeCount ? ` (${knowledgeCount} ${knowledgeCount === 1 ? "match" : "matches"})` : ""}</Link></p>;
   const names = new Map((profiles ?? []).map(p => [p.user_id, p.display_name]));
   const teamNames = new Map((teams ?? []).map(t => [t.id, t.name]));
-  if (viewer.role === "end_user") return <TicketQueueContext returnTo={returnTo} panel={null} allowDrawer={false}><div className="portal-page">{usage}<header className="portal-page-heading"><div><Link className="button button-quiet page-back-link" href="/app">← Home</Link><h1>My requests</h1><p>See updates, read replies, and continue a conversation with IT.</p></div><Link className="button button-primary" href="/app/tickets/new">Submit a request</Link></header><nav className="portal-request-types" aria-label="Request types"><Link className="button button-quiet" aria-current={!filters.kind ? "page" : undefined} href="/app/tickets">All requests</Link><Link className="button button-quiet" aria-current={filters.kind === "inventory" ? "page" : undefined} href="/app/tickets?kind=inventory">Equipment requests</Link></nav><LiveSearchForm action="/app/tickets" className="portal-search" label="Search requests" resultSummary={searchSummary}>{filters.kind === "inventory" && <input type="hidden" name="kind" value="inventory"/>}<label htmlFor="ticket-search">Search requests</label><div><input id="ticket-search" className="input" name="q" defaultValue={search} type="search" maxLength={SEARCH_LIMIT} aria-describedby="ticket-search-hint" placeholder="Words or #ticket number"/><button className="button button-secondary">Search</button></div>{search&&<Link className="button button-quiet queue-clear" href="/app/tickets">Clear search</Link>}</LiveSearchForm><p id="ticket-search-hint" className="muted">{SEARCH_HINT} Use # for an exact ticket number.</p>{relatedArticles}{error ? <div className="alert alert-error" role="alert">Requests could not be loaded. Refresh the page.</div> : tickets?.length ? <ul className="portal-ticket-list">{tickets.map(ticket => <li key={ticket.id}><Link data-queue-ticket={ticket.id} href={detailHref(ticket.id)}><span className="portal-ticket-main"><strong>{ticket.title}</strong>{ticket.request_kind === "inventory" && <small>Equipment request</small>}<small>#{ticket.ticket_number} · Updated <Timestamp value={ticket.updated_at}/></small></span><span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span><span aria-hidden="true">→</span></Link></li>)}</ul> : <div className="portal-empty"><h2>No requests found</h2><p>{filters.q ? "Try a different search." : "When you contact IT, your requests will appear here."}</p><Link href="/app/tickets/new" className="button button-primary">Submit a request</Link></div>}{!error && pagination}</div></TicketQueueContext>;
+  if (viewer.role === "end_user") return <TicketQueueContext returnTo={returnTo} panel={null} allowDrawer={false}>
+    <div className="portal-page employee-requests-page">
+      {usage}
+      <PageHeader title="My requests" description="Track your requests and replies from IT." actions={<Link className="button button-primary" href="/app/tickets/new">New request</Link>}/>
+      <section className="employee-requests-panel" aria-label="Requests">
+        <div className="employee-requests-toolbar">
+          <nav className="portal-request-types" aria-label="Request types">
+            <Link className="button button-quiet" aria-current={!filters.kind ? "page" : undefined} href={search ? `/app/tickets?q=${encodeURIComponent(search)}` : "/app/tickets"}>All requests</Link>
+            <Link className="button button-quiet" aria-current={filters.kind === "inventory" ? "page" : undefined} href={search ? `/app/tickets?kind=inventory&q=${encodeURIComponent(search)}` : "/app/tickets?kind=inventory"}>Equipment requests</Link>
+          </nav>
+          <LiveSearchForm action="/app/tickets" className="portal-search" label="Search requests" resultSummary={searchSummary} idleMessage="">
+            {filters.kind === "inventory" && <input type="hidden" name="kind" value="inventory"/>}
+            <label htmlFor="ticket-search">Search requests</label>
+            <div>
+              <input id="ticket-search" className="input" name="q" defaultValue={search} type="search" maxLength={SEARCH_LIMIT} aria-describedby="ticket-search-hint" placeholder="Search by subject or request number"/>
+              <button type="submit" className="button button-secondary">Search</button>
+              {search && <Link className="button button-quiet" href={filters.kind === "inventory" ? "/app/tickets?kind=inventory" : "/app/tickets"}>Clear search</Link>}
+            </div>
+          </LiveSearchForm>
+          <details className="employee-request-search-help"><summary>Search tips</summary><p id="ticket-search-hint">Results update as you type. {SEARCH_HINT} Use # for an exact request number.</p></details>
+          {relatedArticles}
+        </div>
+        {error ? <div className="employee-requests-feedback"><div className="alert alert-error" role="alert">Requests could not be loaded. Try Search again or refresh the page.</div></div> : tickets?.length ? <ul className="portal-ticket-list">
+          {tickets.map(ticket => <li key={ticket.id}><Link data-queue-ticket={ticket.id} href={detailHref(ticket.id)}>
+            <span className="portal-ticket-main"><strong>{ticket.title}</strong>{ticket.request_kind === "inventory" && <small>Equipment request</small>}<small>#{ticket.ticket_number} · Updated <Timestamp value={ticket.updated_at}/></small></span>
+            <span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span><span aria-hidden="true">→</span>
+          </Link></li>)}
+        </ul> : <div className="portal-empty"><h2>{search ? "No matching requests" : filters.kind === "inventory" ? "No equipment requests yet" : "No requests yet"}</h2><p>{search ? "Try different words or clear your search." : "Your requests and replies from IT will appear here."}</p></div>}
+        {!error && (page > 1 || hasMore) && pagination}
+      </section>
+    </div>
+  </TicketQueueContext>;
   const views = [
     { value: "mine", label: "My tickets", description: "Active support work assigned to you." },
     { value: "unassigned", label: "Unassigned", description: "Active tickets ready for someone to pick up." },

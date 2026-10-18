@@ -97,3 +97,33 @@ test('asset detail uses a shared heading, lifecycle text and named ticket histor
   assert.match(employee, /Get help with this equipment/); assert.match(employee, /Equipment details/);
   assert.doesNotMatch(employee, /Edit asset|Ticket history|Replace keyboard/);
 });
+
+test('empty personal equipment omits inventory controls, duplicate headings and pagination', async () => {
+ const page = inventory({ role: 'end_user', rows: [] });
+ const html = await page.render({status:'available'});
+ assert.match(html, /No equipment assigned/);
+ assert.doesNotMatch(html, /Lifecycle|Search assets|Your equipment|0 assets|Most recently|Page 1|No results|Example workspace|<form/);
+ assert.ok(!page.calls.some(c => c[1] === 'eq' && c[2] === 'status'));
+});
+
+test('personal equipment cards retain identity, written state and accessible detail links', async () => {
+ const html = await inventory({role:'end_user'}).render();
+ for (const text of ['Reception laptop', 'PC-001', '012345', 'Example notebook', 'Under repair', 'View equipment']) assert.ok(html.includes(text));
+ assert.match(html, /aria-label="Assigned equipment"/);
+ assert.match(html, /View equipment<span class="sr-only">: Reception laptop/);
+ assert.doesNotMatch(html, /<table|Lifecycle|name="status"|Asset pages|Page 1/);
+});
+
+test('personal equipment search, errors and later pages offer recovery without false empty states', async () => {
+ const empty = inventory({role:'end_user',rows:[]});
+ const searched = await empty.render({q:'unknown'});
+ assert.match(searched, /No matching equipment/); assert.match(searched, /Clear search/);
+ assert.match(searched, /aria-describedby="my-equipment-hint"/);
+ const later = await empty.render({page:'3'});
+ assert.match(later, /Back to my equipment/); assert.match(later, /aria-label="Equipment pages"/);
+ const error = await inventory({role:'end_user',rows:[],error:{message:'private detail'}}).render();
+ assert.match(error, /role="alert"/); assert.match(error, /Try again/);
+ assert.doesNotMatch(error, /No equipment assigned|private detail|Equipment pages/);
+ const multiple = await inventory({role:'end_user',count:26}).render({q:'laptop'});
+ assert.match(multiple, /q=laptop&amp;status=&amp;page=2/);
+});

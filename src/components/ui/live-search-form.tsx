@@ -33,12 +33,13 @@ export function restoreSearchForm(form: HTMLFormElement, params: URLSearchParams
 }
 
 /** Enhance the existing GET form; results and authorization stay on the server. */
-export function LiveSearchForm({ action, label, className, children, resultSummary }: {
+export function LiveSearchForm({ action, label, className, children, resultSummary, idleMessage = 'Results update as you type. You can also press Enter or Search.' }: {
   action: string;
   label: string;
   className?: string;
   children: ReactNode;
   resultSummary: string;
+  idleMessage?: string;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -130,7 +131,7 @@ export function LiveSearchForm({ action, label, className, children, resultSumma
       {children}
     </form>
     <p className="muted live-search-status" role="status" aria-live="polite" aria-atomic="true">
-      {pending ? 'Searching…' : searched ? resultSummary : 'Results update as you type. You can also press Enter or Search.'}
+      {pending ? 'Searching…' : searched ? resultSummary : idleMessage}
     </p>
   </>;
 }

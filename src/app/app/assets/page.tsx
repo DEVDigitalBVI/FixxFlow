@@ -9,7 +9,7 @@ import {PageHeader} from '@/components/ui/page-header';
 import {AssetStatusBadge} from '@/features/assets/asset-status-badge';
 import {AssetLinkForm} from '@/features/assets/ticket-link-form';
 export default async function AssetsPage({searchParams}:{searchParams:Promise<{q?:string;status?:string;page?:string;ticket?:string}>}) {
- const viewer=await requireViewer();const staff=viewer.role!=='end_user';const params=await searchParams;const q=normalizeSearch(params.q);const page=pageNumber(params.page);const status=typeof params.status==='string'&&Object.hasOwn(assetStatuses,params.status)?params.status as keyof typeof assetStatuses:'';const db=await createClient();
+ const viewer=await requireViewer();const staff=viewer.role!=='end_user';const params=await searchParams;const q=normalizeSearch(params.q);const page=pageNumber(params.page);const status=staff&&typeof params.status==='string'&&Object.hasOwn(assetStatuses,params.status)?params.status as keyof typeof assetStatuses:'';const db=await createClient();
  const source=q?db.rpc('search_assets',{target_organization_id:viewer.organizationId,search_text:q},{count:'exact'}):db.from('assets');
  let query=source.select('*',{count:'exact'}).eq('organization_id',viewer.organizationId);
  if(!staff)query=query.eq('assigned_user_id',viewer.id);
@@ -22,6 +22,23 @@ export default async function AssetsPage({searchParams}:{searchParams:Promise<{q
  const href=(n:number)=>`/app/assets?${new URLSearchParams({q,status,page:String(n),...(ticket?{ticket}:{})})}`;
  const clearHref=ticket?`/app/assets?${new URLSearchParams({ticket})}`:'/app/assets';
  const filtered=Boolean(q||status);
+ if(!staff) return <div className="portal-page employee-equipment-page">
+  <PageHeader title="My equipment" description="Equipment assigned to you by your IT team."/>
+  {(q || (count??0)>0 || page>1) && !error && <div className="employee-equipment-search">
+   <LiveSearchForm action="/app/assets" className="portal-search" label="Search my equipment" idleMessage="" resultSummary={ `${count??0} matching items.` }>
+    <label htmlFor="my-equipment-search">Search my equipment</label><div><input id="my-equipment-search" className="input" name="q" type="search" defaultValue={q} maxLength={SEARCH_LIMIT} aria-describedby="my-equipment-hint" placeholder="Name, tag or serial number"/><button type="submit" className="button button-secondary">Search</button>{q&&<Link className="button button-quiet" href="/app/assets">Clear search</Link>}</div>
+   </LiveSearchForm><span id="my-equipment-hint" className="sr-only">{SEARCH_HINT}</span>
+  </div>}
+  {error ? <div className="alert alert-error" role="alert">Your equipment could not be loaded. <Link className="button button-secondary" href={href(page)}>Try again</Link></div>
+   : data?.length ? <ul className="employee-equipment-list" aria-label="Assigned equipment">{data.map(a=><li key={a.id} className="employee-equipment-card">
+    <div className="employee-equipment-identity"><h2><Link href={`/app/assets/${a.id}`}>{a.name}</Link></h2><AssetStatusBadge status={a.status}/></div>
+    <p className="muted">{assetKinds[a.kind]}{a.model ? ` · ${a.model}` : ''}</p>
+    <dl><div><dt>Equipment tag</dt><dd>{a.tag}</dd></div>{a.serial_number&&<div><dt>Serial number</dt><dd>{a.serial_number}</dd></div>}</dl>
+    <Link className="button button-secondary" href={`/app/assets/${a.id}`}>View equipment<span className="sr-only">: {a.name}</span></Link>
+   </li>)}</ul>
+   : <section className="portal-empty employee-equipment-empty" aria-labelledby="equipment-empty-title"><h2 id="equipment-empty-title">{q?'No matching equipment':page>1?'No equipment on this page':'No equipment assigned'}</h2><p>{q?'Try another name, tag or serial number.':page>1?'Return to the first page to see your equipment.':'Your IT team will add equipment here when it is assigned to you.'}</p>{(q||page>1)&&<Link className="button button-secondary" href="/app/assets">{q?'Clear search':'Back to my equipment'}</Link>}</section>}
+  {!error&&(page>1||page*25<(count??0))&&<nav className="notification-pagination" aria-label="Equipment pages">{page>1&&<Link className="button button-secondary" href={href(page-1)}>Previous</Link>}<span>Page {page}</span>{page*25<(count??0)&&<Link className="button button-secondary" href={href(page+1)}>Next</Link>}</nav>}
+ </div>;
  return <div className={`${staff?'page':'portal-page'} assets-page`}>
   <PageHeader title={staff?'Assets':'My equipment'} eyebrow={viewer.organizationName} description={staff?'Equipment, ownership and service history in one place.':'Equipment assigned to you by your IT team.'} actions={staff?<><Link className="button button-secondary" href="/app/assets/import">Import spreadsheet</Link><Link className="button button-primary" href="/app/assets/new">Add asset</Link></>:undefined}/>
   {ticketR?.data&&<div className="alert asset-ticket-context"><div><strong>Link equipment to Ticket #{ticketR.data.ticket_number}</strong><p>Find the asset below, then choose Link to ticket.</p></div><Link className="button button-secondary" href={`/app/tickets/${ticket}`}>Back to ticket</Link></div>}

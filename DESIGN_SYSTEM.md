@@ -115,7 +115,7 @@ The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its
 ### 4.1 Agent/admin workspace
 
 - Use persistent left navigation on desktop. Target width: 232–264px expanded and 64–72px collapsed.
-- Navigation groups should reflect stable product areas, not every available page. Provide icon, label, active state, and optional count. The active state must include more than color.
+- Navigation groups should reflect stable product areas, not every available page. Use softly filled, subtly bordered rounded boxes with spacing between groups instead of visible section headers. Keep group names available to assistive technology through labeled lists. Apply the same grouping to employee, staff, and platform navigation, including the compact rail and mobile sheet; keep account controls in their own box. Provide icon, label, active state, and optional count. The active state must include more than color.
 - Prefer task labels in primary navigation: Dashboard, Tickets, Live chat, and Settings. Avoid internal product terminology when a common destination name is clearer.
 - Keep account/workspace controls separate from primary navigation. Do not repeat the company name in navigation; show organization context within page content where relevant.
 - The main content area should have a clear page header containing title, concise context, primary action, and only the most relevant secondary controls.
@@ -259,6 +259,7 @@ The employee portal is intentionally simpler than the agent workspace.
 - Use larger type and targets, more whitespace, and fewer visible metadata fields than the agent workspace.
 - Guide request creation with progressive disclosure and human language. Ask only for information needed to route or solve the issue.
 - Show request status, latest response, and next expected step. Translate internal workflow terms into employee-friendly language where needed.
+- My requests uses the shared page header and one quiet bordered panel for request-type links, search, and results. Keep search tips in a native disclosure, preserve filters when searching or clearing search, and show pagination only when another page is available.
 - Make adding a reply or attachment obvious. Hide assignment mechanics, internal notes, SLA machinery, and operational analytics.
 - Provide confirmation and a durable request reference after submission; never leave success dependent on a transient toast.
 

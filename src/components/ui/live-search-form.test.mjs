@@ -174,3 +174,12 @@ test('declining a queue search keeps the ticket draft mounted and restores commi
   allowed = true; h.type('new'); h.tick();
   assert.equal(h.calls.length, 1); assert.match(h.calls[0][1], /q=new/);
 });
+
+
+test('compact search can omit idle guidance while retaining its live status region', () => {
+ const html = renderToStaticMarkup(React.createElement(LiveSearchForm, {
+  action: '/app/tickets', label: 'Search requests', resultSummary: '1 request.', idleMessage: '',
+ }, React.createElement('button', {type: 'submit'}, 'Search')));
+ assert.match(html, /role="status" aria-live="polite" aria-atomic="true"><\/p>/);
+ assert.doesNotMatch(html, /Results update as you type/);
+});

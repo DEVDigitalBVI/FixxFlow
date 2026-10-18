@@ -69,3 +69,29 @@ test('employee sidebar shares account and resource patterns without staff destin
   assert.doesNotMatch(html,/<details[^>]*open=/);
  }
 });
+
+test('all navigation variants expose named groups without visible section headers', () => {
+ for (const role of ['end_user', 'agent', 'administrator']) {
+  for (const platform of [false, true]) {
+   for (const workspaceAvailable of [false, true]) {
+    const { WorkspaceNav } = load('src/components/navigation/workspace-nav.tsx', {
+     'next/navigation': { usePathname: () => platform ? '/platform/analytics' : '/app/tickets' },
+     'next/link': { default: props => React.createElement('a', props) },
+     '@/features/search/global-search': { GlobalSearch: () => null },
+     '@/features/theme/theme-control': { ThemeControl: () => null },
+     '@/features/notifications/notification-link': { NotificationLink: props => React.createElement('a', { href: '/app/notifications', className: props.className }, 'Notifications') },
+    });
+    const html = renderToStaticMarkup(React.createElement(WorkspaceNav, { role, platform, workspaceAvailable, organizationId: 'org', userId: 'viewer' }));
+    const groupNames = [...html.matchAll(/<ul class="nav-list nav-group" aria-label="([^"]+)">/g)].map(match => match[1]);
+    assert.deepEqual(groupNames, platform
+     ? ['Platform', ...(workspaceAvailable ? ['Workspace'] : [])]
+     : [role === 'end_user' ? 'Support' : 'Work', 'Resources', ...(role === 'end_user' ? [] : ['Manage'])]);
+    assert.doesNotMatch(html, /nav-group-label|>Support<|>Work<|>Resources<|>Manage</);
+    assert.match(html, /aria-current="page"/);
+    assert.match(html, /aria-controls="workspace-navigation" aria-expanded="false"/);
+    if (platform) assert.equal(html.includes('href="/app"'), workspaceAvailable);
+    else assert.match(html, /<summary class="nav-link" aria-label="Account"/);
+   }
+  }
+ }
+});

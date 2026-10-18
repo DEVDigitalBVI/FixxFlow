@@ -5,9 +5,9 @@ import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 const { normalizeQueueFilters } = load('src/features/tickets/queue-filters.ts');
-function setup(role = 'technician') {
+function setup(role = 'technician', count = 51) {
  const calls=[];
- const rows=Array.from({length:51},(_,i)=>({id:String(i),title:'Search result',ticket_number:i,status:'open',priority:'normal',updated_at:'2026-09-25T00:00:00Z'}));
+ const rows=Array.from({length:count},(_,i)=>({id:String(i),title:'Search result',ticket_number:i,status:'open',priority:'normal',updated_at:'2026-09-25T00:00:00Z'}));
  const builder=(data)=>new Proxy({}, {get:(_,key)=>key==='then' ? (resolve)=>Promise.resolve({data,error:null}).then(resolve) : (...args)=>{calls.push([key,...args]);return builder(data);}});
  const mocks={
   'next/navigation':searchNavigation,
@@ -46,4 +46,29 @@ test('employee ticket lists do not fetch staff-only lookup data', async () => {
  assert.deepEqual(calls.filter(call => call[0] === 'from'), [['from', 'tickets']]);
  assert.ok(calls.some(call => call[0] === 'eq' && call[1] === 'requester_id' && call[2] === 'staff'));
  assert.ok(calls.some(call => call[0] === 'eq' && call[1] === 'organization_id' && call[2] === 'org'));
+});
+
+
+test('employee requests use one panel, optional search tips, and no single-page pagination', async () => {
+ const { Page } = setup('end_user', 1);
+ const html = renderToStaticMarkup(await Page({ searchParams: Promise.resolve({ q: 'VPN', kind: 'inventory' }) }));
+ assert.match(html, /class="page-header"/);
+ assert.match(html, /class="employee-requests-panel" aria-label="Requests"/);
+ assert.match(html, /<details class="employee-request-search-help"><summary>Search tips<\/summary>/);
+ assert.match(html, /aria-describedby="ticket-search-hint"/);
+ assert.match(html, /name="kind" value="inventory"/);
+ assert.match(html, /href="\/app\/tickets\?kind=inventory">Clear search/);
+ assert.match(html, /href="\/app\/tickets\?kind=inventory&amp;q=VPN"/);
+ assert.doesNotMatch(html, /aria-label="Ticket pages"|← Home|See updates, read replies/);
+ assert.equal((html.match(/Results update as you type/g) ?? []).length, 1);
+ assert.match(html, /data-queue-ticket="0"/);
+});
+
+test('employee request empty states distinguish equipment and search results', async () => {
+ const { Page } = setup('end_user', 0);
+ for (const [filters, title] of [[{}, 'No requests yet'], [{kind:'inventory'}, 'No equipment requests yet'], [{q:'missing'}, 'No matching requests']]) {
+  const html = renderToStaticMarkup(await Page({searchParams:Promise.resolve(filters)}));
+  assert.ok(html.includes(title));
+  assert.equal((html.match(/href="\/app\/tickets\/new"/g) ?? []).length, 1);
+ }
 });
