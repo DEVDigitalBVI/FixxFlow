@@ -117,7 +117,7 @@ The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its
 - Use persistent left navigation on desktop. Target width: 232–264px expanded and 64–72px collapsed.
 - Navigation groups should reflect stable product areas, not every available page. Provide icon, label, active state, and optional count. The active state must include more than color.
 - Prefer task labels in primary navigation: Dashboard, Tickets, Live chat, and Settings. Avoid internal product terminology when a common destination name is clearer.
-- Keep account/workspace controls separate from primary navigation.
+- Keep account/workspace controls separate from primary navigation. Do not repeat the company name in navigation; show organization context within page content where relevant.
 - The main content area should have a clear page header containing title, concise context, primary action, and only the most relevant secondary controls.
 - Use a contextual right-side detail drawer for rapid inspection and editing without losing queue context. Provide an optional full detail view for long work, deep linking, complex history, or narrow screens.
 - Preserve the user's list position, filters, and selection when opening and closing a drawer.
@@ -240,7 +240,7 @@ Recommended initial priorities: Low, Normal, High, Urgent. Always display the wr
 - Keep the composer below a bounded, independently scrolling thread. Short viewports and zoom must allow the page to grow so controls remain reachable. Photos and playable video/audio appear in chronological order with messages, using private signed links and native controls without autoplay. Keep download/open links and recoverable expired-link states. File guidance includes supported types, the 10 MB limit, and a request for text descriptions of visual or spoken content. Uploads remain shared with the employee even when composing an internal note.
 - Chat unread counts represent the viewer's existing unread notifications, including media uploads. A visible thread at its latest entries acknowledges only notifications covered by the loaded snapshot. Keep newer and background-tab updates unread. The navigation badge and notifications page subscribe to live changes, retaining focus and polling recovery.
 - Clearly distinguish employee, agent, system event, and internal note using labels, alignment/surface treatment, and icons—not color alone.
-- Keep message width readable. Show sender and timestamp at logical group boundaries rather than repeating noisy metadata on every bubble.
+- Keep the chat inbox to one heading and its view filters. Use compact timestamps with the exact date and timezone available to assistive technology and on hover. Keep history and file browsing together in a quiet toolbar, with attachments shown once in the timeline. The composer has one heading row, message field, audience/keyboard hint, and attachment/send actions. Keep message width readable. Show sender and timestamp at logical group boundaries rather than repeating noisy metadata on every bubble.
 - Internal notes use a cool neutral surface with a solid blue edge and the shared blue primary action. Reserve amber for warnings, never for message visibility. Apply this treatment to ticket composers, timelines, live chat and linked history. Internal notes must be unmistakable before composition and after posting. The composer mode label and submit action must state “Internal note” when active.
 - The composer supports keyboard entry, attachments, drafts, sending progress, retry after failure, and multiline content. `Enter` versus `Shift+Enter` behavior must be visible or configurable; never surprise users with an accidental send.
 - New messages should not force-scroll a user who is reading history. Show a “new messages” affordance instead. Maintain focus and announce incoming messages politely.
@@ -252,7 +252,7 @@ Recommended initial priorities: Low, Normal, High, Urgent. Always display the wr
 
 The employee portal is intentionally simpler than the agent workspace.
 
-- Reuse the admin workspace shell and navigation branding for employees: the same responsive logo, workspace identity, collapsible desktop sidebar, mobile navigation sheet, search, account area, and appearance controls. Keep employee task labels and destinations permission-scoped; expose My chats and Notifications directly. Preserve larger employee content typography and readable page widths.
+- Reuse the admin workspace shell and navigation branding for employees: the same responsive logo, collapsible desktop sidebar, mobile navigation sheet, search, account area, and appearance controls. Keep employee task labels and destinations permission-scoped; expose My chats and Notifications directly. Preserve larger employee content typography and readable page widths.
 - Lead with a prominent plain-language request/search entry point: “How can we help?”
 - Keep navigation shallow: Home, My requests, Help/knowledge, and account controls are usually sufficient.
 - Present three distinct next steps on the home page: chat for immediate questions, a tracked request for work that needs follow-up, and help articles for self-service. Show existing requests in their own section rather than as another competing action.

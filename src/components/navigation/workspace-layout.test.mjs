@@ -20,7 +20,7 @@ test('employees and administrators use the same shell, brand and account control
     assert.match(html, /class="app-shell"/);
     assert.match(html, /class="sidebar-logo|brand-logo-navigation sidebar-logo/);
     assert.match(html, /FixxFlow home/);
-    assert.match(html, /class="sidebar-workspace"[^>]*>Example workspace/);
+    assert.doesNotMatch(html, /sidebar-workspace|Example workspace/);
     assert.match(html, /class="sidebar-account"/);
     assert.match(html, /Jordan Morgan/);
     assert.match(html, /aria-label="Sign out"/);

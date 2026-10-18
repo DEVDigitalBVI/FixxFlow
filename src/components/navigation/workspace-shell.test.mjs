@@ -14,7 +14,7 @@ test('workspace shell defaults to the viewport and supports deliberate expansion
       const { WorkspaceShell } = load('src/components/navigation/workspace-shell.tsx', {
         react: { ...React, useState: () => [state, value => { state = typeof value === 'function' ? value(state) : value; }], useEffect: callback => { effect = callback; } },
       });
-      const render = () => WorkspaceShell({ workspaceName: 'Example & Team', brand: 'Brand', navigation: 'Navigation', account: 'Account', children: 'Content' });
+      const render = () => WorkspaceShell({ brand: 'Brand', navigation: 'Navigation', account: 'Account', children: 'Content' });
       const button = tree => tree.props.children[0].props.children[0].props.children[1];
       assert.equal(render().props['data-sidebar'], 'auto');
       const cleanup = effect();
@@ -32,7 +32,7 @@ test('workspace shell defaults to the viewport and supports deliberate expansion
       const html = renderToStaticMarkup(render());
       assert.match(html, /aria-label="Workspace sidebar"/);
       assert.match(html, /aria-controls="workspace-navigation"/);
-      assert.match(html, /Example &amp; Team/);
+      assert.doesNotMatch(html, /sidebar-workspace/);
       assert.match(html, /<main class="workspace" id="main-content">Content<\/main>/);
       cleanup(); assert.equal(removed, true);
     } finally { globalThis.window = previous; }

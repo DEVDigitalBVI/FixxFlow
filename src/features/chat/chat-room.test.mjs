@@ -104,3 +104,32 @@ test('failed media uploads retry the retained file and uncertain writes are neve
   assert.match(uncertain.h.find(n=>n.props.className==='chat-feedback').props.children,/Refresh the file list/);
  }finally{uncertain.h.close();}
 });
+
+
+test('compact composer keeps staff audiences explicit and preserves each draft when switching',()=>{
+ const f=fixture({worker:true});try{
+  f.draft('Private troubleshooting');
+  assert.equal(f.h.find(n=>n.type==='label'&&n.props.htmlFor==='chat-draft').props.children,'Internal note · IT only');
+  assert.equal(f.h.find(n=>n.type==='textarea').props['aria-describedby'],'chat-audience');
+  f.h.find(n=>n.type==='select').props.onChange({target:{value:'message'}});f.h.render();
+  assert.equal(f.h.find(n=>n.type==='textarea').props.value,'');f.draft('Public reply');
+  f.h.find(n=>n.type==='select').props.onChange({target:{value:'internal_note'}});f.h.render();
+  assert.equal(f.h.find(n=>n.type==='textarea').props.value,'Private troubleshooting');
+  assert.ok(f.h.find(n=>n.type==='button'&&n.props.children==='Add internal note'));
+ }finally{f.h.close();}
+ const employee=fixture();try{
+  assert.equal(employee.h.all(n=>n.type==='select').length,0);
+  assert.equal(employee.h.find(n=>n.type==='label'&&n.props.htmlFor==='chat-draft').props.children,'Message');
+  assert.equal(employee.h.find(n=>n.type==='input'&&n.props.type==='file').props['aria-label'],'Attach a photo, video, audio or file');
+ }finally{employee.h.close();}
+});
+
+test('files stay reachable from the compact toolbar without duplicating the attachment list',()=>{
+ const f=fixture();try{
+  f.props.attachments=[{id:'file',file_name:'Screenshot.png',created_at:'2026-10-17T12:00:00Z',size_bytes:100,storage_path:'file',content_type:'image/png'}];f.props.open=false;f.h.render();
+  assert.ok(f.h.find(n=>n.props.href==='/app/chat/chat/history?view=files'));
+  assert.ok(f.h.find(n=>n.props.href==='/app/chat/chat/history'));
+  assert.equal(f.h.all(n=>n.props.className==='chat-attachments').length,0);
+  assert.equal(f.h.all(n=>n.type==='form').length,0);
+ }finally{f.h.close();}
+});
