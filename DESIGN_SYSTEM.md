@@ -245,6 +245,7 @@ Recommended initial priorities: Low, Normal, High, Urgent. Always display the wr
 - The composer supports keyboard entry, attachments, drafts, sending progress, retry after failure, and multiline content. `Enter` versus `Shift+Enter` behavior must be visible or configurable; never surprise users with an accidental send.
 - New messages should not force-scroll a user who is reading history. Show a “new messages” affordance instead. Maintain focus and announce incoming messages politely.
 - System events such as assignment or status changes should be compact timeline items, not chat bubbles.
+- Sent chat messages offer a visible, keyboard-accessible Edit action for their author while the conversation is open, including in chat history. Keep the draft during save failures and revision conflicts, offer Save and Cancel, restore focus, and show an Edited timestamp after saving. Editing never changes the sender, audience, or original send time and does not generate another new-message alert.
 - Sanitize rendered content, constrain attachments, and never render untrusted HTML directly.
 
 ## 8. Simplified employee support portal

@@ -1,3 +1,4 @@
+import { EditableChatMessage } from '@/features/chat/editable-message';
 import { ChatMediaAttachment } from '@/features/chat/media-attachment';
 import { Timestamp } from '@/features/timezones/provider';
 import { inventoryAccess } from '@/features/inventory/access';
@@ -21,11 +22,12 @@ export async function HistoryBrowser({ kind, id, filters }: {
   const org = viewer.organizationId;
   const parent = kind === 'ticket'
     ? await db.from('tickets').select('id, requester_id, request_kind').eq('organization_id', org).eq('id', id).maybeSingle()
-    : await db.from('chat_conversations').select('id, requester_id').eq('organization_id', org).eq('id', id).maybeSingle();
+    : await db.from('chat_conversations').select('id, requester_id, status').eq('organization_id', org).eq('id', id).maybeSingle();
   if (parent.error) throw new Error('History is unavailable. Please try again.');
   if (!parent.data) notFound();
   if (viewer.role === 'end_user' && parent.data.requester_id !== viewer.id && !(kind === 'ticket' && 'request_kind' in parent.data && parent.data.request_kind === 'inventory' && (await inventoryAccess(viewer)).manager)) notFound();
   const staff = viewer.role !== 'end_user';
+  const chatOpen = kind === 'chat' && 'status' in parent.data && parent.data.status === 'open';
   const view = filters.view === 'files' ? 'files' : filters.view === 'activity' && staff && kind === 'ticket' ? 'activity' : 'messages';
   let filter: string | null;
   try { filter = historyFilter(filters.before); } catch { notFound(); }
@@ -68,19 +70,19 @@ export async function HistoryBrowser({ kind, id, filters }: {
   } else {
     const source = kind === 'ticket'
       ? db.from('ticket_messages').select('id, author_id, author_type, automation_name, kind, body, created_at').eq('ticket_id', id)
-      : db.from('chat_messages').select('id, author_id, kind, body, created_at').eq('conversation_id', id);
+      : db.from('chat_messages').select('id, author_id, kind, body, created_at, revision, edited_at').eq('conversation_id', id);
     let query = source.eq('organization_id', org)
       .order('created_at', { ascending: false }).order('id', { ascending: false }).limit(HISTORY_PAGE_SIZE + 1);
     if (!staff) query = query.neq('kind', 'internal_note');
     if (filter) query = query.or(filter);
     const { data, error } = await query;
     if (error) throw new Error('Messages could not be loaded. Please try again.');
-    const page = historyPage<MessageAuthor & { id: string; kind: string; body: string; created_at: string }>(data ?? []);
+    const page = historyPage<MessageAuthor & { id: string; kind: string; body: string; created_at: string; revision?: number; edited_at?: string | null }>(data ?? []);
     older = page.older;
     const names = await authorNames(page.items.flatMap(row => row.author_id ? [row.author_id] : []));
     content = page.items.length ? <ol className="ticket-conversation">{page.items.toReversed().map(row => <li className={`conversation-item${row.kind === 'internal_note' ? ' conversation-item-note' : ''}`} key={row.id}>
       <article className="conversation-bubble"><header><strong>{messageAuthorName(row, names, viewer.id)}</strong><time dateTime={row.created_at}><Timestamp value={row.created_at}/></time></header>
-        {staff && <p>{row.kind === 'internal_note' ? 'Internal note · IT staff only' : 'Public reply'}</p>}<p>{row.body}</p>
+        {staff && <p>{row.kind === 'internal_note' ? 'Internal note · IT staff only' : 'Public reply'}</p>}{kind === 'chat' && row.author_id ? <EditableChatMessage message={{ ...row, author_id: row.author_id, kind: row.kind === 'internal_note' ? 'internal_note' : 'message' }} organizationId={org} conversationId={id} canEdit={row.author_id === viewer.id && chatOpen}/> : <p>{row.body}</p>}
       </article>
     </li>)}</ol> : <p>No messages in this part of the history.</p>;
   }

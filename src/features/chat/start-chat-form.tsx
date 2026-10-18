@@ -18,7 +18,7 @@ export function StartChatForm({ initialError, submissionKey }: { initialError?: 
     <SubmissionKey value={submissionKey}/>
     <div className="chat-recipient">
       <span className="chat-intake-icon"><NavigationIcon name="support"/></span>
-      <div><span className="muted">New conversation with</span><h2 id="chat-compose-title">IT support</h2></div>
+      <div><span className="muted">New conversation with your organization’s</span><h2 id="chat-compose-title">IT support team</h2><p className="chat-recipient-description">Your message goes to your IT support team. Once a technician picks it up, you’ll see their name in the conversation.</p></div>
     </div>
     {state.error && <div className="alert alert-error" role="alert" tabIndex={-1} ref={feedback}>
       <p>{state.error}</p>

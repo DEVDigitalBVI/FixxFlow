@@ -1,4 +1,7 @@
 "use client";
+import { EditableChatMessage } from "./editable-message";
+import { mergeChatMessages, parseChatMessage, type RoomMessage } from "./message-model";
+export type { RoomMessage } from "./message-model";
 import { ChatReadUpdates } from "./read-updates";
 import { HISTORY_PAGE_SIZE } from "@/features/conversations/history";
 import { Timestamp } from '@/features/timezones/provider';
@@ -14,13 +17,12 @@ import { ChatMediaAttachment } from "./media-attachment";
 import { createClient } from "@/lib/supabase/client";
 import { useUnsavedChanges } from '@/components/ui/unsaved-changes';
 
-export type RoomMessage = { id: string; author_id: string; kind: "message" | "internal_note"; body: string; created_at: string };
 export type RoomAttachment = { id: string; file_name: string; size_bytes: number; created_at: string; storage_path: string; content_type?: string; uploaded_by?: string; url?: string };
 
 
-export function ChatRoom({ conversationId, organizationId, viewerId, isWorker, open, names, initialMessages, attachments: initialAttachments, readThrough }: {
+export function ChatRoom({ conversationId, organizationId, viewerId, isWorker, open, names, initialMessages, attachments: initialAttachments, readThrough, supportName = "IT support team", assigned = false, participantId }: {
   conversationId: string; organizationId: string; viewerId: string; isWorker: boolean; open: boolean;
-  names: Record<string, string>; initialMessages: RoomMessage[]; attachments: RoomAttachment[]; readThrough?: string;
+  names: Record<string, string>; initialMessages: RoomMessage[]; attachments: RoomAttachment[]; readThrough?: string; supportName?: string; assigned?: boolean; participantId?: string;
 }) {
   const router = useRouter();
   const [supabase] = useState(createClient);
@@ -30,8 +32,7 @@ export function ChatRoom({ conversationId, organizationId, viewerId, isWorker, o
   const lastTyping = useRef(0);
   const [liveMessages, setLiveMessages] = useState<RoomMessage[]>([]);
   const [outgoing, setOutgoing] = useState<RoomMessage | null>(null);
-  const confirmed = new Map(liveMessages.map(message => [message.id, message]));
-  for (const message of initialMessages) confirmed.set(message.id, message);
+  const confirmed = new Map(mergeChatMessages(liveMessages, initialMessages).map(message => [message.id, message]));
   const messages = [...confirmed.values()].sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at) || a.created_at.localeCompare(b.created_at) || a.id.localeCompare(b.id)).slice(-HISTORY_PAGE_SIZE);
   if (outgoing && !confirmed.has(outgoing.id)) messages.push(outgoing);
   const [liveAttachments, setLiveAttachments] = useState<RoomAttachment[]>([]);
@@ -75,21 +76,19 @@ export function ChatRoom({ conversationId, organizationId, viewerId, isWorker, o
   useEffect(() => {
     let disposed = false;
     const channel = supabase.channel(`chat:${conversationId}`, { config: { private: true, presence: { key: `${viewerId}:${crypto.randomUUID()}` } } })
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages", filter: `conversation_id=eq.${conversationId}` }, ({ new: row }) => {
-        if (disposed || row.organization_id !== organizationId || row.conversation_id !== conversationId
-          || (row.kind !== "message" && row.kind !== "internal_note") || (!isWorker && row.kind === "internal_note")
-          || typeof row.id !== "string" || typeof row.author_id !== "string" || typeof row.body !== "string" || typeof row.created_at !== "string" || !Number.isFinite(Date.parse(row.created_at))) return;
-        const message: RoomMessage = { id: row.id, author_id: row.author_id, kind: row.kind, body: row.body, created_at: row.created_at };
-        setLiveMessages(current => [...current.filter(item => item.id !== message.id), message].slice(-HISTORY_PAGE_SIZE));
+      .on("postgres_changes", { event: "*", schema: "public", table: "chat_messages", filter: `conversation_id=eq.${conversationId}` }, ({ new: row }) => {
+        const message = parseChatMessage(row, organizationId, conversationId, isWorker);
+        if (disposed || !message) return;
+        setLiveMessages(current => mergeChatMessages(current, [message]).slice(-HISTORY_PAGE_SIZE));
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "chat_conversations", filter: `id=eq.${conversationId}` }, refresh)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_attachments", filter: `conversation_id=eq.${conversationId}` }, refresh)
       .on("presence", { event: "sync" }, () => {
-        const others = Object.values(channel.presenceState()).flat().some(value => (value as { userId?: string }).userId !== viewerId);
+        const others = Object.values(channel.presenceState()).flat().some(value => { const id = (value as { userId?: string }).userId; return Boolean(id && id !== viewerId && (!participantId || id === participantId)); });
         setOnline(others);
       })
       .on("broadcast", { event: "typing" }, ({ payload }) => {
-        if (payload?.userId === viewerId) return;
+        if (payload?.userId === viewerId || (participantId && payload?.userId !== participantId)) return;
         setTyping(Boolean(payload?.typing));
         if (remoteTimer.current) window.clearTimeout(remoteTimer.current);
         if (payload?.typing) remoteTimer.current = window.setTimeout(() => setTyping(false), 3500);
@@ -111,7 +110,7 @@ export function ChatRoom({ conversationId, organizationId, viewerId, isWorker, o
       channelRef.current = null;
       void supabase.removeChannel(channel);
     };
-  }, [conversationId, organizationId, viewerId, isWorker, supabase, refresh]);
+  }, [conversationId, organizationId, viewerId, isWorker, participantId, supabase, refresh]);
 
   function stopTyping() {
     if (typingTimer.current) window.clearTimeout(typingTimer.current);
@@ -207,7 +206,7 @@ export function ChatRoom({ conversationId, organizationId, viewerId, isWorker, o
     finally { uploadInFlight.current = false; setUploading(false); }
   }
 
-  return <section className="chat-room" aria-label="Conversation"><div className="chat-live-state" role="status"><span className={online ? "chat-online" : ""}>{online ? "Another participant online" : "Waiting for another participant"}</span><span>{connected ? "Live" : "Reconnecting · updates may be delayed"}</span></div><Link className="chat-history-link" href={`/app/chat/${conversationId}/history`} target="_blank" rel="noopener noreferrer">Earlier messages <span className="sr-only">(opens in a new tab)</span></Link><div className="chat-thread" ref={threadRef} onScroll={event => {
+  return <section className="chat-room" aria-label="Conversation"><div className="chat-live-state" role="status"><span className={online ? "chat-online" : ""}>{online ? `${isWorker ? "Employee" : supportName} is online` : !connected ? `Connecting to ${isWorker ? "the employee" : supportName}…` : isWorker ? "Employee is not currently in the chat" : assigned ? `${supportName} is not currently in the chat` : "Waiting for your IT support team"}</span><span>{connected ? "Live" : "Reconnecting · updates may be delayed"}</span></div><Link className="chat-history-link" href={`/app/chat/${conversationId}/history`} target="_blank" rel="noopener noreferrer">Earlier messages <span className="sr-only">(opens in a new tab)</span></Link><div className="chat-thread" ref={threadRef} onScroll={event => {
     const thread = event.currentTarget;
     followLatest.current = thread.scrollHeight - thread.scrollTop - thread.clientHeight < 80;
     setReadingHistory(!followLatest.current);
@@ -215,11 +214,11 @@ export function ChatRoom({ conversationId, organizationId, viewerId, isWorker, o
   }} tabIndex={0} role="log" aria-label="Conversation messages" aria-live="polite" aria-relevant="additions text">{timeline.map(entry => {
     if (entry.type === "file") return <article key={entry.key} className={`chat-message chat-message-media${entry.file.uploaded_by === viewerId ? " chat-message-own" : ""}`}><div className="chat-message-meta"><strong>{entry.file.uploaded_by === viewerId ? "You" : names[entry.file.uploaded_by ?? ""] ?? "Participant"} · Attachment</strong><time dateTime={entry.created_at}><Timestamp value={entry.created_at}/></time></div><ChatMediaAttachment file={entry.file} onReady={() => { if (followLatest.current) threadRef.current?.scrollTo({ top: threadRef.current.scrollHeight, behavior: "instant" }); }}/></article>;
     const message = entry.message;
-    return <article key={entry.key} className={`chat-message${message.author_id === viewerId ? " chat-message-own" : ""}${message.kind === "internal_note" ? " chat-message-note" : ""}`}><div className="chat-message-meta"><strong>{message.author_id === viewerId ? "You" : names[message.author_id] ?? "IT support"}{message.kind === "internal_note" ? " · Internal note" : ""}</strong><time dateTime={message.created_at}><Timestamp value={message.created_at}/></time></div><p>{message.body}</p>{outgoing?.id === message.id && !confirmed.has(message.id) && <small>Sending…</small>}</article>;
-  })}{uploading && <article className="chat-message chat-message-own" aria-label="Uploading attachment"><p>Uploading {uploadName}…</p></article>}{!timeline.length && !uploading && <p className="muted">No messages yet.</p>}</div>{newMessages && readingHistory && <button className="chat-new-messages" type="button" onClick={() => { followLatest.current = true; setReadingHistory(false); threadRef.current?.scrollTo({ top: threadRef.current.scrollHeight, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }); setSeenMessageId(latestMessageId); }}>New messages ↓</button>}<div className="chat-typing" role="status">{typing ? "Someone is typing…" : "\u00a0"}</div>{attachments.length > 0 && <details className="chat-attachments"><summary>Files in this conversation ({attachments.length})</summary><Link className="button button-secondary" href={`/app/chat/${conversationId}/history?view=files`}>Browse all files</Link><ul>{attachments.map(file => <li key={file.id}>{file.url ? <a href={file.url} target="_blank" rel="noreferrer">{file.file_name}</a> : <span>{file.file_name}</span>}<small>{Math.ceil(file.size_bytes / 1024)} KB</small></li>)}</ul></details>}{open ? <form className={`chat-composer${kind === "internal_note" ? " chat-composer-note" : ""}`} onSubmit={sendMessage}>{isWorker && <label htmlFor="chat-kind">Send as<select id="chat-kind" className="input" value={kind} disabled={sending} onChange={event => { stopTyping(); setKind(event.target.value as "message" | "internal_note"); }}><option value="message">Reply to employee</option><option value="internal_note">Internal note · IT only</option></select></label>}<label htmlFor="chat-draft">{kind === "internal_note" && isWorker ? "Internal note · visible only to IT" : "Message"}</label><textarea id="chat-draft" className="input textarea" value={draft} aria-describedby="chat-audience" onChange={event => announceTyping(event.target.value)} onBlur={stopTyping} onKeyDown={event => {
+    return <article key={entry.key} className={`chat-message${message.author_id === viewerId ? " chat-message-own" : ""}${message.kind === "internal_note" ? " chat-message-note" : ""}`}><div className="chat-message-meta"><strong>{message.author_id === viewerId ? "You" : names[message.author_id] ?? "IT support"}{message.kind === "internal_note" ? " · Internal note" : ""}</strong><time dateTime={message.created_at}><Timestamp value={message.created_at}/></time></div><EditableChatMessage message={message} conversationId={conversationId} organizationId={organizationId} canEdit={open && message.author_id === viewerId && outgoing?.id !== message.id} onSaved={updated => setLiveMessages(current => mergeChatMessages(current, [updated]).slice(-HISTORY_PAGE_SIZE))}/>{outgoing?.id === message.id && !confirmed.has(message.id) && <small>Sending…</small>}</article>;
+  })}{uploading && <article className="chat-message chat-message-own" aria-label="Uploading attachment"><p>Uploading {uploadName}…</p></article>}{!timeline.length && !uploading && <p className="muted">No messages yet.</p>}</div>{newMessages && readingHistory && <button className="chat-new-messages" type="button" onClick={() => { followLatest.current = true; setReadingHistory(false); threadRef.current?.scrollTo({ top: threadRef.current.scrollHeight, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }); setSeenMessageId(latestMessageId); }}>New messages ↓</button>}<div className="chat-typing" role="status">{typing ? `${isWorker ? "Employee" : supportName} is typing…` : "\u00a0"}</div>{attachments.length > 0 && <details className="chat-attachments"><summary>Files in this conversation ({attachments.length})</summary><Link className="button button-secondary" href={`/app/chat/${conversationId}/history?view=files`}>Browse all files</Link><ul>{attachments.map(file => <li key={file.id}>{file.url ? <a href={file.url} target="_blank" rel="noreferrer">{file.file_name}</a> : <span>{file.file_name}</span>}<small>{Math.ceil(file.size_bytes / 1024)} KB</small></li>)}</ul></details>}{open ? <form className={`chat-composer${kind === "internal_note" ? " chat-composer-note" : ""}`} onSubmit={sendMessage}>{isWorker && <label htmlFor="chat-kind">Send as<select id="chat-kind" className="input" value={kind} disabled={sending} onChange={event => { stopTyping(); setKind(event.target.value as "message" | "internal_note"); }}><option value="message">Reply to employee</option><option value="internal_note">Internal note · IT only</option></select></label>}<label htmlFor="chat-draft">{kind === "internal_note" && isWorker ? "Internal note · visible only to IT" : "Message"}</label><textarea id="chat-draft" className="input textarea" value={draft} aria-describedby="chat-audience" onChange={event => announceTyping(event.target.value)} onBlur={stopTyping} onKeyDown={event => {
     if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing && event.keyCode !== 229) {
       event.preventDefault();
       event.currentTarget.form?.requestSubmit();
     }
-  }} rows={2} maxLength={20000} placeholder="Write a message" required/><p id="chat-audience" className="muted">{kind === "internal_note" ? "Only IT staff can see this note. Attachments are shared with the employee." : "The employee can see this message and attachments."} Enter to send · Shift+Enter for a new line.</p><div className="chat-composer-actions"><label className="button button-secondary chat-file-button"><input type="file" accept={chatAttachmentTypes.join(",")} aria-describedby="chat-upload-hint" disabled={uploading} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }}/>{uploading ? "Uploading…" : "Add media or file"}</label><button className="button button-primary" disabled={sending || !draft.trim()}>{sending ? "Sending…" : kind === "internal_note" && isWorker ? "Add internal note" : "Send message"}</button></div><details className="chat-upload-guide"><summary>Media &amp; files · up to 10 MB</summary><p id="chat-upload-hint" className="muted">Photos (JPEG, PNG, WebP), video (MP4, WebM, MOV), audio (MP3, M4A, WAV, WebM, Ogg), PDF, text, Word, or Excel. Include a text description of visual or spoken content in your message.</p></details></form> : <p className="chat-closed-note">This conversation is closed. Its history remains available here.</p>}{feedback && <p className="chat-feedback" role="status">{feedback}</p>}{failedUpload && !uploading && open && <button className="button button-secondary chat-upload-retry" type="button" onClick={() => void upload(failedUpload)}>Retry upload: {failedUpload.name}</button>}{readThrough && <ChatReadUpdates conversationId={conversationId} organizationId={organizationId} viewerId={viewerId} through={readThrough} active={!readingHistory}/>}</section>;
+  }} rows={2} maxLength={20000} placeholder="Write a message" required/><p id="chat-audience" className="muted">{kind === "internal_note" ? "Only IT staff can see this note. Attachments are shared with the employee." : isWorker ? "The employee can see this message and attachments." : "Your IT support team can see your message and files."} Enter to send · Shift+Enter for a new line.</p><div className="chat-composer-actions"><label className="button button-secondary chat-file-button"><input type="file" accept={chatAttachmentTypes.join(",")} aria-describedby="chat-upload-hint" disabled={uploading} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }}/>{uploading ? "Uploading…" : "Add media or file"}</label><button className="button button-primary" disabled={sending || !draft.trim()}>{sending ? "Sending…" : kind === "internal_note" && isWorker ? "Add internal note" : "Send message"}</button></div><details className="chat-upload-guide"><summary>Media &amp; files · up to 10 MB</summary><p id="chat-upload-hint" className="muted">Photos (JPEG, PNG, WebP), video (MP4, WebM, MOV), audio (MP3, M4A, WAV, WebM, Ogg), PDF, text, Word, or Excel. Include a text description of visual or spoken content in your message.</p></details></form> : <p className="chat-closed-note">This conversation is closed. Its history remains available here.</p>}{feedback && <p className="chat-feedback" role="status">{feedback}</p>}{failedUpload && !uploading && open && <button className="button button-secondary chat-upload-retry" type="button" onClick={() => void upload(failedUpload)}>Retry upload: {failedUpload.name}</button>}{readThrough && <ChatReadUpdates conversationId={conversationId} organizationId={organizationId} viewerId={viewerId} through={readThrough} active={!readingHistory}/>}</section>;
 }

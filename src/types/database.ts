@@ -1,3 +1,4 @@
+import type { RoomMessage } from '@/features/chat/message-model';
 import type { InventoryTables, InventoryFunctions } from './inventory-database';
 import type { Database as GeneratedDatabase } from './database.generated';
 import type { AutomationFunctions, AutomationTables } from './automation-database';
@@ -44,7 +45,7 @@ type NullableArgs<Name extends keyof Functions, Keys extends keyof Functions[Nam
 export type Database = Omit<GeneratedDatabase, 'public'> & {
   public: Omit<Schema, 'Tables' | 'Functions' | 'Enums'> & {
     Enums: Omit<Schema['Enums'], 'notification_kind'> & { notification_kind: NotificationKind };
-    Tables: Omit<Tables, 'organizations' | 'profiles' | 'assets' | 'tickets' | 'ticket_messages' | 'notifications'> & AutomationTables & AutomationExecutionTables & InventoryTables & {
+    Tables: Omit<Tables, 'organizations' | 'profiles' | 'assets' | 'tickets' | 'ticket_messages' | 'chat_messages' | 'notifications'> & AutomationTables & AutomationExecutionTables & InventoryTables & {
       saved_reports: {
         Row: { id: string; organization_id: string; owner_id: string; name: string; description: string | null; visibility: 'personal' | 'shared'; definition: CustomReportDefinition; created_at: string; updated_at: string };
         Insert: { id?: string; organization_id: string; owner_id: string; name: string; description?: string | null; visibility?: 'personal' | 'shared'; definition: import('./database.generated').Json; created_at?: string; updated_at?: string };
@@ -59,6 +60,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
       };
       organizations: Omit<Tables['organizations'], 'Row' | 'Insert' | 'Update'> & { Row: Tables['organizations']['Row'] & { timezone: string }; Insert: Tables['organizations']['Insert'] & { timezone?: string }; Update: Tables['organizations']['Update'] & { timezone?: string } };
       profiles: Omit<Tables['profiles'], 'Row' | 'Insert' | 'Update'> & { Row: Tables['profiles']['Row'] & { timezone: string | null }; Insert: Tables['profiles']['Insert'] & { timezone?: string | null }; Update: Tables['profiles']['Update'] & { timezone?: string | null } };
+      chat_messages: Omit<Tables['chat_messages'], 'Row'> & { Row: Tables['chat_messages']['Row'] & { revision: number; edited_at: string | null } };
       notifications: Omit<Tables['notifications'], 'Row'> & { Row: Notification };
       ticket_messages: Omit<Tables['ticket_messages'], 'Row'> & {
         Row: Omit<Tables['ticket_messages']['Row'], 'author_id'> & {
@@ -78,6 +80,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
       };
     };
     Functions: Omit<Functions, 'bootstrap_organization' | 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails' | 'search_tickets'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & AutomationAdminFunctions & InventoryFunctions & {
+      edit_chat_message: { Args: { org: string; conversation: string; message: string; expected_revision: number; new_body: string }; Returns: RoomMessage[] };
       search_tickets: Omit<Functions['search_tickets'], 'Returns'> & { Returns: (Functions['search_tickets']['Returns'][number] & { request_kind: 'support' | 'inventory' })[] };
       prepare_member_invitation: { Args: { org: string; token: string; email: string; display_name: string; member_role: AppRole; actor: string }; Returns: { id: string; userId: string | null; completed: boolean } };
       complete_member_invitation: { Args: { org: string; token: string; invited_user: string; actor: string }; Returns: undefined };

@@ -2259,3 +2259,19 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
   .chat-center-heading .page-header-actions { width: auto; flex: 0 0 auto; }
   .chat-center-heading .page-header-actions .button { width: auto; }
 }
+.chat-intake-page > .page-back-link { margin-bottom: 24px; }
+.chat-recipient-description { margin: 8px 0 0; max-width: 52ch; color: var(--color-text-muted); font-size: 14px; line-height: 22px; }
+.employee-more-nav > summary { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; border: 1px solid transparent; border-radius: var(--radius-control); font-weight: 600; }
+.staff-more-nav > summary { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 12px; color: var(--color-text-muted); border-radius: var(--radius-control); }
+.staff-more-nav > summary svg { width: 20px; height: 20px; flex-shrink: 0; }
+.staff-more-nav > summary:has([data-active]) { color: var(--color-accent); background: var(--color-accent-subtle); }
+.chat-active-identity p + p { margin-top: 4px; font-size: 12px; }
+.chat-message-content { min-width: 0; }
+.chat-message-edit-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 4px 12px; }
+.chat-message-edit-meta small { color: var(--color-text-muted); }
+.chat-message .chat-edit-button { min-height: 40px; padding: 8px 12px; font-size: 12px; }
+.chat-message-editor { display: grid; gap: 8px; min-width: min(260px, 100%); }
+.chat-message-editor > label { font-size: 13px; font-weight: 600; }
+.chat-message-editor > p { font-size: 13px; }
+.chat-message-edit-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.chat-message:has(.chat-message-editor) { width: min(95%, 560px); max-width: 95%; }

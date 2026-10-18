@@ -27,7 +27,7 @@ export default async function ConversationPage({ params, searchParams }: { param
   const view = normalizeChatView(notice.view);
   const readThrough = new Date().toISOString();
   const [messagesR, attachmentsR, ticketsR, inbox] = await Promise.all([
-    supabase.from("chat_messages").select("id, author_id, kind, body, created_at").eq("organization_id", viewer.organizationId).eq("conversation_id", conversationId).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(HISTORY_PAGE_SIZE),
+    supabase.from("chat_messages").select("id, author_id, kind, body, created_at, revision, edited_at").eq("organization_id", viewer.organizationId).eq("conversation_id", conversationId).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(HISTORY_PAGE_SIZE),
     supabase.from("chat_attachments").select("id, file_name, size_bytes, created_at, storage_path, content_type, uploaded_by").eq("organization_id", viewer.organizationId).eq("conversation_id", conversationId).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(HISTORY_PAGE_SIZE),
     worker && !conversation.ticket_id ? supabase.from("tickets").select("id, ticket_number, title").eq("organization_id", viewer.organizationId).eq("requester_id", conversation.requester_id).order("updated_at", { ascending: false }).limit(30) : Promise.resolve({ data: [] }),
     loadChatInbox(supabase, viewer, view),
@@ -38,12 +38,15 @@ export default async function ConversationPage({ params, searchParams }: { param
   const { data: signed } = paths.length ? await supabase.storage.from("chat-attachments").createSignedUrls(paths, 3600) : { data: [] };
   const urls = new Map((signed ?? []).map(file => [file.path, file.signedUrl ?? undefined]));
   const attachments = (attachmentsR.data ?? []).map(file => ({ ...file, url: urls.get(file.storage_path) }));
-  const person = worker ? names[conversation.requester_id] ?? "Employee" : "IT support";
+  const lastSupportReply = recentMessages(messagesR.data ?? []).findLast(message => message.kind === "message" && message.author_id !== conversation.requester_id);
+  const supportId = conversation.assigned_technician_id ?? lastSupportReply?.author_id;
+  const supportName = supportId ? names[supportId] ?? "IT support team" : "IT support team";
+  const person = worker ? names[conversation.requester_id] ?? "Employee" : supportName;
   return <ChatCenter personal={!worker} inbox={<ChatInbox {...inbox} view={view} organizationId={viewer.organizationId} viewerId={viewer.id} personal={!worker} selectedId={conversation.id}/>}>
     <section className="chat-active" aria-labelledby="chat-active-title">
       <header className="chat-active-header">
         <Link className="button button-quiet chat-back" href={chatInboxHref(view)}>← {worker ? "Inbox" : "My chats"}</Link>
-        <Avatar name={person}/><div className="chat-active-identity"><h2 id="chat-active-title">{conversation.topic}</h2><p>{person} <span>· {conversation.status === "open" ? "Open" : "Closed"}</span></p></div>
+        <Avatar name={person}/><div className="chat-active-identity"><h2 id="chat-active-title">{conversation.topic}</h2><p>{worker ? person : `Chatting with ${person}`} <span>· {conversation.status === "open" ? "Open" : "Closed"}</span></p>{!worker && conversation.status === "open" && <p>{conversation.assigned_technician_id ? "Your assigned technician can reply here." : lastSupportReply ? `IT support · Last replied by ${supportName}.` : "Your conversation is in the IT support inbox. A technician has not picked it up yet."}</p>}</div>
       </header>
       {worker && <details className="chat-context"><summary>Details</summary><div className="chat-context-content">
         <h3>Conversation details</h3><div className="chat-contact"><Avatar name={person}/><strong>{person}</strong><span>Employee</span></div>
@@ -58,7 +61,7 @@ export default async function ConversationPage({ params, searchParams }: { param
         {messagesR.error && <div className="alert alert-error" role="alert">Messages could not be loaded. <Link href={`/app/chat/${conversation.id}`}>Try again</Link></div>}
         {attachmentsR.error && <div className="alert alert-error" role="alert">Files could not be loaded. <Link href={`/app/chat/${conversation.id}`}>Try again</Link></div>}
         {!worker && conversation.ticket_id && <Link className="button button-secondary" href={`/app/tickets/${conversation.ticket_id}`}>View linked ticket</Link>}
-        <ChatRoom key={conversation.id} conversationId={conversation.id} organizationId={viewer.organizationId} viewerId={viewer.id} isWorker={worker} open={conversation.status === "open"} names={names} initialMessages={recentMessages(messagesR.data ?? [])} attachments={attachments} readThrough={messagesR.error || attachmentsR.error ? undefined : readThrough}/>
+        <ChatRoom key={conversation.id} conversationId={conversation.id} organizationId={viewer.organizationId} viewerId={viewer.id} isWorker={worker} open={conversation.status === "open"} names={names} initialMessages={recentMessages(messagesR.data ?? [])} attachments={attachments} supportName={supportName} assigned={Boolean(supportId)} participantId={worker ? conversation.requester_id : supportId} readThrough={messagesR.error || attachmentsR.error ? undefined : readThrough}/>
       </div>
     </section>
   </ChatCenter>;
