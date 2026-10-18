@@ -8,7 +8,7 @@ export const notificationLabels: Record<NotificationKind, string> = {
 };
 
 export function notificationHref(item: { ticket_id: string | null; conversation_id: string | null }) {
-  if (item.ticket_id) return `/app/tickets/${encodeURIComponent(item.ticket_id)}`;
   if (item.conversation_id) return `/app/chat/${encodeURIComponent(item.conversation_id)}`;
+  if (item.ticket_id) return `/app/tickets/${encodeURIComponent(item.ticket_id)}`;
   return "/app/notifications";
 }

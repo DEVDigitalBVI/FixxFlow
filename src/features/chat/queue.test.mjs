@@ -12,9 +12,9 @@ function setup(role) {
       : (...args) => { calls.push([key, ...args]); return query; },
   });
   const { default: Page } = load('src/app/app/chat/page.tsx', {
-    'next/link': { default: props => React.createElement('a', props) },
+    'next/link': { default: props => { const attributes={...props}; delete attributes.scroll; return React.createElement('a', attributes); } },
     '@/components/ui/submit-button': { SubmitButton: props => { const buttonProps = { ...props }; delete buttonProps.pendingLabel; return React.createElement('button', buttonProps); } },
-    '@/features/chat/live-queue': { LiveChatQueue: () => null },
+    './live-queue': { LiveChatQueue: () => null },
     '@/app/app/chat/actions': { startChat: async () => {} },
     '@/lib/auth/viewer': { requireViewer: async () => ({ role, id: 'viewer', organizationId: 'org' }) },
     '@/lib/supabase/server': { createClient: async () => {

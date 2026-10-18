@@ -1,3 +1,4 @@
+import { ChatMediaAttachment } from '@/features/chat/media-attachment';
 import { Timestamp } from '@/features/timezones/provider';
 import { inventoryAccess } from '@/features/inventory/access';
 import Link from 'next/link';
@@ -36,7 +37,7 @@ export async function HistoryBrowser({ kind, id, filters }: {
   if (view === 'files') {
     const source = kind === 'ticket'
       ? db.from('ticket_attachments').select('id, file_name, storage_path, size_bytes, created_at').eq('ticket_id', id)
-      : db.from('chat_attachments').select('id, file_name, storage_path, size_bytes, created_at').eq('conversation_id', id);
+      : db.from('chat_attachments').select('id, file_name, storage_path, size_bytes, created_at, content_type').eq('conversation_id', id);
     let query = source.eq('organization_id', org)
       .order('created_at', { ascending: false }).order('id', { ascending: false }).limit(HISTORY_PAGE_SIZE + 1);
     if (filter) query = query.or(filter);
@@ -48,7 +49,7 @@ export async function HistoryBrowser({ kind, id, filters }: {
       .createSignedUrls(page.items.map(file => file.storage_path), 3600) : { data: [] };
     const urls = new Map((signed.data ?? []).map(file => [file.path, file.signedUrl ?? undefined]));
     content = page.items.length ? <ul className="attachment-list">{page.items.map(file => <li key={file.id}>
-      {urls.get(file.storage_path) ? <a href={urls.get(file.storage_path)} target="_blank" rel="noreferrer">{file.file_name}</a> : <span>{file.file_name} · Link unavailable; refresh to retry</span>}
+      {kind === 'chat' ? <ChatMediaAttachment file={{ ...file, content_type: 'content_type' in file ? String(file.content_type) : undefined, url: urls.get(file.storage_path) }}/> : urls.get(file.storage_path) ? <a href={urls.get(file.storage_path)} target="_blank" rel="noreferrer">{file.file_name}</a> : <span>{file.file_name} · Link unavailable; refresh to retry</span>}
       <p>{Math.ceil(file.size_bytes / 1024)} KB · <time dateTime={file.created_at}><Timestamp value={file.created_at}/></time></p>
     </li>)}</ul> : <p>No files in this part of the history.</p>;
   } else if (view === 'activity') {

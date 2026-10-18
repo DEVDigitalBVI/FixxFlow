@@ -8,6 +8,26 @@ const item = {notification_id:'notice-1',recipient_email:'recipient@example.test
 const config = {apiKey:'mock-key',from:'FixxFlow <support@example.test>',siteUrl:'https://example.test'};
 const {renderEmail} = load('src/features/notifications/template.ts');
 
+test('all email variants share the invitation layout and centered content',()=>{
+ const emails=fs.readdirSync('supabase/templates').filter(name=>name.endsWith('.html'))
+  .map(file=>[file,fs.readFileSync(`supabase/templates/${file}`,'utf8')]);
+ for(const purpose of ['notification','workspace','account-access','security-alert']) {
+  emails.push([purpose,renderEmail({title:'Workspace update',message:'Your update is ready.',purpose,action:'View update',href:'https://example.test/update',note:'Contact support for help.'})]);
+ }
+ for(const [name,html] of emails) {
+  assert.match(html,/<td align="center" style="padding:24px;text-align:center;overflow-wrap:anywhere">/,name);
+  assert.match(html,/<p style="margin:0 0 8px;color:#64748b;font-size:14px;line-height:22px;font-weight:500">/,name);
+  assert.match(html,/<p style="max-width:420px;margin:0 auto 20px;color:#64748b;">/,name);
+  assert.match(html,/<td align="center" style="text-align:center;padding:16px 24px;border-top:/,name);
+  assert.match(html,/width="100%"[^>]*style="max-width:560px/,name);
+  if(html.includes('Button not working?')) {
+   assert.match(html,/<table role="presentation" align="center" style="margin:0 auto"/,name);
+   assert.match(html,/word-break:break-all;overflow-wrap:anywhere/,name);
+  }
+  if(html.includes('Security notice')) assert.match(html,/<td align="center" bgcolor="#fff7e6" style="text-align:center;/,name);
+ }
+});
+
 test('invitation overview has three semantic role lists before its primary action',()=>{
  const html=fs.readFileSync('supabase/templates/invite-user.html','utf8');
  assert.match(html,/What you can do in FixxFlow/);

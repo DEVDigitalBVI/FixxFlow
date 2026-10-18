@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLiveNotifications } from "./use-live-notifications";
 import { createClient } from "@/lib/supabase/client";
 import { NavigationIcon } from "@/components/navigation/navigation-icon";
 
@@ -12,22 +13,33 @@ export function NotificationLink({ organizationId, userId, className, onNavigate
   const pathname = usePathname();
   const [count, setCount] = useState<number | null>(null);
   const [supabase] = useState(createClient);
+  const requestVersion = useRef({ value: 0 });
+  const refresh = useCallback(async () => {
+    if (document.visibilityState !== "visible") return;
+    const version = ++requestVersion.current.value;
+    try {
+      const { count, error } = await supabase.from("notifications").select("id", { count: "exact", head: true })
+        .eq("organization_id", organizationId).eq("recipient_id", userId).is("read_at", null);
+      if (version === requestVersion.current.value) setCount(error ? null : count);
+    } catch { if (version === requestVersion.current.value) setCount(null); }
+  }, [supabase, organizationId, userId]);
+  useLiveNotifications(organizationId, userId, refresh);
   useEffect(() => {
-    let active = true;
-    async function refresh() {
-      if (document.visibilityState !== "visible") return;
-      try {
-        const { count, error } = await supabase.from("notifications").select("id", { count: "exact", head: true })
-          .eq("organization_id", organizationId).eq("recipient_id", userId).is("read_at", null);
-        if (active) setCount(error ? null : count);
-      } catch { if (active) setCount(null); }
-    }
-    void refresh();
+    const version = requestVersion.current;
+    const initial = window.setTimeout(() => void refresh(), 0);
     const timer = window.setInterval(() => void refresh(), 30000);
     window.addEventListener("focus", refresh);
     window.addEventListener("notifications-changed", refresh);
-    return () => { active = false; window.clearInterval(timer); window.removeEventListener("focus", refresh); window.removeEventListener("notifications-changed", refresh); };
-  }, [supabase, organizationId, userId, pathname]);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      version.value++;
+      window.clearTimeout(initial);
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("notifications-changed", refresh);
+      document.removeEventListener("visibilitychange", refresh);
+    };
+  }, [refresh, pathname]);
   const label = `Notifications${count ? `, ${count} unread` : ""}`;
   return <Link href="/app/notifications" className={className} aria-label={label} title={label}
     aria-current={pathname === "/app/notifications" ? "page" : undefined} onClick={onNavigate}>

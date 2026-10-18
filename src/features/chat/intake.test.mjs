@@ -51,7 +51,7 @@ test('chat form preserves controlled drafts on errors, associates feedback, focu
   const drafts = ['VPN problem', 'First line\nSecond line'];
   const { StartChatForm } = load('src/features/chat/start-chat-form.tsx', {
    react: { ...React, useActionState: () => [{ error: 'Try again', fields: { topic: 'Check subject', message: 'Check message' } }, () => {}, pending], useState: () => [drafts[stateIndex++], () => {}], useRef: () => ({ current: { focus: () => focusCount++ } }), useEffect: fn => fn() },
-   'next/link': { default: props => React.createElement('a', props) },
+   'next/link': { default: props => { const attributes={...props}; delete attributes.scroll; return React.createElement('a', attributes); } },
    '@/app/app/chat/actions': { startChat: () => {} },
    '@/components/ui/submit-button': { SubmitButton: ({ pendingLabel, ...props }) => React.createElement('button', props, props.disabled ? pendingLabel : props.children) },
   });
@@ -66,7 +66,7 @@ test('chat form preserves controlled drafts on errors, associates feedback, focu
 });
 
 const queue = props => {
- const { ChatQueue } = load('src/features/chat/chat-queue.tsx', { 'next/link': { default: props => React.createElement('a', props) } });
+ const { ChatQueue } = load('src/features/chat/chat-queue.tsx', { 'next/link': { default: props => { const attributes={...props}; delete attributes.scroll; return React.createElement('a', attributes); } } });
  return renderToStaticMarkup(React.createElement(ChatQueue, { chats: [], names: new Map(), view: 'open', failed: false, ...props }));
 };
 test('chat queue empty views provide relevant next steps; load errors do not pretend the queue is empty', () => {
@@ -79,11 +79,11 @@ test('chat queue empty views provide relevant next steps; load errors do not pre
  assert.doesNotMatch(error, /0 conversations|no assigned chats/);
 });
 
-test('chat rows show ownership, written status, exact timestamps and uniquely named open buttons', () => {
+test('chat rows show ownership, written status, exact timestamps and uniquely named conversation links', () => {
  const chat = { id: 'c1', topic: 'VPN access', requester_id: 'r1', assigned_technician_id: 't1', status: 'closed', ticket_id: 'ticket1', updated_at: '2026-10-01T12:00:00Z' };
  const html = queue({ chats: [chat], names: new Map([['r1', 'Robin'], ['t1', 'Alex']]), view: 'all' });
  for (const text of ['VPN access', 'Robin', 'Assigned to Alex', 'Closed', 'Linked to a ticket']) assert.ok(html.includes(text));
- assert.match(html, /class="button button-secondary" href="\/app\/chat\/c1" aria-label="Open chat: VPN access"/);
+ assert.match(html, /class="chat-conversation-link" href="\/app\/chat\/c1\?view=all" aria-label="Open chat: VPN access"/);
  assert.match(html, /<time dateTime="2026-10-01T12:00:00Z"/i);
  assert.match(queue({ chats: Array.from({ length: 100 }, (_, i) => ({ ...chat, id: `c${i}` })) }), /Latest 100 conversations/);
 });
