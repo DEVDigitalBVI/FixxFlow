@@ -85,13 +85,11 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
       return <li key={item.href} className={item.href === '/app/profile' ? 'nav-account-start' : undefined}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? 'page' : undefined} onClick={closeMenu}>{item.icon}<span>{item.label}</span></Link></li>;
     });
   }
-  const employeePrimary = ['/app', '/app/tickets', '/app/chat', '/app/help'];
-  const employeeSecondary = items.map(item => item.href).filter(href => !employeePrimary.includes(href));
-  const staffWork = ['/app', '/app/tickets', '/app/chat'];
-  const staffResources = ['/app/help', '/app/inventory', '/app/assets'];
-  const staffManage = ['/app/reports', '/app/people', '/app/administration'];
-  const staffAccount = ['/app/profile', '/app/security', '/app/support'];
-  const accountActive = staffAccount.some(path => pathname.startsWith(path));
+  const primaryPaths = ['/app', '/app/tickets', '/app/chat'];
+  const resourcePaths = ['/app/help', '/app/inventory', '/app/assets'];
+  const managePaths = ['/app/reports', '/app/people', '/app/administration'];
+  const accountPaths = ['/app/profile', '/app/security', '/app/support'];
+  const accountActive = accountPaths.some(path => pathname.startsWith(path));
   return <>
     <button ref={menuButtonRef} className="mobile-nav-toggle" type="button" aria-controls="workspace-navigation" aria-expanded={isOpen} aria-label={isOpen ? "Close navigation" : "Open navigation"} onClick={() => setIsOpen((open) => !open)}>
       <span aria-hidden="true" />
@@ -99,10 +97,10 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
       <span aria-hidden="true" />
     </button>
     {isOpen && <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" tabIndex={-1} onClick={closeMenu} />}
-    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><GlobalSearch role={role} inventoryAccess={inventoryAccess} onOpen={closeMenu} platform={platform} workspaceAvailable={workspaceAvailable}/><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}>{platform ? <ul className="nav-list">{linksFor()}</ul> : role === 'end_user' ? <><ul className="nav-list">{linksFor(employeePrimary)}</ul><NavigationDisclosure className="employee-more-nav" summaryClassName="button button-quiet" summary="Account"><ul className="nav-list">{linksFor(employeeSecondary)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></NavigationDisclosure></> : <>
-      <div className="nav-group"><span className="nav-group-label">Work</span><ul className="nav-list">{linksFor(staffWork)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></div>
-      <div className="nav-group"><span className="nav-group-label">Resources</span><ul className="nav-list">{linksFor(staffResources)}</ul></div>
-      <div className="nav-group"><span className="nav-group-label">Manage</span><ul className="nav-list">{linksFor(staffManage)}</ul></div>
-    </>}</nav>{!platform && role !== 'end_user' && <NavigationDisclosure className="staff-more-nav" summaryClassName="nav-link" label="Account" summary={<><NavigationIcon name="profile"/><span data-active={accountActive || undefined}>Account</span></>}><ul className="nav-list">{linksFor(staffAccount)}</ul></NavigationDisclosure>}<ThemeControl /></div>
+    <div ref={menuPanelRef} id="workspace-navigation" className={`workspace-nav${isOpen ? " is-open" : ""}`} role={isOpen ? "dialog" : undefined} aria-modal={isOpen ? "true" : undefined} aria-label={isOpen ? "Workspace navigation" : undefined}><button className="button button-secondary nav-close" type="button" onClick={closeMenu}>Close navigation</button><GlobalSearch role={role} inventoryAccess={inventoryAccess} onOpen={closeMenu} platform={platform} workspaceAvailable={workspaceAvailable}/><nav aria-label={role === "end_user" ? "Employee navigation" : "Primary navigation"}>{platform ? <ul className="nav-list">{linksFor()}</ul> : <>
+      <div className="nav-group"><span className="nav-group-label">{role === "end_user" ? "Support" : "Work"}</span><ul className="nav-list">{linksFor(primaryPaths)}<li><NotificationLink organizationId={organizationId} userId={userId} className="nav-link" onNavigate={closeMenu}/></li></ul></div>
+      <div className="nav-group"><span className="nav-group-label">Resources</span><ul className="nav-list">{linksFor(resourcePaths)}</ul></div>
+      {role !== "end_user" && <div className="nav-group"><span className="nav-group-label">Manage</span><ul className="nav-list">{linksFor(managePaths)}</ul></div>}
+    </>}</nav>{!platform && <NavigationDisclosure className="staff-more-nav" summaryClassName="nav-link" label="Account" summary={<><NavigationIcon name="profile"/><span data-active={accountActive || undefined}>Account</span></>}><ul className="nav-list">{linksFor(accountPaths)}</ul></NavigationDisclosure>}<ThemeControl /></div>
   </>;
 }

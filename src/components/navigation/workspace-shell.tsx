@@ -3,8 +3,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
 
 /** Keeps server-rendered identity and account controls outside the client data boundary. */
-export function WorkspaceShell({ brand, navigation, account, workspaceName, children }: {
-  brand: ReactNode; navigation: ReactNode; account: ReactNode; workspaceName: string; children: ReactNode;
+export function WorkspaceShell({ brand, navigation, account, workspaceName, audience = 'staff', children }: {
+  brand: ReactNode; navigation: ReactNode; account: ReactNode; workspaceName: string; children: ReactNode; audience?: 'staff' | 'employee';
 }) {
   const [collapsed, setCollapsed] = useState<boolean | null>(null);
   useEffect(() => {
@@ -26,6 +26,6 @@ export function WorkspaceShell({ brand, navigation, account, workspaceName, chil
       {navigation}
       {account}
     </aside>
-    <main className="workspace" id="main-content">{children}</main>
+    <main className={audience === 'employee' ? 'workspace employee-workspace' : 'workspace'} id="main-content">{children}</main>
   </div>;
 }

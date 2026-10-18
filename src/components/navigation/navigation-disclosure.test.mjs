@@ -41,10 +41,31 @@ test('My chats is directly accessible in employee navigation and active for an e
   '@/features/notifications/notification-link':{NotificationLink:()=>null},
  });
  const html=renderToStaticMarkup(React.createElement(WorkspaceNav,{role:'end_user',organizationId:'org',userId:'viewer'}));
- assert.match(html,/<details class="employee-more-nav">/);assert.doesNotMatch(html,/<details[^>]*open=/);assert.match(html,/aria-current="page"[^>]*>.*?My chats/);
- const primary=html.split('<details class="employee-more-nav">')[0];
- const account=html.split('<details class="employee-more-nav">')[1].split('</details>')[0];
+ assert.match(html,/<details class="staff-more-nav">/);assert.doesNotMatch(html,/<details[^>]*open=/);assert.match(html,/aria-current="page"[^>]*>.*?My chats/);
+ const primary=html.split('<details class="staff-more-nav">')[0];
+ const account=html.split('<details class="staff-more-nav">')[1].split('</details>')[0];
  assert.match(primary,/<a[^>]*href="\/app\/chat"[^>]*aria-current="page"/);
  assert.doesNotMatch(account,/href="\/app\/chat"/);
  assert.equal((html.match(/href="\/app\/chat"/g)||[]).length,1);
+});
+
+
+test('employee sidebar shares account and resource patterns without staff destinations',()=>{
+ for(const inventoryAccess of [false,true]){
+  const {WorkspaceNav}=load('src/components/navigation/workspace-nav.tsx',{
+   'next/navigation':{usePathname:()=>'/app/profile'},'next/link':{default:props=>React.createElement('a',props)},
+   '@/features/search/global-search':{GlobalSearch:()=>null},'@/features/theme/theme-control':{ThemeControl:()=>null},
+   '@/features/notifications/notification-link':{NotificationLink:props=>React.createElement('a',{href:'/app/notifications',className:props.className},'Notifications')},
+  });
+  const html=renderToStaticMarkup(React.createElement(WorkspaceNav,{role:'end_user',organizationId:'org',userId:'viewer',inventoryAccess}));
+  const primary=html.split('<details class="staff-more-nav">')[0];
+  assert.match(primary,/href="\/app\/notifications"/);
+  for(const destination of ['chat','help','assets'])assert.ok(primary.includes('href="/app/'+destination+'"'));
+  assert.equal(primary.includes('href="/app/inventory"'),inventoryAccess);
+  for(const destination of ['reports','people','administration'])assert.ok(!html.includes('href="/app/'+destination+'"'));
+  assert.doesNotMatch(html,/>Manage<|employee-more-nav/);
+  assert.match(html,/<summary class="nav-link" aria-label="Account"/);
+  assert.match(html,/href="\/app\/profile"[^>]*aria-current="page"/);
+  assert.doesNotMatch(html,/<details[^>]*open=/);
+ }
 });

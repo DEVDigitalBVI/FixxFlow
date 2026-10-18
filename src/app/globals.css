@@ -429,6 +429,7 @@ img { display: block; max-width: 100%; }
 }
 
 /* Employee support portal */
+.employee-workspace { font-size: 16px; line-height: 24px; }
 .portal-shell { min-height: 100dvh; background: var(--color-canvas); font-size: 16px; line-height: 24px; }
 .portal-header { min-height: 72px; padding: 10px max(24px, calc((100vw - 1120px)/2)); display: flex; align-items: center; gap: 24px; background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
 .portal-identity { min-width: 0; display: flex; align-items: center; gap: 16px; }

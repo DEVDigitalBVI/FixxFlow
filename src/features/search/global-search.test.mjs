@@ -22,6 +22,7 @@ function fixture(role = 'end_user') {
 test('search dialog mounts outside hidden mobile navigation and groups results for assistive technology', () => {
   const f = fixture();
   try {
+    assert.equal(f.find(node => node.type === 'button').props['aria-label'], 'Search');
     f.find(node => node.type === 'button').props.onClick(); f.render();
     assert.equal(f.target(), f.body);
     assert.equal(f.find(node => node.type === 'dialog').props['aria-labelledby'], 'global-search-title');

@@ -252,6 +252,7 @@ Recommended initial priorities: Low, Normal, High, Urgent. Always display the wr
 
 The employee portal is intentionally simpler than the agent workspace.
 
+- Reuse the admin workspace shell and navigation branding for employees: the same responsive logo, workspace identity, collapsible desktop sidebar, mobile navigation sheet, search, account area, and appearance controls. Keep employee task labels and destinations permission-scoped; expose My chats and Notifications directly. Preserve larger employee content typography and readable page widths.
 - Lead with a prominent plain-language request/search entry point: “How can we help?”
 - Keep navigation shallow: Home, My requests, Help/knowledge, and account controls are usually sufficient.
 - Present three distinct next steps on the home page: chat for immediate questions, a tracked request for work that needs follow-up, and help articles for self-service. Show existing requests in their own section rather than as another competing action.
