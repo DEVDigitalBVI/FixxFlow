@@ -85,7 +85,7 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
       return <li key={item.href} className={item.href === '/app/profile' ? 'nav-account-start' : undefined}><Link className="nav-link" href={item.href} aria-label={item.label} title={item.label} aria-current={active ? 'page' : undefined} onClick={closeMenu}>{item.icon}<span>{item.label}</span></Link></li>;
     });
   }
-  const employeePrimary = ['/app', '/app/tickets', '/app/help'];
+  const employeePrimary = ['/app', '/app/tickets', '/app/chat', '/app/help'];
   const employeeSecondary = items.map(item => item.href).filter(href => !employeePrimary.includes(href));
   const staffWork = ['/app', '/app/tickets', '/app/chat'];
   const staffResources = ['/app/help', '/app/inventory', '/app/assets'];

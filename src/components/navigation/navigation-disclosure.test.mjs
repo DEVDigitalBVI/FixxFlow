@@ -34,12 +34,17 @@ test('Escape restores summary focus and navigating closes even an active-route l
  }finally{f.close();}
 });
 
-test('being on My chats does not automatically open the Account dropdown',()=>{
+test('My chats is directly accessible in employee navigation and active for an existing conversation',()=>{
  const {WorkspaceNav}=load('src/components/navigation/workspace-nav.tsx',{
-  'next/navigation':{usePathname:()=>'/app/chat'},'next/link':{default:props=>React.createElement('a',props)},
+  'next/navigation':{usePathname:()=>'/app/chat/existing-conversation'},'next/link':{default:props=>React.createElement('a',props)},
   '@/features/search/global-search':{GlobalSearch:()=>null},'@/features/theme/theme-control':{ThemeControl:()=>null},
   '@/features/notifications/notification-link':{NotificationLink:()=>null},
  });
  const html=renderToStaticMarkup(React.createElement(WorkspaceNav,{role:'end_user',organizationId:'org',userId:'viewer'}));
  assert.match(html,/<details class="employee-more-nav">/);assert.doesNotMatch(html,/<details[^>]*open=/);assert.match(html,/aria-current="page"[^>]*>.*?My chats/);
+ const primary=html.split('<details class="employee-more-nav">')[0];
+ const account=html.split('<details class="employee-more-nav">')[1].split('</details>')[0];
+ assert.match(primary,/<a[^>]*href="\/app\/chat"[^>]*aria-current="page"/);
+ assert.doesNotMatch(account,/href="\/app\/chat"/);
+ assert.equal((html.match(/href="\/app\/chat"/g)||[]).length,1);
 });
