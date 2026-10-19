@@ -39,7 +39,7 @@ test('asset empty results and failures retain recovery, and employee queries ret
  const empty=setup('src/app/app/assets/page.tsx',{role:'end_user',count:0});
  const html=await empty.render({q:'missing'});
  assert.ok(empty.calls.some(c=>c[1]==='eq'&&c[2]==='assigned_user_id'&&c[3]==='employee'));
- assert.match(html,/No matching assets/);assert.match(html,/shorter name or serial-number fragment/);
+ assert.match(html,/No matching equipment/);assert.match(html,/Try another name, tag or serial number/);
  const failed=setup('src/app/app/assets/page.tsx',{error:{message:'offline'}});
  assert.match(await failed.render({q:'12345'}),/role="alert"/);
  const blank=setup('src/app/app/assets/page.tsx');await blank.render({q:['one','two']});

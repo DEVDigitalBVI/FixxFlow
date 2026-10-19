@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-19T14:30:56.285Z",
+  "baseCommit": "673b9bb82b5263f5d2588725cdeaecf403a61337",
+  "packageLockSha256": "5566a012006a755068078a26f70d2ba32dd96a3807bc0d8cd9c0006fffc0c6e8",
+  "decision": "Automated feature coverage passed; authenticated hosted acceptance and full production-readiness certification remain open.",
+  "sequence": [
+    "employee",
+    "admin/IT"
+  ],
+  "automatedChecks": {
+    "runtime": "Node 24.22.0",
+    "tests": 932,
+    "passed": 932,
+    "failed": 0,
+    "lint": "passed with zero warnings",
+    "typecheck": "passed",
+    "productionBuild": "passed under Node 24",
+    "productionProxy": "passed",
+    "productionDependencyAudit": {
+      "knownVulnerabilities": 0
+    }
+  },
+  "browser": {
+    "checkedAt": "2026-10-19T14:30:56.285Z",
+    "mode": "synthetic service adapters; actual React page/components",
+    "employee": [
+      {
+        "name": "Home exposes employee tasks and excludes privileged destinations",
+        "status": "pass"
+      },
+      {
+        "name": "Home search submits a native GET query to help",
+        "status": "pass"
+      },
+      {
+        "name": "Ticket creation requires subject and description with optional sections closed",
+        "status": "pass"
+      },
+      {
+        "name": "Request failure focuses feedback and preserves draft and idempotency key; retry navigates",
+        "status": "pass"
+      },
+      {
+        "name": "Cancel retains a draft when discard is declined",
+        "status": "pass"
+      },
+      {
+        "name": "Optional category/location and guides expand using keyboard",
+        "status": "pass"
+      },
+      {
+        "name": "Assigned equipment retains tag and serial without inventory administration",
+        "status": "pass"
+      },
+      {
+        "name": "Appearance switches immediately and persists after reload",
+        "status": "pass"
+      },
+      {
+        "name": "Mobile navigation contains focus, closes on Escape, and restores focus",
+        "status": "pass"
+      },
+      {
+        "name": "Complete request page reflows at mobile and compact desktop widths",
+        "status": "pass"
+      },
+      {
+        "name": "Employee request list exposes status, search recovery, and no staff mutations",
+        "status": "pass"
+      },
+      {
+        "name": "Notification read failure stays visible and preserves the selected notification",
+        "status": "pass"
+      },
+      {
+        "name": "Profile retains edits after save failure and discloses workplace details",
+        "status": "pass"
+      },
+      {
+        "name": "Chat intake validates fields and retains the first message after failure",
+        "status": "pass"
+      },
+      {
+        "name": "Employee chat exposes public messaging without internal-note controls",
+        "status": "pass"
+      },
+      {
+        "name": "Command search handles failure, retry, keyboard selection and Escape",
+        "status": "pass"
+      },
+      {
+        "name": "Inventory request validates destination, preserves failed draft, and retries",
+        "status": "pass"
+      }
+    ],
+    "admin": [
+      {
+        "name": "Admin navigation exposes work and management destinations",
+        "status": "pass"
+      },
+      {
+        "name": "Queue bulk selection shows actions only for selected tickets",
+        "status": "pass"
+      },
+      {
+        "name": "Desktop ticket drawer opens from queue and Escape restores the queue",
+        "status": "pass"
+      },
+      {
+        "name": "IT message composer separates private and public drafts and retains failed sends",
+        "status": "pass"
+      },
+      {
+        "name": "Staff ticket intake retains requester, priority and automatic routing",
+        "status": "pass"
+      },
+      {
+        "name": "Administration groups settings links without horizontal overflow",
+        "status": "pass"
+      },
+      {
+        "name": "People management protects own account and preserves permission drafts",
+        "status": "pass"
+      },
+      {
+        "name": "Equipment handover requires explicit unit confirmation",
+        "status": "pass"
+      },
+      {
+        "name": "Asset editor preserves identity and optional warranty dates after failed save",
+        "status": "pass"
+      },
+      {
+        "name": "Article editor retains selected related guides and content on save failure",
+        "status": "pass"
+      },
+      {
+        "name": "Report builder prevents empty measures and submits chosen report definition",
+        "status": "pass"
+      }
+    ]
+  },
+  "livePublicSmoke": {
+    "target": "https://www.fixxflow.app",
+    "checkedAt": "2026-10-19T14:12:29.303Z",
+    "checks": [
+      {
+        "path": "/api/health/live",
+        "status": 200,
+        "durationMs": 299
+      },
+      {
+        "path": "/",
+        "status": 307,
+        "durationMs": 350
+      },
+      {
+        "path": "/login",
+        "status": 200,
+        "durationMs": 177
+      }
+    ]
+  },
+  "liveAccessChecks": {
+    "checkedAt": "2026-10-19T14:29:30.151Z",
+    "mode": "read-only unauthenticated live requests",
+    "checks": [
+      {
+        "route": "/app",
+        "status": 307,
+        "redirectPath": "/login"
+      },
+      {
+        "route": "/app/tickets",
+        "status": 307,
+        "redirectPath": "/login"
+      },
+      {
+        "route": "/app/assets",
+        "status": 307,
+        "redirectPath": "/login"
+      },
+      {
+        "route": "/app/people",
+        "status": 307,
+        "redirectPath": "/login"
+      },
+      {
+        "route": "/app/administration",
+        "status": 307,
+        "redirectPath": "/login"
+      },
+      {
+        "route": "/platform",
+        "status": 307,
+        "redirectPath": "/login"
+      },
+      {
+        "route": "/api/health/ready",
+        "status": 401
+      }
+    ]
+  },
+  "fixes": [
+    "Updated stale employee chat and equipment assertions to current product copy.",
+    "Repaired mobile-navigation effect capture and missing router mocks in UI tests.",
+    "Added repeatable local employee-first/admin-second browser acceptance coverage."
+  ],
+  "productionMutationsPerformed": false,
+  "limits": [
+    "Browser scenarios use actual React pages/components with synthetic service adapters and mocked Next.js routing, not authenticated hosted end-to-end transactions.",
+    "No authenticated employee or admin live session was available; sign-in/MFA, invitation acceptance, real persistence, uploads, email delivery, realtime synchronization, and protected database readiness were not verified live in this pass.",
+    "Docker is unavailable locally; the dedicated full Supabase-stack regression job was not rerun here. Existing embedded-database tests are included in the 932-test run.",
+    "Physical-backup restore certification remains open per the existing pilot release record."
+  ],
+  "reproduce": {
+    "fixtures": [
+      "node tests/helpers/interface-audit-preview.mjs 4183",
+      "node tests/helpers/inventory-ui-preview.mjs"
+    ],
+    "browser": "PLAYWRIGHT_MODULE=<installed-playwright-module-path> node tests/browser/pilot-features.mjs",
+    "screenshots": "Local screenshots retained in /private/tmp/fixxflow-pilot-final-tests."
+  }
+}

@@ -164,7 +164,7 @@ test("live support defaults to internal notes and labels shared attachments", ()
 test("employee live support offers a public composer only", () => {
   const html = renderToStaticMarkup(React.createElement(ChatRoom, { ...chatProps, isWorker: false }));
   assert.doesNotMatch(html, /Internal note|chat-kind/);
-  assert.match(html, /The employee can see this message/);
+  assert.match(html, /Shared with IT support/);
 });
 test("switching live chat audience keeps independent drafts", () => {
   const hooks = []; let cursor = 0;

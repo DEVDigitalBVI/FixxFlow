@@ -19,7 +19,7 @@ test('mobile menu contains a close control, locks background, traps focus and re
  const main={inert:false},doc={body:{style:{overflow:'auto'}},getElementById:()=>main,activeElement:last};
  const handlers={};const media={matches:false,addEventListener:(key,fn)=>handlers.resize=fn,removeEventListener:()=>{}};
  const win={requestAnimationFrame:fn=>{fn();return 1;},cancelAnimationFrame:()=>{},matchMedia:()=>media,addEventListener:(key,fn)=>handlers[key]=fn,removeEventListener:()=>{}};
- let refs=0;const react={...React,useState:()=>[true,v=>{closed=v===false;}],useRef:()=>({current:refs++===0?{focus:()=>buttonFocused=true}:{querySelectorAll:()=>[first,last],contains:node=>node===first||node===last}}),useEffect:fn=>{effect=fn;}};
+ let refs=0;const react={...React,useState:()=>[true,v=>{closed=v===false;}],useRef:()=>({current:refs++===0?{focus:()=>buttonFocused=true}:{querySelectorAll:()=>[first,last],contains:node=>node===first||node===last}}),useEffect:fn=>{effect??=fn;}};
  globalThis.document=doc;globalThis.window=win;
  try {
   const {WorkspaceNav}=load('src/components/navigation/workspace-nav.tsx',{...navMocks,react});
@@ -63,6 +63,7 @@ test('every role can find chat creation and gets a labeled form with realistic r
  const builder=new Proxy({}, {get:(_,key)=>key==='then'?resolve=>Promise.resolve({data:[],error:null}).then(resolve):()=>builder});
  for(const role of ['end_user','technician','administrator']) {
   const page=load('src/app/app/chat/page.tsx',{
+   'next/navigation':{useRouter:()=>({push(){},refresh(){}})},
    'next/link':{default:props=>React.createElement('a',props)},
    '@/lib/auth/viewer':{requireViewer:async()=>({role,id:'user',organizationId:'org'})},
    '@/lib/supabase/server':{createClient:async()=>({from:()=>builder})},
