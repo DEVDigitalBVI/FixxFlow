@@ -10,10 +10,9 @@ export default function SupportPage() {
     </header>
     <section className="portal-detail-card" aria-labelledby="email-support-heading">
       <h2 id="email-support-heading">Email FixxFlow support</h2>
-      <p>Tell us what you need help with, what happened, and what you expected. Include your organization name and any relevant screenshots.</p>
+      <p>Include your organization name and a short description of the problem.</p>
       <p><a className="button button-primary" href="mailto:support@fixxflow.app?subject=FixxFlow%20support">Email support</a></p>
-      <p className="muted">Opens your email app. If it doesn’t open, compose a message in your email service to <a href="mailto:support@fixxflow.app">support@fixxflow.app</a>.</p>
-      <p className="muted">Your message is sent when you choose Send in your email app.</p>
+      <p className="muted">Opens your email app. Your message is sent when you choose Send.</p><details className="progressive-section"><summary>Email app didn’t open?</summary><p>Write to <a href="mailto:support@fixxflow.app">support@fixxflow.app</a> using your email service.</p></details>
     </section>
     <section className="portal-detail-card" aria-labelledby="more-help-heading">
       <h2 id="more-help-heading">More ways to get help</h2>

@@ -1,11 +1,14 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 
 /** Keeps server-rendered identity and account controls outside the client data boundary. */
 export function WorkspaceShell({ brand, navigation, account, audience = 'staff', children }: {
   brand: ReactNode; navigation: ReactNode; account: ReactNode; children: ReactNode; audience?: 'staff' | 'employee';
 }) {
+  const pathname = usePathname();
+  const chatPage = pathname === "/app/chat" || pathname?.startsWith("/app/chat/");
   const [collapsed, setCollapsed] = useState<boolean | null>(null);
   useEffect(() => {
     const medium = window.matchMedia('(max-width: 1199px)');
@@ -26,6 +29,6 @@ export function WorkspaceShell({ brand, navigation, account, audience = 'staff',
       {navigation}
       {account}
     </aside>
-    <main className={audience === 'employee' ? 'workspace employee-workspace' : 'workspace'} id="main-content">{children}</main>
+    <main className={audience === 'employee' ? 'workspace employee-workspace' : 'workspace'} id="main-content" data-page-flow={chatPage ? undefined : "standard"}>{children}</main>
   </div>;
 }

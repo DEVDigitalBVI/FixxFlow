@@ -2430,3 +2430,149 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
   .portal-home-search-controls .button { width: 100%; }
   .portal-home .portal-recent li a { flex-wrap: wrap; gap: 12px; padding: 16px; }
 }
+
+/* A restrained brand accent brings warmth to the employee home. */
+.portal-home .portal-kicker { color: var(--color-accent); }
+.portal-home .portal-action-emphasis {
+  background: var(--color-accent-subtle);
+  border-color: color-mix(in srgb, var(--color-accent) 32%, var(--color-border));
+}
+.portal-home .portal-action-emphasis strong { color: var(--color-accent); }
+.portal-home .portal-action-emphasis:hover {
+  background: var(--color-accent-subtle);
+  border-color: var(--color-accent);
+}
+.portal-home .portal-action span:last-child {
+  background: var(--color-accent-subtle);
+  border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-border));
+}
+.portal-home .portal-action-emphasis span:last-child { background: var(--color-surface); }
+.portal-home-search {
+  background: color-mix(in srgb, var(--color-accent-subtle) 35%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--color-accent) 16%, var(--color-border));
+}
+.portal-home-search .input { background: var(--color-surface); }
+.portal-home .portal-section-heading h2::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  margin-right: 8px;
+  border-radius: 4px;
+  background: var(--color-accent);
+  vertical-align: -1px;
+}
+
+/* Employee ticket creation leads with two fields and discloses optional context. */
+.portal-form-page.ticket-create-page .portal-page-heading { margin-bottom: 24px; padding-bottom: 0; border: 0; }
+.portal-form-page.ticket-create-page .portal-page-heading h1 { font-size: 28px; line-height: 36px; margin-top: 0; }
+.portal-request-form .ticket-create-section { border-top: 0; }
+.portal-request-form .ticket-create-required { margin: 0 0 20px; color: var(--color-text-muted); font-size: 14px; }
+.portal-request-form .ticket-create-fields { gap: 24px; }
+.portal-request-form .ticket-create-fields small { font-size: 14px; }
+.portal-request-form .ticket-create-optional summary { font-size: 16px; font-weight: 500; }
+.portal-request-form .ticket-create-optional .ticket-suggestions { margin-top: 12px; padding: 0; border: 0; }
+.portal-request-form .ticket-create-footer { gap: 16px; }
+@media (max-width: 767px) {
+  .portal-form-page.ticket-create-page .portal-page-heading h1 { font-size: 24px; line-height: 32px; }
+  .portal-request-form .ticket-create-optional summary .muted { display: block; margin: 4px 0 0; }
+}
+
+/* Continue the home page's compact heading and soft blue accents into requests. */
+.portal-form-page.ticket-create-page { width: 100%; max-width: 720px; padding: 40px 24px 64px; }
+.portal-form-page.ticket-create-page .portal-kicker { margin: 0 0 8px; color: var(--color-accent); }
+.portal-form-page.ticket-create-page .portal-page-heading h1 { margin: 0 0 8px; letter-spacing: -.025em; }
+.portal-form-page.ticket-create-page .portal-page-heading p { font-size: 16px; line-height: 24px; }
+.portal-request-form .ticket-create-section { border-radius: var(--radius-panel) var(--radius-panel) 0 0; }
+.portal-request-form .ticket-create-optional {
+  background: color-mix(in srgb, var(--color-accent-subtle) 35%, var(--color-surface));
+}
+.portal-request-form .ticket-create-optional summary { color: var(--color-accent); }
+.portal-request-form .ticket-create-optional .input { background: var(--color-surface); }
+.portal-request-form .ticket-create-equipment {
+  border-top: 0;
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  background: var(--color-accent-subtle);
+}
+.portal-request-form .ticket-create-footer { border-radius: 0 0 var(--radius-panel) var(--radius-panel); }
+@media (max-width: 767px) {
+  .portal-form-page.ticket-create-page { padding: 24px 16px 40px; }
+}
+
+/* Shared page principles: a clear first task, readable context, quiet secondary tools.
+   Chat routes deliberately do not opt into this treatment. */
+.workspace[data-page-flow="standard"] > :is(.page, .portal-page):not(.portal-home):not(.ticket-create-page) {
+  padding-top: 32px;
+}
+.workspace[data-page-flow="standard"] > :not(.overview-page) :is(.page-header, .portal-page-heading) {
+  padding-bottom: 0;
+  border-bottom: 0;
+  margin-bottom: 24px;
+  gap: 16px 24px;
+}
+.workspace[data-page-flow="standard"] :is(.page-header, .portal-page-heading) h1 {
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: -.025em;
+}
+.workspace[data-page-flow="standard"] :is(.page-header, .portal-page-heading) p {
+  max-width: 65ch;
+  line-height: 1.5;
+}
+.workspace[data-page-flow="standard"] .page-eyebrow { letter-spacing: .02em; margin-bottom: 8px; }
+.workspace[data-page-flow="standard"] :is(.settings-card, .portal-detail-card, .asset-inventory, .administration-panel) {
+  box-shadow: none;
+}
+.workspace[data-page-flow="standard"] :is(.settings-card, .portal-detail-card) > :is(h2, h3) {
+  font-size: 18px;
+  line-height: 26px;
+}
+.workspace[data-page-flow="standard"] :is(.settings-card, .portal-detail-card) > p { max-width: 65ch; }
+.workspace[data-page-flow="standard"] :is(.asset-inventory-toolbar, .employee-requests-toolbar, .report-toolbar) {
+  background: color-mix(in srgb, var(--color-accent-subtle) 25%, var(--color-surface));
+}
+.workspace[data-page-flow="standard"] .administration-card-icon {
+  background: var(--color-accent-subtle);
+  border-color: color-mix(in srgb, var(--color-accent) 20%, var(--color-border));
+}
+.workspace[data-page-flow="standard"] .knowledge-categories > a:hover {
+  background: var(--color-accent-subtle);
+  border-color: var(--color-accent);
+}
+.workspace[data-page-flow="standard"] .progressive-section { min-width: 0; }
+.workspace[data-page-flow="standard"] .progressive-section > summary {
+  min-height: 44px;
+  align-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--color-accent);
+  overflow-wrap: anywhere;
+}
+.workspace[data-page-flow="standard"] .progressive-section > summary .muted { margin-left: 8px; font-size: 14px; font-weight: 400; }
+.workspace[data-page-flow="standard"] .progressive-section[open] > summary { margin-bottom: 16px; }
+.workspace[data-page-flow="standard"] .progressive-section > summary:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-control);
+}
+.workspace[data-page-flow="standard"] .knowledge-related-disclosure {
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-subtle);
+}
+.workspace[data-page-flow="standard"] .knowledge-related-disclosure > fieldset { border: 0; padding: 0; }
+.workspace[data-page-flow="standard"] .profile-form-section.progressive-section {
+  background: var(--color-surface-subtle);
+}
+.workspace[data-page-flow="standard"] .asset-editor details.asset-form-section { display: block; }
+.auth-card h1 { font-size: 28px; line-height: 36px; letter-spacing: -.025em; }
+.auth-intro { max-width: 55ch; line-height: 1.5; }
+@media (max-width: 767px) {
+  .workspace[data-page-flow="standard"] > :is(.page, .portal-page):not(.portal-home):not(.ticket-create-page) { padding: 24px 16px 40px; }
+  .workspace[data-page-flow="standard"] :is(.page-header, .portal-page-heading) h1 { font-size: 24px; line-height: 32px; }
+  .workspace[data-page-flow="standard"] :is(.page-header, .portal-page-heading) { align-items: flex-start; }
+  .workspace[data-page-flow="standard"] .progressive-section > summary .muted { display: inline; }
+}

@@ -395,5 +395,18 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Employee home hierarchy
 
 - Keep the employee home within a centered 960px maximum width, with a compact 24–28px heading and no decorative introduction rule. This supersedes the employee-home rule treatment in section 13.
-- Offer two neutral support cards, followed by a labeled help-article search and recent requests. Submit this entry search explicitly with Enter or Search to open the results page; live search remains on article lists.
+- Offer two support cards, with a soft accent surface on Chat with IT and a neutral surface on Submit a request, followed by a lightly tinted help-article search and recent requests. Reuse the existing accent tokens for the organization label, directional details, and small section markers. Submit this entry search explicitly with Enter or Search to open the results page; live search remains on article lists.
 - Recent request rows use shared ticket status presentation, request numbers, and updated timestamps in the viewer’s timezone. Stack controls and wrap request metadata on compact screens.
+
+### Employee request creation
+
+- Continue the home page’s compact heading, accent eyebrow, and lightly tinted optional surfaces within a centered 720px form layout. Lead with subject and description; use brief guidance instead of repeated section introductions. Keep category/location and helpful guides in native disclosures, closed initially. Equipment-linked requests retain the equipment identity and omit location.
+- Keep attachment guidance, Cancel, and Open ticket together at the end. Preserve draft protection, pending state, recoverable errors, and mobile wrapping.
+- Empty optional lookups must not block creation when their choices are loading or unavailable. Once a value is selected, retain the shared save guard until it can be resolved.
+
+### Shared page design principles
+
+- Apply the employee home’s hierarchy principles across non-chat pages: compact 24–28px titles, concise context, a clear primary task, neutral content surfaces, and restrained accent details. Adapt layouts to the task: operational queues and reports retain density; forms and articles retain readable widths. Do not duplicate the home page composition.
+- Keep infrequent tools in labeled native disclosures, with controls mounted so selections and drafts remain intact. Examples include workplace details, purchase/warranty dates, related articles, content previews, and adding organization entries. Keep required inputs, safety instructions, status, primary actions, validation, and recoverable errors discoverable.
+- Use the existing surface, border, spacing, and accent tokens. Allow light tint in bounded search/tool areas; avoid coloring whole pages or adding decorative containers around every section.
+- Scope shared page refinements through the workspace’s `data-page-flow="standard"`. All `/app/chat` routes, including conversation and history routes, are excluded. Shared conversation components retain their existing treatment.

@@ -70,7 +70,9 @@ test('asset editor groups all existing fields and preserves drafts and focused e
     '@/components/ui/submit-button': { SubmitButton: props => React.createElement('button', props) },
   });
   const html = render(React.createElement(AssetForm, { asset, people: [], locations: [] }));
-  for (const label of ['Identity', 'Assignment &amp; lifecycle', 'Purchase &amp; warranty']) assert.ok(html.includes(`<legend>${label}</legend>`));
+  for (const label of ['Identity', 'Assignment &amp; lifecycle']) assert.ok(html.includes(`<legend>${label}</legend>`));
+  assert.match(html, /<details class="asset-form-section progressive-section"><summary>Purchase &amp; warranty/);
+  assert.doesNotMatch(html, /<details[^>]*open=/);
   for (const name of ['tag', 'name', 'kind', 'status', 'model', 'serial_number', 'assigned_user_id', 'location_id', 'purchased_on', 'warranty_until']) assert.ok(html.includes(`name="${name}"`));
   assert.match(html, /value="Reception laptop"/); assert.match(html, /value="012345"/);
   assert.match(html, /tabindex="-1" class="alert alert-error" role="alert"/);

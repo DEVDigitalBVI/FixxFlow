@@ -35,3 +35,20 @@ test('lookup retains selected values across pages/search, cancels stale requests
  } finally {ui.close();globalThis.fetch=old;}
  assert.ok(calls.every(call=>call.options.cache==='no-store'&&call.options.redirect==='error'));
 });
+
+
+test('optional selection guard permits empty failed lookups but protects a chosen value', async () => {
+ const old = globalThis.fetch;
+ globalThis.fetch = async () => Response.json({}, {status:503});
+ try {
+  for (const selected of ['', 'chosen']) {
+   const ui = componentHarness('src/features/lookups/lookup-select.tsx','LookupSelect',{resource:'locations',name:'locationId',label:'Location',defaultValue:selected,guardSave:'selection'});
+   try {
+    assert.equal(ui.all(n=>n.props.name==='lookupLoadError').length, selected ? 1 : 0);
+    await pause(20); ui.render();
+    assert.equal(ui.all(n=>n.props.name==='lookupLoadError').length, selected ? 1 : 0);
+    assert.match(ui.find(n=>n.props.role==='status').props.children, /could not load/);
+   } finally { ui.close(); }
+  }
+ } finally { globalThis.fetch=old; }
+});

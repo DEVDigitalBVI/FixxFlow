@@ -50,13 +50,13 @@ export default async function ProfilePage({ searchParams }: Props) {
             <div className="field"><label htmlFor="phone">Phone</label><input className="input" id="phone" name="phone" type="tel" autoComplete="tel" defaultValue={profile?.phone ?? ""} /></div>
           </div>
         </section>
-        <section className="profile-form-section" aria-labelledby="profile-workplace-heading">
-          <div className="profile-form-heading"><h3 id="profile-workplace-heading">Workplace</h3><p className="muted">Help your team understand where you work.</p></div>
+        <details className="profile-form-section progressive-section">
+          <summary>Workplace details</summary><p className="muted">Department and location help IT route your requests.</p>
           <div className="form-grid">
             <LookupSelect resource="departments" name="departmentId" label="Department" defaultValue={profile.department_id ?? ""}/>
             <LookupSelect resource="locations" name="locationId" label="Location" defaultValue={profile.location_id ?? ""}/>
           </div>
-        </section>
+        </details>
         <div className="profile-form-actions"><SubmitButton className="button button-primary" type="submit">Save profile</SubmitButton></div>
       </ActionForm>
     </section>

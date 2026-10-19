@@ -12,6 +12,7 @@ test('workspace shell defaults to the viewport and supports deliberate expansion
     globalThis.window = { matchMedia: () => media };
     try {
       const { WorkspaceShell } = load('src/components/navigation/workspace-shell.tsx', {
+        'next/navigation': { usePathname: () => '/app/profile' },
         react: { ...React, useState: () => [state, value => { state = typeof value === 'function' ? value(state) : value; }], useEffect: callback => { effect = callback; } },
       });
       const render = () => WorkspaceShell({ brand: 'Brand', navigation: 'Navigation', account: 'Account', children: 'Content' });
@@ -33,8 +34,19 @@ test('workspace shell defaults to the viewport and supports deliberate expansion
       assert.match(html, /aria-label="Workspace sidebar"/);
       assert.match(html, /aria-controls="workspace-navigation"/);
       assert.doesNotMatch(html, /sidebar-workspace/);
-      assert.match(html, /<main class="workspace" id="main-content">Content<\/main>/);
+      assert.match(html, /<main class="workspace" id="main-content" data-page-flow="standard">Content<\/main>/);
       cleanup(); assert.equal(removed, true);
     } finally { globalThis.window = previous; }
   }
+});
+
+
+test('shared page refinements exclude chat inbox, conversations, and history routes', () => {
+ for (const pathname of ['/app', '/app/tickets', '/app/profile', '/platform/customers', '/app/chat', '/app/chat/conversation', '/app/chat/conversation/history']) {
+  const { WorkspaceShell } = load('src/components/navigation/workspace-shell.tsx', {
+   'next/navigation': { usePathname: () => pathname },
+  });
+  const html = renderToStaticMarkup(React.createElement(WorkspaceShell, {brand:'Brand', navigation:'Navigation', account:'Account'}, 'Content'));
+  assert.equal(html.includes('data-page-flow="standard"'), !pathname.startsWith('/app/chat'));
+ }
 });

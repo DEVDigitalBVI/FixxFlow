@@ -55,3 +55,23 @@ test('cancel protects written drafts, permits confirmed/empty/new-tab navigation
  assert.equal(cancelCase({draft:'Unsaved',modified:true}).prompts,0);
  assert.deepEqual(cancelCase({draft:'Unsaved',pending:true}),{prompts:0,prevented:true,focused:false,disabled:true});
 });
+
+
+test('employee full page keeps optional content collapsed and submission after all sections', async () => {
+ const html = await renderTicketCreate({role:'end_user', errors:['knowledge_articles']});
+ assert.doesNotMatch(html, /ticket-create-intro|What’s happening|A little context/);
+ assert.equal((html.match(/<details class="ticket-create-routing ticket-create-optional">/g)||[]).length, 2);
+ assert.doesNotMatch(html, /<details[^>]*open=/);
+ const context = html.match(/<details[^>]*><summary>Add category or location[\s\S]*?<\/details>/)?.[0];
+ assert.ok(context);
+ assert.match(context, /name="categoryId"/);
+ assert.match(context, /name="locationId"/);
+ assert.doesNotMatch(html, /name="lookupLoadError"/);
+ assert.match(html, /Suggestions are unavailable. You can still submit your request./);
+ assert.ok(html.indexOf('ticket-create-footer') > html.lastIndexOf('</details>'));
+ assert.match(html, /href="\/app"[^>]*>Cancel/);
+ assert.match(html, /type="submit"[^>]*>Open ticket/);
+ const equipment = await renderTicketCreate({role:'end_user', params:{asset:'asset'}});
+ assert.match(equipment, /<summary>Add category <span/);
+ assert.doesNotMatch(equipment, /Add category or location|name="locationId"/);
+});

@@ -23,11 +23,13 @@ const actions = [
   {
     href: "/app/chat?start=1",
     title: "Chat with IT",
+    emphasis: true,
     description: "Best for a quick question or help you need right now",
   },
   {
     href: "/app/tickets/new",
     title: "Submit a request",
+    emphasis: false,
     description: "Track an issue, access request, or equipment need",
   },
 ] as const;
@@ -42,7 +44,7 @@ export function EmployeeHome({ firstName, greeting, organizationName, recent, ti
     </section>
     <div className="portal-actions">
       {actions.map(action => <Link
-        className="portal-action"
+        className={`portal-action${action.emphasis ? " portal-action-emphasis" : ""}`}
         href={action.href}
         key={action.href}
       >

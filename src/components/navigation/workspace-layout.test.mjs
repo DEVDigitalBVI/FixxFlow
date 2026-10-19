@@ -13,6 +13,7 @@ test('employees and administrators use the same shell, brand and account control
       '@/features/timezones/provider': { TimezoneProvider: ({ children }) => children },
       '@/features/identity/viewer-avatar': { ViewerAvatar: () => React.createElement('span', null, 'Avatar') },
       '@/components/navigation/workspace-nav': { WorkspaceNav: props => React.createElement('nav', { 'data-role': props.role, 'data-inventory': props.inventoryAccess }) },
+      'next/navigation': { usePathname: () => '/app/profile' },
       'next/image': { default: ({ src, alt, className, width, height }) => React.createElement('img', { src, alt, className, width, height }) },
       'next/link': { default: props => React.createElement('a', props) },
     });
