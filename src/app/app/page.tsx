@@ -19,6 +19,7 @@ export default async function OverviewPage() {
       greeting={greeting}
       organizationName={viewer.organizationName}
       recent={recent ?? []}
+      timeZone={viewer.timeZone}
     />;
   }
   return <div className="page overview-page"><PageHeader title="Support dashboard" eyebrow={viewer.organizationName} description="Today’s activity and the work that needs attention." actions={<Link className="button button-primary" href="/app/tickets">Open ticket queue</Link>}/><Suspense fallback={<TodayMetrics report={null}/>}><OverviewMetrics organizationId={viewer.organizationId}/></Suspense><section className="overview-work" aria-labelledby="overview-work-heading"><div className="overview-section-heading"><div><h2 id="overview-work-heading">Work queues</h2><p>Pick up the next conversation or move a request forward.</p></div><Link className="button button-secondary" href="/app/reports">View reports &amp; trends <span aria-hidden="true">↗</span></Link></div><nav className="overview-queues" aria-label="Support shortcuts">{[

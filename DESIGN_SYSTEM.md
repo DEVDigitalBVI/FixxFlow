@@ -391,3 +391,9 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Administration is a grouped settings index with bordered rows and lightweight destination links. Knowledge browsing uses neutral destination surfaces with blue interaction feedback. Green, amber, and red remain reserved for semantic feedback.
 - The overview introduction uses a restrained navy-to-blue brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded navigation uses the responsive mark-and-wordmark lockup in every theme; compact sidebars and mobile headers retain the mark alone. Preserve the approved mark without cropping or recoloring.
 - Employee pages should feel warmer and simpler through larger type, plain-language tasks, and whitespace rather than additional decorative color. Authentication may carry the strongest brand panel because it has no competing operational data.
+
+### Employee home hierarchy
+
+- Keep the employee home within a centered 960px maximum width, with a compact 24–28px heading and no decorative introduction rule. This supersedes the employee-home rule treatment in section 13.
+- Offer two neutral support cards, followed by a labeled help-article search and recent requests. Submit this entry search explicitly with Enter or Search to open the results page; live search remains on article lists.
+- Recent request rows use shared ticket status presentation, request numbers, and updated timestamps in the viewer’s timezone. Stack controls and wrap request metadata on compact screens.
