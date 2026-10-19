@@ -21,7 +21,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
   const staff = viewer.role !== "end_user";
   const contextFields = <div className="ticket-create-fields">
     <CategoryFields simple={!staff}/>
-    {!equipment?.data && <LookupSelect resource="locations" guardSave={staff ? true : "selection"} name="locationId" label={staff ? "Location" : "Location (optional)"}/>}
+    {!equipment?.data && <LookupSelect searchable={staff ? true : "when-paginated"} resource="locations" guardSave={staff ? true : "selection"} name="locationId" label={staff ? "Location" : "Location (optional)"}/>}
   </div>;
   const suggestions = <TicketSuggestions articles={articlesResult.data ?? []} categories={[]} unavailable={!!articlesResult.error}/>;
   return <div className={staff ? "page page-narrow ticket-create-page" : "portal-page portal-form-page ticket-create-page"}>

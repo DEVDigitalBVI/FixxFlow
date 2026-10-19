@@ -402,6 +402,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 - Continue the home page’s compact heading, accent eyebrow, and lightly tinted optional surfaces within a centered 720px form layout. Lead with subject and description; use brief guidance instead of repeated section introductions. Keep category/location and helpful guides in native disclosures, closed initially. Equipment-linked requests retain the equipment identity and omit location.
 - Keep attachment guidance, Cancel, and Open ticket together at the end. Preserve draft protection, pending state, recoverable errors, and mobile wrapping.
+- Employee category and location dropdowns show search and its guidance only when the unfiltered choices span more than one page. Keep search visible while filtering and retain paging for larger organizations. Single-page dropdowns omit inactive paging controls.
 - Empty optional lookups must not block creation when their choices are loading or unavailable. Once a value is selected, retain the shared save guard until it can be resolved.
 
 ### Shared page design principles

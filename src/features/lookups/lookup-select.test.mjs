@@ -52,3 +52,60 @@ test('optional selection guard permits empty failed lookups but protects a chose
   }
  } finally { globalThis.fetch=old; }
 });
+
+test('adaptive search keeps small dropdowns simple and stays available while filtering paginated choices', async () => {
+ const old = globalThis.fetch;
+ let large = false;
+ globalThis.fetch = async url => {
+  const params = new URL(url,'https://fixture.test').searchParams;
+  return Response.json({rows:[choice('first')],selected:null,next:large && !params.get('q') && !params.get('cursor') ? 'next-page' : null});
+ };
+ try {
+  const small = componentHarness('src/features/lookups/lookup-select.tsx','LookupSelect',{resource:'categories',name:'categoryId',label:'Category',searchable:'when-paginated'});
+  try {
+   await pause(20);small.render();
+   assert.equal(small.all(n=>n.props.type==='search').length,0);
+   assert.equal(small.all(n=>n.type==='button').length,0);
+   assert.equal(small.all(n=>n.type==='select').length,1);
+  } finally {small.close();}
+  large = true;
+  const big = componentHarness('src/features/lookups/lookup-select.tsx','LookupSelect',{resource:'locations',name:'locationId',label:'Location',searchable:'when-paginated'});
+  try {
+   assert.equal(big.all(n=>n.props.type==='search').length,0);
+   await pause(20);big.render();
+   const search = big.find(n=>n.props.type==='search');
+   assert.equal(big.find(n=>n.type==='button'&&n.props.children==='More choices').props.disabled,false);
+   big.find(n=>n.type==='button'&&n.props.children==='More choices').props.onClick();big.render();
+   await pause(20);big.render();
+   assert.equal(big.find(n=>n.type==='button'&&n.props.children==='More choices').props.disabled,true);
+   assert.equal(big.all(n=>n.props.type==='search').length,1);
+   search.props.onChange({target:{value:'first'},stopPropagation(){}});big.render();
+   await pause(330);big.render();
+   assert.equal(big.find(n=>n.props.type==='search').props.value,'first');
+   big.find(n=>n.type==='button'&&n.props.children==='Clear search').props.onClick();big.render();
+   assert.equal(big.all(n=>n.props.type==='search').length,1);
+   await pause(20);big.render();
+   assert.equal(big.all(n=>n.props.type==='search').length,1);
+  } finally {big.close();}
+ } finally {globalThis.fetch=old;}
+});
+
+test('adaptive dropdown failures offer retry and focus the select when search is absent', async () => {
+ const old = globalThis.fetch;
+ let fail = true;
+ globalThis.fetch = async () => fail ? Response.json({}, {status:503}) : Response.json({rows:[],selected:null,next:null});
+ const ui = componentHarness('src/features/lookups/lookup-select.tsx','LookupSelect',{resource:'locations',name:'locationId',label:'Location',searchable:'when-paginated',guardSave:'selection'});
+ try {
+  await pause(20);ui.render();
+  assert.equal(ui.all(n=>n.props.type==='search').length,0);
+  assert.match(ui.find(n=>n.props.role==='status').props.children,/could not load/);
+  let focused = false;
+  ui.find(n=>n.type==='select').props.ref.current = {focus(){focused=true;}};
+  fail = false;
+  ui.find(n=>n.type==='button'&&n.props.children==='Try again').props.onClick();ui.render();
+  assert.equal(focused,true);
+  await pause(20);ui.render();
+  assert.equal(ui.find(n=>n.props.role==='status').props.children,'No choices available.');
+  assert.equal(ui.all(n=>n.type==='button').length,0);
+ } finally {ui.close();globalThis.fetch=old;}
+});

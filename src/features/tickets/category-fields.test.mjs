@@ -16,6 +16,6 @@ test('category picker clears a dependent selection and scopes each subcategory r
 });
 test('employee category field stays optional and does not expose subcategories',()=>{
  const ui=componentHarness('src/features/tickets/category-fields.tsx','CategoryFields',{categoryId:'old',simple:true});
- try {assert.equal(ui.all(n=>n.props.resource==='subcategories').length,0);assert.match(ui.find(n=>n.props.resource==='categories').props.label,/optional/);}
+ try {assert.equal(ui.all(n=>n.props.resource==='subcategories').length,0);assert.match(ui.find(n=>n.props.resource==='categories').props.label,/optional/);assert.equal(ui.find(n=>n.props.resource==='categories').props.searchable,'when-paginated');}
  finally {ui.close();}
 });

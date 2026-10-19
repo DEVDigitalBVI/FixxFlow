@@ -4,13 +4,14 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
 import type { LookupPage, LookupResource } from './model';
 
-export function LookupSelect({ resource, name, label, defaultValue = '', value, onChange, parentId, required = false, emptyLabel = 'Not selected', specialOptions = [], activeOnly = true, guardSave = true, describedBy, compact = false }: {
+export function LookupSelect({ resource, name, label, defaultValue = '', value, onChange, parentId, required = false, emptyLabel = 'Not selected', specialOptions = [], activeOnly = true, guardSave = true, describedBy, compact = false, searchable = true }: {
   resource: LookupResource; name: string; label: string; defaultValue?: string; value?: string;
   onChange?: (value: string) => void; parentId?: string; required?: boolean; emptyLabel?: string;
-  specialOptions?: { id: string; label: string }[]; activeOnly?: boolean; guardSave?: boolean | "selection"; describedBy?: string; compact?: boolean;
+  specialOptions?: { id: string; label: string }[]; activeOnly?: boolean; guardSave?: boolean | "selection"; describedBy?: string; compact?: boolean; searchable?: boolean | 'when-paginated';
 }) {
   const id = useId();
   const searchInput = useRef<HTMLInputElement>(null);
+  const selectInput = useRef<HTMLSelectElement>(null);
   const immediate = useRef(false);
   const [local, setLocal] = useState(defaultValue);
   const selected = value ?? local;
@@ -18,6 +19,7 @@ export function LookupSelect({ resource, name, label, defaultValue = '', value, 
   const [cursors, setCursors] = useState<string[]>(['']);
   const [retry, setRetry] = useState(0);
   const [composing, setComposing] = useState(false);
+  const [paginated, setPaginated] = useState(false);
   const [state, setState] = useState<{ data: LookupPage; pending: boolean; error: boolean }>({ data: { rows: [], selected: null, next: null }, pending: true, error: false });
   const cursor = cursors.at(-1) ?? '';
   const selectedId = selected && !specialOptions.some(option => option.id === selected) ? selected : '';
@@ -36,6 +38,7 @@ export function LookupSelect({ resource, name, label, defaultValue = '', value, 
         const data: LookupPage = await response.json();
         if (!Array.isArray(data.rows) || data.rows.some(row => typeof row.id !== 'string' || typeof row.label !== 'string') || (data.next !== null && typeof data.next !== 'string')) throw new Error('Invalid lookup');
         if (!cancelled) {
+          if (!query) setPaginated(Boolean(cursor || data.next));
           setState({ data, pending: false, error: false });
         }
       } catch { if (!cancelled) setState(previous => ({ ...previous, pending: false, error: true })); }
@@ -47,13 +50,17 @@ export function LookupSelect({ resource, name, label, defaultValue = '', value, 
   const choices = [...new Map([...(current ? [current] : []), ...state.data.rows].map(row => [row.id, row])).values()];
   const unavailable = Boolean(selectedId && !state.pending && !state.error && !choices.some(row => row.id === selectedId));
   const busy = state.pending || composing;
+  const showSearch = searchable === true || (searchable === 'when-paginated' && (paginated || Boolean(query)));
+  const focusPicker = () => (searchInput.current ?? selectInput.current)?.focus();
   const search = (text: string) => { setQuery(text); setCursors(['']); setState(previous => ({ ...previous, pending: true })); };
   return <div className={`field lookup-picker${compact ? ' lookup-picker-compact' : ''}`}>
     <label htmlFor={id}>{label}{required ? ' *' : ''}</label>
+    {showSearch && <>
     <label className="sr-only" htmlFor={`${id}-search`}>Search {label.toLowerCase()}</label>
     <input ref={searchInput} id={`${id}-search`} className="input" type="search" value={query} maxLength={SEARCH_LIMIT} placeholder={`Search ${label.toLowerCase()}`} aria-describedby={`${id}-hint`} onChange={event => { event.stopPropagation(); search(event.target.value); }} onCompositionStart={() => setComposing(true)} onCompositionEnd={() => setComposing(false)} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); if (!composing) { immediate.current = true; setRetry(number => number + 1); } } }}/>
     <small id={`${id}-hint`} className={compact ? 'sr-only' : 'muted'}>{SEARCH_HINT}</small>
-    <select id={id} className="input" name={name} value={selected} required={required} aria-describedby={[`${id}-status`, describedBy].filter(Boolean).join(' ')} onChange={event => {
+    </>}
+    <select ref={selectInput} id={id} className="input" name={name} value={selected} required={required} aria-describedby={[`${id}-status`, describedBy].filter(Boolean).join(' ')} onChange={event => {
       const next = event.target.value;
       setState(previous => ({ ...previous, data: { ...previous.data, selected: choices.find(row => row.id === next) ?? null } }));
       setLocal(next); onChange?.(next);
@@ -64,13 +71,13 @@ export function LookupSelect({ resource, name, label, defaultValue = '', value, 
       {choices.map(row => <option key={row.id} value={row.id} disabled={activeOnly && !row.active && row.id !== selected}>{row.label}{!row.active ? ' (inactive)' : ''}</option>)}
     </select>
     {guardSave && (guardSave !== "selection" || required || Boolean(selected)) && (busy || state.error || unavailable) && <input type="hidden" name="lookupLoadError" value="true"/>}
-    <span id={`${id}-status`} className={compact ? 'sr-only' : 'muted'} role="status">{busy ? 'Loading choices…' : state.error ? 'Choices could not load. Your selection is preserved. Try again before saving.' : unavailable ? 'Current selection is unavailable. Choose a replacement or clear it before saving.' : !state.data.rows.length ? 'No matches. Try a different search.' : `Page ${cursors.length} · ${state.data.rows.length} ${state.data.rows.length === 1 ? "choice" : "choices"}`}</span>
+    <span id={`${id}-status`} className={compact ? 'sr-only' : 'muted'} role="status">{busy ? 'Loading choices…' : state.error ? 'Choices could not load. Your selection is preserved. Try again before saving.' : unavailable ? 'Current selection is unavailable. Choose a replacement or clear it before saving.' : !state.data.rows.length ? showSearch ? 'No matches. Try a different search.' : 'No choices available.' : `Page ${cursors.length} · ${state.data.rows.length} ${state.data.rows.length === 1 ? "choice" : "choices"}`}</span>
     {compact && state.error && <div className="lookup-compact-error" role="alert">
       <span>Choices could not load.</span>
-      <button type="button" className="button button-quiet" onClick={() => { immediate.current = true; searchInput.current?.focus(); setState(previous => ({ ...previous, pending: true })); setRetry(number => number + 1); }}>Try again</button>
+      <button type="button" className="button button-quiet" onClick={() => { immediate.current = true; focusPicker(); setState(previous => ({ ...previous, pending: true })); setRetry(number => number + 1); }}>Try again</button>
     </div>}
-    {!compact && <div className="lookup-actions">
-      {state.error && <button type="button" className="button button-secondary" onClick={() => { immediate.current = true; searchInput.current?.focus(); setState(previous => ({ ...previous, pending: true })); setRetry(number => number + 1); }}>Try again</button>}
+    {!compact && (state.error || showSearch || cursors.length > 1 || state.data.next) && <div className="lookup-actions">
+      {state.error && <button type="button" className="button button-secondary" onClick={() => { immediate.current = true; focusPicker(); setState(previous => ({ ...previous, pending: true })); setRetry(number => number + 1); }}>Try again</button>}
       {query && <button type="button" className="button button-quiet" onClick={() => { search(''); searchInput.current?.focus(); }}>Clear search</button>}
       <button type="button" className="button button-quiet" disabled={busy || cursors.length === 1} onClick={() => { setState(previous => ({ ...previous, pending: true })); setCursors(previous => previous.slice(0, -1)); }}>Previous choices</button>
       <button type="button" className="button button-quiet" disabled={busy || state.error || !state.data.next} onClick={() => { setState(previous => ({ ...previous, pending: true })); setCursors(previous => [...previous, state.data.next!]); }}>More choices</button>

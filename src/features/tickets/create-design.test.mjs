@@ -66,6 +66,7 @@ test('employee full page keeps optional content collapsed and submission after a
  assert.ok(context);
  assert.match(context, /name="categoryId"/);
  assert.match(context, /name="locationId"/);
+ assert.doesNotMatch(context, /type="search"|Search category|Search location|Previous choices|More choices/);
  assert.doesNotMatch(html, /name="lookupLoadError"/);
  assert.match(html, /Suggestions are unavailable. You can still submit your request./);
  assert.ok(html.indexOf('ticket-create-footer') > html.lastIndexOf('</details>'));
