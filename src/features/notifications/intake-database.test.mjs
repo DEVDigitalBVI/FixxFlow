@@ -30,6 +30,7 @@ test('ticket intake alerts all company admins and ownership emails survive readi
   await db.query("update public.organization_memberships set status='inactive',deactivated_at=now() where organization_id=$1 and user_id=$2",[org,secondAdmin]);
   await db.exec("update public.notifications set read_at=now(); update private.notification_email_outbox set available_at=now();");
   const claimed=(await db.query('select * from public.claim_notification_emails(20)')).rows;
+  assert.ok(claimed.every(n=>n.title.endsWith(' — Intake test')), 'email uses the queued name even after ticket rename');
   assert.deepEqual(claimed.map(n=>n.recipient_email).sort(),[admin,technician].map(id=>`${id}@example.test`).sort());
   assert.equal((await db.query("select * from private.notification_email_outbox where status='skipped'")).rows.length,2);
   assert.equal((await db.query('select * from public.claim_notification_emails(20)')).rows.length,0);

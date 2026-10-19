@@ -61,7 +61,7 @@ test('incident communication snapshots, approvals, scoped delivery, leases and r
  });
  await t.test('dispatcher authorizes stakeholders, returns approved content, and retries retain notification identity',async()=>{
  await db.exec('reset role');await db.exec("update private.notification_email_outbox set available_at=now()-interval '1 minute'");await db.exec('set role service_role');
- const claimed=(await db.query('select * from public.claim_notification_emails(20)')).rows.find(n=>n.incident_bulletin_id===draft);assert.ok(claimed);assert.equal(claimed.approved_body,payload.body);assert.equal(claimed.recipient_email,'stakeholder@example.invalid');
+ const claimed=(await db.query('select * from public.claim_notification_emails(20)')).rows.find(n=>n.incident_bulletin_id===draft);assert.ok(claimed);assert.equal(claimed.approved_body,payload.body);assert.equal(claimed.title,(await db.query('select title from public.notifications where id=$1',[claimed.notification_id])).rows[0].title);assert.equal(claimed.recipient_email,'stakeholder@example.invalid');
  await db.query('select public.finish_notification_email($1,$2,$3,$4)',[claimed.notification_id,claimed.lease_token,null,'Retry']);
  await db.exec('reset role');await db.exec("update private.notification_email_outbox set available_at=now()-interval '1 minute'");await db.exec('set role service_role');
  const retry=(await db.query('select * from public.claim_notification_emails(20)')).rows.find(n=>n.incident_bulletin_id===draft);assert.equal(retry.notification_id,claimed.notification_id);assert.notEqual(retry.lease_token,claimed.lease_token);

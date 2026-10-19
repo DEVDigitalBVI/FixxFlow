@@ -199,3 +199,13 @@ test('approved incident emails use the shared brand and deliver only the saved m
  assert.match(body.html,/\/app\/incident-updates\/bulletin-1/);assert.doesNotMatch(body.html,/\/app\/tickets\/ticket-1/);
  assert.match(body.html,/#febe10/);assert.match(body.html,/fixxflow-logo-primary\.png/);
 });
+
+
+test('ticket email subject and both bodies include the number and escaped ticket name',async()=>{
+ let body;
+ await sendNotificationEmail({...item,title:'Ticket #1004 created — Printer <offline> & scanner'},config,async(_url,options)=>{body=JSON.parse(options.body);return Response.json({id:'ticket-name-email'});});
+ assert.equal(body.subject,'FixxFlow: Ticket #1004 created — Printer <offline> & scanner');
+ assert.match(body.text,/Ticket #1004 created — Printer <offline> & scanner/);
+ assert.match(body.html,/Ticket #1004 created — Printer &lt;offline&gt; &amp; scanner/);
+ assert.doesNotMatch(body.html,/<offline>/);
+});

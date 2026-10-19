@@ -87,7 +87,7 @@ test('company workflow templates publish immutable versions and apply procedures
 test('template upgrade preserves existing incident data, approvals, approved communications and outbox history',async()=>{
  let before,ticket;
  const tables=['public.tickets','public.ticket_incidents','public.incident_steps','public.incident_step_history','public.incident_approvals','public.incident_approval_history','public.incident_escalation_policies','public.incident_communication_plans','public.incident_stakeholder_groups','public.incident_stakeholder_members','public.incident_update_drafts','public.incident_bulletins','public.incident_bulletin_recipients','public.notifications','private.notification_email_outbox'];
- const snapshot=async db=>{const result={};for(const table of tables){result[table]=(await db.query(`select * from ${table}`)).rows.map(row=>{if(table==='public.incident_steps'){delete row.application_id;delete row.procedure_position;}return row;}).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)));}return result;};
+ const snapshot=async db=>{const result={};for(const table of tables){result[table]=(await db.query(`select * from ${table}`)).rows.map(row=>{if(table==='public.incident_steps'){delete row.application_id;delete row.procedure_position;}if(table==='private.notification_email_outbox')delete row.ticket_name;return row;}).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)));}return result;};
  const db=await migratedPostgres({beforeMigration:async(db,name)=>{
  if(!name.endsWith('_reusable_workflow_templates.sql'))return;
  await fixtures(db);await identity(db,admin);
