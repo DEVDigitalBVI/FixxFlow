@@ -24,7 +24,7 @@
       "inverse": { "$value": "#FFFFFF", "$type": "color" }
     },
     "border": {
-      "subtle": { "$value": "#F2F2F2", "$type": "color" }
+      "subtle": { "$value": "#E8E8E8", "$type": "color" }
     },
     "status": {
       "info": { "$value": "#FEBE10", "$type": "color" },

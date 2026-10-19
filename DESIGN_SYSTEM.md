@@ -38,8 +38,8 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-surface: #ffffff;
   --color-surface-subtle: #f7f7f7;
   --color-surface-raised: #ffffff;
-  --color-border: #dedede;
-  --color-border-strong: #c9c9c9;
+  --color-border: #e8e8e8;
+  --color-border-strong: #dadada;
   --color-text: #1a1a1a;
   --color-text-muted: #595959;
   --color-text-subtle: #595959;
@@ -100,7 +100,7 @@ The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its
 - Default page padding: 24px desktop, 20px tablet, 16px mobile.
 - Card padding: 16–24px; do not nest multiple bordered cards without a clear hierarchy.
 - Radius: 8px controls, 10–12px cards, 14–16px major panels. Pills are reserved for compact status, filters, and avatars.
-- Use borders and surface shifts before shadows. Shadows should indicate elevation, not decorate every object.
+- Use quiet 1px borders and surface shifts before shadows. Decorative borders use `#E8E8E8` / `#DADADA` in light mode and `#373737` / `#505050` in dark mode. Keep card shadows faint; avoid dark outlines and saturated gold borders around ordinary content. Essential form boundaries use the separate control-border token and retain 3:1 contrast; focus, selection, and semantic state cues stay distinct. Shadows should indicate elevation, not decorate every object.
 - Icons should be from one consistent outline icon family. Default size 16–20px. Every unfamiliar icon-only action requires an accessible name and tooltip.
 
 ### 3.5 Motion
