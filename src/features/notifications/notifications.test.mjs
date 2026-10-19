@@ -20,6 +20,8 @@ test('all email variants share the invitation layout and centered content',()=>{
   assert.match(html,/<p style="max-width:420px;margin:0 auto 20px;color:#595959;">/,name);
   assert.match(html,/<td align="center" style="text-align:center;padding:16px 24px;border-top:/,name);
   assert.match(html,/width="100%"[^>]*style="max-width:560px/,name);
+  assert.match(html,/max-width:560px;background:#ffffff;border:0;border-radius:16px/,name);
+  assert.doesNotMatch(html,/border:1px solid #795500/,name);
   if(html.includes('Button not working?')) {
    assert.match(html,/<table role="presentation" align="center" style="margin:0 auto"/,name);
    assert.match(html,/word-break:break-all;overflow-wrap:anywhere/,name);

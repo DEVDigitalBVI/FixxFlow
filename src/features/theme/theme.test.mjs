@@ -57,7 +57,7 @@ test('explicit and system dark themes share the approved black-and-gold palette'
   assert.equal(explicit.trim(), system.trim());
   for (const [token, value] of Object.entries({
     canvas: '#1a1a1a', surface: '#222222', accent: '#febe10',
-    text: '#ffffff', 'text-muted': '#f2f2f2', focus: '#febe10',
+    text: '#ffffff', 'text-muted': '#c2c2c2', focus: '#febe10',
   })) assert.ok(explicit.includes(`--color-${token}: ${value};`), token);
 });
 test('dark text, states, buttons, charts and focus meet contrast thresholds', () => {
@@ -77,8 +77,8 @@ test('light surfaces and gold filled actions retain readable contrast in both th
   const light = read(css.match(/:root \{([^}]+)\}/)[1]);
   const dark = { ...light, ...read(css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1]) };
   for (const theme of [light, dark]) {
-    for (const surface of ['canvas', 'surface', 'surface-subtle', 'surface-raised']) {
-      for (const foreground of ['text', 'text-muted', 'accent', 'accent-hover']) {
+    for (const surface of ['canvas', 'surface', 'surface-subtle', 'surface-raised', 'field-surface', 'field-hover']) {
+      for (const foreground of ['text', 'text-muted', 'text-subtle', 'accent', 'accent-hover']) {
         assert.ok(contrast(theme[foreground], theme[surface]) >= 4.5, `${foreground} on ${surface}`);
       }
       for (const cue of ['focus', 'control-border']) assert.ok(contrast(theme[cue], theme[surface]) >= 3, `${cue} on ${surface}`);
