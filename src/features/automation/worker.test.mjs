@@ -162,7 +162,7 @@ test('Stage 5 worker integration through migrated database RPCs', async t => {
       assert.equal(saved.notifications.filter(row => row.kind === 'automation_update').length, 1);
       await available(db, saved.executions[0].delivery_id); await runAutomationWorker(store, options); saved = await state(db);
       assert.equal(saved.notifications.filter(row => row.kind === 'automation_update').length, 2); assert.equal(saved.executions[0].status, 'succeeded');
-      assert.equal((await db.query('select count(*)::int n from private.notification_email_outbox')).rows[0].n, 3);
+      assert.equal((await db.query("select count(*)::int n from private.notification_email_outbox q join public.notifications n on n.id=q.notification_id where n.kind<>'ticket_created'")).rows[0].n, 3);
       assert.ok(saved.notifications.every(row => row.organization_id === ids.org && !/SECRET/.test(row.title)));
     });
     await scenario('missing/inactive recipient and forged cross-tenant notification payload fail without enqueue', async () => {
@@ -171,7 +171,7 @@ test('Stage 5 worker integration through migrated database RPCs', async t => {
       await assert.rejects(store.execute(delivery, { ...execution, organization_id: ids.otherOrg }, candidate.rule.definition.actions[0]), { code: '22023' });
       await assert.rejects(store.execute(delivery, execution, { ...candidate.rule.definition.actions[0], configuration: { recipient: ids.otherAdmin, template: 'ticket_update' } }), { code: '22023' });
       assert.equal((await runAutomationWorker({ ...store, claim: async () => [delivery] }, options)).acknowledged, 1); const saved = await state(db);
-      assert.equal(saved.steps[0].error_code, 'unavailable_reference'); assert.equal(saved.notifications.length, 0);
+      assert.equal(saved.steps[0].error_code, 'unavailable_reference'); assert.equal(saved.notifications.filter(row => row.kind !== 'ticket_created').length, 0);
     });
     await scenario('notification recipient loses membership before enqueue and receives no explicit notification', async () => {
       const { store } = await ready(db, { actions: [action('assign_technician', { technicianId: ids.worker }), action('send_notification', { recipient: 'assigned_technician', template: 'ticket_update' }, 1)] });
@@ -186,8 +186,8 @@ test('Stage 5 worker integration through migrated database RPCs', async t => {
     await scenario('notification receipt failure rolls back both inbox and email enqueue', async () => {
       const { store } = await ready(db, { actions: [action('send_notification', { recipient: 'requester', template: 'ticket_update' })] });
       await owner(db); await db.exec("create function private.test_receipt_failure() returns trigger language plpgsql as $$ begin if new.status='succeeded' then raise exception 'SECRET'; end if; return new; end $$; create trigger test_receipt_failure before update on public.automation_execution_steps for each row execute function private.test_receipt_failure();"); await service(db);
-      await runAutomationWorker(store, options); const saved = await state(db); assert.equal(saved.notifications.length, 0); assert.equal(saved.steps[0].error_code, 'action_failed');
-      assert.equal((await db.query('select count(*)::int n from private.notification_email_outbox')).rows[0].n, 0);
+      await runAutomationWorker(store, options); const saved = await state(db); assert.equal(saved.notifications.filter(row => row.kind !== 'ticket_created').length, 0); assert.equal(saved.steps[0].error_code, 'action_failed');
+      assert.equal((await db.query("select count(*)::int n from private.notification_email_outbox q join public.notifications n on n.id=q.notification_id where n.kind<>'ticket_created'")).rows[0].n, 0);
     });
     await scenario('malformed worker definition and planner/database disagreement never execute actions', async () => {
       const { store } = await ready(db); const bad = { ...store, discover: async (...args) => (await store.discover(...args)).map(row => ({ ...row, rule: { ...row.rule, definition: { ...row.rule.definition, script: 'SECRET eval()' } } })) };

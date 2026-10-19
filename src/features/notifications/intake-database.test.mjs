@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { randomUUID } from 'node:crypto';
+import { migratedPostgres } from '../../../tests/helpers/postgres.mjs';
+
+test('ticket intake alerts all company admins and ownership emails survive reading and self assignment', async () => {
+ const db = await migratedPostgres();
+ try {
+  const org=randomUUID(), foreignOrg=randomUUID();
+  const [admin,secondAdmin,inactiveAdmin,foreignAdmin,employee,technician,unverified]=Array.from({length:7},()=>randomUUID());
+  await db.query("insert into public.organizations(id,name,slug) values($1,'Intake','intake-alerts'),($2,'Other','other-intake')",[org,foreignOrg]);
+  for(const id of [admin,secondAdmin,inactiveAdmin,foreignAdmin,employee,technician,unverified]) await db.query('insert into auth.users(id,email,email_confirmed_at) values($1,$2,$3)',[id,`${id}@example.test`,id===unverified?null:new Date().toISOString()]);
+  for(const [id,role,status,company] of [[admin,'administrator','active',org],[secondAdmin,'administrator','active',org],[inactiveAdmin,'administrator','inactive',org],[foreignAdmin,'administrator','active',foreignOrg],[employee,'end_user','active',org],[technician,'technician','active',org],[unverified,'administrator','active',org]]) await db.query("insert into public.organization_memberships(organization_id,user_id,role,status,deactivated_at) values($1,$2,$3,$4,case when $4::public.membership_status='inactive' then now() else null end)",[company,id,role,status]);
+  await db.query("select set_config('request.jwt.claims',$1,false)",[JSON.stringify({sub:employee})]);
+  const ticket=randomUUID();
+  await db.query("insert into public.tickets(id,organization_id,requester_id,title,description) values($1,$2,$3,'Intake test','Private employee description')",[ticket,org,employee]);
+  const notices=(await db.query('select * from public.notifications where ticket_id=$1',[ticket])).rows;
+  assert.deepEqual(notices.map(n=>n.recipient_id).sort(),[admin,secondAdmin,unverified].sort());
+  assert.ok(notices.every(n=>n.kind==='ticket_created' && n.staff_only && !n.title.includes('Private')));
+  assert.equal((await db.query('select * from private.notification_email_outbox')).rows.length,3);
+  // Self-assignment is still a responsibility change and must send email.
+  await db.query("select set_config('request.jwt.claims',$1,false)",[JSON.stringify({sub:technician})]);
+  await db.query('update public.tickets set assigned_technician_id=$1 where id=$2',[technician,ticket]);
+  const assigned=(await db.query("select * from public.notifications where ticket_id=$1 and kind='ticket_assigned'",[ticket])).rows;
+  assert.equal(assigned.length,1);assert.equal(assigned[0].recipient_id,technician);
+  await db.query("update public.tickets set title='Edited title' where id=$1",[ticket]);
+  assert.equal((await db.query('select * from public.notifications where ticket_id=$1',[ticket])).rows.length,4);
+  // Intake/assignment email remains due after in-app read. Former staff and
+  // unverified email addresses remain ineligible regardless of event kind.
+  await db.query("update public.organization_memberships set status='inactive',deactivated_at=now() where organization_id=$1 and user_id=$2",[org,secondAdmin]);
+  await db.exec("update public.notifications set read_at=now(); update private.notification_email_outbox set available_at=now();");
+  const claimed=(await db.query('select * from public.claim_notification_emails(20)')).rows;
+  assert.deepEqual(claimed.map(n=>n.recipient_email).sort(),[admin,technician].map(id=>`${id}@example.test`).sort());
+  assert.equal((await db.query("select * from private.notification_email_outbox where status='skipped'")).rows.length,2);
+  assert.equal((await db.query('select * from public.claim_notification_emails(20)')).rows.length,0);
+  for(const n of claimed) assert.equal((await db.query('select public.finish_notification_email($1,$2,$3,null) ok',[n.notification_id,n.lease_token,'mock-provider'])).rows[0].ok,true);
+  // Reassignment reaches the new owner; unchanged ownership is silent.
+  await db.query('update public.tickets set assigned_technician_id=$1 where id=$2',[admin,ticket]);
+  assert.equal((await db.query("select * from public.notifications where ticket_id=$1 and recipient_id=$2 and kind='ticket_reassigned'",[ticket,admin])).rows.length,1);
+  assert.equal((await db.query("select * from public.notifications where ticket_id=$1 and kind='ticket_created'",[ticket])).rows.length,3);
+  assert.equal((await db.query("select has_function_privilege('authenticated','public.claim_notification_emails(integer)','EXECUTE') allowed")).rows[0].allowed,false);
+ } finally { await db.close(); }
+});

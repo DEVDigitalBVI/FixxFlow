@@ -4,7 +4,7 @@ export const notificationLabels: Record<NotificationKind, string> = {
   incident_escalation: "Workflow escalation", incident_approval: "Approval", incident_step_assigned: "Response step assignment",
   incident_update: "IT update", incident_update_due: "Stakeholder update due",
   automation_update: "Automation update",
-  ticket_assigned: "Assignment", ticket_response: "Response", new_chat: "New chat",
+  ticket_created: "New ticket", ticket_assigned: "Assignment", ticket_response: "Response", new_chat: "New chat",
   ticket_reassigned: "Reassignment", sla_approaching: "SLA warning", ticket_resolved: "Resolved",
   ticket_reopened: "Reopened", user_replied: "Requester reply", chat_response: "Chat response",
 };
