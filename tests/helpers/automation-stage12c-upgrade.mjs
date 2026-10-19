@@ -1,7 +1,8 @@
 /** Large synthetic migration/locking probe: fixed disposable Docker identity only. */
+import { writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import { execFileSync, spawn } from 'node:child_process';
-import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';
+import {readFileSync, copyFileSync} from 'node:fs';
 import { setTimeout as delay } from 'node:timers/promises';
 import { definition, action, group } from '../fixtures/automation.mjs';
 const workdir = '/tmp/fixxflow-stage12c-upgrade', container = 'supabase_db_fixxflow-stage12c-upgrade';
@@ -71,7 +72,7 @@ const mutations = (async () => {
 })();
 assert.equal(await migrated, 0, 'Migration failed; do not repair history');
 report.migrationMs = performance.now() - started;
-await mutations; writeFileSync('/tmp/fixxflow-stage12c-upgrade-migration.private', output, { mode: 0o600 });
+await mutations; writeAutomationArtifact('fixxflow-stage12c-upgrade-migration.private', output);
 report.after = JSON.parse(snapshot()); assert.deepEqual(report.after, report.before);
 assert.equal(q('select count(*)from supabase_migrations.schema_migrations'), '40');
 assert.equal(q('select count(*)from public.automation_rules where enabled'), '101');
@@ -82,5 +83,5 @@ report.mutationLatency = { count: sorted.length, p95Ms: sorted[Math.min(sorted.l
 report.noMaintenanceWindowTarget = report.mutationLatency.p95Ms < 1000 && report.mutationLatency.maxMs < 2000 && report.migrationMs < 300000 ? 'PASS, local tested volume only' : 'FAIL';
 report.processing = q('select active from private.automation_processing_state') === 'f' ? 'OFF' : 'UNEXPECTED';
 report.finishedAt = new Date().toISOString();
-writeFileSync('/tmp/fixxflow-stage12c-upgrade-results.json', JSON.stringify(report, null, 2));
+writeAutomationArtifact('fixxflow-stage12c-upgrade-results.json', JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ volume: report.volume, migrationMs: report.migrationMs, mutations: report.mutationLatency, preservation: report.preservation, locking: report.lockTimeoutRollback, processing: report.processing }));

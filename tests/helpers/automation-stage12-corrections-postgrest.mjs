@@ -2,16 +2,17 @@
  * This verifies HTTP/RLS/MFA-claim enforcement, NOT GoTrue login/TOTP or Next SSR.
  * Fixed disposable identities; no .env, hosted URL or existing volume is loaded.
  */
+import { automationArtifacts, writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import {execFileSync,spawnSync} from 'node:child_process';
 import {randomBytes,createHmac} from 'node:crypto';
-import {readFile,readdir,writeFile,unlink} from 'node:fs/promises';
+import {readFile, readdir, unlink} from 'node:fs/promises';
 import {setTimeout as delay} from 'node:timers/promises';
 import {createClient} from '@supabase/supabase-js';
 import {load} from './load-module.mjs';
 import {definition,group,action} from '../fixtures/automation.mjs';
 const db='fixxflow-stage12-corrections-http-pg17',rest='fixxflow-stage12-corrections-postgrest',network='fixxflow-stage12-corrections-http';
-const origin='http://127.0.0.1:54630',envFile='/tmp/fixxflow-stage12-corrections-postgrest.private';
+const origin='http://127.0.0.1:54630',envFile=automationArtifacts().path('fixxflow-stage12-corrections-postgrest.private');
 const org='20000000-0000-0000-0000-000000000401',other='20000000-0000-0000-0000-000000000402',admin='10000000-0000-0000-0000-000000000401',otherAdmin='10000000-0000-0000-0000-000000000402',tech='10000000-0000-0000-0000-000000000403',employee='10000000-0000-0000-0000-000000000404';
 const docker=(args,options={})=>execFileSync('docker',args,{encoding:'utf8',stdio:['pipe','pipe','pipe'],maxBuffer:16*1024*1024,...options}).trim();
 const q=sql=>docker(['exec','-i',db,'psql','-X','-qAt','-h','/tmp','-U','postgres','-d','postgres','-v','ON_ERROR_STOP=1'],{input:sql});
@@ -37,7 +38,7 @@ try{
   q(await readFile(`supabase/migrations/${file}`,'utf8'));
  }
  q(`create role authenticator login noinherit;grant anon,authenticated,service_role to authenticator;insert into auth.mfa_factors(id,user_id,factor_type,status)values(gen_random_uuid(),'${admin}','totp','verified');`);
- await writeFile(envFile,`PGRST_DB_URI=postgresql://authenticator@${db}:5432/postgres\nPGRST_DB_SCHEMAS=public\nPGRST_DB_ANON_ROLE=anon\nPGRST_JWT_SECRET=${key}\nPGRST_LOG_LEVEL=info\n`,{mode:0o600});
+ writeAutomationArtifact('fixxflow-stage12-corrections-postgrest.private',`PGRST_DB_URI=postgresql://authenticator@${db}:5432/postgres\nPGRST_DB_SCHEMAS=public\nPGRST_DB_ANON_ROLE=anon\nPGRST_JWT_SECRET=${key}\nPGRST_LOG_LEVEL=info\n`);
  docker(['run','--name',rest,'--rm','-d','--network','bridge','-p','127.0.0.1:54630:3000','--env-file',envFile,'public.ecr.aws/supabase/postgrest:v16.4']);restStarted=true;docker(['network','connect',network,rest]);
  for(let n=0;n<100;n++){try{const r=await fetch(origin);report.readinessStatus=r.status;report.readinessBody=await r.text();if(r.ok){ready=true;break;}}catch(error){report.readinessError=error.cause?.code??error.name;}ready=false;await delay(100);}if(!ready){const diagnostic=spawnSync('docker',['logs','--tail','12',rest],{encoding:'utf8'});report.serverLog=diagnostic.stdout+diagnostic.stderr;report.containerState=docker(['inspect','--format','{{json .State}} {{json .NetworkSettings.Ports}}',rest]);}assert.equal(ready,true);delete report.readinessBody;delete report.readinessError;
  const a=client(admin),b=client(otherAdmin),service=client(null,'aal2','service_role');
@@ -77,6 +78,6 @@ try{
  assert.equal(q('select active from private.automation_processing_state'),'f');report.processing='OFF';report.result='PASS';
 }finally{
  if(restStarted)docker(['stop',rest]);if(databaseStarted)docker(['stop',db]);docker(['network','rm',network]);await unlink(envFile).catch(()=>{});
- await writeFile('/tmp/fixxflow-stage12-corrections-postgrest.json',JSON.stringify(report,null,2)+'\n');
+ await writeAutomationArtifact('fixxflow-stage12-corrections-postgrest.json',JSON.stringify(report,null,2)+'\n');
 }
 console.log(JSON.stringify(report));

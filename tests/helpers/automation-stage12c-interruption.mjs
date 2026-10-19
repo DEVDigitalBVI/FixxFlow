@@ -1,8 +1,8 @@
 /** Real worker process interruption and wall-clock lease recovery. Docker only. */
+import { writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import {fork} from 'node:child_process';
 import {randomUUID} from 'node:crypto';
-import {writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {setTimeout as delay} from 'node:timers/promises';
 import {service,sql,json,literal,ok} from './automation-stage12c-recovery-env.mjs';
@@ -72,7 +72,7 @@ if(process.argv.includes('--child')) {
   finally {
     if(child&&!child.killed)child.kill('SIGTERM');
     sql('select private.set_automation_processing(false)');report.processing='OFF';report.finishedAt=new Date().toISOString();
-    writeFileSync('/tmp/fixxflow-stage12c-interruption-results.json',JSON.stringify(report,null,2));
+    writeAutomationArtifact('fixxflow-stage12c-interruption-results.json',JSON.stringify(report,null,2));
   }
   console.log('PASS wall-clock lease reclaim, token fencing, completed-step preservation; processing OFF');
 }

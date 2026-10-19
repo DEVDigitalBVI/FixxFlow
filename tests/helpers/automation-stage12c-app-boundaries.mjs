@@ -1,10 +1,10 @@
 /** Actual Next HTTP authorization/export boundaries; fixed loopback only. */
+import { readAutomationArtifact, writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
 import { createServerClient } from '@supabase/ssr';
 import { local, ok, sql, literal } from './automation-stage12c-local.mjs';
-const fixture = JSON.parse(readFileSync('/tmp/fixxflow-stage12c-test-session.json', 'utf8'));
+const fixture = JSON.parse(readAutomationArtifact('fixxflow-stage12c-test-session.json', 'utf8'));
 const root = 'http://localhost:3100/app/administration/automations';
 async function session(index, mfa = false) {
   const cookies = new Map();
@@ -38,7 +38,7 @@ for (const route of ['', '/new', '/import', '/operations', '/operations/history'
 }
 const exported = await get(allowed, `/${rule}/export`); assert.equal(exported.status, 200); assert.match(exported.contentType, /application\/json/);
 const pkg = JSON.parse(exported.body); assert.equal(pkg.rules.length, 1);
-writeFileSync('/tmp/fixxflow-stage12c-import.json', JSON.stringify(pkg, null, 2));
+writeAutomationArtifact('fixxflow-stage12c-import.json', JSON.stringify(pkg, null, 2));
 report.checks.push({ role: 'administrator AAL2', route: 'export', result: 'PASS' });
 for (const [index, role] of [[0, 'administrator AAL1'], [2, 'technician'], [3, 'end_user']]) {
   const cookie = await session(index);
@@ -66,5 +66,5 @@ assert.equal(choices.status, 200); assert.ok(!JSON.parse(choices.body).rows.some
 const operations = await get(other, '/operations'); assert.equal(operations.status, 200);
 assert.ok(!operations.body.includes(fixture.orgA));
 report.checks.push({ role: 'other tenant administrator', route: 'selected references and Operations', result: 'PASS, no sibling data' });
-writeFileSync('/tmp/fixxflow-stage12c-app-boundaries-results.json', JSON.stringify(report, null, 2));
+writeAutomationArtifact('fixxflow-stage12c-app-boundaries-results.json', JSON.stringify(report, null, 2));
 console.log(`PASS ${report.checks.length} local Next HTTP boundary checks; export saved as a synthetic import fixture`);

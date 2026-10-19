@@ -1,9 +1,10 @@
 /** Fresh, network-isolated PG17 migration/locking/restore checks. Synthetic only.
  * Does not accept connection URLs or credentials. Never reads the prepared backup.
  */
+import { writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import {execFileSync,spawn} from 'node:child_process';
-import {readFile,readdir,writeFile} from 'node:fs/promises';
+import {readFile, readdir} from 'node:fs/promises';
 import {setTimeout as delay} from 'node:timers/promises';
 import {definition,group,action} from '../fixtures/automation.mjs';
 const mode=process.argv[2];assert.ok(['clean','upgrade','restore','advisors','concurrency','plans','restore-provenance'].includes(mode));
@@ -45,7 +46,7 @@ try{
   const digest="select json_build_object('rules',(select md5(string_agg(md5(to_jsonb(t)::text),'' order by id))from public.automation_rules t),'versions',(select md5(string_agg(md5(to_jsonb(t)::text),'' order by rule_id,version))from public.automation_rule_versions t),'executions',(select md5(string_agg(md5(to_jsonb(t)::text),'' order by id))from public.automation_executions t),'steps',(select md5(string_agg(md5(to_jsonb(t)::text),'' order by id))from public.automation_execution_steps t),'events',(select md5(string_agg(md5(to_jsonb(t)::text),'' order by id))from private.domain_events t),'deliveries',(select md5(string_agg(md5(to_jsonb(t)::text),'' order by id))from private.domain_event_deliveries t),'processing',(select to_jsonb(t)from private.automation_processing_state t))";
   report.before=JSON.parse(docker('exec',source,'psql','-X','-qAt','-h','/tmp','-U','postgres','-d','postgres','-c',digest));
   const dump=execFileSync('docker',['exec',source,'pg_dump','-h','/tmp','-U','postgres','-Fc','postgres'],{maxBuffer:64*1024*1024,stdio:['pipe','pipe','pipe']});
-  await writeFile('/tmp/fixxflow-stage12-corrections-synthetic.dump',dump,{mode:0o600});report.backupBytes=dump.length;
+  await writeAutomationArtifact('fixxflow-stage12-corrections-synthetic.dump',dump);report.backupBytes=dump.length;
   await q('create role anon nologin;create role authenticated nologin;create role service_role nologin bypassrls;');
   const started=performance.now();await restoreLogical(container,dump);report.restoreMs=performance.now()-started;
   report.after=await json(digest);assert.deepEqual(report.after,report.before);
@@ -197,7 +198,7 @@ try{
  }
  report.processing=await q('select active from private.automation_processing_state');assert.equal(report.processing,'f');report.result=mode==='advisors'&&report.advisorExit!==0?'BLOCKED':'PASS';
 }finally{
- report.finishedAt=new Date().toISOString();await writeFile(`/tmp/fixxflow-stage12-corrections-${mode}.json`,JSON.stringify(report,null,2)+'\n');
+ report.finishedAt=new Date().toISOString();await writeAutomationArtifact(`fixxflow-stage12-corrections-${mode}.json`,JSON.stringify(report,null,2)+'\n');
  docker('stop',container);
 }
 console.log(JSON.stringify(report));

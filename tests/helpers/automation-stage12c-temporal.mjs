@@ -1,7 +1,7 @@
 /** Real-time short SLA window and bounded temporal fairness; isolated Docker. */
+import { writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
-import {writeFileSync} from 'node:fs';
 import {setTimeout as delay} from 'node:timers/promises';
 import {service,sql,json,literal,ok} from './automation-stage12c-recovery-env.mjs';
 import {definition,action,group} from '../fixtures/automation.mjs';
@@ -62,6 +62,6 @@ finally {
   sql('select private.set_automation_processing(false)');
   assert.equal(ok(await service.rpc('discover_temporal_automation',{})).emitted,0);
   report.processing='OFF';report.finishedAt=new Date().toISOString();
-  writeFileSync('/tmp/fixxflow-stage12c-temporal-results.json',JSON.stringify(report,null,2));
+  writeAutomationArtifact('fixxflow-stage12c-temporal-results.json',JSON.stringify(report,null,2));
 }
 console.log('PASS temporal bounds, fairness, real short SLA windows, missed observations and OFF control');

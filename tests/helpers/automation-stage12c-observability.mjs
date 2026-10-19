@@ -1,15 +1,16 @@
 /** Read-only log/provenance checks. Never print credential or content values. */
+import { readAutomationArtifact, writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {readFileSync,writeFileSync} from 'node:fs';
+import {readFileSync} from 'node:fs';
 import {local,sql,literal,container} from './automation-stage12c-local.mjs';
-const run=JSON.parse(readFileSync('/tmp/fixxflow-stage12c-capacity-results.json','utf8'));
-const session=JSON.parse(readFileSync('/tmp/fixxflow-stage12c-test-session.json','utf8'));
+const run=JSON.parse(readAutomationArtifact('fixxflow-stage12c-capacity-results.json','utf8'));
+const session=JSON.parse(readAutomationArtifact('fixxflow-stage12c-test-session.json','utf8'));
 const app=readFileSync('/tmp/fixxflow-stage12c-app-server.private','utf8');
 const databaseLog=spawnSync('docker',['logs',container],{encoding:'utf8',stdio:['ignore','pipe','pipe'],maxBuffer:32*1024*1024});
 assert.equal(databaseLog.status,0);
 const database=databaseLog.stdout+databaseLog.stderr;
-const forbidden=[local.SERVICE_ROLE_KEY,readFileSync('/tmp/fixxflow-stage12c-cron.private','utf8'),session.mfa.secret,...session.users.map(u=>u.password),'Synthetic Stage12C secret body must not enter telemetry','Synthetic Stage12C capacity note','Synthetic verification note.'];
+const forbidden=[local.SERVICE_ROLE_KEY,readAutomationArtifact('fixxflow-stage12c-cron.private','utf8'),session.mfa.secret,...session.users.map(u=>u.password),'Synthetic Stage12C secret body must not enter telemetry','Synthetic Stage12C capacity note','Synthetic verification note.'];
 const report={scope:'Local Next server log and PostgreSQL stdout/stderr log sample; not provider-wide log sinks',checkedAt:new Date().toISOString(),logs:{}};
 for(const [name,text]of Object.entries({app,database})){
   assert.ok(forbidden.every(value=>value&&!text.includes(value)),`${name}: sensitive canary found (value withheld)`);
@@ -28,5 +29,5 @@ report.invocations=JSON.parse(sql(`select jsonb_agg(jsonb_build_object('id',id,'
 report.workerInvocationLink='PARTIAL: worker step logs omit the automation_runs UUID; associate by bounded invocation time, not an exact persisted foreign key';
 report.discoveryInvocationIds=run.samples.map(s=>s.discovery.result.invocationId).filter(Boolean);
 report.externalLogSinks='Not inspected; no hosted environment';
-writeFileSync('/tmp/fixxflow-stage12c-observability-results.json',JSON.stringify(report,null,2));
+writeAutomationArtifact('fixxflow-stage12c-observability-results.json',JSON.stringify(report,null,2));
 console.log('PASS sensitive canaries absent and persisted action identifiers match worker logs; invocation association remains PARTIAL');

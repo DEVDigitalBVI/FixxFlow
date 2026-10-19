@@ -1,21 +1,21 @@
 /** Real-time local HTTP cadence probe. Roughly 80 minutes; no clock/window aging. */
+import { readAutomationArtifact, writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
 import { setTimeout as delay } from 'node:timers/promises';
 import { sql, json, literal } from './automation-stage12c-local.mjs';
 import { definition, action, group, condition } from '../fixtures/automation.mjs';
 
 const base = 'http://localhost:3100';
-const secret = readFileSync('/tmp/fixxflow-stage12c-cron.private', 'utf8');
-const { users } = JSON.parse(readFileSync('/tmp/fixxflow-stage12c-test-session.json', 'utf8'));
+const secret = readAutomationArtifact('fixxflow-stage12c-cron.private', 'utf8');
+const { users } = JSON.parse(readAutomationArtifact('fixxflow-stage12c-test-session.json', 'utf8'));
 const admin = users[1].id, orgs = Array.from({ length: 8 }, () => randomUUID());
 const identity = `set local role authenticated;select set_config('request.jwt.claims',${literal(JSON.stringify({ sub: admin, role: 'authenticated', aal: 'aal1' }))},true);`;
 const ids = orgs.map(literal).join(',');
 const report = { scope: 'Local Docker Supabase PG17 and production-mode Next HTTP endpoints; not hosted capacity',
   engine: sql('show server_version'), startedAt: new Date().toISOString(), configuration: { cadenceSeconds: 60, batch: 5, steadyMinutes: 60, burst: 80 },
   tenants: orgs, samples: [], arrivalBatches: [], processing: 'OFF', result: 'RUNNING' };
-const save = () => writeFileSync('/tmp/fixxflow-stage12c-capacity-results.json', JSON.stringify(report, null, 2));
+const save = () => writeAutomationArtifact('fixxflow-stage12c-capacity-results.json', JSON.stringify(report, null, 2));
 const relations = () => JSON.parse(sql(`select coalesce(jsonb_object_agg(relname,jsonb_build_object('tableBytes',pg_table_size(relid),'indexBytes',pg_indexes_size(relid),'rowsEstimate',n_live_tup)),'{}') from pg_stat_user_tables where schemaname in ('public','private') and (relname like 'automation_%' or relname like 'domain_event%' or relname in ('notifications','ticket_messages'))`));
 const queue = () => JSON.parse(sql(`select jsonb_build_object('total',count(*),'pending',count(*)filter(where status='pending'),'leased',count(*)filter(where status='leased'),'acknowledged',count(*)filter(where status='acknowledged'),'dead',count(*)filter(where status='dead'),'capacityDeferred',count(*)filter(where capacity_reason is not null),'retryPending',count(*)filter(where status='pending' and attempts>0),'oldestActionableSeconds',coalesce(extract(epoch from clock_timestamp()-min(created_at)filter(where status='pending' and available_at<=clock_timestamp())),0),'perTenant',(select jsonb_object_agg(organization_id,n)from(select organization_id,count(*)filter(where status='acknowledged')n from private.domain_event_deliveries where organization_id in (${ids}) group by organization_id)t)) from private.domain_event_deliveries where organization_id in (${ids})`));
 async function endpoint(path) {

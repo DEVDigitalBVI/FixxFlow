@@ -1,6 +1,7 @@
 /** Disposable Supabase PG17 upgrade/restore rehearsal. Fixed local container only. */
+import { writeAutomationArtifact } from './automation-artifacts.mjs';
 import {execFileSync,spawn} from 'node:child_process';
-import {readFileSync,writeFileSync,copyFileSync} from 'node:fs';
+import {readFileSync, copyFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import {definition,action,group} from '../fixtures/automation.mjs';
 const container='supabase_db_fixxflow-stage12b-upgrade',workdir='/tmp/fixxflow-stage12b-upgrade';
@@ -31,11 +32,11 @@ let migrationOutput='';migration.stdout.on('data',d=>migrationOutput+=d);migrati
 const done=new Promise((resolve,reject)=>{migration.on('error',reject);migration.on('close',code=>code===0?resolve():reject(Error('Local migration failed; inspect private migration log')));});
 let sawLockWait=false;
 for(let i=0;i<12;i++) {await new Promise(r=>setTimeout(r,200));if(q("select count(*) from pg_stat_activity where wait_event_type='Lock' and query like '%automation_safety_limits%' ")!=='0')sawLockWait=true;}
-await done;writeFileSync('/tmp/fixxflow-stage12b-upgrade-migration.log',migrationOutput);
+await done;writeAutomationArtifact('fixxflow-stage12b-upgrade-migration.log',migrationOutput);
 assert.equal(snapshot(),before);assert.equal(q('select count(*) from supabase_migrations.schema_migrations'),'40');
 assert.equal(q('select count(*) from public.automation_rules where enabled'),'101');
 assert.throws(()=>q(`begin;${identity}do $$ declare r public.automation_rules;begin r:=public.create_automation_rule('${org}','${draft}'::jsonb);perform public.set_automation_rule_enabled('${org}',r.id,1,true);end $$;commit;`),/Active automation safety limit/);
 assert.equal(q('select count(*) from public.automation_rules where enabled'),'101');
 const report={engine:q('show server_version'),cleanPreStage12Ledger:39,upgradedLedger:40,legacyEnabledRules:101,tickets:2000,deliveries:Number(q('select count(*) from private.domain_event_deliveries')),executions:1,steps:1,immutableSnapshot:'PASS',furtherEnableDenied:'PASS',migrationElapsedMs:performance.now()-start,observedLockWait:sawLockWait,processing:'OFF'};
-writeFileSync('/tmp/fixxflow-stage12b-upgrade-results.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+writeAutomationArtifact('fixxflow-stage12b-upgrade-results.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 // Use the separate supported CLI export + automation-stage12b-restore.mjs workflow.

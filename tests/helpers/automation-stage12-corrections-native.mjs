@@ -3,9 +3,10 @@
  * prepare: empty cluster replay/upgrade. verify: legacy and concurrency checks.
  * workload: default-cadence sustained load; always restores processing OFF.
  */
+import { writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import {readFile, readdir} from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import { randomUUID } from 'node:crypto';
 import { load } from './load-module.mjs';
@@ -109,7 +110,7 @@ if(mode==='verify'){
   result.legacyTemporalAndWorker='PASS';
  }finally{await q('select private.set_automation_processing(false)');}
  result.processing=await q('select active from private.automation_processing_state');assert.equal(result.processing,'f');
- await writeFile('/tmp/fixxflow-stage12-corrections-native-results.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+ await writeAutomationArtifact('fixxflow-stage12-corrections-native-results.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }
 
 if(mode==='workload'){
@@ -127,7 +128,7 @@ if(mode==='workload'){
  const report={scope:'Local PG17 + actual TypeScript worker over independent SQL RPC sessions; not HTTP/hosted',configuration:{cadenceSeconds:60,batch:5,steadyMinutes:60,burst:20},startedAt:new Date().toISOString(),samples:[],arrivals:0,result:'RUNNING'};
  const ids=tenants.map(lit).join(',');
  const queue=()=>data(`select json_build_object('total',count(*),'pending',count(*)filter(where status in ('pending','leased')),'acknowledged',count(*)filter(where status='acknowledged'),'dead',count(*)filter(where status='dead'),'capacityDeferred',count(*)filter(where capacity_reason is not null),'oldestSeconds',coalesce(extract(epoch from clock_timestamp()-min(created_at)filter(where status='pending' and available_at<=clock_timestamp())),0),'perTenant',(select json_object_agg(organization_id,n)from(select organization_id,count(*)filter(where status='acknowledged')n from private.domain_event_deliveries where organization_id in (${ids})group by organization_id)t))from private.domain_event_deliveries where organization_id in (${ids})`);
- const save=()=>writeFile('/tmp/fixxflow-stage12-corrections-capacity.json',JSON.stringify(report,null,2)+'\n');
+ const save=()=>writeAutomationArtifact('fixxflow-stage12-corrections-capacity.json',JSON.stringify(report,null,2)+'\n');
  const tick=async(phase,minute)=>{
   const started=performance.now(),discovery=await data('begin;set local role service_role;select public.discover_temporal_automation();commit;');
   const worker=await runAutomationWorker(store,{enabled:true}),current=await queue();

@@ -1,7 +1,7 @@
 /** Run manually against the disposable Stage 12C stack. Never loads .env files. */
+import { writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import {randomUUID, randomBytes, createHmac} from 'node:crypto';
-import {writeFileSync} from 'node:fs';
 import {client, local, service, sql, json, literal, ok} from './automation-stage12c-local.mjs';
 import {definition, action, group} from '../fixtures/automation.mjs';
 import {load} from './load-module.mjs';
@@ -81,10 +81,10 @@ assert.equal(sql(`select count(*) from public.automation_rules where organizatio
 assert.equal((await create(a,orgA)).enabled,false);
 pass('independent_http_enable_race_ceiling_and_disabled_creation');
 // Preserve state for subsequent local worker verification. Session material stays
-// only in a private temporary credential file, never evidence or committed files.
-writeFileSync('/tmp/fixxflow-stage12c-test-session.json',JSON.stringify({orgA,orgB,users:users.map(u=>({id:u.id,email:u.email,password:u.password})),ruleId:rule.id,mfa:{factorId:factor.id,secret:factor.totp.secret}}),{mode:0o600});
+// only in a private checkout credential file, never evidence or committed files.
+writeAutomationArtifact('fixxflow-stage12c-test-session.json',JSON.stringify({orgA,orgB,users:users.map(u=>({id:u.id,email:u.email,password:u.password})),ruleId:rule.id,mfa:{factorId:factor.id,secret:factor.totp.secret}}));
 assert.equal(sql('select active from private.automation_processing_state'),'f');
-writeFileSync('/tmp/fixxflow-stage12c-postgrest-results.json',JSON.stringify(report,null,2));
+writeAutomationArtifact('fixxflow-stage12c-postgrest-results.json',JSON.stringify(report,null,2));
 console.log('PASS processing_OFF');
 // Keep this import exercised here: the real repository boundary is used next.
 assert.equal(typeof load('src/features/automation/worker-repository.ts',{'server-only':{}}).automationWorkerRepository,'function');

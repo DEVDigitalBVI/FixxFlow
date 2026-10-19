@@ -1,11 +1,11 @@
 /** Bounded real-time default-cadence smoke; local Supabase only. About six minutes. */
+import { readAutomationArtifact, writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
-import {readFileSync,writeFileSync} from 'node:fs';
 import {setTimeout as delay} from 'node:timers/promises';
 import {service,sql,json,literal,ok} from './automation-stage12b-local.mjs';
 import {definition,action,group} from '../fixtures/automation.mjs';
 import {load} from './load-module.mjs';
-const {orgA,orgB,users}=JSON.parse(readFileSync('/tmp/fixxflow-stage12b-test-session.json','utf8'));
+const {orgA,orgB,users}=JSON.parse(readAutomationArtifact('fixxflow-stage12b-test-session.json','utf8'));
 const {runAutomationWorker}=load('src/features/automation/worker.ts',{'server-only':{}});
 const {automationWorkerRepository}=load('src/features/automation/worker-repository.ts',{'server-only':{}});
 const {observeAutomationRun}=load('src/features/automation/operations-telemetry.ts',{'server-only':{}});
@@ -63,6 +63,6 @@ try {
  assert.equal(sql('select count(*) from public.automation_execution_steps'),offBefore);
  const sorted=actionLatencyMs.toSorted((a,b)=>a-b);
  const report={scope:'Local Supabase PG17, actual PostgREST worker, unmodified 60-second cadence; short smoke only',engine:sql('show server_version'),startedAt,finishedAt:new Date().toISOString(),steady:{arrivals:12,observationSeconds:180,completed:12,ratePerMinute:4},burst:{arrivals:14,completed,drainSeconds:(performance.now()-burstStart)/1000},actionLatencyMs:{count:sorted.length,p50:sorted[Math.floor(sorted.length*.5)],p95:sorted[Math.floor(sorted.length*.95)],max:sorted.at(-1)},invocations,before,after:stats(),sanitizedTrace:'PASS',processing:'OFF'};
- writeFileSync('/tmp/fixxflow-stage12b-capacity-results.json',JSON.stringify(report,null,2));
+ writeAutomationArtifact('fixxflow-stage12b-capacity-results.json',JSON.stringify(report,null,2));
  console.log('PASS default_cadence_fairness_burst_recovery_and_OFF');
 } finally { sql('select private.set_automation_processing(false)'); }

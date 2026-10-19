@@ -1,10 +1,10 @@
 /** Independent PostgREST requests + database connections. Local stack only. */
+import { readAutomationArtifact, writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
-import {readFileSync,writeFileSync} from 'node:fs';
 import {randomUUID} from 'node:crypto';
 import {service,sql,connection,json,literal,ok} from './automation-stage12b-local.mjs';
 import {definition,action,group} from '../fixtures/automation.mjs';
-const {users}=JSON.parse(readFileSync('/tmp/fixxflow-stage12b-test-session.json','utf8'));
+const {users}=JSON.parse(readAutomationArtifact('fixxflow-stage12b-test-session.json','utf8'));
 const org=randomUUID(),admin=users[1].id;
 const identity=`set local role authenticated;select set_config('request.jwt.claims',${literal(JSON.stringify({sub:admin,role:'authenticated',aal:'aal1'}))},true);`;
 const gates={};const pass=name=>{gates[name]='PASS';console.log(`PASS ${name}`);};
@@ -83,4 +83,4 @@ try {
  assert.equal(sql(`select status from public.automation_executions where id='${running.id}'`),'failed');
  pass('retry_exhaustion_terminalizes_running_execution');
 } finally {sql('select private.set_automation_processing(false)');}
-writeFileSync('/tmp/fixxflow-stage12b-contention-results.json',JSON.stringify({engine:sql('show server_version'),gates,processing:'OFF'},null,2));
+writeAutomationArtifact('fixxflow-stage12b-contention-results.json',JSON.stringify({engine:sql('show server_version'),gates,processing:'OFF'},null,2));

@@ -1,3 +1,4 @@
+import { renderCompactPreview } from './compact-preview.mjs';
 /** Local interface regression fixture. Synthetic data; no credentials or production mutations. */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -72,7 +73,7 @@ const server=http.createServer((request,response)=>{
  if(url.pathname.startsWith('/brand/')){const file=path.join(root,'public',url.pathname);response.setHeader('Content-Type',url.pathname.endsWith('.woff2')?'font/woff2':'image/png');response.end(fs.readFileSync(file));return;}
  if(url.pathname==='/app/lookups'){response.setHeader('Content-Type','application/json');response.end(JSON.stringify({rows:[],selected:null,next:null}));return;}
  if(url.pathname==='/app/search'){response.setHeader('Content-Type','application/json');if(url.searchParams.get('q')==='fail'&&!searchFailed){searchFailed=true;response.statusCode=503;response.end('{}');}else response.end(JSON.stringify({results:/vpn/i.test(url.searchParams.get('q')??'')?[{id:'ticket-0',label:'VPN disconnects during video calls',detail:'#1842',href:'/app/tickets?view=all&ticket=ticket-0',group:'Tickets'}]:[]}));return;}
- if(url.pathname==='/compact'){const width=Number(url.searchParams.get('width'))||390;const role=url.searchParams.get('role')||'';const theme=url.searchParams.get('theme')||'light';const surface=url.searchParams.get('surface')||'';response.setHeader('Content-Type','text/html');response.end('<!doctype html><html lang="en"><head><title>Interface audit viewport</title></head><body><h1>'+width+'px '+role+' '+theme+' fixture</h1><iframe title="Audit viewport" src="/app/tickets?view=all&role='+role+'&theme='+theme+'&surface='+surface+'" style="width:'+width+'px;height:850px;border:1px solid gray"></iframe></body></html>');return;}
+ if(url.pathname==='/compact'){response.setHeader('Content-Type','text/html');response.end(renderCompactPreview(url.searchParams));return;}
  response.setHeader('Content-Type','text/html');response.end('<!doctype html><html lang="en" data-theme="'+(url.searchParams.get('theme')==='dark'?'dark':'light')+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FixxFlow interface fixture</title><style>@font-face{font-family:Inter;src:url(/brand/fixxflow/fonts/InterVariable.woff2) format(woff2);font-weight:100 900}:root{--font-inter:Inter}</style><link rel="stylesheet" href="/style.css"></head><body><div id="root"></div><script>window.fixtureQueue='+JSON.stringify(queueHtml).replaceAll('<','\\u003c')+';</script><script src="/bundle.js"></script></body></html>');
 });
 const port=Number(process.argv[2])||4183;

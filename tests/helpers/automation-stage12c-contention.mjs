@@ -1,6 +1,6 @@
 /** Independent PostgREST requests + database connections. Local stack only. */
+import { writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
-import {writeFileSync} from 'node:fs';
 import {randomUUID} from 'node:crypto';
 import {service,sql,connection,json,literal,ok} from './automation-stage12c-recovery-env.mjs';
 import {definition,action,group} from '../fixtures/automation.mjs';
@@ -83,4 +83,4 @@ try {
  assert.equal(sql(`select status from public.automation_executions where id='${running.id}'`),'failed');
  pass('retry_exhaustion_terminalizes_running_execution');
 } finally {sql('select private.set_automation_processing(false)');}
-writeFileSync('/tmp/fixxflow-stage12c-contention-results.json',JSON.stringify({engine:sql('show server_version'),gates,processing:'OFF'},null,2));
+writeAutomationArtifact('fixxflow-stage12c-contention-results.json',JSON.stringify({engine:sql('show server_version'),gates,processing:'OFF'},null,2));

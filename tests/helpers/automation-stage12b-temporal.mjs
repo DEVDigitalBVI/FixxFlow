@@ -1,11 +1,11 @@
 /** Bounded real PostgREST discovery and worker probe, local Supabase only. */
+import { readAutomationArtifact, writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
-import {readFileSync,writeFileSync} from 'node:fs';
 import {randomUUID} from 'node:crypto';
 import {service,sql,json,literal,ok} from './automation-stage12b-local.mjs';
 import {definition,action,group} from '../fixtures/automation.mjs';
 import {load} from './load-module.mjs';
-const {users}=JSON.parse(readFileSync('/tmp/fixxflow-stage12b-test-session.json','utf8'));
+const {users}=JSON.parse(readAutomationArtifact('fixxflow-stage12b-test-session.json','utf8'));
 const {discoverTemporalAutomation}=load('src/features/automation/scheduler.ts',{'server-only':{}});
 const {runAutomationWorker}=load('src/features/automation/worker.ts',{'server-only':{}});
 const {automationWorkerRepository}=load('src/features/automation/worker-repository.ts',{'server-only':{}});
@@ -31,6 +31,6 @@ try{
  assert.equal(sql(`select count(*) from public.automation_executions where organization_id='${orgs[1]}' and status='succeeded'`),'1');
  const lag=JSON.parse(sql(`select jsonb_build_object('emitted',count(*),'maxLagSeconds',max(extract(epoch from e.occurred_at-o.threshold_at)),'minLagSeconds',min(extract(epoch from e.occurred_at-o.threshold_at))) from private.automation_temporal_occurrences o join private.domain_events e on e.id=o.event_id where o.organization_id in ('${orgs.join("','")}')`));
  const report={engine:sql('show server_version'),discovery:discoveries,worker:batches,lag,cursorRollbackRecovery:'PASS',idempotency:'PASS',smallTenantProgress:'PASS',scope:'Aged synthetic thresholds; not a real-time SLA-window or throughput measurement',processing:'OFF'};
- writeFileSync('/tmp/fixxflow-stage12b-temporal-results.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ writeAutomationArtifact('fixxflow-stage12b-temporal-results.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }finally{sql('select private.set_automation_processing(false)');}
 assert.equal(ok(await service.rpc('discover_temporal_automation',{})).emitted,0);

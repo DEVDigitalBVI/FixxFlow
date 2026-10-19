@@ -1,15 +1,15 @@
 /** One-use loopback session bootstrap; real GoTrue password + TOTP, no token output. */
+import { readAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { createHmac, randomUUID, randomBytes } from 'node:crypto';
-import { readFileSync } from 'node:fs';
 import { createServerClient, serializeCookieHeader } from '@supabase/ssr';
 import { local, ok, service, sql } from './automation-stage12c-local.mjs';
 
-const fixture = JSON.parse(readFileSync('/tmp/fixxflow-stage12c-test-session.json', 'utf8'));
+const fixture = JSON.parse(readAutomationArtifact('fixxflow-stage12c-test-session.json', 'utf8'));
 const loadView = process.argv.includes('--load-view');
 if (loadView) {
-  const org = JSON.parse(readFileSync('/tmp/fixxflow-stage12c-capacity-results.json', 'utf8')).tenants[0];
+  const org = JSON.parse(readAutomationArtifact('fixxflow-stage12c-capacity-results.json', 'utf8')).tenants[0];
   assert.match(org, /^[0-9a-f-]{36}$/);
   const email = `stage12c-observer-${randomUUID()}@example.invalid`, password = randomBytes(32).toString('base64url');
   const user = ok(await service.auth.admin.createUser({ email, password, email_confirm: true })).user;

@@ -3,6 +3,7 @@ node_modules/
 .next/
 out/
 coverage/
+.fixxflow-test-artifacts/
 *.tsbuildinfo
 
 # Environment files (commit only the example)

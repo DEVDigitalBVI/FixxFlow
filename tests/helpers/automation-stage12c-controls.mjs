@@ -1,8 +1,9 @@
 /** Real Next HTTP environment/database kill-switch and activation-cutoff probe. */
+import { automationArtifacts, readAutomationArtifact, writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
 import {randomUUID,randomBytes} from 'node:crypto';
-import {readFileSync,writeFileSync,openSync,closeSync} from 'node:fs';
+import {openSync, closeSync} from 'node:fs';
 import {setTimeout as delay} from 'node:timers/promises';
 import {createServerClient} from '@supabase/ssr';
 import {local,service,sql,json,literal,ok} from './automation-stage12c-recovery-env.mjs';
@@ -24,7 +25,8 @@ const snapshot=()=>sql(`select jsonb_build_object('rules',(select jsonb_agg(to_j
 let server;
 async function stop(){if(!server)return;const exited=new Promise(resolve=>server.once('exit',resolve));server.kill('SIGTERM');await exited;server=null;}
 async function start(mode){
-  const file=openSync('/tmp/fixxflow-stage12c-controls-server.private','a',0o600);
+  writeAutomationArtifact('fixxflow-stage12c-controls-server.private','');
+  const file=openSync(automationArtifacts().path('fixxflow-stage12c-controls-server.private'),'a',0o600);
   server=spawn(process.execPath,['tests/helpers/automation-stage12c-recovery-app.mjs',mode],{stdio:['ignore',file,file]});closeSync(file);
   for(let i=0;i<100;i++){
     if(server.exitCode!==null)throw new Error('Local recovery application exited');
@@ -34,7 +36,7 @@ async function start(mode){
   throw new Error('Local recovery application did not start');
 }
 async function cron(kind){
-  const secret=readFileSync('/tmp/fixxflow-stage12c-recovery-cron.private','utf8');
+  const secret=readAutomationArtifact('fixxflow-stage12c-recovery-cron.private','utf8');
   const response=await fetch(`http://localhost:3102/api/cron/${kind}`,{headers:{authorization:`Bearer ${secret}`}});
   assert.equal(response.status,200);return response.json();
 }
@@ -68,6 +70,6 @@ finally {
   sql('select private.set_automation_processing(false)');
   report.processing=sql('select active from private.automation_processing_state')==='f'?'OFF':'UNEXPECTED';
   await stop();report.server='stopped';report.finishedAt=new Date().toISOString();
-  writeFileSync('/tmp/fixxflow-stage12c-controls-results.json',JSON.stringify(report,null,2));
+  writeAutomationArtifact('fixxflow-stage12c-controls-results.json',JSON.stringify(report,null,2));
 }
 console.log('PASS HTTP environment/database OFF controls, Administration, durable pending work and reactivation cutoffs');

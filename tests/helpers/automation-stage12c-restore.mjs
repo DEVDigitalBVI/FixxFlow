@@ -1,6 +1,7 @@
 /** Restore only freshly exported synthetic local data into a separate empty stack. */
+import { writeAutomationArtifact } from './automation-artifacts.mjs';
 import {execFileSync} from 'node:child_process';
-import {readFileSync,writeFileSync,chmodSync} from 'node:fs';
+import {readFileSync, chmodSync} from 'node:fs';
 import assert from 'node:assert/strict';
 const source='supabase_db_fixxflow-stage12c-upgrade',target='supabase_db_fixxflow-stage12c-restore';
 for(const name of ['upgrade','restore'])assert.match(readFileSync(`/tmp/fixxflow-stage12c-${name}/supabase/config.toml`,'utf8'),new RegExp(`project_id = "fixxflow-stage12c-${name}"`));
@@ -18,7 +19,7 @@ assert.doesNotMatch(contents.data,/COPY "storage"\."(?:buckets_vectors|vector_in
 // an empty path so cross-schema references remain valid after pg_dump's SETs.
 const policyExport=`set search_path=''; select format('create policy %I on %I.%I as %s for %s to %s%s%s;',policyname,schemaname,tablename,permissive,cmd,array_to_string(array(select quote_ident(x) from unnest(roles)x),','),case when qual is null then '' else ' using ('||qual||')' end,case when with_check is null then '' else ' with check ('||with_check||')' end) from pg_catalog.pg_policies where (schemaname,tablename) in (('storage','objects'),('realtime','messages')) order by schemaname,tablename,policyname`;
 const policies=q(source,policyExport);
-writeFileSync('/tmp/fixxflow-stage12c-managed-policies.sql',policies,{mode:0o600});
+writeAutomationArtifact('fixxflow-stage12c-managed-policies.sql',policies);
 if(completePolicies){
  assert.equal(q(target,"select count(*) from pg_policies where (schemaname,tablename) in (('storage','objects'),('realtime','messages'))"),'0');
  q(target,`begin;\n${policies}\ncommit;`);
@@ -34,4 +35,4 @@ assert.equal(q(target,'select count(*) from supabase_migrations.schema_migration
 // All restored tenant FK references still resolve after replica-mode import.
 assert.equal(q(target,`select count(*) from public.automation_executions x left join public.automation_rule_versions v on(v.organization_id,v.rule_id,v.version)=(x.organization_id,x.rule_id,x.rule_version) where v.rule_id is null`),'0');
 const report={engine:q(target,'show server_version'),method:'Supabase CLI schema/data/history; replica-mode transaction; managed vector tables excluded',tablesCompared:tables.length,rowDigests:'PASS',migrationLedger:40,enabledRules:Number(q(target,'select count(*) from public.automation_rules where enabled')),tickets:Number(q(target,'select count(*) from public.tickets')),processing:'OFF',scope:'Isolated local restore; no hosted platform configuration or Storage object bytes restored'};
-writeFileSync('/tmp/fixxflow-stage12c-restore-results.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+writeAutomationArtifact('fixxflow-stage12c-restore-results.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));

@@ -1,23 +1,23 @@
 /** Early-failure handoff: stop synthetic arrivals, retain generation and cadence. */
+import { readAutomationArtifact, writeAutomationArtifact } from './automation-artifacts.mjs';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
-import {readFileSync,writeFileSync} from 'node:fs';
 import {setTimeout as delay} from 'node:timers/promises';
 import {sql,literal} from './automation-stage12c-local.mjs';
 const pid=Number(process.argv[2]);assert.ok(Number.isInteger(pid)&&pid>1);
 assert.equal(execFileSync('ps',['-p',String(pid),'-o','command='],{encoding:'utf8'}).trim(),'node tests/helpers/automation-stage12c-capacity.mjs');
-const file='/tmp/fixxflow-stage12c-capacity-results.json';
-const preliminary=JSON.parse(readFileSync(file,'utf8'));
+const file='fixxflow-stage12c-capacity-results.json';
+const preliminary=JSON.parse(readAutomationArtifact(file,'utf8'));
 assert.equal(preliminary.result,'RUNNING');assert.ok(preliminary.samples.some(s=>s.queue.oldestActionableSeconds>=180));
 assert.equal(sql('select active from private.automation_processing_state'),'t');
 process.kill(pid,'SIGTERM');
 // This specific generator has no signal handler; its parent shell exits without
 // a processing transition. The finally below now owns the OFF restoration.
-const report=JSON.parse(readFileSync(file,'utf8'));
+const report=JSON.parse(readAutomationArtifact(file,'utf8'));
 const ids=report.tenants.map(value=>{assert.match(value,/^[0-9a-f-]{36}$/);return literal(value);}).join(',');
-const secret=readFileSync('/tmp/fixxflow-stage12c-cron.private','utf8');
+const secret=readAutomationArtifact('fixxflow-stage12c-cron.private','utf8');
 const generation=sql('select generation from private.automation_processing_state');
-const save=()=>writeFileSync(file,JSON.stringify(report,null,2));
+const save=()=>writeAutomationArtifact(file,JSON.stringify(report,null,2));
 const queue=()=>JSON.parse(sql(`select jsonb_build_object('total',count(*),'pending',count(*)filter(where status='pending'),'leased',count(*)filter(where status='leased'),'acknowledged',count(*)filter(where status='acknowledged'),'dead',count(*)filter(where status='dead'),'capacityDeferred',count(*)filter(where capacity_reason is not null),'retryPending',count(*)filter(where status='pending'and attempts>0),'oldestActionableSeconds',coalesce(extract(epoch from clock_timestamp()-min(created_at)filter(where status='pending'and available_at<=clock_timestamp())),0),'perTenant',(select jsonb_object_agg(organization_id,n)from(select organization_id,count(*)filter(where status='acknowledged')n from private.domain_event_deliveries where organization_id in (${ids})group by organization_id)t))from private.domain_event_deliveries where organization_id in (${ids})`));
 async function endpoint(path){const start=performance.now();const response=await fetch('http://localhost:3100'+path,{headers:{authorization:`Bearer ${secret}`},signal:AbortSignal.timeout(65000)});assert.equal(response.status,200);return {elapsedMs:performance.now()-start,result:await response.json()};}
 report.result='FAIL';report.failure='Steady workload exceeded 180-second actionable age and accumulated backlog; stopped arrivals early to measure same-generation drain.';
