@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import React from 'react';
+import { load } from '../../../tests/helpers/load-module.mjs';
 import { componentHarness } from '../../../tests/helpers/component-harness.mjs';
 const initial={id:'ticket',revision:1,status:'open',priority:'normal',assigned_technician_id:null,team_id:null,category_id:null,subcategory_id:null,location_id:null,due_at:'2026-10-09T13:00:00Z'};
 function editor(result={success:'Saved',revision:2}){
@@ -50,4 +52,20 @@ test('assignment editor opens against current details and stays mounted when rev
   assert.equal(h.find(n=>n.props.ticket).props.ticket.revision,2);
   assert.equal(h.find(n=>n.props.ticket).props.ticket.assigned_technician_id,'viewer');
  }finally{h.close();}
+});
+
+test('saved-details fragment opens the editor initially and on later hash navigation',()=>{
+ const previous=globalThis.window;let change,removed;
+ globalThis.window={location:{hash:'#ticket-details'},addEventListener:(name,handler)=>{if(name==='hashchange')change=handler;},removeEventListener:(name,handler)=>removed=[name,handler]};
+ try{
+  const fresh=()=>{
+   let editing=false;const effects=[];
+   const {TicketAssignmentEditor}=load('src/features/tickets/ticket-details-form.tsx',{react:{...React,useState:()=>[editing,v=>editing=v],useEffect:fn=>effects.push(fn)}});
+   TicketAssignmentEditor({ticket:initial,timeZone:'UTC'});
+   const cleanup=effects[0]();return {editing:()=>editing,cleanup};
+  };
+  const initialLink=fresh();assert.equal(initialLink.editing(),true);initialLink.cleanup();assert.deepEqual(removed,['hashchange',change]);
+  globalThis.window.location.hash='';const later=fresh();assert.equal(later.editing(),false);
+  globalThis.window.location.hash='#ticket-details';change();assert.equal(later.editing(),true);later.cleanup();
+ }finally{globalThis.window=previous;}
 });

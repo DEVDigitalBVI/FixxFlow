@@ -15,7 +15,7 @@ export function TicketWorkflow({status,assigned,review,assignment,conversation,r
  const headings=useRef<Array<HTMLHeadingElement|null>>([]);
  const focusNext=useRef(false);
  useEffect(()=>{
-  const followHash=()=>{const index=steps.findIndex(s=>`#${s.hash}`===window.location.hash);if(index>=0){focusNext.current=true;setStep(index);}};
+  const followHash=()=>{const hash=window.location.hash;const index=hash==='#ticket-details'?1:steps.findIndex(s=>`#${s.hash}`===hash);if(index>=0){focusNext.current=true;setStep(index);}};
   followHash();window.addEventListener('hashchange',followHash);return()=>window.removeEventListener('hashchange',followHash);
  },[]);
  useEffect(()=>{if(focusNext.current){headings.current[step]?.focus();focusNext.current=false;}},[step]);

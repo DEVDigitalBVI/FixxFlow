@@ -17,12 +17,31 @@ test('staff work controls show actions appropriate to unassigned, working and re
 test('background updates preserve a changed status draft; explicit review adopts the new revision',async()=>{
  const props={ticket:initial,assignee:'Unassigned'},h=componentHarness('src/features/tickets/work-actions.tsx','TicketWorkActions',props,mocks);
  try{
-  h.find(n=>n.type==='select').props.onChange();h.render();
+  h.find(n=>n.type==='select').props.onChange({target:{value:'waiting_on_user'}});h.render();
   props.ticket={...initial,revision:2,assigned_technician_id:'someone'};h.render();
   assert.equal(h.all(n=>n.props.name==='intent').length,0);
   h.find(n=>n.type==='button').props.onClick();h.render();
   assert.equal(h.find(n=>n.props.name==='revision').props.value,2);
   const form=h.find(n=>typeof n.props.action==='function');await form.props.action(new FormData());h.render();
   assert.equal(h.find(n=>n.props.name==='revision').props.value,2);
+ }finally{h.close();}
+});
+
+
+test('first status choice survives assignment and start revisions and is retained on unrelated refresh',()=>{
+ const props={ticket:initial,assignee:'Unassigned'},h=componentHarness('src/features/tickets/work-actions.tsx','TicketWorkActions',props,mocks);
+ try{
+  props.ticket={...initial,revision:3,status:'in_progress',assigned_technician_id:'worker'};h.render();
+  assert.equal(h.find(n=>n.type==='select').props.value,'in_progress');
+  h.find(n=>n.type==='select').props.onChange({target:{value:'waiting_on_user'}});h.render();
+  assert.equal(h.find(n=>n.type==='select').props.value,'waiting_on_user');
+  assert.equal(h.find(n=>n.props.className==='ticket-status-action').key,null);
+  assert.equal(h.find(n=>n.props.name==='revision').props.value,3);
+  h.render();assert.equal(h.find(n=>n.type==='select').props.value,'waiting_on_user');
+  props.ticket={...props.ticket,revision:4};h.render();
+  assert.equal(h.all(n=>n.type==='select').length,0);
+  h.find(n=>n.type==='button').props.onClick();h.render();
+  assert.equal(h.find(n=>n.type==='select').props.value,'in_progress');
+  assert.equal(h.find(n=>n.props.name==='revision').props.value,4);
  }finally{h.close();}
 });

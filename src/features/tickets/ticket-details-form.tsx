@@ -1,7 +1,7 @@
 'use client';
 
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ActionForm } from '@/components/ui/action-form';
 import { SubmitButton } from '@/components/ui/submit-button';
@@ -18,6 +18,12 @@ type TicketDetails = Pick<Database['public']['Tables']['tickets']['Row'],
 /** Mount the full editor only when requested, using the latest saved revision. */
 export function TicketAssignmentEditor({ticket,timeZone}:{ticket:TicketDetails;timeZone:string}) {
   const [editing,setEditing]=useState(false);
+  useEffect(()=>{
+    const openLinkedDetails=()=>{if(window.location?.hash==='#ticket-details')setEditing(true);};
+    openLinkedDetails();
+    window.addEventListener('hashchange',openLinkedDetails);
+    return()=>window.removeEventListener('hashchange',openLinkedDetails);
+  },[]);
   return editing ? <TicketDetailsForm ticket={ticket} timeZone={timeZone}/> : <button type="button" className="button button-secondary" onClick={()=>setEditing(true)}>Choose technician or edit details</button>;
 }
 

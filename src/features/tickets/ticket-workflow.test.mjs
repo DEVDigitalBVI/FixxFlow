@@ -29,3 +29,16 @@ test('wizard navigation retains every panel and updates the shareable step witho
   assert.ok(walk(tree,n=>n.type==='button').every(n=>n.props.type==='button'));
  }finally{globalThis.window=old;}
 });
+
+test('saved-details recovery links activate Assignment even when a working ticket normally opens Respond',()=>{
+ const previous=globalThis.window;let listener,removed,step,effects=[];
+ globalThis.window={location:{hash:'#ticket-details'},addEventListener:(name,handler)=>{if(name==='hashchange')listener=handler;},removeEventListener:(name,handler)=>removed=[name,handler]};
+ const {TicketWorkflow}=load('src/features/tickets/ticket-workflow.tsx',{react:{...React,useState:initial=>{step??=initial;return[step,next=>step=next];},useRef:initial=>({current:initial}),useEffect:fn=>effects.push(fn)}});
+ try{
+  TicketWorkflow({...props,status:'in_progress',assigned:true});assert.equal(step,2);
+  const cleanup=effects[0]();assert.equal(step,1);
+  globalThis.window.location.hash='#ticket-resolution';listener();assert.equal(step,3);
+  globalThis.window.location.hash='#ticket-details';listener();assert.equal(step,1);
+  cleanup();assert.deepEqual(removed,['hashchange',listener]);
+ }finally{globalThis.window=previous;}
+});

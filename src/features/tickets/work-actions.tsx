@@ -13,6 +13,7 @@ export function TicketWorkActions({ticket,assignee,stage='all'}:{ticket:WorkTick
  const router=useRouter();
  const heading=useId();
  const [dirty,setDirty]=useState(false);
+ const [statusDraft,setStatusDraft]=useState(ticket.status);
  const [baseline,setBaseline]=useState(ticket.revision);
  const [conflict,setConflict]=useState(false);
  const expectedRevision=dirty||conflict?baseline:ticket.revision;
@@ -29,11 +30,11 @@ export function TicketWorkActions({ticket,assignee,stage='all'}:{ticket:WorkTick
  return <section className="settings-card ticket-work" aria-labelledby={heading}>
   <div className="section-heading-row"><div><h3 id={heading}>{stage==='resolution'?'Ticket outcome':'Ownership & work status'}</h3><p className="muted">Owner: <strong>{assignee}</strong></p></div>{stage==='all'&&<a className="button button-quiet" href="#ticket-conversation">Reply or add a note</a>}</div>
   <p className="muted">{done?'Review the conversation or reopen this ticket if more work is needed.':!ticket.assigned_technician_id?'Assign the ticket, reply to the requester, then resolve it when the issue is fixed.':'Keep the requester updated. When the issue is fixed, set the status to Resolved.'}</p>
-  {stale?<div role="status"><p>The ticket has changed. Review its current status and owner before continuing.</p><button type="button" className="button button-secondary" onClick={()=>{setBaseline(ticket.revision);setConflict(false);router.refresh();}}>Use latest ticket</button></div>:<div className="ticket-work-controls">
+  {stale?<div role="status"><p>The ticket has changed. Review its current status and owner before continuing.</p><button type="button" className="button button-secondary" onClick={()=>{setBaseline(ticket.revision);setDirty(false);setConflict(false);router.refresh();}}>Use latest ticket</button></div>:<div className="ticket-work-controls">
    {stage!=='resolution'&&!done&&!ticket.assigned_technician_id&&<ActionForm action={action} protectDraft={false}>{fields('take')}<SubmitButton className="button button-primary" pendingLabel="Assigning…">Assign to me</SubmitButton></ActionForm>}
    {stage!=='resolution'&&!done&&ticket.assigned_technician_id&&ticket.status!=='in_progress'&&<ActionForm action={action} protectDraft={false}>{fields('start')}<SubmitButton className="button button-primary" pendingLabel="Starting…">Start work</SubmitButton></ActionForm>}
    {stage!=='assignment'&&!done&&ticket.assigned_technician_id&&<ActionForm action={action} protectDraft={false}>{fields('status')}<input type="hidden" name="status" value="resolved"/><SubmitButton className="button button-secondary" pendingLabel="Resolving…">Mark resolved</SubmitButton></ActionForm>}
-   {stage!=='assignment'&&<ActionForm key={`${baseline}-${ticket.status}`} action={action} protectDraft={false} className="ticket-status-action">{fields('status')}<label>Status<select name="status" className="input" defaultValue={ticket.status} onChange={()=>{setBaseline(ticket.revision);setDirty(true);}}>{Object.entries(ticketStatuses).map(([value,item])=><option key={value} value={value}>{item.label}</option>)}</select></label><SubmitButton className="button button-secondary" pendingLabel="Updating…">Update status</SubmitButton></ActionForm>}
+   {stage!=='assignment'&&<ActionForm action={action} protectDraft={false} className="ticket-status-action">{fields('status')}<label>Status<select name="status" className="input" value={dirty?statusDraft:ticket.status} onChange={event=>{setStatusDraft(event.target.value as TicketStatus);setBaseline(ticket.revision);setDirty(true);}}>{Object.entries(ticketStatuses).map(([value,item])=><option key={value} value={value}>{item.label}</option>)}</select></label><SubmitButton className="button button-secondary" pendingLabel="Updating…">Update status</SubmitButton></ActionForm>}
   </div>}
  </section>;
 }
