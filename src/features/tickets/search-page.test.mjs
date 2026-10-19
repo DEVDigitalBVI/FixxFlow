@@ -72,3 +72,11 @@ test('employee request empty states distinguish equipment and search results', a
   assert.equal((html.match(/href="\/app\/tickets\/new"/g) ?? []).length, 1);
  }
 });
+
+test('incident queue filtering uses the tenant-scoped ticket source and survives paging and filter removal',async()=>{
+ const {calls,Page}=setup();
+ const html=renderToStaticMarkup(await Page({searchParams:Promise.resolve({type:'incident',q:'outage',page:'2'})}));
+ assert.ok(calls.some(c=>c[0]==='eq'&&c[1]==='ticket_type'&&c[2]==='incident'));
+ assert.match(html,/q=outage&amp;type=incident&amp;page=3/);
+ assert.match(html,/name="type"/);assert.match(html,/Incident tickets/);
+});

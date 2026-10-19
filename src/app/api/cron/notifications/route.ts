@@ -17,6 +17,10 @@ export async function GET(request: Request) {
   const correlationId = randomUUID();
   try {
     const database = createAdminClient();
+    const escalations = await database.rpc("enqueue_incident_escalations");
+    if (escalations.error) throw escalations.error;
+    const reminders = await database.rpc("enqueue_incident_update_reminders");
+    if (reminders.error) throw reminders.error;
     const sla = await database.rpc("enqueue_sla_notifications");
     if (sla.error) throw sla.error;
     const batch = await database.rpc("claim_notification_emails", { batch_size: 5 });

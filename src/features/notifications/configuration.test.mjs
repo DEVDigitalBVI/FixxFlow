@@ -69,6 +69,8 @@ test('configured cron sends and acknowledges queued mail using the shared config
     const { GET } = load('src/app/api/cron/notifications/route.ts', {
       '@/lib/supabase/admin': { createAdminClient: () => ({ rpc: async (name, args) => {
         calls.push(name);
+        if (name === 'enqueue_incident_escalations') return { data: 0, error: null };
+        if (name === 'enqueue_incident_update_reminders') return { data: 0, error: null };
         if (name === 'enqueue_sla_notifications') return { data: null, error: null };
         if (name === 'claim_notification_emails') return { data: [item], error: null };
         assert.equal(name, 'finish_notification_email');
@@ -89,7 +91,7 @@ test('configured cron sends and acknowledges queued mail using the shared config
       headers: { authorization: `Bearer ${environment.CRON_SECRET}` },
     }));
     assert.equal(response.status, 200);
-    assert.deepEqual(calls, ['enqueue_sla_notifications', 'claim_notification_emails', 'send', 'finish_notification_email']);
+    assert.deepEqual(calls, ['enqueue_incident_escalations', 'enqueue_incident_update_reminders', 'enqueue_sla_notifications', 'claim_notification_emails', 'send', 'finish_notification_email']);
   } finally {
     for (const [key, value] of Object.entries(previous)) {
       if (value === undefined) delete process.env[key]; else process.env[key] = value;

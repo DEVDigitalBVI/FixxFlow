@@ -1,3 +1,4 @@
+import { IncidentCreateFields } from "@/features/tickets/incident-fields";
 import { randomUUID } from "node:crypto";
 import { SubmissionKey } from "@/components/ui/submission-key";
 import { DeadlineField } from "@/features/tickets/deadline-field";
@@ -37,6 +38,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
           <div className="field field-wide"><label htmlFor="title">{staff ? "Subject" : "What do you need help with?"} <span aria-hidden="true">*</span></label><input className="input" id="title" name="title" required minLength={3} maxLength={180} aria-describedby="ticket-title-hint" placeholder={staff ? "For example, VPN disconnects during calls" : "For example, I can’t connect to Wi-Fi"}/><small className="muted" id="ticket-title-hint">{staff ? "Use a short, specific subject (3–180 characters)." : "3–180 characters."}</small></div>
           <div className="field field-wide"><label htmlFor="description">{staff ? "Description" : "Tell us more"} <span aria-hidden="true">*</span></label><textarea className="input textarea" id="description" name="description" required maxLength={20000} rows={staff ? 6 : 5} aria-describedby="ticket-description-hint" placeholder="What happened? What did you expect? What have you tried?"/><small className="muted" id="ticket-description-hint">{staff ? "Include any error messages or steps to reproduce the problem. Up to 20,000 characters." : "Include any error message and what you’ve tried."}</small></div>
           {staff && <>
+            <div className="field-wide"><IncidentCreateFields ownerId={viewer.id}/></div>
             <LookupSelect resource="people" name="requesterId" label="Requester" defaultValue={viewer.id} required/>
             <div className="field"><label htmlFor="priority">Priority</label><select className="input" id="priority" name="priority" defaultValue="normal">{Object.entries(ticketPriorities).map(([value, priority]) => <option key={value} value={value}>{priority.label}</option>)}</select></div>
           </>}

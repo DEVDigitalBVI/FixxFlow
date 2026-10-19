@@ -23,6 +23,7 @@ const groups: readonly { id: string; title: string; description: string; cards: 
   ] },
   { id: 'support', title: 'Support workflows', description: 'Shape how requests reach the right people and get resolved.', cards: [
     { title: 'Automations', description: 'Take repetitive work off your team’s plate. Build rules and test them safely.', icon: 'automation', destinations: ['automations'] },
+    { title: 'Workflow templates', description: 'Publish reusable procedures with response steps, approvals and communication guidance.', icon: 'routing', destinations: ['workflows'] },
     { title: 'Teams & routing', description: 'Organize support teams and route requests by category.', icon: 'routing', destinations: ['teams','categories'] },
     { title: 'Knowledge Base', description: 'Publish helpful answers and keep employee guidance up to date.', icon: 'knowledge', destinations: ['knowledge'] },
   ] },

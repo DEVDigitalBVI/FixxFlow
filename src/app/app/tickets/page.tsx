@@ -28,7 +28,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const { view, sort, search, page, rows, error, profiles, teams, knowledgeCount } = await loadTicketQueue(viewer, filters);
   const pageHref = (next: number) => {
     const params = new URLSearchParams();
-    for (const key of ["q", "kind", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) if (filters[key]) params.set(key, filters[key]);
+    for (const key of ["q", "kind", "type", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) if (filters[key]) params.set(key, filters[key]);
     params.set("page", String(next));
     return `/app/tickets?${params}`;
   };
@@ -67,7 +67,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
         </div>
         {error ? <div className="employee-requests-feedback"><div className="alert alert-error" role="alert">Requests could not be loaded. Try Search again or refresh the page.</div></div> : tickets?.length ? <ul className="portal-ticket-list">
           {tickets.map(ticket => <li key={ticket.id}><Link data-queue-ticket={ticket.id} href={detailHref(ticket.id)}>
-            <span className="portal-ticket-main"><strong>{ticket.title}</strong>{ticket.request_kind === "inventory" && <small>Equipment request</small>}<small>#{ticket.ticket_number} · Updated <Timestamp value={ticket.updated_at}/></small></span>
+            <span className="portal-ticket-main"><strong>{ticket.title}</strong>{ticket.ticket_type === "incident" && <span className="ticket-badge tone-info">Incident</span>}{ticket.request_kind === "inventory" && <small>Equipment request</small>}<small>#{ticket.ticket_number} · Updated <Timestamp value={ticket.updated_at}/></small></span>
             <span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span><span aria-hidden="true">→</span>
           </Link></li>)}
         </ul> : <div className="portal-empty"><h2>{search ? "No matching requests" : filters.kind === "inventory" ? "No equipment requests yet" : "No requests yet"}</h2><p>{search ? "Try different words or clear your search." : "Your requests and replies from IT will appear here."}</p></div>}
@@ -85,12 +85,13 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const clearHref = `/app/tickets?view=${view}`;
   const withoutFilter = (key: keyof TicketQueueFilters) => {
     const params = new URLSearchParams();
-    for (const name of ["q", "kind", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) {
+    for (const name of ["q", "kind", "type", "view", "team", "status", "priority", "sort", "overdue", "sla"] as const) {
       if (name !== key && filters[name]) params.set(name, filters[name]);
     }
     return `/app/tickets?${params}`;
   };
   const filterChips = [
+    { key: "type", label: filters.type === "incident" ? "Incident tickets" : filters.type === "support" ? "Non-incident tickets" : null },
     { key: "kind", label: filters.kind === "inventory" ? "Inventory requests" : null },
     { key: "q", label: search ? `Search: ${search}` : null },
     { key: "status", label: Object.entries(ticketStatuses).find(([key]) => key === filters.status)?.[1].label },
@@ -123,7 +124,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
             <div className="queue-filter-fields">
               <label>Request type<select className="input" name="kind" defaultValue={filters.kind ?? ""}><option value="">All requests</option><option value="inventory">Equipment requests</option></select></label>
               <label>Status<select className="input" name="status" defaultValue={filters.status ?? ""}><option value="">Any status</option>{Object.entries(ticketStatuses).map(([value, p]) => <option key={value} value={value}>{p.label}</option>)}</select></label>
-              <label>Priority<select className="input" name="priority" defaultValue={filters.priority ?? ""}><option value="">Any priority</option>{Object.entries(ticketPriorities).map(([value, p]) => <option key={value} value={value}>{p.label}</option>)}</select></label>
+              <label>Ticket type<select className="input" name="type" defaultValue={filters.type ?? ""}><option value="">All ticket types</option><option value="support">Non-incident tickets</option><option value="incident">Incidents</option></select></label><label>Priority<select className="input" name="priority" defaultValue={filters.priority ?? ""}><option value="">Any priority</option>{Object.entries(ticketPriorities).map(([value, p]) => <option key={value} value={value}>{p.label}</option>)}</select></label>
               <label>Sort by<select className="input" name="sort" defaultValue={sort}>{Object.entries(sortOptions).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
               <LookupSelect key={filters.team ?? ""} resource="teams" name="team" label="Team" defaultValue={filters.team ?? ""} emptyLabel="All teams" activeOnly={false} guardSave={false} compact/>
               <label className="queue-check"><input type="checkbox" name="overdue" value="1" defaultChecked={filters.overdue === "1"}/> Manual date overdue</label>
@@ -149,7 +150,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
             <thead><tr><th scope="col"><span className="sr-only">Select</span></th><th scope="col">Ticket</th><th scope="col">Status</th><th scope="col">Priority</th><th scope="col">Requester</th><th scope="col">Assigned to</th><th scope="col">SLA</th><th scope="col">Updated</th></tr></thead>
             <tbody>{tickets.map(ticket => <tr key={ticket.id}>
               <td data-label="Select"><input className="queue-row-check" type="checkbox" name="ticketIds" value={ticket.id} aria-label={`Select ticket ${ticket.ticket_number}`}/></td>
-              <td data-label="Ticket"><Link className="ticket-link" data-queue-ticket={ticket.id} href={detailHref(ticket.id)}><strong>{ticket.title}</strong>{ticket.request_kind === "inventory" && <small>Inventory request</small>}<span>#{ticket.ticket_number} · {ticket.team_id ? teamNames.get(ticket.team_id) ?? "Team" : "No team"}{ticket.due_at && new Date(ticket.due_at) < new Date() && active.includes(ticket.status) ? " · Overdue" : ""}</span></Link></td>
+              <td data-label="Ticket"><Link className="ticket-link" data-queue-ticket={ticket.id} href={detailHref(ticket.id)}><strong>{ticket.title}</strong>{ticket.ticket_type === "incident" && <span className="ticket-badge tone-info">Incident</span>}{ticket.request_kind === "inventory" && <small>Inventory request</small>}<span>#{ticket.ticket_number} · {ticket.team_id ? teamNames.get(ticket.team_id) ?? "Team" : "No team"}{ticket.due_at && new Date(ticket.due_at) < new Date() && active.includes(ticket.status) ? " · Overdue" : ""}</span></Link></td>
               <td data-label="Status"><span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>{ticketStatuses[ticket.status].label}</span></td>
               <td data-label="Priority"><span className={`ticket-badge tone-${ticketPriorities[ticket.priority].tone}`}>{ticketPriorities[ticket.priority].label}</span></td>
               <td data-label="Requester">{names.get(ticket.requester_id) ?? "Unknown"}</td>

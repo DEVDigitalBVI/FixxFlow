@@ -29,8 +29,8 @@ ${list([['Get help when you need it', 'Submit IT requests in one place.'], ['Fol
 {{ end }}</div>`;
 }
 
-export function renderEmail({ title, message, action, href, code, note, invitation = false, purpose = 'notification', siteUrl = 'https://www.fixxflow.app' }: {
-  title: string; message: string; action?: string; href?: string; code?: string; note?: string; invitation?: boolean; purpose?: EmailPurpose; siteUrl?: string;
+export function renderEmail({ title, message, action, href, code, note, invitation = false, purpose = 'notification', siteUrl = 'https://www.fixxflow.app', preserveLines = false }: {
+  title: string; message: string; action?: string; href?: string; code?: string; note?: string; invitation?: boolean; purpose?: EmailPurpose; siteUrl?: string; preserveLines?: boolean;
 }): string {
   const e = escapeEmailHtml;
   const origin = new URL(siteUrl).origin;
@@ -46,7 +46,7 @@ export function renderEmail({ title, message, action, href, code, note, invitati
 </td></tr><tr><td align="center" style="padding:24px;text-align:center;overflow-wrap:anywhere">
 <p style="margin:0 0 8px;color:#595959;font-size:14px;line-height:22px;font-weight:500">${e(purposeLabels[purpose])}</p>
 <h1 style="margin:0 0 16px;font-size:28px;line-height:36px;font-weight:600;letter-spacing:-0.5px;color:#1a1a1a">${e(title)}</h1>
-<p style="max-width:420px;margin:0 auto 20px;color:#595959;">${e(message)}</p>
+<p style="max-width:420px;margin:0 auto 20px;color:#595959;${preserveLines ? 'white-space:pre-line;' : ''}">${e(message)}</p>
 ${invitation ? `${renderInvitationOverview()}\n` : ''}${code ? `<p style="margin:0 0 24px;padding:16px;background:#f2f2f2;border:0;border-radius:8px;font-size:28px;line-height:36px;font-weight:700;letter-spacing:6px;text-align:center">${e(code)}</p>` : ''}
 ${action && href ? `<table role="presentation" align="center" style="margin:0 auto" cellpadding="0" cellspacing="0"><tr><td bgcolor="#febe10" style="border-radius:8px"><a href="${e(href)}" style="display:inline-block;padding:14px 24px;border:1px solid #febe10;border-radius:8px;background:#febe10;color:#1a1a1a;text-decoration:none;font-size:16px;font-weight:600;line-height:24px">${e(action)}</a></td></tr></table><p style="text-align:center;margin:16px 0 0;font-size:13px;line-height:20px;color:#595959">Button not working? Copy this link:<br><a href="${e(href)}" style="color:#595959;text-decoration:underline;word-break:break-all;overflow-wrap:anywhere">${e(href)}</a></p>` : ''}
 ${note ? purpose === 'security-alert'

@@ -189,3 +189,13 @@ test('ambiguous failures reuse the same idempotency key and payload across queue
  await sendNotificationEmail({...item,notification_id:'notice-2'},config,request);
  assert.notEqual(attempts[1].key,attempts[2].key);
 });
+
+test('approved incident emails use the shared brand and deliver only the saved message with a recipient update link',async()=>{
+ let body;
+ await sendNotificationEmail({...item,incident_bulletin_id:'bulletin-1',approved_body:'Service is returning.\n<script>Unsafe</script>',next_update_at:'2026-10-20T15:00:00Z'},config,async(url,options)=>{body=JSON.parse(options.body);return new Response(JSON.stringify({id:'approved-message'}),{status:200});});
+ assert.match(body.text,/Service is returning\.\n<script>Unsafe<\/script>/);
+ assert.match(body.text,/Next update expected:.*UTC/);
+ assert.match(body.html,/white-space:pre-line/);assert.match(body.html,/&lt;script&gt;Unsafe&lt;\/script&gt;/);assert.doesNotMatch(body.html,/<script>/);
+ assert.match(body.html,/\/app\/incident-updates\/bulletin-1/);assert.doesNotMatch(body.html,/\/app\/tickets\/ticket-1/);
+ assert.match(body.html,/#febe10/);assert.match(body.html,/fixxflow-logo-primary\.png/);
+});

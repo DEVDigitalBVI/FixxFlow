@@ -21,6 +21,7 @@ export const activityLabels: Record<string, string> = {
   inventory_cancel: 'cancelled the inventory request and released any reservation', inventory_cancelled: 'closed the ticket and cancelled unfinished inventory fulfillment',
   automatically_routed: "automatically routed this ticket to its category’s default team",
   created: "created the ticket", status_changed: "changed the status", assignment_changed: "changed the assignment",
+  incident_declared: "declared an incident", incident_updated: "updated incident coordination",
   priority_changed: "changed the priority", details_updated: "updated ticket details", first_response_recorded: "sent the first response",
   reply_added: "added a reply", internal_note_added: "added an internal note",
 };

@@ -20,8 +20,8 @@ export type TicketPriority = Schema['Enums']['ticket_priority'];
 export type TicketMessageKind = Schema['Enums']['ticket_message_kind'];
 export type ChatStatus = Schema['Enums']['chat_status'];
 export type ChatMessageKind = Schema['Enums']['chat_message_kind'];
-export type NotificationKind = Schema['Enums']['notification_kind'] | 'automation_update';
-export type Notification = Omit<Tables['notifications']['Row'], 'kind'> & { kind: NotificationKind };
+export type NotificationKind = Schema['Enums']['notification_kind'] | 'automation_update' | 'incident_update' | 'incident_update_due' | 'incident_escalation' | 'incident_approval' | 'incident_step_assigned';
+export type Notification = Omit<Tables['notifications']['Row'], 'kind'> & { kind: NotificationKind; incident_bulletin_id: string | null };
 export type KnowledgeArticle = Tables['knowledge_articles']['Row'];
 export type KnowledgeAsset = Tables['knowledge_attachments']['Row'];
 
@@ -34,6 +34,9 @@ export type Asset = Omit<Tables['assets']['Row'], keyof AssetFields> & AssetFiel
 export type NotificationEmail = Omit<Functions['claim_notification_emails']['Returns'][number], 'ticket_id' | 'conversation_id'> & {
   ticket_id: string | null;
   conversation_id: string | null;
+  incident_bulletin_id?: string | null;
+  approved_body?: string | null;
+  next_update_at?: string | null;
 };
 type NullableArgs<Name extends keyof Functions, Keys extends keyof Functions[Name]['Args']> =
   Omit<Functions[Name], 'Args'> & {
@@ -46,6 +49,25 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
   public: Omit<Schema, 'Tables' | 'Functions' | 'Enums'> & {
     Enums: Omit<Schema['Enums'], 'notification_kind'> & { notification_kind: NotificationKind };
     Tables: Omit<Tables, 'organizations' | 'profiles' | 'assets' | 'tickets' | 'ticket_messages' | 'chat_messages' | 'notifications'> & AutomationTables & AutomationExecutionTables & InventoryTables & {
+      ticket_workflows: { Row: import('@/features/workflows/model').TicketWorkflow; Insert: never; Update: never; Relationships: []; };
+      workflow_templates: { Row: import('@/features/workflows/model').WorkflowTemplate; Insert: never; Update: never; Relationships: []; };
+      workflow_template_drafts: { Row: import('@/features/workflows/model').TemplateDraft; Insert: never; Update: never; Relationships: []; };
+      workflow_template_versions: { Row: import('@/features/workflows/model').TemplateVersion; Insert: never; Update: never; Relationships: []; };
+      ticket_workflow_applications: { Row: import('@/features/workflows/model').WorkflowApplication; Insert: never; Update: never; Relationships: []; };
+      incident_escalation_policies: { Row: import('@/features/tickets/incident-control').EscalationPolicy; Insert: never; Update: never; Relationships: []; };
+      incident_approvals: { Row: import('@/features/tickets/incident-control').IncidentApproval; Insert: never; Update: never; Relationships: []; };
+      incident_approval_history: { Row: import('@/features/tickets/incident-control').ApprovalHistory; Insert: never; Update: never; Relationships: []; };
+      incident_escalations: { Row: import('@/features/tickets/incident-control').IncidentEscalation; Insert: never; Update: never; Relationships: []; };
+      incident_control_history: { Row: import('@/features/tickets/incident-control').ControlChange; Insert: never; Update: never; Relationships: []; };
+      incident_communication_plans: { Row: import('@/features/tickets/communications').CommunicationPlan; Insert: never; Update: never; Relationships: []; };
+      incident_stakeholder_groups: { Row: import('@/features/tickets/communications').StakeholderGroup; Insert: never; Update: never; Relationships: []; };
+      incident_stakeholder_members: { Row: import('@/features/tickets/communications').StakeholderMember; Insert: never; Update: never; Relationships: []; };
+      incident_update_drafts: { Row: import('@/features/tickets/communications').UpdateDraft; Insert: never; Update: never; Relationships: []; };
+      incident_bulletins: { Row: import('@/features/tickets/communications').IncidentBulletin; Insert: never; Update: never; Relationships: []; };
+      incident_bulletin_recipients: { Row: import('@/features/tickets/communications').BulletinRecipient; Insert: never; Update: never; Relationships: []; };
+      incident_steps: { Row: import('@/features/tickets/response-checklist').IncidentStep; Insert: Partial<import('@/features/tickets/response-checklist').IncidentStep>; Update: Partial<import('@/features/tickets/response-checklist').IncidentStep>; Relationships: []; };
+      incident_step_history: { Row: import('@/features/tickets/response-checklist').StepHistory; Insert: never; Update: never; Relationships: []; };
+      ticket_incidents: { Row: import('@/features/tickets/incidents').Incident; Insert: import('@/features/tickets/incidents').IncidentInput & { ticket_id: string; organization_id: string }; Update: Partial<import('@/features/tickets/incidents').IncidentInput>; Relationships: []; };
       saved_reports: {
         Row: { id: string; organization_id: string; owner_id: string; name: string; description: string | null; visibility: 'personal' | 'shared'; definition: CustomReportDefinition; created_at: string; updated_at: string };
         Insert: { id?: string; organization_id: string; owner_id: string; name: string; description?: string | null; visibility?: 'personal' | 'shared'; definition: import('./database.generated').Json; created_at?: string; updated_at?: string };
@@ -70,7 +92,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
       };
       // BEFORE INSERT triggers assign the number and SLA deadlines.
       tickets: Omit<Tables['tickets'], 'Row' | 'Insert'> & {
-        Row: Tables['tickets']['Row'] & { request_kind: 'support' | 'inventory'; revision: number; unassigned_since: string | null; unassigned_episode_id: string | null; waiting_on_user_since: string | null; waiting_on_user_episode_id: string | null };
+        Row: Tables['tickets']['Row'] & { ticket_type: 'support' | 'incident'; incident_revision: number; request_kind: 'support' | 'inventory'; revision: number; unassigned_since: string | null; unassigned_episode_id: string | null; waiting_on_user_since: string | null; waiting_on_user_episode_id: string | null };
         Insert: Omit<Tables['tickets']['Insert'], 'ticket_number' | 'response_sla_due_at' | 'resolution_sla_due_at'>;
       };
       assets: Omit<Tables['assets'], 'Row' | 'Insert' | 'Update'> & {
@@ -81,9 +103,19 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
     };
     Functions: Omit<Functions, 'bootstrap_organization' | 'create_equipment_ticket' | 'record_product_usage' | 'manage_customer' | 'finish_notification_email' | 'claim_notification_emails' | 'search_tickets'> & AutomationFunctions & DomainEventFunctions & AutomationExecutionFunctions & AutomationWorkerFunctions & AutomationDryRunFunctions & AutomationAdminFunctions & InventoryFunctions & {
       edit_chat_message: { Args: { org: string; conversation: string; message: string; expected_revision: number; new_body: string }; Returns: RoomMessage[] };
-      search_tickets: Omit<Functions['search_tickets'], 'Returns'> & { Returns: (Functions['search_tickets']['Returns'][number] & { request_kind: 'support' | 'inventory' })[] };
+      search_tickets: Omit<Functions['search_tickets'], 'Returns'> & { Returns: (Functions['search_tickets']['Returns'][number] & { ticket_type: 'support' | 'incident'; request_kind: 'support' | 'inventory' })[] };
       prepare_member_invitation: { Args: { org: string; token: string; email: string; display_name: string; member_role: AppRole; actor: string }; Returns: { id: string; userId: string | null; completed: boolean } };
       complete_member_invitation: { Args: { org: string; token: string; invited_user: string; actor: string }; Returns: undefined };
+      manage_workflow_template: { Args: { org: string; target: string; expected_revision: number; operation: string; payload: import('./database.generated').Json }; Returns: number };
+      apply_workflow_template: { Args: { org: string; ticket: string; template_id: string; version: number; token: string; expected_ticket_revision: number; payload: import('./database.generated').Json }; Returns: string };
+      manage_incident_control: { Args: { org: string; ticket: string; target: string; expected_revision: number; operation: string; payload: import('./database.generated').Json }; Returns: number };
+      enqueue_incident_escalations: { Args: Record<string, never>; Returns: number };
+      manage_incident_communication: { Args: { org: string; ticket: string; target: string; expected_revision: number; operation: string; payload: import('./database.generated').Json }; Returns: number };
+      incident_delivery_summary: { Args: { org: string; ticket: string; bulletins: string[] }; Returns: import('@/features/tickets/communications').DeliverySummary[] };
+      enqueue_incident_update_reminders: { Args: Record<string, never>; Returns: number };
+      change_incident_step: { Args: { org: string; ticket: string; step: string; expected_revision: number; operation: string; payload: import('./database.generated').Json }; Returns: number };
+      save_ticket_incident: { Args: { org: string; target: string; expected_revision: number; payload: import('./database.generated').Json }; Returns: number };
+      submit_incident_ticket: { Args: { org: string; token: string; payload: import('./database.generated').Json }; Returns: string };
       submit_support_request: { Args: { org: string; token: string; kind: 'ticket' | 'equipment' | 'chat'; payload: import('./database.generated').Json }; Returns: string };
       lookup_choices: { Args: { org: string; resource: string; query?: string; after_label?: string | null; after_id?: string | null; selected?: string | null; parent?: string | null; active_only?: boolean }; Returns: import('@/features/lookups/model').LookupChoice[] };
       start_automation_run: { Args: { kind: string }; Returns: string };

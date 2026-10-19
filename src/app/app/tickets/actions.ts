@@ -11,6 +11,8 @@ import type { TicketMessageKind, TicketPriority, TicketStatus } from "@/types/da
 
 
 
+import { parseIncident } from "@/features/tickets/incidents";
+
 const optional = (value: FormDataEntryValue | null) => String(value ?? "").trim() || null;
 const fail = (path: string, message: string): never => redirect(`${path}?${new URLSearchParams({ error: message })}`);
 
@@ -32,6 +34,10 @@ async function classificationError(supabase: Awaited<ReturnType<typeof createCli
 
 export async function createTicket(formData: FormData) {
   const viewer = await requireViewer();
+  const ticketType = String(formData.get("ticketType") ?? "support");
+  if (!["support","incident"].includes(ticketType) || (ticketType === "incident" && viewer.role === "end_user")) return { error: "Only IT staff can declare incidents." };
+  const incident = ticketType === "incident" ? parseIncident(formData) : null;
+  if (incident?.error) return { error: incident.error };
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const priority = String(formData.get("priority") ?? "normal") as TicketPriority;
@@ -55,7 +61,10 @@ export async function createTicket(formData: FormData) {
     return { redirectTo: `/app/tickets/${equipmentTicket}?success=Request sent.` };
   }
   const automaticRouting = viewer.role === "end_user" || !formData.has("teamId") || formData.get("teamId") === "automatic";
-  const { data, error } = await supabase.rpc("submit_support_request", { org: viewer.organizationId, token: submissionKey, kind: "ticket", payload: { requester_id: requesterId, title, description, priority, routing_mode: automaticRouting ? "automatic" : "manual", team_id: automaticRouting ? null : optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: dueAt } });
+  const payload = { requester_id: requesterId, title, description, priority, routing_mode: automaticRouting ? "automatic" : "manual", team_id: automaticRouting ? null : optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: dueAt, ...(incident?.data ? { incident: incident.data } : {}) };
+  const { data, error } = incident?.data
+    ? await supabase.rpc("submit_incident_ticket", { org: viewer.organizationId, token: submissionKey, payload })
+    : await supabase.rpc("submit_support_request", { org: viewer.organizationId, token: submissionKey, kind: "ticket", payload });
   if (error?.code === "PT409") return { error: "This request was already saved with different details. Check your tickets before starting a new request." };
   if (error || !data) { reportServerError("ticket.create", error); return { error: "Your request could not be sent. Your entries are preserved; please try again." }; }
   return { redirectTo: `/app/tickets/${data}?success=Request sent.` };
@@ -150,4 +159,20 @@ export async function bulkUpdateTickets(formData: FormData) {
   const count = data?.length ?? 0;
   revalidatePath("/app/tickets"); revalidatePath("/app");
   redirect(`/app/tickets?success=${encodeURIComponent(`${count} ticket${count === 1 ? "" : "s"} updated.`)}`);
+}
+
+export async function saveIncident(formData: FormData): Promise<{ error?: string; success?: string; revision?: number; conflict?: boolean }> {
+  const viewer = await requireViewer();
+  if (viewer.role === 'end_user') return { error: 'Only IT staff can coordinate incidents.' };
+  const target = String(formData.get('ticketId') ?? ''), revision = Number(formData.get('revision'));
+  if (!/^[0-9a-f-]{36}$/i.test(target) || !Number.isSafeInteger(revision) || revision < 1) return { error: 'Reload the latest ticket before saving. Your draft is preserved.' };
+  if (formData.has('lookupLoadError')) return { error: 'The incident owner could not load. Retry the lookup before saving.' };
+  const input = parseIncident(formData);
+  if ("error" in input) return { error: input.error };
+  const db = await createClient();
+  const { data,error } = await db.rpc('save_ticket_incident',{ org:viewer.organizationId,target,expected_revision:revision,payload:input.data });
+  if (error?.code === 'PT409') return { conflict:true,error:'This ticket changed while you were editing. Your draft is preserved. Review the saved details and reload before saving.' };
+  if (error || data === null) { reportServerError('incident.save',error); return { error:'Incident details could not be saved. Check that the owner is active and try again. Your draft is preserved.' }; }
+  revalidatePath(`/app/tickets/${target}`);revalidatePath('/app/tickets');
+  return { success:'Incident details saved.',revision:data };
 }

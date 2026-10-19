@@ -1,4 +1,5 @@
 export const administrationSections = [
+  { slug: 'workflows', title: 'Workflow templates', group: 'Service delivery', status: 'Available', description: 'Publish company response procedures for incidents, maintenance and repeatable work.', href: '/app/administration/workflows' },
   { slug: 'automations', title: 'Automations', group: 'Service delivery', status: 'Available', description: 'Create, test and manage ordered rules for repeatable ticket work.', href: '/app/administration/automations' },
   { slug: 'organization', title: 'Organization', group: 'Workspace', status: 'Available', description: 'Workspace identity, departments, and service locations.', href: '/app/organization' },
   { slug: 'users', title: 'Users', group: 'Workspace', status: 'Available', description: 'Invite members and manage roles and workspace access.', href: '/app/people' },

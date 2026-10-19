@@ -2592,3 +2592,43 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
   .input:focus, .input-prefix:focus-within { outline-color: Highlight; }
   .input[aria-invalid="true"] { border-style: double; }
 }
+
+/* Incident coordination extends the shared quiet form and detail primitives. */
+.incident-fields { min-width: 0; margin: 0; padding: 16px 0 0; border: 0; border-top: 1px solid var(--color-border); }
+.incident-fields legend { padding: 0 8px 0 0; font-size: 16px; font-weight: 600; }
+.incident-fields textarea { resize: vertical; }
+.incident-fields .field, .incident-fields .input { min-width: 0; }
+.incident-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 16px; margin: 0; }
+.incident-summary dt { color: var(--color-text-muted); font-size: 13px; }
+.incident-summary dd { margin: 4px 0 0; overflow-wrap: anywhere; }
+#incident-summary details[open] > summary { margin-bottom: 16px; }
+
+/* Incident response stays within the quiet, shared ticket surface. */
+.response-checklist { list-style: none; margin: 0; padding: 0; }
+.response-checklist > li { padding-block: 1rem; border-block-end: 1px solid var(--color-border); overflow-wrap: anywhere; }
+.response-checklist h4 { margin: 0; font-size: 1rem; }
+.response-step-actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .75rem; }
+.response-step-actions > details { flex: 1 1 16rem; min-width: 0; }
+.response-step-actions .button { white-space: normal; text-align: start; }
+@media (max-width: 767px) { .response-step-actions { flex-direction: column; align-items: stretch; } .response-step-actions > details { flex-basis: auto; } }
+
+.communication-choice { display: flex; align-items: flex-start; gap: .75rem; min-height: 44px; padding-block: .5rem; overflow-wrap: anywhere; }
+.communication-choice input { flex: 0 0 auto; margin-block-start: .25rem; accent-color: var(--color-accent); }
+#communication-plan { padding-block: 1rem; border-block-start: 1px solid var(--color-border); }
+#communication-plan h4 { margin: 0; font-size: 1rem; }
+#communication-plan .button { white-space: normal; text-align: start; }
+#communication-plan .section-heading-row > * { min-width: 0; overflow-wrap: anywhere; }
+
+#incident-approvals { padding-block: 1rem; border-block-start: 1px solid var(--color-border); }
+#incident-approvals h4 { margin: 0; font-size: 1rem; }
+#incident-approvals .button { white-space: normal; text-align: start; }
+#incident-approvals .section-heading-row > * { min-width: 0; overflow-wrap: anywhere; }
+
+.workflow-builder-actions, .workflow-catalog-filters { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; }
+.workflow-catalog-filters { margin-block: 1rem 1.5rem; }
+.workflow-catalog-filters .field { flex: 1 1 14rem; min-width: 0; }
+.workflow-catalog h2, .workflow-definition h3 { margin: 0; font-size: 1rem; }
+.workflow-catalog > li > div { flex: 1 1 20rem; min-width: 0; }
+.workflow-builder .input, .workflow-builder .field { min-width: 0; }
+.workflow-builder .button { white-space: normal; }
+@media (max-width: 767px) { .workflow-builder-actions > *, .workflow-catalog-filters > button { flex: 1 1 auto; } }

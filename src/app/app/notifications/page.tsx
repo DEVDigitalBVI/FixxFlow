@@ -14,7 +14,7 @@ export default async function NotificationsPage({ searchParams }: { searchParams
   const unread = params.view === "unread";
   const page = pageNumber(params.page, 10000);
   const supabase = await createClient();
-  let query = supabase.from("notifications").select("id,kind,title,ticket_id,conversation_id,created_at,read_at", { count: "exact" })
+  let query = supabase.from("notifications").select("id,kind,title,ticket_id,conversation_id,incident_bulletin_id,created_at,read_at", { count: "exact" })
     .eq("organization_id", viewer.organizationId).eq("recipient_id", viewer.id);
   if (unread) query = query.is("read_at", null);
   const { data, count, error } = await query.order("created_at", { ascending: false }).order("id", { ascending: false }).range((page - 1) * 30, page * 30 - 1);

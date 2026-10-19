@@ -22,6 +22,8 @@ async function dispatch({ batch = items, send = async () => 'provider-id', rpcEr
       '@/lib/supabase/admin': { createAdminClient: () => ({ rpc: async (name, args) => {
         calls.push({ name, args });
         if (name === rpcError) return { error: new Error('private database details') };
+        if (name === 'enqueue_incident_escalations') return { data: 0, error: null };
+        if (name === 'enqueue_incident_update_reminders') return { data: 0, error: null };
         if (name === 'enqueue_sla_notifications') return { data: null, error: null };
         if (name === 'claim_notification_emails') {
           assert.deepEqual(args, { batch_size: 5 });
@@ -51,7 +53,7 @@ test('empty email queue returns success without sending or acknowledging mail', 
   const result = await dispatch({ batch: [] });
   assert.equal(result.status, 200);
   assert.deepEqual(result.body, { processed: 0, sent: 0 });
-  assert.deepEqual(result.calls.map(call => call.name), ['enqueue_sla_notifications', 'claim_notification_emails']);
+  assert.deepEqual(result.calls.map(call => call.name), ['enqueue_incident_escalations', 'enqueue_incident_update_reminders', 'enqueue_sla_notifications', 'claim_notification_emails']);
   assert.ok(result.reference);
 });
 
@@ -72,7 +74,7 @@ test('provider failure schedules a sanitized retry and continues the remaining b
   assert.doesNotMatch(JSON.stringify(result.body), /private/);
 });
 
-for (const rpcError of ['enqueue_sla_notifications', 'claim_notification_emails']) {
+for (const rpcError of ['enqueue_incident_escalations', 'enqueue_incident_update_reminders', 'enqueue_sla_notifications', 'claim_notification_emails']) {
   test(`${rpcError} failure returns a safe error before sending mail`, async () => {
     const result = await dispatch({ rpcError });
     assert.equal(result.status, 500);
