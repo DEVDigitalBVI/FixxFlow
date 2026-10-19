@@ -30,22 +30,22 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
 
 ```css
 :root {
-  --color-brand-primary: #fca311;
-  --color-brand-secondary: #ffbb4d;
-  --color-brand-navy: #14213d;
-  --color-brand-purple: #865cf6;
-  --color-canvas: #f5f5f5;
+  --color-brand-primary: #febe10;
+  --color-brand-secondary: #ffd04a;
+  --color-brand-ink: #1a1a1a;
+  --color-brand-purple: #1a1a1a;
+  --color-canvas: #f2f2f2;
   --color-surface: #ffffff;
-  --color-surface-subtle: #fafafa;
+  --color-surface-subtle: #f7f7f7;
   --color-surface-raised: #ffffff;
-  --color-border: #e5e5e5;
+  --color-border: #dedede;
   --color-border-strong: #c9c9c9;
-  --color-text: #14213d;
+  --color-text: #1a1a1a;
   --color-text-muted: #595959;
   --color-text-subtle: #595959;
-  --color-accent: #885000;
-  --color-accent-hover: #704100;
-  --color-accent-subtle: #fff4df;
+  --color-accent: #795500;
+  --color-accent-hover: #624500;
+  --color-accent-subtle: #fff8df;
   --color-success: #15803d;
   --color-success-brand: #22c55e;
   --color-success-subtle: #ecfdf3;
@@ -55,26 +55,26 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-danger: #c92a2a;
   --color-danger-brand: #ef4444;
   --color-danger-subtle: #fff1f1;
-  --color-info: #885000;
-  --color-info-subtle: #fff4df;
-  --color-focus: #885000;
+  --color-info: #795500;
+  --color-info-subtle: #fff8df;
+  --color-focus: #795500;
   --color-control-border: #858585;
   --shadow-card: 0 1px 2px rgb(16 24 40 / 5%), 0 4px 12px rgb(16 24 40 / 4%);
   --shadow-overlay: 0 16px 40px rgb(16 24 40 / 18%);
 }
 ```
 
-Functional links use the darker gold `--color-accent` alias to meet normal-text contrast on light surfaces. Filled actions use `--color-action-fill: #FCA311`, `--color-action-hover: #FFBB4D`, and `--color-on-action: #14213D`. Brand artwork uses gold with navy folds. Focus indicators use a solid outline rather than a translucent tint.
+Functional links use the darker gold `--color-accent` alias to meet normal-text contrast on light surfaces. Filled actions use `--color-action-fill: #FEBE10`, `--color-action-hover: #FFD04A`, and `--color-on-action: #1A1A1A`. Brand artwork uses gold with charcoal folds. Focus indicators use a solid outline rather than a translucent tint.
 
-The core brand palette is `#FCA311` gold, `#14213D` navy, `#FFFFFF` white, `#E5E5E5` light gray, and `#000000` black. Use derived neutral surfaces and accessible darker gold links in light mode. Gold is the brand and interaction color; keep written labels and icons to distinguish warning states. Preserve green for success, red for danger, and distinct chart series with non-color cues. Validate normal text at WCAG AA (4.5:1) and essential controls and focus indicators at 3:1.
+The core brand palette is `#FEBE10` gold, `#1A1A1A` night black, `#FFFFFF` white, and `#F2F2F2` gray. Use derived neutral surfaces and accessible darker gold links in light mode. Gold is the brand and interaction color; keep written labels and icons to distinguish warning states. Preserve green for success, red for danger, and distinct chart series with non-color cues. Validate normal text at WCAG AA (4.5:1) and essential controls and focus indicators at 3:1.
 
 ### 3.2 Brand identity and logo flow
 
-- The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its gold ribbon motion and deep navy folds express speed, continuity, and dependable technical support.
+- The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its gold ribbon motion and deep charcoal folds express speed, continuity, and dependable technical support.
 - The product name is always written **FixxFlow** with two lowercase x characters and capital F characters. The primary tagline is **IT SUPPORT IN MOTION**.
 - Application navigation uses a responsive lockup built from the approved standalone mark and a live product wordmark. Keep its size and spacing identical in light and dark themes; change only the token-driven text contrast. Do not place the navigation logo on a contrasting plaque.
-- Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Favicons and app-launcher icons use the same gold-and-navy mark.
-- Use `logo/fixxflow-logo-horizontal-full.png` for spacious light-surface placements, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode-transparent.png` for the dark stacked lockup. Compact and operational navigation use `icon/fixxflow-icon-primary.png` inside the responsive navigation lockup. Use the approved gold-and-navy artwork; do not stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
+- Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Favicons and app-launcher icons use the same gold-and-black mark.
+- Use `logo/fixxflow-logo-horizontal-full.png` for spacious light-surface placements, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode-transparent.png` for the dark stacked lockup. Compact and operational navigation use `icon/fixxflow-icon-primary.png` inside the responsive navigation lockup. Use the approved gold-and-black artwork; do not stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
 - Keep clear space around the logo. At small sizes, drop the tagline before reducing legibility; use the icon rather than forcing the wordmark into a square.
 - The logo gradient belongs to brand artwork and occasional brand-forward moments. Functional controls should normally use solid semantic token colors, not gradients.
 - Prefer motion cues that echo the mark's forward sweep: short horizontal reveals, progress movement, and directional transitions. Keep them subtle, 120–200ms, and fully compatible with reduced-motion settings.
@@ -340,7 +340,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Operational overview hierarchy
 
-- Lead the staff overview with a compact navy introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with navy text; the focus outline uses gold for contrast against navy.
+- Lead the staff overview with a compact charcoal introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with night-black text; the focus outline uses gold for contrast against charcoal.
 - Place real metrics before shortcuts and personal support actions. On wide screens, group comparable metrics in one divided panel; on compact screens, use two columns and a single column below 360px.
 - Queue shortcuts use native links, a title, brief supporting text, and a decorative arrow. Numbered markers indicate reading order, never ticket counts. Keep secondary support actions neutral so they do not compete with the queue.
 - Shared cards favor borders over shadows. Preserve clear input boundaries, visible focus, and the employee portal’s larger controls.
@@ -369,7 +369,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Appearance themes
 
 - Offer a soft, rounded Appearance group with native icon buttons for System (monitor), Light (sun), and Dark (moon). Each button has an accessible name, tooltip, pressed state, and a selected dot in addition to color. Keep 44px targets and visible keyboard focus. Place these choices centered below Notifications in workspace navigation, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.
-- Keep the existing semantic tokens as the single color system. Dark mode uses the approved black-and-gold palette: `#000000` canvas, `#14213D` navy surfaces, `#FCA311` actions and focus, `#FFFFFF` primary text, and `#E5E5E5` secondary text. Use derived navy tones for elevation and borders and a dark gold tint for selection. Both themes and all brand artwork use this palette. Light mode uses white surfaces, a soft neutral canvas, navy primary text, gray secondary text, and darker gold links and focus outlines. Preserve distinct success, warning, danger, and chart colors with darker tinted backgrounds. `--color-on-action` controls navy text on gold filled actions; `--color-inverse` stays white for fixed navy brand panels. Chart series retain their distinct line styles and data tables.
+- Keep the existing semantic tokens as the single color system. Dark mode uses the approved black-and-gold palette: `#1A1A1A` canvas, `#222222` charcoal surfaces, `#FEBE10` actions and focus, `#FFFFFF` primary text, and `#F2F2F2` secondary text. Use derived charcoal tones for elevation and borders and a dark gold tint for selection. Both themes and all brand artwork use this palette. Light mode uses white surfaces, a soft neutral canvas, night-black primary text, gray secondary text, and darker gold links and focus outlines. Preserve distinct success, warning, danger, and chart colors with darker tinted backgrounds. `--color-on-action` controls night-black text on gold filled actions; `--color-inverse` stays white for fixed charcoal brand panels. Chart series retain their distinct line styles and data tables.
 - Use native dark form controls via `color-scheme`. Keep focus outlines and control boundaries visible. Theme changes are immediate and introduce no animation.
 - Full shared logos use the approved primary (light mode) and dark-mode (dark mode) PNGs at their original 1353:1334 proportions; compact sidebar logos use the approved 1139:1151 color icon, with no light backing, cropping, or recoloring. All shared logo variants, including the full inverse artwork, must have genuine alpha transparency around the mark and lettering. Never bake a background into application logo assets. Keep launcher icons separate from transparent application logos.
 
@@ -389,7 +389,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Keep the operational shell neutral and use a thin gold-to-amber signature at the top of persistent navigation. Selected navigation uses a subtle gold surface, accessible gold text, and an inset edge so the active location remains clear without turning the full control into a saturated block. Keep the existing focus outline and forced-colors selected outline.
 - Concentrate expressive brand color in a few deliberate moments: the staff overview introduction, the authentication brand panel, primary actions, selection, and small directional details. Standard page headers, settings rows, knowledge categories, tables, and form surfaces stay neutral. Gold highlights belong within brand artwork and signature rules, not a default card fill or workflow color.
 - Administration is a grouped settings index with bordered rows and lightweight destination links. Knowledge browsing uses neutral destination surfaces with gold interaction feedback. Green, amber, and red remain reserved for semantic feedback.
-- The overview introduction uses a restrained navy-to-black brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded navigation uses the responsive mark-and-wordmark lockup in every theme; compact sidebars and mobile headers retain the mark alone. Preserve the approved mark without distortion.
+- The overview introduction uses a restrained charcoal-to-black brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded navigation uses the responsive mark-and-wordmark lockup in every theme; compact sidebars and mobile headers retain the mark alone. Preserve the approved mark without distortion.
 - Employee pages should feel warmer and simpler through larger type, plain-language tasks, and whitespace rather than additional decorative color. Authentication may carry the strongest brand panel because it has no competing operational data.
 
 ### Employee home hierarchy

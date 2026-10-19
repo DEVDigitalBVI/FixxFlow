@@ -56,8 +56,8 @@ test('explicit and system dark themes share the approved black-and-gold palette'
   const system = css.match(/:root:not\(\[data-theme\]\) \{([^}]+)\}/)[1];
   assert.equal(explicit.trim(), system.trim());
   for (const [token, value] of Object.entries({
-    canvas: '#000000', surface: '#14213d', accent: '#fca311',
-    text: '#ffffff', 'text-muted': '#e5e5e5', focus: '#fca311',
+    canvas: '#1a1a1a', surface: '#222222', accent: '#febe10',
+    text: '#ffffff', 'text-muted': '#f2f2f2', focus: '#febe10',
   })) assert.ok(explicit.includes(`--color-${token}: ${value};`), token);
 });
 test('dark text, states, buttons, charts and focus meet contrast thresholds', () => {
@@ -189,10 +189,10 @@ test('brand logo variants use approved artwork at its original proportions', () 
   }
   // Fingerprints of the product-owner-authorized gold-and-navy brand artwork.
   const approved = {
-    primary: 'b59a5aac15fc308315ec26a7597c10949d971351bdc9f339cb76291bdd1116af',
-    'dark-mode': '5893b118ac302062f9cea522806b7bd5af5fc7151ac5d89c2e282e90ab56a27b',
-    'dark-mode-transparent': '5893b118ac302062f9cea522806b7bd5af5fc7151ac5d89c2e282e90ab56a27b',
-    'horizontal-full': 'f975fe6cf19092ee1f927d60384933f71e3ef86bdc16ca7acd56de7eda121274',
+    primary: '2afa8a72c7bad3d2ab92ed212412db3b861a60f3e45327ea88c0f5a2e5196777',
+    'dark-mode': '39ba3c95e9cadd6856feffb32b57124d7bab3432f450a04f6fb3103dbcc7edc3',
+    'dark-mode-transparent': '39ba3c95e9cadd6856feffb32b57124d7bab3432f450a04f6fb3103dbcc7edc3',
+    'horizontal-full': 'e3522928afced6d3661339f4581e432b6096516c477fa64d9530c0a662f608a1',
   };
   for (const [name, fingerprint] of Object.entries(approved)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`)).digest('hex'), fingerprint);
@@ -200,6 +200,7 @@ test('brand logo variants use approved artwork at its original proportions', () 
 });
 
 test('shared logo artwork has transparent surroundings in every theme', async () => {
+  const { alphaFingerprints } = JSON.parse(fs.readFileSync('public/brand/fixxflow/source/source-notes.json', 'utf8'));
   for (const asset of [
     'logo/fixxflow-logo-primary.png',
     'logo/fixxflow-logo-dark-mode.png',
@@ -211,6 +212,9 @@ test('shared logo artwork has transparent surroundings in every theme', async ()
   ]) {
     const { data, info } = await sharp(`public/brand/fixxflow/${asset}`).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     const alpha = (x, y) => data[(y * info.width + x) * info.channels + 3];
+    const channel = Buffer.alloc(info.width * info.height);
+    for (let i = 3, j = 0; i < data.length; i += info.channels, j++) channel[j] = data[i];
+    assert.equal(createHash('sha256').update(channel).digest('hex'), alphaFingerprints[asset], `${asset}: original transparency preserved`);
     for (const [x, y] of [[0, 0], [info.width - 1, 0], [0, info.height - 1], [info.width - 1, info.height - 1]]) {
       assert.equal(alpha(x, y), 0, `${asset}: transparent corners`);
     }
@@ -257,7 +261,7 @@ test('brand surfaces retain readable navigation, category copy and overview text
   // Check the lighter end of the actual sRGB overview wash, not just navy.
   const weight = Number(css.match(/color-mix\(in srgb, var\(--color-brand-primary\) (\d+)%/)[1]) / 100;
   const channels = hex => hex.match(/[a-f\d]{2}/gi).map(v => parseInt(v, 16));
-  const blue = channels(base['brand-primary']), navy = channels(base['brand-navy']);
+  const blue = channels(base['brand-primary']), navy = channels(base['brand-ink']);
   const end = '#' + blue.map((v, i) => Math.round(v * weight + navy[i] * (1 - weight)).toString(16).padStart(2, '0')).join('');
   for (const foreground of ['inverse', 'brand-text-muted', 'brand-secondary']) {
     assert.ok(contrast(base[foreground], end) >= 4.5, `${foreground} on overview wash`);

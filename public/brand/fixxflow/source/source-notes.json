@@ -1,5 +1,5 @@
 {
-  "source": "AI-assisted recolor of the existing FixxFlow ribbon F and wrench, authorized by the product owner in October 2026",
+  "source": "Palette migration of the existing FixxFlow ribbon F and wrench to the product-owner-selected white, gray, gold and night-black palette, October 2026",
   "iconSourceDimensions": [
     1254,
     1254
@@ -11,17 +11,28 @@
   "format": "PNG RGBA",
   "vectorOriginalIncluded": false,
   "palette": {
-    "gold": "#FCA311",
-    "navy": "#14213D",
+    "gold": "#FEBE10",
+    "nightBlack": "#1A1A1A",
     "white": "#FFFFFF",
-    "lightGray": "#E5E5E5",
-    "black": "#000000"
+    "grey": "#F2F2F2"
   },
-  "method": "Built-in imagegen background extraction, with final alpha matting against the clean inverse master and existing transparent master silhouette to preserve crisp lettering and navy folds. Sharp performs alpha validation, crop and resize.",
+  "method": "Built-in imagegen recolor with final palette normalization and exact preservation of the existing artwork alpha masks, silhouettes and dimensions. Sharp prepares production derivatives and verifies alpha channels.",
   "prompts": {
-    "primary": "Edit this exact FixxFlow logo, only recolor. Preserve the ribbon F with circular wrench, precise silhouette, wordmark spelling FixxFlow and tagline IT SUPPORT IN MOTION, layout and proportions. Replace all blue/cyan ribbon and Flow text with gold #FCA311 highlights and amber-gold shading; deepest ribbon folds navy #14213D. Fixx text navy, tagline dark neutral gray. Wrench white. Transparent background.",
-    "dark": "Use case: background-extraction. Edit target: the attached FixxFlow logo. Remove ONLY the navy rectangular background and replace it with real alpha transparency everywhere outside the logo, including the gaps and holes between letters. Preserve the gold ribbon F, its internal navy folds, white wrench, gold Flow letters, white Fixx letters, and the exact tagline IT SUPPORT IN MOTION. Keep all typography, shapes, layout, colors and spacing unchanged. Crisp smooth edges and intact solid letter interiors; no rough edges, speckles, paint splashes, extra outlines, glow, checkerboard, matte or background color. Final deliverable is a transparent PNG logo, not a logo on a navy panel."
+    "paletteMigration": "Recolor this exact transparent FixxFlow logo to the palette GOLD #FEBE10, NIGHT BLACK #1A1A1A, WHITE #FFFFFF and GREY #F2F2F2. Change ONLY colors: gold ribbon and Flow should use #FEBE10 with restrained tonal gold shading; every blue/navy internal ribbon fold becomes neutral night-black/charcoal #1A1A1A with subtle gray shading, absolutely no blue. Preserve white Fixx and wrench and light-gray IT SUPPORT IN MOTION tagline. Preserve exact shapes, letterforms, layout, proportions, and all genuine alpha transparency around the logo and between letters. Smooth crisp edges, no splatter, no fringe, no opaque backdrop, no checkerboard. Deliver transparent PNG."
   },
-  "derivatives": "Navigation mark, horizontal lockups, source masters, app icons, Apple/Android icons and ICO all derive from the same gold logo.",
-  "darkArtwork": "All full inverse and reversed logo assets have genuine alpha transparency. The app uses the dark-mode-transparent filename to bypass previous opaque image caches. Navy remains only inside the ribbon folds."
+  "derivatives": "Navigation mark, horizontal lockups, source masters, app icons, Apple/Android icons and ICO share the gold-and-night-black palette. Application logos retain their exact prior alpha channels.",
+  "darkArtwork": "All application logo variants retain their original alpha channels exactly. No background or backing plaque is introduced. Internal folds use neutral charcoal; launcher icons retain their intentional square background.",
+  "alphaFingerprints": {
+    "logo/fixxflow-logo-dark-mode-transparent.png": "4e00e4065859eec47e3d7ab80487f025b3c5072323528cd5b03239ce9e4e37f7",
+    "logo/fixxflow-logo-dark-mode.png": "4e00e4065859eec47e3d7ab80487f025b3c5072323528cd5b03239ce9e4e37f7",
+    "logo/fixxflow-logo-horizontal-full.png": "ef12a97e1f99bf2660c95a4a7bb78c9e6f194b33a028f88941d58a5a91e5c4f8",
+    "logo/fixxflow-logo-horizontal.png": "ef12a97e1f99bf2660c95a4a7bb78c9e6f194b33a028f88941d58a5a91e5c4f8",
+    "logo/fixxflow-logo-monochrome-black.png": "499769500dde69ff13e22048bb6709ef8f0bc0ce737d49347a6477c50e33df70",
+    "logo/fixxflow-logo-monochrome-white.png": "499769500dde69ff13e22048bb6709ef8f0bc0ce737d49347a6477c50e33df70",
+    "logo/fixxflow-logo-primary.png": "e7911343a046b95dbc48a6b05c1e4e1f5aaf70c21ef7b12a58f7472599f0f185",
+    "logo/fixxflow-logo-reversed-white.png": "4e00e4065859eec47e3d7ab80487f025b3c5072323528cd5b03239ce9e4e37f7",
+    "icon/fixxflow-icon-black.png": "f51312211d9d3d7d6ed623e10874376abf79129f1fc21ae6ca878e079063a645",
+    "icon/fixxflow-icon-primary.png": "41a4cce3444e0b3a3b6c509b5e89a3849c5b131d6ab3766447dd1f5d2265f802",
+    "icon/fixxflow-icon-white.png": "f51312211d9d3d7d6ed623e10874376abf79129f1fc21ae6ca878e079063a645"
+  }
 }

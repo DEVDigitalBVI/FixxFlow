@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
     '/api/cron/reports': ['./src/features/reporting/fonts/*.ttf', './public/brand/fixxflow/logo/fixxflow-logo-horizontal.png'],
   },
   images: {
+    localPatterns: [
+      { pathname: '/**', search: '' },
+      { pathname: '/brand/fixxflow/**', search: '?v=night-gold' },
+    ],
     remotePatterns: [
       {
         protocol: "https",

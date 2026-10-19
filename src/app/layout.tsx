@@ -34,10 +34,10 @@ export const metadata: Metadata = {
   manifest: "/brand/fixxflow/site.webmanifest",
   icons: {
     icon: [
-      { url: "/brand/fixxflow/favicon/favicon.ico" },
-      { url: "/brand/fixxflow/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/fixxflow/favicon/favicon.ico?v=night-gold" },
+      { url: "/brand/fixxflow/favicon/favicon-32x32.png?v=night-gold", sizes: "32x32", type: "image/png" },
     ],
-    apple: "/brand/fixxflow/favicon/apple-touch-icon.png",
+    apple: "/brand/fixxflow/favicon/apple-touch-icon.png?v=night-gold",
   },
 };
 
