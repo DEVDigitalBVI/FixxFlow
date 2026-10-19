@@ -30,7 +30,7 @@ export function WorkspaceNav({ role, organizationId, userId, platform = false, w
     { href: "/app/reports", label: "Reports", icon: <NavigationIcon name="reports" />, visible: role !== "end_user" },
     { href: "/app/people", label: "People", icon: <NavigationIcon name="people" />, visible: role !== "end_user" },
     { href: "/app/administration", label: "Settings", icon: <NavigationIcon name="administration" />, visible: role === "administrator" },
-    { href: "/app/profile", label: role === "end_user" ? "Account" : "Profile", icon: <NavigationIcon name="profile" />, visible: true },
+    { href: "/app/profile", label: "Profile", icon: <NavigationIcon name="profile" />, visible: true },
     { href: "/app/security", label: "Security", icon: <NavigationIcon name="security" />, visible: true },
     { href: "/app/support", label: "Contact support", icon: <NavigationIcon name="support" />, visible: true },
   ];
