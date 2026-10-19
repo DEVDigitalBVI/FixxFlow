@@ -2652,7 +2652,7 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
 }
 
 .ticket-wizard { display: grid; gap: 20px; max-width: 1040px; margin-inline: auto; }
-.ticket-wizard-steps { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 0; margin: 0; }
+.ticket-wizard-steps { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 0; margin: 0; }
 .ticket-wizard-steps button { width: 100%; min-height: 48px; display: flex; align-items: center; gap: 8px; text-align: left; padding: 12px; border: 0; border-radius: 8px; background: var(--color-surface-subtle); color: var(--color-text-muted); font: inherit; cursor: pointer; }
 .ticket-wizard-steps button[aria-current="step"] { background: var(--color-accent-subtle); color: var(--color-text); font-weight: 600; }
 .ticket-step-number { flex-shrink: 0; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--color-surface); font-variant-numeric: tabular-nums; }
