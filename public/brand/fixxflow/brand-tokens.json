@@ -6,32 +6,32 @@
   },
   "color": {
     "brand": {
-      "blue": { "$value": "#007AFF", "$type": "color" },
-      "cyan": { "$value": "#00C6FF", "$type": "color" },
-      "blueHover": { "$value": "#0066D6", "$type": "color" },
-      "blueSoft": { "$value": "#EAF5FF", "$type": "color" },
-      "navy": { "$value": "#0F172A", "$type": "color" },
-      "purple": { "$value": "#865CF6", "$type": "color" }
+      "gold": { "$value": "#FCA311", "$type": "color" },
+      "amber": { "$value": "#FFBB4D", "$type": "color" },
+      "goldLink": { "$value": "#885000", "$type": "color" },
+      "goldSoft": { "$value": "#FFF4DF", "$type": "color" },
+      "navy": { "$value": "#14213D", "$type": "color" },
+      "black": { "$value": "#000000", "$type": "color" }
     },
     "surface": {
-      "canvas": { "$value": "#F8FAFC", "$type": "color" },
+      "canvas": { "$value": "#F5F5F5", "$type": "color" },
       "card": { "$value": "#FFFFFF", "$type": "color" },
-      "dark": { "$value": "#0B1220", "$type": "color" }
+      "dark": { "$value": "#000000", "$type": "color" }
     },
     "text": {
-      "primary": { "$value": "#0F172A", "$type": "color" },
-      "secondary": { "$value": "#64748B", "$type": "color" },
+      "primary": { "$value": "#14213D", "$type": "color" },
+      "secondary": { "$value": "#595959", "$type": "color" },
       "inverse": { "$value": "#FFFFFF", "$type": "color" }
     },
     "border": {
-      "subtle": { "$value": "#E2E8F0", "$type": "color" }
+      "subtle": { "$value": "#E5E5E5", "$type": "color" }
     },
     "status": {
-      "info": { "$value": "#007AFF", "$type": "color" },
+      "info": { "$value": "#FCA311", "$type": "color" },
       "success": { "$value": "#22C55E", "$type": "color" },
       "warning": { "$value": "#F59E0B", "$type": "color" },
       "critical": { "$value": "#EF4444", "$type": "color" },
-      "inactive": { "$value": "#64748B", "$type": "color" }
+      "inactive": { "$value": "#595959", "$type": "color" }
     }
   },
   "typography": {

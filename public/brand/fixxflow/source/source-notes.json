@@ -1,5 +1,5 @@
 {
-  "source": "AI-assisted raster reconstruction using the approved FixxFlow brand board as the authoritative reference",
+  "source": "AI-assisted recolor of the existing FixxFlow ribbon F and wrench, authorized by the product owner in October 2026",
   "iconSourceDimensions": [
     1254,
     1254
@@ -11,10 +11,17 @@
   "format": "PNG RGBA",
   "vectorOriginalIncluded": false,
   "palette": {
-    "blue": "#007AFF",
-    "cyan": "#00C6FF",
-    "navy": "#0F172A",
-    "slate": "#64748B",
-    "white": "#FFFFFF"
-  }
+    "gold": "#FCA311",
+    "navy": "#14213D",
+    "white": "#FFFFFF",
+    "lightGray": "#E5E5E5",
+    "black": "#000000"
+  },
+  "method": "Built-in imagegen for recoloring; Sharp for crop, resize, lockup composition, and launcher/favicon derivation",
+  "prompts": {
+    "primary": "Edit this exact FixxFlow logo, only recolor. Preserve the ribbon F with circular wrench, precise silhouette, wordmark spelling FixxFlow and tagline IT SUPPORT IN MOTION, layout and proportions. Replace all blue/cyan ribbon and Flow text with gold #FCA311 highlights and amber-gold shading; deepest ribbon folds navy #14213D. Fixx text navy, tagline dark neutral gray. Wrench white. Transparent background.",
+    "dark": "Produce a pristine smooth-edge dark-mode version of this exact FixxFlow logo on a uniform navy #14213D background. No transparency. Keep gold ribbon F and white wrench and gold Flow. Fixx solid white. Tagline IT SUPPORT IN MOTION light gray #E5E5E5. Preserve composition, size, spacing, spelling. Remove edge debris and artifacts. Crisp smooth vector-like brand rendering. Gold #FCA311 with amber shading, no blue or cyan."
+  },
+  "derivatives": "Navigation mark, horizontal lockups, source masters, app icons, Apple/Android icons and ICO all derive from the same gold logo.",
+  "darkArtwork": "Full inverse artwork uses a navy background for clean light lettering. Navigation and compact marks remain transparent without a backing plaque."
 }

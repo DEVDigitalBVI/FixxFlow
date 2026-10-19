@@ -49,6 +49,16 @@ function luminance(hex) {
   return rgb[0] * .2126 + rgb[1] * .7152 + rgb[2] * .0722;
 }
 function contrast(a, b) { const x = luminance(a), y = luminance(b); return (Math.max(x,y) + .05) / (Math.min(x,y) + .05); }
+test('explicit and system dark themes share the approved black-and-gold palette', () => {
+  const css = fs.readFileSync('src/app/globals.css', 'utf8');
+  const explicit = css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1];
+  const system = css.match(/:root:not\(\[data-theme\]\) \{([^}]+)\}/)[1];
+  assert.equal(explicit.trim(), system.trim());
+  for (const [token, value] of Object.entries({
+    canvas: '#000000', surface: '#14213d', accent: '#fca311',
+    text: '#ffffff', 'text-muted': '#e5e5e5', focus: '#fca311',
+  })) assert.ok(explicit.includes(`--color-${token}: ${value};`), token);
+});
 test('dark text, states, buttons, charts and focus meet contrast thresholds', () => {
   const css = fs.readFileSync('src/app/globals.css', 'utf8');
   const block = css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1];
@@ -59,6 +69,21 @@ test('dark text, states, buttons, charts and focus meet contrast thresholds', ()
   }
   for (const state of ['accent', 'success', 'warning', 'danger', 'cyan', 'purple', 'neutral']) assert.ok(contrast(tokens[state], tokens[`${state}-subtle`]) >= 4.5, state);
   for (const fill of ['accent', 'accent-hover']) assert.ok(contrast(tokens['on-accent'], tokens[fill]) >= 4.5, fill);
+});
+test('light surfaces and gold filled actions retain readable contrast in both themes', () => {
+  const css = fs.readFileSync('src/app/globals.css', 'utf8');
+  const read = block => Object.fromEntries([...block.matchAll(/--color-([\w-]+): (#[\da-f]+);/g)].map(m => [m[1], m[2]]));
+  const light = read(css.match(/:root \{([^}]+)\}/)[1]);
+  const dark = { ...light, ...read(css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1]) };
+  for (const theme of [light, dark]) {
+    for (const surface of ['canvas', 'surface', 'surface-subtle', 'surface-raised']) {
+      for (const foreground of ['text', 'text-muted', 'accent', 'accent-hover']) {
+        assert.ok(contrast(theme[foreground], theme[surface]) >= 4.5, `${foreground} on ${surface}`);
+      }
+      for (const cue of ['focus', 'control-border']) assert.ok(contrast(theme[cue], theme[surface]) >= 3, `${cue} on ${surface}`);
+    }
+    for (const fill of ['action-fill', 'action-hover']) assert.ok(contrast(theme['on-action'], theme[fill]) >= 4.5, fill);
+  }
 });
 test('theme selection persists and remains usable when storage rejects writes', () => {
   for (const blocked of [false, true]) {
@@ -161,12 +186,11 @@ test('brand logo variants use approved artwork at its original proportions', () 
     if (variant !== 'full') assert.equal(imageProps.at(-1).preload, true);
     assert.doesNotMatch(html, /raster-master/);
   }
-  // Fingerprints of the approved originals; the local brand staging folder is
-  // intentionally ignored and is absent from clean checkouts and CI.
+  // Fingerprints of the product-owner-authorized gold-and-navy brand artwork.
   const approved = {
-    primary: '35216b27154bbe0997b54aec8e99d4fca5dc1e4e1e5c605f7d07515de8a05314',
-    'dark-mode': '6d1d839e11c4de70aa0be2161aa992a8962ec3c1c3c484f0254f6b287ff8325e',
-    'horizontal-full': '7d552841a4a7fca98dc22215a40dca25b0d8dfa35d4813515a5bfcfc17aa839a',
+    primary: 'b59a5aac15fc308315ec26a7597c10949d971351bdc9f339cb76291bdd1116af',
+    'dark-mode': '60521e9b5e8526567d31759f0b1019101ea16e561e4d648c37a73b6f1d0908bb',
+    'horizontal-full': 'f975fe6cf19092ee1f927d60384933f71e3ef86bdc16ca7acd56de7eda121274',
   };
   for (const [name, fingerprint] of Object.entries(approved)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`)).digest('hex'), fingerprint);

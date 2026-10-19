@@ -11,10 +11,10 @@ export class PdfCharacterError extends Error {
 }
 
 // Print equivalents of the product text, muted, border, surface, and accent tokens.
-const ink = rgb(15 / 255, 23 / 255, 42 / 255);
-const muted = rgb(100 / 255, 116 / 255, 139 / 255);
-const border = rgb(226 / 255, 232 / 255, 240 / 255);
-const surface = rgb(248 / 255, 250 / 255, 252 / 255);
+const ink = rgb(20 / 255, 33 / 255, 61 / 255);
+const muted = rgb(89 / 255, 89 / 255, 89 / 255);
+const border = rgb(229 / 255, 229 / 255, 229 / 255);
+const surface = rgb(245 / 255, 245 / 255, 245 / 255);
 
 export async function createReportPdf(report: Report, organization: string): Promise<Uint8Array> {
   const doc = await PDFDocument.create();

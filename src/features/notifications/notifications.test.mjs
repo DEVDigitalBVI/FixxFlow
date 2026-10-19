@@ -16,8 +16,8 @@ test('all email variants share the invitation layout and centered content',()=>{
  }
  for(const [name,html] of emails) {
   assert.match(html,/<td align="center" style="padding:24px;text-align:center;overflow-wrap:anywhere">/,name);
-  assert.match(html,/<p style="margin:0 0 8px;color:#64748b;font-size:14px;line-height:22px;font-weight:500">/,name);
-  assert.match(html,/<p style="max-width:420px;margin:0 auto 20px;color:#64748b;">/,name);
+  assert.match(html,/<p style="margin:0 0 8px;color:#595959;font-size:14px;line-height:22px;font-weight:500">/,name);
+  assert.match(html,/<p style="max-width:420px;margin:0 auto 20px;color:#595959;">/,name);
   assert.match(html,/<td align="center" style="text-align:center;padding:16px 24px;border-top:/,name);
   assert.match(html,/width="100%"[^>]*style="max-width:560px/,name);
   if(html.includes('Button not working?')) {
