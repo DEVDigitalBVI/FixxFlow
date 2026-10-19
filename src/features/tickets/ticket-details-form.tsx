@@ -15,6 +15,12 @@ import { DeadlineField } from './deadline-field';
 type TicketDetails = Pick<Database['public']['Tables']['tickets']['Row'],
   'id' | 'revision' | 'status' | 'priority' | 'assigned_technician_id' | 'team_id' | 'category_id' | 'subcategory_id' | 'location_id' | 'due_at'>;
 
+/** Mount the full editor only when requested, using the latest saved revision. */
+export function TicketAssignmentEditor({ticket,timeZone}:{ticket:TicketDetails;timeZone:string}) {
+  const [editing,setEditing]=useState(false);
+  return editing ? <TicketDetailsForm ticket={ticket} timeZone={timeZone}/> : <button type="button" className="button button-secondary" onClick={()=>setEditing(true)}>Choose technician or edit details</button>;
+}
+
 export function TicketDetailsForm({ ticket, timeZone }: { ticket: TicketDetails; timeZone: string }) {
   // Realtime page refreshes must never advance the draft's revision or reset its fields.
   const [draft] = useState(ticket);
@@ -46,11 +52,13 @@ export function TicketDetailsForm({ ticket, timeZone }: { ticket: TicketDetails;
     <input type="hidden" name="revision" value={revision}/>
     <label>Status<select className="input" name="status" defaultValue={draft.status}>{Object.entries(ticketStatuses).map(([value, item]) => <option key={value} value={value}>{item.label}</option>)}</select></label>
     <label>Priority<select className="input" name="priority" defaultValue={draft.priority}>{Object.entries(ticketPriorities).map(([value, item]) => <option key={value} value={value}>{item.label}</option>)}</select></label>
-    <LookupSelect resource="technicians" name="assignedTechnicianId" label="Technician" defaultValue={draft.assigned_technician_id ?? ''}/>
+    <LookupSelect resource="technicians" name="assignedTechnicianId" label="Assigned technician" defaultValue={draft.assigned_technician_id ?? ''}/>
     <LookupSelect resource="teams" name="teamId" label="Team" defaultValue={draft.team_id ?? ''}/>
+    <details className="ticket-classification"><summary>Classification &amp; deadlines</summary><div className="stack">
     <CategoryFields categoryId={draft.category_id ?? ''} subcategoryId={draft.subcategory_id ?? ''}/>
     <LookupSelect resource="locations" name="locationId" label="Location" defaultValue={draft.location_id ?? ''}/>
     <DeadlineField timeZone={timeZone} value={draft.due_at}/>
-    <SubmitButton className="button button-primary">Save changes</SubmitButton>
+    </div></details>
+    <SubmitButton className="button button-secondary">Save ticket details</SubmitButton>
   </ActionForm>;
 }

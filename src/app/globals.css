@@ -2632,3 +2632,44 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
 .workflow-builder .input, .workflow-builder .field { min-width: 0; }
 .workflow-builder .button { white-space: normal; }
 @media (max-width: 767px) { .workflow-builder-actions > *, .workflow-catalog-filters > button { flex: 1 1 auto; } }
+
+/* Ticket work keeps everyday actions ahead of optional coordination tools. */
+.ticket-work { margin-bottom: 20px; }
+.ticket-work h2 { margin: 0; font-size: 17px; }
+.ticket-work .section-heading-row p { margin: 8px 0 0; }
+.ticket-work-controls, .ticket-status-action .action-form-fields { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+.ticket-work-controls > form { min-width: 0; }
+.ticket-status-action label { display: grid; gap: 6px; font-weight: 600; }
+.ticket-work-controls .action-form-fields { margin: 0; padding: 0; border: 0; min-inline-size: 0; }
+.ticket-coordination { display: grid; gap: 16px; }
+.ticket-extra-tools > summary, .ticket-assignment > summary, .activity > summary { cursor: pointer; font-weight: 600; min-height: 44px; padding: 12px 0; }
+.ticket-assignment .ticket-update { padding: 0; border: 0; box-shadow: none; background: transparent; }
+.ticket-assignment .ticket-update h2 { display: none; }
+#ticket-conversation, #ticket-assignment { scroll-margin-top: 24px; }
+@media (max-width: 767px) {
+ .ticket-work-controls, .ticket-status-action .action-form-fields { align-items: stretch; flex-direction: column; }
+ .ticket-work-controls > form, .ticket-work-controls button, .ticket-status-action { width: 100%; }
+}
+
+.ticket-wizard { display: grid; gap: 20px; max-width: 1040px; margin-inline: auto; }
+.ticket-wizard-steps { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 0; margin: 0; }
+.ticket-wizard-steps button { width: 100%; min-height: 48px; display: flex; align-items: center; gap: 8px; text-align: left; padding: 12px; border: 0; border-radius: 8px; background: var(--color-surface-subtle); color: var(--color-text-muted); font: inherit; cursor: pointer; }
+.ticket-wizard-steps button[aria-current="step"] { background: var(--color-accent-subtle); color: var(--color-text); font-weight: 600; }
+.ticket-step-number { flex-shrink: 0; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--color-surface); font-variant-numeric: tabular-nums; }
+.ticket-wizard-steps button[aria-current="step"] .ticket-step-number { background: var(--color-action-fill); color: var(--color-on-action); }
+.ticket-wizard-progress { margin: 0; }
+.ticket-wizard-panel[hidden] { display: none; }
+.ticket-step-heading { margin-bottom: 20px; }
+.ticket-step-heading h2 { margin: 0 0 8px; font-size: 22px; }
+.ticket-step-heading p { margin: 0; }
+.ticket-step-content { display: grid; gap: 16px; }
+.ticket-step-content h3 { margin: 0 0 12px; font-size: 17px; }
+.ticket-step-content .ticket-update { max-width: 640px; }
+.ticket-wizard-navigation { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.ticket-wizard-navigation p { margin: 0; max-width: 520px; }
+.ticket-work h3 { margin: 0; }
+@media (max-width: 767px) {
+ .ticket-wizard-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .ticket-wizard-navigation { flex-direction: column-reverse; align-items: stretch; }
+ .ticket-wizard-navigation > span:empty { display: none; }
+}

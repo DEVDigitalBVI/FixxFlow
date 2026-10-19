@@ -31,12 +31,12 @@ test("staff history labels both audiences and preserves timestamps for notes", (
   assert.match(html, /IT staff only/);
   assert.match(html, /dateTime="2026-09-24T10:01:00Z"/);
 });
-test("staff composer starts private with native radio controls and explicit send label", () => {
+test("staff composer starts with a clearly labeled requester reply and offers private notes", () => {
   const html = renderToStaticMarkup(React.createElement(MessageComposer, { ticketId: "ticket", action: async () => ({}) }));
-  assert.match(html, /name="kind" value="internal_note"/);
+  assert.match(html, /name="kind" value="reply"/);
   assert.match(html, /type="radio"/);
-  assert.match(html, /Add internal note/);
-  assert.match(html, /Hidden from the requester/);
+  assert.match(html, /Send public reply/);
+  assert.match(html, /Visible to the requester and IT staff/);
   assert.match(html, /aria-describedby="message-audience message-hint"/);
   assert.match(html, /Enter adds a new line/);
 });
@@ -66,6 +66,7 @@ test("successful replies retain their audience and preserve the other draft", as
     harness.render();
   };
   try {
+    choose('internal_note');
     textarea().props.onChange({ target: { value: 'Private diagnostic draft' } });
     choose('reply');
     textarea().props.onChange({ target: { value: 'Public update' } });

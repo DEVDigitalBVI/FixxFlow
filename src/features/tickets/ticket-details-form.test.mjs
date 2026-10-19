@@ -39,3 +39,15 @@ test('submission keys stay attached to their mounted drafts across refreshed ser
  const props={value:'original-key'},h=componentHarness('src/components/ui/submission-key.tsx','SubmissionKey',props);
  try{props.value='new-server-key';assert.equal(h.render().props.value,'original-key');}finally{h.close();}
 });
+
+test('assignment editor opens against current details and stays mounted when revisiting a wizard step',()=>{
+ const props={ticket:{...initial},timeZone:'America/Tortola'};
+ const h=componentHarness('src/features/tickets/ticket-details-form.tsx','TicketAssignmentEditor',props,{'next/navigation':{useRouter:()=>({refresh(){}})}});
+ try{
+  assert.equal(h.all(n=>n.props.ticket).length,0);
+  props.ticket={...initial,revision:2,assigned_technician_id:'viewer'};h.render();
+  h.find(n=>n.type==='button').props.onClick();h.render();
+  assert.equal(h.find(n=>n.props.ticket).props.ticket.revision,2);
+  assert.equal(h.find(n=>n.props.ticket).props.ticket.assigned_technician_id,'viewer');
+ }finally{h.close();}
+});

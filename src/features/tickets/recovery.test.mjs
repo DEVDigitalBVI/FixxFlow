@@ -39,3 +39,22 @@ test('manual deadlines are saved with an explicit offset and impossible dates ne
  const a=actions(),data=form();data.set('dueAt','2026-10-09T09:00');assert.ok((await a.updateTicket(data)).success);assert.equal(a.calls.find(c=>c[1]==='update')[2].due_at,'2026-10-09T13:00:00.000Z');
  const invalid=actions();data.set('dueAt','2026-02-30T09:00');assert.match((await invalid.updateTicket(data)).error,/valid manual due date/);assert.equal(invalid.calls.length,0);
 });
+
+test('focused ticket actions validate staff access and change only their named fields',async()=>{
+ for(const intent of ['take','start','status']){
+  const a=actions(),data=new FormData();data.set('ticketId',id);data.set('revision','1');data.set('intent',intent);data.set('status','resolved');
+  assert.ok((await a.workTicket(data)).success);
+  const patch=a.calls.find(c=>c[1]==='update')[2];
+  assert.deepEqual(patch,intent==='take'?{assigned_technician_id:id}:{status:intent==='start'?'in_progress':'resolved'});
+  assert.ok(a.calls.some(c=>c[1]==='eq'&&c[2]==='organization_id'&&c[3]==='trusted-org'));
+  assert.ok(a.calls.some(c=>c[1]==='eq'&&c[2]==='revision'&&c[3]===1));
+  if(intent==='take')assert.ok(a.calls.some(c=>c[1]==='is'&&c[2]==='assigned_technician_id'&&c[3]===null));
+ }
+ for(const setup of [{role:'end_user'},{race:true},{failWrite:true}]){
+  const a=actions(setup),data=new FormData();for(const [k,v]of Object.entries({ticketId:id,revision:'1',intent:'take'}))data.set(k,v);
+  assert.ok((await a.workTicket(data)).error);
+  if(setup.role)assert.equal(a.calls.length,0);
+ }
+ const a=actions(),data=new FormData();for(const [k,v]of Object.entries({ticketId:id,revision:'1',intent:'status',status:'invented'}))data.set(k,v);
+ assert.ok((await a.workTicket(data)).error);assert.equal(a.calls.length,0);
+});

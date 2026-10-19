@@ -14,7 +14,7 @@ export function MessageComposer({ ticketId, action, staff = true }: {
   action: (formData: FormData) => Promise<MessageResult>;
 }) {
   const router = useRouter();
-  const [kind, setKind] = useState<TicketMessageKind>(staff ? "internal_note" : "reply");
+  const [kind, setKind] = useState<TicketMessageKind>("reply");
   const [drafts, setDrafts] = useState({ reply: "", internal_note: "" });
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<MessageResult>({});
@@ -57,10 +57,10 @@ export function MessageComposer({ ticketId, action, staff = true }: {
     <input type="hidden" name="ticketId" value={ticketId}/>
     <input type="hidden" name="kind" value={kind}/>
     {staff && <fieldset className="composer-modes" disabled={pending}>
-      <legend>Message type</legend>
-      {Object.entries(messageKinds).map(([value, presentation]) => <label key={value}>
+      <legend>Who is this message for?</legend>
+      {Object.keys(messageKinds).map(value => <label key={value}>
         <input type="radio" name="composerMode" value={value} checked={kind === value} onChange={() => { setKind(value as TicketMessageKind); setResult({}); requestId.current = null; }}/>
-        {presentation.label}
+        {value === "reply" ? "Reply to requester" : "Internal note"}
       </label>)}
     </fieldset>}
     <div className="composer-audience" id="message-audience" role="status"><strong>{staff ? mode.label : "Reply to IT"}</strong><span>{staff ? mode.audience : "Visible to you and IT support."}</span></div>

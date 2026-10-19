@@ -105,6 +105,28 @@ export async function updateTicket(formData: FormData): Promise<{ error?: string
   return { success: "Ticket updated.", revision: data.revision };
 }
 
+/** Focused staff actions change only ownership/status, never hidden metadata. */
+export async function workTicket(formData: FormData): Promise<{ error?: string; success?: string; conflict?: boolean; revision?: number }> {
+  const viewer = await requireViewer();
+  if (viewer.role === 'end_user') return { error: 'Only IT staff can work tickets.' };
+  const ticketId = String(formData.get('ticketId') ?? '');
+  const revision = Number(formData.get('revision'));
+  const intent = String(formData.get('intent') ?? '');
+  const status = String(formData.get('status') ?? '') as TicketStatus;
+  if (!/^[0-9a-f-]{36}$/i.test(ticketId) || !Number.isSafeInteger(revision) || revision < 1 || !['take','start','status'].includes(intent) || (intent === 'status' && !Object.hasOwn(ticketStatuses,status))) return { error: 'Choose a valid action and reload the latest ticket.' };
+  const db = await createClient();
+  const changes = intent === 'take' ? { assigned_technician_id: viewer.id } : { status: intent === 'start' ? 'in_progress' as TicketStatus : status };
+  let query = db.from('tickets').update(changes).eq('organization_id',viewer.organizationId).eq('id',ticketId).eq('revision',revision);
+  // Taking an unassigned ticket never replaces another person's ownership.
+  if (intent === 'take') query = query.is('assigned_technician_id',null).not('status','in','(resolved,closed)');
+  if (intent === 'start') query = query.in('status',['new','open','on_hold','waiting_on_user']);
+  const { data, error } = await query.select('id, revision').maybeSingle();
+  if (error) { reportServerError('ticket.save',error); return { error: 'The ticket could not be updated. Try again.' }; }
+  if (!data) return { conflict: true, error: 'This ticket changed. Review the refreshed ticket before trying again.' };
+  revalidatePath(`/app/tickets/${ticketId}`); revalidatePath('/app/tickets');
+  return { revision: data.revision, success: intent === 'take' ? 'Ticket assigned to you.' : intent === 'start' ? 'Work started.' : `Status updated to ${ticketStatuses[status].label}.` };
+}
+
 export async function addTicketMessage(formData: FormData) {
   const viewer = await requireViewer();
   const ticketId = String(formData.get("ticketId") ?? "");
