@@ -100,7 +100,7 @@ test("successful replies retain their audience and preserve the other draft", as
 });
 test("message text is escaped instead of rendered as HTML", () => {
   const html = renderToStaticMarkup(React.createElement(ConversationTimeline, { messages: [{ ...messages[0], body: "<script>alert(1)</script>" }], names: new Map(), viewerId: "requester", requesterId: "requester", staff: true, error: false }));
-  assert.doesNotMatch(html, /<script>/);
+  assert.doesNotMatch(html, /<script\b/i);
   assert.match(html, /&lt;script&gt;/);
 });
 test("automation notes have a system label, never impersonate a human, and remain hidden from employees", () => {
