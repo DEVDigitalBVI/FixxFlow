@@ -20,8 +20,11 @@ FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 - `scripts` — development, release, and operational commands
 - `content/knowledge` — curated knowledge article sources
 - `public/brand` — approved brand assets, fonts, and licenses
+
 - `supabase/migrations` — versioned database schema changes
 - `docs` — indexed architecture, feature guides, operating procedures, and release evidence
+
+The local `brand/fixxflow` handoff folder is generated and ignored by Git. After changing approved assets, run `npm run brand:sync` to refresh every logo, icon, source master, font, token file and manifest. Run `npm run brand:check` to verify that the handoff package matches the approved files byte for byte.
 
 ## Documentation
 

@@ -16,7 +16,9 @@
     "test:build": "node scripts/verify-proxy-build.mjs",
     "test:database": "node scripts/test-database.mjs",
     "test:smoke": "node scripts/smoke-deployment.mjs",
-    "release:manifest": "node scripts/release-manifest.mjs"
+    "release:manifest": "node scripts/release-manifest.mjs",
+    "brand:sync": "node scripts/sync-brand-assets.mjs",
+    "brand:check": "node scripts/sync-brand-assets.mjs --check"
   },
   "dependencies": {
     "@pdf-lib/fontkit": "1.1.1",

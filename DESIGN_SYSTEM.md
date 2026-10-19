@@ -80,7 +80,7 @@ The core brand palette is `#FEBE10` gold, `#1A1A1A` night black, `#FFFFFF` white
 - Prefer motion cues that echo the mark's forward sweep: short horizontal reveals, progress movement, and directional transitions. Keep them subtle, 120–200ms, and fully compatible with reduced-motion settings.
 - Product copy should sound clear, capable, and active. Favor outcome language such as “Resolve ticket,” “Route request,” and “Keep work moving.” Avoid mechanical jargon in the employee portal.
 
-The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its PNG masters as approved artwork; do not recreate the wordmark with live text. A designer-authored vector master should replace raster artwork if large-format print production is required.
+The approved, versioned asset package lives under `public/brand/fixxflow/`. Refresh the ignored local handoff package in `brand/fixxflow/` with `npm run brand:sync` and verify byte-for-byte parity with `npm run brand:check`. Treat its PNG masters as approved artwork; do not recreate the wordmark with live text. A designer-authored vector master should replace raster artwork if large-format print production is required.
 
 ### 3.3 Typography
 
