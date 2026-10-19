@@ -4,6 +4,7 @@ import test from 'node:test';
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import vm from 'node:vm';
+import sharp from 'sharp';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
@@ -155,10 +156,10 @@ test('brand logo variants use approved artwork at its original proportions', () 
     const html = renderToStaticMarkup(React.createElement(BrandLogo, { variant, href: '/app', priority: true }));
     if (variant === 'full') {
       assert.match(html, /fixxflow-logo-primary\.png/);
-      assert.match(html, /fixxflow-logo-dark-mode\.png/);
+      assert.match(html, /fixxflow-logo-dark-mode-transparent\.png/);
       assert.match(html, /width="1353" height="1334"/);
     } else if (variant === 'full-inverse') {
-      assert.match(html, /fixxflow-logo-dark-mode\.png/);
+      assert.match(html, /fixxflow-logo-dark-mode-transparent\.png/);
       assert.doesNotMatch(html, /fixxflow-logo-primary\.png/);
       assert.match(html, /width="1353" height="1334"/);
     } else if (variant === 'horizontal') {
@@ -189,11 +190,38 @@ test('brand logo variants use approved artwork at its original proportions', () 
   // Fingerprints of the product-owner-authorized gold-and-navy brand artwork.
   const approved = {
     primary: 'b59a5aac15fc308315ec26a7597c10949d971351bdc9f339cb76291bdd1116af',
-    'dark-mode': '60521e9b5e8526567d31759f0b1019101ea16e561e4d648c37a73b6f1d0908bb',
+    'dark-mode': '5893b118ac302062f9cea522806b7bd5af5fc7151ac5d89c2e282e90ab56a27b',
+    'dark-mode-transparent': '5893b118ac302062f9cea522806b7bd5af5fc7151ac5d89c2e282e90ab56a27b',
     'horizontal-full': 'f975fe6cf19092ee1f927d60384933f71e3ef86bdc16ca7acd56de7eda121274',
   };
   for (const [name, fingerprint] of Object.entries(approved)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`)).digest('hex'), fingerprint);
+  }
+});
+
+test('shared logo artwork has transparent surroundings in every theme', async () => {
+  for (const asset of [
+    'logo/fixxflow-logo-primary.png',
+    'logo/fixxflow-logo-dark-mode.png',
+    'logo/fixxflow-logo-dark-mode-transparent.png',
+    'logo/fixxflow-logo-reversed-white.png',
+    'logo/fixxflow-logo-horizontal.png',
+    'logo/fixxflow-logo-horizontal-full.png',
+    'icon/fixxflow-icon-primary.png',
+  ]) {
+    const { data, info } = await sharp(`public/brand/fixxflow/${asset}`).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    const alpha = (x, y) => data[(y * info.width + x) * info.channels + 3];
+    for (const [x, y] of [[0, 0], [info.width - 1, 0], [0, info.height - 1], [info.width - 1, info.height - 1]]) {
+      assert.equal(alpha(x, y), 0, `${asset}: transparent corners`);
+    }
+    let clear = 0;
+    let opaque = 0;
+    for (let i = 3; i < data.length; i += info.channels) {
+      if (data[i] === 0) clear++;
+      if (data[i] >= 200) opaque++;
+    }
+    assert.ok(clear / (info.width * info.height) > .4, `${asset}: no rectangular matte`);
+    assert.ok(opaque / (info.width * info.height) > .05, `${asset}: artwork remains visible`);
   }
 });
 

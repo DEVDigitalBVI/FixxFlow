@@ -29,7 +29,7 @@ export function BrandLogo({ variant = "full", priority = false, className, href 
     <Link className={classes} href={href} aria-label="FixxFlow home">
       {variant === "full-inverse" ? <Image
         className="brand-logo-image"
-        src="/brand/fixxflow/logo/fixxflow-logo-dark-mode.png"
+        src="/brand/fixxflow/logo/fixxflow-logo-dark-mode-transparent.png"
         width={1353}
         height={1334}
         alt="FixxFlow — IT Support in Motion"
@@ -54,7 +54,7 @@ export function BrandLogo({ variant = "full", priority = false, className, href 
       /> : (["light", "dark"] as const).map(theme => <Image
         key={theme}
         className={`brand-logo-image brand-logo-image-${theme}`}
-        src={`/brand/fixxflow/logo/fixxflow-logo-${theme === "light" ? "primary" : "dark-mode"}.png`}
+        src={`/brand/fixxflow/logo/fixxflow-logo-${theme === "light" ? "primary" : "dark-mode-transparent"}.png`}
         width={1353}
         height={1334}
         alt="FixxFlow — IT Support in Motion"
