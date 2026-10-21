@@ -12,6 +12,7 @@ type WorkTicket = {id:string;revision:number;status:TicketStatus;assigned_techni
 export function TicketWorkActions({ticket,assignee,stage='all'}:{ticket:WorkTicket;assignee:string;stage?:'all'|'assignment'|'resolution'}) {
  const router=useRouter();
  const heading=useId();
+ const statusHint=useId();
  const [dirty,setDirty]=useState(false);
  const [statusDraft,setStatusDraft]=useState(ticket.status);
  const [baseline,setBaseline]=useState(ticket.revision);
@@ -34,7 +35,7 @@ export function TicketWorkActions({ticket,assignee,stage='all'}:{ticket:WorkTick
    {stage!=='resolution'&&!done&&!ticket.assigned_technician_id&&<ActionForm action={action} protectDraft={false}>{fields('take')}<SubmitButton className="button button-primary" pendingLabel="Assigning…">Assign to me</SubmitButton></ActionForm>}
    {stage!=='resolution'&&!done&&ticket.assigned_technician_id&&ticket.status!=='in_progress'&&<ActionForm action={action} protectDraft={false}>{fields('start')}<SubmitButton className="button button-primary" pendingLabel="Starting…">Start work</SubmitButton></ActionForm>}
    {stage!=='assignment'&&!done&&ticket.assigned_technician_id&&<ActionForm action={action} protectDraft={false}>{fields('status')}<input type="hidden" name="status" value="resolved"/><SubmitButton className="button button-secondary" pendingLabel="Resolving…">Mark resolved</SubmitButton></ActionForm>}
-   {stage!=='assignment'&&<ActionForm action={action} protectDraft={false} className="ticket-status-action">{fields('status')}<label>Status<select name="status" className="input" value={dirty?statusDraft:ticket.status} onChange={event=>{setStatusDraft(event.target.value as TicketStatus);setBaseline(ticket.revision);setDirty(true);}}>{Object.entries(ticketStatuses).map(([value,item])=><option key={value} value={value}>{item.label}</option>)}</select></label><SubmitButton className="button button-secondary" pendingLabel="Updating…">Update status</SubmitButton></ActionForm>}
+   {stage!=='assignment'&&<ActionForm action={action} protectDraft={false} className="ticket-status-action">{fields('status')}<label>Status<select name="status" className="input" aria-describedby={statusHint} value={dirty?statusDraft:ticket.status} onChange={event=>{setStatusDraft(event.target.value as TicketStatus);setBaseline(ticket.revision);setDirty(true);}}>{Object.entries(ticketStatuses).map(([value,item])=><option key={value} value={value}>{item.label}</option>)}</select></label><SubmitButton className="button button-primary" pendingLabel="Saving status…">Save status</SubmitButton><p id={statusHint} className="muted ticket-status-hint">{dirty?`Unsaved status: ${ticketStatuses[statusDraft].label}. Select Save status to apply it.`:"Choose a status, then select Save status to apply it."}</p></ActionForm>}
   </div>}
  </section>;
 }

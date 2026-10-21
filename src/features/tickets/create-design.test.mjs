@@ -76,3 +76,15 @@ test('employee full page keeps optional content collapsed and submission after a
  assert.match(equipment, /<summary>Add category <span/);
  assert.doesNotMatch(equipment, /Add category or location|name="locationId"/);
 });
+
+test('employee work impact is required, explained and available for equipment requests',async()=>{
+ for(const params of [{},{asset:'asset'}]){
+  const html=await renderTicketCreate({role:'end_user',params});
+  assert.match(html,/<label for="reportedImpact">How is this affecting work/);
+  assert.match(html,/<select[^>]*name="reportedImpact"[^>]*required=""[^>]*aria-describedby="ticket-impact-hint"/);
+  assert.match(html,/<option value="" disabled="" selected="">Choose the impact/);
+  for(const value of ['minor_inconvenience','work_blocked','team_affected','operations_stopped'])assert.ok(html.includes(`value="${value}"`));
+  assert.match(html,/Your choice automatically sets the initial priority/);
+ }
+ assert.doesNotMatch(await renderTicketCreate(),/name="reportedImpact"/);
+});

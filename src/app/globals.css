@@ -2639,6 +2639,8 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
 .ticket-work .section-heading-row p { margin: 8px 0 0; }
 .ticket-work-controls, .ticket-status-action .action-form-fields { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
 .ticket-work-controls > form { min-width: 0; }
+.ticket-status-action { flex: 1 1 320px; }
+.ticket-status-hint { flex-basis: 100%; margin: 0; }
 .ticket-status-action label { display: grid; gap: 6px; font-weight: 600; }
 .ticket-work-controls .action-form-fields { margin: 0; padding: 0; border: 0; min-inline-size: 0; }
 .ticket-coordination { display: grid; gap: 16px; }

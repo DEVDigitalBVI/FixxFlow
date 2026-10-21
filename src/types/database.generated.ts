@@ -1097,6 +1097,7 @@ export type Database = {
           location_id: string | null
           organization_id: string
           priority: Database["public"]["Enums"]["ticket_priority"]
+          reported_impact: string | null
           requester_id: string
           resolution_sla_due_at: string
           resolved_at: string | null
@@ -1122,6 +1123,7 @@ export type Database = {
           location_id?: string | null
           organization_id: string
           priority?: Database["public"]["Enums"]["ticket_priority"]
+          reported_impact?: string | null
           requester_id: string
           resolution_sla_due_at: string
           resolved_at?: string | null
@@ -1147,6 +1149,7 @@ export type Database = {
           location_id?: string | null
           organization_id?: string
           priority?: Database["public"]["Enums"]["ticket_priority"]
+          reported_impact?: string | null
           requester_id?: string
           resolution_sla_due_at?: string
           resolved_at?: string | null

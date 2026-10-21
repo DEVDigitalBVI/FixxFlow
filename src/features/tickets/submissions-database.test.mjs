@@ -21,6 +21,24 @@ test('support submission receipts preserve atomicity, permissions and retry iden
  const db=await migratedPostgres();
  const scenario=async(name,run)=>t.test(name,async()=>{await db.exec('begin');try{await db.exec(await readFile('tests/fixtures/domain-events.sql','utf8'));await identity(db,employee);await run();}finally{await db.exec('rollback; reset role');}});
  try {
+  await scenario('reported impact persists independently, rejects invalid values and survives retries',async()=>{
+   for(const impact of ['minor_inconvenience','work_blocked','team_affected','operations_stopped']){
+    for(const [kind,input] of [['ticket',payload],['equipment',{asset:'60000000-0000-0000-0000-000000000401',title:'Impact request',description:'Cannot connect'}]]){
+     const token=randomUUID(),request={...input,reported_impact:impact};
+     const id=await submit(db,kind,request,token);
+     assert.equal(await submit(db,kind,request,token),id);
+     let row=(await db.query('select reported_impact,priority,extract(epoch from (response_sla_due_at-created_at))/60 response_minutes,extract(epoch from (resolution_sla_due_at-created_at))/60 resolution_minutes from public.tickets where id=$1',[id])).rows[0];
+     const [priority,response,resolution]={minor_inconvenience:['low',480,2880],work_blocked:['normal',240,1440],team_affected:['high',60,480],operations_stopped:['critical',15,240]}[impact];
+     assert.equal(row.reported_impact,impact);assert.equal(row.priority,priority);
+     assert.equal(Number(row.response_minutes),response);assert.equal(Number(row.resolution_minutes),resolution);
+     await identity(db,admin);await db.query("update public.tickets set priority='high' where id=$1",[id]);
+     row=(await db.query('select reported_impact,priority from public.tickets where id=$1',[id])).rows[0];assert.equal(row.reported_impact,impact);assert.equal(row.priority,'high');
+     await identity(db,employee);
+     await denied(db,()=>submit(db,kind,{...request,reported_impact:'invalid'}),/check constraint/);
+     await denied(db,()=>submit(db,kind,{...request,reported_impact:'invalid'},token),/different input/);
+    }
+   }
+  });
   await scenario('a lost ticket response retries to one ticket, even after its details change',async()=>{
    const token=randomUUID(),id=await submit(db,'ticket',payload,token);
    await identity(db,admin);await db.query("update public.tickets set priority='high' where id=$1",[id]);await identity(db,employee);

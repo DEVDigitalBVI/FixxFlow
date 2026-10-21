@@ -1,4 +1,5 @@
 "use server";
+import { isTicketImpact, ticketImpacts } from "@/features/tickets/impact";
 import { reportServerError } from "@/lib/server-errors";
 
 import { parseDeadline } from "@/features/tickets/deadlines";
@@ -40,7 +41,9 @@ export async function createTicket(formData: FormData) {
   if (incident?.error) return { error: incident.error };
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
-  const priority = String(formData.get("priority") ?? "normal") as TicketPriority;
+  const reportedImpact = viewer.role === "end_user" ? String(formData.get("reportedImpact") ?? "") : null;
+  if (reportedImpact !== null && !isTicketImpact(reportedImpact)) return { error: "Choose how this issue is affecting work." };
+  const priority = (reportedImpact !== null && isTicketImpact(reportedImpact) ? ticketImpacts[reportedImpact].priority : String(formData.get("priority") ?? "normal")) as TicketPriority;
   const requesterId = viewer.role === "end_user" ? viewer.id : optional(formData.get("requesterId")) ?? viewer.id;
   if (title.length < 3 || title.length > 180 || !description || description.length > 20000 || !Object.hasOwn(ticketPriorities, priority)) return { error: "Enter a subject of 3–180 characters, a description of up to 20,000 characters, and a valid priority." };
   const submissionKey = String(formData.get("submissionKey") ?? "");
@@ -55,13 +58,13 @@ export async function createTicket(formData: FormData) {
   if (categoryError) return { error: categoryError };
   const assetId = viewer.role === "end_user" ? optional(formData.get("assetId")) : null;
   if (assetId) {
-    const {data: equipmentTicket,error: equipmentError} = await supabase.rpc('submit_support_request',{org:viewer.organizationId,token:submissionKey,kind:'equipment',payload:{asset:assetId,title,description,category_id:classification.categoryId}});
+    const {data: equipmentTicket,error: equipmentError} = await supabase.rpc('submit_support_request',{org:viewer.organizationId,token:submissionKey,kind:'equipment',payload:{asset:assetId,title,description,reported_impact:reportedImpact,category_id:classification.categoryId}});
     if(equipmentError?.code === 'PT409') return { error: 'This equipment request was already saved with different details. Check your tickets before starting a new request.' };
     if(equipmentError || !equipmentTicket) return { error: 'Your equipment request could not be sent. Check that the equipment is still assigned to you and try again.' };
     return { redirectTo: `/app/tickets/${equipmentTicket}?success=Request sent.` };
   }
   const automaticRouting = viewer.role === "end_user" || !formData.has("teamId") || formData.get("teamId") === "automatic";
-  const payload = { requester_id: requesterId, title, description, priority, routing_mode: automaticRouting ? "automatic" : "manual", team_id: automaticRouting ? null : optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: dueAt, ...(incident?.data ? { incident: incident.data } : {}) };
+  const payload = { requester_id: requesterId, title, description, reported_impact: reportedImpact, priority, routing_mode: automaticRouting ? "automatic" : "manual", team_id: automaticRouting ? null : optional(formData.get("teamId")), category_id: classification.categoryId, subcategory_id: classification.subcategoryId, location_id: optional(formData.get("locationId")), assigned_technician_id: viewer.role === "end_user" ? null : optional(formData.get("assignedTechnicianId")), due_at: dueAt, ...(incident?.data ? { incident: incident.data } : {}) };
   const { data, error } = incident?.data
     ? await supabase.rpc("submit_incident_ticket", { org: viewer.organizationId, token: submissionKey, payload })
     : await supabase.rpc("submit_support_request", { org: viewer.organizationId, token: submissionKey, kind: "ticket", payload });
