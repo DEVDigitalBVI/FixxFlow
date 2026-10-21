@@ -2661,8 +2661,8 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
 .ticket-wizard-steps button[aria-current="step"] .ticket-step-number { background: var(--color-action-fill); color: var(--color-on-action); }
 .ticket-wizard-progress { margin: 0; }
 .ticket-wizard-panel[hidden] { display: none; }
-.ticket-step-heading { margin-bottom: 20px; }
-.ticket-step-heading h2 { margin: 0 0 8px; font-size: 22px; }
+.ticket-step-heading { margin-bottom: 24px; padding: 20px 24px; border-radius: 12px; background: var(--color-surface-subtle); min-width: 0; }
+.ticket-step-heading h2 { margin: 0 0 8px; padding-inline-start: 12px; border-inline-start: 3px solid var(--color-action-fill); font-size: 22px; }
 .ticket-step-heading p { margin: 0; }
 .ticket-step-content { display: grid; gap: 16px; }
 .ticket-step-content h3 { margin: 0 0 12px; font-size: 17px; }
@@ -2676,6 +2676,24 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
  .ticket-wizard-navigation > span:empty { display: none; }
 }
 
-.ticket-step-help { margin-bottom: 20px; }
-.ticket-step-help summary { cursor: pointer; min-height: 40px; align-content: center; }
-.ticket-step-help p { max-width: 70ch; margin: 8px 0 0; overflow-wrap: anywhere; }
+.ticket-step-help { margin-top: 8px; }
+.ticket-step-help summary { cursor: pointer; min-height: 44px; align-content: center; width: fit-content; border-radius: 4px; color: var(--color-accent); font-weight: 500; }
+.ticket-guidance-hide, .ticket-step-help[open] .ticket-guidance-show { display: none; }
+.ticket-step-help[open] .ticket-guidance-hide { display: inline; }
+.ticket-step-help ol { display: grid; gap: 8px; max-width: 70ch; margin: 4px 0 0; padding-inline-start: 24px; color: var(--color-text-muted); }
+.ticket-step-help li { padding-inline-start: 4px; overflow-wrap: anywhere; }
+.ticket-step-help strong { color: var(--color-text); font-weight: 600; }
+.ticket-wizard-footer { display: grid; gap: 12px; }
+.ticket-navigation-note { margin: 0; font-size: 13px; }
+@media (max-width: 767px) { .ticket-step-heading { padding: 16px; } }
+
+/* Procedure authors start with the task; coordination stays optional. */
+.workflow-builder-intro { padding: 20px; background: var(--color-surface-subtle); border-radius: 12px; }
+.workflow-builder-intro h2, .workflow-builder-section h2, .workflow-builder-save h2 { margin: 0; font-size: 18px; }
+.workflow-builder-intro p, .workflow-builder-section > div > p, .workflow-builder-save p { margin: 8px 0 0; max-width: 70ch; }
+.workflow-builder-section { padding-block: 16px; }
+.workflow-builder-options { min-width: 0; border-block-start: 1px solid var(--color-border); }
+.workflow-builder-options > summary { cursor: pointer; min-height: 44px; padding-block: 12px; font-weight: 500; overflow-wrap: anywhere; }
+.workflow-builder-options > .stack { padding-block: 8px 16px; }
+.workflow-builder-save { display: grid; justify-items: start; gap: 16px; padding-block-start: 20px; border-block-start: 1px solid var(--color-border); }
+@media (max-width: 767px) { .workflow-builder-intro { padding: 16px; } .workflow-builder-save > button { width: 100%; } }

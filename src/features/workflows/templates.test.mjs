@@ -54,3 +54,16 @@ test('publishing a saved draft advances metadata revision without stranding the 
  const ui=componentHarness('src/features/workflows/template-builder.tsx','TemplateBuilder',props,{'@/components/ui/unsaved-changes':{useUnsavedChanges:()=>()=>{},confirmDiscardChanges:()=>true}});
  try{props.revision=3;ui.render();assert.equal(ui.find(n=>n.props.name==='revision').props.value,3);}finally{ui.close();}
 });
+
+test('builder explains the reusable checklist and keeps optional controls mounted in native disclosures',()=>{
+ const ui=componentHarness('src/features/workflows/template-builder.tsx','TemplateBuilder',{templateId:template,revision:1,initial:definition()},{'./actions':{manageWorkflowTemplate:async()=>({success:true,revision:2})},'@/components/ui/unsaved-changes':{useUnsavedChanges:()=>()=>{},confirmDiscardChanges:()=>true}});
+ try{
+ const timing=ui.find(n=>n.type==='input'&&n.props.id?.endsWith('-due'));
+ assert.ok(timing.props['aria-describedby']);
+ assert.ok(ui.find(n=>n.type==='p'&&n.props.id===timing.props['aria-describedby']));
+ assert.ok(ui.find(n=>n.type==='summary'&&n.props.children==='Assignment, deadline & approval'));
+ assert.ok(ui.find(n=>n.type==='summary'&&n.props.children==='Updates & audiences (optional)'));
+ assert.ok(ui.find(n=>n.type==='h2'&&n.props.children==='A repeatable checklist for your team'));
+ assert.ok(ui.find(n=>n.type==='h2'&&n.props.children==='Save, review, then publish'));
+ }finally{ui.close();}
+});

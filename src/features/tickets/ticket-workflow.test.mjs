@@ -61,8 +61,10 @@ test('each step offers collapsed practical guidance and distinguishes navigation
  assert.equal((html.match(/<details class="ticket-step-help">/g)||[]).length,6);
  assert.doesNotMatch(html,/<details[^>]* open/);
  assert.match(html,/Back and Next only change the view/);
- assert.match(html,/Internal note for troubleshooting visible only to IT staff/);
+ assert.match(html,/Internal note<\/strong> for troubleshooting visible only to IT staff/);
  assert.match(html,/Skip this step if no update is needed/);
  assert.match(html,/sending a reply does not resolve the ticket/);
- assert.match(html,/What to do here<span class="sr-only">: Respond/);
+ assert.match(html,/Show guidance<\/span><span class="ticket-guidance-hide">Hide guidance<\/span><span class="sr-only">: Respond/);
+ assert.equal((html.match(/<details class="ticket-step-help"><summary>/g)||[]).length,6);
+ assert.equal((html.match(/<ol><li>/g)||[]).length,6);
 });
