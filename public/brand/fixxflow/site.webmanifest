@@ -8,12 +8,12 @@
   "theme_color": "#FEBE10",
   "icons": [
     {
-      "src": "/brand/fixxflow/favicon/android-chrome-192x192.png?v=night-gold",
+      "src": "/brand/fixxflow/favicon/android-chrome-192x192.png?v=febe10-20261021",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/brand/fixxflow/favicon/android-chrome-512x512.png?v=night-gold",
+      "src": "/brand/fixxflow/favicon/android-chrome-512x512.png?v=febe10-20261021",
       "sizes": "512x512",
       "type": "image/png"
     }
