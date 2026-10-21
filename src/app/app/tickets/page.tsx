@@ -38,7 +38,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const searchNoun = viewer.role === "end_user" ? "requests" : "tickets";
   const searchSummary = error ? `${viewer.role === "end_user" ? "Requests" : "Tickets"} could not load. Use Search to try again.` : `${tickets?.length ?? 0} ${searchNoun} on this page${(rows?.length ?? 0) > 50 ? ", with more results available" : ""}.`;
   const hasMore = (rows?.length ?? 0) > 50;
-  const pagination = <nav className="notification-pagination" aria-label="Ticket pages">{page > 1 && <Link className="button button-secondary" href={pageHref(page - 1)}>Previous</Link>}<span>Page {page}</span>{hasMore && <Link className="button button-secondary" href={pageHref(page + 1)}>Next</Link>}</nav>;
+  const pagination = (page > 1 || hasMore) ? <nav className="notification-pagination" aria-label="Ticket pages">{page > 1 && <Link className="button button-secondary" href={pageHref(page - 1)}>Previous</Link>}<span>Page {page}</span>{hasMore && <Link className="button button-secondary" href={pageHref(page + 1)}>Next</Link>}</nav> : null;
   const usage = viewer.usageSharing && search && !error && page === 1 ? <UsageEvent key={search} event="search_performed" surface="tickets"/> : null;
   const relatedArticles = search && <p className="queue-count"><Link href={`/app/help?q=${encodeURIComponent(search)}`}>Search knowledge articles{knowledgeCount ? ` (${knowledgeCount} ${knowledgeCount === 1 ? "match" : "matches"})` : ""}</Link></p>;
   const names = new Map((profiles ?? []).map(p => [p.user_id, p.display_name]));

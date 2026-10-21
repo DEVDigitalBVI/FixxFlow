@@ -45,7 +45,7 @@ export default async function InventoryPage({ searchParams }: { searchParams: Pr
     <button className="button button-secondary">Filter inventory</button>{department && <Link className="button button-quiet" href="/app/inventory">Clear filter</Link>}
    </form></div>
    {items.error ? <p className="asset-inventory-feedback" role="alert">Inventory could not load. <Link href={href(page)}>Retry inventory</Link></p> : items.data?.length ? <InventoryTable items={items.data}/> : <p className="asset-inventory-feedback">No inventory found. {department ? 'Try another authorized department.' : 'An inventory manager can record received stock here.'}</p>}
-   <div className="asset-inventory-footer"><span className="muted">Allocation, storage and assignment stay separate.</span><nav className="asset-pagination" aria-label="Inventory pages">{page > 1 && <Link className="button button-secondary" href={href(page - 1)}>Previous</Link>}<span>Page {page}</span>{page * 25 < (items.count ?? 0) && <Link className="button button-secondary" href={href(page + 1)}>Next</Link>}</nav></div>
+   <div className="asset-inventory-footer"><span className="muted">Allocation, storage and assignment stay separate.</span>{(page>1 || page*25<(items.count??0)) && <nav className="asset-pagination" aria-label="Inventory pages">{page > 1 && <Link className="button button-secondary" href={href(page - 1)}>Previous</Link>}<span>Page {page}</span>{page * 25 < (items.count ?? 0) && <Link className="button button-secondary" href={href(page + 1)}>Next</Link>}</nav>}</div>
   </section>}
   {access.manager && <section className="settings-card stack" id="receive-stock" aria-labelledby="receive-heading">
    <div className="inventory-section-heading"><div><h2 id="receive-heading">Receive stock</h2><p className="muted">Open an existing item above to record a delivery, or set up a new item type below.</p></div></div>
@@ -57,7 +57,7 @@ export default async function InventoryPage({ searchParams }: { searchParams: Pr
     <div><Link href={`/app/tickets/${r.ticket_id}`}><strong>{contextLabel(r.context, 'item')}</strong></Link><p className="muted">{r.quantity} requested · {contextLabel(r.context, 'department')} · {r.destination}</p></div>
     <span className={`ticket-badge tone-${inventoryStates[r.state].tone}`}>{inventoryStates[r.state].label}</span>
    </li>)}</ul> : <p>No inventory requests found. Submitted requests will appear here and in Tickets.</p>}
-   <nav className="asset-pagination" aria-label="Inventory request history pages">{history > 1 && <Link className="button button-secondary" href={href(page, history - 1)}>Previous requests</Link>}<span>Page {history}</span>{history * 25 < (requests.count ?? 0) && <Link className="button button-secondary" href={href(page, history + 1)}>More requests</Link>}</nav>
+   {(history>1 || history*25<(requests.count??0)) && <nav className="asset-pagination" aria-label="Inventory request history pages">{history > 1 && <Link className="button button-secondary" href={href(page, history - 1)}>Previous requests</Link>}<span>Page {history}</span>{history * 25 < (requests.count ?? 0) && <Link className="button button-secondary" href={href(page, history + 1)}>More requests</Link>}</nav>}
   </section>
  </div>;
 }

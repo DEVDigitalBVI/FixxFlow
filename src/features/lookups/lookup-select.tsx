@@ -71,7 +71,7 @@ export function LookupSelect({ resource, name, label, defaultValue = '', value, 
       {choices.map(row => <option key={row.id} value={row.id} disabled={activeOnly && !row.active && row.id !== selected}>{row.label}{!row.active ? ' (inactive)' : ''}</option>)}
     </select>
     {guardSave && (guardSave !== "selection" || required || Boolean(selected)) && (busy || state.error || unavailable) && <input type="hidden" name="lookupLoadError" value="true"/>}
-    <span id={`${id}-status`} className={compact ? 'sr-only' : 'muted'} role="status">{busy ? 'Loading choices…' : state.error ? 'Choices could not load. Your selection is preserved. Try again before saving.' : unavailable ? 'Current selection is unavailable. Choose a replacement or clear it before saving.' : !state.data.rows.length ? showSearch ? 'No matches. Try a different search.' : 'No choices available.' : `Page ${cursors.length} · ${state.data.rows.length} ${state.data.rows.length === 1 ? "choice" : "choices"}`}</span>
+    <span id={`${id}-status`} className={compact ? 'sr-only' : 'muted'} role="status">{busy ? 'Loading choices…' : state.error ? 'Choices could not load. Your selection is preserved. Try again before saving.' : unavailable ? 'Current selection is unavailable. Choose a replacement or clear it before saving.' : !state.data.rows.length ? showSearch ? 'No matches. Try a different search.' : 'No choices available.' : `${cursors.length > 1 || state.data.next ? `Page ${cursors.length} · ` : ''}${state.data.rows.length} ${state.data.rows.length === 1 ? "choice" : "choices"}`}</span>
     {compact && state.error && <div className="lookup-compact-error" role="alert">
       <span>Choices could not load.</span>
       <button type="button" className="button button-quiet" onClick={() => { immediate.current = true; focusPicker(); setState(previous => ({ ...previous, pending: true })); setRetry(number => number + 1); }}>Try again</button>
@@ -79,8 +79,8 @@ export function LookupSelect({ resource, name, label, defaultValue = '', value, 
     {!compact && (state.error || showSearch || cursors.length > 1 || state.data.next) && <div className="lookup-actions">
       {state.error && <button type="button" className="button button-secondary" onClick={() => { immediate.current = true; focusPicker(); setState(previous => ({ ...previous, pending: true })); setRetry(number => number + 1); }}>Try again</button>}
       {query && <button type="button" className="button button-quiet" onClick={() => { search(''); searchInput.current?.focus(); }}>Clear search</button>}
-      <button type="button" className="button button-quiet" disabled={busy || cursors.length === 1} onClick={() => { setState(previous => ({ ...previous, pending: true })); setCursors(previous => previous.slice(0, -1)); }}>Previous choices</button>
-      <button type="button" className="button button-quiet" disabled={busy || state.error || !state.data.next} onClick={() => { setState(previous => ({ ...previous, pending: true })); setCursors(previous => [...previous, state.data.next!]); }}>More choices</button>
+      {(cursors.length > 1 || state.data.next) && <><button type="button" className="button button-quiet" disabled={busy || cursors.length === 1} onClick={() => { setState(previous => ({ ...previous, pending: true })); setCursors(previous => previous.slice(0, -1)); }}>Previous choices</button>
+      <button type="button" className="button button-quiet" disabled={busy || state.error || !state.data.next} onClick={() => { setState(previous => ({ ...previous, pending: true })); setCursors(previous => [...previous, state.data.next!]); }}>More choices</button></>}
     </div>}
   </div>;
 }

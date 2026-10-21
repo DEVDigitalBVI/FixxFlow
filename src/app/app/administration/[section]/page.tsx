@@ -61,5 +61,6 @@ export default async function AdministrationSection({ params, searchParams }: { 
   return <div className="page"><PageHeader title={item.title} eyebrow={`Administration · ${item.status}`} description={item.description} back={{href:'/app/administration',label:'Back to Administration'}}/><section className="settings-card">{content}</section></div>;
 }
 function Pagination({ section, page, hasNext }: { section: string; page: number; hasNext: boolean }) {
+  if (page <= 1 && !hasNext) return null;
   return <nav className="queue-views" aria-label="Administration pages">{page > 1 && <Link className="button button-secondary" href={`/app/administration/${section}?page=${page - 1}`}>Previous</Link>}<span>Page {page}</span>{hasNext && <Link className="button button-secondary" href={`/app/administration/${section}?page=${page + 1}`}>Next</Link>}</nav>;
 }

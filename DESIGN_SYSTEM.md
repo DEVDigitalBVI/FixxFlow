@@ -473,3 +473,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Ticket workflow guidance
 
 - Each staff workflow step groups its heading, short purpose/action sentence and native “Show guidance” disclosure in one subtle neutral surface with a small gold heading accent. Expanded guidance uses short ordered instructions with action names emphasized; the disclosure label becomes “Hide guidance” when open. Keep audience, optional work and explicit save actions clear. Explain once beside Back/Next that navigation only changes the view; Back/Next never save or change status. Reuse existing typography and surface tokens without separate instruction cards. Keep the redundant progress announcement available to assistive technology without repeating it visually.
+
+### Pagination visibility
+
+- Show page numbers and pagination navigation only when a previous or next page is available. Hide the complete pagination region for empty or single-page results, including import previews. Keep result counts visible. Retain a way back on later pages, including when a filtered or stale URL returns no rows. Preserve filters and independent paging parameters in navigation links.

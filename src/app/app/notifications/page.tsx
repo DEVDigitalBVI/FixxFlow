@@ -29,6 +29,6 @@ export default async function NotificationsPage({ searchParams }: { searchParams
         <div className="notification-copy"><div className="notification-meta"><span>{item.conversation_id && item.kind === "user_replied" ? "Chat reply" : notificationLabels[item.kind]}</span><span>{item.read_at ? "Read" : "Unread"}</span><time dateTime={item.created_at}><Timestamp value={item.created_at}/></time></div><Link className="notification-title" href={notificationHref(item)}>{item.title}</Link></div>
         {!item.read_at && <ReadButton id={item.id} />}
       </li>)}</ul>}
-    {!error && <nav className="notification-pagination" aria-label="Notification pages">{page > 1 && <Link className="button button-secondary" href={pageHref(page - 1)}>Newer</Link>}<span>Page {page}</span>{page * 30 < (count ?? 0) && <Link className="button button-secondary" href={pageHref(page + 1)}>Older</Link>}</nav>}
+    {!error && (page>1 || page*30<(count??0)) && <nav className="notification-pagination" aria-label="Notification pages">{page > 1 && <Link className="button button-secondary" href={pageHref(page - 1)}>Newer</Link>}<span>Page {page}</span>{page * 30 < (count ?? 0) && <Link className="button button-secondary" href={pageHref(page + 1)}>Older</Link>}</nav>}
   </div>;
 }

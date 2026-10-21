@@ -40,3 +40,12 @@ test('queue keeps selection and mutations out of the employee view and escapes l
  const long=await renderTicketQueue({rows:[{...queueRows[0],title:'<script>unsafe</script> '+ 'long'.repeat(100)}]});
  assert.match(long,/&lt;script&gt;unsafe&lt;\/script&gt;/);assert.doesNotMatch(long,/<script>unsafe/);
 });
+
+test('pagination stays hidden for one page and offers navigation for multiple or later pages',async()=>{
+ for(const rows of [[],queueRows])assert.doesNotMatch(await renderTicketQueue({rows}),/aria-label="Ticket pages"/);
+ const many=Array.from({length:51},(_,i)=>({...queueRows[0],id:`ticket-${i}`,ticket_number:2000+i}));
+ const first=await renderTicketQueue({rows:many});
+ assert.match(first,/aria-label="Ticket pages"/);assert.match(first,/page=2/);assert.match(first,/>Next<\/a>/);
+ const later=await renderTicketQueue({rows:[],filters:{page:'2'}});
+ assert.match(later,/aria-label="Ticket pages"/);assert.match(later,/>Previous<\/a>/);
+});
