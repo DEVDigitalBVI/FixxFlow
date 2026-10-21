@@ -8,7 +8,7 @@ export function ReadButton({ id, all = false }: { id?: string; all?: boolean }) 
   useEffect(() => { if (state.success) window.dispatchEvent(new Event("notifications-changed")); }, [state]);
   return <form action={action}>
     <input type="hidden" name={all ? "all" : "notificationId"} value={all ? "true" : id} />
-    <button className="button button-secondary" disabled={pending}>{pending ? "Updating…" : all ? "Mark all as read" : "Mark as read"}</button>
+    <button className="button button-quiet" disabled={pending}>{pending ? "Updating…" : all ? "Mark all as read" : "Mark as read"}</button>
     {state.error && <p className="form-error" role="alert">{state.error}</p>}
   </form>;
 }

@@ -15,7 +15,7 @@ export function searchDestinations(role: AppRole, inventory: boolean): SearchRes
     ...(inventory ? [['/app/inventory', employee ? 'Request an item' : 'Inventory']] : []),
     ...(!employee ? [['/app/people', 'People'], ['/app/reports', 'Reports']] : []),
     ...(role === 'administrator' ? [['/app/administration', 'Settings'], ['/app/organization', 'Organization']] : []),
-    ['/app/profile', employee ? 'Account' : 'Profile'], ['/app/security', 'Security'], ['/app/support', 'Contact support'], ['/app/notifications', 'Notifications'],
+    ['/app/profile', 'Profile'], ['/app/security', 'Security'], ['/app/support', 'Contact support'], ['/app/notifications', 'Notifications'],
   ].map(([href, label]) => ({ id: href, href, label, keywords: keywords[href], group: 'Navigation' }));
 }
 export function matchDestinations(results: SearchResult[], query: string) {

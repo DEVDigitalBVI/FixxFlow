@@ -48,3 +48,25 @@ test('a pending save rejects duplicate submissions and a successful redirect rel
     assert.deepEqual(f.navigations, ['/app/tickets/created']); assert.equal(f.dirty(), false);
   } finally { f.close(); }
 });
+
+test('native validation reveals all enclosing disclosures without losing values',()=>{
+ const f=fixture(async()=>({}));
+ try{
+  const outer={tagName:'DETAILS',open:false,parentElement:null};
+  const inner={tagName:'DETAILS',open:false,parentElement:outer};
+  const field={value:'Unsaved entry',parentElement:inner};
+  f.h.find(n=>n.type==='form').props.onInvalidCapture({target:field});
+  assert.equal(inner.open,true);assert.equal(outer.open,true);assert.equal(field.value,'Unsaved entry');
+ }finally{f.close();}
+});
+
+test('named server errors provide a focus action that reveals the invalid field',async()=>{
+ const f=fixture(async()=>({error:'Review the location.',fieldErrors:{name:'Choose another name.'}}));
+ try{
+  f.submit();await new Promise(resolve=>setImmediate(resolve));f.h.render();
+  const disclosure={tagName:'DETAILS',open:false,parentElement:null};let focused=false;
+  f.h.find(n=>n.type==='form').props.ref.current.elements={namedItem:name=>name==='name'?{parentElement:disclosure,focus(){focused=true;}}:null};
+  f.h.find(n=>n.type==='button'&&n.props.children==='Choose another name.').props.onClick();
+  assert.equal(disclosure.open,true);assert.equal(focused,true);
+ }finally{f.close();}
+});

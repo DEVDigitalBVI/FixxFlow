@@ -27,11 +27,25 @@ export async function CommunicationPanel({organizationId,ticketId,ownerId}:{orga
  const due=plan?.next_update_at&&Date.parse(plan.next_update_at)<new Date().getTime();
  const delivery=bulletins.length?await db.rpc('incident_delivery_summary',{org:organizationId,ticket:ticketId,bulletins:bulletins.map(b=>b.id)}):{data:[],error:null};
  return <section id="communication-plan" className="stack" aria-labelledby="communication-plan-heading">
- <div className="section-heading-row"><h3 id="communication-plan-heading">Communication plan</h3>{due&&<span className="ticket-badge tone-warning">Update due</span>}</div>
- <p className="muted">Prepare updates here. The coordinator or an administrator approves and sends the saved message to its saved audience. Internal coordination details stay private.</p>
+ <div className="section-heading-row"><h3 id="communication-plan-heading">Stakeholder updates</h3>{due&&<span className="ticket-badge tone-warning">Update due</span>}</div>
+ <p className="muted">Prepare an update, review its audience, then ask the coordinator or an administrator to approve and send it.</p>
  {namesFailed&&<p role="alert">Member names could not load. Approval is unavailable until names can be reviewed. <RetryButton/></p>}
  <p>Communication owner: {name(plan?.owner_id??ownerId)} · Next update: <Timestamp value={plan?.next_update_at??null}/></p>
  {plan?.reminded_at&&<p className="muted">Reminder recorded <Timestamp value={plan.reminded_at}/></p>}
+ <div className="stack"><h4>Update drafts</h4>{!drafts.length&&<p className="muted">No drafts awaiting approval.</p>}
+ <ul className="response-checklist">{drafts.map(draft=><li key={draft.id} className="stack"><details><summary>{draft.title} · {draft.recipient_ids.length} recipients</summary>
+ <div className="stack"><p className="muted">Saved revision {draft.revision} · Prepared by {name(draft.created_by)} · <Timestamp value={draft.updated_at}/></p>
+ <h4>{draft.title}</h4><p className="ticket-description">{draft.body}</p><p>Next update expected: <Timestamp value={draft.next_update_at}/></p>
+ <p>Saved groups: {draft.group_names.join(', ')}</p>
+ <details><summary>Review saved recipients ({draft.recipient_ids.length})</summary><ul>{draft.recipient_ids.map(id=><li key={id}>{name(id)}</li>)}</ul></details>
+ {canApprove&&!namesFailed&&draft.recipient_ids.every(id=>Boolean(names[id]))&&<CommunicationForm ticketId={ticketId} targetId={draft.id} revision={draft.revision} operation="publish" label="Approve and send update"><label className="communication-choice"><input type="checkbox" name="confirm" value="yes" required/><span>I approve this saved message and its {draft.recipient_ids.length} saved recipients. Send notifications and email updates.</span></label></CommunicationForm>}
+ {draft.recipient_ids.some(id=>!names[id])&&<p role="alert">Some saved recipient profiles are unavailable. Restore their profiles or save the draft with an updated audience before approval.</p>}
+ {!canApprove&&<p className="muted">Ready for the coordinator or an administrator to approve.</p>}
+ <details><summary>Edit draft: {draft.title}</summary><DraftEditor ticketId={ticketId} targetId={draft.id} groups={groups} draft={draft}/></details>
+ <details><summary>Discard draft: {draft.title}</summary><p>This removes the draft from pending approval. It cannot be sent afterward.</p><CommunicationForm ticketId={ticketId} targetId={draft.id} revision={draft.revision} operation="discard_draft" label="Discard draft"/></details>
+ </div></details></li>)}</ul>
+ {drafts.length<20&&<details><summary>Prepare stakeholder update</summary><DraftEditor ticketId={ticketId} targetId={randomUUID()} groups={groups}/></details>}
+ </div>
  <details><summary>Edit communication plan</summary><PlanEditor ticketId={ticketId} ownerId={ownerId} plan={plan}/></details>
  <details><summary>Stakeholder groups ({groups.length})</summary>
  <p className="muted">Company members only. Up to 20 active groups and 100 members per group. Group changes apply to new drafts; save an existing draft again to update its audience.</p>
@@ -45,22 +59,8 @@ export async function CommunicationPanel({organizationId,ticketId,ownerId}:{orga
  </details></li>})}</ul>
  {groups.length<20&&<details><summary>Create stakeholder group</summary><GroupNameForm ticketId={ticketId} targetId={randomUUID()}/></details>}
  </details>
- <div className="stack"><h4>Update drafts</h4>{!drafts.length&&<p className="muted">No drafts awaiting approval.</p>}
- <ul className="response-checklist">{drafts.map(draft=><li key={draft.id} className="stack"><details><summary>{draft.title} · {draft.recipient_ids.length} recipients</summary>
- <div className="stack"><p className="muted">Saved revision {draft.revision} · Prepared by {name(draft.created_by)} · <Timestamp value={draft.updated_at}/></p>
- <h4>{draft.title}</h4><p className="ticket-description">{draft.body}</p><p>Next update expected: <Timestamp value={draft.next_update_at}/></p>
- <p>Saved groups: {draft.group_names.join(', ')}</p>
- <details><summary>Review saved recipients ({draft.recipient_ids.length})</summary><ul>{draft.recipient_ids.map(id=><li key={id}>{name(id)}</li>)}</ul></details>
- {canApprove&&!namesFailed&&draft.recipient_ids.every(id=>Boolean(names[id]))&&<CommunicationForm ticketId={ticketId} targetId={draft.id} revision={draft.revision} operation="publish" label="Approve and send update"><label className="communication-choice"><input type="checkbox" name="confirm" value="yes" required/><span>I approve this saved message and its {draft.recipient_ids.length} saved recipients. Send in-app notifications and queue branded emails.</span></label></CommunicationForm>}
- {draft.recipient_ids.some(id=>!names[id])&&<p role="alert">Some saved recipient profiles are unavailable. Restore their profiles or save the draft with an updated audience before approval.</p>}
- {!canApprove&&<p className="muted">Ready for the coordinator or an administrator to approve.</p>}
- <details><summary>Edit draft: {draft.title}</summary><DraftEditor ticketId={ticketId} targetId={draft.id} groups={groups} draft={draft}/></details>
- <details><summary>Discard draft: {draft.title}</summary><p>This removes the draft from pending approval. It cannot be sent afterward.</p><CommunicationForm ticketId={ticketId} targetId={draft.id} revision={draft.revision} operation="discard_draft" label="Discard draft"/></details>
- </div></details></li>)}</ul>
- {drafts.length<20&&<details><summary>Prepare stakeholder update</summary><DraftEditor ticketId={ticketId} targetId={randomUUID()} groups={groups}/></details>}
- </div>
  {bulletins[0]&&<p className="muted">Latest approved update: <Link href={`/app/incident-updates/${bulletins[0].id}`}>{bulletins[0].title}</Link> · <Timestamp value={bulletins[0].approved_at}/></p>}
  <details><summary>Approved updates and delivery</summary>{bulletinResult.error?<p role="alert">Approved updates could not load. <RetryButton/></p>:<PublishedUpdates ticketId={ticketId} initial={bulletins} initialHasMore={(bulletinResult.data?.length??0)>20} initialDelivery={delivery.data??[]} deliveryError={Boolean(delivery.error)}/>}</details>
- <p className="muted">Recipients can open approved updates from <Link href="/app/notifications">Notifications</Link>. Email delivery uses the existing notification queue; read updates may skip email.</p>
+ <p className="muted">Recipients can open approved updates from <Link href="/app/notifications">Notifications</Link>. Recipients who have already read an update may not receive an email.</p>
  </section>;
 }

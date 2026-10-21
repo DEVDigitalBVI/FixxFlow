@@ -31,6 +31,7 @@ export async function ChecklistPanel({organizationId,ticketId,ownerId}:{organiza
   {approvalsResult.error&&<p role="alert">Step approval status could not load. Completion still requires any configured approval. <RetryButton/></p>}
   <ol className="response-checklist">{steps.map((step:IncidentStep)=>{const approval=approvalsResult.data?.find(a=>a.step_id===step.id);const blocked=Boolean(approval&&(approval.status!=='approved'||approval.step_work_version!==step.work_version));return <li className="stack" key={step.id}>
    <div className="section-heading-row"><h4>{step.title}</h4><span className={`ticket-badge tone-${step.completed_at?'success':step.due_at&&Date.parse(step.due_at)<now?'warning':'neutral'}`}>{stepState(step,now)}</span></div>
+   <details open={step.completed_at?undefined:true} className="checklist-step-details"><summary>{step.completed_at?'Completed step details':'Instructions & progress'}</summary>
    {step.instructions&&<p className="ticket-description">{step.instructions}</p>}
    <p className="muted">Assigned to {name(step.assignee_id)}{viewer.id===step.assignee_id?' (you)':''} · {step.due_at?<>Due <Timestamp value={step.due_at}/></>:'No deadline'}</p>
    {step.acknowledged_at&&<p className="muted">Acknowledged <Timestamp value={step.acknowledged_at}/></p>}
@@ -39,7 +40,7 @@ export async function ChecklistPanel({organizationId,ticketId,ownerId}:{organiza
    <div className="response-step-actions">
     {!step.completed_at&&viewer.id===step.assignee_id&&(!step.acknowledged_at||!blocked)&&<ChecklistStepAction ticketId={ticketId} step={step} operation={step.acknowledged_at?'complete':'acknowledge'} label={`${step.acknowledged_at?'Complete':'Acknowledge'} step: ${step.title}`}/>}
     {step.completed_at?<ChecklistStepAction ticketId={ticketId} step={step} operation="reopen" label={`Reopen step: ${step.title}`}/>:<details><summary>Edit step: {step.title}</summary><ChecklistEditor ticketId={ticketId} stepId={step.id} assigneeId={ownerId} step={step}/></details>}
-   </div>
+   </div></details>
   </li>})}</ol>
   {steps.length<100?<details><summary>Add response step</summary><ChecklistEditor ticketId={ticketId} stepId={randomUUID()} assigneeId={ownerId}/></details>:<p>Maximum of 100 response steps reached.</p>}
   <details><summary>Response history</summary>

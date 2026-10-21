@@ -22,10 +22,10 @@ export async function InventoryRequestPanel({ ticketId }: { ticketId: string }) 
   {contextLabel(request.context,'printer') && <p>Printer: {contextLabel(request.context,'printer')}</p>}
   {request.decision_reason && <p>Review note: {request.decision_reason}</p>}
   {request.issued_at && <p>Issued <Timestamp value={request.issued_at}/></p>}
-  <p className="muted">Closing an unfinished ticket cancels fulfillment and releases stock. Reopening continues the conversation without reserving or issuing again.</p>
+  {!final&&<p className="muted">Closing this ticket before handover cancels fulfillment and releases reserved stock.</p>}
   {access.manager && <Link className="button button-secondary" href={`/app/inventory/${request.item_id}`}>View inventory and usage history</Link>}
   {access.manager && !final && <>
-   {request.state !== 'approved' && <details><summary className="button button-secondary">Review approval</summary><ReviewForm request={request} equipment={contextLabel(request.context,'kind')==='equipment'} command="approve" token={randomUUID()}/></details>}
+   {request.state !== 'approved' && <details><summary className="button button-secondary">Approve and reserve items</summary><ReviewForm request={request} equipment={contextLabel(request.context,'kind')==='equipment'} command="approve" token={randomUUID()}/></details>}
    {request.state === 'approved' && (units.error ? <p role="alert">Reserved equipment could not load. Reload before handing over.</p> : <IssueForm request={request} units={units.data ?? []} token={randomUUID()}/>)}
    <details><summary className="button button-secondary">Ask for more information</summary><ReviewForm request={request} equipment={false} command="information" token={randomUUID()}/></details>
    <details><summary className="button button-secondary">Decline request</summary><ReviewForm request={request} equipment={false} command="decline" token={randomUUID()}/></details>

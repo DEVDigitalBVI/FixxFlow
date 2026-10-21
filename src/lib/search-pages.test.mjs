@@ -51,7 +51,7 @@ test('inventory keeps complete long values, semantic headers and mobile labels i
  const a=setup('src/app/app/assets/page.tsx',{rows:[{id:'asset',name:'Reception workstation',tag:'PC-001 (HOUSE KEEPING SUPERVISORS)',kind:'network',status:'repair',serial_number:serial,model}]});
  const html=await a.render({});
  assert.match(html,/role="region" aria-label="Asset inventory" tabindex="0"/);
- for(const label of ['Asset','Serial number','Type','Lifecycle','Model']) {
+ for(const label of ['Asset','Serial number','Type','Asset status','Model']) {
   assert.ok(html.includes(`<th scope="col">${label}</th>`));
   assert.ok(html.includes(`data-label="${label}"`));
  }

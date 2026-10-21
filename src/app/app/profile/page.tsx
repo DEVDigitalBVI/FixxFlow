@@ -24,7 +24,7 @@ export default async function ProfilePage({ searchParams }: Props) {
 
 
   return <div className="page profile-page">
-    <PageHeader title="Your profile" eyebrow="Account" description="Keep your contact and workplace details current." actions={<OwnerConsoleLink className="button button-secondary" />} />
+    <PageHeader title="Your profile" eyebrow="Account" description="Manage your details and preferences." actions={<OwnerConsoleLink className="button button-secondary" />} />
     {message.error && <div className="alert alert-error page-alert" role="alert">{message.error}</div>}
     {message.success && <div className="alert alert-success page-alert" role="status">{message.success}</div>}
 
@@ -42,7 +42,7 @@ export default async function ProfilePage({ searchParams }: Props) {
       </header>
       <ActionForm action={updateProfile} className="profile-form">
         <section className="profile-form-section" aria-labelledby="profile-details-heading">
-          <div className="profile-form-heading"><h3 id="profile-details-heading">Contact details</h3><p className="muted">How your coworkers can identify and reach you.</p></div>
+          <div className="profile-form-heading"><h3 id="profile-details-heading">Contact details</h3><p className="muted">Your name and contact information.</p></div>
           <div className="form-grid">
             <div className="field"><label htmlFor="displayName">Display name</label><input className="input" id="displayName" name="displayName" defaultValue={profile?.display_name ?? viewer.displayName} required maxLength={120} /></div>
             <div className="field"><label htmlFor="email">Email</label><input className="input" id="email" value={profile?.email ?? viewer.email} disabled /><small className="muted">Managed by your sign-in settings.</small></div>
@@ -61,9 +61,9 @@ export default async function ProfilePage({ searchParams }: Props) {
       </ActionForm>
     </section>
 
-    <section className="settings-card profile-card timezone-settings" aria-labelledby="timezone-heading"><div className="profile-section-heading"><h2 id="timezone-heading">Timezone</h2><p className="muted">Ticket, chat and activity times follow your device unless you choose a timezone. Reports use the organization timezone.</p><p className="muted">Currently showing times in {viewer.timeZone}.</p></div><TimezoneSettingsForm scope="personal" initial={viewer.timezonePreference ?? ""}><TimezoneSelect personal value={viewer.timezonePreference ?? ""}/></TimezoneSettingsForm></section>
+    <section className="settings-card profile-card timezone-settings" aria-labelledby="timezone-heading"><div className="profile-section-heading"><h2 id="timezone-heading">Timezone</h2><p className="muted">Choose a timezone or follow your device. Reports use the organization timezone.</p><p className="muted">Currently showing times in {viewer.timeZone}.</p></div><TimezoneSettingsForm scope="personal" initial={viewer.timezonePreference ?? ""}><TimezoneSelect personal value={viewer.timezonePreference ?? ""}/></TimezoneSettingsForm></section>
     <section className="settings-card profile-card appearance-settings" aria-labelledby="appearance-heading">
-      <div className="profile-section-heading"><div><h2 id="appearance-heading">Appearance</h2><p className="muted">Choose light or dark mode, or follow your device. Changes apply immediately and are remembered on this browser.</p></div></div>
+      <div className="profile-section-heading"><div><h2 id="appearance-heading">Appearance</h2><p className="muted">Applies immediately to this browser.</p></div></div>
       <ThemeControl />
     </section>
 

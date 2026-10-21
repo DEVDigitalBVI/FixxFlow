@@ -68,3 +68,14 @@ test('each step offers collapsed practical guidance and distinguishes navigation
  assert.equal((html.match(/<details class="ticket-step-help"><summary>/g)||[]).length,6);
  assert.equal((html.match(/<ol><li>/g)||[]).length,6);
 });
+
+test('coordination deep links open the coordination step from a working ticket',()=>{
+ const old=globalThis.window;let effects=[],step;
+ const {TicketWorkflow}=load('src/features/tickets/ticket-workflow.tsx',{react:{...React,useState:initial=>[initial,next=>step=next],useRef:initial=>({current:initial}),useEffect:fn=>effects.push(fn)}});
+ try{
+  for(const hash of ['#incident-approvals','#response-checklist','#communication-plan','#ticket-procedures']){
+   effects=[];globalThis.window={location:{hash},addEventListener(){},removeEventListener(){}};
+   TicketWorkflow({...props,status:'in_progress',assigned:true});effects[0]();assert.equal(step,2,hash);
+  }
+ }finally{globalThis.window=old;}
+});

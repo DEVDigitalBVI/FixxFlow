@@ -58,7 +58,7 @@ export default async function AdministrationSection({ params, searchParams }: { 
   } else {
     content = <p>Asset inventory is available. Manage equipment, employee assignments and ticket history from Assets.</p>;
   }
-  return <div className="page"><PageHeader title={item.title} eyebrow={`Administration · ${item.status}`} description={item.description} back={{href:'/app/administration',label:'Back to Administration'}}/><section className="settings-card">{content}</section></div>;
+  return <div className="page"><PageHeader title={item.title} eyebrow={item.status==='Fixed'?'Settings · Read only':'Settings'} description={item.description} back={{href:'/app/administration',label:'Back to settings'}}/><section className="settings-card">{content}</section></div>;
 }
 function Pagination({ section, page, hasNext }: { section: string; page: number; hasNext: boolean }) {
   if (page <= 1 && !hasNext) return null;

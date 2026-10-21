@@ -15,5 +15,11 @@ test('asset writes use verified organization and stale revisions preserve the dr
 test('duplicate equipment tags have an actionable error',async()=>{const a=actions('administrator',{error:{code:'23505'}});assert.match((await a.saveAsset(null,0,{},form())).error,/already in use/);});
 test('asset form exposes persistent labels, retirement guidance and native date fields',()=>{
  const {AssetForm}=load('src/features/assets/asset-form.tsx',{react:{...React,useState:v=>[v,()=>{}],useActionState:()=>[{},()=>{}],useEffect:()=>{},useRef:()=>({current:null})},'next/link':{default:p=>React.createElement('a',p)},'@/components/ui/submit-button':{SubmitButton:p=>React.createElement('button',p)},'@/app/app/assets/actions':{saveAsset:()=>{}},'./model':model});
- const html=renderToStaticMarkup(React.createElement(AssetForm,{people:[],locations:[]}));assert.match(html,/<label[^>]*>Asset tag/);assert.match(html,/type="date"/);assert.match(html,/Retirement preserves/);assert.doesNotMatch(html,/dangerouslySetInnerHTML/);
+ const html=renderToStaticMarkup(React.createElement(AssetForm,{people:[],locations:[]}));assert.match(html,/<label[^>]*>Asset tag/);assert.match(html,/type="date"/);assert.doesNotMatch(html,/Retirement preserves/);assert.doesNotMatch(html,/dangerouslySetInnerHTML/);
+});
+
+test('retirement guidance appears when the selected asset status is retired',()=>{
+ const {AssetForm}=load('src/features/assets/asset-form.tsx',{react:{...React,useState:v=>[v,()=>{}],useActionState:()=>[{},()=>{}],useEffect:()=>{},useRef:()=>({current:null})},'next/link':{default:p=>React.createElement('a',p)},'@/components/ui/submit-button':{SubmitButton:p=>React.createElement('button',p)},'@/app/app/assets/actions':{saveAsset:()=>{}},'./model':model});
+ const html=renderToStaticMarkup(React.createElement(AssetForm,{asset:{status:'retired'}}));
+ assert.match(html,/Retirement preserves/);assert.match(html,/Unassign the employee before retiring/);
 });

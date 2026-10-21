@@ -1,5 +1,6 @@
 import {isUuid} from '@/features/tickets/communications';
 export const workflowKinds={incident:'Incident response',maintenance:'Planned maintenance',procedure:'General procedure'} as const;
+export const workflowKindDescriptions={incident:'For wider disruptions. Apply only to declared incident tickets.',maintenance:'For scheduled service work.',procedure:'For repeatable work on support tickets.'} as const;
 export type WorkflowKind=keyof typeof workflowKinds;
 export type ProcedureStep={id:string;title:string;instructions:string;assignee:'owner'|'backup';due_minutes:number|null;approval_required:boolean;approval_minutes:number|null};
 export type WorkflowDefinition={schema_version:1;name:string;kind:WorkflowKind;description:string;steps:ProcedureStep[];communication:{guidance:string;group_names:string[];next_update_minutes:number|null};escalation:{enabled:boolean;acknowledgement_minutes:number;overdue_minutes:number}};

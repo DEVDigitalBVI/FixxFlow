@@ -60,3 +60,27 @@ test('scheduled report cron authenticates, renders a claimed item and fences its
  assert.equal((await GET(new Request('https://example.test/api/cron/reports'))).status,401);const response=await GET(new Request('https://example.test/api/cron/reports',{headers:{authorization:'Bearer cron-secret'}}));assert.equal(response.status,200);assert.deepEqual(await response.json(),{queued:1,processed:1,sent:1,failed:0});assert.ok(calls.some(call=>call[0]==='send'&&call[1].recipient==='owner@example.test'));const finish=calls.find(call=>call[0]==='finish_report_delivery');assert.equal(finish[1].target_id,'delivery');assert.equal(finish[1].token,'lease');
 });
 
+
+test('custom creation waits for a chosen definition before querying results',async()=>{
+ let runs=0;
+ const Page=load('src/app/app/reports/custom/page.tsx',{
+  'next/link':{default:props=>React.createElement('a',props)},
+  'next/navigation':{notFound(){throw Error('NOT_FOUND');}},
+  '@/lib/auth/viewer':{requireViewer:async()=>({id:'staff',role:'technician',organizationId:'org',organizationTimezone:'UTC'})},
+  '@/features/reporting/custom-data':{getSavedReport:async()=>null,getReportReferences:async()=>({}),getCustomReport:async()=>{runs++;return null;}},
+  '@/features/reporting/custom-builder':{CustomReportBuilder:()=>React.createElement('form',null,'Builder')},
+  '@/features/reporting/custom-components':{CustomReportResults:()=>null,ReportOutputActions:()=>null,SaveReportPanel:()=>null},
+ }).default;
+ const start=renderToStaticMarkup(await Page({searchParams:Promise.resolve({})}));
+ assert.equal(runs,0);assert.match(start,/Start with a template/);assert.doesNotMatch(start,/custom report could not load/);
+ const run=renderToStaticMarkup(await Page({searchParams:Promise.resolve({reportType:'volume'})}));
+ assert.equal(runs,1);assert.doesNotMatch(run,/Start with a template/);assert.match(run,/Your definition is preserved/);
+});
+
+test('report entity filters use individually labeled choices and retain selected values',()=>{
+ const {CustomReportBuilder}=load('src/features/reporting/custom-builder.tsx');
+ const references={categories:[{id:definition.filters.categoryIds[0],name:'Network'}],subcategories:[],teams:[],technicians:[],departments:[],locations:[]};
+ const html=renderToStaticMarkup(React.createElement(CustomReportBuilder,{definition,references}));
+ assert.doesNotMatch(html,/<select[^>]*multiple/);
+ assert.match(html,/<input(?=[^>]*type="checkbox")(?=[^>]*name="categoryIds")(?=[^>]*checked="")[^>]*\/>Network/);
+});

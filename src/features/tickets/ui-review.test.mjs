@@ -78,7 +78,7 @@ test('every role can find chat creation and gets a labeled form with realistic r
    const form=renderToStaticMarkup(await page({searchParams:Promise.resolve(params)}));
    assert.match(form,/<h1>Start a chat<\/h1>/);
    assert.match(form,/<label for="chat-topic">/);assert.match(form,/<label for="chat-first-message">/);
-   assert.match(form,/technician may not be available immediately/i);
+   assert.match(form,/IT may reply later/i);
    assert.match(form,/href="\/app\/chat"/);
    if(params.error)assert.match(form,/role="alert"/);
   }

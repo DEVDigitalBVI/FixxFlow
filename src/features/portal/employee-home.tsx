@@ -24,13 +24,13 @@ const actions = [
     href: "/app/chat?start=1",
     title: "Chat with IT",
     emphasis: true,
-    description: "Best for a quick question or help you need right now",
+    description: "Ask a question and continue the conversation",
   },
   {
     href: "/app/tickets/new",
     title: "Submit a request",
     emphasis: false,
-    description: "Track an issue, access request, or equipment need",
+    description: "Describe an issue and track its progress",
   },
 ] as const;
 
@@ -40,7 +40,6 @@ export function EmployeeHome({ firstName, greeting, organizationName, recent, ti
       <span className="portal-kicker">{organizationName} IT support</span>
       <p className="portal-greeting">{greeting}, {firstName}</p>
       <h1 id="portal-home-heading">How can IT help today?</h1>
-      <p className="portal-home-summary">Get help from your IT team or pick up an existing request.</p>
     </section>
     <div className="portal-actions">
       {actions.map(action => <Link
@@ -63,7 +62,7 @@ export function EmployeeHome({ firstName, greeting, organizationName, recent, ti
     </section>
     <section className="portal-recent" aria-labelledby="recent-heading">
       <div className="portal-section-heading">
-        <div><h2 id="recent-heading">Recent requests</h2><p>Continue where you left off.</p></div>
+        <div><h2 id="recent-heading">Recent requests</h2></div>
         <Link className="button button-secondary" href="/app/tickets">View all requests</Link>
       </div>
       {recent.length ? <ul>{recent.map(ticket => <li key={ticket.id}><Link href={`/app/tickets/${ticket.id}`}>

@@ -139,7 +139,7 @@ test('profile offers an independent appearance control outside profile-save form
   const appearance = React.Children.toArray(tree.props.children).find(child => child.props['aria-labelledby'] === 'appearance-heading');
   assert.ok(appearance);
   const html = renderToStaticMarkup(appearance);
-  assert.match(html, /Changes apply immediately/);
+  assert.match(html, /Applies immediately to this browser/);
   assert.match(html, /role="group"/);
   assert.doesNotMatch(html, /<form/);
 });

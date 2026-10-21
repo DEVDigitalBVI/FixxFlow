@@ -23,7 +23,7 @@ test('employee article edits are rejected before database access',async()=>{
 test('article editor uses labeled native controls and keyboard block ordering',()=>{
  const {ArticleEditor}=load('src/features/knowledge/article-editor.tsx',{'next/navigation':{useRouter:()=>({push(){},refresh(){}})},'@/app/app/help/actions':{saveArticle:async()=>({})},'@/lib/supabase/client':{createClient:()=>({})},'./article-content':{ArticleContent:()=>null}});
  const html=renderToStaticMarkup(React.createElement(ArticleEditor,{article:{id:'10000000-0000-0000-0000-000000000001',title:'Draft',summary:'',category:'Network',status:'draft',revision:1,content:[{type:'paragraph',text:'Example'}],related_article_ids:[]},organizationId:'org',assets:[],related:[],isNew:true}));
- assert.match(html,/Draft — IT staff only/);assert.match(html,/aria-label="Move block 1 up"/);assert.match(html,/<legend>Article content<\/legend>/);assert.match(html,/Create article/);assert.match(html,/Create the article first, then upload files/);
+ assert.match(html,/Draft — IT staff only/);assert.match(html,/aria-label="Move block 1 up"/);assert.match(html,/<legend>Write your article<\/legend>/);assert.match(html,/Create article/);assert.match(html,/Save your article to add images and attachments/);
  assert.match(html, /<details class="progressive-section knowledge-related-disclosure"><summary>Related articles/);
  assert.match(html, /<details class="settings-card progressive-section"><summary>Content preview/);
  assert.doesNotMatch(html, /<details[^>]*open=/);

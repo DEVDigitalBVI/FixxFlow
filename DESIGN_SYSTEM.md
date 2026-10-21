@@ -477,3 +477,13 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Pagination visibility
 
 - Show page numbers and pagination navigation only when a previous or next page is available. Hide the complete pagination region for empty or single-page results, including import previews. Keep result counts visible. Retain a way back on later pages, including when a filtered or stale URL returns no rows. Preserve filters and independent paging parameters in navigation links.
+
+### Simpler task flows (October 2026)
+
+- Use Settings consistently for the workspace configuration destination. Keep employee Help articles and staff Knowledge base as audience-specific names. Assets identifies individual equipment records; Inventory handles stock requests, receiving and fulfillment.
+- Show active checklist work and pending decisions before coordination configuration. Keep completed step detail and backup/alert settings in native disclosures. Preserve the guided ticket wizard, its mounted drafts and direct coordination links.
+- Template authoring leads with the reusable checklist. Summarize collapsed role, deadline and approval choices. Ask only for roles needed by a procedure or its existing settings. Publishing and applying remain explicit actions.
+- Automation creation leads with practical templates, followed by custom creation. Article authoring leads with title and content, with format/reorder controls in section options and publication scope explicit below the writing area.
+- Inventory receiving validates item quantities and equipment before showing a receipt review with department, storage and selected equipment. Keep entry controls mounted when reviewing, preserve the retry token and reveal them on save failure. Corrections remain a separate action with a required reason.
+- Reports lead with existing operational results. A new custom report does not query results before a definition is chosen or run. Changed builder options clearly require Run report; result exports use the last run definition. Entity filters use labeled checkboxes instead of modifier-key multi-selects.
+- Reveal enclosing disclosures for native validation and named server field errors. Error feedback links focus the corresponding control without discarding values. Reuse shared ActionForm, existing typography, surfaces, focus and responsive tokens.

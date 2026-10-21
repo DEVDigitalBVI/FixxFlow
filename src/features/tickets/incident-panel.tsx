@@ -25,8 +25,8 @@ export async function IncidentPanel({ organizationId,ticketId,revision,ownerId }
     <dl className="incident-summary"><div><dt>Incident owner</dt><dd>{ownerName}</dd></div><div><dt>Affected services</dt><dd>{data.affected_services.length ? data.affected_services.join(', ') : 'Not recorded'}</dd></div><div><dt>Affected locations</dt><dd>{data.affected_locations.length ? data.affected_locations.join(', ') : 'Not recorded'}</dd></div></dl>
     <div><h3>Business impact</h3><p className="ticket-description">{data.business_impact}</p></div>
     <details><summary>Edit incident details</summary><IncidentEditor ticketId={ticketId} ticketRevision={revision} incident={data} ownerId={ownerId}/></details>
+    <ChecklistPanel organizationId={organizationId} ticketId={ticketId} ownerId={data.owner_id}/>
     <IncidentControlPanel organizationId={organizationId} ticketId={ticketId} ownerId={data.owner_id}/>
     <CommunicationPanel organizationId={organizationId} ticketId={ticketId} ownerId={data.owner_id}/>
-    <ChecklistPanel organizationId={organizationId} ticketId={ticketId} ownerId={data.owner_id}/>
   </section>;
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { confirmDiscardChanges, useUnsavedChanges } from '@/components/ui/unsaved-changes';
+import { revealField } from '@/components/ui/reveal-field';
 import { useRouter } from "next/navigation";
 import { saveArticle } from "@/app/app/help/actions";
 import { ArticleContent } from "./article-content";
@@ -21,6 +22,8 @@ export function ArticleEditor({ article, organizationId, assets: initialAssets, 
   const [uploadMessage, setUploadMessage] = useState(""); const [dirty, setDirty] = useState(false);
   const errorRef = useRef<HTMLParagraphElement>(null);
   const textareas = useRef<(HTMLTextAreaElement | null)[]>([]);
+  const focusParagraph = useRef<number | null>(null);
+  useEffect(() => { if (focusParagraph.current !== null) { textareas.current[focusParagraph.current]?.focus(); focusParagraph.current = null; } }, [blocks]);
   const releaseDraft = useUnsavedChanges(dirty);
   const update = (index: number, patch: Partial<ArticleBlock>) => { setDirty(true); setBlocks(items => items.map((item, i) => i === index ? { ...item, ...patch } : item)); };
   const format = (index: number, marker: string) => {
@@ -68,32 +71,36 @@ export function ArticleEditor({ article, organizationId, assets: initialAssets, 
   }
   const images = Object.fromEntries(assets.filter(a => a.content_type.startsWith("image/")).map(a => [a.id, `/app/help/assets/${a.id}`]));
   return <div className="knowledge-editor">
-    <form action={submit} onChange={() => setDirty(true)}>
+    <form action={submit} onChange={() => setDirty(true)} onInvalidCapture={event => revealField(event.target as HTMLElement)}>
       <input type="hidden" name="id" value={article.id}/><input type="hidden" name="revision" value={article.revision}/><input type="hidden" name="new" value={String(isNew)}/>
       {error && <p ref={errorRef} tabIndex={-1} className="alert alert-error" role="alert">{error}</p>}
       <fieldset disabled={busy}><legend>Article details</legend>
         <label>Title<input className="input" name="title" defaultValue={article.title} required minLength={3} maxLength={180}/></label>
-        <label>Category<select className="input" name="category" defaultValue={article.category}>{knowledgeCategories.map(c => <option key={c}>{c}</option>)}</select></label>
-        <label>Summary<textarea className="input" name="summary" defaultValue={article.summary} maxLength={500}/></label>
-        <label>Visibility<select className="input" name="status" defaultValue={article.status}><option value="draft">Draft — IT staff only</option><option value="published">Published — all organization members</option><option value="archived">Archived — IT staff only</option></select></label>
+
       </fieldset>
-      <fieldset disabled={busy}><legend>Article content</legend><p className="muted">Add content blocks. Bold uses **text** and italic uses *text*. List items go on separate lines.</p>
-        {blocks.map((block, i) => <fieldset className="knowledge-block" key={i}><legend>Block {i + 1}</legend>
-          <label>Content type<select className="input" value={block.type} onChange={e => update(i, { type: e.target.value as ArticleBlock["type"] })}>{blockTypes.map(type => <option key={type} value={type}>{type[0].toUpperCase() + type.slice(1)}</option>)}</select></label>
+      <fieldset disabled={busy}><legend>Write your article</legend><p className="muted">Start with the answer, then explain the steps. Use Bold and Italic to format selected text.</p>
+        {blocks.map((block, i) => <fieldset className="knowledge-block" key={i}><legend>{block.type==='paragraph'?'Paragraph':block.type[0].toUpperCase()+block.type.slice(1)} {i + 1}</legend>
+
           <label>{block.type === "image" ? "Image description (alt text)" : block.type === "link" ? "Link label" : "Text"}<textarea ref={node => { textareas.current[i] = node; }} className="input" value={block.text} rows={block.type === "image" || block.type === "link" ? 2 : 5} maxLength={20000} onChange={e => update(i, { text: e.target.value })}/></label>
           {block.type === "link" && <label>Link URL<input className="input" type="url" value={block.url ?? ""} placeholder="https://" onChange={e => update(i, { url: e.target.value })}/></label>}
           {block.type === "image" && <label>Uploaded image<select className="input" value={block.assetId ?? ""} onChange={e => update(i, { assetId: e.target.value })}><option value="">Choose image</option>{assets.filter(a => a.content_type.startsWith("image/")).map(a => <option key={a.id} value={a.id}>{a.file_name}</option>)}</select></label>}
           <div className="knowledge-actions">{!["image","link","code"].includes(block.type) && <><button type="button" className="button button-secondary" onClick={() => format(i,"**")}>Bold</button><button type="button" className="button button-secondary" onClick={() => format(i,"*")}>Italic</button></>}
-            <button type="button" className="button button-secondary" disabled={i === 0} aria-label={`Move block ${i + 1} up`} onClick={() => { setDirty(true); setBlocks(items => { const next = [...items]; [next[i-1], next[i]] = [next[i], next[i-1]]; return next; }); }}>Move up</button>
-            <button type="button" className="button button-secondary" disabled={i === blocks.length - 1} aria-label={`Move block ${i + 1} down`} onClick={() => { setDirty(true); setBlocks(items => { const next = [...items]; [next[i+1], next[i]] = [next[i], next[i+1]]; return next; }); }}>Move down</button>
-            <button type="button" className="button button-secondary" aria-label={`Remove block ${i + 1}`} onClick={() => { setDirty(true); setBlocks(items => items.filter((_, index) => index !== i)); }}>Remove</button>
-          </div></fieldset>)}
-        <button type="button" className="button button-secondary" disabled={blocks.length >= 100} onClick={() => { setDirty(true); setBlocks(items => [...items, { type: "paragraph", text: "" }]); }}>Add content block</button>
+          </div><details className="knowledge-block-options"><summary>Section options<span className="sr-only">: section {i + 1}</span></summary>
+          <label>Section format<select className="input" value={block.type} onChange={e => update(i, { type: e.target.value as ArticleBlock["type"] })}>{blockTypes.map(type => <option key={type} value={type}>{type[0].toUpperCase() + type.slice(1)}</option>)}</select></label>
+          <div className="knowledge-actions"><button type="button" className="button button-secondary" disabled={i === 0} aria-label={`Move block ${i + 1} up`} onClick={() => { setDirty(true); focusParagraph.current=i-1; setBlocks(items => { const next = [...items]; [next[i-1], next[i]] = [next[i], next[i-1]]; return next; }); }}>Move up</button>
+            <button type="button" className="button button-secondary" disabled={i === blocks.length - 1} aria-label={`Move block ${i + 1} down`} onClick={() => { setDirty(true); focusParagraph.current=i+1; setBlocks(items => { const next = [...items]; [next[i+1], next[i]] = [next[i], next[i+1]]; return next; }); }}>Move down</button>
+            <button type="button" className="button button-secondary" aria-label={`Remove block ${i + 1}`} onClick={() => { if (block.text && !window.confirm('Remove this section and its content?')) return; setDirty(true); focusParagraph.current=Math.max(0,i-1); setBlocks(items => items.filter((_, index) => index !== i)); }}>Remove</button>
+          </div></details></fieldset>)}
+        <button type="button" className="button button-secondary" disabled={blocks.length >= 100} onClick={() => { setDirty(true); focusParagraph.current=blocks.length; setBlocks(items => [...items, { type: "paragraph", text: "" }]); }}>Add paragraph</button>
       </fieldset>
+      <fieldset disabled={busy}><legend>Publish settings</legend>
+        <label>Category<select className="input" name="category" defaultValue={article.category}>{knowledgeCategories.map(c => <option key={c}>{c}</option>)}</select></label>
+        <label>Short summary (optional)<textarea className="input" name="summary" defaultValue={article.summary} maxLength={500}/></label>
+        <label>Visibility<select className="input" name="status" defaultValue={article.status}><option value="draft">Draft — IT staff only</option><option value="published">Published — all organization members</option><option value="archived">Archived — IT staff only</option></select></label><p className="muted">Drafts are visible to IT staff. Publishing makes this article available to everyone in your organization.</p></fieldset>
       <details className="progressive-section knowledge-related-disclosure"><summary>Related articles <span className="muted">Optional</span></summary><fieldset disabled={busy}><legend className="sr-only">Related articles</legend><p className="muted">Choose up to eight. Readers only see articles they have access to.</p><div className="knowledge-related-options">{related.map(a => <label key={a.id}><input type="checkbox" name="related" value={a.id} defaultChecked={article.related_article_ids.includes(a.id)}/>{a.title}</label>)}</div></fieldset></details>
       <div className="knowledge-actions"><button className="button button-primary" disabled={busy || uploading}>{busy ? "Saving…" : isNew ? "Create article" : "Save article"}</button><button type="button" className="button button-secondary" onClick={() => { if (!dirty || confirmDiscardChanges()) router.push(isNew ? "/app/help" : `/app/help/${article.id}`); }}>Cancel</button></div>
     </form>
-    <section className="settings-card"><h2>Images and attachments</h2>{isNew ? <p>Create the article first, then upload files.</p> : <><p>Files added here are available to anyone who can read this article.</p><label className="knowledge-file">Upload a file (up to 6 MB)<input type="file" accept={assetTypes.join(",")} disabled={uploading || busy} onChange={e => { void upload(e.target.files?.[0]); e.target.value=""; }}/></label>{uploadMessage && <p role="status">{uploadMessage}</p>}<ul>{assets.map(a => <li key={a.id}><a href={`/app/help/assets/${a.id}?download=1`}>{a.file_name}</a></li>)}</ul></>}</section>
+    <section className="settings-card"><h2>Images and attachments</h2>{isNew ? <p>Save your article to add images and attachments. You’ll return to this editor after saving.</p> : <><p>Files added here are available to anyone who can read this article.</p><label className="knowledge-file">Upload a file (up to 6 MB)<input type="file" accept={assetTypes.join(",")} disabled={uploading || busy} onChange={e => { void upload(e.target.files?.[0]); e.target.value=""; }}/></label>{uploadMessage && <p role="status">{uploadMessage}</p>}<ul>{assets.map(a => <li key={a.id}><a href={`/app/help/assets/${a.id}?download=1`}>{a.file_name}</a></li>)}</ul></>}</section>
     <details className="settings-card progressive-section"><summary>Content preview</summary><ArticleContent content={blocks} images={images}/></details>
   </div>;
 }

@@ -11,7 +11,7 @@ export const administrationSections = [
   { slug: 'priorities', title: 'Priorities', group: 'Service delivery', status: 'Fixed', description: 'Four shared priority levels used across the workspace.' },
   { slug: 'slas', title: 'SLAs', group: 'Service delivery', status: 'Fixed', description: 'First response and resolution targets by priority.' },
   { slug: 'assets', title: 'Assets', group: 'Service delivery', status: 'Available', description: 'Manage equipment, employee assignments, lifecycle and linked tickets.', href: '/app/assets' },
-  { slug: 'knowledge', title: 'Knowledge Base', group: 'Service delivery', status: 'Available', description: 'Publish guides, manage drafts, and review article feedback.', href: '/app/help?view=all' },
+  { slug: 'knowledge', title: 'Knowledge base', group: 'Service delivery', status: 'Available', description: 'Publish guides, manage drafts, and review article feedback.', href: '/app/help?view=all' },
   { slug: 'notifications', title: 'Notifications', group: 'Governance', status: 'Fixed', description: 'Delivery channels and current notification behavior.' },
   { slug: 'security', title: 'Security', group: 'Governance', status: 'Fixed', description: 'Review access protections and personal two-factor settings.' },
   { slug: 'audit-log', title: 'Audit Log', group: 'Governance', status: 'Available', description: 'Review who changed tickets, member access, and organization settings.' },

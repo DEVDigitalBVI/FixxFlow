@@ -61,7 +61,7 @@ test('builder explains the reusable checklist and keeps optional controls mounte
  const timing=ui.find(n=>n.type==='input'&&n.props.id?.endsWith('-due'));
  assert.ok(timing.props['aria-describedby']);
  assert.ok(ui.find(n=>n.type==='p'&&n.props.id===timing.props['aria-describedby']));
- assert.ok(ui.find(n=>n.type==='summary'&&n.props.children==='Assignment, deadline & approval'));
+ assert.ok(ui.find(n=>n.type==='summary'&&Array.isArray(n.props.children)&&n.props.children[0]==='Assignment, deadline & approval'));
  assert.ok(ui.find(n=>n.type==='summary'&&n.props.children==='Updates & audiences (optional)'));
  assert.ok(ui.find(n=>n.type==='h2'&&n.props.children==='A repeatable checklist for your team'));
  assert.ok(ui.find(n=>n.type==='h2'&&n.props.children==='Save, review, then publish'));

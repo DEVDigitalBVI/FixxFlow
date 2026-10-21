@@ -22,12 +22,12 @@ export default async function OverviewPage() {
       timeZone={viewer.timeZone}
     />;
   }
-  return <div className="page overview-page"><PageHeader title="Support dashboard" eyebrow={viewer.organizationName} description="Today’s activity and the work that needs attention." actions={<Link className="button button-primary" href="/app/tickets">Open ticket queue</Link>}/><Suspense fallback={<TodayMetrics report={null}/>}><OverviewMetrics organizationId={viewer.organizationId}/></Suspense><section className="overview-work" aria-labelledby="overview-work-heading"><div className="overview-section-heading"><div><h2 id="overview-work-heading">Work queues</h2><p>Pick up the next conversation or move a request forward.</p></div><Link className="button button-secondary" href="/app/reports">View reports &amp; trends <span aria-hidden="true">↗</span></Link></div><nav className="overview-queues" aria-label="Support shortcuts">{[
-    { href: "/app/tickets?view=mine", title: "My assigned tickets", description: "Continue the work you own", symbol: "01" },
-    { href: "/app/tickets?view=unassigned", title: "Unassigned tickets", description: "Find requests that need an owner", symbol: "02" },
-    { href: "/app/tickets?sla=breached", title: "Overdue tickets", description: "Review requests past their SLA", symbol: "03" },
-    { href: "/app/chat?view=unassigned", title: "Incoming chats", description: "Pick up a new conversation", symbol: "04" },
-  ].map(item => <Link key={item.href} href={item.href} className="overview-queue"><span className="overview-queue-index" aria-hidden="true">{item.symbol}</span><span><strong>{item.title}</strong><span>{item.description}</span></span><span className="overview-queue-arrow" aria-hidden="true">→</span></Link>)}</nav></section></div>;
+  return <div className="page overview-page"><PageHeader title="Support dashboard" eyebrow={viewer.organizationName} description="Today’s activity and the work that needs attention." actions={<Link className="button button-primary" href="/app/tickets">Open ticket queue</Link>}/><Suspense fallback={<TodayMetrics report={null}/>}><OverviewMetrics organizationId={viewer.organizationId}/></Suspense><section className="overview-work" aria-labelledby="overview-work-heading"><div className="overview-section-heading"><div><h2 id="overview-work-heading">Work queues</h2><p>Choose the work that needs attention.</p></div><Link className="button button-secondary" href="/app/reports">View reports &amp; trends <span aria-hidden="true">↗</span></Link></div><nav className="overview-queues" aria-label="Support shortcuts">{[
+    { href: "/app/tickets?view=mine", title: "My assigned tickets", description: "Continue the work you own" },
+    { href: "/app/tickets?view=unassigned", title: "Unassigned tickets", description: "Find requests that need an owner" },
+    { href: "/app/tickets?sla=breached", title: "Overdue tickets", description: "Review requests past their SLA" },
+    { href: "/app/chat?view=unassigned", title: "Incoming chats", description: "Pick up a new conversation" },
+  ].map(item => <Link key={item.href} href={item.href} className="overview-queue"><span className="overview-queue-copy"><strong>{item.title}</strong><span>{item.description}</span></span><span className="overview-queue-arrow" aria-hidden="true">→</span></Link>)}</nav></section></div>;
 }
 
 async function OverviewMetrics({ organizationId }: { organizationId: string }) {

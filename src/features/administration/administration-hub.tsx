@@ -23,9 +23,9 @@ const groups: readonly { id: string; title: string; description: string; cards: 
   ] },
   { id: 'support', title: 'Support workflows', description: 'Shape how requests reach the right people and get resolved.', cards: [
     { title: 'Automations', description: 'Take repetitive work off your team’s plate. Build rules and test them safely.', icon: 'automation', destinations: ['automations'] },
-    { title: 'Workflow templates', description: 'Publish reusable procedures with response steps, approvals and communication guidance.', icon: 'routing', destinations: ['workflows'] },
+    { title: 'Workflow templates', description: 'Create reusable checklists staff can add to tickets.', icon: 'routing', destinations: ['workflows'] },
     { title: 'Teams & routing', description: 'Organize support teams and route requests by category.', icon: 'routing', destinations: ['teams','categories'] },
-    { title: 'Knowledge Base', description: 'Publish helpful answers and keep employee guidance up to date.', icon: 'knowledge', destinations: ['knowledge'] },
+    { title: 'Knowledge base', description: 'Publish helpful answers and keep employee guidance up to date.', icon: 'knowledge', destinations: ['knowledge'] },
   ] },
   { id: 'governance', title: 'Policies & oversight', description: 'Understand service expectations, communication and accountability.', cards: [
     { title: 'Priorities & SLAs', description: 'Review response and resolution targets for each ticket priority.', icon: 'clock', destinations: ['slas'], note: 'Fixed targets' },
@@ -44,8 +44,8 @@ function DestinationLink({ section }: { section: Section }) {
 }
 export function AdministrationHub({ organizationName }: { organizationName: string }) {
   return <div className="page administration-hub">
-    <PageHeader className="administration-hub-header" title="Administration" eyebrow="Workspace settings" description="Manage your workspace and how support gets done." actions={<span className="badge administration-workspace-name">{organizationName}</span>}/>
-    <nav className="administration-jump-nav" aria-label="Administration sections">{groups.map(group => <a key={group.id} className="button button-quiet" href={`#admin-${group.id}`}>{group.title}</a>)}</nav>
+    <PageHeader className="administration-hub-header" title="Settings" description="Manage your workspace and how support gets done." actions={<span className="badge administration-workspace-name">{organizationName}</span>}/>
+    <nav className="administration-jump-nav" aria-label="Settings sections">{groups.map(group => <a key={group.id} className="button button-quiet" href={`#admin-${group.id}`}>{group.title}</a>)}</nav>
     {groups.map(group => <section className="administration-hub-group" id={`admin-${group.id}`} key={group.id} aria-labelledby={`admin-${group.id}-heading`}>
       <header className="administration-section-heading"><h2 id={`admin-${group.id}-heading`}>{group.title}</h2><p>{group.description}</p></header>
       <div className="administration-panel">{group.cards.map(card => <article className="administration-setting-row" key={card.title}>

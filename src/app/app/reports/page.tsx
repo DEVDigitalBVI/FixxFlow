@@ -23,8 +23,7 @@ export default async function ReportsPage() {
   if (viewer.role === 'end_user') notFound();
   const [report,savedReports] = await Promise.all([getReport(viewer.organizationId),loadSavedReports(viewer.organizationId)]);
   return <div className="page reports-page">
-    <PageHeader title="Reports" eyebrow={viewer.organizationName} description="Understand your workload, service levels and support trends." actions={<><Link className="button button-primary" href="/app/reports/custom">Create custom report</Link><Link className="button button-secondary" href="/app/tickets">Open ticket queue</Link></>}/>
-    <SavedReportList reports={savedReports} viewerId={viewer.id}/>
+    <PageHeader title="Reports" eyebrow={viewer.organizationName} description="Understand your workload, service levels and support trends." actions={<Link className="button button-secondary" href="/app/tickets">Open ticket queue</Link>}/>
     {report ? <>
       <section className="settings-card report-toolbar" aria-labelledby="report-period-title">
         <div><h2 id="report-period-title">Last 30 days</h2><p>Includes today · {report.timezone}</p><span className="muted">Current workload is shown separately.</span></div>
@@ -34,5 +33,6 @@ export default async function ReportsPage() {
       <ServiceLevels report={report} canViewTargets={viewer.role === 'administrator'}/>
       <ReportCharts report={report}/>
     </> : <ReportUnavailable/>}
+    <SavedReportList reports={savedReports} viewerId={viewer.id}/>
   </div>;
 }

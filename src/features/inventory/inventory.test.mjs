@@ -21,7 +21,7 @@ const shared={
 const forms=load('src/features/inventory/forms.tsx',shared);
 const html=(name,props)=>renderToStaticMarkup(React.createElement(forms[name],{token:'retry',...props}));
 test('request form distinguishes recipient from requester, labels destination and exposes quantity constraints and toner printer',()=>{
- const markup=html('RequestForm',{item});assert.match(markup,/Intended employee \(optional\)/);assert.match(markup,/Recipient or destination details/);assert.match(markup,/Printer \(optional, for toner\)/);assert.match(markup,/min="1"/);assert.match(markup,/step="1"/);assert.match(markup,/Submission does not reserve stock/);assert.doesNotMatch(markup,/name="requester/);
+ const markup=html('RequestForm',{item});assert.match(markup,/Employee receiving the item \(optional\)/);assert.match(markup,/Delivery location or recipient details/);assert.match(markup,/Printer \(optional, for toner\)/);assert.match(markup,/min="1"/);assert.match(markup,/step="1"/);assert.match(markup,/Submission does not reserve stock/);assert.doesNotMatch(markup,/name="requester/);
 });
 test('handover requires confirming reserved equipment and recipient before issuance',()=>{
  const markup=html('IssueForm',{request,units:[{asset_id:'asset',asset_context:{tag:'PC-1',name:'Laptop',serial:'SN-1'}}]});assert.match(markup,/type="checkbox" required=""/);assert.match(markup,/required="" name="assets" value="asset"/);assert.match(markup,/Confirm PC-1 · Laptop · SN-1/);assert.match(markup,/Mark as issued/);
@@ -69,4 +69,25 @@ test('server action retains retry keys and verified organization; failed lookups
  await h.inventoryMutation(f);await h.inventoryMutation(f);
  assert.equal(h.calls[0][1].org,'verified-org');assert.equal(h.calls[0][1].token,h.calls[1][1].token);
  f.set('lookupLoadError','1');assert.match((await h.inventoryMutation(f)).error,/retry the lookup/);f.delete('lookupLoadError');f.set('quantity','1.2');assert.match((await h.inventoryMutation(f)).error,/whole/);assert.equal(h.calls.length,2);
+});
+
+test('stock receiving validates before review and preserves the mounted fields after a failed save',async()=>{
+ const {componentHarness}=await import('../../../tests/helpers/component-harness.mjs');
+ let calls=0,valid=false;
+ const ui=componentHarness('src/features/inventory/forms.tsx','StockForm',{item:{...item,location_name:'Main store'},command:'receive',token:'receipt-token'},{...shared,'@/app/app/inventory/actions':{inventoryMutation:async()=>{calls++;return{error:'Receipt could not be saved.'};}}});
+ const Original=globalThis.FormData,data=new Original();data.set('quantity','4');data.set('note','Delivery 42');
+ globalThis.FormData=class{constructor(form){return form.data;}};
+ try{
+  const fieldset=ui.find(n=>n.type==='fieldset');
+  fieldset.props.ref.current={form:{data},querySelectorAll:selector=>selector.startsWith('select[')?[]:[{reportValidity:()=>valid}]};
+  const review=ui.find(n=>n.type==='button'&&n.props.children==='Review receipt');
+  review.props.onClick();await ui.find(n=>typeof n.props.action==='function').props.action(data);ui.render();assert.equal(calls,0);assert.equal(ui.find(n=>n.type==='fieldset').props.hidden,false);
+  ui.find(n=>n.type==='fieldset').props.ref.current={form:{data},querySelectorAll:selector=>selector.startsWith('select[')?[]:[{reportValidity:()=>true}]};
+  ui.find(n=>n.type==='button'&&n.props.children==='Review receipt').props.onClick();ui.render();
+  assert.equal(calls,0);assert.equal(ui.find(n=>n.type==='fieldset').props.hidden,true);
+  assert.ok(ui.find(n=>n.type==='dd'&&n.props.children==='4'));assert.ok(ui.find(n=>n.props.name==='quantity'));
+  assert.equal(ui.focuses.at(-1),ui.find(n=>n.type==='h3').props.id);
+  await ui.find(n=>typeof n.props.action==='function').props.action(data);ui.render();
+  assert.equal(calls,1);assert.equal(ui.find(n=>n.type==='fieldset').props.hidden,false);assert.equal(ui.find(n=>n.props.name==='quantity').props.defaultValue,1);
+ }finally{globalThis.FormData=Original;ui.close();}
 });

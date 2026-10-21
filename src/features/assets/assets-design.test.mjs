@@ -23,11 +23,11 @@ function inventory({ role = 'administrator', rows = [asset], count = rows.length
 
 test('inventory groups count, filters, complete asset identity and named Open controls', async () => {
   const html = await inventory().render();
-  for (const text of ['Assets', 'Your inventory', '1 asset', 'Most recently updated first', 'Add asset', 'Import spreadsheet', 'PC-001', '012345', 'Under repair']) assert.ok(html.includes(text));
+  for (const text of ['Assets', 'Equipment records', '1 asset', 'Most recently updated first', 'Add asset', 'Import spreadsheet', 'PC-001', '012345', 'Under repair']) assert.ok(html.includes(text));
   assert.match(html, /aria-labelledby="inventory-heading"/);
   assert.match(html, /class="button button-secondary" href="\/app\/assets\/asset-a">Open<span class="sr-only"> Reception laptop/);
   assert.match(html, /table responsive-table table-nowrap/);
-  assert.match(html, /aria-label="Asset pages"/);
+  assert.doesNotMatch(html, /aria-label="Asset pages"/);
 });
 test('lifecycle presentation always includes the authoritative written label', () => {
   const { AssetStatusBadge } = load('src/features/assets/asset-status-badge.tsx');
@@ -70,13 +70,13 @@ test('asset editor groups all existing fields and preserves drafts and focused e
     '@/components/ui/submit-button': { SubmitButton: props => React.createElement('button', props) },
   });
   const html = render(React.createElement(AssetForm, { asset, people: [], locations: [] }));
-  for (const label of ['Identity', 'Assignment &amp; lifecycle']) assert.ok(html.includes(`<legend>${label}</legend>`));
+  for (const label of ['Identity', 'Assignment &amp; status']) assert.ok(html.includes(`<legend>${label}</legend>`));
   assert.match(html, /<details class="asset-form-section progressive-section"><summary>Purchase &amp; warranty/);
   assert.doesNotMatch(html, /<details[^>]*open=/);
   for (const name of ['tag', 'name', 'kind', 'status', 'model', 'serial_number', 'assigned_user_id', 'location_id', 'purchased_on', 'warranty_until']) assert.ok(html.includes(`name="${name}"`));
   assert.match(html, /value="Reception laptop"/); assert.match(html, /value="012345"/);
   assert.match(html, /tabindex="-1" class="alert alert-error" role="alert"/);
-  assert.match(html, /Save asset/); assert.match(html, /Retirement preserves/);
+  assert.match(html, /Save asset/); assert.doesNotMatch(html, /Retirement preserves/);
   effects.forEach(fn => fn()); assert.equal(focused, true);
 });
 

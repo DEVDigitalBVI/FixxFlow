@@ -779,7 +779,7 @@ img { display: block; max-width: 100%; }
 
 .knowledge-editor { max-width: 900px; display: grid; gap: 24px; }
 .knowledge-editor form, .knowledge-editor fieldset { display: grid; gap: 16px; min-width: 0; }
-.knowledge-editor fieldset { border: 1px solid var(--color-border); border-radius: 12px; padding: 16px; }
+.knowledge-editor fieldset { border: 0; border-radius: 0; padding: 16px 0; margin: 0; }
 .knowledge-editor legend { font-weight: 600; padding-inline: 4px; }
 .knowledge-editor label, .knowledge-file { display: grid; gap: 8px; }
 .knowledge-editor .input { width: 100%; }
@@ -850,7 +850,7 @@ img { display: block; max-width: 100%; }
 .portal-articles h2 a { color: var(--color-text); text-decoration: none; }
 .portal-articles h2 a:hover { color: var(--color-accent); text-decoration: underline; }
 .knowledge-file input { min-height: 40px; max-width: 100%; }
-.knowledge-editor fieldset fieldset { background: var(--color-surface); }
+.knowledge-editor fieldset fieldset { background: transparent; border-block-start: 1px solid var(--color-border); }
 .notification-pagination { margin-top: 20px; flex-wrap: wrap; }
 .queue-views { flex-wrap: wrap; }
 .queue-views a { white-space: normal; }
@@ -1407,9 +1407,9 @@ select.input-compact { height: 40px; }
 .overview-queues { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--color-border); border-radius: var(--radius-panel); background: var(--color-surface); }
 .overview-queue { display: flex; align-items: center; gap: 16px; padding: 24px; color: var(--color-text); text-decoration: none; border-radius: 0; }
 .overview-queue:nth-child(n+3) { border-top: 1px solid var(--color-border); }
-.overview-queue > span:nth-child(2) { display: grid; gap: 4px; min-width: 0; }
+.overview-queue-copy { display: grid; gap: 4px; min-width: 0; }
 .overview-queue strong { font-weight: 600; }
-.overview-queue > span:nth-child(2) > span { color: var(--color-text-muted); font-size: 13px; }
+.overview-queue-copy > span { color: var(--color-text-muted); font-size: 13px; }
 .overview-queue-index { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border: 1px solid var(--color-border); border-radius: var(--radius-control); font-size: 12px; font-variant-numeric: tabular-nums; color: var(--color-accent); background: var(--color-accent-subtle); }
 .overview-queue-arrow { margin-left: auto; color: var(--color-accent); font-size: 20px; }
 .overview-queue:hover { background: var(--color-accent-subtle); }
@@ -2697,3 +2697,21 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
 .workflow-builder-options > .stack { padding-block: 8px 16px; }
 .workflow-builder-save { display: grid; justify-items: start; gap: 16px; padding-block-start: 20px; border-block-start: 1px solid var(--color-border); }
 @media (max-width: 767px) { .workflow-builder-intro { padding: 16px; } .workflow-builder-save > button { width: 100%; } }
+
+/* Quiet settings summaries retain context without opening every section. */
+.disclosure-summary { display: block; margin-top: 4px; color: var(--color-text-muted); font-size: 13px; font-weight: 400; line-height: 20px; overflow-wrap: anywhere; }
+
+.report-choice-list { display: grid; gap: 8px; max-height: 240px; overflow-y: auto; padding: 4px; }
+.report-entity-filter { min-width: 0; }
+.knowledge-block-options { border-block-start: 1px solid var(--color-border); margin-top: 12px; }
+.knowledge-block-options > summary { cursor: pointer; min-height: 44px; padding-block: 12px; font-weight: 500; }
+.knowledge-block-options > label { margin-block: 12px; }
+.organization-item-actions small { display: block; max-width: 26ch; margin-top: 8px; }
+
+.ticket-wizard-steps button.ticket-step-secondary:not([aria-current="step"]) { background: transparent; }
+.checklist-step-details > summary { min-height: 44px; padding-block: 12px; cursor: pointer; font-weight: 500; }
+.checklist-step-details > p { margin-block: 8px; }
+
+.inventory-receipt-fields { min-width: 0; border: 0; margin: 0; padding: 0; }
+.inventory-receipt-fields[hidden] { display: none; }
+.inventory-receipt-fields legend { padding: 0; font-weight: 600; margin-bottom: 12px; }

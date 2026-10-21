@@ -18,7 +18,7 @@ export function StartChatForm({ initialError, submissionKey }: { initialError?: 
     <SubmissionKey value={submissionKey}/>
     <div className="chat-recipient">
       <span className="chat-intake-icon"><NavigationIcon name="support"/></span>
-      <div><span className="muted">New conversation with your organization’s</span><h2 id="chat-compose-title">IT support team</h2><p className="chat-recipient-description">Your message goes to your IT support team. Once a technician picks it up, you’ll see their name in the conversation.</p></div>
+      <div><h2 id="chat-compose-title">IT support team</h2><p className="chat-recipient-description">IT may reply later. You can leave this page and return to My chats.</p></div>
     </div>
     {state.error && <div className="alert alert-error" role="alert" tabIndex={-1} ref={feedback}>
       <p>{state.error}</p>
@@ -40,7 +40,7 @@ export function StartChatForm({ initialError, submissionKey }: { initialError?: 
       </div>
     </div>
     <footer className="chat-intake-footer">
-      <p>Your first message starts the conversation.</p>
+
       <div><Link className="button button-secondary" href="/app/chat">Cancel</Link><SubmitButton className="button button-primary" disabled={pending} pendingLabel="Starting chat…">Start a chat</SubmitButton></div>
     </footer>
     <span className="sr-only" role="status">{pending ? 'Starting your chat…' : ''}</span>
@@ -48,11 +48,5 @@ export function StartChatForm({ initialError, submissionKey }: { initialError?: 
 }
 
 export function ChatIntakeGuide() {
-  return <aside className="chat-intake-guide" aria-labelledby="chat-guide-title">
-    <h2 id="chat-guide-title">What happens next</h2>
-    <p>Share the issue in your own words. You can add more details as you talk with IT.</p>
-    <div className="chat-guide-detail"><NavigationIcon name="chat"/><div><h3>Pick up where you left off</h3><p>Return to Chats to read replies and keep the conversation going.</p></div></div>
-    <div className="chat-guide-detail"><NavigationIcon name="people"/><div><h3>The IT team will follow up</h3><p>A technician may not be available immediately. You don’t need to keep this page open.</p></div></div>
-    <div className="chat-guide-help"><h3>Looking for a quick answer?</h3><p>A help article may already have what you need.</p><Link className="button button-secondary" href="/app/help">Browse knowledge base</Link></div>
-  </aside>;
+  return <aside className="chat-intake-guide" aria-labelledby="chat-guide-title"><h2 id="chat-guide-title">Need a quick answer?</h2><p>Search existing help before starting a conversation.</p><Link className="button button-secondary" href="/app/help">Browse help articles</Link></aside>;
 }

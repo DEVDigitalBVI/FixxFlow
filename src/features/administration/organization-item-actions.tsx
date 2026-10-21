@@ -12,11 +12,11 @@ type Props = {
 
 export function OrganizationItemActions({ id, name, active, kind, toggleAction, deleteAction }: Props) {
   return <div className="organization-item-actions">
-    <form action={toggleAction}>
+    <div><form action={toggleAction}>
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="isActive" value={String(active)} />
       <SubmitButton className="button button-small button-secondary" aria-label={`${active ? "Deactivate" : "Activate"} ${kind} ${name}`}>{active ? "Deactivate" : "Activate"}</SubmitButton>
-    </form>
+    </form>{active&&<small className="muted">Hides this entry from new selections; existing records stay linked.</small>}</div>
     <details className="organization-delete">
       <summary>Delete<span className="sr-only"> {kind} {name}</span>…</summary>
       <form action={deleteAction} className="stack">

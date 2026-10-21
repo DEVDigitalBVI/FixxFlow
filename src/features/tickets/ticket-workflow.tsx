@@ -20,7 +20,7 @@ export function TicketWorkflow({status,assigned,review,assignment,conversation,r
  const headings=useRef<Array<HTMLHeadingElement|null>>([]);
  const focusNext=useRef(false);
  useEffect(()=>{
-  const followHash=()=>{const hash=window.location.hash;const index=hash==='#ticket-details'?steps.findIndex(s=>s.hash==='ticket-assignment'):steps.findIndex(s=>`#${s.hash}`===hash);if(index>=0){focusNext.current=true;setStep(index);}};
+  const followHash=()=>{const hash=window.location.hash;const coordinationHashes=['#ticket-procedures','#incident-summary','#response-checklist','#incident-approvals','#communication-plan'];const index=coordinationHashes.includes(hash)?steps.findIndex(s=>s.hash==='ticket-workflow-tools'):hash==='#ticket-details'?steps.findIndex(s=>s.hash==='ticket-assignment'):steps.findIndex(s=>`#${s.hash}`===hash);if(index>=0){focusNext.current=true;setStep(index);}};
   followHash();window.addEventListener('hashchange',followHash);return()=>window.removeEventListener('hashchange',followHash);
  },[steps]);
  useEffect(()=>{if(focusNext.current){headings.current[step]?.focus();focusNext.current=false;}},[step]);
@@ -28,7 +28,7 @@ export function TicketWorkflow({status,assigned,review,assignment,conversation,r
  const panels:Record<string,ReactNode>={'ticket-review':review,'ticket-assignment':assignment,'ticket-workflow-tools':tools,'ticket-conversation':conversation,'ticket-resolution':resolution,'ticket-activity':history};
  const hint=(item:typeof workflowSteps[number])=>item.hash==='ticket-workflow-tools'?(activeWorkflow?'This ticket has active coordination work. Review its checklist, approvals and stakeholder updates before continuing.':'Optional for routine tickets. Apply a company procedure or declare a wider incident here, or continue to Respond.'):item.hint;
  return <div className="ticket-wizard">
-  <nav aria-label="Ticket workflow"><ol className="ticket-wizard-steps">{steps.map((item,index)=><li key={item.hash}><button type="button" aria-current={step===index?'step':undefined} onClick={()=>go(index)}><span className="ticket-step-number" aria-hidden="true">{index+1}</span><span>{item.title}</span></button></li>)}</ol></nav>
+  <nav aria-label="Ticket workflow"><ol className="ticket-wizard-steps">{steps.map((item,index)=><li key={item.hash}><button type="button" className={item.hash==='ticket-activity'||(item.hash==='ticket-workflow-tools'&&!activeWorkflow)?'ticket-step-secondary':undefined} aria-current={step===index?'step':undefined} onClick={()=>go(index)}><span className="ticket-step-number" aria-hidden="true">{index+1}</span><span>{item.title}</span></button></li>)}</ol></nav>
   <p className="sr-only" role="status">Step {step+1} of {steps.length} · {steps[step].title}</p>
   {steps.map((item,index)=><section key={item.hash} id={item.hash} hidden={step!==index} aria-labelledby={`${item.hash}-heading`} className="ticket-wizard-panel">
    <header className="ticket-step-heading"><h2 id={`${item.hash}-heading`} ref={node=>{headings.current[index]=node;}} tabIndex={-1}>{item.title}</h2><p className="muted">{hint(item)}</p>

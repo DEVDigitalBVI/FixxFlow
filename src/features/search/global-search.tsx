@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
-import { normalizeSearch, SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
+import { normalizeSearch, SEARCH_LIMIT } from '@/lib/search';
 import { groupSearchResults, matchDestinations, searchDestinations, type SearchResult } from './model';
 import type { AppRole } from '@/types/database';
 
@@ -66,7 +66,7 @@ export function GlobalSearch({ role, inventoryAccess, onOpen, platform = false, 
         if (results.length && ['ArrowDown', 'ArrowUp'].includes(event.key)) { event.preventDefault(); const next = (selected + (event.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length; setSelected(next); document.getElementById(`global-result-${next}`)?.scrollIntoView({ block: 'nearest' }); }
         if (event.key === 'Enter') { event.preventDefault(); if (results[selected]) choose(results[selected]); }
       }}/>
-      <p className="form-note" id="global-search-hint">{SEARCH_HINT} Use ↑ and ↓ to choose, Enter to open, Escape to close.</p>
+      <p className="form-note" id="global-search-hint">↑ ↓ to choose · Enter to open · Escape to close.</p>
       <p role="status">{status === 'loading' ? 'Searching…' : `${results.length} ${results.length === 1 ? 'result' : 'results'}${remote.length >= 8 ? ' · Open a feature to see more' : ''}.`}</p>
       {status === 'error' && navigationResults.length > 0 && <p className="form-note">Showing navigation results. Tickets, people, and articles are temporarily unavailable.</p>}
       {status === 'error' && navigationResults.length === 0 && <div role="alert" className="alert alert-error">Workspace results could not load. <button type="button" className="button button-secondary" onClick={() => { setStatus('loading'); setRetry(value => value + 1); input.current?.focus(); }}>Retry search</button></div>}

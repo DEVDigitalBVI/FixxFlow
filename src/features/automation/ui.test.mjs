@@ -63,7 +63,7 @@ test('builder uses semantic vertical sections and exposes only established condi
   const {AutomationBuilder}=load('src/features/automation/builder.tsx',baseMocks);
   const initial={rule:rule({definition:definition({conditions:group(condition('team_id','is_empty')),actions:[action('set_priority',{priority:'critical'}),action('send_notification',{recipient:'requester',template:'ticket_update'},1)]})}),archivedAt:null};
   const html=render(React.createElement(AutomationBuilder,{initial}));
-  for(const text of ['When','If','Then','All conditions must match','Move Up','Move Down','Test Automation','Save changes','Requester','Assigned technician'])assert.ok(html.includes(text));
+  for(const text of ['When','If','Then','Only continue when all conditions match','Move Up','Move Down','Test Automation','Save changes','Requester','Assigned technician'])assert.ok(html.includes(text));
   assert.doesNotMatch(html,/Notify IT Manager|apply_sla|add_tag|<canvas|>OR</);assert.match(html,/aria-label="Move action 2 up"/);assert.match(html,/aria-live="polite"/);
 });
 test('condition operators and reorder use registry constraints and contiguous immutable ordering',()=>{
