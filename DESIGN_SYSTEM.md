@@ -469,3 +469,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 - Employee support and equipment ticket creation asks “How is this affecting work?” with a required, initially empty native select: Minor inconvenience, Work blocked, Team affected, Operations stopped. Include plain descriptions and explain that the choice sets initial priority and SLA targets, which IT can adjust after review.
 - Store the original reported impact separately from priority; show it in employee request details and staff Review request. Historical and staff-created tickets may have no reported impact. Map Minor inconvenience to Low (8h response / 48h resolution), Work blocked to Normal (4h / 24h), Team affected to High (1h / 8h), and Operations stopped to Critical (15min / 4h). Apply on creation only, before SLA calculation; retain IT priority overrides and the original report. Selecting impact does not declare an incident. Reuse shared field, input, form, and feedback primitives.
+
+### Ticket workflow guidance
+
+- Each staff workflow step pairs a short purpose/action sentence with a native “What to do here” disclosure for practical instructions. Keep audience, optional work and explicit save actions clear. Explain once beside step progress that navigation only changes the view; Back/Next never save or change status. Reuse existing typography and surface tokens without additional instruction cards.

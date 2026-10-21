@@ -2675,3 +2675,7 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
  .ticket-wizard-navigation { flex-direction: column-reverse; align-items: stretch; }
  .ticket-wizard-navigation > span:empty { display: none; }
 }
+
+.ticket-step-help { margin-bottom: 20px; }
+.ticket-step-help summary { cursor: pointer; min-height: 40px; align-content: center; }
+.ticket-step-help p { max-width: 70ch; margin: 8px 0 0; overflow-wrap: anywhere; }

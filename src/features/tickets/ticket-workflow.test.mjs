@@ -51,5 +51,18 @@ test('tickets without coordination tools skip that step but retain visible activ
  assert.match(html,/id="ticket-activity"/);assert.match(html,/Next: Activity history/);
  const active=renderToStaticMarkup(React.createElement(TicketWorkflow,{...props,activeWorkflow:true}));
  assert.match(active,/This ticket has active coordination work/);
- assert.doesNotMatch(active,/<details/);
+ assert.match(active,/<div class="ticket-step-content">Company tools<\/div>/);
+});
+
+
+test('each step offers collapsed practical guidance and distinguishes navigation from saved actions',()=>{
+ const {TicketWorkflow}=load('src/features/tickets/ticket-workflow.tsx');
+ const html=renderToStaticMarkup(React.createElement(TicketWorkflow,props));
+ assert.equal((html.match(/<details class="ticket-step-help">/g)||[]).length,6);
+ assert.doesNotMatch(html,/<details[^>]* open/);
+ assert.match(html,/Back and Next only change the view/);
+ assert.match(html,/Internal note for troubleshooting visible only to IT staff/);
+ assert.match(html,/Skip this step if no update is needed/);
+ assert.match(html,/sending a reply does not resolve the ticket/);
+ assert.match(html,/What to do here<span class="sr-only">: Respond/);
 });
