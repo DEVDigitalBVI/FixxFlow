@@ -50,14 +50,14 @@ function luminance(hex) {
   return rgb[0] * .2126 + rgb[1] * .7152 + rgb[2] * .0722;
 }
 function contrast(a, b) { const x = luminance(a), y = luminance(b); return (Math.max(x,y) + .05) / (Math.min(x,y) + .05); }
-test('explicit and system dark themes share the approved black-and-gold palette', () => {
+test('explicit and system dark themes share the approved red-and-gunmetal palette', () => {
   const css = fs.readFileSync('src/app/globals.css', 'utf8');
   const explicit = css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1];
   const system = css.match(/:root:not\(\[data-theme\]\) \{([^}]+)\}/)[1];
   assert.equal(explicit.trim(), system.trim());
   for (const [token, value] of Object.entries({
-    canvas: '#1a1a1a', surface: '#222222', accent: '#febe10',
-    text: '#ffffff', 'text-muted': '#c2c2c2', focus: '#febe10',
+    canvas: '#282d33', surface: '#282d33', accent: '#ffadb5',
+    text: '#fbfffe', 'text-muted': '#c2c2c2', focus: '#ffadb5',
   })) assert.ok(explicit.includes(`--color-${token}: ${value};`), token);
 });
 test('dark text, states, buttons, charts and focus meet contrast thresholds', () => {
@@ -71,7 +71,7 @@ test('dark text, states, buttons, charts and focus meet contrast thresholds', ()
   for (const state of ['accent', 'success', 'warning', 'danger', 'cyan', 'purple', 'neutral']) assert.ok(contrast(tokens[state], tokens[`${state}-subtle`]) >= 4.5, state);
   for (const fill of ['accent', 'accent-hover']) assert.ok(contrast(tokens['on-accent'], tokens[fill]) >= 4.5, fill);
 });
-test('light surfaces and gold filled actions retain readable contrast in both themes', () => {
+test('light surfaces and red filled actions retain readable contrast in both themes', () => {
   const css = fs.readFileSync('src/app/globals.css', 'utf8');
   const read = block => Object.fromEntries([...block.matchAll(/--color-([\w-]+): (#[\da-f]+);/g)].map(m => [m[1], m[2]]));
   const light = read(css.match(/:root \{([^}]+)\}/)[1]);
@@ -187,12 +187,12 @@ test('brand logo variants use approved artwork at its original proportions', () 
     if (variant !== 'full') assert.equal(imageProps.at(-1).preload, true);
     assert.doesNotMatch(html, /raster-master/);
   }
-  // Fingerprints of the product-owner-authorized gold-and-navy brand artwork.
+  // Fingerprints of the product-owner-authorized red-and-gunmetal brand artwork.
   const approved = {
-    primary: '2afa8a72c7bad3d2ab92ed212412db3b861a60f3e45327ea88c0f5a2e5196777',
-    'dark-mode': '39ba3c95e9cadd6856feffb32b57124d7bab3432f450a04f6fb3103dbcc7edc3',
-    'dark-mode-transparent': '39ba3c95e9cadd6856feffb32b57124d7bab3432f450a04f6fb3103dbcc7edc3',
-    'horizontal-full': 'e3522928afced6d3661339f4581e432b6096516c477fa64d9530c0a662f608a1',
+    primary: '9ab9a2cd89da79c574dddfc383961812ffb92693b0d3aa4fc2ef111a2674fc85',
+    'dark-mode': '8f9d96be959afec6d96e792eea3cd2c536cc0d1398663989c5df52d6456b940f',
+    'dark-mode-transparent': '8f9d96be959afec6d96e792eea3cd2c536cc0d1398663989c5df52d6456b940f',
+    'horizontal-full': '01f97921fdc5d139c7cbf860dd60b3bd692e4250b0d3eeaa3666ce2213ff5e82',
   };
   for (const [name, fingerprint] of Object.entries(approved)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/brand/fixxflow/logo/fixxflow-logo-${name}.png`)).digest('hex'), fingerprint);
@@ -266,4 +266,15 @@ test('brand surfaces retain readable navigation, category copy and overview text
   for (const foreground of ['inverse', 'brand-text-muted', 'brand-secondary']) {
     assert.ok(contrast(base[foreground], end) >= 4.5, `${foreground} on overview wash`);
   }
+});
+
+test('rebranded artwork versions are allowed by image optimization and favicon copies agree', () => {
+  const component = fs.readFileSync('src/components/brand/brand-logo.tsx', 'utf8');
+  const config = fs.readFileSync('next.config.ts', 'utf8');
+  const versions = [...component.matchAll(/\?v=([\w-]+)/g)].map(match => match[1]);
+  assert.ok(versions.length >= 4);
+  for (const version of versions) assert.ok(config.includes(`search: '?v=${version}'`));
+  assert.deepEqual(fs.readFileSync('src/app/favicon.ico'), fs.readFileSync('public/brand/fixxflow/favicon/favicon.ico'));
+  const manifest = JSON.parse(fs.readFileSync('public/brand/fixxflow/site.webmanifest', 'utf8'));
+  assert.equal(manifest.theme_color, '#BD212C');
 });

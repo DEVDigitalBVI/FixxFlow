@@ -1,5 +1,5 @@
 {
-  "source": "Palette migration of the existing FixxFlow ribbon F and wrench to the product-owner-selected white, gray, gold and night-black palette, October 2026",
+  "source": "Product-owner-authorized red, gunmetal, dark tangerine, off-white and dim gray rebrand, October 23 2026",
   "iconSourceDimensions": [
     1254,
     1254
@@ -11,17 +11,18 @@
   "format": "PNG RGBA",
   "vectorOriginalIncluded": false,
   "palette": {
-    "gold": "#FEBE10",
-    "nightBlack": "#1A1A1A",
-    "white": "#FFFFFF",
-    "grey": "#F2F2F2"
+    "red": "#BD212C",
+    "gunmetal": "#282D33",
+    "amber": "#FBA917",
+    "white": "#FBFFFE",
+    "dimGray": "#6E676F"
   },
-  "method": "Built-in imagegen recolor with final palette normalization and exact preservation of the existing artwork alpha masks, silhouettes and dimensions. Sharp prepares production derivatives and verifies alpha channels.",
+  "method": "Built-in imagegen palette reference followed by deterministic Sharp palette normalization of original artwork, preserving exact alpha masks and dimensions.",
   "prompts": {
-    "paletteMigration": "Recolor this exact transparent FixxFlow logo to the palette GOLD #FEBE10, NIGHT BLACK #1A1A1A, WHITE #FFFFFF and GREY #F2F2F2. Change ONLY colors: gold ribbon and Flow should use #FEBE10 with restrained tonal gold shading; every blue/navy internal ribbon fold becomes neutral night-black/charcoal #1A1A1A with subtle gray shading, absolutely no blue. Preserve white Fixx and wrench and light-gray IT SUPPORT IN MOTION tagline. Preserve exact shapes, letterforms, layout, proportions, and all genuine alpha transparency around the logo and between letters. Smooth crisp edges, no splatter, no fringe, no opaque backdrop, no checkerboard. Deliver transparent PNG."
+    "paletteMigration": "Recolor the exact FixxFlow logo: American red #BD212C ribbon and Flow, gunmetal #282D33 folds, off-white #FBFFFE wrench and inverse wordmark. Preserve silhouette, typography, layout and transparency."
   },
-  "derivatives": "Navigation mark, horizontal lockups, source masters, app icons, Apple/Android icons and ICO share the gold-and-night-black palette. Application logos retain their exact prior alpha channels.",
-  "darkArtwork": "All application logo variants retain their original alpha channels exactly. No background or backing plaque is introduced. Internal folds use neutral charcoal; launcher icons retain their intentional square background.",
+  "derivatives": "All logo variants, source masters, app icons, favicon PNGs and ICO use the red-and-gunmetal palette. Monochrome variants retain their single-color role.",
+  "darkArtwork": "Original alpha masks preserved. No backing plaque added. Launcher icons retain their intentional background.",
   "alphaFingerprints": {
     "logo/fixxflow-logo-dark-mode-transparent.png": "4e00e4065859eec47e3d7ab80487f025b3c5072323528cd5b03239ce9e4e37f7",
     "logo/fixxflow-logo-dark-mode.png": "4e00e4065859eec47e3d7ab80487f025b3c5072323528cd5b03239ce9e4e37f7",

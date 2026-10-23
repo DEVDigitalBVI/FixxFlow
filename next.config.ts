@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
   images: {
     localPatterns: [
       { pathname: '/**', search: '' },
-      { pathname: '/brand/fixxflow/**', search: '?v=night-gold' },
+      { pathname: '/brand/fixxflow/**', search: '?v=red-gunmetal-20261023' },
     ],
     remotePatterns: [
       {

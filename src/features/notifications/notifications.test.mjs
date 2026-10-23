@@ -16,11 +16,11 @@ test('all email variants share the invitation layout and centered content',()=>{
  }
  for(const [name,html] of emails) {
   assert.match(html,/<td align="center" style="padding:24px;text-align:center;overflow-wrap:anywhere">/,name);
-  assert.match(html,/<p style="margin:0 0 8px;color:#595959;font-size:14px;line-height:22px;font-weight:500">/,name);
-  assert.match(html,/<p style="max-width:420px;margin:0 auto 20px;color:#595959;">/,name);
+  assert.match(html,/<p style="margin:0 0 8px;color:#6e676f;font-size:14px;line-height:22px;font-weight:500">/,name);
+  assert.match(html,/<p style="max-width:420px;margin:0 auto 20px;color:#6e676f;">/,name);
   assert.match(html,/<td align="center" style="text-align:center;padding:16px 24px;border-top:/,name);
   assert.match(html,/width="100%"[^>]*style="max-width:560px/,name);
-  assert.match(html,/max-width:560px;background:#ffffff;border:0;border-radius:16px/,name);
+  assert.match(html,/max-width:560px;background:#fbfffe;border:0;border-radius:16px/,name);
   assert.doesNotMatch(html,/border:1px solid #795500/,name);
   if(html.includes('Button not working?')) {
    assert.match(html,/<table role="presentation" align="center" style="margin:0 auto"/,name);
@@ -197,7 +197,7 @@ test('approved incident emails use the shared brand and deliver only the saved m
  assert.match(body.text,/Next update expected:.*UTC/);
  assert.match(body.html,/white-space:pre-line/);assert.match(body.html,/&lt;script&gt;Unsafe&lt;\/script&gt;/);assert.doesNotMatch(body.html,/<script>/);
  assert.match(body.html,/\/app\/incident-updates\/bulletin-1/);assert.doesNotMatch(body.html,/\/app\/tickets\/ticket-1/);
- assert.match(body.html,/#febe10/);assert.match(body.html,/fixxflow-logo-primary\.png/);
+ assert.match(body.html,/#bd212c/);assert.match(body.html,/fixxflow-logo-primary\.png/);
 });
 
 

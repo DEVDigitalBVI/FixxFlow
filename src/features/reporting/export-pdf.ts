@@ -11,8 +11,8 @@ export class PdfCharacterError extends Error {
 }
 
 // Print equivalents of the product text, muted, border, surface, and accent tokens.
-const ink = rgb(26 / 255, 26 / 255, 26 / 255);
-const muted = rgb(89 / 255, 89 / 255, 89 / 255);
+const ink = rgb(40 / 255, 45 / 255, 51 / 255);
+const muted = rgb(110 / 255, 103 / 255, 111 / 255);
 const border = rgb(229 / 255, 229 / 255, 229 / 255);
 const surface = rgb(242 / 255, 242 / 255, 242 / 255);
 

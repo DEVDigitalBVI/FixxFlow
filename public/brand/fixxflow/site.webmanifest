@@ -5,15 +5,15 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F2F2F2",
-  "theme_color": "#FEBE10",
+  "theme_color": "#BD212C",
   "icons": [
     {
-      "src": "/brand/fixxflow/favicon/android-chrome-192x192.png?v=febe10-20261021",
+      "src": "/brand/fixxflow/favicon/android-chrome-192x192.png?v=red-gunmetal-20261023",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/brand/fixxflow/favicon/android-chrome-512x512.png?v=febe10-20261021",
+      "src": "/brand/fixxflow/favicon/android-chrome-512x512.png?v=red-gunmetal-20261023",
       "sizes": "512x512",
       "type": "image/png"
     }
