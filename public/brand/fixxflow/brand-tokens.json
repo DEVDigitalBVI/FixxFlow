@@ -9,7 +9,7 @@
       "red": { "$value": "#BD212C", "$type": "color" },
       "amber": { "$value": "#FBA917", "$type": "color" },
       "redLink": { "$value": "#a71d27", "$type": "color" },
-      "redSoft": { "$value": "#FFF0F1", "$type": "color" },
+      "redSoft": { "$value": "#F1F2F3", "$type": "color" },
       "ink": { "$value": "#282D33", "$type": "color" },
       "black": { "$value": "#282D33", "$type": "color" }
     },

@@ -56,8 +56,8 @@ test('explicit and system dark themes share the approved red-and-gunmetal palett
   const system = css.match(/:root:not\(\[data-theme\]\) \{([^}]+)\}/)[1];
   assert.equal(explicit.trim(), system.trim());
   for (const [token, value] of Object.entries({
-    canvas: '#282d33', surface: '#282d33', accent: '#ffadb5',
-    text: '#fbfffe', 'text-muted': '#c2c2c2', focus: '#ffadb5',
+    canvas: '#282d33', surface: '#282d33', accent: '#fba917',
+    text: '#fbfffe', 'text-muted': '#c2c2c2', focus: '#fba917',
   })) assert.ok(explicit.includes(`--color-${token}: ${value};`), token);
 });
 test('dark text, states, buttons, charts and focus meet contrast thresholds', () => {
@@ -277,4 +277,11 @@ test('rebranded artwork versions are allowed by image optimization and favicon c
   assert.deepEqual(fs.readFileSync('src/app/favicon.ico'), fs.readFileSync('public/brand/fixxflow/favicon/favicon.ico'));
   const manifest = JSON.parse(fs.readFileSync('public/brand/fixxflow/site.webmanifest', 'utf8'));
   assert.equal(manifest.theme_color, '#BD212C');
+});
+
+test('brand wordmark keeps palette red independently of dark-mode link accents', () => {
+  const css = fs.readFileSync('src/app/globals.css', 'utf8');
+  assert.match(css, /--color-brand-primary: #bd212c;/);
+  assert.match(css, /\.brand-logo-navigation-wordmark span:last-child \{ color: var\(--color-brand-primary\); \}/);
+  assert.doesNotMatch(css, /#(?:fff0f1|fff1f1|ffadb5|ffc2c8|42272e|ff9a9a|44262f)\b/i);
 });

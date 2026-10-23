@@ -36,17 +36,17 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-action-hover: #a71d27;
   --color-on-action: #fbfffe;
   --color-inverse: #fbfffe;
-  --color-inverse-hover: #fff0f1;
+  --color-inverse-hover: #f1f2f3;
   --color-brand-text-muted: #e1e3e5;
   --color-cyan: #725000;
-  --color-cyan-subtle: #fff0f1;
+  --color-cyan-subtle: #f1f2f3;
   --color-purple: #6842c7;
   --color-purple-subtle: #f1edff;
   --color-neutral: #6e676f;
   --color-neutral-subtle: #eeeeee;
   --color-note-border: var(--color-accent);
   --color-note-surface: var(--color-surface-subtle);
-  --color-auth-tint: #fff0f1;
+  --color-auth-tint: #f1f2f3;
 
   --color-brand-primary: #bd212c;
   --color-brand-secondary: #fba917;
@@ -63,7 +63,7 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-text-subtle: #6e676f;
   --color-accent: #a71d27;
   --color-accent-hover: #8e1821;
-  --color-accent-subtle: #fff0f1;
+  --color-accent-subtle: #f1f2f3;
   --color-info: var(--color-accent-hover);
   --color-info-subtle: var(--color-accent-subtle);
   --color-success: #15803d;
@@ -71,7 +71,7 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-warning: #a15c00;
   --color-warning-subtle: #fff7e6;
   --color-danger: #bd212c;
-  --color-danger-subtle: #fff1f1;
+  --color-danger-subtle: #f1f2f3;
   --color-focus: #a71d27;
   --color-control-border: #817b83;
   --color-field-surface: #f1f2f3;
@@ -87,7 +87,7 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
 
 Functional links use the accessible red `--color-accent` alias to meet normal-text contrast on light surfaces. Filled actions use `--color-action-fill: #BD212C`, `--color-action-hover: #A71D27`, and `--color-on-action: #FBFFFE`. Brand artwork uses red with gunmetal folds. Focus indicators use a solid outline rather than a translucent tint.
 
-The core brand palette is American red `#BD212C`, gunmetal `#282D33`, dark tangerine `#FBA917`, off-white `#FBFFFE`, and dim gray `#6E676F`. Red anchors brand artwork and primary actions; amber is reserved for warnings and small highlights with dark text. Use off-white text on solid red actions, accessible darker red links on light surfaces, and pale red links/focus cues in dark mode. Derived neutral surfaces keep the workspace calm. Preserve green for success, and distinguish destructive actions with explicit labels and icons. Validate normal text at WCAG AA (4.5:1) and essential controls and focus indicators at 3:1.
+The core brand palette is American red `#BD212C`, gunmetal `#282D33`, dark tangerine `#FBA917`, off-white `#FBFFFE`, and dim gray `#6E676F`. Red anchors brand artwork and primary actions; amber is reserved for warnings and small highlights with dark text. Use off-white text on solid red actions, accessible darker red links on light surfaces, and palette amber links/focus cues in dark mode. Derived neutral surfaces keep the workspace calm. Preserve green for success, and distinguish destructive actions with explicit labels and icons. Validate normal text at WCAG AA (4.5:1) and essential controls and focus indicators at 3:1.
 
 ### 3.2 Brand identity and logo flow
 
@@ -361,7 +361,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Operational overview hierarchy
 
-- Lead the staff overview with a compact charcoal introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with gunmetal text; the focus outline uses a light red tint for contrast against charcoal.
+- Lead the staff overview with a compact charcoal introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with gunmetal text; the focus outline uses palette amber for contrast against charcoal.
 - Place real metrics before shortcuts and personal support actions. On wide screens, group comparable metrics in one divided panel; on compact screens, use two columns and a single column below 360px.
 - Queue shortcuts use native links, a title, brief supporting text, and a decorative arrow. Numbered markers indicate reading order, never ticket counts. Keep secondary support actions neutral so they do not compete with the queue.
 - Shared cards favor borders over shadows. Preserve clear input boundaries, visible focus, and the employee portal’s larger controls.
@@ -390,7 +390,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Appearance themes
 
 - Offer a soft, rounded Appearance group with native icon buttons for System (monitor), Light (sun), and Dark (moon). Each button has an accessible name, tooltip, pressed state, and a selected dot in addition to color. Keep 44px targets and visible keyboard focus. Place these choices centered below Notifications in workspace navigation, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.
-- Keep the existing semantic tokens as the single color system. Dark mode uses the approved red-and-gunmetal palette: `#282D33` canvas, `#282d33` charcoal surfaces, `#BD212C` actions and pale red `#FFADB5` links and focus, `#FBFFFE` primary text, `#C2C2C2` secondary text, and `#C2BDC4` placeholders. Use derived charcoal tones for elevation and borders and a dark red tint for selection. Both themes and all brand artwork use this palette. Light mode uses white surfaces, a soft neutral canvas, gunmetal primary text, gray secondary text, and accessible red links and focus outlines. Preserve distinct success, warning, danger, and chart colors with darker tinted backgrounds. `--color-on-action` controls off-white text on red filled actions; `--color-inverse` stays white for fixed charcoal brand panels. Chart series retain their distinct line styles and data tables.
+- Keep the existing semantic tokens as the single color system. Dark mode uses the approved red-and-gunmetal palette: `#282D33` canvas, `#282d33` charcoal surfaces, `#BD212C` actions and amber `#FBA917` links and focus, `#FBFFFE` primary text, `#C2C2C2` secondary text, and `#C2BDC4` placeholders. Use derived charcoal tones for elevation and borders and neutral gunmetal surfaces for selection. Both themes and all brand artwork use this palette. Light mode uses white surfaces, a soft neutral canvas, gunmetal primary text, gray secondary text, and accessible red links and focus outlines. Preserve distinct success, warning, danger, and chart colors with darker tinted backgrounds. `--color-on-action` controls off-white text on red filled actions; `--color-inverse` stays white for fixed charcoal brand panels. Chart series retain their distinct line styles and data tables.
 - Use native dark form controls via `color-scheme`. Keep focus outlines and control boundaries visible. Theme changes are immediate and introduce no animation.
 - Full shared logos use the approved primary (light mode) and dark-mode (dark mode) PNGs at their original 1353:1334 proportions; compact sidebar logos use the approved 1139:1151 color icon, with no light backing, cropping, or recoloring. All shared logo variants, including the full inverse artwork, must have genuine alpha transparency around the mark and lettering. Never bake a background into application logo assets. Keep launcher icons separate from transparent application logos.
 
@@ -508,3 +508,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 - Inventory receiving validates item quantities and equipment before showing a receipt review with department, storage and selected equipment. Keep entry controls mounted when reviewing, preserve the retry token and reveal them on save failure. Corrections remain a separate action with a required reason.
 - Reports lead with existing operational results. A new custom report does not query results before a definition is chosen or run. Changed builder options clearly require Run report; result exports use the last run definition. Entity filters use labeled checkboxes instead of modifier-key multi-selects.
 - Reveal enclosing disclosures for native validation and named server field errors. Error feedback links focus the corresponding control without discarding values. Reuse shared ActionForm, existing typography, surfaces, focus and responsive tokens.
+
+### Palette fidelity
+
+Do not use pink or rose tints for brand, selection, chat bubbles, or errors. Light selections use cool neutral surfaces; dark selections use elevated gunmetal. Dark-mode links and focus use palette amber for contrast. The navigation wordmark uses exact American red `#BD212C` in both themes, independently of functional link colors. Error labels use red in light mode and off-white on neutral dark surfaces, with explicit error text and icons.
