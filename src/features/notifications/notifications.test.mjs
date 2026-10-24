@@ -272,3 +272,15 @@ test('intake and ownership emails render a dedicated priority field in both bodi
   });
  }
 });
+
+test('requester reopening email includes the recorded explanation safely in both bodies',async()=>{
+ await sendNotificationEmail({...item,email_kind:'ticket_reopened',reopen_reason:'Still broken <script>private</script>',ticket_status:'open',previous_status:'closed',status_changed_by:'Taylor Employee',ticket_priority:'high'},config,async(_url,options)=>{
+  const body=JSON.parse(options.body);
+  assert.match(body.subject,/Ticket reopened/);
+  assert.match(body.text,/Reason for reopening:\nStill broken/);
+  assert.match(body.html,/Reason for reopening/);
+  assert.match(body.html,/Still broken &lt;script&gt;private&lt;\/script&gt;/);
+  assert.doesNotMatch(body.html,/<script>/);
+  return Response.json({id:'reopened'});
+ });
+});

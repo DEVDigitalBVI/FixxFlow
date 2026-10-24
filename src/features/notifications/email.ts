@@ -52,6 +52,7 @@ export async function sendNotificationEmail(item: NotificationEmail, config: Not
     if (item.ticket_owner) details.push({ label: 'Owner', value: item.ticket_owner });
     if (item.ticket_priority) details.push({ label: 'Priority', value: ticketPriorities[item.ticket_priority].label });
   }
+  const reopenReason = !incident && item.email_kind === 'ticket_reopened' ? item.reopen_reason : null;
   const subject = reason && !incident ? `${label}: ${item.title}` : item.title;
   const message = incident ? item.approved_body! : statusUpdate ? `The ticket status changed${item.previous_status ? ` from ${ticketStatuses[item.previous_status].label}` : ""} to ${statusLabel}. ${item.email_kind === "ticket_reopened" ? "Further work is needed. Open the ticket to review the next steps." : "Review the outcome in FixxFlow. If the issue continues, return to the ticket to follow up."}` : reason?.message ?? "There is an update waiting for you in FixxFlow.";
   const nextUpdate = incident && item.next_update_at ? ` Next update expected: ${new Intl.DateTimeFormat('en', {dateStyle:'medium',timeStyle:'short',timeZone:'UTC'}).format(new Date(item.next_update_at))} UTC.` : '';
@@ -70,8 +71,8 @@ export async function sendNotificationEmail(item: NotificationEmail, config: Not
       to: [item.recipient_email],
       reply_to: "support@fixxflow.app",
       subject: `FixxFlow: ${subject}`,
-      text: incident ? `${item.title}\n\n${message}\n\n${note}\n\nView approved update:\n${url}` : reason ? `${label}\n${item.title}\n\n${message}${details.length ? `\n\n${details.map(detail => `${detail.label}: ${detail.value}`).join("\n")}${reply ? `\n\nReply preview:\n${item.reply_preview}` : ""}` : ""}\n\n${action}:\n${url}\n\n${note}` : `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\nSign in to your account to view the conversation.`,
-      html: renderEmail({ title: reason && !incident ? label! : item.title, message: reason && !incident ? `${item.title}\n\n${message}` : message, action: incident ? "View approved update" : action ?? "View update", href: url, note, preserveLines: incident || Boolean(reason), siteUrl: base.origin, notificationLabel: statusUpdate ? "Ticket status update" : reply ? "New public reply" : reason && !incident ? "Workspace notification" : undefined, details, replyPreview: reply ? item.reply_preview! : undefined }),
+      text: incident ? `${item.title}\n\n${message}\n\n${note}\n\nView approved update:\n${url}` : reason ? `${label}\n${item.title}\n\n${message}${details.length ? `\n\n${details.map(detail => `${detail.label}: ${detail.value}`).join("\n")}${reply ? `\n\nReply preview:\n${item.reply_preview}` : ""}` : ""}${reopenReason ? `\n\nReason for reopening:\n${reopenReason}` : ""}\n\n${action}:\n${url}\n\n${note}` : `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\nSign in to your account to view the conversation.`,
+      html: renderEmail({ title: reason && !incident ? label! : item.title, message: reason && !incident ? `${item.title}\n\n${message}` : message, action: incident ? "View approved update" : action ?? "View update", href: url, note, preserveLines: incident || Boolean(reason), siteUrl: base.origin, notificationLabel: statusUpdate ? "Ticket status update" : reply ? "New public reply" : reason && !incident ? "Workspace notification" : undefined, details, reopenReason: reopenReason ?? undefined, replyPreview: reply ? item.reply_preview! : undefined }),
     }),
     signal: AbortSignal.timeout(8000),
   });

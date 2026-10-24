@@ -46,6 +46,7 @@ export type NotificationEmail = Omit<Functions['claim_notification_emails']['Ret
   status_changed_by?: string | null;
   ticket_owner?: string | null;
   event_created_at?: string | null;
+  reopen_reason?: string | null;
   next_update_at?: string | null;
 };
 type NullableArgs<Name extends keyof Functions, Keys extends keyof Functions[Name]['Args']> =
@@ -140,6 +141,7 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
         Args: { target: string | null; customer_name: string; customer_slug?: string | null; admin_email?: string | null; admin_name?: string | null; organization_timezone?: string };
       };
       finish_notification_email: NullableArgs<'finish_notification_email', 'provider_message_id' | 'failure'>;
+      reopen_ticket: { Args: { target: string; expected_revision: number; explanation: string; token: string }; Returns: number };
       claim_notification_emails: Omit<Functions['claim_notification_emails'], 'Returns'> & { Returns: NotificationEmail[] };
       custom_report: { Args: { target_organization_id: string; report_config: import('./database.generated').Json }; Returns: import('./database.generated').Json };
       enqueue_scheduled_report_deliveries: { Args: never; Returns: number };

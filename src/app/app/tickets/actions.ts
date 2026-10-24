@@ -148,16 +148,24 @@ export async function addTicketMessage(formData: FormData) {
   return { success: kind === "internal_note" ? "Internal note added · IT staff only." : "Public reply sent." };
 }
 
-export async function reopenTicket(formData: FormData) {
-  const viewer = await requireViewer();
-  const ticketId = String(formData.get("ticketId") ?? "");
+export async function reopenTicket(formData: FormData): Promise<import('@/lib/action-result').ActionResult> {
+  await requireViewer();
+  const ticketId = String(formData.get('ticketId') ?? '');
+  const reason = String(formData.get('reason') ?? '').trim();
+  const revision = Number(formData.get('revision'));
+  const token = String(formData.get('requestToken') ?? '');
+  if (!reason || reason.length > 2000) return { error: 'Explain what is still wrong (up to 2,000 characters).', fieldErrors: { reason: 'Enter a reason for reopening.' } };
+  if (!/^[0-9a-f-]{36}$/i.test(ticketId) || !/^[0-9a-f-]{36}$/i.test(token) || !Number.isSafeInteger(revision) || revision < 1) return { error: 'Refresh this ticket before trying to reopen it. Your explanation is preserved.' };
+  const db = await createClient();
+  const { error } = await db.rpc('reopen_ticket', { target: ticketId, expected_revision: revision, explanation: reason, token });
+  if (error) {
+    if (error.code === 'PT409') return { error: 'This ticket changed. Review its current status before reopening. Your explanation is preserved.' };
+    reportServerError('ticket.reopen', error);
+    return { error: 'The ticket could not be reopened. Your explanation is preserved; please try again.' };
+  }
   const path = `/app/tickets/${ticketId}`;
-  if (!/^[0-9a-f-]{36}$/i.test(ticketId)) fail("/app/tickets", "Choose a valid request.");
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("tickets").update({ status: "open" }).eq("organization_id", viewer.organizationId).eq("id", ticketId).eq("requester_id", viewer.id).in("status", ["resolved", "closed"]).select("id").maybeSingle();
-  if (error || !data) fail(path, "This request could not be reopened. Refresh and try again.");
-  revalidatePath(path); revalidatePath("/app/tickets"); revalidatePath("/app");
-  redirect(`${path}?success=Request reopened.`);
+  revalidatePath(path); revalidatePath('/app/tickets'); revalidatePath('/app'); revalidatePath('/app/notifications');
+  return { redirectTo: `${path}?success=${encodeURIComponent('Ticket reopened. IT has been notified.')}` };
 }
 
 export async function bulkUpdateTickets(formData: FormData) {

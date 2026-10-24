@@ -37,9 +37,11 @@ export function activityDetail(row: Activity, names: ReadonlyMap<string, string>
 export function ActivityTimeline({ items, names }: { items: Activity[]; names: ReadonlyMap<string, string> }) {
   return <ol className="ticket-activity-list" role="list" aria-label="Ticket activity, newest first">{items.map(item => {
     const detail = activityDetail(item, names);
+    const data = record(item.details);
+    const reopenReason = item.action === 'status_changed' && data.to === 'open' && ['resolved','closed'].includes(String(data.from)) && typeof data.reason === 'string' ? data.reason : null;
     return <li className="ticket-activity-item" key={item.id}>
       <span className="ticket-activity-marker" aria-hidden="true" />
-      <div className="ticket-activity-content"><p><strong>{activityAuthorName(item.actor_id, item.details, names)}</strong> {activityLabels[item.action] ?? item.action.replaceAll('_', ' ')}</p>{detail && <p className="ticket-activity-detail">{detail}</p>}</div>
+      <div className="ticket-activity-content"><p><strong>{activityAuthorName(item.actor_id, item.details, names)}</strong> {reopenReason ? 'reopened the ticket' : activityLabels[item.action] ?? item.action.replaceAll('_', ' ')}</p>{detail && <p className="ticket-activity-detail">{detail}</p>}{reopenReason && <p className="ticket-activity-reason"><strong>Reason:</strong> {reopenReason}</p>}</div>
       <time dateTime={item.created_at}><Timestamp value={item.created_at} /></time>
     </li>;
   })}</ol>;

@@ -29,3 +29,12 @@ test('shared activity rows keep semantic list order, timestamps and escaped cont
  assert.equal((html.match(/class="ticket-activity-item"/g)??[]).length,2);
  assert.doesNotMatch(html,/management-list/);
 });
+
+test('employee reopening history identifies the action and shows the recorded reason safely',()=>{
+ const html=renderToStaticMarkup(React.createElement(ActivityTimeline,{items:[event('status_changed',{from:'closed',to:'open',reason:'Still broken <script>bad</script>'})],names}));
+ assert.match(html,/reopened the ticket/);
+ assert.match(html,/Closed → Open/);
+ assert.match(html,/Reason:/);
+ assert.match(html,/Still broken &lt;script&gt;bad&lt;\/script&gt;/);
+ assert.doesNotMatch(html,/<script>/);
+});

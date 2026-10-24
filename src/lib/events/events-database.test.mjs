@@ -106,7 +106,7 @@ test('Stage 3 database capture and durable delivery', async t => {
       const created = await ticket(db, { status: 'resolved' });
       await identity(db, ids.employee);
       await expectError(db, "update public.tickets set status='open',title='Forged subject' where id=$1", [created.id], 'P0001');
-      await db.query("update public.tickets set status='open' where id=$1", [created.id]);
+      await db.query("select public.reopen_ticket($1,$2,'The issue is still happening.',gen_random_uuid())", [created.id,created.revision]);
       const current = (await db.query('select revision,resolved_at from public.tickets where id=$1', [created.id])).rows[0];
       assert.equal(current.revision, 2); assert.equal(current.resolved_at, null);
       assert.deepEqual(types((await events(db, created.id)).filter(event => event.entityVersion === 2)), ['ticket.status_changed']);
@@ -263,7 +263,7 @@ test('Stage 3 database capture and durable delivery', async t => {
     await t.test('unchanged employee reopening pgTAP suite', async () => {
       const result = await db.exec(await readFile('supabase/tests/database/employee_reopen.test.sql', 'utf8'));
       const output = result.flatMap(item => item.rows.flatMap(row => Object.values(row))).filter(value => typeof value === 'string');
-      assert.ok(output.includes('1..4')); assert.equal(output.filter(line => /^ok \d+/.test(line)).length, 4);
+      assert.ok(output.includes('1..5')); assert.equal(output.filter(line => /^ok \d+/.test(line)).length, 5);
       assert.equal(output.some(line => /not ok|Bail out!|Looks like you/.test(line)), false, output.join('\n'));
     });
   } finally { await db.close(); }

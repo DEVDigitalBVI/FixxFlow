@@ -2730,3 +2730,9 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
   .ticket-activity-item { grid-template-columns: 8px minmax(0, 1fr); gap: 4px 12px; }
   .ticket-activity-item time { grid-column: 2; text-align: left; }
 }
+
+.ticket-reopen-disclosure > summary { width: fit-content; min-height: 44px; cursor: pointer; }
+.ticket-reopen-disclosure[open] > summary { margin-bottom: 16px; }
+.ticket-reopen-disclosure .field p { margin: 0; }
+.ticket-activity-content .ticket-activity-reason { margin-top: 8px; white-space: pre-wrap; }
+@media (max-width: 767px) { .ticket-reopen-disclosure > summary { width: 100%; } }

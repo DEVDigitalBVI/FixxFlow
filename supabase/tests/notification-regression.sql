@@ -37,7 +37,7 @@ select pg_temp.check_notification((select count(*)=0 from public.claim_notificat
 select pg_temp.check_notification(not public.finish_notification_email((select notification_id from claimed limit 1),gen_random_uuid(),'fake',null),'incorrect lease cannot acknowledge');
 select public.finish_notification_email(notification_id,lease_token,'mock-provider-id',null) from claimed;
 select pg_temp.check_notification((select count(*)=3 from private.notification_email_outbox where status='sent'),'delivery acknowledgement');
-update public.tickets set status='open' where id='30000000-0000-0000-0000-000000000061';
+select public.reopen_ticket('30000000-0000-0000-0000-000000000061',(select revision from public.tickets where id='30000000-0000-0000-0000-000000000061'),'The issue returned.',gen_random_uuid());
 select pg_temp.check_notification((select count(*)=1 from public.notifications where kind='ticket_reopened'),'reopen suppresses actor notification');
 select set_config('request.jwt.claims','{}',true);
 update public.tickets set assigned_technician_id=null where id='30000000-0000-0000-0000-000000000061';

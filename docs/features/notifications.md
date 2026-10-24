@@ -131,3 +131,5 @@ hosted **Invite user** template from `supabase/templates/invite-user.html`.
 
 
 Status outcome emails (resolved, closed, reopened) include the previous and new status, person making the change, change time in UTC, owner and priority captured with the transition. Missing legacy details remain omitted. Generic updates are not used for these events.
+
+Employees can reopen their own resolved or closed tickets with the **Reopen ticket** action near the top of the ticket page. A required explanation (up to 2,000 characters) is saved atomically with the Open transition and activity event. The current owner and team are retained. The active assigned technician receives the reopening alert; if there is no active assignee, active IT staff receive the alert for triage. Reopening email includes the reason, transition, actor and priority. Retries use the same receipt to prevent duplicate reopens or emails. Staff status controls remain separate. Existing SLA deadlines resume rather than granting a new window.

@@ -516,3 +516,7 @@ Do not use pink or rose tints for brand, selection, chat bubbles, or errors. Lig
 ### Activity history readability
 
 Recent and full ticket activity share a semantic chronological list without visible numbering. Use compact separated rows, a clear actor/action line, recorded before-and-after status, priority or assignment details, and quieter timestamps. Place time alongside the event on wide screens and below it on compact screens. Use existing text and border tokens in both themes; retain machine-readable times and the user's timezone. Do not invent missing historical details or show raw record identifiers.
+
+### Employee reopening
+
+On the employee's own resolved or closed ticket, show a prominent Reopen ticket disclosure near the top, before the description and conversation. It opens a required explanation field and a Reopen ticket submit action. Preserve the explanation on errors and keep its revision and retry key stable across background refreshes. Reopening returns the same ticket to Open, preserves ownership and conversation history, and records the explanation for IT and the reopening email. This employee action is separate from staff status controls.
