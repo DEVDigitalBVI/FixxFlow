@@ -39,7 +39,7 @@ function setup(role, parent = { data: { id: 'parent', requester_id: 'viewer' }, 
   let signed = 0;
   const query = table => {
     const builder = new Proxy({}, { get: (_, key) => {
-      if (key === 'then') return resolve => Promise.resolve({ data: table === 'profiles' ? [{ user_id: 'author', display_name: 'Support' }] : rows.slice(0, 51), error: null }).then(resolve);
+      if (key === 'then') return resolve => Promise.resolve({ data: table === 'profiles' ? [{ user_id: 'author', display_name: 'Support' }] : table === 'ticket_activity' ? rows.slice(0,51).map(row=>({...row,actor_id:'author',action:'status_changed',details:{from:'open',to:'in_progress'}})) : rows.slice(0, 51), error: null }).then(resolve);
       if (key === 'maybeSingle') return async () => parent;
       return (...args) => { calls.push([table, key, ...args]); return builder; };
     } });
@@ -91,4 +91,15 @@ test('employee inventory managers can read linked inventory history without inte
   assert.doesNotMatch(html, />Activity</);
   await assert.rejects(setup('end_user', {data:{requester_id:'other',request_kind:'support'},error:null}, true).render(), /NOT_FOUND/);
   await assert.rejects(setup('end_user', {data:{requester_id:'other',request_kind:'inventory'},error:null}, false).render(), /NOT_FOUND/);
+});
+
+
+test('full activity archive reuses readable activity rows and retains pagination',async()=>{
+ const html=renderToStaticMarkup(await setup('technician').render({view:'activity'}));
+ assert.match(html,/aria-label="Ticket activity, newest first"/);
+ assert.match(html,/Open → In progress/);
+ assert.match(html,/Support/);
+ assert.match(html,/Earlier activity/);
+ assert.equal((html.match(/class="ticket-activity-item"/g)??[]).length,50);
+ assert.doesNotMatch(html,/management-list/);
 });

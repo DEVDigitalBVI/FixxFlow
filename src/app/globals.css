@@ -330,7 +330,7 @@ img { display: block; max-width: 100%; }
 .conversation { display: grid; gap: 12px; margin-bottom: 18px; }.message { padding: 14px 16px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface-subtle); }.message-note { border-inline-start: 4px solid var(--color-note-border); background: var(--color-note-surface); }.message header { display: flex; justify-content: space-between; gap: 12px; }.message header span { color: var(--color-text-muted); font-size: 12px; }.message p { margin: 8px 0 0; white-space: pre-wrap; }.message-form { display: grid; gap: 10px; }.message-form .button { justify-self: end; }
 .ticket-update { display: grid; gap: 13px; }.ticket-update label { display: grid; gap: 6px; font-weight: 600; }.ticket-facts dl { margin: 0; display: grid; gap: 13px; }.ticket-facts dl div { display: flex; justify-content: space-between; gap: 12px; }.ticket-facts dt { color: var(--color-text-muted); }.ticket-facts dd { margin: 0; text-align: right; }
 .attachment-upload { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }.attachment-upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }.attachment-upload span { color: var(--color-text-muted); font-size: 12px; }.attachment-list { display: grid; border-top: 1px solid var(--color-border); }.attachment-list a { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--color-border); text-decoration: none; }.attachment-list span { color: var(--color-text-muted); font-size: 12px; }
-.activity { display: grid; }.activity > div { display: grid; grid-template-columns: 10px 1fr; gap: 9px; position: relative; padding-bottom: 15px; }.activity > div:not(:last-child)::before { content: ""; position: absolute; left: 4px; top: 10px; bottom: 0; width: 1px; background: var(--color-border); }.activity-dot { width: 9px; height: 9px; margin-top: 5px; border-radius: 50%; background: var(--color-accent); position: relative; z-index: 1; }.activity p { margin: 0; font-size: 13px; }.activity time { display: block; color: var(--color-text-muted); font-size: 11px; }
+
 
 @media (max-width: 1199px) {
   .app-shell { grid-template-columns: 72px minmax(0, 1fr); }
@@ -2715,3 +2715,18 @@ details.settings-card[open] > summary { margin-bottom: 16px; }
 .inventory-receipt-fields { min-width: 0; border: 0; margin: 0; padding: 0; }
 .inventory-receipt-fields[hidden] { display: none; }
 .inventory-receipt-fields legend { padding: 0; font-weight: 600; margin-bottom: 12px; }
+
+/* Shared activity history: compact rows, readable changes, no visible numbering. */
+.ticket-activity-list { list-style: none; margin: 0; padding: 0; }
+.ticket-activity-item { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; align-items: start; gap: 8px 12px; padding-block: 16px; }
+.ticket-activity-item + .ticket-activity-item { border-top: 1px solid var(--color-border); }
+.ticket-activity-marker { width: 8px; height: 8px; margin-top: 6px; border-radius: 50%; background: var(--color-text-muted); }
+.ticket-activity-content { min-width: 0; }
+.ticket-activity-content p { margin: 0; font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
+.ticket-activity-content strong { font-weight: 600; }
+.ticket-activity-content .ticket-activity-detail { margin-top: 4px; color: var(--color-text-muted); }
+.ticket-activity-item time { color: var(--color-text-muted); font-size: 13px; line-height: 22px; text-align: right; }
+@media (max-width: 767px) {
+  .ticket-activity-item { grid-template-columns: 8px minmax(0, 1fr); gap: 4px 12px; }
+  .ticket-activity-item time { grid-column: 2; text-align: left; }
+}

@@ -9,7 +9,7 @@ import { InventoryRequestPanel } from '@/features/inventory/request-panel';
 import { inventoryAccess } from '@/features/inventory/access';
 import { TicketAssignmentEditor } from "@/features/tickets/ticket-details-form";
 import { profileLabels } from "@/features/lookups/labels";
-import { activityAuthorName } from '@/features/tickets/authorship';
+import { ActivityTimeline, activityProfileIds } from './activity-timeline';
 import { SlaPolicy } from "@/features/tickets/sla-policy-table";
 import { HISTORY_PAGE_SIZE, recentMessages } from "@/features/conversations/history";
 import { TicketAssets } from '@/features/assets/ticket-assets';
@@ -20,7 +20,7 @@ import { SlaClock, SlaIndicator } from "@/features/tickets/sla-indicator";
 import { notFound } from "next/navigation";
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
-import { activityLabels, ticketPriorities, ticketStatuses } from "@/features/tickets/presentation";
+import { ticketPriorities, ticketStatuses } from "@/features/tickets/presentation";
 import { AttachmentUpload } from "@/features/tickets/attachment-upload";
 import { ConversationRefresh } from "@/features/tickets/conversation-refresh";
 import { ConversationTimeline } from "@/features/tickets/conversation-timeline";
@@ -53,7 +53,7 @@ export async function TicketDetail({ ticketId, message = {}, embedded = false }:
     supabase.from("ticket_messages").select("id, author_id, author_type, automation_name, kind, body, created_at").eq("organization_id", viewer.organizationId).eq("ticket_id", ticketId).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(HISTORY_PAGE_SIZE), supabase.from("ticket_attachments").select("id, file_name, storage_path, size_bytes, created_at").eq("organization_id", viewer.organizationId).eq("ticket_id", ticketId).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(HISTORY_PAGE_SIZE), supabase.from("ticket_activity").select("id, actor_id, action, details, created_at").eq("organization_id", viewer.organizationId).eq("ticket_id", ticketId).order("created_at", { ascending: false }).order("id", { ascending: false }).limit(HISTORY_PAGE_SIZE),
     supabase.from("ticket_workflows").select("ticket_id").eq("organization_id",viewer.organizationId).eq("ticket_id",ticketId).maybeSingle(),
   ]);
-  const profiles = await profileLabels(supabase, viewer.organizationId, [ticket.requester_id, ...(ticket.assigned_technician_id ? [ticket.assigned_technician_id] : []), ...(messagesR.data ?? []).map(row => row.author_id), ...(activityR.data ?? []).map(row => row.actor_id)]);
+  const profiles = await profileLabels(supabase, viewer.organizationId, [ticket.requester_id, ...(ticket.assigned_technician_id ? [ticket.assigned_technician_id] : []), ...(messagesR.data ?? []).map(row => row.author_id), ...activityProfileIds(activityR.data ?? [])]);
   const names = new Map(profiles.map(p => [p.user_id, p.display_name]));
   const paths = attachmentsR.data?.map(a => a.storage_path) ?? []; const { data: signed } = paths.length ? await supabase.storage.from("ticket-attachments").createSignedUrls(paths, 3600) : { data: [] }; const urls = new Map((signed ?? []).map(v => [v.path, v.signedUrl ?? undefined]));
   const activeWorkflow = ticket.ticket_type === 'incident' || Boolean(workflowR.data) || Boolean(workflowR.error);
@@ -65,7 +65,7 @@ export async function TicketDetail({ ticketId, message = {}, embedded = false }:
       conversation={<><section className="settings-card"><div className="section-heading-row"><h3>Conversation</h3><Link className="button button-quiet" aria-label="View conversation history in a new tab" href={`/app/tickets/${ticket.id}/history`} target="_blank" rel="noopener noreferrer">View history</Link></div>{viewer.usageSharing && <UsageEvent key={ticketId} event="ticket_viewed" surface="tickets" targetId={ticketId}/>}<ConversationRefresh/><ConversationTimeline messages={recentMessages(messagesR.data ?? [])} names={names} viewerId={viewer.id} requesterId={ticket.requester_id} staff error={!!messagesR.error}/><MessageComposer key={ticket.id} ticketId={ticket.id} action={addTicketMessage}/></section><LinkedChatHistory ticketId={ticket.id} organizationId={viewer.organizationId} viewerId={viewer.id}/></>}
       resolution={<><TicketWorkActions ticket={ticket} stage="resolution" assignee={ticket.assigned_technician_id ? names.get(ticket.assigned_technician_id) ?? 'Assigned staff member' : 'Unassigned'}/><section className="settings-card"><h3>Service levels</h3><SlaClock initialNow={new Date().getTime()}><SlaIndicator ticket={ticket}/></SlaClock><p className="muted">Calendar hours · Includes nights and weekends. Waiting and on-hold time counts.</p><details><summary>SLA targets</summary><SlaPolicy/><p className="muted">Priority changes adjust unfinished targets from creation. Reopening resumes the original resolution deadline.</p></details></section></>}
       tools={coordination}
-      history={<section className="settings-card activity"><h3>Recent activity</h3><Link className="button button-secondary" href={`/app/tickets/${ticket.id}/history?view=activity`}>Browse all activity</Link>{activityR.error && <p role="alert">Activity could not load. <RetryButton/></p>}{!activityR.error && !activityR.data?.length && <p className="muted">No activity recorded yet.</p>}{activityR.data?.map(a => <div key={a.id}><span className="activity-dot"/><p><strong>{activityAuthorName(a.actor_id, a.details, names)}</strong> {activityLabels[a.action] ?? a.action.replaceAll("_", " ")}{a.action === "automatically_routed" && a.details && typeof a.details === "object" && !Array.isArray(a.details) && typeof a.details.team_name === "string" ? `: ${a.details.team_name}` : ""}<time><Timestamp value={a.created_at}/></time></p></div>)}</section>}
+      history={<section className="settings-card activity"><h3>Recent activity</h3><Link className="button button-secondary" href={`/app/tickets/${ticket.id}/history?view=activity`}>Browse all activity</Link>{activityR.error && <p role="alert">Activity could not load. <RetryButton/></p>}{!activityR.error && !activityR.data?.length && <p className="muted">No activity recorded yet.</p>}{Boolean(activityR.data?.length) && <ActivityTimeline items={activityR.data ?? []} names={names}/>}</section>}
     />
   </div>;
 }

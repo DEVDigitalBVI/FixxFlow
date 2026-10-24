@@ -482,7 +482,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 - Every staff ticket uses a guided wizard: Review request, Assign & start, Coordinate, Respond, Resolve, Activity history. Omit Coordinate for tickets that do not offer coordination tools. Each step explains its purpose and provides labeled Back/Next controls. Navigation never changes ticket state; explicit save/actions do. Keep the employee portal unchanged.
 - Keep all step panels mounted so navigation preserves drafts. Expose only the current panel, mark the current step in text/ARIA, and move keyboard focus to its heading after explicit navigation. Step links are directly accessible; URL fragments retain the chosen step. Existing work resumes at the relevant step without forcing a reply or unnecessary reassignment.
-- Offer explicit Assign to me, Start work and Mark resolved actions plus all existing statuses. Mutations change only named fields and reject stale revisions; taking a ticket never replaces another worker. Keep assignment/priority easy to find and classification/deadlines in a native disclosure.
+- Offer explicit Assign to me and Start work actions. Use the Status dropdown and Save status for every status change, including resolution; do not duplicate it with a Mark resolved button. Mutations change only named fields and reject stale revisions; taking a ticket never replaces another worker. Keep assignment/priority easy to find and classification/deadlines in a native disclosure.
 - Coordination and activity history are wizard steps, not disclosures below the flow. Coordinate explains active work when present and clearly marks coordination as optional for routine tickets. Show recent activity directly within its step and retain the full-history link. All steps remain directly accessible from the numbered navigation.
 - Ticket replies start addressed to the requester, with a visible audience and explicit send label. Internal notes require an explicit audience choice and retain their own draft and staff-only labels. Reuse shared forms, tokens and failure recovery. The wizard is an intentional update to the earlier detail-page ordering: the request, work actions and conversation now have their own focused steps.
 
@@ -512,3 +512,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Palette fidelity
 
 Do not use pink or rose tints for brand, selection, chat bubbles, or errors. Light selections use cool neutral surfaces; dark selections use elevated gunmetal. Dark-mode links and focus use palette amber for contrast. The navigation wordmark uses exact American red `#BD212C` in both themes, independently of functional link colors. Error labels use red in light mode and off-white on neutral dark surfaces, with explicit error text and icons.
+
+### Activity history readability
+
+Recent and full ticket activity share a semantic chronological list without visible numbering. Use compact separated rows, a clear actor/action line, recorded before-and-after status, priority or assignment details, and quieter timestamps. Place time alongside the event on wide screens and below it on compact screens. Use existing text and border tokens in both themes; retain machine-readable times and the user's timezone. Do not invent missing historical details or show raw record identifiers.

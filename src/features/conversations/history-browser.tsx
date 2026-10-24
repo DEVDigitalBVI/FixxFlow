@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
-import { activityLabels } from '@/features/tickets/presentation';
-import { activityAuthorName, messageAuthorName, type MessageAuthor } from '@/features/tickets/authorship';
+import { ActivityTimeline, activityProfileIds } from '@/features/tickets/activity-timeline';
+import { messageAuthorName, type MessageAuthor } from '@/features/tickets/authorship';
 import { HISTORY_PAGE_SIZE, historyFilter, historyPage } from './history';
 import { PageHeader } from '@/components/ui/page-header';
 
@@ -62,11 +62,8 @@ export async function HistoryBrowser({ kind, id, filters }: {
     if (error) throw new Error('Activity could not be loaded. Please try again.');
     const page = historyPage(data ?? []);
     older = page.older;
-    const names = await authorNames(page.items.flatMap(row => row.actor_id ? [row.actor_id] : []));
-    content = page.items.length ? <ol className="management-list">{page.items.map(row => <li key={row.id}>
-      <strong>{activityAuthorName(row.actor_id, row.details, names)}</strong> {activityLabels[row.action] ?? row.action.replaceAll('_', ' ')}
-      <p><time dateTime={row.created_at}><Timestamp value={row.created_at}/></time></p>
-    </li>)}</ol> : <p>No activity in this part of the history.</p>;
+    const names = await authorNames(activityProfileIds(page.items));
+    content = page.items.length ? <ActivityTimeline items={page.items} names={names}/> : <p>No activity in this part of the history.</p>;
   } else {
     const source = kind === 'ticket'
       ? db.from('ticket_messages').select('id, author_id, author_type, automation_name, kind, body, created_at').eq('ticket_id', id)

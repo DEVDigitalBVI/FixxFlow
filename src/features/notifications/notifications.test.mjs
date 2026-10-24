@@ -209,3 +209,54 @@ test('ticket email subject and both bodies include the number and escaped ticket
  assert.match(body.html,/Ticket #1004 created — Printer &lt;offline&gt; &amp; scanner/);
  assert.doesNotMatch(body.html,/<offline>/);
 });
+
+test('creation and assignment emails explain their different reasons at a glance',async()=>{
+ const bodies={};
+ for(const kind of ['ticket_created','ticket_assigned','ticket_reassigned','user_replied']) {
+  await sendNotificationEmail({...item,email_kind:kind,title:'Ticket #1006 — Printer · Priority: High'},config,async(_url,options)=>{
+   bodies[kind]=JSON.parse(options.body);return Response.json({id:'delivery'});
+  });
+ }
+ assert.match(bodies.ticket_created.subject,/New ticket received:/);
+ assert.match(bodies.ticket_created.html,/<h1[^>]*>New ticket received<\/h1>/);
+ assert.match(bodies.ticket_created.html,/Review new ticket/);
+ assert.match(bodies.ticket_assigned.subject,/Assigned to you:/);
+ assert.match(bodies.ticket_assigned.html,/<h1[^>]*>Assigned to you<\/h1>/);
+ assert.match(bodies.ticket_assigned.html,/You are now responsible for this ticket/);
+ assert.match(bodies.ticket_assigned.html,/Open assigned ticket/);
+ assert.match(bodies.ticket_reassigned.text,/assignment changed/);
+ assert.match(bodies.user_replied.text,/requester has added a reply/);
+ for(const body of Object.values(bodies)) {
+  for(const field of ['text','html'])assert.match(body[field],/Priority: High/);
+  assert.doesNotMatch(body.html,/There is an update waiting/);
+ }
+});
+
+test('public reply emails show sender, time, status, priority and escaped preview in both formats',async()=>{
+ const reply={...item,email_kind:'ticket_response',reply_author:'Alex & Team',reply_preview:'Printer is ready.\n<script>alert(1)</script>',reply_created_at:'2026-10-24T00:00:00Z',ticket_status:'in_progress',ticket_priority:'high'};
+ await sendNotificationEmail(reply,config,async(_url,options)=>{
+  const body=JSON.parse(options.body);
+  assert.match(body.subject,/Alex & Team replied/);
+  assert.match(body.html,/<h1[^>]*>Alex &amp; Team replied<\/h1>/);
+  assert.match(body.html,/Reply preview/);
+  assert.match(body.html,/&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
+  assert.doesNotMatch(body.html,/<script>/);
+  for(const format of ['html','text'])for(const value of ['In progress','High','UTC','Printer is ready.','Read reply and respond'])assert.ok(body[format].includes(value),`${format}: ${value}`);
+  assert.match(body.html,/Reply in FixxFlow/);
+  return Response.json({id:'reply-preview'});
+ });
+});
+
+test('status emails show the outcome and transition details instead of a generic update',async()=>{
+ for(const [kind,status,heading] of [['ticket_resolved','resolved','Ticket resolved'],['ticket_resolved','closed','Ticket closed'],['ticket_reopened','open','Ticket reopened']]) {
+  const statusMail={...item,email_kind:kind,ticket_status:status,previous_status:'in_progress',status_changed_by:'Alex Support',ticket_owner:'Taylor Owner',ticket_priority:'high',event_created_at:'2026-10-24T00:00:00Z'};
+  await sendNotificationEmail(statusMail,config,async(_url,options)=>{
+   const body=JSON.parse(options.body);
+   assert.ok(body.subject.includes(heading));
+   assert.ok(body.html.includes(`>${heading}</h1>`));
+   for(const field of ['html','text'])for(const value of ['In progress','Alex Support','Taylor Owner','High','UTC'])assert.ok(body[field].includes(value),`${field}: ${value}`);
+   assert.doesNotMatch(body.html,/There is an update waiting|Reply preview/);
+   return Response.json({id:'outcome'});
+  });
+ }
+});

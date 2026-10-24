@@ -36,6 +36,16 @@ export type NotificationEmail = Omit<Functions['claim_notification_emails']['Ret
   conversation_id: string | null;
   incident_bulletin_id?: string | null;
   approved_body?: string | null;
+  email_kind?: NotificationKind | null;
+  reply_author?: string | null;
+  reply_preview?: string | null;
+  reply_created_at?: string | null;
+  ticket_status?: TicketStatus | null;
+  ticket_priority?: TicketPriority | null;
+  previous_status?: TicketStatus | null;
+  status_changed_by?: string | null;
+  ticket_owner?: string | null;
+  event_created_at?: string | null;
   next_update_at?: string | null;
 };
 type NullableArgs<Name extends keyof Functions, Keys extends keyof Functions[Name]['Args']> =

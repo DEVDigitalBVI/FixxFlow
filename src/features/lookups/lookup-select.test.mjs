@@ -109,3 +109,22 @@ test('adaptive dropdown failures offer retry and focus the select when search is
   assert.equal(ui.all(n=>n.type==='button').length,0);
  } finally {ui.close();globalThis.fetch=old;}
 });
+
+test('loaded dropdowns omit choice counts across resources and display modes', async () => {
+ const old = globalThis.fetch;
+ globalThis.fetch = async () => Response.json({rows:[choice('first'),choice('second')],selected:null,next:null});
+ try {
+  for (const resource of ['categories','locations','people']) for (const compact of [false,true]) {
+   const ui = componentHarness('src/features/lookups/lookup-select.tsx','LookupSelect',{resource,name:'selection',label:'Selection',searchable:false,compact});
+   try {
+    assert.equal(ui.find(n=>n.props.role==='status').props.children,'Loading choices…');
+    await pause(20);ui.render();
+    const status=ui.find(n=>n.props.role==='status');
+    assert.equal(status.props.children,'');
+    assert.equal(status.props.className,'sr-only');
+    assert.ok(ui.find(n=>n.type==='select').props['aria-describedby'].includes(status.props.id));
+    assert.equal(ui.all(n=>n.type==='option').length,3);
+   } finally {ui.close();}
+  }
+ } finally {globalThis.fetch=old;}
+});

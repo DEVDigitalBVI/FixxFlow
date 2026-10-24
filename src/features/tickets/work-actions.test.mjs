@@ -8,7 +8,7 @@ const initial={id:'ticket',revision:1,status:'open',assigned_technician_id:null}
 const mocks={'next/navigation':{useRouter:()=>({refresh(){}})},'@/app/app/tickets/actions':{workTicket:async()=>({success:'Saved',revision:2})},'@/components/ui/action-form':{ActionForm:({children})=>React.createElement('form',null,children)},'@/components/ui/submit-button':{SubmitButton:({children})=>React.createElement('button',null,children)}};
 test('staff work controls show actions appropriate to unassigned, working and resolved tickets',()=>{
  const {TicketWorkActions}=load('src/features/tickets/work-actions.tsx',mocks);
- for(const [ticket,present,absent]of [[initial,['Assign to me','Save status'],['Start work','Mark resolved']],[{...initial,assigned_technician_id:'worker'},['Start work','Mark resolved'],['Assign to me']],[{...initial,status:'in_progress',assigned_technician_id:'worker'},['Mark resolved'],['Start work']],[{...initial,status:'resolved'},['reopen this ticket','Save status'],['Assign to me','Start work','Mark resolved']]]){
+ for(const [ticket,present,absent]of [[initial,['Assign to me','Save status'],['Start work','Mark resolved']],[{...initial,assigned_technician_id:'worker'},['Start work','Save status'],['Assign to me','Mark resolved']],[{...initial,status:'in_progress',assigned_technician_id:'worker'},['Save status'],['Start work','Mark resolved']],[{...initial,status:'resolved'},['reopen this ticket','Save status'],['Assign to me','Start work','Mark resolved']]]){
   const html=renderToStaticMarkup(React.createElement(TicketWorkActions,{ticket,assignee:'Unassigned'}));
   for(const text of present)assert.ok(html.includes(text),text);for(const text of absent)assert.ok(!html.includes(text),text);
   assert.match(html,/href="#ticket-conversation"/);assert.match(html,/<label>Status<select/);
@@ -48,9 +48,11 @@ test('first status choice survives assignment and start revisions and is retaine
 
 test('Resolve provides an explicit save for every status and submits the selected draft',async()=>{
  const calls=[];
- const h=componentHarness('src/features/tickets/work-actions.tsx','TicketWorkActions',{ticket:initial,assignee:'Unassigned',stage:'resolution'},{...mocks,'@/app/app/tickets/actions':{workTicket:async data=>{calls.push(data);return {error:'Try again'};}}});
+ const h=componentHarness('src/features/tickets/work-actions.tsx','TicketWorkActions',{ticket:{...initial,assigned_technician_id:'worker'},assignee:'Worker',stage:'resolution'},{...mocks,'@/app/app/tickets/actions':{workTicket:async data=>{calls.push(data);return {error:'Try again'};}}});
  try{
   const {ticketStatuses}=load('src/features/tickets/presentation.ts');
+  assert.equal(h.all(n=>n.props.children==='Mark resolved').length,0);
+  assert.equal(h.all(n=>n.props.name==='status').length,1);
   assert.equal(h.find(n=>n.props.children==='Save status').props.className,'button button-primary');
   for(const status of Object.keys(ticketStatuses)){
    h.find(n=>n.type==='select').props.onChange({target:{value:status}});h.render();
