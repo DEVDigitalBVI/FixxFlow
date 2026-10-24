@@ -35,6 +35,9 @@ export async function sendNotificationEmail(item: NotificationEmail, config: Not
   const label = statusUpdate ? item.ticket_status === 'closed' ? 'Ticket closed' : reason?.label : reply && item.reply_author ? `${item.reply_author} replied` : reason?.label;
   const action = reply ? 'Read reply and respond' : reason?.action;
   const details: { label: string; value: string }[] = [];
+  if (!incident && ['ticket_created', 'ticket_assigned', 'ticket_reassigned'].includes(item.email_kind ?? '') && item.ticket_priority) {
+    details.push({ label: 'Priority', value: ticketPriorities[item.ticket_priority].label });
+  }
   if (reply) {
     if (item.reply_author) details.push({ label: 'From', value: item.reply_author });
     if (item.reply_created_at) details.push({ label: 'Replied at', value: `${new Intl.DateTimeFormat('en', {dateStyle:'medium',timeStyle:'short',timeZone:'UTC'}).format(new Date(item.reply_created_at))} UTC` });
@@ -67,7 +70,7 @@ export async function sendNotificationEmail(item: NotificationEmail, config: Not
       to: [item.recipient_email],
       reply_to: "support@fixxflow.app",
       subject: `FixxFlow: ${subject}`,
-      text: incident ? `${item.title}\n\n${message}\n\n${note}\n\nView approved update:\n${url}` : reason ? `${label}\n${item.title}\n\n${message}${(reply || statusUpdate) ? `\n\n${details.map(detail => `${detail.label}: ${detail.value}`).join("\n")}${reply ? `\n\nReply preview:\n${item.reply_preview}` : ""}` : ""}\n\n${action}:\n${url}\n\n${note}` : `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\nSign in to your account to view the conversation.`,
+      text: incident ? `${item.title}\n\n${message}\n\n${note}\n\nView approved update:\n${url}` : reason ? `${label}\n${item.title}\n\n${message}${details.length ? `\n\n${details.map(detail => `${detail.label}: ${detail.value}`).join("\n")}${reply ? `\n\nReply preview:\n${item.reply_preview}` : ""}` : ""}\n\n${action}:\n${url}\n\n${note}` : `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\nSign in to your account to view the conversation.`,
       html: renderEmail({ title: reason && !incident ? label! : item.title, message: reason && !incident ? `${item.title}\n\n${message}` : message, action: incident ? "View approved update" : action ?? "View update", href: url, note, preserveLines: incident || Boolean(reason), siteUrl: base.origin, notificationLabel: statusUpdate ? "Ticket status update" : reply ? "New public reply" : reason && !incident ? "Workspace notification" : undefined, details, replyPreview: reply ? item.reply_preview! : undefined }),
     }),
     signal: AbortSignal.timeout(8000),

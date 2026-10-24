@@ -260,3 +260,15 @@ test('status emails show the outcome and transition details instead of a generic
   });
  }
 });
+
+test('intake and ownership emails render a dedicated priority field in both bodies without relying on the subject',async()=>{
+ for(const kind of ['ticket_created','ticket_assigned','ticket_reassigned'])for(const [priority,label] of [['low','Low'],['normal','Normal'],['high','High'],['critical','Critical']]) {
+  await sendNotificationEmail({...item,email_kind:kind,title:'Ticket #1007 — Printer issue',ticket_priority:priority},config,async(_url,options)=>{
+   const body=JSON.parse(options.body);
+   assert.doesNotMatch(body.subject,/Priority/);
+   assert.match(body.text,new RegExp(`\\nPriority: ${label}\\n`));
+   assert.match(body.html,new RegExp(`<th[^>]*scope="row"[^>]*>Priority</th><td[^>]*>${label}</td>`));
+   return Response.json({id:'intake-body-priority'});
+  });
+ }
+});
