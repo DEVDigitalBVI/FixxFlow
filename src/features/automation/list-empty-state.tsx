@@ -51,7 +51,7 @@ export function AutomationListEmptyState({
       <section className="automation-workflow-example" aria-labelledby="automation-example-heading">
         <header>
           <span className="badge badge-inactive">Example workflow</span>
-          <h3 id="automation-example-heading">A head start on critical tickets</h3>
+          <h3 id="automation-example-heading">A head start on urgent tickets</h3>
         </header>
         <ol>
           <li>
@@ -69,7 +69,7 @@ export function AutomationListEmptyState({
             </span>
             <div>
               <strong>If</strong>
-              <span>Priority is Critical</span>
+              <span>Priority is Urgent</span>
             </div>
           </li>
           <li>

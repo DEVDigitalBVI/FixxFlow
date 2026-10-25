@@ -118,7 +118,7 @@ test('gallery uses keyboard-native controls; selection and scratch open ordinary
     let builder = h.find(
       (n) => typeof n.type === 'function' && n.type.name === 'AutomationBuilder',
     );
-    assert.equal(builder.props.draft.name, 'Critical Ticket Assignment');
+    assert.equal(builder.props.draft.name, 'Urgent Ticket Assignment');
     assert.equal(builder.props.draft.actions[0].configuration.teamId, '');
     assert.equal(builder.props.focusOnMount, true);
     builder.props.onChooseTemplate();
@@ -151,7 +151,7 @@ test('gallery preview explains customization and keeps missing choices visible w
   ])
     assert.ok(html.includes(text), text);
   assert.doesNotMatch(html, /ticket\.created|teamId|category_id|Notify IT Manager/);
-  assert.match(html, /aria-label="Use Critical Ticket Assignment template"/);
+  assert.match(html, /aria-label="Use Urgent Ticket Assignment template"/);
 });
 
 test('summaries follow structured conditions and configured action positions, update with edits and hide reference IDs', () => {
@@ -168,7 +168,7 @@ test('summaries follow structured conditions and configured action positions, up
   const text = automationSummary(input, { [uuid(4)]: 'Network', [uuid(5)]: 'Network Team' });
   assert.match(
     text,
-    /When a ticket is created, if Priority equals Critical and Category equals Network/,
+    /When a ticket is created, if Priority equals Urgent and Category equals Network/,
   );
   assert.ok(text.indexOf('Network Team') < text.indexOf('Set priority'));
   assert.doesNotMatch(text, /00000000/);

@@ -320,7 +320,7 @@ test('matching/nonmatching dry-run presentation preserves no-change notice, simu
       labels: {},
     }),
   );
-  assert.match(match, /Set priority → Critical/);
+  assert.match(match, /Set priority → Urgent/);
   assert.match(match, /matches and its current checks pass/);
 });
 test('execution detail renders pinned historical version and differentiates retry exhaustion and unexecuted actions', async () => {

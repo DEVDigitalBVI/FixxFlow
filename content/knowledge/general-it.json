@@ -4133,7 +4133,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Critical targets are 15 minutes for first public staff response and 4 hours for resolution; High is 1 hour and 8 hours; Normal is 4 hours and 24 hours; Low is 8 hours and 48 hours. These are fixed calendar-time targets, including nights and weekends."
+          "text": "Urgent targets are 15 minutes for first public staff response and 4 hours for resolution; High is 1 hour and 8 hours; Normal is 4 hours and 24 hours; Low is 8 hours and 48 hours. These are fixed calendar-time targets, including nights and weekends."
         },
         {
           "type": "heading",
