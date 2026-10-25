@@ -41,6 +41,8 @@ export type Notification = Omit<Tables['notifications']['Row'], 'kind'> & {
 export type KnowledgeArticle = Tables['knowledge_articles']['Row'] & {
   audience: import('@/features/knowledge/audience').KnowledgeAudience;
 };
+export type LibraryArticle = Omit<KnowledgeArticle, 'organization_id'> & { organization_id: null };
+export type ReadableArticle = KnowledgeArticle | LibraryArticle;
 export type KnowledgeAsset = Tables['knowledge_attachments']['Row'];
 
 // PostgreSQL CHECK constraints and nullable function arguments are not inferred
@@ -79,6 +81,20 @@ type NullableArgs<Name extends keyof Functions, Keys extends keyof Functions[Nam
   };
 };
 
+type LibraryTable = {
+  Row: LibraryArticle;
+  Insert: Pick<KnowledgeArticle, 'id' | 'title' | 'category'> &
+    Partial<
+      Pick<KnowledgeArticle, 'summary' | 'content' | 'status' | 'audience' | 'related_article_ids'>
+    >;
+  Update: Partial<
+    Pick<
+      KnowledgeArticle,
+      'title' | 'category' | 'summary' | 'content' | 'status' | 'audience' | 'related_article_ids'
+    >
+  >;
+  Relationships: [];
+};
 type RuntimeTables = AutomationTables &
   AutomationExecutionTables &
   InventoryTables & {
@@ -294,6 +310,7 @@ type RuntimeTables = AutomationTables &
     chat_messages: Omit<Tables['chat_messages'], 'Row'> & {
       Row: Tables['chat_messages']['Row'] & { revision: number; edited_at: string | null };
     };
+    library_articles: LibraryTable;
     knowledge_articles: Omit<Tables['knowledge_articles'], 'Row' | 'Insert' | 'Update'> & {
       Row: KnowledgeArticle;
       Insert: Tables['knowledge_articles']['Insert'] & {
@@ -358,7 +375,7 @@ type RuntimeFunctions = AutomationFunctions &
       Returns: RoomMessage[];
     };
     search_knowledge_articles: Omit<Functions['search_knowledge_articles'], 'Returns'> & {
-      Returns: KnowledgeArticle[];
+      Returns: ReadableArticle[];
     };
     search_tickets: Omit<Functions['search_tickets'], 'Returns'> & {
       Returns: (Functions['search_tickets']['Returns'][number] & {
@@ -565,10 +582,13 @@ type RuntimeFunctions = AutomationFunctions &
   };
 
 export type Database = Omit<GeneratedDatabase, 'public'> & {
-  public: Omit<Schema, 'Tables' | 'Functions' | 'Enums'> & {
+  public: Omit<Schema, 'Tables' | 'Functions' | 'Enums' | 'Views'> & {
     Enums: Omit<Schema['Enums'], 'notification_kind'> & { notification_kind: NotificationKind };
     Tables: Omit<Tables, keyof RuntimeTables> & RuntimeTables;
 
+    Views: Schema['Views'] & {
+      readable_knowledge_articles: { Row: ReadableArticle; Relationships: [] };
+    };
     Functions: Omit<Functions, keyof RuntimeFunctions> & RuntimeFunctions;
   };
 };

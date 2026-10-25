@@ -214,6 +214,9 @@ async function renderHelp({ role = 'end_user', filters = {}, data = [], error = 
     order() {
       return this;
     },
+    or() {
+      return this;
+    },
     range: async () => ({ data, error }),
   };
   const { default: Page } = load('src/app/app/help/page.tsx', {

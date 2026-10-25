@@ -440,14 +440,18 @@ test('Stage 12 corrected scheduling and Operations classifications', async (t) =
             "insert into public.organizations(id,name,slug)values($1,'Inactive tenant',$2)",
             [tenant, `inactive-${n}`],
           );
+          const tenantAdmin = uuid(10000 + n);
+          await db.query('insert into auth.users(id,email) values($1,$2)', [
+            tenantAdmin,
+            `inactive-${n}@example.test`,
+          ]);
           await db.query(
             "insert into public.organization_memberships(organization_id,user_id,role)values($1,$2,'administrator')",
-            [tenant, ids.admin],
+            [tenant, tenantAdmin],
           );
-          await identity(db);
           await db.query(
             "insert into public.tickets(organization_id,requester_id,title,description)values($1,$2,'Historical','Synthetic')",
-            [tenant, ids.admin],
+            [tenant, tenantAdmin],
           );
         }
         await createRule(db, {

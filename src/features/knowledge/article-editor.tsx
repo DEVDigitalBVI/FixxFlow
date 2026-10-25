@@ -29,12 +29,16 @@ export function ArticleEditor({
   assets: initialAssets,
   related,
   isNew = false,
+  library = false,
+  saveAction = saveArticle,
 }: {
   article: KnowledgeArticle;
   organizationId: string;
   assets: KnowledgeAsset[];
   related: { id: string; title: string; audience?: import('./audience').KnowledgeAudience }[];
   isNew?: boolean;
+  library?: boolean;
+  saveAction?: typeof saveArticle;
 }) {
   const router = useRouter();
   const [revision] = useState(article.revision);
@@ -81,14 +85,18 @@ export function ArticleEditor({
     setError('');
     form.set('content', JSON.stringify(blocks));
     try {
-      const result = await saveArticle(form);
+      const result = await saveAction(form);
       if (result.error || !result.id) {
         setError(result.error ?? 'Could not save.');
         requestAnimationFrame(() => errorRef.current?.focus());
       } else {
         releaseDraft();
         setDirty(false);
-        router.push(`/app/help/${result.id}${isNew ? '/edit' : ''}`);
+        router.push(
+          library
+            ? `/platform/library?saved=${result.id}`
+            : `/app/help/${result.id}${isNew ? '/edit' : ''}`,
+        );
         router.refresh();
       }
     } catch {
@@ -279,11 +287,13 @@ export function ArticleEditor({
                     value={block.type}
                     onChange={(e) => update(i, { type: e.target.value as ArticleBlock['type'] })}
                   >
-                    {blockTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type[0].toUpperCase() + type.slice(1)}
-                      </option>
-                    ))}
+                    {blockTypes
+                      .filter((type) => !library || type !== 'image')
+                      .map((type) => (
+                        <option key={type} value={type}>
+                          {type[0].toUpperCase() + type.slice(1)}
+                        </option>
+                      ))}
                   </select>
                 </label>
                 <div className="knowledge-actions">
@@ -397,9 +407,9 @@ export function ArticleEditor({
             </select>
           </label>
           <p id="article-audience-hint" className="muted">
-            Employee-facing articles are available to employees only after publication. IT only
-            articles stay private to technicians and administrators. Drafts and archived articles
-            are always IT only.
+            {library
+              ? 'Published employee-facing articles are available to active members in every workspace. Published IT only articles are available to technicians and administrators. Drafts and archived library articles are visible only to the platform owner.'
+              : 'Employee-facing articles are available to employees only after publication. IT only articles stay private to technicians and administrators. Drafts and archived articles are always IT only.'}
           </p>
         </fieldset>
         <details className="progressive-section knowledge-related-disclosure">
@@ -436,46 +446,50 @@ export function ArticleEditor({
             className="button button-secondary"
             onClick={() => {
               if (!dirty || confirmDiscardChanges())
-                router.push(isNew ? '/app/help' : `/app/help/${article.id}`);
+                router.push(
+                  library ? '/platform/library' : isNew ? '/app/help' : `/app/help/${article.id}`,
+                );
             }}
           >
             Cancel
           </button>
         </div>
       </form>
-      <section className="settings-card">
-        <h2>Images and attachments</h2>
-        {isNew ? (
-          <p>
-            Save your article to add images and attachments. You’ll return to this editor after
-            saving.
-          </p>
-        ) : (
-          <>
-            <p>Files added here are available to anyone who can read this article.</p>
-            <label className="knowledge-file">
-              Upload a file (up to 6 MB)
-              <input
-                type="file"
-                accept={assetTypes.join(',')}
-                disabled={uploading || busy}
-                onChange={(e) => {
-                  void upload(e.target.files?.[0]);
-                  e.target.value = '';
-                }}
-              />
-            </label>
-            {uploadMessage && <p role="status">{uploadMessage}</p>}
-            <ul>
-              {assets.map((a) => (
-                <li key={a.id}>
-                  <a href={`/app/help/assets/${a.id}?download=1`}>{a.file_name}</a>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </section>
+      {!library && (
+        <section className="settings-card">
+          <h2>Images and attachments</h2>
+          {isNew ? (
+            <p>
+              Save your article to add images and attachments. You’ll return to this editor after
+              saving.
+            </p>
+          ) : (
+            <>
+              <p>Files added here are available to anyone who can read this article.</p>
+              <label className="knowledge-file">
+                Upload a file (up to 6 MB)
+                <input
+                  type="file"
+                  accept={assetTypes.join(',')}
+                  disabled={uploading || busy}
+                  onChange={(e) => {
+                    void upload(e.target.files?.[0]);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
+              {uploadMessage && <p role="status">{uploadMessage}</p>}
+              <ul>
+                {assets.map((a) => (
+                  <li key={a.id}>
+                    <a href={`/app/help/assets/${a.id}?download=1`}>{a.file_name}</a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </section>
+      )}
       <details className="settings-card progressive-section">
         <summary>Content preview</summary>
         <ArticleContent content={blocks} images={images} />

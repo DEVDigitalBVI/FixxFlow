@@ -53,7 +53,7 @@ test('employee creation stays simple and equipment context retains its submitted
 
 test('creation guards pending lookup data, tolerates knowledge failure and escapes feedback', async () => {
   const html = await renderTicketCreate({
-    errors: ['ticket_categories', 'knowledge_articles'],
+    errors: ['ticket_categories', 'readable_knowledge_articles'],
     params: { error: '<script>error</script>' },
   });
   assert.match(html, /name="lookupLoadError" value="true"/);
@@ -114,7 +114,10 @@ test('cancel protects written drafts, permits confirmed/empty/new-tab navigation
 });
 
 test('employee full page keeps optional content collapsed and submission after all sections', async () => {
-  const html = await renderTicketCreate({ role: 'end_user', errors: ['knowledge_articles'] });
+  const html = await renderTicketCreate({
+    role: 'end_user',
+    errors: ['readable_knowledge_articles'],
+  });
   assert.doesNotMatch(html, /ticket-create-intro|What’s happening|A little context/);
   assert.equal(
     (html.match(/<details class="ticket-create-routing ticket-create-optional">/g) || []).length,

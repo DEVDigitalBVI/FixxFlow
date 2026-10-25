@@ -108,7 +108,15 @@ test('workspace search uses bounded existing RPCs and organization scopes, never
   assert.equal(
     f.calls.filter((row) => row[1] === 'eq' && row[2] === 'organization_id' && row[3] === 'org')
       .length,
-    4,
+    3,
+  );
+  assert.ok(
+    f.calls.some(
+      (row) =>
+        row[0] === 'search_knowledge_articles' &&
+        row[1] === 'or' &&
+        row[2] === 'organization_id.eq.org,organization_id.is.null',
+    ),
   );
   assert.ok(f.calls.some((row) => row[0] === 'search_tickets' && row[1]?.search_text === 'VPN'));
 });

@@ -43,6 +43,9 @@ test('workspace ticket search executes the projected, sorted RPC query in Postgr
           eq() {
             return this;
           },
+          or() {
+            return this;
+          },
           order() {
             return this;
           },

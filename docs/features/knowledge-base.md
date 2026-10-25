@@ -1,8 +1,8 @@
 # Knowledge base
 
-Categories: Accounts, Email, Network, Hardware, Software, Security. Organizations start with an empty knowledge base. The sample-guide cleanup migration removes untouched original guides and disables automatic article seeding; authored or edited guides and guides with attachments or incoming article links are preserved.
+Categories: Accounts, Email, Network, Hardware, Software, Security. Organizations start with no organization-owned articles and can browse the shared FixxFlow library. The sample-guide cleanup migration removes untouched original guides and disables automatic article seeding; authored or edited guides and guides with attachments or incoming article links are preserved.
 
-IT technicians and administrators create/edit articles. Draft and archived articles are staff-only; published articles are readable by active organization members. Article IDs provide stable links. Editors use optimistic revision checks so a stale editor cannot overwrite newer work. Editing a published article updates it on save; set visibility to Draft before developing changes that should remain private. Separate published/draft revisions are deferred.
+IT technicians and administrators create/edit articles. Draft and archived articles are staff-only; published employee-facing articles are readable by active organization members; IT-only articles stay private to staff. Article IDs provide stable links. Editors use optimistic revision checks so a stale editor cannot overwrite newer work. Editing a published article updates it on save; set visibility to Draft before developing changes that should remain private. Separate published/draft revisions are deferred.
 
 The structured editor supports headings, paragraphs, bold/italic, lists, quotes, code, HTTP(S) links, and image blocks with required alt text. Preview uses React text nodes; raw HTML is never executed. Images must reference uploads associated with the article. This intentionally avoids adding an editor library. Keyboard-accessible buttons move/remove blocks; no drag operation is required.
 
@@ -12,11 +12,11 @@ Related articles are limited to eight, within the same organization. Readers onl
 
 Published article views are recorded on client mount and deduplicated per signed-in user/article/UTC day. Each user has one changeable helpful/not-helpful vote. Database defaults own identity and timestamps; clients cannot forge them. Staff can see total daily-reader views and current vote counts in Article insights. Draft views are not recorded. These are aggregate product signals, not AI inference or training. History of individual vote changes and anonymous readership are not collected.
 
-Search uses Postgres full-text indexes across title, summary, and block text. Browsing is category-filtered with 24 articles per page. Ticket search links now query published knowledge articles rather than static data.
+Search uses the shared literal substring matching contract across title, summary, and block text. Browsing is category-filtered with 24 articles per page. Ticket search links now query published knowledge articles rather than static data.
 
 Ticket intake suggests up to three guides by matching title, description, and
 category against up to 200 recently updated published article summaries from the
-same organization. Matching runs in the browser; guides open in a separate tab to
+same organization and the shared FixxFlow library. Matching runs in the browser; guides open in a separate tab to
 preserve the draft. Missing or unavailable suggestions never prevent submission,
 and Browse all guides remains available.
 
@@ -53,13 +53,13 @@ Post-import checks confirmed all 40 new bodies and related-link lists match the
 reviewed collection. A repeat import in a rolled-back transaction created zero
 articles. No schema, roles, permissions, or email configuration changed.
 
-The collection is explicitly imported per organization, never automatically seeded. Generate a reviewable SQL transaction with:
+Legacy organization copies can still be explicitly imported per organization. The shared library now provides the same collection without per-organization imports. Generate a reviewable SQL transaction with:
 
 ```sh
 node scripts/knowledge-import.mjs ORGANIZATION_UUID ORGANIZATION_SLUG > /tmp/knowledge-import.sql
 ```
 
-Review the SQL and run it through the authorized database connection for that organization. The script itself has no database credentials and performs no network requests. It checks the organization identity, uses stable organization-specific article IDs, reuses matching titles, publishes new articles, and links related guides. Existing articles (including renamed or edited imported guides) are never overwritten. Imported articles have no attributed human author; database audit events record system creation. Re-running is additive, so use the editor for subsequent content changes. The collection was imported into the existing Peter Island Resort and Spa workspace; future customer workspaces remain empty.
+Review the SQL and run it through the authorized database connection for that organization. The script itself has no database credentials and performs no network requests. It checks the organization identity, uses stable organization-specific article IDs, reuses matching titles, publishes new articles, and links related guides. Existing articles (including renamed or edited imported guides) are never overwritten. Imported articles have no attributed human author; database audit events record system creation. Re-running is additive, so use the editor for subsequent content changes. The collection was imported into the existing Peter Island Resort and Spa workspace; future customer workspaces have no organization-owned articles but can read the shared library.
 
 The UI reuses portal cards, existing surface/border/focus tokens, and native links. Topics wrap from three columns to two to one on compact screens. Article section links target focusable headings; all support actions remain visible without hover, and no animation is introduced. Existing search, pagination, tenant isolation, staff editing, feedback, and related articles remain in use.
 
@@ -70,3 +70,24 @@ Validation: collection parsing and related-link tests; heading-link accessibilit
 Audience is separate from publication status: **Employee-facing** and **IT only**. New articles default to IT only. Employees can read only published Employee-facing articles, including through global search, ticket suggestions, related links and attachment downloads. IT staff can read both audiences and have a labeled Audience filter. Drafts and archived articles are always private to IT. The editor requires an explicit audience value when saving; the default keeps unreviewed imports private.
 
 The initial content review covers all 70 hosted articles: 42 employee-facing guides and 28 IT-only operational procedures. The per-article decision and reviewed content fingerprint are in `docs/knowledge-audience-review.json`. The migration only exposes reviewed employee content when its fingerprint still matches; changed or unknown articles remain IT only. Publishing guidance and the employee reopening label were corrected during the review.
+
+## Shared FixxFlow library
+
+The knowledge base combines organization-owned articles with `library_articles` through the security-invoker `readable_knowledge_articles` view. A library article has no organization, and organizations cannot edit, hide, or copy it through the application. Existing imported organization copies remain unchanged to preserve customer edits. The library starts with the 70 reviewed guides from `content/knowledge/general-it.json`, including their related-article links. Its stable IDs use the import helper's all-zero namespace; they are independent of tenant article IDs.
+
+Active members can read published library articles. Employees see only the `employees` audience; technicians and administrators can also read `it_only` articles. Inactive and unassigned accounts, anonymous requests, and members with unmet MFA requirements cannot read the library. Only a platform owner with a valid session and completed MFA can create or update it. Drafts and archived library articles are visible only to that owner, including in search. Owner edits retain optimistic revision checks and produce platform audit entries without copying article bodies into the audit log.
+
+Owners use **Platform → FixxFlow library** to search, create, revise, publish, and archive guides. Library articles reuse the structured article editor, audience controls, preview, and unsaved-change protection. This first version supports text blocks and HTTP(S) links; uploads and image blocks remain organization-specific. Related library articles can link to one another, and reader RLS filters related links by audience and publication status. Organization article related selections remain within their organization.
+
+Shared guides appear alongside organization articles in knowledge browsing, category/audience filters, paginated search, global search, and new-ticket suggestions. They are labeled **FixxFlow library** and use the existing article detail URLs. Shared readers do not expose tenant article feedback or insights, which remain organization-specific.
+
+The `membership_and_shared_library` migration also enforces one organization membership per user, including inactive memberships. It stops on duplicates without deleting or selecting memberships. Before deployment, check for duplicates:
+
+```sql
+select user_id, count(*)
+from public.organization_memberships
+group by user_id
+having count(*) > 1;
+```
+
+`npm test` includes the permanent catalog-driven organization isolation sweep, so the existing Checks workflow runs it on pull requests and main pushes. It discovers every public organization-owned table, checks enabled RLS, inserts a foreign canary into each table, and verifies foreign reads/inserts/updates/deletes and anonymous reads. Only fixture checks and triggers are bypassed in that disposable PGlite database; migrated RLS and grants are unchanged. This is an authorization regression test, not a replacement for the domain constraint/trigger suites or live Storage and Realtime service tests. Library tests separately cover shared audiences, lifecycle, active membership, owner/session/MFA requirements, revisions, audit records, and cross-workspace updates.

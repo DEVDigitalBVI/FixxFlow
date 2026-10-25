@@ -29,7 +29,8 @@ jobs:
       - run: npm run format:check
       - run: npm run lint -- --max-warnings=0
       - run: npm run typecheck
-      - run: npm test
+      - name: Run application and organization-isolation tests
+        run: npm test
       - run: npm run build
       - run: npm run test:build
   database:
