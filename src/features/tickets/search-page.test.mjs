@@ -56,6 +56,7 @@ function setup(role = 'technician', count = 51) {
     '@/features/tickets/sla-indicator': {
       SlaClock: ({ children }) => children,
       SlaIndicator: () => null,
+      RelativeAge: () => null,
     },
     '@/features/tickets/presentation': {
       formatTicketDate: (x) => x,

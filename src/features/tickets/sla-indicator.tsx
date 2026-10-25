@@ -2,9 +2,10 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
-import { Timestamp } from '@/features/timezones/provider';
+import { formatRelativeAge, formatTimestamp } from '@/features/timezones/model';
+import { Timestamp, useTimezone } from '@/features/timezones/provider';
 
-import { ticketSla, type SlaResult, type SlaState, type SlaTicket } from './sla';
+import { queueSlaSummary, ticketSla, type SlaResult, type SlaState, type SlaTicket } from './sla';
 
 const Clock = createContext(0);
 export function SlaClock({ initialNow, children }: { initialNow: number; children: ReactNode }) {
@@ -29,15 +30,7 @@ const presentation: Record<SlaState, { tone: string; icon: string }> = {
   missing: { tone: 'warning', icon: '⚠' },
   unavailable: { tone: 'neutral', icon: '—' },
 };
-function Objective({
-  label,
-  result,
-  compact,
-}: {
-  label: string;
-  result: SlaResult;
-  compact: boolean;
-}) {
+function Objective({ label, result }: { label: string; result: SlaResult }) {
   const style = presentation[result.state];
   return (
     <div className={`sla-objective sla-${style.tone}`}>
@@ -47,11 +40,11 @@ function Objective({
         <span>{result.label}</span>
       </div>
       {result.deadline && (
-        <time className={compact ? 'sr-only' : 'sla-date'} dateTime={result.deadline}>
+        <time className="sla-date" dateTime={result.deadline}>
           Due <Timestamp value={result.deadline} />
         </time>
       )}
-      {!compact && result.completedAt && (
+      {result.completedAt && (
         <time className="sla-date" dateTime={result.completedAt}>
           Completed <Timestamp value={result.completedAt} />
         </time>
@@ -67,17 +60,45 @@ export function SlaIndicator({
   compact?: boolean;
 }) {
   const now = useContext(Clock);
+  const zone = useTimezone();
   const sla = ticketSla(ticket, now);
+  if (compact) {
+    const summary = queueSlaSummary(sla);
+    const style = presentation[summary.state];
+    const describe = (label: string, result: SlaResult) =>
+      `${label} SLA: ${result.label}${result.deadline ? `, due ${formatTimestamp(result.deadline, zone)}` : ''}.`;
+    const detail = `${describe('Response', sla.response)} ${describe('Resolution', sla.resolution)}`;
+    // Queue rows show one line; the full two-objective view lives on the ticket.
+    return (
+      <div className={`sla-indicator sla-compact sla-${style.tone}`} title={detail}>
+        <div className="sla-label" aria-hidden="true">
+          <span>{style.icon}</span>
+          <span>{summary.text}</span>
+        </div>
+        <span className="sr-only">{detail}</span>
+      </div>
+    );
+  }
   return (
-    <div className={`sla-indicator ${compact ? 'sla-compact' : ''}`}>
-      {!compact && (
-        <span className="sr-only" role="status">
-          Response SLA: {sla.response.state.replaceAll('_', ' ')}. Resolution SLA:{' '}
-          {sla.resolution.state.replaceAll('_', ' ')}.
-        </span>
-      )}
-      <Objective label="Response" result={sla.response} compact={compact} />
-      <Objective label="Resolution" result={sla.resolution} compact={compact} />
+    <div className="sla-indicator">
+      <span className="sr-only" role="status">
+        Response SLA: {sla.response.state.replaceAll('_', ' ')}. Resolution SLA:{' '}
+        {sla.resolution.state.replaceAll('_', ' ')}.
+      </span>
+      <Objective label="Response" result={sla.response} />
+      <Objective label="Resolution" result={sla.resolution} />
     </div>
+  );
+}
+
+/** "3h ago" for scanning lists, kept current by the surrounding SlaClock. */
+export function RelativeAge({ value }: { value: string }) {
+  const now = useContext(Clock);
+  const zone = useTimezone();
+  const exact = formatTimestamp(value, zone);
+  return (
+    <time dateTime={value} title={`${exact} (${zone})`} aria-label={`${exact} (${zone})`}>
+      {formatRelativeAge(value, now, zone)}
+    </time>
   );
 }

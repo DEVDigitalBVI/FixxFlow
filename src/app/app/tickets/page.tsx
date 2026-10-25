@@ -12,7 +12,7 @@ import { loadTicketQueue, type TicketQueueFilters } from '@/features/tickets/dat
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 import { TicketQueueContext } from '@/features/tickets/queue-context';
 import { ticketDetailHref } from '@/features/tickets/queue-navigation';
-import { SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
+import { RelativeAge, SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { TicketDetail } from '@/features/tickets/ticket-detail';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -587,7 +587,6 @@ export default async function TicketsPage({
                           <th scope="col">Ticket</th>
                           <th scope="col">Status</th>
                           <th scope="col">Priority</th>
-                          <th scope="col">Requester</th>
                           <th scope="col">Assigned to</th>
                           <th scope="col">SLA</th>
                           <th scope="col">Updated</th>
@@ -620,6 +619,8 @@ export default async function TicketsPage({
                                 )}
                                 <span>
                                   #{ticket.ticket_number} ·{' '}
+                                  <span className="sr-only">Requested by </span>
+                                  {names.get(ticket.requester_id) ?? 'Unknown requester'} ·{' '}
                                   {ticket.team_id
                                     ? (teamNames.get(ticket.team_id) ?? 'Team')
                                     : 'No team'}
@@ -645,9 +646,6 @@ export default async function TicketsPage({
                                 {ticketPriorities[ticket.priority].label}
                               </span>
                             </td>
-                            <td data-label="Requester">
-                              {names.get(ticket.requester_id) ?? 'Unknown'}
-                            </td>
                             <td data-label="Assigned to">
                               {ticket.assigned_technician_id ? (
                                 (names.get(ticket.assigned_technician_id) ?? 'Unknown')
@@ -659,9 +657,7 @@ export default async function TicketsPage({
                               <SlaIndicator ticket={ticket} compact />
                             </td>
                             <td data-label="Updated" className="muted">
-                              <time dateTime={ticket.updated_at}>
-                                <Timestamp value={ticket.updated_at} />
-                              </time>
+                              <RelativeAge value={ticket.updated_at} />
                             </td>
                           </tr>
                         ))}
