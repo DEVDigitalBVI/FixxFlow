@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
-import { createClient } from '@/lib/supabase/client';
+import { loadBrowserClient } from '@/lib/supabase/lazy-client';
 
 import { useLiveNotifications } from './use-live-notifications';
 
@@ -22,12 +22,12 @@ export function NotificationLink({
 }) {
   const pathname = usePathname();
   const [count, setCount] = useState<number | null>(null);
-  const [supabase] = useState(createClient);
   const requestVersion = useRef({ value: 0 });
   const refresh = useCallback(async () => {
     if (document.visibilityState !== 'visible') return;
     const version = ++requestVersion.current.value;
     try {
+      const supabase = await loadBrowserClient();
       const { count, error } = await supabase
         .from('notifications')
         .select('id', { count: 'exact', head: true })
@@ -38,7 +38,7 @@ export function NotificationLink({
     } catch {
       if (version === requestVersion.current.value) setCount(null);
     }
-  }, [supabase, organizationId, userId]);
+  }, [organizationId, userId]);
   useLiveNotifications(organizationId, userId, refresh);
   useEffect(() => {
     const version = requestVersion.current;
