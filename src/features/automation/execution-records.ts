@@ -8,6 +8,7 @@ import type {
   AutomationAction,
   AutomationExecution,
   AutomationExecutionStep,
+  ConditionResult,
   SafeAutomationError,
 } from './model';
 
@@ -35,6 +36,20 @@ const failureMessages: Record<AutomationFailureCode, string> = {
 export function executionError(code: AutomationFailureCode | null): SafeAutomationError | null {
   return code ? { code, message: failureMessages[code] } : null;
 }
+const conditionStatuses: ReadonlySet<unknown> = new Set(['passed', 'failed', 'error']);
+/** Stored worker JSON: keep well-formed results only, so history pages never crash on it. */
+export function conditionResults(value: unknown): readonly ConditionResult[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (item): item is ConditionResult =>
+      typeof item === 'object' &&
+      item !== null &&
+      typeof item.id === 'string' &&
+      typeof item.field === 'string' &&
+      typeof item.operator === 'string' &&
+      conditionStatuses.has(item.status),
+  );
+}
 /** Map trusted database records to the unchanged Stage 1 history contracts. */
 export function executionRecord(row: AutomationExecutionRow): AutomationExecution {
   return {
@@ -52,7 +67,7 @@ export function executionRecord(row: AutomationExecutionRow): AutomationExecutio
     completedAt: row.completed_at,
     durationMs: row.duration_ms,
     status: row.status,
-    conditions: row.conditions as unknown as AutomationExecution['conditions'],
+    conditions: conditionResults(row.conditions),
     actionsAttempted: row.actions_attempted,
     error: executionError(row.error_code),
   };
