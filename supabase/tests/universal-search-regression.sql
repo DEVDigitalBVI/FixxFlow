@@ -16,7 +16,7 @@ select set_config('request.jwt.claims',jsonb_build_object('sub',staff,'aal','aal
 set local role authenticated;
 insert into public.tickets(id,organization_id,requester_id,assigned_technician_id,title,description) select ticket,org,employee,staff,'Workstation network','Connection timeout 1234567890' from search_fixture;
 insert into public.ticket_messages(organization_id,ticket_id,author_id,kind,body) select org,ticket,staff,'reply'::public.ticket_message_kind,'Restart adapter' from search_fixture union all select org,ticket,staff,'internal_note','confidentialneedle' from search_fixture;
-insert into public.knowledge_articles(organization_id,category,title,content,status) select org,'Network','Network troubleshooting','[{"type":"paragraph","text":"Restart adapter using screen menu"}]'::jsonb,'published' from search_fixture union all select org,'Network','Classifiedguide draft','[]'::jsonb,'draft' from search_fixture;
+insert into public.knowledge_articles(organization_id,category,title,content,status,audience) select org,'Network','Network troubleshooting','[{"type":"paragraph","text":"Restart adapter using screen menu"}]'::jsonb,'published','employees' from search_fixture union all select org,'Network','Classifiedguide draft','[]'::jsonb,'draft','employees' from search_fixture;
 insert into public.departments(organization_id,name) select org,'FragmentDept' from search_fixture;
 
 select pg_temp.check_universal_search((select count(*)=1 from public.search_tickets((select org from search_fixture),'workstat adapt')),'ticket terms combine partial title and public message');
