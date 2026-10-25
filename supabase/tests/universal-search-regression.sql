@@ -39,7 +39,9 @@ select set_config('request.jwt.claims',jsonb_build_object('sub',employee,'aal','
 select pg_temp.check_universal_search((select count(*)=1 from public.search_tickets((select org from search_fixture),'workstat adapt')),'employee sees own public matches');
 select pg_temp.check_universal_search((select count(*)=0 from public.search_tickets((select org from search_fixture),'confid')),'partial internal-note search cannot leak to employees');
 select pg_temp.check_universal_search((select count(*)=1 from public.search_knowledge_articles((select org from search_fixture),'trouble adapt')),'employee sees published partial knowledge matches');
-select pg_temp.check_universal_search((select count(*)=0 from public.search_knowledge_articles((select org from search_fixture),'classif')),'partial draft match cannot leak');
+-- The shared FixxFlow library is searchable by every organization, so scope draft checks to the workspace.
+select pg_temp.check_universal_search((select count(*)=0 from public.search_knowledge_articles((select org from search_fixture),'classif') a where a.organization_id=(select org from search_fixture)),'partial draft match cannot leak');
+select pg_temp.check_universal_search((select count(*)=0 from public.search_knowledge_articles((select org from search_fixture),'classif') a where a.organization_id is null and a.audience<>'employees'),'employees never see IT-only library matches');
 select pg_temp.check_universal_search((select count(*)=0 from public.search_audit_events((select org from search_fixture),'fragm')),'employee cannot search staff audit records');
 
 select set_config('request.jwt.claims',jsonb_build_object('sub',outsider,'aal','aal2')::text,true) from search_fixture;
