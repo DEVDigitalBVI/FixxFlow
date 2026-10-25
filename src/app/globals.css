@@ -7709,6 +7709,23 @@ details.settings-card[open] > summary {
   color: var(--color-text-muted);
   font-size: 13px;
 }
+/* Guidance lives in the linked hint; the status line appears once a search runs. */
+.ticket-queue-toolbar .live-search-status:empty {
+  display: none;
+}
+@media (max-width: 767px) {
+  .ticket-queue-toolbar .queue-filters .ticket-queue-search {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .ticket-queue-toolbar .queue-filters > .button {
+    flex: 0 0 auto;
+    align-self: end;
+  }
+  .ticket-queue-toolbar .queue-filter-options {
+    flex-basis: 100%;
+  }
+}
 .ticket-queue-filter-chips {
   display: flex;
   flex-wrap: wrap;
