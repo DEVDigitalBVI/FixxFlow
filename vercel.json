@@ -3,5 +3,10 @@
   "framework": "nextjs",
   "installCommand": "env -u npm_config_cache_dir -u NPM_CONFIG_CACHE_DIR npm ci",
   "buildCommand": "env -u npm_config_cache_dir -u NPM_CONFIG_CACHE_DIR npm run build",
-  "crons": [{ "path": "/api/cron/notifications", "schedule": "* * * * *" }, { "path": "/api/cron/automation", "schedule": "* * * * *" }, { "path": "/api/cron/automation-scheduler", "schedule": "* * * * *" }, { "path": "/api/cron/reports", "schedule": "* * * * *" }]
+  "crons": [
+    { "path": "/api/cron/notifications", "schedule": "* * * * *" },
+    { "path": "/api/cron/automation", "schedule": "* * * * *" },
+    { "path": "/api/cron/automation-scheduler", "schedule": "* * * * *" },
+    { "path": "/api/cron/reports", "schedule": "* * * * *" }
+  ]
 }

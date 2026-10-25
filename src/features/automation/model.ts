@@ -1,8 +1,22 @@
 import type { JsonValue } from '@/lib/events/model';
 
-export const conditionOperators = ['equals', 'not_equals', 'contains', 'not_contains', 'is_empty', 'is_not_empty', 'greater_than', 'less_than', 'in', 'not_in'] as const;
-export type ConditionOperator = typeof conditionOperators[number];
-export type AutomationTrigger = { readonly type: string; readonly configuration: Readonly<Record<string, JsonValue>> };
+export const conditionOperators = [
+  'equals',
+  'not_equals',
+  'contains',
+  'not_contains',
+  'is_empty',
+  'is_not_empty',
+  'greater_than',
+  'less_than',
+  'in',
+  'not_in',
+] as const;
+export type ConditionOperator = (typeof conditionOperators)[number];
+export type AutomationTrigger = {
+  readonly type: string;
+  readonly configuration: Readonly<Record<string, JsonValue>>;
+};
 export type AutomationCondition = {
   readonly kind: 'condition';
   readonly id: string;
@@ -76,11 +90,21 @@ export type AutomationExecutionStep = {
   readonly durationMs: number | null;
   readonly status: 'pending' | 'running' | 'succeeded' | 'failed' | 'not_attempted';
   /** Allowlisted result codes/references only; no action bodies or provider payloads. */
-  readonly result: { readonly code: string; readonly entityType?: string; readonly entityId?: string } | null;
+  readonly result: {
+    readonly code: string;
+    readonly entityType?: string;
+    readonly entityId?: string;
+  } | null;
   readonly error: SafeAutomationError | null;
 };
-export type ValidationIssue = { readonly path: string; readonly code: string; readonly message: string };
-export type ValidationResult<T> = { readonly valid: true; readonly value: T } | { readonly valid: false; readonly issues: readonly ValidationIssue[] };
+export type ValidationIssue = {
+  readonly path: string;
+  readonly code: string;
+  readonly message: string;
+};
+export type ValidationResult<T> =
+  | { readonly valid: true; readonly value: T }
+  | { readonly valid: false; readonly issues: readonly ValidationIssue[] };
 export type ConditionResult = {
   readonly id: string;
   readonly field: string;

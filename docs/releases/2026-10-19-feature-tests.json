@@ -4,10 +4,7 @@
   "baseCommit": "673b9bb82b5263f5d2588725cdeaecf403a61337",
   "packageLockSha256": "5566a012006a755068078a26f70d2ba32dd96a3807bc0d8cd9c0006fffc0c6e8",
   "decision": "Automated feature coverage passed; authenticated hosted acceptance and full production-readiness certification remain open.",
-  "sequence": [
-    "employee",
-    "admin/IT"
-  ],
+  "sequence": ["employee", "admin/IT"],
   "automatedChecks": {
     "runtime": "Node 24.22.0",
     "tests": 932,

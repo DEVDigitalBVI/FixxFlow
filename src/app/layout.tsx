@@ -1,52 +1,62 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import type { ReactNode } from "react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { WebAnalytics } from "@/features/product-analytics/web-analytics";
-import { themeScript } from "@/features/theme/theme";
-import { ThemeController } from "@/features/theme/theme-control";
-import "./globals.css";
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import type { ReactNode } from 'react';
+
+import { WebAnalytics } from '@/features/product-analytics/web-analytics';
+import { themeScript } from '@/features/theme/theme';
+import { ThemeController } from '@/features/theme/theme-control';
+
+import './globals.css';
 
 const inter = localFont({
   src: [
     {
-      path: "../../public/brand/fixxflow/fonts/InterVariable.woff2",
-      style: "normal",
-      weight: "100 900",
+      path: '../../public/brand/fixxflow/fonts/InterVariable.woff2',
+      style: 'normal',
+      weight: '100 900',
     },
     {
-      path: "../../public/brand/fixxflow/fonts/InterVariable-Italic.woff2",
-      style: "italic",
-      weight: "100 900",
+      path: '../../public/brand/fixxflow/fonts/InterVariable-Italic.woff2',
+      style: 'italic',
+      weight: '100 900',
     },
   ],
-  display: "swap",
-  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
-  variable: "--font-inter",
+  display: 'swap',
+  fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "FixxFlow",
-    template: "%s | FixxFlow",
+    default: 'FixxFlow',
+    template: '%s | FixxFlow',
   },
-  description: "IT Support in Motion",
-  manifest: "/brand/fixxflow/site.webmanifest",
+  description: 'IT Support in Motion',
+  manifest: '/brand/fixxflow/site.webmanifest',
   icons: {
     icon: [
-      { url: "/brand/fixxflow/favicon/favicon.ico?v=red-gunmetal-20261023" },
-      { url: "/brand/fixxflow/favicon/favicon-32x32.png?v=red-gunmetal-20261023", sizes: "32x32", type: "image/png" },
+      { url: '/brand/fixxflow/favicon/favicon.ico?v=red-gunmetal-20261023' },
+      {
+        url: '/brand/fixxflow/favicon/favicon-32x32.png?v=red-gunmetal-20261023',
+        sizes: '32x32',
+        type: 'image/png',
+      },
     ],
-    apple: "/brand/fixxflow/favicon/apple-touch-icon.png?v=red-gunmetal-20261023",
+    apple: '/brand/fixxflow/favicon/apple-touch-icon.png?v=red-gunmetal-20261023',
   },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
-        <a className="skip-link" href="#main-content">Skip to main content</a>
+        <a className="skip-link" href="#main-content">
+          Skip to main content
+        </a>
         {children}
         <ThemeController />
         <SpeedInsights />

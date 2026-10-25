@@ -3565,9 +3565,7 @@
         {
           "wait": "relation",
           "waitType": "Lock",
-          "blockedBy": [
-            703
-          ],
+          "blockedBy": [703],
           "queryAgeMs": 132.774,
           "application": "stage12c-blocked-migration"
         }
@@ -3583,9 +3581,7 @@
         {
           "wait": "relation",
           "waitType": "Lock",
-          "blockedBy": [
-            703
-          ],
+          "blockedBy": [703],
           "queryAgeMs": 292.916,
           "application": "stage12c-blocked-migration"
         }
@@ -3601,9 +3597,7 @@
         {
           "wait": "relation",
           "waitType": "Lock",
-          "blockedBy": [
-            703
-          ],
+          "blockedBy": [703],
           "queryAgeMs": 449.333,
           "application": "stage12c-blocked-migration"
         }
@@ -3619,9 +3613,7 @@
         {
           "wait": "relation",
           "waitType": "Lock",
-          "blockedBy": [
-            703
-          ],
+          "blockedBy": [703],
           "queryAgeMs": 596.06,
           "application": "stage12c-blocked-migration"
         }
@@ -3637,9 +3629,7 @@
         {
           "wait": "relation",
           "waitType": "Lock",
-          "blockedBy": [
-            703
-          ],
+          "blockedBy": [703],
           "queryAgeMs": 749.663,
           "application": "stage12c-blocked-migration"
         }
@@ -3655,9 +3645,7 @@
         {
           "wait": "relation",
           "waitType": "Lock",
-          "blockedBy": [
-            703
-          ],
+          "blockedBy": [703],
           "queryAgeMs": 905.796,
           "application": "stage12c-blocked-migration"
         }
@@ -3682,12 +3670,8 @@
       ]
     ],
     "mutationMs": [
-      49.12237499999901,
-      45.39054199999373,
-      43.54908299999806,
-      50.352624999999534,
-      62.48220899999433,
-      62.74412499999744
+      49.12237499999901, 45.39054199999373, 43.54908299999806, 50.352624999999534,
+      62.48220899999433, 62.74412499999744
     ],
     "before": {
       "rules": "1ce2b6d3743ae0baa96664bdba726a3e",
@@ -4198,11 +4182,7 @@
   "releaseDecision": "BLOCKED: steady workload fails; hosted-specific, full UI/screen-reader and operational-matrix gaps remain; no activation",
   "ui": {
     "scope": "Real local Safari; documented manual observations",
-    "viewports": [
-      1440,
-      834,
-      390
-    ],
+    "viewports": [1440, 834, 390],
     "operationsZoomPercent": 200,
     "fullMatrix": "PARTIAL",
     "screenReader": "BLOCKED; incomplete spoken workflow audit; VoiceOver OFF at owner request",

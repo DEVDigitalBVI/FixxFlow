@@ -1,2 +1,5 @@
-import { PageLoading } from "@/components/ui/page-loading";
-export default function Loading() { return <PageLoading title="Reports" message="Loading support metrics…"/>; }
+import { PageLoading } from '@/components/ui/page-loading';
+
+export default function Loading() {
+  return <PageLoading title="Reports" message="Loading support metrics…" />;
+}

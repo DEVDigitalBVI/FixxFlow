@@ -1,2 +1,14 @@
 'use client';
-export default function AutomationError({retry}:{retry:()=>void}){return <section className="settings-card"><h1>Automations could not load</h1><p role="alert">Try again. This page load has not changed your automations.</p><button className="button button-primary" onClick={retry}>Try again</button></section>;}
+
+import { RouteError } from '@/components/route-error';
+
+export default function ErrorBoundary({ retry }: { retry: () => void }) {
+  return (
+    <RouteError
+      retry={retry}
+      title="Automations could not load"
+      message="Try again. This page load has not changed your automations."
+      layout="card"
+    />
+  );
+}

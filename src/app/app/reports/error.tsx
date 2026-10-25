@@ -1,7 +1,15 @@
 'use client';
 
-import Link from 'next/link';
+import { RouteError } from '@/components/route-error';
 
-export default function ReportsError({ retry }: { retry: () => void }) {
-  return <div className="page page-narrow"><section className="settings-card"><h1>Reports could not load</h1><p role="alert">We couldn’t retrieve the report data. Your saved definitions and schedules have not changed.</p><div className="knowledge-actions"><button className="button button-primary" onClick={retry}>Try again</button><Link className="button button-secondary" href="/app">Back to overview</Link></div></section></div>;
+export default function ErrorBoundary({ retry }: { retry: () => void }) {
+  return (
+    <RouteError
+      retry={retry}
+      title="Reports could not load"
+      message="We couldn’t retrieve the report data. Your saved definitions and schedules have not changed."
+      layout="narrow"
+      back={{ href: '/app', label: 'Back to overview' }}
+    />
+  );
 }

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+
 import { load } from '../../../tests/helpers/load-module.mjs';
 
 const { WebAnalytics } = load('src/features/product-analytics/web-analytics.tsx', {
@@ -25,6 +26,9 @@ test('web page views retain feature paths while redacting every record ID', () =
     type: 'pageview',
     url: 'https://www.fixxflow.app/app/administration/automations/50000000-0000-0000-0000-000000000401/history/AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE',
   });
-  assert.equal(result.url, 'https://www.fixxflow.app/app/administration/automations/[id]/history/[id]');
+  assert.equal(
+    result.url,
+    'https://www.fixxflow.app/app/administration/automations/[id]/history/[id]',
+  );
   assert.equal(beforeSend({ type: 'pageview', url: 'not a URL' }), null);
 });

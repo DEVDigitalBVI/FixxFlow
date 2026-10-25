@@ -1,8 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from 'react';
+
 import { normalizeSearch } from '@/lib/search';
+
 import { confirmDiscardChanges } from './unsaved-changes';
 
 export const SEARCH_DELAY = 300;
@@ -24,16 +26,26 @@ export function restoreSearchForm(form: HTMLFormElement, params: URLSearchParams
   for (const control of form.elements) {
     if (control instanceof HTMLInputElement) {
       if (control.name === 'q') control.value = normalizeSearch(params.get('q') ?? '');
-      else if (control.type === 'checkbox') control.checked = params.getAll(control.name).includes(control.value);
+      else if (control.type === 'checkbox')
+        control.checked = params.getAll(control.name).includes(control.value);
     } else if (control instanceof HTMLSelectElement) {
       const value = params.get(control.name);
-      control.value = Array.from(control.options).some(option => option.value === value) ? value! : control.options[0]?.value ?? '';
+      control.value = Array.from(control.options).some((option) => option.value === value)
+        ? value!
+        : (control.options[0]?.value ?? '');
     }
   }
 }
 
 /** Enhance the existing GET form; results and authorization stay on the server. */
-export function LiveSearchForm({ action, label, className, children, resultSummary, idleMessage = 'Results update as you type. You can also press Enter or Search.' }: {
+export function LiveSearchForm({
+  action,
+  label,
+  className,
+  children,
+  resultSummary,
+  idleMessage = 'Results update as you type. You can also press Enter or Search.',
+}: {
   action: string;
   label: string;
   className?: string;
@@ -71,15 +83,20 @@ export function LiveSearchForm({ action, label, className, children, resultSumma
   }, [href, params, cancel]);
 
   useEffect(() => {
-    const leave = () => { cancel(); requestedHref.current = null; };
+    const leave = () => {
+      cancel();
+      requestedHref.current = null;
+    };
     const followLink = (event: MouseEvent) => {
       if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href]') : null;
+      const link =
+        event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href]') : null;
       if (link) {
         leave();
         // A clear link can point to the already-committed URL while a draft is
         // waiting. Restore it immediately even when navigation changes no URL.
-        if (form.current?.contains(link) && link.pathname === action) restoreSearchForm(form.current, new URLSearchParams(link.search));
+        if (form.current?.contains(link) && link.pathname === action)
+          restoreSearchForm(form.current, new URLSearchParams(link.search));
       }
     };
     // Cancel before navigation starts, including links outside this form.
@@ -117,21 +134,46 @@ export function LiveSearchForm({ action, label, className, children, resultSumma
     else timer.current = setTimeout(search, SEARCH_DELAY);
   };
 
-  return <>
-    <form ref={form} action={action} method="get" role="search" aria-label={label} aria-busy={pending} className={className}
-      onChange={event => {
-        if (event.target instanceof HTMLInputElement && event.target.name === 'q') schedule();
-      }}
-      onCompositionStart={() => { composing.current = true; cancel(); }}
-      onCompositionEnd={() => { composing.current = false; schedule(); }}
-      onKeyDown={event => {
-        if (event.key === 'Enter' && (composing.current || event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229)) event.preventDefault();
-      }}
-      onSubmit={event => { event.preventDefault(); search(true); }}>
-      {children}
-    </form>
-    <p className="muted live-search-status" role="status" aria-live="polite" aria-atomic="true">
-      {pending ? 'Searching…' : searched ? resultSummary : idleMessage}
-    </p>
-  </>;
+  return (
+    <>
+      <form
+        ref={form}
+        action={action}
+        method="get"
+        role="search"
+        aria-label={label}
+        aria-busy={pending}
+        className={className}
+        onChange={(event) => {
+          if (event.target instanceof HTMLInputElement && event.target.name === 'q') schedule();
+        }}
+        onCompositionStart={() => {
+          composing.current = true;
+          cancel();
+        }}
+        onCompositionEnd={() => {
+          composing.current = false;
+          schedule();
+        }}
+        onKeyDown={(event) => {
+          if (
+            event.key === 'Enter' &&
+            (composing.current ||
+              event.nativeEvent.isComposing ||
+              event.nativeEvent.keyCode === 229)
+          )
+            event.preventDefault();
+        }}
+        onSubmit={(event) => {
+          event.preventDefault();
+          search(true);
+        }}
+      >
+        {children}
+      </form>
+      <p className="muted live-search-status" role="status" aria-live="polite" aria-atomic="true">
+        {pending ? 'Searching…' : searched ? resultSummary : idleMessage}
+      </p>
+    </>
+  );
 }

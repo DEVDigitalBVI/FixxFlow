@@ -21,21 +21,12 @@
       "archive": "FF004"
     },
     "legacyDiscovery": {
-      "failures": [
-        "FF004",
-        "FF004",
-        "FF004"
-      ],
+      "failures": ["FF004", "FF004", "FF004"],
       "tenantScheduleUnchanged": true,
       "healthyTenantScans": 0
     },
     "ineligibleTenantUtilization": {
-      "claimed": [
-        2,
-        3,
-        2,
-        1
-      ],
+      "claimed": [2, 3, 2, 1],
       "requestedSlots": 20,
       "completed": 8
     },

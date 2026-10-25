@@ -43,8 +43,10 @@ Start with the [documentation index](docs/README.md). Keep implementation rules 
 With the local Supabase stack running, regenerate database types with:
 
 ```sh
-npx supabase gen types typescript --local > src/types/database.generated.ts
+npm run db:types -- --local
 ```
+
+Use `npm run db:types` to read the linked project instead. The generator captures successful output before replacing the file, so a CLI or authentication failure preserves the existing types.
 
 `database.generated.ts` contains generated schema and relationships. Keep domain aliases,
 CHECK-constraint refinements, and trigger-populated insert fields in `database.ts`;
@@ -95,7 +97,7 @@ their verification date; they do not establish the current state of a database.
 
 `20260925010358_enforce_mfa_and_server_owned_timestamps.sql` enforces verified MFA factors across all application tables, Storage and Realtime. Accounts without a verified factor can still use AAL1; enrolled accounts require AAL2. Authenticated callers cannot provide ticket/chat system timestamps or SLA completion fields. It also serializes administrator demotions and indexes chat foreign keys.
 
-Run `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build`. Run `supabase test db` against a local stack for the pgTAP suites, plus the transactional `supabase/tests/security-regression.sql` and `supabase/tests/sla-regression.sql` using the SQL runner. All fixtures roll back. Production verification should use the same transactional isolation and must not send invitations or recovery emails.
+Run `npm run format:check`, `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build`. Use `npm run format` to apply the shared Prettier and import-order rules. Generated files are excluded. Run `supabase test db` against a local stack for the pgTAP suites, plus the transactional `supabase/tests/security-regression.sql` and `supabase/tests/sla-regression.sql` using the SQL runner. All fixtures roll back. Production verification should use the same transactional isolation and must not send invitations or recovery emails.
 
 Production Auth uses `https://www.fixxflow.app`, confirmed email signup, an eight-character minimum, and leaked-password protection. Leaked-password protection is managed in the hosted Auth dashboard. Keep `NEXT_PUBLIC_SITE_URL` aligned with this domain. The server secret is required for organization bootstrap, invitations, and queued notification delivery; never expose it to the browser.
 

@@ -1,1 +1,12 @@
-export default function Loading(){return <div className="automation-collection automation-list-loading" role="status" aria-live="polite"><p>Loading automations…</p><div className="automation-list-loading-bars" aria-hidden="true"><span/><span/><span/></div></div>;}
+export default function Loading() {
+  return (
+    <div className="automation-collection automation-list-loading" role="status" aria-live="polite">
+      <p>Loading automations…</p>
+      <div className="automation-list-loading-bars" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+    </div>
+  );
+}

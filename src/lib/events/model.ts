@@ -1,5 +1,6 @@
 /** Transport-independent data contracts. No persistence or publishing in Stage 1. */
-export type JsonValue = null | boolean | number | string | readonly JsonValue[] | { readonly [key: string]: JsonValue };
+export type JsonValue =
+  null | boolean | number | string | readonly JsonValue[] | { readonly [key: string]: JsonValue };
 export type EntitySnapshot = Readonly<Record<string, JsonValue>>;
 
 export type DomainEvent = {

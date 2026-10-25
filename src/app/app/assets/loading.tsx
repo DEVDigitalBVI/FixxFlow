@@ -1,2 +1,5 @@
-import { PageLoading } from "@/components/ui/page-loading";
-export default function Loading() { return <PageLoading title="Assets" message="Loading equipment…"/>; }
+import { PageLoading } from '@/components/ui/page-loading';
+
+export default function Loading() {
+  return <PageLoading title="Assets" message="Loading equipment…" />;
+}

@@ -1,25 +1,136 @@
-import { load } from '../../../tests/helpers/load-module.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
+
 import React from 'react';
-import {renderToStaticMarkup} from 'react-dom/server';
+import { renderToStaticMarkup } from 'react-dom/server';
 
-const model=load('src/features/assets/model.ts');
-const form=()=>{const f=new FormData();for(const [k,v] of Object.entries({tag:' pc-001 ',name:'Laptop',kind:'computer',status:'available',assigned_user_id:'',location_id:''}))f.set(k,v);return f;};
-test('asset validation normalizes tags and rejects invalid lifecycle and dates',()=>{
- assert.equal(model.assetInput(form()).data.tag,'PC-001');const f=form();f.set('kind','__proto__');assert.ok(model.assetInput(f).error);f.set('kind','computer');f.set('purchased_on','2026-09-20');f.set('warranty_until','2026-09-01');assert.match(model.assetInput(f).error,/Warranty/);f.set('warranty_until','2027-09-01');f.set('status','retired');f.set('assigned_user_id','11111111-1111-4111-8111-111111111111');assert.match(model.assetInput(f).error,/Unassign/);
+import { load } from '../../../tests/helpers/load-module.mjs';
+
+const model = load('src/features/assets/model.ts');
+const form = () => {
+  const f = new FormData();
+  for (const [k, v] of Object.entries({
+    tag: ' pc-001 ',
+    name: 'Laptop',
+    kind: 'computer',
+    status: 'available',
+    assigned_user_id: '',
+    location_id: '',
+  }))
+    f.set(k, v);
+  return f;
+};
+test('asset validation normalizes tags and rejects invalid lifecycle and dates', () => {
+  assert.equal(model.assetInput(form()).data.tag, 'PC-001');
+  const f = form();
+  f.set('kind', '__proto__');
+  assert.ok(model.assetInput(f).error);
+  f.set('kind', 'computer');
+  f.set('purchased_on', '2026-09-20');
+  f.set('warranty_until', '2026-09-01');
+  assert.match(model.assetInput(f).error, /Warranty/);
+  f.set('warranty_until', '2027-09-01');
+  f.set('status', 'retired');
+  f.set('assigned_user_id', '11111111-1111-4111-8111-111111111111');
+  assert.match(model.assetInput(f).error, /Unassign/);
 });
-function actions(role,{data={id:'asset'},error=null}={}) {const calls=[];const builder=new Proxy({},{get:(_,key)=>key==='then'?resolve=>Promise.resolve({data,error}).then(resolve):(...args)=>{calls.push([key,...args]);return builder;}});return {...load('src/app/app/assets/actions.ts',{'next/cache':{revalidatePath:()=>{}},'next/navigation':{redirect:path=>{throw Error(path);}},'@/lib/auth/viewer':{requireViewer:async()=>({role,organizationId:'verified-org'})},'@/lib/supabase/server':{createClient:async()=>({from:t=>{calls.push(['from',t]);return builder;}})},'@/features/assets/model':model}),calls};}
-test('employee mutation attempts stop before database access',async()=>{const a=actions('end_user');assert.match((await a.saveAsset(null,0,{},form())).error,/Only IT/);assert.match((await a.changeAssetLink('ticket',{},form())).error,/Only IT/);assert.equal(a.calls.length,0);});
-test('asset writes use verified organization and stale revisions preserve the draft',async()=>{const a=actions('technician',{data:null});const f=form();f.set('organization_id','attacker-org');const result=await a.saveAsset('asset',4,{},f);assert.match(result.error,/changed/);assert.ok(a.calls.some(c=>c[0]==='eq'&&c[1]==='organization_id'&&c[2]==='verified-org'));assert.ok(a.calls.some(c=>c[0]==='eq'&&c[1]==='revision'&&c[2]===4));});
-test('duplicate equipment tags have an actionable error',async()=>{const a=actions('administrator',{error:{code:'23505'}});assert.match((await a.saveAsset(null,0,{},form())).error,/already in use/);});
-test('asset form exposes persistent labels, retirement guidance and native date fields',()=>{
- const {AssetForm}=load('src/features/assets/asset-form.tsx',{react:{...React,useState:v=>[v,()=>{}],useActionState:()=>[{},()=>{}],useEffect:()=>{},useRef:()=>({current:null})},'next/link':{default:p=>React.createElement('a',p)},'@/components/ui/submit-button':{SubmitButton:p=>React.createElement('button',p)},'@/app/app/assets/actions':{saveAsset:()=>{}},'./model':model});
- const html=renderToStaticMarkup(React.createElement(AssetForm,{people:[],locations:[]}));assert.match(html,/<label[^>]*>Asset tag/);assert.match(html,/type="date"/);assert.doesNotMatch(html,/Retirement preserves/);assert.doesNotMatch(html,/dangerouslySetInnerHTML/);
+function actions(role, { data = { id: 'asset' }, error = null } = {}) {
+  const calls = [];
+  const builder = new Proxy(
+    {},
+    {
+      get: (_, key) =>
+        key === 'then'
+          ? (resolve) => Promise.resolve({ data, error }).then(resolve)
+          : (...args) => {
+              calls.push([key, ...args]);
+              return builder;
+            },
+    },
+  );
+  return {
+    ...load('src/app/app/assets/actions.ts', {
+      'next/cache': { revalidatePath: () => {} },
+      'next/navigation': {
+        redirect: (path) => {
+          throw Error(path);
+        },
+      },
+      '@/lib/auth/viewer': {
+        requireViewer: async () => ({ role, organizationId: 'verified-org' }),
+      },
+      '@/lib/supabase/server': {
+        createClient: async () => ({
+          from: (t) => {
+            calls.push(['from', t]);
+            return builder;
+          },
+        }),
+      },
+      '@/features/assets/model': model,
+    }),
+    calls,
+  };
+}
+test('employee mutation attempts stop before database access', async () => {
+  const a = actions('end_user');
+  assert.match((await a.saveAsset(null, 0, {}, form())).error, /Only IT/);
+  assert.match((await a.changeAssetLink('ticket', {}, form())).error, /Only IT/);
+  assert.equal(a.calls.length, 0);
+});
+test('asset writes use verified organization and stale revisions preserve the draft', async () => {
+  const a = actions('technician', { data: null });
+  const f = form();
+  f.set('organization_id', 'attacker-org');
+  const result = await a.saveAsset('asset', 4, {}, f);
+  assert.match(result.error, /changed/);
+  assert.ok(
+    a.calls.some((c) => c[0] === 'eq' && c[1] === 'organization_id' && c[2] === 'verified-org'),
+  );
+  assert.ok(a.calls.some((c) => c[0] === 'eq' && c[1] === 'revision' && c[2] === 4));
+});
+test('duplicate equipment tags have an actionable error', async () => {
+  const a = actions('administrator', { error: { code: '23505' } });
+  assert.match((await a.saveAsset(null, 0, {}, form())).error, /already in use/);
+});
+test('asset form exposes persistent labels, retirement guidance and native date fields', () => {
+  const { AssetForm } = load('src/features/assets/asset-form.tsx', {
+    react: {
+      ...React,
+      useState: (v) => [v, () => {}],
+      useActionState: () => [{}, () => {}],
+      useEffect: () => {},
+      useRef: () => ({ current: null }),
+    },
+    'next/link': { default: (p) => React.createElement('a', p) },
+    '@/components/ui/submit-button': { SubmitButton: (p) => React.createElement('button', p) },
+    '@/app/app/assets/actions': { saveAsset: () => {} },
+    './model': model,
+  });
+  const html = renderToStaticMarkup(React.createElement(AssetForm, { people: [], locations: [] }));
+  assert.match(html, /<label[^>]*>Asset tag/);
+  assert.match(html, /type="date"/);
+  assert.doesNotMatch(html, /Retirement preserves/);
+  assert.doesNotMatch(html, /dangerouslySetInnerHTML/);
 });
 
-test('retirement guidance appears when the selected asset status is retired',()=>{
- const {AssetForm}=load('src/features/assets/asset-form.tsx',{react:{...React,useState:v=>[v,()=>{}],useActionState:()=>[{},()=>{}],useEffect:()=>{},useRef:()=>({current:null})},'next/link':{default:p=>React.createElement('a',p)},'@/components/ui/submit-button':{SubmitButton:p=>React.createElement('button',p)},'@/app/app/assets/actions':{saveAsset:()=>{}},'./model':model});
- const html=renderToStaticMarkup(React.createElement(AssetForm,{asset:{status:'retired'}}));
- assert.match(html,/Retirement preserves/);assert.match(html,/Unassign the employee before retiring/);
+test('retirement guidance appears when the selected asset status is retired', () => {
+  const { AssetForm } = load('src/features/assets/asset-form.tsx', {
+    react: {
+      ...React,
+      useState: (v) => [v, () => {}],
+      useActionState: () => [{}, () => {}],
+      useEffect: () => {},
+      useRef: () => ({ current: null }),
+    },
+    'next/link': { default: (p) => React.createElement('a', p) },
+    '@/components/ui/submit-button': { SubmitButton: (p) => React.createElement('button', p) },
+    '@/app/app/assets/actions': { saveAsset: () => {} },
+    './model': model,
+  });
+  const html = renderToStaticMarkup(
+    React.createElement(AssetForm, { asset: { status: 'retired' } }),
+  );
+  assert.match(html, /Retirement preserves/);
+  assert.match(html, /Unassign the employee before retiring/);
 });

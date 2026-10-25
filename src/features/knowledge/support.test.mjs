@@ -1,19 +1,23 @@
 import assert from 'node:assert/strict';
-import test from 'node:test';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
-import ts from 'typescript';
+import test from 'node:test';
+
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import ts from 'typescript';
 
 const require = createRequire(import.meta.url);
 const compiled = { exports: {} };
 const code = ts.transpileModule(fs.readFileSync('src/app/app/support/page.tsx', 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
 }).outputText;
-new Function('require', 'module', 'exports', code)(name => name === 'next/link'
-  ? { default: props => React.createElement('a', props) }
-  : require(name), compiled, compiled.exports);
+new Function('require', 'module', 'exports', code)(
+  (name) =>
+    name === 'next/link' ? { default: (props) => React.createElement('a', props) } : require(name),
+  compiled,
+  compiled.exports,
+);
 
 test('support offers an email draft and fallback without claiming a message was sent', () => {
   const html = renderToStaticMarkup(React.createElement(compiled.exports.default));

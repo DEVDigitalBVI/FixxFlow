@@ -1,6 +1,7 @@
 import fs from 'node:fs';
-import path from 'node:path';
 import { createRequire } from 'node:module';
+import path from 'node:path';
+
 import ts from 'typescript';
 
 /** Load an isolated TS/TSX module graph with explicit dependency replacements. */
@@ -21,7 +22,7 @@ export function load(file, mocks = {}) {
         jsx: ts.JsxEmit.ReactJSX,
       },
     }).outputText;
-    const localRequire = name => {
+    const localRequire = (name) => {
       if (Object.hasOwn(mocks, name)) return mocks[name];
       // Next's build-time boundary marker has no Node test runtime implementation.
       // The production build continues to enforce client/server import boundaries.
@@ -30,8 +31,9 @@ export function load(file, mocks = {}) {
         const base = name.startsWith('@/')
           ? path.resolve('src', name.slice(2))
           : path.resolve(path.dirname(absolute), name);
-        const source = [base, `${base}.ts`, `${base}.tsx`]
-          .find(candidate => /\.tsx?$/.test(candidate) && fs.existsSync(candidate));
+        const source = [base, `${base}.ts`, `${base}.tsx`].find(
+          (candidate) => /\.tsx?$/.test(candidate) && fs.existsSync(candidate),
+        );
         if (source) return visit(source);
       }
       return require(name);

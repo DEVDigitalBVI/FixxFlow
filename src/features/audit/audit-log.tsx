@@ -1,25 +1,174 @@
-import { Timestamp } from '@/features/timezones/provider';
-import { AuditValue } from './value';
-import { LiveSearchForm } from '@/components/ui/live-search-form';
-import { pageNumber } from "@/lib/pagination";
-import { normalizeSearch, SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
-import { auditEntities, auditFields, parseChanges } from './presentation';
 
-export type AuditFilters = {page?:string;q?:string;entity?:string;action?:string};
-export async function AuditLog({organizationId,filters}:{organizationId:string;filters:AuditFilters}) {
+import { LiveSearchForm } from '@/components/ui/live-search-form';
+import { Timestamp } from '@/features/timezones/provider';
+import { pageNumber } from '@/lib/pagination';
+import { normalizeSearch, SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
+import { createClient } from '@/lib/supabase/server';
+
+import { auditEntities, auditFields, parseChanges } from './presentation';
+import { AuditValue } from './value';
+
+export type AuditFilters = { page?: string; q?: string; entity?: string; action?: string };
+export async function AuditLog({
+  organizationId,
+  filters,
+}: {
+  organizationId: string;
+  filters: AuditFilters;
+}) {
   const page = pageNumber(filters.page, 999999);
   const search = normalizeSearch(filters.q);
-  const entity = filters.entity && Object.hasOwn(auditEntities,filters.entity)?filters.entity:'';
-  const action = ['created','updated','deleted'].includes(filters.action??'')?filters.action!:'';
+  const entity =
+    filters.entity && Object.hasOwn(auditEntities, filters.entity) ? filters.entity : '';
+  const action = ['created', 'updated', 'deleted'].includes(filters.action ?? '')
+    ? filters.action!
+    : '';
   const supabase = await createClient();
-  const source=search?supabase.rpc('search_audit_events',{target_organization_id:organizationId,search_text:search}):supabase.from('audit_events');
-  let query = source.select('id,actor_name,entity_type,entity_id,entity_label,action,changes,created_at').eq('organization_id',organizationId).order('created_at',{ascending:false}).order('id',{ascending:false}).range((page-1)*50,page*50);
-  if(entity)query=query.eq('entity_type',entity);
-  if(action)query=query.eq('action',action);
-  const {data,error}=await query;
-  if(error)throw new Error('Unable to load audit events.');
-  const href=(number:number)=>{const p=new URLSearchParams({page:String(number)});if(search)p.set('q',search);if(entity)p.set('entity',entity);if(action)p.set('action',action);return `/app/administration/audit-log?${p}`;};
-  return <><p className="muted">Significant changes are recorded automatically from the time auditing was enabled. Times follow your profile timezone. Message contents and credentials are excluded.</p><LiveSearchForm action="/app/administration/audit-log" className="audit-filters" label="Search audit activity" resultSummary={`${Math.min(data.length,50)} events on this page${data.length>50 ? ', with more results available' : ''}.`}><div className="field"><label htmlFor="audit-search">Find a person or item</label><input className="input" id="audit-search" name="q" type="search" maxLength={SEARCH_LIMIT} aria-describedby="audit-search-hint" defaultValue={search} placeholder="Name or Ticket #1042"/></div><div className="field"><label htmlFor="audit-entity">Area</label><select className="input" id="audit-entity" name="entity" defaultValue={entity}><option value="">All areas</option>{Object.entries(auditEntities).map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></div><div className="field"><label htmlFor="audit-action">Action</label><select className="input" id="audit-action" name="action" defaultValue={action}><option value="">All actions</option><option value="created">Created</option><option value="updated">Updated</option><option value="deleted">Deleted</option></select></div><button className="button button-primary" type="submit">Apply filters</button>{(search||entity||action)&&<Link className="button button-quiet" href="/app/administration/audit-log">Clear filters</Link>}</LiveSearchForm><p className="muted" id="audit-search-hint">{SEARCH_HINT}</p><ol className="audit-timeline">{data.slice(0,50).map(event=><li key={event.id}><div className="audit-event-heading"><time dateTime={event.created_at}><Timestamp value={event.created_at}/></time><span className="badge">{auditEntities[event.entity_type]??'Activity'}</span></div><p><strong>{event.actor_name}</strong> {event.action} {event.entity_type==='tickets'&&event.action!=='deleted'?<Link href={`/app/tickets/${event.entity_id}`}>{event.entity_label}</Link>:<strong>{event.entity_label}</strong>}</p><details><summary>View changes</summary><ul className="audit-changes">{parseChanges(event.changes).map((change,i)=><li key={`${change.field}-${i}`}><strong>{auditFields[change.field]??'Details'}:</strong> <span><AuditValue field={change.field} value={change.from}/></span><span aria-label="changed to"> → </span><span><AuditValue field={change.field} value={change.to}/></span></li>)}</ul></details></li>)}</ol>{!data.length&&<div className="empty-state"><strong>{search||entity||action?'No matching activity':'No recorded activity yet'}</strong><p>{search||entity||action?'Try different filters or clear your search.':'Future ticket and administration changes will appear here automatically.'}</p></div>}{(page>1 || data.length>50) && <nav className="queue-views" aria-label="Audit log pages">{page>1&&<Link className="button button-secondary" href={href(page-1)}>Previous</Link>}<span>Page {page}</span>{data.length>50&&<Link className="button button-secondary" href={href(page+1)}>Next</Link>}</nav>}</>;
+  const source = search
+    ? supabase.rpc('search_audit_events', {
+        target_organization_id: organizationId,
+        search_text: search,
+      })
+    : supabase.from('audit_events');
+  let query = source
+    .select('id,actor_name,entity_type,entity_id,entity_label,action,changes,created_at')
+    .eq('organization_id', organizationId)
+    .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
+    .range((page - 1) * 50, page * 50);
+  if (entity) query = query.eq('entity_type', entity);
+  if (action) query = query.eq('action', action);
+  const { data, error } = await query;
+  if (error) throw new Error('Unable to load audit events.');
+  const href = (number: number) => {
+    const p = new URLSearchParams({ page: String(number) });
+    if (search) p.set('q', search);
+    if (entity) p.set('entity', entity);
+    if (action) p.set('action', action);
+    return `/app/administration/audit-log?${p}`;
+  };
+  return (
+    <>
+      <p className="muted">
+        Significant changes are recorded automatically from the time auditing was enabled. Times
+        follow your profile timezone. Message contents and credentials are excluded.
+      </p>
+      <LiveSearchForm
+        action="/app/administration/audit-log"
+        className="audit-filters"
+        label="Search audit activity"
+        resultSummary={`${Math.min(data.length, 50)} events on this page${data.length > 50 ? ', with more results available' : ''}.`}
+      >
+        <div className="field">
+          <label htmlFor="audit-search">Find a person or item</label>
+          <input
+            className="input"
+            id="audit-search"
+            name="q"
+            type="search"
+            maxLength={SEARCH_LIMIT}
+            aria-describedby="audit-search-hint"
+            defaultValue={search}
+            placeholder="Name or Ticket #1042"
+          />
+        </div>
+        <div className="field">
+          <label htmlFor="audit-entity">Area</label>
+          <select className="input" id="audit-entity" name="entity" defaultValue={entity}>
+            <option value="">All areas</option>
+            {Object.entries(auditEntities).map(([key, label]) => (
+              <option key={key} value={key}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="field">
+          <label htmlFor="audit-action">Action</label>
+          <select className="input" id="audit-action" name="action" defaultValue={action}>
+            <option value="">All actions</option>
+            <option value="created">Created</option>
+            <option value="updated">Updated</option>
+            <option value="deleted">Deleted</option>
+          </select>
+        </div>
+        <button className="button button-primary" type="submit">
+          Apply filters
+        </button>
+        {(search || entity || action) && (
+          <Link className="button button-quiet" href="/app/administration/audit-log">
+            Clear filters
+          </Link>
+        )}
+      </LiveSearchForm>
+      <p className="muted" id="audit-search-hint">
+        {SEARCH_HINT}
+      </p>
+      <ol className="audit-timeline">
+        {data.slice(0, 50).map((event) => (
+          <li key={event.id}>
+            <div className="audit-event-heading">
+              <time dateTime={event.created_at}>
+                <Timestamp value={event.created_at} />
+              </time>
+              <span className="badge">{auditEntities[event.entity_type] ?? 'Activity'}</span>
+            </div>
+            <p>
+              <strong>{event.actor_name}</strong> {event.action}{' '}
+              {event.entity_type === 'tickets' && event.action !== 'deleted' ? (
+                <Link href={`/app/tickets/${event.entity_id}`}>{event.entity_label}</Link>
+              ) : (
+                <strong>{event.entity_label}</strong>
+              )}
+            </p>
+            <details>
+              <summary>View changes</summary>
+              <ul className="audit-changes">
+                {parseChanges(event.changes).map((change, i) => (
+                  <li key={`${change.field}-${i}`}>
+                    <strong>{auditFields[change.field] ?? 'Details'}:</strong>{' '}
+                    <span>
+                      <AuditValue field={change.field} value={change.from} />
+                    </span>
+                    <span aria-label="changed to"> → </span>
+                    <span>
+                      <AuditValue field={change.field} value={change.to} />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </li>
+        ))}
+      </ol>
+      {!data.length && (
+        <div className="empty-state">
+          <strong>
+            {search || entity || action ? 'No matching activity' : 'No recorded activity yet'}
+          </strong>
+          <p>
+            {search || entity || action
+              ? 'Try different filters or clear your search.'
+              : 'Future ticket and administration changes will appear here automatically.'}
+          </p>
+        </div>
+      )}
+      {(page > 1 || data.length > 50) && (
+        <nav className="queue-views" aria-label="Audit log pages">
+          {page > 1 && (
+            <Link className="button button-secondary" href={href(page - 1)}>
+              Previous
+            </Link>
+          )}
+          <span>Page {page}</span>
+          {data.length > 50 && (
+            <Link className="button button-secondary" href={href(page + 1)}>
+              Next
+            </Link>
+          )}
+        </nav>
+      )}
+    </>
+  );
 }

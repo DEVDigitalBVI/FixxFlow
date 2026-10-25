@@ -1,23 +1,42 @@
 // Generates reviewable SQL only; it does not connect to or modify a database.
-import fs from 'node:fs';
 import { createHash } from 'node:crypto';
+import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 export function articleId(organizationId, key) {
-  const bytes = createHash('sha1').update(Buffer.from(organizationId.replaceAll('-', ''), 'hex')).update(`fixxflow-knowledge:${key}`).digest().subarray(0, 16);
+  const bytes = createHash('sha1')
+    .update(Buffer.from(organizationId.replaceAll('-', ''), 'hex'))
+    .update(`fixxflow-knowledge:${key}`)
+    .digest()
+    .subarray(0, 16);
   bytes[6] = (bytes[6] & 15) | 80;
   bytes[8] = (bytes[8] & 63) | 128;
   const hex = bytes.toString('hex');
-  return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
-const literal = value => "'" + String(value).replaceAll("'", "''") + "'";
+const literal = (value) => "'" + String(value).replaceAll("'", "''") + "'";
 export function buildImport(collection, organizationId, slug) {
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(organizationId) || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error('An explicit organization UUID and slug are required.');
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(organizationId) ||
+    !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)
+  )
+    throw new Error('An explicit organization UUID and slug are required.');
   const articles = collection.articles;
-  const keys = new Set(articles.map(a => a.key));
-  if (keys.size !== articles.length || articles.some(a => a.related.some(key => key === a.key || !keys.has(key)) || a.related.length > 8)) throw new Error('Invalid article keys or related guides.');
-  if (articles.some(a => !['employees','it_only'].includes(a.audience ?? 'it_only'))) throw new Error('Invalid article audience.');
-  const rows = articles.map(a => ({...a, audience: a.audience ?? 'it_only', id: articleId(organizationId, a.key)}));
+  const keys = new Set(articles.map((a) => a.key));
+  if (
+    keys.size !== articles.length ||
+    articles.some(
+      (a) => a.related.some((key) => key === a.key || !keys.has(key)) || a.related.length > 8,
+    )
+  )
+    throw new Error('Invalid article keys or related guides.');
+  if (articles.some((a) => !['employees', 'it_only'].includes(a.audience ?? 'it_only')))
+    throw new Error('Invalid article audience.');
+  const rows = articles.map((a) => ({
+    ...a,
+    audience: a.audience ?? 'it_only',
+    id: articleId(organizationId, a.key),
+  }));
   return `begin;
 set local standard_conforming_strings = on;
 do $$ begin
@@ -25,7 +44,7 @@ do $$ begin
     raise exception 'Organization identity does not match; no guides were imported';
   end if;
 end $$;
-select pg_advisory_xact_lock(hashtextextended(${literal('knowledge-import:'+organizationId)}, 0));
+select pg_advisory_xact_lock(hashtextextended(${literal('knowledge-import:' + organizationId)}, 0));
 create temporary table knowledge_import on commit drop as
 select r.* from jsonb_to_recordset(${literal(JSON.stringify(rows))}::jsonb)
 as r(id uuid, key text, category text, title text, summary text, content jsonb, related jsonb, audience text);
@@ -54,6 +73,8 @@ commit;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const [organizationId, slug] = process.argv.slice(2);
-  const collection = JSON.parse(fs.readFileSync(new URL('../content/knowledge/general-it.json', import.meta.url), 'utf8'));
+  const collection = JSON.parse(
+    fs.readFileSync(new URL('../content/knowledge/general-it.json', import.meta.url), 'utf8'),
+  );
   process.stdout.write(buildImport(collection, organizationId, slug));
 }

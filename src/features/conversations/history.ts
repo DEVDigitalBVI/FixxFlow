@@ -1,3 +1,5 @@
+import { isUuid } from '@/lib/ids';
+
 export const HISTORY_PAGE_SIZE = 50;
 export type HistoryRow = { id: string | number; created_at: string };
 
@@ -10,9 +12,12 @@ export function historyFilter(value: string | string[] | undefined) {
   if (!value) return null;
   if (typeof value !== 'string') throw new Error('Invalid history cursor');
   const [timestamp, id, extra] = value.split('|');
-  if (extra !== undefined || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/.test(timestamp)
-    || !Number.isFinite(Date.parse(timestamp))
-    || !/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|\d{1,19})$/i.test(id ?? '')) {
+  if (
+    extra !== undefined ||
+    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/.test(timestamp) ||
+    !Number.isFinite(Date.parse(timestamp)) ||
+    !(isUuid(id) || /^\d{1,19}$/.test(id ?? ''))
+  ) {
     throw new Error('Invalid history cursor');
   }
   return `created_at.lt.${timestamp},and(created_at.eq.${timestamp},id.lt.${id})`;

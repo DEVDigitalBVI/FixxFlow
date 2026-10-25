@@ -65,11 +65,7 @@
           "text": "For an urgent outage or suspected security incident, also use your established workplace contact method. A ticket records the issue but does not guarantee an immediate response. If FixxFlow itself is inaccessible, contact IT outside the app."
         }
       ],
-      "related": [
-        "follow-ticket",
-        "browser",
-        "phishing"
-      ],
+      "related": ["follow-ticket", "browser", "phishing"],
       "audience": "employees"
     },
     {
@@ -135,10 +131,7 @@
           "type": "paragraph"
         }
       ],
-      "related": [
-        "request-support",
-        "browser"
-      ],
+      "related": ["request-support", "browser"],
       "audience": "employees"
     },
     {
@@ -204,10 +197,7 @@
           "text": "If no email arrives, the link is rejected, or you cannot access your work inbox or authenticator, contact IT through an established alternative channel. Do not send your password or reset link."
         }
       ],
-      "related": [
-        "authenticator",
-        "request-support"
-      ],
+      "related": ["authenticator", "request-support"],
       "audience": "employees"
     },
     {
@@ -273,10 +263,7 @@
           "text": "If verification keeps failing, check that the phone uses automatic date and time. If you lost every verified authenticator, contact IT outside the app for help; do not create a duplicate organization to regain access."
         }
       ],
-      "related": [
-        "password",
-        "lost-device"
-      ],
+      "related": ["password", "lost-device"],
       "audience": "employees"
     },
     {
@@ -351,11 +338,7 @@
           "url": "https://support.microsoft.com/en-us/windows/fix-wi-fi-connection-issues-in-windows-9424a1f7-6a3b-65a6-4d78-7f07eee84d2c"
         }
       ],
-      "related": [
-        "browser",
-        "email",
-        "request-support"
-      ],
+      "related": ["browser", "email", "request-support"],
       "audience": "employees"
     },
     {
@@ -421,11 +404,7 @@
           "text": "Send IT the application name, error, approximate time, location, and whether ordinary websites work. Exclude passwords, codes, and connection secrets. Use another contact method if FixxFlow cannot be reached."
         }
       ],
-      "related": [
-        "wifi",
-        "password",
-        "request-support"
-      ],
+      "related": ["wifi", "password", "request-support"],
       "audience": "employees"
     },
     {
@@ -500,11 +479,7 @@
           "url": "https://support.microsoft.com/en-us/outlook/i-can-t-send-or-receive-messages-in-outlook"
         }
       ],
-      "related": [
-        "missing-email",
-        "wifi",
-        "phishing"
-      ],
+      "related": ["missing-email", "wifi", "phishing"],
       "audience": "employees"
     },
     {
@@ -570,11 +545,7 @@
           "text": "If messages from one sender repeatedly disappear, give IT the sender address, expected recipient, subject without sensitive details, and approximate sending time. IT can investigate filtering and delivery."
         }
       ],
-      "related": [
-        "email",
-        "password",
-        "phishing"
-      ],
+      "related": ["email", "password", "phishing"],
       "audience": "employees"
     },
     {
@@ -649,10 +620,7 @@
           "url": "https://support.microsoft.com/en-US/Windows/Hardware/Printer/fix-printer-connection-and-printing-problems-in-windows"
         }
       ],
-      "related": [
-        "wifi",
-        "request-support"
-      ],
+      "related": ["wifi", "request-support"],
       "audience": "employees"
     },
     {
@@ -727,10 +695,7 @@
           "url": "https://support.microsoft.com/en-us/windows/hardware/display-graphics/troubleshoot-external-monitor-connections-in-windows"
         }
       ],
-      "related": [
-        "request-support",
-        "browser"
-      ],
+      "related": ["request-support", "browser"],
       "audience": "employees"
     },
     {
@@ -805,10 +770,7 @@
           "url": "https://support.google.com/chrome/answer/142063?hl=en"
         }
       ],
-      "related": [
-        "wifi",
-        "request-support"
-      ],
+      "related": ["wifi", "request-support"],
       "audience": "employees"
     },
     {
@@ -874,10 +836,7 @@
           "text": "Update the ticket if your deadline changes, an installer asks for administrator credentials, or you receive unexpected access. Never put license secrets or passwords into the request."
         }
       ],
-      "related": [
-        "request-support",
-        "browser"
-      ],
+      "related": ["request-support", "browser"],
       "audience": "employees"
     },
     {
@@ -952,11 +911,7 @@
           "url": "https://www.nist.gov/itl/smallbusinesscyber/guidance-topic/phishing"
         }
       ],
-      "related": [
-        "password",
-        "authenticator",
-        "request-support"
-      ],
+      "related": ["password", "authenticator", "request-support"],
       "audience": "employees"
     },
     {
@@ -1022,11 +977,7 @@
           "text": "If you believe the device was stolen, follow your workplace’s physical-security reporting process as well. Do not attempt to recover it from another person yourself."
         }
       ],
-      "related": [
-        "authenticator",
-        "password",
-        "request-support"
-      ],
+      "related": ["authenticator", "password", "request-support"],
       "audience": "employees"
     },
     {
@@ -1103,12 +1054,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "teams-audio",
-        "teams-camera",
-        "teams-screen-sharing",
-        "outlook-meetings"
-      ],
+      "related": ["teams-audio", "teams-camera", "teams-screen-sharing", "outlook-meetings"],
       "audience": "employees"
     },
     {
@@ -1185,11 +1131,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "teams-join-chat",
-        "mouse-keyboard",
-        "request-support"
-      ],
+      "related": ["teams-join-chat", "mouse-keyboard", "request-support"],
       "audience": "employees"
     },
     {
@@ -1261,11 +1203,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "teams-audio",
-        "teams-join-chat",
-        "request-support"
-      ],
+      "related": ["teams-audio", "teams-join-chat", "request-support"],
       "audience": "employees"
     },
     {
@@ -1337,11 +1275,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "teams-join-chat",
-        "display",
-        "secure-file-sharing"
-      ],
+      "related": ["teams-join-chat", "display", "secure-file-sharing"],
       "audience": "employees"
     },
     {
@@ -1418,11 +1352,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "onedrive-sync",
-        "cloud-file-recovery",
-        "secure-file-sharing"
-      ],
+      "related": ["onedrive-sync", "cloud-file-recovery", "secure-file-sharing"],
       "audience": "employees"
     },
     {
@@ -1499,10 +1429,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "office-save-recovery",
-        "secure-file-sharing"
-      ],
+      "related": ["office-save-recovery", "secure-file-sharing"],
       "audience": "employees"
     },
     {
@@ -1579,10 +1506,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "office-save-recovery",
-        "software-access"
-      ],
+      "related": ["office-save-recovery", "software-access"],
       "audience": "employees"
     },
     {
@@ -1654,11 +1578,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "teams-join-chat",
-        "email",
-        "missing-email"
-      ],
+      "related": ["teams-join-chat", "email", "missing-email"],
       "audience": "employees"
     },
     {
@@ -1730,11 +1650,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "office-save-recovery",
-        "cloud-file-recovery",
-        "wifi"
-      ],
+      "related": ["office-save-recovery", "cloud-file-recovery", "wifi"],
       "audience": "employees"
     },
     {
@@ -1811,11 +1727,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "onedrive-sync",
-        "secure-file-sharing",
-        "office-save-recovery"
-      ],
+      "related": ["onedrive-sync", "secure-file-sharing", "office-save-recovery"],
       "audience": "employees"
     },
     {
@@ -1892,11 +1804,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "software-access",
-        "phishing",
-        "cloud-file-recovery"
-      ],
+      "related": ["software-access", "phishing", "cloud-file-recovery"],
       "audience": "employees"
     },
     {
@@ -1973,11 +1881,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "approved-updates",
-        "browser",
-        "request-support"
-      ],
+      "related": ["approved-updates", "browser", "request-support"],
       "audience": "employees"
     },
     {
@@ -2054,10 +1958,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "windows-performance",
-        "software-access"
-      ],
+      "related": ["windows-performance", "software-access"],
       "audience": "employees"
     },
     {
@@ -2134,11 +2035,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "display",
-        "teams-audio",
-        "request-support"
-      ],
+      "related": ["display", "teams-audio", "request-support"],
       "audience": "employees"
     },
     {
@@ -2210,11 +2107,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "phishing",
-        "password",
-        "request-support"
-      ],
+      "related": ["phishing", "password", "request-support"],
       "audience": "employees"
     },
     {
@@ -2306,12 +2199,7 @@
           "text": "Source guidance reviewed October 6, 2026. App labels and available features can vary by version, license, and organization policy."
         }
       ],
-      "related": [
-        "request-support",
-        "teams-join-chat",
-        "onedrive-sync",
-        "email"
-      ],
+      "related": ["request-support", "teams-join-chat", "onedrive-sync", "email"],
       "audience": "employees"
     },
     {
@@ -2542,11 +2430,7 @@
           "text": "If you cannot find a record, remove extra words, check feature filters, and confirm that you are in the correct organization. Ask the record owner or administrator about access rather than sharing someone else’s account."
         }
       ],
-      "related": [
-        "fixxflow-queue",
-        "fixxflow-help",
-        "fixxflow-account"
-      ],
+      "related": ["fixxflow-queue", "fixxflow-help", "fixxflow-account"],
       "intendedReaders": "everyone"
     },
     {
@@ -2615,11 +2499,7 @@
           "text": "Use Try again if the list fails to load. If an expected email is missing, check junk mail and ask IT to investigate delivery; avoid repeatedly requesting the same notification."
         }
       ],
-      "related": [
-        "fixxflow-email",
-        "fixxflow-chat",
-        "fixxflow-ticket-files"
-      ],
+      "related": ["fixxflow-email", "fixxflow-chat", "fixxflow-ticket-files"],
       "intendedReaders": "everyone"
     },
     {
@@ -2762,11 +2642,7 @@
           "text": "If a file is rejected, check its type and size. If the file list or history fails, use its retry control. Report the ticket number and error text to IT without sending account secrets."
         }
       ],
-      "related": [
-        "fixxflow-my-equipment",
-        "fixxflow-messages",
-        "fixxflow-recovery"
-      ],
+      "related": ["fixxflow-my-equipment", "fixxflow-messages", "fixxflow-recovery"],
       "intendedReaders": "everyone"
     },
     {
@@ -2835,11 +2711,7 @@
           "text": "If a device is missing or its assignment is wrong, ask IT to correct the asset record. For a lost or stolen device, follow your workplace security process promptly as well as recording a request."
         }
       ],
-      "related": [
-        "fixxflow-inventory-request",
-        "fixxflow-ticket-files",
-        "fixxflow-notifications"
-      ],
+      "related": ["fixxflow-inventory-request", "fixxflow-ticket-files", "fixxflow-notifications"],
       "intendedReaders": "employees"
     },
     {
@@ -2908,11 +2780,7 @@
           "text": "If no departments or items appear, ask an administrator to check your request grants and stock setup. If submission is uncertain, inspect request history before trying again."
         }
       ],
-      "related": [
-        "fixxflow-fulfill",
-        "fixxflow-my-equipment",
-        "fixxflow-ticket-files"
-      ],
+      "related": ["fixxflow-fulfill", "fixxflow-my-equipment", "fixxflow-ticket-files"],
       "intendedReaders": "authorized inventory requesters"
     },
     {
@@ -2981,11 +2849,7 @@
           "text": "If a guide is outdated, tell IT which article and step needs correction. If a download or article becomes unavailable, ask staff to check publication and access rather than reusing an old file link."
         }
       ],
-      "related": [
-        "fixxflow-kb-author",
-        "fixxflow-kb-maintain",
-        "fixxflow-start"
-      ],
+      "related": ["fixxflow-kb-author", "fixxflow-kb-maintain", "fixxflow-start"],
       "intendedReaders": "everyone"
     },
     {
@@ -3281,11 +3145,7 @@
           "text": "Ask an administrator about repeated authorization or stale-record failures. For a mistaken batch, review each ticket’s history and coordinate corrective changes rather than applying a blind reversal."
         }
       ],
-      "related": [
-        "fixxflow-queue",
-        "fixxflow-ticket-details",
-        "fixxflow-audit"
-      ],
+      "related": ["fixxflow-queue", "fixxflow-ticket-details", "fixxflow-audit"],
       "intendedReaders": "technicians and administrators"
     },
     {
@@ -3295,10 +3155,7 @@
       "summary": "For technicians and administrators. Turn a support conversation into tracked work without losing its history.",
       "reviewedOn": "2026-10-12",
       "audience": "it_only",
-      "sourcePaths": [
-        "src/app/app/chat/[conversationId]/page.tsx",
-        "src/app/app/chat/actions.ts"
-      ],
+      "sourcePaths": ["src/app/app/chat/[conversationId]/page.tsx", "src/app/app/chat/actions.ts"],
       "content": [
         {
           "type": "paragraph",
@@ -3353,11 +3210,7 @@
           "text": "If the desired ticket is not in the selector, check it through Ticket queue and ask an administrator about linking. Preserve a failed assignment draft and review any success notice before repeating an action."
         }
       ],
-      "related": [
-        "fixxflow-chat",
-        "fixxflow-ticket-details",
-        "fixxflow-messages"
-      ],
+      "related": ["fixxflow-chat", "fixxflow-ticket-details", "fixxflow-messages"],
       "intendedReaders": "technicians and administrators"
     },
     {
@@ -3500,11 +3353,7 @@
           "text": "If validation keeps failing, ask IT to review the template and exact row error. Do not work around an existing tag by changing it unless the equipment is genuinely a different asset."
         }
       ],
-      "related": [
-        "fixxflow-assets",
-        "fixxflow-stock",
-        "fixxflow-recovery"
-      ],
+      "related": ["fixxflow-assets", "fixxflow-stock", "fixxflow-recovery"],
       "intendedReaders": "technicians and administrators"
     },
     {
@@ -3573,11 +3422,7 @@
           "text": "If Reports is unavailable, retry or reload Reports. Share the period, format, and error reference with an administrator. Employees do not have the staff reporting route."
         }
       ],
-      "related": [
-        "fixxflow-sla",
-        "fixxflow-queue",
-        "fixxflow-platform-analytics"
-      ],
+      "related": ["fixxflow-sla", "fixxflow-queue", "fixxflow-platform-analytics"],
       "intendedReaders": "technicians and administrators"
     },
     {
@@ -3646,11 +3491,7 @@
           "type": "paragraph"
         }
       ],
-      "related": [
-        "fixxflow-kb-maintain",
-        "fixxflow-help",
-        "fixxflow-recovery"
-      ],
+      "related": ["fixxflow-kb-maintain", "fixxflow-help", "fixxflow-recovery"],
       "intendedReaders": "technicians and administrators"
     },
     {
@@ -3719,11 +3560,7 @@
           "type": "paragraph"
         }
       ],
-      "related": [
-        "fixxflow-kb-author",
-        "fixxflow-help",
-        "fixxflow-audit"
-      ],
+      "related": ["fixxflow-kb-author", "fixxflow-help", "fixxflow-audit"],
       "intendedReaders": "technicians and administrators"
     },
     {
@@ -3960,12 +3797,7 @@
           "text": "If deletion is blocked, use deactivation or ask an administrator to review the references. Do not remove historical tickets or equipment just to make a location deletable."
         }
       ],
-      "related": [
-        "fixxflow-people",
-        "fixxflow-routing",
-        "fixxflow-stock",
-        "fixxflow-account"
-      ],
+      "related": ["fixxflow-people", "fixxflow-routing", "fixxflow-stock", "fixxflow-account"],
       "intendedReaders": "administrators"
     },
     {
@@ -4034,11 +3866,7 @@
           "text": "If a selected team is inactive or unavailable, choose an active destination or remove the default. Ask an administrator to resolve conflicting edits before changing routing again."
         }
       ],
-      "related": [
-        "fixxflow-ticket-details",
-        "fixxflow-auto-create",
-        "fixxflow-organization"
-      ],
+      "related": ["fixxflow-ticket-details", "fixxflow-auto-create", "fixxflow-organization"],
       "intendedReaders": "administrators"
     },
     {
@@ -4271,11 +4099,7 @@
           "text": "If stock changed or a reserved unit is unavailable, stop and reconcile with the inventory manager. After a lost response, inspect the request and movements before retrying a handover."
         }
       ],
-      "related": [
-        "fixxflow-inventory-request",
-        "fixxflow-stock",
-        "fixxflow-ticket-details"
-      ],
+      "related": ["fixxflow-inventory-request", "fixxflow-stock", "fixxflow-ticket-details"],
       "intendedReaders": "inventory managers"
     },
     {
@@ -4344,11 +4168,7 @@
           "text": "Raise incorrect timing with an administrator using the ticket number and displayed deadline. Custom business-hours calendars and pause rules are not editable in the current fixed-policy UI."
         }
       ],
-      "related": [
-        "fixxflow-reports",
-        "fixxflow-ticket-details",
-        "fixxflow-auto-scheduled"
-      ],
+      "related": ["fixxflow-reports", "fixxflow-ticket-details", "fixxflow-auto-scheduled"],
       "intendedReaders": "technicians and administrators"
     },
     {
@@ -4432,10 +4252,7 @@
       "summary": "For everyone. Know where email replies go and what the support action actually does.",
       "reviewedOn": "2026-10-12",
       "audience": "employees",
-      "sourcePaths": [
-        "src/app/app/support/page.tsx",
-        "docs/features/notifications.md"
-      ],
+      "sourcePaths": ["src/app/app/support/page.tsx", "docs/features/notifications.md"],
       "content": [
         {
           "type": "paragraph",
@@ -4490,11 +4307,7 @@
           "text": "Contact your administrator for missing account emails or recurring delivery issues. Include the time and message purpose, but never forward reset links, passwords, or authenticator codes."
         }
       ],
-      "related": [
-        "fixxflow-notifications",
-        "fixxflow-people",
-        "fixxflow-recovery"
-      ],
+      "related": ["fixxflow-notifications", "fixxflow-people", "fixxflow-recovery"],
       "intendedReaders": "everyone"
     },
     {
@@ -4639,12 +4452,7 @@
           "text": "If a comparison or destination is unavailable, choose one supported by the field or ask an administrator to correct configuration. Do not broaden conditions simply to make an invalid test pass."
         }
       ],
-      "related": [
-        "fixxflow-auto-test",
-        "fixxflow-auto-create",
-        "fixxflow-routing",
-        "fixxflow-sla"
-      ],
+      "related": ["fixxflow-auto-test", "fixxflow-auto-create", "fixxflow-routing", "fixxflow-sla"],
       "intendedReaders": "administrators"
     },
     {
@@ -4787,11 +4595,7 @@
           "text": "If another administrator changed the rule, review the newer version before retrying. Contact the operator for processing health; do not assume disabling/archive reverses in-flight or completed changes."
         }
       ],
-      "related": [
-        "fixxflow-auto-test",
-        "fixxflow-auto-ops",
-        "fixxflow-auto-portable"
-      ],
+      "related": ["fixxflow-auto-test", "fixxflow-auto-ops", "fixxflow-auto-portable"],
       "intendedReaders": "administrators"
     },
     {
@@ -4860,11 +4664,7 @@
           "text": "If a narrow SLA-approaching window is missed or discovery lag is high, ask the operator to inspect service health. Increasing or changing a rule is not a replay mechanism for missed historical events."
         }
       ],
-      "related": [
-        "fixxflow-auto-test",
-        "fixxflow-auto-ops",
-        "fixxflow-sla"
-      ],
+      "related": ["fixxflow-auto-test", "fixxflow-auto-ops", "fixxflow-sla"],
       "intendedReaders": "administrators"
     },
     {
@@ -4941,11 +4741,7 @@
           "text": "Contact the platform operator for repeated failures, growing eligible backlog, or unhealthy processing. Avoid duplicate rules or manual replays until the original outcome is understood."
         }
       ],
-      "related": [
-        "fixxflow-auto-manage",
-        "fixxflow-auto-scheduled",
-        "fixxflow-email"
-      ],
+      "related": ["fixxflow-auto-manage", "fixxflow-auto-scheduled", "fixxflow-email"],
       "intendedReaders": "administrators"
     },
     {
@@ -5014,11 +4810,7 @@
           "text": "If the package or mapping is rejected, correct the reported issue and retry. Ask the source administrator about missing or ambiguous definitions; never guess a destination that broadens access."
         }
       ],
-      "related": [
-        "fixxflow-auto-test",
-        "fixxflow-auto-manage",
-        "fixxflow-auto-create"
-      ],
+      "related": ["fixxflow-auto-test", "fixxflow-auto-manage", "fixxflow-auto-create"],
       "intendedReaders": "administrators"
     },
     {
@@ -5087,11 +4879,7 @@
           "text": "Contact the platform operator for owner provisioning, unavailable MFA, or an account already assigned to another workspace. Do not change customer memberships to work around owner-console authentication."
         }
       ],
-      "related": [
-        "fixxflow-platform-analytics",
-        "fixxflow-people",
-        "fixxflow-admin"
-      ],
+      "related": ["fixxflow-platform-analytics", "fixxflow-people", "fixxflow-admin"],
       "intendedReaders": "provisioned platform owners"
     },
     {
@@ -5160,12 +4948,7 @@
           "text": "Ask the platform operator about unavailable analytics, missing audit operations, or access failures. Do not enable usage sharing for other users to fill an empty chart."
         }
       ],
-      "related": [
-        "fixxflow-platform",
-        "fixxflow-reports",
-        "fixxflow-audit",
-        "fixxflow-account"
-      ],
+      "related": ["fixxflow-platform", "fixxflow-reports", "fixxflow-audit", "fixxflow-account"],
       "intendedReaders": "provisioned platform owners"
     },
     {
@@ -5257,10 +5040,7 @@
       "summary": "For everyone. Record an issue clearly and use staff assignment controls when available.",
       "reviewedOn": "2026-10-12",
       "audience": "employees",
-      "sourcePaths": [
-        "src/app/app/tickets/new/page.tsx",
-        "src/app/app/tickets/actions.ts"
-      ],
+      "sourcePaths": ["src/app/app/tickets/new/page.tsx", "src/app/app/tickets/actions.ts"],
       "content": [
         {
           "type": "paragraph",

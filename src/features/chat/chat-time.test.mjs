@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+
 import { load } from '../../../tests/helpers/load-module.mjs';
 
 test('compact chat times retain the full date and viewer timezone in their accessible name', () => {
