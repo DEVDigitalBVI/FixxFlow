@@ -64,6 +64,38 @@ export function evaluateSla(
   };
 }
 
+type TicketSla = ReturnType<typeof ticketSla>;
+const active: SlaState[] = ['on_track', 'warning', 'breached'];
+
+/**
+ * One scannable line for queue rows: the objective that needs attention now.
+ * Order: breached, nearest active deadline, missed, missing, met, then no SLA.
+ * Ticket detail keeps the full two-objective view.
+ */
+export function queueSlaSummary(sla: TicketSla): { state: SlaState; text: string } {
+  const objectives = [
+    ['Response', sla.response],
+    ['Resolution', sla.resolution],
+  ] as const;
+  const pending = objectives
+    .filter(([, result]) => active.includes(result.state))
+    .sort(([, a], [, b]) => Date.parse(a.deadline ?? '') - Date.parse(b.deadline ?? ''));
+  const pick =
+    objectives.find(([, result]) => result.state === 'breached') ??
+    pending[0] ??
+    objectives.find(([, result]) => result.state === 'missed') ??
+    objectives.find(([, result]) => result.state === 'missing') ??
+    [...objectives].reverse().find(([, result]) => result.state === 'met');
+  if (!pick) return { state: 'unavailable', text: 'No SLA' };
+  const [objective, result] = pick;
+  // "No public response recorded" already names its objective.
+  const text =
+    result.state === 'missing'
+      ? result.label
+      : `${objective} ${result.label.charAt(0).toLowerCase()}${result.label.slice(1)}`;
+  return { state: result.state, text: text.replace(/\b(\d+) minutes?\b/, '$1m') };
+}
+
 export function ticketSla(ticket: SlaTicket, now: number) {
   const terminal = ticket.status === 'resolved' || ticket.status === 'closed';
   return {

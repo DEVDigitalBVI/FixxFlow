@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { evaluateSla, ticketSla } from './sla.ts';
+import { evaluateSla, queueSlaSummary, ticketSla } from './sla.ts';
 
 const start = '2026-09-24T08:00:00Z';
 const due = '2026-09-24T12:00:00Z';
@@ -99,4 +99,54 @@ test('terminal legacy tickets without a completion timestamp do not keep countin
     at('18:00:00'),
   );
   assert.equal(result.resolution.state, 'unavailable');
+});
+
+const ticket = (overrides) => ({
+  created_at: start,
+  status: 'open',
+  first_response_at: null,
+  resolved_at: null,
+  closed_at: null,
+  response_sla_due_at: due,
+  resolution_sla_due_at: '2026-09-24T20:00:00Z',
+  ...overrides,
+});
+const summary = (overrides, now) => queueSlaSummary(ticketSla(ticket(overrides), at(now)));
+
+test('queue SLA summary shows the nearest active deadline on one short line', () => {
+  assert.deepEqual(summary({}, '11:37:00'), { state: 'warning', text: 'Response due in 23m' });
+  assert.deepEqual(summary({ first_response_at: '2026-09-24T09:00:00Z' }, '10:00:00'), {
+    state: 'on_track',
+    text: 'Resolution due in 10h',
+  });
+});
+test('queue SLA summary puts any breach first', () => {
+  assert.deepEqual(summary({ response_sla_due_at: '2026-09-24T21:00:00Z' }, '20:30:00'), {
+    state: 'breached',
+    text: 'Resolution breached 30m ago',
+  });
+});
+test('queue SLA summary reports outcomes on finished tickets, problems before success', () => {
+  const finished = { status: 'resolved', first_response_at: '2026-09-24T09:00:00Z' };
+  assert.deepEqual(summary({ ...finished, resolved_at: '2026-09-24T19:00:00Z' }, '22:00:00'), {
+    state: 'met',
+    text: 'Resolution met',
+  });
+  assert.deepEqual(summary({ ...finished, resolved_at: '2026-09-24T21:00:00Z' }, '22:00:00'), {
+    state: 'missed',
+    text: 'Resolution missed by 1h',
+  });
+  assert.deepEqual(summary({ status: 'closed', closed_at: '2026-09-24T19:00:00Z' }, '22:00:00'), {
+    state: 'missing',
+    text: 'No public response recorded',
+  });
+});
+test('queue SLA summary says plainly when a ticket has no SLA', () => {
+  assert.deepEqual(
+    summary({ response_sla_due_at: null, resolution_sla_due_at: null }, '09:00:00'),
+    {
+      state: 'unavailable',
+      text: 'No SLA',
+    },
+  );
 });

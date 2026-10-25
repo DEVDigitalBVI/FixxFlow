@@ -163,3 +163,17 @@ test('timezone settings keep their original write guard during background refres
     h.close();
   }
 });
+
+test('relative ages stay short for scanning and fall back to a date after a week', () => {
+  const { formatRelativeAge } = load('src/features/timezones/model.ts');
+  const now = Date.parse('2026-10-24T12:00:00Z');
+  const age = (iso, zone = 'UTC') => formatRelativeAge(iso, now, zone);
+  assert.equal(age('2026-10-24T11:59:40Z'), 'Just now');
+  assert.equal(age('2026-10-24T12:00:30Z'), 'Just now');
+  assert.equal(age('2026-10-24T11:15:00Z'), '45m ago');
+  assert.equal(age('2026-10-24T09:00:00Z'), '3h ago');
+  assert.equal(age('2026-10-21T12:00:00Z'), '3d ago');
+  assert.equal(age('2026-10-03T09:30:00Z'), 'Oct 3');
+  assert.equal(age('2025-12-31T23:00:00Z'), 'Dec 31, 2025');
+  assert.equal(age('2025-12-31T23:00:00Z', 'Asia/Tokyo'), 'Jan 1');
+});

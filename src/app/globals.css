@@ -2569,8 +2569,9 @@ img {
   color: var(--color-text-muted);
   font-size: 12px;
 }
+/* Fits a 1280px laptop with the sidebar expanded; wider tables scroll in their region. */
 .ticket-table {
-  min-width: 1050px;
+  min-width: 880px;
 }
 .ticket-table th:first-child,
 .ticket-table td:first-child {
@@ -3398,12 +3399,8 @@ img {
   font-size: 12px;
 }
 .sla-compact {
-  min-width: 160px;
-  gap: 8px;
-}
-.sla-compact .sla-objective {
-  padding-inline-start: 8px;
-  font-size: 12px;
+  min-width: 150px;
+  font-size: 13px;
 }
 @media (max-width: 767px) {
   .sla-compact {
@@ -7786,39 +7783,31 @@ details.settings-card[open] > summary {
   z-index: 1;
 }
 @media (min-width: 768px) {
-  .ticket-queue-panel .sla-compact {
-    min-width: 220px;
-  }
   .ticket-queue-panel .ticket-table th {
     white-space: nowrap;
     overflow-wrap: normal;
   }
-  .ticket-queue-panel .ticket-table td:is([data-label='Requester'], [data-label='Assigned to']) {
-    min-width: 130px;
+  .ticket-queue-panel .ticket-table :is(th, td) {
+    padding-inline: 12px;
+  }
+  .ticket-queue-panel .ticket-table td[data-label='Assigned to'] {
+    min-width: 116px;
+  }
+  .ticket-queue-panel .sla-compact {
+    min-width: 140px;
   }
   .ticket-queue-panel .ticket-table td[data-label='Updated'] {
-    min-width: 140px;
+    white-space: nowrap;
   }
 }
 .ticket-queue-panel .ticket-table td {
-  height: 72px;
+  height: 56px;
 }
 .ticket-queue-panel .ticket-table td[data-label='Ticket'] {
   width: 30%;
 }
 .ticket-queue-panel .ticket-link {
   gap: 6px;
-}
-.ticket-queue-panel .sla-compact {
-  gap: 6px;
-}
-.ticket-queue-panel .sla-compact .sla-objective {
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: baseline;
-  gap: 8px;
-  padding: 0;
-  border: 0;
-  overflow-wrap: normal;
 }
 .ticket-queue-panel .ticket-link strong {
   font-size: 14px;
