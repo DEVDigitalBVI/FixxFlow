@@ -7,11 +7,11 @@ supabase/.temp/
 src/types/database.generated.ts
 next-env.d.ts
 # Generated and external artifacts.
-public/
-brand/
-artifacts/
+/public/
+/brand/
+/artifacts/
 *.lock
 package-lock.json
 # Scope this cleanup to maintained code and configuration.
 **/*.md
-supabase/
+/supabase/
