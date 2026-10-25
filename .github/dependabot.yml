@@ -8,6 +8,12 @@ updates:
       time: '09:00'
       timezone: America/Tortola
     open-pull-requests-limit: 5
+    groups:
+      # pglite-pgtap pins an exact pglite peer version; update them together.
+      pglite:
+        patterns:
+          - '@electric-sql/pglite'
+          - '@electric-sql/pglite-pgtap'
   - package-ecosystem: github-actions
     directory: /
     schedule:
