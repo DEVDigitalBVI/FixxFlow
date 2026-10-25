@@ -76,7 +76,7 @@ Apply `20260925004643_ticket_sla_targets.sql` before deploying the SLA UI. It st
 
 | Priority | First public staff response | Resolution |
 | --- | --- | --- |
-| Critical | 15 minutes | 4 hours |
+| Urgent | 15 minutes | 4 hours |
 | High | 1 hour | 8 hours |
 | Normal | 4 hours | 24 hours |
 | Low | 8 hours | 48 hours |

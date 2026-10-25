@@ -56,7 +56,8 @@ test('intake priority survives edits and retries and reaches every email format'
       );
       const claimed = (await db.query('select * from public.claim_notification_emails(20)')).rows;
       const mail = claimed.find((n) => n.ticket_id === ticket);
-      const label = priority[0].toUpperCase() + priority.slice(1);
+      const label =
+        priority === 'critical' ? 'Urgent' : priority[0].toUpperCase() + priority.slice(1);
       assert.ok(mail.title.endsWith(`Priority: ${label}`));
       await sendNotificationEmail(
         mail,
@@ -89,7 +90,7 @@ test('intake priority survives edits and retries and reaches every email format'
       'attempted payload is unchanged by migration',
     );
     assert.ok(
-      retry.find((n) => n.ticket_id === unattempted).title.endsWith('Priority: Critical'),
+      retry.find((n) => n.ticket_id === unattempted).title.endsWith('Priority: Urgent'),
       'unattempted intake is backfilled',
     );
     assert.equal(

@@ -32,7 +32,7 @@ test('activity renders recorded changes with readable labels and no raw identifi
   );
   assert.equal(
     activityDetail(event('priority_changed', { from: 'normal', to: 'critical' }), names),
-    'Normal → Critical',
+    'Normal → Urgent',
   );
   assert.equal(
     activityDetail(event('assignment_changed', { from: null, to: 'worker' }), names),

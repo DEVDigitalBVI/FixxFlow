@@ -477,7 +477,7 @@ test('intake and ownership emails render a dedicated priority field in both bodi
       ['low', 'Low'],
       ['normal', 'Normal'],
       ['high', 'High'],
-      ['critical', 'Critical'],
+      ['critical', 'Urgent'],
     ]) {
       await sendNotificationEmail(
         {

@@ -222,12 +222,12 @@ catalog: stable ID, name, description, category, use case, guidance and a normal
 
 | Template | Starting condition | Action / required administrator input |
 | --- | --- | --- |
-| Critical Ticket Assignment | Priority equals Critical | Select team |
+| Urgent Ticket Assignment | Priority equals Urgent | Select team |
 | Category Based Routing | Select category | Select team |
 | Technician Assignment | Select category; editable | Select active technician |
 | Priority Adjustment | Select category; editable | Select priority |
 | Add Internal Triage Note | Select category; editable | Enter internal note |
-| Requester Notification | Priority equals Critical | Standard ticket update to Requester |
+| Requester Notification | Priority equals Urgent | Standard ticket update to Requester |
 
 No candidate required new capabilities. References are blank, never guessed from
 organization choices or replaced with synthetic IDs. Templates with missing inputs

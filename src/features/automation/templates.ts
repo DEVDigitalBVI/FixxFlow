@@ -32,13 +32,13 @@ const draft = (
 export const automationTemplates: readonly AutomationTemplate[] = [
   {
     id: 'critical-ticket-assignment',
-    name: 'Critical Ticket Assignment',
+    name: 'Urgent Ticket Assignment',
     category: 'Routing',
-    description: 'Route critical tickets to the appropriate team.',
+    description: 'Route urgent tickets to the appropriate team.',
     useCase: 'Keep urgent work with the team responsible for triage.',
     guidance: 'Select a team. Review whether category routing already covers these tickets.',
     definition: {
-      ...draft('Critical Ticket Assignment', 'priority', 'assign_team'),
+      ...draft('Urgent Ticket Assignment', 'priority', 'assign_team'),
       conditions: {
         kind: 'group',
         id: 'conditions',
@@ -91,7 +91,7 @@ export const automationTemplates: readonly AutomationTemplate[] = [
     name: 'Requester Notification',
     category: 'Communication',
     description: 'Send the standard ticket update to the requester.',
-    useCase: 'Notify the requester when a critical ticket is created.',
+    useCase: 'Notify the requester when an urgent ticket is created.',
     guidance:
       'Review the condition and existing ticket notifications to avoid unnecessary messages. The standard message cannot be customized here.',
     definition: {

@@ -15,7 +15,7 @@ export const ticketPriorities: Record<TicketPriority, { label: string; tone: str
   low: { label: 'Low', tone: 'slate' },
   normal: { label: 'Normal', tone: 'slate' },
   high: { label: 'High', tone: 'amber' },
-  critical: { label: 'Critical', tone: 'red' },
+  critical: { label: 'Urgent', tone: 'red' },
 };
 
 export const formatTicketDate = (value: string | null, timeZone = 'UTC') =>
