@@ -21,10 +21,10 @@ Custom exports support Excel, CSV, and PDF. They include the organization, repor
 
 ## Scheduled delivery
 
-Administrators can attach weekly or monthly delivery schedules to saved reports, using the organization timezone and Excel, CSV, or PDF attachments. A minute cron endpoint performs two durable steps:
+Administrators can attach weekly or monthly delivery schedules to saved reports, using the organization timezone and Excel, CSV, or PDF attachments. A cron endpoint runs every 15 minutes (at :00, :15, :30 and :45, so on-the-hour schedules send on time) and performs two durable steps:
 
 1. due schedules create one immutable delivery item per recipient with a snapshot of the report definition;
-2. workers lease a bounded batch, generate fresh report data, send a recipient-specific email, and acknowledge success or retry with exponential backoff.
+2. workers lease batches of three, generate fresh report data, send a recipient-specific email, and acknowledge success or retry with exponential backoff. A run keeps leasing batches for up to 40 seconds of its 60-second limit, so large recipient lists clear in one run; retries wait for their backoff and the next run.
 
 Leases are fenced, attempts are capped at five, and provider idempotency keys are delivery-specific. Delivery history retains status, attempts, scheduled time, snapshot time, format, and recipient. Attachments are not stored. Report definitions and schedules are audited; definitions are summarized and recipient addresses are represented only as a count in the audit log.
 
