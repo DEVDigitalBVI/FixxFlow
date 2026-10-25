@@ -23,16 +23,19 @@ export default async function InventoryItemPage({
   searchParams: Promise<{ page?: string; equipment?: string }>;
 }) {
   const viewer = await requireViewer(),
-    access = await inventoryAccess(viewer),
     db = await createClient(),
     { itemId } = await params,
     filters = await searchParams;
-  const { data: item, error } = await db
-    .from('inventory_items')
-    .select('*')
-    .eq('organization_id', viewer.organizationId)
-    .eq('id', itemId)
-    .maybeSingle();
+  // The full item row feeds the stock summary and request/stock forms.
+  const [{ data: item, error }, access] = await Promise.all([
+    db
+      .from('inventory_items')
+      .select('*')
+      .eq('organization_id', viewer.organizationId)
+      .eq('id', itemId)
+      .maybeSingle(),
+    inventoryAccess(viewer),
+  ]);
   if (error) throw new Error('Inventory item could not load. Try again.');
   if (!item) notFound();
   const page = pageNumber(filters.page),
@@ -41,7 +44,7 @@ export default async function InventoryItemPage({
     access.manager
       ? db
           .from('inventory_movements')
-          .select('*', { count: 'exact' })
+          .select('id,kind,quantity,created_at,actor_name,context,note', { count: 'exact' })
           .eq('organization_id', viewer.organizationId)
           .eq('item_id', item.id)
           .order('created_at', { ascending: false })
@@ -51,7 +54,7 @@ export default async function InventoryItemPage({
     access.manager && item.kind === 'equipment'
       ? db
           .from('inventory_equipment')
-          .select('*', { count: 'exact' })
+          .select('asset_id,asset_context,state,request_id', { count: 'exact' })
           .eq('organization_id', viewer.organizationId)
           .eq('item_id', item.id)
           .order('asset_id')
@@ -59,28 +62,34 @@ export default async function InventoryItemPage({
       : { data: [], error: null, count: 0 },
   ]);
   const assetIds = (units.data ?? []).map((u) => u.asset_id);
-  const currentAssets = assetIds.length
-    ? await db
-        .from('assets')
-        .select('*')
-        .eq('organization_id', viewer.organizationId)
-        .in('id', assetIds)
-    : { data: [], error: null };
-  const currentOwners = await profileLabels(
-    db,
-    viewer.organizationId,
-    (currentAssets.data ?? []).map((a) => a.assigned_user_id),
-  );
+  const issuedIds = (units.data ?? []).flatMap((u) => (u.request_id ? [u.request_id] : []));
+  // Asset owners and issued destinations both depend only on the equipment page.
+  const [{ currentAssets, currentOwners }, issuedRequests] = await Promise.all([
+    (async () => {
+      const currentAssets = assetIds.length
+        ? await db
+            .from('assets')
+            .select('id,status,assigned_user_id')
+            .eq('organization_id', viewer.organizationId)
+            .in('id', assetIds)
+        : { data: [], error: null };
+      const currentOwners = await profileLabels(
+        db,
+        viewer.organizationId,
+        (currentAssets.data ?? []).map((a) => a.assigned_user_id),
+      );
+      return { currentAssets, currentOwners };
+    })(),
+    issuedIds.length
+      ? db
+          .from('inventory_requests')
+          .select('id,destination')
+          .eq('organization_id', viewer.organizationId)
+          .in('id', issuedIds)
+      : { data: [], error: null },
+  ]);
   const owners = new Map(currentOwners.map((p) => [p.user_id, p.display_name]));
   const assets = new Map((currentAssets.data ?? []).map((a) => [a.id, a]));
-  const issuedIds = (units.data ?? []).flatMap((u) => (u.request_id ? [u.request_id] : []));
-  const issuedRequests = issuedIds.length
-    ? await db
-        .from('inventory_requests')
-        .select('id,destination,context')
-        .eq('organization_id', viewer.organizationId)
-        .in('id', issuedIds)
-    : { data: [], error: null };
   const destinations = new Map((issuedRequests.data ?? []).map((r) => [r.id, r.destination]));
   const href = (n: number, e = equipmentPage) =>
     `/app/inventory/${item.id}?page=${n}&equipment=${e}`;
