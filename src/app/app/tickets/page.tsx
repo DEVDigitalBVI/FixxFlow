@@ -358,6 +358,7 @@ export default async function TicketsPage({
               className="queue-filters"
               label="Search tickets"
               resultSummary={searchSummary}
+              idleMessage=""
             >
               <input type="hidden" name="view" value={view} />
               <label className="ticket-queue-search">
