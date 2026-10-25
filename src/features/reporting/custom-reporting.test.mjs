@@ -241,10 +241,12 @@ test('scheduled report cron authenticates, renders a claimed item and fences its
     else process.env.CRON_SECRET = previous;
   });
   const calls = [];
+  let claims = 0;
   const database = {
     rpc: async (name, args) => {
       calls.push([name, args]);
       if (name === 'enqueue_scheduled_report_deliveries') return { data: 1, error: null };
+      if (name === 'claim_report_deliveries' && claims++ > 0) return { data: [], error: null };
       if (name === 'claim_report_deliveries')
         return {
           data: [
@@ -388,9 +390,11 @@ test('scheduled report failures identify the failing phase regardless of error w
   });
   for (const phase of ['render_failed', 'provider_failed']) {
     let acknowledged;
+    let claims = 0;
     const database = {
       rpc: async (name, args) => {
         if (name === 'enqueue_scheduled_report_deliveries') return { data: 1 };
+        if (name === 'claim_report_deliveries' && claims++ > 0) return { data: [] };
         if (name === 'claim_report_deliveries')
           return {
             data: [
@@ -445,4 +449,64 @@ test('scheduled report failures identify the failing phase regardless of error w
     assert.equal(acknowledged.provider_id, null);
     assert.equal(acknowledged.token, 'lease');
   }
+});
+
+test('one scheduled report run drains several claimed batches until the queue is empty', async (t) => {
+  const previous = process.env.CRON_SECRET;
+  process.env.CRON_SECRET = 'cron-secret';
+  t.after(() => {
+    if (previous === undefined) delete process.env.CRON_SECRET;
+    else process.env.CRON_SECRET = previous;
+  });
+  const report = { asOf: '2026-10-01T00:00:00Z', endDate: '2026-09-30', summary: {} };
+  const delivery = (id) => ({
+    delivery_id: id,
+    lease_token: `lease-${id}`,
+    organization_id: 'org',
+    report_id: 'saved',
+    report_name: 'Weekly',
+    definition: {},
+    recipient_email: `${id}@example.test`,
+    format: 'csv',
+  });
+  // Ten recipients arrive as batches of three, then the queue is empty.
+  const batches = [['a', 'b', 'c'], ['d', 'e', 'f'], ['g', 'h', 'i'], ['j'], []];
+  const sent = [];
+  const database = {
+    rpc: async (name) => {
+      if (name === 'enqueue_scheduled_report_deliveries') return { data: 10, error: null };
+      if (name === 'claim_report_deliveries')
+        return { data: (batches.shift() ?? []).map(delivery), error: null };
+      if (name === 'custom_report') return { data: report, error: null };
+      if (name === 'finish_report_delivery') return { data: true, error: null };
+      throw Error(name);
+    },
+    from: () => ({
+      select: () => ({
+        eq: () => ({ single: async () => ({ data: { name: 'Acme' }, error: null }) }),
+      }),
+    }),
+  };
+  const { GET } = load('src/app/api/cron/reports/route.ts', {
+    '@/lib/supabase/admin': { createAdminClient: () => database },
+    '@/features/notifications/configuration': { getNotificationEmailConfiguration: () => ({}) },
+    '@/lib/server-errors': { reportServerError: () => 'reference' },
+    '@/features/reporting/custom-model': { isCustomReport: (value) => value === report },
+    '@/features/reporting/custom-export': { createCustomReportCsv: () => 'csv' },
+    '@/features/reporting/export-model': { exportFormats: { csv: { mime: 'text/csv' } } },
+    '@/features/reporting/scheduled-email': {
+      sendScheduledReportEmail: async ({ recipient }) => {
+        sent.push(recipient);
+        return `provider-${recipient}`;
+      },
+    },
+  });
+  const response = await GET(
+    new Request('https://example.test/api/cron/reports', {
+      headers: { authorization: 'Bearer cron-secret' },
+    }),
+  );
+  assert.deepEqual(await response.json(), { queued: 10, processed: 10, sent: 10, failed: 0 });
+  assert.equal(sent.length, 10);
+  assert.equal(batches.length, 0);
 });

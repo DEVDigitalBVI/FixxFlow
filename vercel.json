@@ -7,6 +7,6 @@
     { "path": "/api/cron/notifications", "schedule": "* * * * *" },
     { "path": "/api/cron/automation", "schedule": "* * * * *" },
     { "path": "/api/cron/automation-scheduler", "schedule": "* * * * *" },
-    { "path": "/api/cron/reports", "schedule": "* * * * *" }
+    { "path": "/api/cron/reports", "schedule": "*/15 * * * *" }
   ]
 }

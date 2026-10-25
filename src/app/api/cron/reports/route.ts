@@ -14,6 +14,8 @@ import type { Json } from '@/types/database';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
+/** Stop claiming new batches here; leaves headroom to finish in-flight deliveries. */
+const CLAIM_BUDGET_MS = 40_000;
 function filename(name: string, end: string, format: 'xlsx' | 'csv' | 'pdf') {
   const slug =
     name
@@ -86,6 +88,7 @@ async function deliver(database: DatabaseClient, item: Delivery, config: EmailCo
 }
 
 export async function GET(request: Request) {
+  const started = Date.now();
   if (!isCronAuthorized(request)) return Response.json({ error: 'Unauthorized' }, { status: 401 });
   const emailConfig = getNotificationEmailConfiguration(process.env);
   if (!emailConfig)
@@ -94,14 +97,23 @@ export async function GET(request: Request) {
     const database = createAdminClient();
     const queued = await database.rpc('enqueue_scheduled_report_deliveries');
     if (queued.error) throw queued.error;
-    const claimed = await database.rpc('claim_report_deliveries', {
-      batch_size: 3,
-      lease_seconds: 240,
-    });
-    if (claimed.error) throw claimed.error;
+    // Runs every 15 minutes (vercel.json), so drain in small leased batches until
+    // the claim budget is spent instead of sending a single batch per run.
+    let processed = 0;
     let sent = 0;
-    for (const item of claimed.data ?? []) if (await deliver(database, item, emailConfig)) sent++;
-    const processed = claimed.data?.length ?? 0;
+    while (Date.now() - started < CLAIM_BUDGET_MS) {
+      const claimed = await database.rpc('claim_report_deliveries', {
+        batch_size: 3,
+        lease_seconds: 240,
+      });
+      if (claimed.error) throw claimed.error;
+      const batch = claimed.data ?? [];
+      if (!batch.length) break;
+      for (const item of batch) {
+        processed++;
+        if (await deliver(database, item, emailConfig)) sent++;
+      }
+    }
     return Response.json({ queued: queued.data ?? 0, processed, sent, failed: processed - sent });
   } catch (error) {
     const reference = reportServerError('report.schedule.dispatch', error);
