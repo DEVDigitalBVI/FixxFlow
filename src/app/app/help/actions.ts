@@ -1,5 +1,6 @@
 "use server";
 
+import { isKnowledgeAudience } from "@/features/knowledge/audience";
 import { revalidatePath } from "next/cache";
 import { requireViewer } from "@/lib/auth/viewer";
 import { createClient } from "@/lib/supabase/server";
@@ -13,6 +14,8 @@ export async function saveArticle(form: FormData): Promise<{ error?: string; id?
   const summary = String(form.get("summary") ?? "").trim();
   const category = String(form.get("category") ?? "");
   const status = String(form.get("status") ?? "draft");
+  const audience = form.get("audience");
+  if (!isKnowledgeAudience(audience)) return { error: "Choose the article audience: Employee-facing or IT only." };
   let content;
   try { content = parseArticleContent(JSON.parse(String(form.get("content") ?? "[]"))); } catch { content = null; }
   const related = [...new Set(form.getAll("related").map(String))];
@@ -23,7 +26,7 @@ export async function saveArticle(form: FormData): Promise<{ error?: string; id?
     const { data, error } = await supabase.from("knowledge_attachments").select("id,content_type").eq("organization_id", viewer.organizationId).eq("article_id", id).in("id", imageIds);
     if (error || imageIds.some(image => !data?.some(asset => asset.id === image && asset.content_type.startsWith("image/")))) return { error: "Choose images uploaded to this article." };
   }
-  const values = { title, summary, category, content, status: status as "draft" | "published" | "archived", related_article_ids: related };
+  const values = { title, summary, category, content, audience, status: status as "draft" | "published" | "archived", related_article_ids: related };
   try {
     const revision = Number(form.get("revision"));
     const result = form.get("new") === "true"

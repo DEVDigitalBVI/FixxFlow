@@ -149,7 +149,7 @@ test('inventory database authorization, stock and ticket integration',async t=>{
   const req=await row(db,'inventory_requests',r);
   await db.query("update public.tickets set status='closed' where id=$1",[req.ticket_id]);
   assert.equal((await row(db,'inventory_requests',r)).state,'cancelled');assert.equal((await row(db,'inventory_items',id)).reserved,0);
-  await identity(db,employee);await db.query("update public.tickets set status='open' where id=$1",[req.ticket_id]);
+  await identity(db,employee);await db.query("select public.reopen_ticket($1,(select revision from public.tickets where id=$1),'The equipment request needs more attention.',gen_random_uuid())",[req.ticket_id]);
   assert.equal((await row(db,'inventory_requests',r)).state,'cancelled');
   await identity(db);await denied(db,()=>command(db,'issue',{id:r,destination:'Engineering office'}),/Approve and reserve/);
  });

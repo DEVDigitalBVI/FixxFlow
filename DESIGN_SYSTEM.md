@@ -520,3 +520,7 @@ Recent and full ticket activity share a semantic chronological list without visi
 ### Employee reopening
 
 On the employee's own resolved or closed ticket, show a prominent Reopen ticket disclosure near the top, before the description and conversation. It opens a required explanation field and a Reopen ticket submit action. Preserve the explanation on errors and keep its revision and retry key stable across background refreshes. Reopening returns the same ticket to Open, preserves ownership and conversation history, and records the explanation for IT and the reopening email. This employee action is separate from staff status controls.
+
+### Knowledge audiences
+
+Knowledge articles have separate Publication status and Audience controls. New articles default to IT only. Employees can read only published Employee-facing articles; IT staff can read both audiences plus drafts and archived content. Staff browsing provides an Audience filter and written audience labels on articles and search/suggestion results. Drafts and archived articles remain staff-only regardless of their intended audience. Related links, search, feedback, suggestions and attachments must respect the same database policy; hiding a control is insufficient.

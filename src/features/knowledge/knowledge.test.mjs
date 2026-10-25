@@ -67,7 +67,7 @@ test('FixxFlow how-tos cover feature routes, identify audiences, and are reachab
   'src/app/platform/audit/page.tsx',
  ]) assert.ok(sources.has(route),`Missing how-to coverage: ${route}`);
  for(const article of guides){
-  assert.ok(article.audience && article.content[0].text.includes(article.audience),article.key);
+  assert.ok(['employees','it_only'].includes(article.audience) && article.content[0].text.includes(article.intendedReaders),article.key);
   assert.match(article.reviewedOn,/^\d{4}-\d{2}-\d{2}$/);
   assert.ok(article.sourcePaths.length>0 && article.sourcePaths.every(path=>fs.existsSync(path)),article.key);
  }
@@ -128,4 +128,36 @@ test('filtered results, empty searches, and failures preserve recovery paths',as
  const staff=await renderHelp({role:'administrator',filters:{view:'all'}});
  assert.match(staff,/category=Security&amp;view=all/);
  assert.match(staff,/New article/);
+});
+
+test('staff can filter by audience while employees see a simpler knowledge base',async()=>{
+ const staff=await renderHelp({role:'technician',filters:{audience:'it_only',view:'all'},data:[{id:'guide',title:'Internal procedure',summary:'Steps',category:'Network',status:'published',audience:'it_only'}]});
+ assert.match(staff,/Audience<select/);
+ assert.match(staff,/IT only/);
+ assert.match(staff,/category=Security&amp;view=all&amp;audience=it_only/);
+ const employee=await renderHelp({filters:{audience:'it_only'}});
+ assert.doesNotMatch(employee,/Audience<select|All audiences|IT only/);
+});
+
+test('saving articles requires a valid audience and persists the selected audience',async()=>{
+ const saved=[];const id='10000000-0000-0000-0000-000000000001';
+ const query={insert(value){saved.push(value);return this;},select(){return this;},single:async()=>({data:{id},error:null})};
+ const {saveArticle}=load('src/app/app/help/actions.ts',{'next/cache':{revalidatePath(){}},'@/lib/auth/viewer':{requireViewer:async()=>({role:'technician',id:'worker',organizationId:'org'})},'@/lib/supabase/server':{createClient:async()=>({from:()=>query})}});
+ const form=()=>new Map(Object.entries({id,title:'Helpful guide',summary:'Steps',category:'Network',status:'published',content:JSON.stringify([{type:'paragraph',text:'Instructions'}]),new:'true'}));
+ // FormData semantics include an empty related-article selection.
+ const data=()=>{const value=form();value.getAll=()=>[];return value;};
+ assert.match((await saveArticle(data())).error,/audience/);assert.equal(saved.length,0);
+ for(const audience of ['employees','it_only']){const value=data();value.set('audience',audience);assert.equal((await saveArticle(value)).id,id);assert.equal(saved.at(-1).audience,audience);}
+});
+
+test('reviewed catalog explicitly separates employee guides from operational procedures',()=>{
+ const collection=JSON.parse(fs.readFileSync('content/knowledge/general-it.json','utf8'));
+ const review=JSON.parse(fs.readFileSync('docs/knowledge-audience-review.json','utf8'));
+ assert.equal(review.articles.length,70);
+ assert.equal(review.articles.filter(a=>a.audience==='employees').length,42);
+ assert.equal(review.articles.filter(a=>a.audience==='it_only').length,28);
+ for(const article of collection.articles){
+  assert.equal(article.audience,review.articles.find(a=>a.title===article.title)?.audience,article.title);
+  if(article.intendedReaders && /administrator|technician|platform owner|inventory manager/i.test(article.intendedReaders))assert.equal(article.audience,'it_only',article.title);
+ }
 });

@@ -1,0 +1,496 @@
+{
+  "reviewedOn": "2026-10-24",
+  "criteria": "Classified from article content and intended tasks, not category alone. Employee guides may mention staff responsibilities but contain no staff-only operational instructions beyond role-aware orientation. Inventory administration/fulfillment and platform-owner guides are IT only; equipment request guidance remains employee-facing. Unreviewed or changed content stays IT only.",
+  "articles": [
+    {
+      "id": "9d8d0fdc-6b97-5f24-8c23-250b3488533d",
+      "title": "A printer is offline or your document will not print",
+      "audience": "employees",
+      "content_hash": "cf083655494a9b9e39ae56b40d04ba49",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "90d21f7d-e78a-51fb-bd77-949a79b4b325",
+      "title": "A website will not load or the browser stops responding",
+      "audience": "employees",
+      "content_hash": "c83d8d8be668158d2920e1129de418f7",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "034e6914-6a64-5d6a-97d7-a61bb71f201c",
+      "title": "A work service or VPN will not connect",
+      "audience": "employees",
+      "content_hash": "4d2d22f1cfaeed1d656a70a2a50cd8bc",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "32613b98-d99a-59b4-9449-d2f660b988f1",
+      "title": "An external monitor is blank or shows no signal",
+      "audience": "employees",
+      "content_hash": "ee7469bb254ca5f15d9d3a3a66ad3fb2",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "9294ebdd-5378-57a8-9140-30a2fb38621b",
+      "title": "Check a Windows computer that is running slowly",
+      "audience": "employees",
+      "content_hash": "59fa3892b2651d56b6446b509572d23e",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "a2c5efa6-cd40-5b83-a257-d50ac5f580c0",
+      "title": "Create and update an Outlook meeting invitation",
+      "audience": "employees",
+      "content_hash": "03eae11989b6b79760b98413df83dcfd",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "2aa89451-488d-56d3-b330-206e01b91017",
+      "title": "Export a Word document to PDF",
+      "audience": "employees",
+      "content_hash": "c8b64934e60c6c8ba862372ddc5b759e",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "42e8c860-ee84-5d23-8dcb-e74ffbac7bd4",
+      "title": "Find a missing email or an expected reset message",
+      "audience": "employees",
+      "content_hash": "1eb0a9f35c45e255b5e8d416a2d16050",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "ddad230d-5013-5cc1-b5e3-8ea5fb5a9586",
+      "title": "Find official help articles and service-status information",
+      "audience": "employees",
+      "content_hash": "76eeb20fe2c5abc077299a266a092e16",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "ba1e40a0-29a9-5cfd-8fd0-80fd2b2ee438",
+      "title": "Find or restore a deleted cloud file",
+      "audience": "employees",
+      "content_hash": "ac33e25abd5da7b9dccffed031029359",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "9f8b062f-8f1f-55e2-958d-78ce4237324f",
+      "title": "Fix a camera that will not work in Teams",
+      "audience": "employees",
+      "content_hash": "ae80b0d1ffc69c8f6e2b92985d4549ef",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "f790e6ac-7886-5c37-bfb2-5baf3a45a2c2",
+      "title": "Fix microphone or speaker problems in Teams",
+      "audience": "employees",
+      "content_hash": "9ceb73fb250d9a473fb4eab5065e351e",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "f389ee69-25e8-5475-a8d5-c0f3f74cab0a",
+      "title": "FixxFlow: add ticket attachments and browse earlier history",
+      "audience": "employees",
+      "content_hash": "54bd26956c669471959f558339ccb279",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "bbab2359-5cf4-53fd-bc4c-fc0c23357c95",
+      "title": "FixxFlow: assign chats, link tickets, and close conversations",
+      "audience": "it_only",
+      "content_hash": "78b4d0088e699dc4ad60d9743222da8d",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "a0afe221-8f39-56ed-beb4-8305dedd1ad7",
+      "title": "FixxFlow: assign, classify, resolve, or reopen a ticket",
+      "audience": "it_only",
+      "content_hash": "ca01619b3aa224f9ccbd3ad85553888d",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "e24eb828-06d5-55a2-8adc-d4f7ff0dbda1",
+      "title": "FixxFlow: change multiple tickets from the queue",
+      "audience": "it_only",
+      "content_hash": "b287366215502678a4617fe3caa6d1ca",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "02ed0a57-c2c7-52ad-9523-00f4497f5900",
+      "title": "FixxFlow: check notification email behavior and contact FixxFlow support",
+      "audience": "employees",
+      "content_hash": "dae87807e7b563fe4e4f00bd6dec4f98",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "3c566107-7c48-57fd-9bc6-79e87c1801aa",
+      "title": "FixxFlow: configure time-based and SLA automation triggers",
+      "audience": "it_only",
+      "content_hash": "cb9bfd906b5b6412410f51425a4de000",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "43f5e4f5-8062-5bd8-9e82-b225c0fc0b28",
+      "title": "FixxFlow: create a knowledge article with images and attachments",
+      "audience": "it_only",
+      "content_hash": "bb62ab53d3f03779c78eaa42eb8451cc",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "dd8a4b2b-8546-5848-884c-764f42376966",
+      "title": "FixxFlow: create a ticket automation from a template or scratch",
+      "audience": "it_only",
+      "content_hash": "87091c1c751dc00e86eec756b39f063a",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "adce07a0-32f6-562e-b455-b03fed2d362d",
+      "title": "FixxFlow: create a ticket for yourself or another requester",
+      "audience": "employees",
+      "content_hash": "442057f005ae1d6aafaf1ed2174fd004",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "ae82c654-b80a-5aea-b749-c0c9d4c24dee",
+      "title": "FixxFlow: enable, disable, duplicate, or archive an automation",
+      "audience": "it_only",
+      "content_hash": "017fa9181cd5b81e5598a55ecedc9967",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "18fe8c80-f85f-5612-b190-fa91ec4502c3",
+      "title": "FixxFlow: export and import an automation between workspaces",
+      "audience": "it_only",
+      "content_hash": "0e1883f593f6d4f4938170c75f9739e6",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "9fde770f-59d4-59ad-801c-fee3dd965cab",
+      "title": "FixxFlow: find administration tools and understand access",
+      "audience": "it_only",
+      "content_hash": "0ff2a4d9441ca158d5ac7faca32b8bd8",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "bb57836b-2ff0-518c-96b1-3a76448db65d",
+      "title": "FixxFlow: find help articles and give useful feedback",
+      "audience": "employees",
+      "content_hash": "233039ffc0ea6d03fa26ab347251de80",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "bafbc76c-ee93-5146-8b2b-f21d0349db75",
+      "title": "FixxFlow: get started and find the right feature",
+      "audience": "employees",
+      "content_hash": "ec6ffdba017464043c8dbeb4949293b7",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "d83762af-9f17-5403-9caf-fd104c238ac6",
+      "title": "FixxFlow: grant department request and inventory management permissions",
+      "audience": "it_only",
+      "content_hash": "d2d96e3f6d168b82a54f458a19c036b7",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "73241af6-2d58-57ac-9c07-50a73315637e",
+      "title": "FixxFlow: import equipment from a spreadsheet",
+      "audience": "it_only",
+      "content_hash": "dc91bc267f38bdb73d749328f0d9d9f0",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "4ec08db7-a141-5c9a-837f-cafc6ddb6f43",
+      "title": "FixxFlow: inspect automation operations and execution failures",
+      "audience": "it_only",
+      "content_hash": "67b8fb6f3160e1e7f5b80f1c36cdea02",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "f1e9ef8a-891b-5fed-82b1-11284e38c363",
+      "title": "FixxFlow: invite members and manage roles or workspace access",
+      "audience": "it_only",
+      "content_hash": "8d3cbdb1db554d3548d570945f724c33",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "cec69f23-3eb7-5a9d-8c59-405c65204e00",
+      "title": "FixxFlow: manage departments, locations, and organization timezone",
+      "audience": "it_only",
+      "content_hash": "15d106a403c06ce770a8ad2b8e5f2358",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "27aaa502-095f-5b8c-9c39-978342071edc",
+      "title": "FixxFlow: manage teams, categories, subcategories, and default routing",
+      "audience": "it_only",
+      "content_hash": "b4f7c1798b4a34b396283adf724f8e95",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "383dd04c-f9e2-53f6-8d4e-4b2ff6c09d64",
+      "title": "FixxFlow: open the owner console and manage customer organizations",
+      "audience": "it_only",
+      "content_hash": "95cd34babcbfdbdc26e4ac5a3f28c4ef",
+      "reason": "Platform-owner operational procedure."
+    },
+    {
+      "id": "98422bbe-7344-526e-b1b1-ae6a7b88dc1f",
+      "title": "FixxFlow: read and manage ticket and chat notifications",
+      "audience": "employees",
+      "content_hash": "c6eeccfdaf71cb09e6f2160f33d0a9ee",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "145120ce-f6dc-54a8-9822-515e38b1a94d",
+      "title": "FixxFlow: read service reports and download Excel, CSV, or PDF",
+      "audience": "it_only",
+      "content_hash": "3bca43a69f3aea88d27de1bbd1be9559",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "264a2a11-b5ba-572d-b62e-f7637adc7842",
+      "title": "FixxFlow: receive equipment or consumables and correct stored stock",
+      "audience": "it_only",
+      "content_hash": "216e7a1a0db79ab69a35724ac6f846e1",
+      "reason": "Stock administration and fulfillment procedure for inventory operators."
+    },
+    {
+      "id": "2ce04863-c96d-532a-8c7e-95f39cb6419f",
+      "title": "FixxFlow: recover from failed saves and protect unfinished work",
+      "audience": "employees",
+      "content_hash": "966ba044ec69ea9d2ab97f5a311a163d",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "20de8acf-bdd6-5434-b806-f29f840ccf85",
+      "title": "FixxFlow: register, assign, and maintain equipment records",
+      "audience": "it_only",
+      "content_hash": "e715af1f1ecc6bd82a48e9f17e6c65f8",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "611e7b9c-ff8d-5261-a17f-d66c931007ca",
+      "title": "FixxFlow: request department equipment or supplies",
+      "audience": "employees",
+      "content_hash": "6358a479d1be9b032a0952b72100e8cf",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "92fe9954-9810-5a6b-83c1-651650683bca",
+      "title": "FixxFlow: review feedback and update or archive a guide",
+      "audience": "it_only",
+      "content_hash": "72b6f22d90b6a1856e62841c75caf6a5",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "affd9ae7-0398-5f20-a75d-f8d3082cf6eb",
+      "title": "FixxFlow: review product analytics and platform audit",
+      "audience": "it_only",
+      "content_hash": "20dd861fedbb344999fbb67bdeacccfa",
+      "reason": "Platform-owner operational procedure."
+    },
+    {
+      "id": "e96e3d84-65b5-529b-bc4d-b28d784f9de4",
+      "title": "FixxFlow: review who changed workspace records",
+      "audience": "it_only",
+      "content_hash": "c8a5e250d8f1c329b23ddadb5e5087ba",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "26f270e1-7391-5ef7-a5fe-0a4635fa6653",
+      "title": "FixxFlow: review, reserve, and issue an inventory request",
+      "audience": "it_only",
+      "content_hash": "78985b35603bc6bfa590c3e037ce4ff0",
+      "reason": "Stock administration and fulfillment procedure for inventory operators."
+    },
+    {
+      "id": "523c733c-f017-55d8-aec7-6d35f938eb0e",
+      "title": "FixxFlow: search the workspace and navigate with the keyboard",
+      "audience": "employees",
+      "content_hash": "2cb233df7c9131166532bc7c1eca4f54",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "f299e2a9-9367-53fc-8424-189a58b0a22d",
+      "title": "FixxFlow: send public replies and keep internal notes separate",
+      "audience": "it_only",
+      "content_hash": "8e52f38b6b937684d900d869372f5698",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "62d44b14-b4ca-530b-8614-b31163be5e32",
+      "title": "FixxFlow: set automation conditions and order ticket actions",
+      "audience": "it_only",
+      "content_hash": "c6d60261c54936f37b2f2d1717cc2264",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "e98082df-ed82-518e-b3a1-f8a6255e4a22",
+      "title": "FixxFlow: start a support chat and continue the conversation",
+      "audience": "employees",
+      "content_hash": "cc7bf271f8eea80e5ff64c456cde8800",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "50fcfee8-4ba6-5c89-a5b7-30ed714c35e0",
+      "title": "FixxFlow: test an automation without changing tickets",
+      "audience": "it_only",
+      "content_hash": "2bef847bc7eff36458b2a5c028e9a387",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "7c20bef6-ba8b-59e4-914c-a41456325e06",
+      "title": "FixxFlow: triage tickets with queue views, filters, and detail panels",
+      "audience": "it_only",
+      "content_hash": "fb47be7258e330d6f2635a18bae1a624",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "ffe23d1a-b246-5b94-bc00-3c8c6a8fadf6",
+      "title": "FixxFlow: understand priority, service targets, and overdue indicators",
+      "audience": "it_only",
+      "content_hash": "ebaab8a3b58d2b917b52a07c93ae6041",
+      "reason": "Technical support or workspace administration procedure."
+    },
+    {
+      "id": "a1e97af3-3cdc-5235-8916-2ec8cab99fd1",
+      "title": "FixxFlow: update your profile, timezone, and appearance",
+      "audience": "employees",
+      "content_hash": "8c4df7f72292a26883a220e35e062716",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "38c3911c-b5e1-5262-90c3-eac260d45197",
+      "title": "FixxFlow: view your equipment and request help for a device",
+      "audience": "employees",
+      "content_hash": "cf744e30c1de2cc850d71bb9fa7f358b",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "79f38af1-c562-5a81-965a-f612fb178663",
+      "title": "Follow a ticket, reply to IT, or reopen an issue",
+      "audience": "employees",
+      "content_hash": "78337fd9b99350e01da9c7904db45a15",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "4dbe634e-2677-5c9a-94e8-8e00bf0792cf",
+      "title": "Get help and submit a useful IT request",
+      "audience": "employees",
+      "content_hash": "9572846650c1fce73b4ba540d1c4a6af",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "53058304-6539-53c4-a3af-f379010a2378",
+      "title": "Install approved updates on a work computer",
+      "audience": "employees",
+      "content_hash": "1466554027acdccff1b48c92f02f951a",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "635393dc-5f98-5e04-a987-013a29b4f5df",
+      "title": "Join a Teams meeting and use meeting chat",
+      "audience": "employees",
+      "content_hash": "1856b4caa678a0a3a2963d4a2ca76a60",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "3926f65c-15c6-5649-8538-9140d9f54827",
+      "title": "Report a lost or stolen work device",
+      "audience": "employees",
+      "content_hash": "dd34fd26ad1646a08e6e3de17370884f",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "d885467c-9dbc-5c83-acf8-8ea75b2b2de5",
+      "title": "Report a suspicious email, message, or sign-in request",
+      "audience": "employees",
+      "content_hash": "e1aa4408cdc2c6a84eac159fe9737e52",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "553901f4-a7e3-5823-9db9-5846554fd86f",
+      "title": "Request software or access to a work application",
+      "audience": "employees",
+      "content_hash": "5f3595e6fdc773078efe0f120ae12c07",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "569b6b4f-a84c-5e28-b9c6-60b049ea1561",
+      "title": "Reset your FixxFlow password",
+      "audience": "employees",
+      "content_hash": "11663f2f5bf7cad5812c2a1922476bdb",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "0d43fa3f-985a-56b4-a3ac-287621c61690",
+      "title": "Respond to a fake technical-support warning",
+      "audience": "employees",
+      "content_hash": "ecd622464f30816d20aa1bf0f33be422",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "ba1bddf7-3d0b-54e6-84e0-fb0b5b3bdd9d",
+      "title": "Save and recover work in Word, Excel, and PowerPoint",
+      "audience": "employees",
+      "content_hash": "c5f06c628c58a0d8f083df2326df9344",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "301e4aaa-f04e-5a9a-a9d6-fcf0b2063929",
+      "title": "Set up an authenticator for FixxFlow",
+      "audience": "employees",
+      "content_hash": "0a78fada43333e8cd147332a54105314",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "a4b94660-5ecf-59a9-90cb-b0f840983aad",
+      "title": "Share a screen or window in a Teams meeting",
+      "audience": "employees",
+      "content_hash": "775cb207a10fedd37b4acb621baab479",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "89237b55-4c11-5c3d-bb4e-08c5c2d9d696",
+      "title": "Share a work file with the right people",
+      "audience": "employees",
+      "content_hash": "b09f6ab969a20756e3c9f698f4df21b8",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "2ab9e4a0-edd4-5fe8-95be-9aed747f124a",
+      "title": "Troubleshoot a file that will not sync with OneDrive",
+      "audience": "employees",
+      "content_hash": "4e36aa2d5d3e45c78aeeb68c8198acb9",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "55caf5ae-7c5d-5a67-ad0d-6ab421d435ff",
+      "title": "Troubleshoot a mouse or keyboard that stops responding",
+      "audience": "employees",
+      "content_hash": "304c80a3d75c1f2491c2b4ae14b4575a",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "eefe9ecb-0357-56bc-ab5a-f8590045d5b6",
+      "title": "Troubleshoot email that will not send or receive",
+      "audience": "employees",
+      "content_hash": "920dc88e91a3924d3ea9a64d459e9489",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "43b42295-a91f-5d1e-9615-8fafb22518c2",
+      "title": "Troubleshoot Excel formulas and unexpected results",
+      "audience": "employees",
+      "content_hash": "71142ee42501d3deffd85fcaa6c87f84",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    },
+    {
+      "id": "a6b8265b-63d3-5280-9568-807c6eb804a7",
+      "title": "Troubleshoot Wi-Fi or an unavailable internet connection",
+      "audience": "employees",
+      "content_hash": "f0897e9919e48352cef2611567fc5cab",
+      "reason": "Employee self-service, safe troubleshooting, personal account guidance, or permitted equipment-request workflow."
+    }
+  ]
+}

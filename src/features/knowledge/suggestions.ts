@@ -1,4 +1,4 @@
-export type SuggestedArticle = { id: string; title: string; summary: string; category: string };
+export type SuggestedArticle = { id: string; title: string; summary: string; category: string; audience?: import('./audience').KnowledgeAudience };
 const stopWords = new Set('the and for with that this from have has are was were not can cant cannot please help need issue problem my our your when what how does work working'.split(' '));
 function words(value: string) {
   return [...new Set(value.toLowerCase().replace(/wi[ -]?fi/g, 'wifi').replace(/[’']/g, '').split(/[^\p{L}\p{N}]+/u).map(word => word.length > 4 ? word.replace(/s$/, '') : word).filter(word => word.length >= 3 && !stopWords.has(word)))];

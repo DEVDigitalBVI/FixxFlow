@@ -16,7 +16,8 @@ export function buildImport(collection, organizationId, slug) {
   const articles = collection.articles;
   const keys = new Set(articles.map(a => a.key));
   if (keys.size !== articles.length || articles.some(a => a.related.some(key => key === a.key || !keys.has(key)) || a.related.length > 8)) throw new Error('Invalid article keys or related guides.');
-  const rows = articles.map(a => ({...a, id: articleId(organizationId, a.key)}));
+  if (articles.some(a => !['employees','it_only'].includes(a.audience ?? 'it_only'))) throw new Error('Invalid article audience.');
+  const rows = articles.map(a => ({...a, audience: a.audience ?? 'it_only', id: articleId(organizationId, a.key)}));
   return `begin;
 set local standard_conforming_strings = on;
 do $$ begin
@@ -27,15 +28,15 @@ end $$;
 select pg_advisory_xact_lock(hashtextextended(${literal('knowledge-import:'+organizationId)}, 0));
 create temporary table knowledge_import on commit drop as
 select r.* from jsonb_to_recordset(${literal(JSON.stringify(rows))}::jsonb)
-as r(id uuid, key text, category text, title text, summary text, content jsonb, related jsonb);
+as r(id uuid, key text, category text, title text, summary text, content jsonb, related jsonb, audience text);
 -- Reuse existing titles or stable IDs; never replace customer edits.
 update knowledge_import i set id = coalesce(
   (select a.id from public.knowledge_articles a where a.organization_id = ${literal(organizationId)}::uuid
    and (a.id = i.id or lower(trim(a.title)) = lower(trim(i.title))) order by (a.id = i.id) desc, a.created_at, a.id limit 1), i.id);
 create temporary table knowledge_import_created on commit drop as
 with inserted as (
-  insert into public.knowledge_articles(id,organization_id,category,title,summary,content,status,author_id)
-  select i.id,${literal(organizationId)}::uuid,i.category,i.title,i.summary,i.content,'published',null from knowledge_import i
+  insert into public.knowledge_articles(id,organization_id,category,title,summary,content,status,audience,author_id)
+  select i.id,${literal(organizationId)}::uuid,i.category,i.title,i.summary,i.content,'published',i.audience,null from knowledge_import i
   where not exists (select 1 from public.knowledge_articles a where a.id = i.id)
   returning id
 ) select id from inserted;

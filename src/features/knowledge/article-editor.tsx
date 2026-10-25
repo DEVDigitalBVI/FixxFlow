@@ -1,4 +1,5 @@
 "use client";
+import { knowledgeAudiences, type KnowledgeAudience } from "./audience";
 
 import { useEffect, useRef, useState } from "react";
 import { confirmDiscardChanges, useUnsavedChanges } from '@/components/ui/unsaved-changes';
@@ -13,9 +14,11 @@ import { uploadAndRegister } from "@/lib/uploads";
 
 const assetTypes = ["image/jpeg", "image/png", "image/webp", "application/pdf", "text/plain", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
 export function ArticleEditor({ article, organizationId, assets: initialAssets, related, isNew = false }: {
-  article: KnowledgeArticle; organizationId: string; assets: KnowledgeAsset[]; related: { id: string; title: string }[]; isNew?: boolean;
+  article: KnowledgeArticle; organizationId: string; assets: KnowledgeAsset[]; related: { id: string; title: string; audience?: import("./audience").KnowledgeAudience }[]; isNew?: boolean;
 }) {
   const router = useRouter();
+  const [revision] = useState(article.revision);
+  const [audience, setAudience] = useState<KnowledgeAudience>(article.audience ?? "it_only");
   const [blocks, setBlocks] = useState<ArticleBlock[]>(parseArticleContent(article.content) ?? []);
   const [assets, setAssets] = useState(initialAssets);
   const [error, setError] = useState(""); const [busy, setBusy] = useState(false); const [uploading, setUploading] = useState(false);
@@ -72,7 +75,7 @@ export function ArticleEditor({ article, organizationId, assets: initialAssets, 
   const images = Object.fromEntries(assets.filter(a => a.content_type.startsWith("image/")).map(a => [a.id, `/app/help/assets/${a.id}`]));
   return <div className="knowledge-editor">
     <form action={submit} onChange={() => setDirty(true)} onInvalidCapture={event => revealField(event.target as HTMLElement)}>
-      <input type="hidden" name="id" value={article.id}/><input type="hidden" name="revision" value={article.revision}/><input type="hidden" name="new" value={String(isNew)}/>
+      <input type="hidden" name="id" value={article.id}/><input type="hidden" name="revision" value={revision}/><input type="hidden" name="new" value={String(isNew)}/>
       {error && <p ref={errorRef} tabIndex={-1} className="alert alert-error" role="alert">{error}</p>}
       <fieldset disabled={busy}><legend>Article details</legend>
         <label>Title<input className="input" name="title" defaultValue={article.title} required minLength={3} maxLength={180}/></label>
@@ -96,8 +99,8 @@ export function ArticleEditor({ article, organizationId, assets: initialAssets, 
       <fieldset disabled={busy}><legend>Publish settings</legend>
         <label>Category<select className="input" name="category" defaultValue={article.category}>{knowledgeCategories.map(c => <option key={c}>{c}</option>)}</select></label>
         <label>Short summary (optional)<textarea className="input" name="summary" defaultValue={article.summary} maxLength={500}/></label>
-        <label>Visibility<select className="input" name="status" defaultValue={article.status}><option value="draft">Draft — IT staff only</option><option value="published">Published — all organization members</option><option value="archived">Archived — IT staff only</option></select></label><p className="muted">Drafts are visible to IT staff. Publishing makes this article available to everyone in your organization.</p></fieldset>
-      <details className="progressive-section knowledge-related-disclosure"><summary>Related articles <span className="muted">Optional</span></summary><fieldset disabled={busy}><legend className="sr-only">Related articles</legend><p className="muted">Choose up to eight. Readers only see articles they have access to.</p><div className="knowledge-related-options">{related.map(a => <label key={a.id}><input type="checkbox" name="related" value={a.id} defaultChecked={article.related_article_ids.includes(a.id)}/>{a.title}</label>)}</div></fieldset></details>
+        <label>Publication status<select className="input" name="status" defaultValue={article.status}><option value="draft">Draft — IT staff only</option><option value="published">Published</option><option value="archived">Archived — IT staff only</option></select></label><label>Audience<select className="input" name="audience" required value={audience} onChange={event => setAudience(event.target.value as KnowledgeAudience)} aria-describedby="article-audience-hint">{Object.entries(knowledgeAudiences).map(([value,item]) => <option key={value} value={value}>{item.label}</option>)}</select></label><p id="article-audience-hint" className="muted">Employee-facing articles are available to employees only after publication. IT only articles stay private to technicians and administrators. Drafts and archived articles are always IT only.</p></fieldset>
+      <details className="progressive-section knowledge-related-disclosure"><summary>Related articles <span className="muted">Optional</span></summary><fieldset disabled={busy}><legend className="sr-only">Related articles</legend><p className="muted">Choose up to eight. Readers only see articles they have access to.</p><div className="knowledge-related-options">{related.map(a => <label key={a.id}><input type="checkbox" name="related" value={a.id} defaultChecked={article.related_article_ids.includes(a.id)}/>{a.title}{a.audience ? ` · ${knowledgeAudiences[a.audience].label}` : ""}</label>)}</div></fieldset></details>
       <div className="knowledge-actions"><button className="button button-primary" disabled={busy || uploading}>{busy ? "Saving…" : isNew ? "Create article" : "Save article"}</button><button type="button" className="button button-secondary" onClick={() => { if (!dirty || confirmDiscardChanges()) router.push(isNew ? "/app/help" : `/app/help/${article.id}`); }}>Cancel</button></div>
     </form>
     <section className="settings-card"><h2>Images and attachments</h2>{isNew ? <p>Save your article to add images and attachments. You’ll return to this editor after saving.</p> : <><p>Files added here are available to anyone who can read this article.</p><label className="knowledge-file">Upload a file (up to 6 MB)<input type="file" accept={assetTypes.join(",")} disabled={uploading || busy} onChange={e => { void upload(e.target.files?.[0]); e.target.value=""; }}/></label>{uploadMessage && <p role="status">{uploadMessage}</p>}<ul>{assets.map(a => <li key={a.id}><a href={`/app/help/assets/${a.id}?download=1`}>{a.file_name}</a></li>)}</ul></>}</section>

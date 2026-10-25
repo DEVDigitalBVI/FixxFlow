@@ -18,14 +18,16 @@ import { createTicket } from "../actions";
 type Props = { searchParams: Promise<{ error?: string; asset?:string }> };
 export default async function NewTicketPage({ searchParams }: Props) {
   const viewer = await requireViewer(); const message = await searchParams; const supabase = await createClient();
-  const articlesResult = await supabase.from("knowledge_articles").select("id, title, summary, category").eq("organization_id", viewer.organizationId).eq("status", "published").order("updated_at", { ascending: false }).order("id").limit(200);
+  let articleQuery = supabase.from("knowledge_articles").select("id, title, summary, category, audience").eq("organization_id", viewer.organizationId).eq("status", "published");
+  if (viewer.role === "end_user") articleQuery=articleQuery.eq("audience","employees");
+  const articlesResult = await articleQuery.order("updated_at", { ascending: false }).order("id").limit(200);
   const equipment = viewer.role === "end_user" && message.asset ? await supabase.from("assets").select("id,name,tag").eq("organization_id",viewer.organizationId).eq("assigned_user_id",viewer.id).eq("id",message.asset).maybeSingle() : null;
   const staff = viewer.role !== "end_user";
   const contextFields = <div className="ticket-create-fields">
     <CategoryFields simple={!staff}/>
     {!equipment?.data && <LookupSelect searchable={staff ? true : "when-paginated"} resource="locations" guardSave={staff ? true : "selection"} name="locationId" label={staff ? "Location" : "Location (optional)"}/>}
   </div>;
-  const suggestions = <TicketSuggestions articles={articlesResult.data ?? []} categories={[]} unavailable={!!articlesResult.error}/>;
+  const suggestions = <TicketSuggestions articles={articlesResult.data ?? []} categories={[]} unavailable={!!articlesResult.error} showAudience={staff}/>;
   return <div className={staff ? "page page-narrow ticket-create-page" : "portal-page portal-form-page ticket-create-page"}>
     {staff ? <PageHeader title="New ticket" eyebrow="Ticket queue" description="Capture the issue and get it to the right people."/> : <header className="portal-page-heading"><div><span className="portal-kicker">IT support</span><h1>Open a ticket</h1><p>Tell IT what is happening. We’ll keep you updated here.</p></div></header>}
     {message.error && <div className="alert alert-error page-alert" role="alert">{message.error}</div>}

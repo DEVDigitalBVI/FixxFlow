@@ -64,3 +64,9 @@ Review the SQL and run it through the authorized database connection for that or
 The UI reuses portal cards, existing surface/border/focus tokens, and native links. Topics wrap from three columns to two to one on compact screens. Article section links target focusable headings; all support actions remain visible without hover, and no animation is introduced. Existing search, pagination, tenant isolation, staff editing, feedback, and related articles remain in use.
 
 Validation: collection parsing and related-link tests; heading-link accessibility tests; TypeScript, lint, build; transaction-based database rehearsal proving repeat imports create no duplicates and preserve a renamed, edited guide.
+
+## Article audiences
+
+Audience is separate from publication status: **Employee-facing** and **IT only**. New articles default to IT only. Employees can read only published Employee-facing articles, including through global search, ticket suggestions, related links and attachment downloads. IT staff can read both audiences and have a labeled Audience filter. Drafts and archived articles are always private to IT. The editor requires an explicit audience value when saving; the default keeps unreviewed imports private.
+
+The initial content review covers all 70 hosted articles: 42 employee-facing guides and 28 IT-only operational procedures. The per-article decision and reviewed content fingerprint are in `docs/knowledge-audience-review.json`. The migration only exposes reviewed employee content when its fingerprint still matches; changed or unknown articles remain IT only. Publishing guidance and the employee reopening label were corrected during the review.

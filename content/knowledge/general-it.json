@@ -69,7 +69,8 @@
         "follow-ticket",
         "browser",
         "phishing"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "follow-ticket",
@@ -78,66 +79,67 @@
       "summary": "Find your request, understand its status, and keep the troubleshooting conversation in one place.",
       "content": [
         {
-          "type": "paragraph",
-          "text": "This guide covers the employee ticket view. Your organization’s IT team manages assignment and priority."
+          "text": "This guide covers the employee ticket view. Your organization’s IT team manages assignment and priority.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "What to do"
+          "text": "What to do",
+          "type": "heading"
         },
         {
-          "type": "heading",
-          "text": "1. Open your request"
+          "text": "1. Open your request",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Choose My tickets, then select the relevant subject. Search using words from the title or the ticket number. Check the latest reply before sending another message."
+          "text": "Choose My tickets, then select the relevant subject. Search using words from the title or the ticket number. Check the latest reply before sending another message.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "2. Understand the status"
+          "text": "2. Understand the status",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "New means the request has been recorded. Open or In progress means it is being handled. Waiting on user means IT needs information from you. On hold means work is paused. Resolved means a solution has been recorded; Closed means the request has been closed."
+          "text": "New means the request has been recorded. Open or In progress means it is being handled. Waiting on user means IT needs information from you. On hold means work is paused. Resolved means a solution has been recorded; Closed means the request has been closed.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "3. Reply with the missing details"
+          "text": "3. Reply with the missing details",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Use the reply field to answer IT’s questions. Describe what changed and whether the suggested fix helped. Add an attachment when it explains the problem, removing unrelated personal or customer information first."
+          "text": "Use the reply field to answer IT’s questions. Describe what changed and whether the suggested fix helped. Add an attachment when it explains the problem, removing unrelated personal or customer information first.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "4. Reopen the same problem"
+          "text": "4. Reopen the same problem",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "If a resolved or closed request still has the same issue, use Reopen request. Explain what is still happening. For a different problem, create a new request instead."
+          "text": "If a resolved or closed request still has the same issue, choose Reopen ticket near the top of the ticket. Explain what is still happening, then submit Reopen ticket. For a different problem, create a new request instead.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "Check the result"
+          "text": "Check the result",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Confirm your reply appears in the conversation or the reopened ticket shows its new status. Do not repeatedly resubmit while a request is sending."
+          "text": "Confirm your reply appears in the conversation or the reopened ticket shows its new status. Do not repeatedly resubmit while a request is sending.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "When to contact IT"
+          "text": "When to contact IT",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "If the ticket will not load or a reply fails, keep the unsent text and retry. If work is blocked, use your established IT contact method and include the ticket number."
+          "text": "If the ticket will not load or a reply fails, keep the unsent text and retry. If work is blocked, use your established IT contact method and include the ticket number.",
+          "type": "paragraph"
         }
       ],
       "related": [
         "request-support",
         "browser"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "password",
@@ -205,7 +207,8 @@
       "related": [
         "authenticator",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "authenticator",
@@ -273,7 +276,8 @@
       "related": [
         "password",
         "lost-device"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "wifi",
@@ -351,7 +355,8 @@
         "browser",
         "email",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "remote-access",
@@ -420,7 +425,8 @@
         "wifi",
         "password",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "email",
@@ -498,7 +504,8 @@
         "missing-email",
         "wifi",
         "phishing"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "missing-email",
@@ -567,7 +574,8 @@
         "email",
         "password",
         "phishing"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "printer",
@@ -644,7 +652,8 @@
       "related": [
         "wifi",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "display",
@@ -721,7 +730,8 @@
       "related": [
         "request-support",
         "browser"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "browser",
@@ -798,7 +808,8 @@
       "related": [
         "wifi",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "software-access",
@@ -866,7 +877,8 @@
       "related": [
         "request-support",
         "browser"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "phishing",
@@ -944,7 +956,8 @@
         "password",
         "authenticator",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "lost-device",
@@ -1013,7 +1026,8 @@
         "authenticator",
         "password",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "teams-join-chat",
@@ -1094,7 +1108,8 @@
         "teams-camera",
         "teams-screen-sharing",
         "outlook-meetings"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "teams-audio",
@@ -1174,7 +1189,8 @@
         "teams-join-chat",
         "mouse-keyboard",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "teams-camera",
@@ -1249,7 +1265,8 @@
         "teams-audio",
         "teams-join-chat",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "teams-screen-sharing",
@@ -1324,7 +1341,8 @@
         "teams-join-chat",
         "display",
         "secure-file-sharing"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "office-save-recovery",
@@ -1404,7 +1422,8 @@
         "onedrive-sync",
         "cloud-file-recovery",
         "secure-file-sharing"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "word-pdf",
@@ -1483,7 +1502,8 @@
       "related": [
         "office-save-recovery",
         "secure-file-sharing"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "excel-formulas",
@@ -1562,7 +1582,8 @@
       "related": [
         "office-save-recovery",
         "software-access"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "outlook-meetings",
@@ -1637,7 +1658,8 @@
         "teams-join-chat",
         "email",
         "missing-email"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "onedrive-sync",
@@ -1712,7 +1734,8 @@
         "office-save-recovery",
         "cloud-file-recovery",
         "wifi"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "cloud-file-recovery",
@@ -1792,7 +1815,8 @@
         "onedrive-sync",
         "secure-file-sharing",
         "office-save-recovery"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "secure-file-sharing",
@@ -1872,7 +1896,8 @@
         "software-access",
         "phishing",
         "cloud-file-recovery"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "windows-performance",
@@ -1952,7 +1977,8 @@
         "approved-updates",
         "browser",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "approved-updates",
@@ -2031,7 +2057,8 @@
       "related": [
         "windows-performance",
         "software-access"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "mouse-keyboard",
@@ -2111,7 +2138,8 @@
         "display",
         "teams-audio",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "tech-support-scams",
@@ -2186,7 +2214,8 @@
         "phishing",
         "password",
         "request-support"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "official-help-directory",
@@ -2282,7 +2311,8 @@
         "teams-join-chat",
         "onedrive-sync",
         "email"
-      ]
+      ],
+      "audience": "employees"
     },
     {
       "key": "fixxflow-start",
@@ -2290,7 +2320,7 @@
       "title": "FixxFlow: get started and find the right feature",
       "summary": "For everyone. Learn where to request help, manage work, and find feature instructions.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/components/navigation/workspace-nav.tsx",
         "src/app/app/page.tsx",
@@ -2359,7 +2389,8 @@
         "fixxflow-admin",
         "fixxflow-platform",
         "fixxflow-recovery"
-      ]
+      ],
+      "intendedReaders": "everyone"
     },
     {
       "key": "fixxflow-account",
@@ -2367,7 +2398,7 @@
       "title": "FixxFlow: update your profile, timezone, and appearance",
       "summary": "For everyone. Keep contact details current and choose how FixxFlow looks and displays time.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/app/app/profile/page.tsx",
         "src/features/timezones/settings-form.tsx",
@@ -2442,7 +2473,8 @@
         "fixxflow-recovery",
         "password",
         "authenticator"
-      ]
+      ],
+      "intendedReaders": "everyone"
     },
     {
       "key": "fixxflow-find",
@@ -2450,7 +2482,7 @@
       "title": "FixxFlow: search the workspace and navigate with the keyboard",
       "summary": "For everyone. Find permitted tickets, articles, people, and navigation destinations.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/features/search/global-search.tsx",
         "src/features/search/service.ts",
@@ -2514,7 +2546,8 @@
         "fixxflow-queue",
         "fixxflow-help",
         "fixxflow-account"
-      ]
+      ],
+      "intendedReaders": "everyone"
     },
     {
       "key": "fixxflow-notifications",
@@ -2522,7 +2555,7 @@
       "title": "FixxFlow: read and manage ticket and chat notifications",
       "summary": "For everyone. Find updates, open the relevant conversation, and mark notifications read.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/app/app/notifications/page.tsx",
         "src/features/notifications/read-button.tsx",
@@ -2586,7 +2619,8 @@
         "fixxflow-email",
         "fixxflow-chat",
         "fixxflow-ticket-files"
-      ]
+      ],
+      "intendedReaders": "everyone"
     },
     {
       "key": "fixxflow-chat",
@@ -2594,7 +2628,7 @@
       "title": "FixxFlow: start a support chat and continue the conversation",
       "summary": "For everyone. Ask IT a question, share evidence, and return to the same chat later.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/app/app/chat/page.tsx",
         "src/features/chat/chat-room.tsx",
@@ -2659,7 +2693,8 @@
         "fixxflow-ticket-files",
         "fixxflow-notifications",
         "fixxflow-recovery"
-      ]
+      ],
+      "intendedReaders": "everyone"
     },
     {
       "key": "fixxflow-ticket-files",
@@ -2667,7 +2702,7 @@
       "title": "FixxFlow: add ticket attachments and browse earlier history",
       "summary": "For everyone. Share useful evidence and find older messages without losing a draft.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/features/tickets/attachment-upload.tsx",
         "src/features/tickets/ticket-detail.tsx",
@@ -2731,7 +2766,8 @@
         "fixxflow-my-equipment",
         "fixxflow-messages",
         "fixxflow-recovery"
-      ]
+      ],
+      "intendedReaders": "everyone"
     },
     {
       "key": "fixxflow-my-equipment",
@@ -2803,7 +2839,8 @@
         "fixxflow-inventory-request",
         "fixxflow-ticket-files",
         "fixxflow-notifications"
-      ]
+      ],
+      "intendedReaders": "employees"
     },
     {
       "key": "fixxflow-inventory-request",
@@ -2811,7 +2848,7 @@
       "title": "FixxFlow: request department equipment or supplies",
       "summary": "For authorized inventory requesters. Request an item for an approved department and track fulfillment in a ticket.",
       "reviewedOn": "2026-10-12",
-      "audience": "authorized inventory requesters",
+      "audience": "employees",
       "sourcePaths": [
         "src/features/inventory/forms.tsx",
         "src/app/app/inventory/page.tsx",
@@ -2875,7 +2912,8 @@
         "fixxflow-fulfill",
         "fixxflow-my-equipment",
         "fixxflow-ticket-files"
-      ]
+      ],
+      "intendedReaders": "authorized inventory requesters"
     },
     {
       "key": "fixxflow-help",
@@ -2883,7 +2921,7 @@
       "title": "FixxFlow: find help articles and give useful feedback",
       "summary": "For everyone. Browse topics, search guides, and tell IT whether an answer helped.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/app/app/help/page.tsx",
         "src/app/app/help/[articleId]/page.tsx",
@@ -2947,7 +2985,8 @@
         "fixxflow-kb-author",
         "fixxflow-kb-maintain",
         "fixxflow-start"
-      ]
+      ],
+      "intendedReaders": "everyone"
     },
     {
       "key": "fixxflow-queue",
@@ -2955,7 +2994,7 @@
       "title": "FixxFlow: triage tickets with queue views, filters, and detail panels",
       "summary": "For technicians and administrators. Prioritize support work while keeping your place in the ticket queue.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/app/tickets/page.tsx",
         "src/features/tickets/queue-context.tsx",
@@ -3024,7 +3063,8 @@
         "fixxflow-reports",
         "fixxflow-sla",
         "fixxflow-recovery"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-ticket-details",
@@ -3032,7 +3072,7 @@
       "title": "FixxFlow: assign, classify, resolve, or reopen a ticket",
       "summary": "For technicians and administrators. Update ticket ownership and status without overwriting another person’s work.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/tickets/ticket-details-form.tsx",
         "src/features/tickets/ticket-detail.tsx",
@@ -3098,7 +3138,8 @@
         "fixxflow-audit",
         "fixxflow-recovery",
         "fixxflow-new-ticket"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-messages",
@@ -3106,7 +3147,7 @@
       "title": "FixxFlow: send public replies and keep internal notes separate",
       "summary": "For technicians and administrators. Choose the correct audience before posting ticket or chat messages.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/tickets/message-composer.tsx",
         "src/features/chat/chat-room.tsx",
@@ -3171,7 +3212,8 @@
         "fixxflow-chat-manage",
         "fixxflow-sla",
         "fixxflow-recovery"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-bulk",
@@ -3179,7 +3221,7 @@
       "title": "FixxFlow: change multiple tickets from the queue",
       "summary": "For technicians and administrators. Apply one status, priority, or assignment change to selected tickets.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/app/tickets/page.tsx",
         "src/app/app/tickets/actions.ts",
@@ -3243,7 +3285,8 @@
         "fixxflow-queue",
         "fixxflow-ticket-details",
         "fixxflow-audit"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-chat-manage",
@@ -3251,7 +3294,7 @@
       "title": "FixxFlow: assign chats, link tickets, and close conversations",
       "summary": "For technicians and administrators. Turn a support conversation into tracked work without losing its history.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/app/chat/[conversationId]/page.tsx",
         "src/app/app/chat/actions.ts"
@@ -3314,7 +3357,8 @@
         "fixxflow-chat",
         "fixxflow-ticket-details",
         "fixxflow-messages"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-assets",
@@ -3322,7 +3366,7 @@
       "title": "FixxFlow: register, assign, and maintain equipment records",
       "summary": "For technicians and administrators. Keep asset identity, lifecycle, location, and linked support work accurate.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/app/assets/new/page.tsx",
         "src/app/app/assets/[assetId]/page.tsx",
@@ -3387,7 +3431,8 @@
         "fixxflow-my-equipment",
         "fixxflow-stock",
         "fixxflow-ticket-details"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-asset-import",
@@ -3395,7 +3440,7 @@
       "title": "FixxFlow: import equipment from a spreadsheet",
       "summary": "For technicians and administrators. Preview and validate a batch of new assets before importing it.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "docs/features/asset-import.md",
         "src/app/app/assets/import/page.tsx",
@@ -3459,7 +3504,8 @@
         "fixxflow-assets",
         "fixxflow-stock",
         "fixxflow-recovery"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-reports",
@@ -3467,7 +3513,7 @@
       "title": "FixxFlow: read service reports and download Excel, CSV, or PDF",
       "summary": "For technicians and administrators. Understand current workload and the displayed 30-day service period.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/app/reports/page.tsx",
         "src/features/reporting/report-download.tsx",
@@ -3531,7 +3577,8 @@
         "fixxflow-sla",
         "fixxflow-queue",
         "fixxflow-platform-analytics"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-kb-author",
@@ -3539,7 +3586,7 @@
       "title": "FixxFlow: create a knowledge article with images and attachments",
       "summary": "For technicians and administrators. Write a structured guide, preview it, and publish only when ready.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/knowledge/article-editor.tsx",
         "src/app/app/help/new/page.tsx",
@@ -3547,63 +3594,64 @@
       ],
       "content": [
         {
-          "type": "paragraph",
-          "text": "For technicians and administrators. Write a structured guide, preview it, and publish only when ready. Available controls depend on your workspace role and permissions."
+          "text": "For technicians and administrators. Write a structured guide, preview it, and publish only when ready. Available controls depend on your workspace role and permissions.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "1. Create the draft"
+          "text": "1. Create the draft",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Open Knowledge base and choose New article. Enter Title, Category, Summary, and Visibility. Choose Draft for staff-only work in progress; Published articles can be read by active organization members."
+          "text": "Open Knowledge base and choose New article. Enter Title, Category, Summary, Publication status, and Audience. Start with Draft and IT only. Employee-facing articles become available to employees only when published; IT only articles remain private to technicians and administrators.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "2. Build clear content blocks"
+          "text": "2. Build clear content blocks",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Add headings, paragraphs, lists, quotes, code, links, or image blocks as needed. Use the visible Move up, Move down, and Remove buttons to arrange blocks. Bold and italic use the editor’s formatting controls or its supported markers. Use full HTTP(S) URLs for links."
+          "text": "Add headings, paragraphs, lists, quotes, code, links, or image blocks as needed. Use the visible Move up, Move down, and Remove buttons to arrange blocks. Bold and italic use the editor’s formatting controls or its supported markers. Use full HTTP(S) URLs for links.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "3. Save before uploading files"
+          "text": "3. Save before uploading files",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Create the article first. In Images and attachments, add a JPG, PNG, WebP, PDF, text, Word, or Excel file up to 6 MB. Choose an uploaded image in an image block and write a meaningful image description. Files follow the article’s access."
+          "text": "Create the article first. In Images and attachments, add a JPG, PNG, WebP, PDF, text, Word, or Excel file up to 6 MB. Choose an uploaded image in an image block and write a meaningful image description. Files follow the article’s access.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "4. Preview and publish"
+          "text": "4. Preview and publish",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Review Content preview, choose up to eight Related articles, and save. When ready, set Visibility to Published and save again. An uploaded file alone does not save unsent edits to article text."
+          "text": "Review Content preview, choose up to eight Related articles, and save. When ready, set Publication status to Published and confirm the intended Audience and save again. An uploaded file alone does not save unsent edits to article text.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "Check the result"
+          "text": "Check the result",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "The article renders with readable headings, correct links, and useful image descriptions. Staff can reopen the draft; employees see it only after publication."
+          "text": "The article renders with readable headings, correct links, and useful image descriptions. Staff can reopen the draft; employees see it only when it is published and Employee-facing.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "When to contact IT"
+          "text": "When to contact IT",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "If saving conflicts with another edit, preserve your text and coordinate before reloading. If upload completion is uncertain, check the attachment list in another tab before retrying."
+          "text": "If saving conflicts with another edit, preserve your text and coordinate before reloading. If upload completion is uncertain, check the attachment list in another tab before retrying.",
+          "type": "paragraph"
         }
       ],
       "related": [
         "fixxflow-kb-maintain",
         "fixxflow-help",
         "fixxflow-recovery"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-kb-maintain",
@@ -3611,7 +3659,7 @@
       "title": "FixxFlow: review feedback and update or archive a guide",
       "summary": "For technicians and administrators. Keep published guidance accurate without exposing unfinished revisions.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/app/help/[articleId]/page.tsx",
         "src/features/knowledge/article-editor.tsx",
@@ -3619,63 +3667,64 @@
       ],
       "content": [
         {
-          "type": "paragraph",
-          "text": "For technicians and administrators. Keep published guidance accurate without exposing unfinished revisions. Available controls depend on your workspace role and permissions."
+          "text": "For technicians and administrators. Keep published guidance accurate without exposing unfinished revisions. Available controls depend on your workspace role and permissions.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "1. Find the article"
+          "text": "1. Find the article",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Open Knowledge base and use the staff view that includes drafts. Search the title and open the guide. Review Article insights for daily-reader views and current helpful/not-helpful votes."
+          "text": "Open Knowledge base and use the staff view that includes drafts. Search the title and open the guide. Review Article insights for daily-reader views and current helpful/not-helpful votes.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "2. Choose how to revise"
+          "text": "2. Choose how to revise",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Editing a Published article changes the live article when saved; there is no separate unpublished revision. If changes must remain private while being developed, set Visibility to Draft and save before editing further."
+          "text": "Editing a Published article changes the live article when saved; there is no separate unpublished revision. If changes must remain private while being developed, set Publication status to Draft and save before editing further.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "3. Review content and access"
+          "text": "3. Review content and access",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Check steps, screenshots, links, attachments, and Related articles against the current workflow. Avoid private operational information in a Published guide. Existing attachment links stop working for readers who lose article access."
+          "text": "Check steps, screenshots, links, attachments, and Related articles against the current workflow. Check Audience before publishing. Keep technical procedures IT only and employee self-service guidance Employee-facing; never include passwords or tokens. Existing attachment links stop working for readers who lose article access.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "4. Publish or archive deliberately"
+          "text": "4. Publish or archive deliberately",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Save the updated article and review its rendered page. Set Published when ready, or Archived when it should no longer be employee guidance. Draft and Archived articles remain staff-only; archiving does not delete history."
+          "text": "Save the updated article and review its rendered page. Set Publication status to Published when ready and confirm Audience, or Archived when it should no longer be current guidance. Draft and Archived articles remain staff-only; archiving does not delete history.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "Check the result"
+          "text": "Check the result",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "The article has the intended visibility and corrected content. Current vote totals are feedback signals, not proof that every reader completed the task."
+          "text": "The article has the intended visibility and corrected content. Current vote totals are feedback signals, not proof that every reader completed the task.",
+          "type": "paragraph"
         },
         {
-          "type": "heading",
-          "text": "When to contact IT"
+          "text": "When to contact IT",
+          "type": "heading"
         },
         {
-          "type": "paragraph",
-          "text": "Coordinate if another editor saved a newer revision. If article access or file visibility is wrong, ask an administrator to investigate before republishing."
+          "text": "Coordinate if another editor saved a newer revision. If article access or file visibility is wrong, ask an administrator to investigate before republishing.",
+          "type": "paragraph"
         }
       ],
       "related": [
         "fixxflow-kb-author",
         "fixxflow-help",
         "fixxflow-audit"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-admin",
@@ -3683,7 +3732,7 @@
       "title": "FixxFlow: find administration tools and understand access",
       "summary": "For administrators. Choose the right workspace setting and distinguish role access from inventory permissions.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/administration/administration-hub.tsx",
         "src/features/administration/sections.ts",
@@ -3752,7 +3801,8 @@
         "fixxflow-email",
         "fixxflow-auto-create",
         "fixxflow-sla"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-people",
@@ -3760,7 +3810,7 @@
       "title": "FixxFlow: invite members and manage roles or workspace access",
       "summary": "For administrators. Invite colleagues, update their details, and safely deactivate or restore access.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/app/people/page.tsx",
         "src/features/administration/person-card.tsx",
@@ -3833,7 +3883,8 @@
         "fixxflow-organization",
         "fixxflow-audit",
         "fixxflow-email"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-organization",
@@ -3841,7 +3892,7 @@
       "title": "FixxFlow: manage departments, locations, and organization timezone",
       "summary": "For administrators. Maintain workplace reference data while preserving historical links.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/app/organization/page.tsx",
         "src/features/administration/organization-item-actions.tsx",
@@ -3914,7 +3965,8 @@
         "fixxflow-routing",
         "fixxflow-stock",
         "fixxflow-account"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-routing",
@@ -3922,7 +3974,7 @@
       "title": "FixxFlow: manage teams, categories, subcategories, and default routing",
       "summary": "For administrators. Keep classification choices clear and route new requests to an active team.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/administration/classification-editor.tsx",
         "src/app/app/administration/[section]/page.tsx",
@@ -3986,7 +4038,8 @@
         "fixxflow-ticket-details",
         "fixxflow-auto-create",
         "fixxflow-organization"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-inventory-access",
@@ -3994,7 +4047,7 @@
       "title": "FixxFlow: grant department request and inventory management permissions",
       "summary": "For administrators. Set inventory capabilities independently of a person’s workspace role.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/inventory/forms.tsx",
         "src/features/inventory/access.ts",
@@ -4059,7 +4112,8 @@
         "fixxflow-stock",
         "fixxflow-fulfill",
         "fixxflow-people"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-stock",
@@ -4067,7 +4121,7 @@
       "title": "FixxFlow: receive equipment or consumables and correct stored stock",
       "summary": "For inventory managers. Record physical receipts and stock corrections for a department allocation.",
       "reviewedOn": "2026-10-12",
-      "audience": "inventory managers",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/inventory/forms.tsx",
         "src/app/app/inventory/[itemId]/page.tsx",
@@ -4140,7 +4194,8 @@
         "fixxflow-assets",
         "fixxflow-asset-import",
         "fixxflow-inventory-access"
-      ]
+      ],
+      "intendedReaders": "inventory managers"
     },
     {
       "key": "fixxflow-fulfill",
@@ -4148,7 +4203,7 @@
       "title": "FixxFlow: review, reserve, and issue an inventory request",
       "summary": "For inventory managers. Separate the approval decision from the physical handover of stock.",
       "reviewedOn": "2026-10-12",
-      "audience": "inventory managers",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/inventory/request-panel.tsx",
         "src/features/inventory/forms.tsx",
@@ -4220,7 +4275,8 @@
         "fixxflow-inventory-request",
         "fixxflow-stock",
         "fixxflow-ticket-details"
-      ]
+      ],
+      "intendedReaders": "inventory managers"
     },
     {
       "key": "fixxflow-sla",
@@ -4228,7 +4284,7 @@
       "title": "FixxFlow: understand priority, service targets, and overdue indicators",
       "summary": "For technicians and administrators. Distinguish response targets, resolution targets, and manual due dates.",
       "reviewedOn": "2026-10-12",
-      "audience": "technicians and administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/tickets/sla-policy.ts",
         "src/features/tickets/ticket-detail.tsx",
@@ -4292,7 +4348,8 @@
         "fixxflow-reports",
         "fixxflow-ticket-details",
         "fixxflow-auto-scheduled"
-      ]
+      ],
+      "intendedReaders": "technicians and administrators"
     },
     {
       "key": "fixxflow-audit",
@@ -4300,7 +4357,7 @@
       "title": "FixxFlow: review who changed workspace records",
       "summary": "For administrators. Use the organization audit log to inspect recorded business changes.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/audit/presentation.ts",
         "src/app/app/administration/[section]/page.tsx",
@@ -4365,7 +4422,8 @@
         "fixxflow-people",
         "fixxflow-email",
         "fixxflow-platform-analytics"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-email",
@@ -4373,7 +4431,7 @@
       "title": "FixxFlow: check notification email behavior and contact FixxFlow support",
       "summary": "For everyone. Know where email replies go and what the support action actually does.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/app/app/support/page.tsx",
         "docs/features/notifications.md"
@@ -4436,7 +4494,8 @@
         "fixxflow-notifications",
         "fixxflow-people",
         "fixxflow-recovery"
-      ]
+      ],
+      "intendedReaders": "everyone"
     },
     {
       "key": "fixxflow-auto-create",
@@ -4444,7 +4503,7 @@
       "title": "FixxFlow: create a ticket automation from a template or scratch",
       "summary": "For administrators. Build a named rule, review its trigger and actions, and save it disabled.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/automation/create-automation.tsx",
         "src/features/automation/builder.tsx",
@@ -4511,7 +4570,8 @@
         "fixxflow-auto-scheduled",
         "fixxflow-auto-ops",
         "fixxflow-auto-portable"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-auto-conditions",
@@ -4519,7 +4579,7 @@
       "title": "FixxFlow: set automation conditions and order ticket actions",
       "summary": "For administrators. Define exactly which tickets match and what happens first.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/automation/builder.tsx",
         "src/features/automation/domains/tickets/actions.ts",
@@ -4584,7 +4644,8 @@
         "fixxflow-auto-create",
         "fixxflow-routing",
         "fixxflow-sla"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-auto-test",
@@ -4592,7 +4653,7 @@
       "title": "FixxFlow: test an automation without changing tickets",
       "summary": "For administrators. Inspect condition results and proposed actions before enabling a rule.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/automation/dry-run-panel.tsx",
         "src/features/automation/dry-run-model.ts",
@@ -4657,7 +4718,8 @@
         "fixxflow-auto-conditions",
         "fixxflow-auto-manage",
         "fixxflow-auto-ops"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-auto-manage",
@@ -4665,7 +4727,7 @@
       "title": "FixxFlow: enable, disable, duplicate, or archive an automation",
       "summary": "For administrators. Control a reviewed rule while retaining its versions and execution history.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/automation/rule-actions.tsx",
         "src/app/app/administration/automations/[ruleId]/page.tsx",
@@ -4729,7 +4791,8 @@
         "fixxflow-auto-test",
         "fixxflow-auto-ops",
         "fixxflow-auto-portable"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-auto-scheduled",
@@ -4737,7 +4800,7 @@
       "title": "FixxFlow: configure time-based and SLA automation triggers",
       "summary": "For administrators. Use elapsed-time thresholds and stored SLA deadlines with clear eligibility limits.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/automation/temporal-controls.tsx",
         "src/features/automation/domains/tickets/temporal.ts",
@@ -4801,7 +4864,8 @@
         "fixxflow-auto-test",
         "fixxflow-auto-ops",
         "fixxflow-sla"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-auto-ops",
@@ -4809,7 +4873,7 @@
       "title": "FixxFlow: inspect automation operations and execution failures",
       "summary": "For administrators. Separate rule matching, queue progress, action outcomes, and service availability.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/automation/operations-view.tsx",
         "src/app/app/administration/automations/operations/page.tsx",
@@ -4881,7 +4945,8 @@
         "fixxflow-auto-manage",
         "fixxflow-auto-scheduled",
         "fixxflow-email"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-auto-portable",
@@ -4889,7 +4954,7 @@
       "title": "FixxFlow: export and import an automation between workspaces",
       "summary": "For administrators. Move a rule definition while explicitly mapping destination references.",
       "reviewedOn": "2026-10-12",
-      "audience": "administrators",
+      "audience": "it_only",
       "sourcePaths": [
         "src/features/automation/export-button.tsx",
         "src/features/automation/import-automation.tsx",
@@ -4953,7 +5018,8 @@
         "fixxflow-auto-test",
         "fixxflow-auto-manage",
         "fixxflow-auto-create"
-      ]
+      ],
+      "intendedReaders": "administrators"
     },
     {
       "key": "fixxflow-platform",
@@ -4961,7 +5027,7 @@
       "title": "FixxFlow: open the owner console and manage customer organizations",
       "summary": "For provisioned platform owners. Use the separate owner console without assuming access to customer workspaces.",
       "reviewedOn": "2026-10-12",
-      "audience": "provisioned platform owners",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/platform/customers/page.tsx",
         "src/app/platform/access/page.tsx",
@@ -5025,7 +5091,8 @@
         "fixxflow-platform-analytics",
         "fixxflow-people",
         "fixxflow-admin"
-      ]
+      ],
+      "intendedReaders": "provisioned platform owners"
     },
     {
       "key": "fixxflow-platform-analytics",
@@ -5033,7 +5100,7 @@
       "title": "FixxFlow: review product analytics and platform audit",
       "summary": "For provisioned platform owners. Understand aggregate opted-in usage and recorded owner operations.",
       "reviewedOn": "2026-10-12",
-      "audience": "provisioned platform owners",
+      "audience": "it_only",
       "sourcePaths": [
         "src/app/platform/analytics/page.tsx",
         "src/app/platform/audit/page.tsx",
@@ -5098,7 +5165,8 @@
         "fixxflow-reports",
         "fixxflow-audit",
         "fixxflow-account"
-      ]
+      ],
+      "intendedReaders": "provisioned platform owners"
     },
     {
       "key": "fixxflow-recovery",
@@ -5106,7 +5174,7 @@
       "title": "FixxFlow: recover from failed saves and protect unfinished work",
       "summary": "For everyone. Keep drafts while resolving errors, stale edits, and uncertain network responses.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/components/ui/action-form.tsx",
         "src/components/ui/unsaved-changes.ts",
@@ -5179,7 +5247,8 @@
         "fixxflow-ticket-files",
         "fixxflow-chat",
         "fixxflow-account"
-      ]
+      ],
+      "intendedReaders": "everyone"
     },
     {
       "key": "fixxflow-new-ticket",
@@ -5187,7 +5256,7 @@
       "title": "FixxFlow: create a ticket for yourself or another requester",
       "summary": "For everyone. Record an issue clearly and use staff assignment controls when available.",
       "reviewedOn": "2026-10-12",
-      "audience": "everyone",
+      "audience": "employees",
       "sourcePaths": [
         "src/app/app/tickets/new/page.tsx",
         "src/app/app/tickets/actions.ts"
@@ -5251,7 +5320,8 @@
         "fixxflow-queue",
         "fixxflow-ticket-details",
         "fixxflow-my-equipment"
-      ]
+      ],
+      "intendedReaders": "everyone"
     }
   ],
   "updatedOn": "2026-10-12"
