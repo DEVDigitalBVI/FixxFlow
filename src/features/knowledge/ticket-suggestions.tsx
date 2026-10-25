@@ -73,6 +73,7 @@ export function TicketSuggestions({
                 <span className="sr-only"> (opens in a new tab)</span>
               </a>
               <p>{article.summary}</p>
+              {article.organization_id === null && <span className="muted">FixxFlow library</span>}
               {showAudience && article.audience && (
                 <span className="muted">{knowledgeAudiences[article.audience].label}</span>
               )}

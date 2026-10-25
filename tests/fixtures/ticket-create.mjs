@@ -19,7 +19,7 @@ export const ticketCreateData = {
     { id: 'subcategory', category_id: 'category', name: 'VPN', is_active: true },
   ],
   locations: [{ id: 'location', name: 'Main office' }],
-  knowledge_articles: [],
+  readable_knowledge_articles: [],
   assets: { id: 'asset', name: 'Work laptop', tag: 'LT-1042' },
 };
 export async function renderTicketCreate({ role = 'technician', errors = [], params = {} } = {}) {

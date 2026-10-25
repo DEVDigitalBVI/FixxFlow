@@ -49,6 +49,12 @@ export function WorkspaceNav({
           visible: true,
         },
         {
+          href: '/platform/library',
+          label: 'FixxFlow library',
+          icon: <NavigationIcon name="knowledge" />,
+          visible: true,
+        },
+        {
           href: '/platform/audit',
           label: 'Platform audit',
           icon: <NavigationIcon name="audit" />,
@@ -269,7 +275,12 @@ export function WorkspaceNav({
           {platform ? (
             <>
               <ul className="nav-list nav-group" aria-label="Platform">
-                {linksFor(['/platform/customers', '/platform/analytics', '/platform/audit'])}
+                {linksFor([
+                  '/platform/customers',
+                  '/platform/analytics',
+                  '/platform/library',
+                  '/platform/audit',
+                ])}
               </ul>
               {workspaceAvailable && (
                 <ul className="nav-list nav-group" aria-label="Workspace">

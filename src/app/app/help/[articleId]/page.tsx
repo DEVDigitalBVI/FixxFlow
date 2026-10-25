@@ -5,6 +5,7 @@ import { ArticleContent } from '@/features/knowledge/article-content';
 import { ArticleFeedback } from '@/features/knowledge/article-feedback';
 import { knowledgeAudiences } from '@/features/knowledge/audience';
 import { validId } from '@/features/knowledge/content';
+import { LibraryArticleDetail } from '@/features/knowledge/library-article-detail';
 import { UsageEvent } from '@/features/product-analytics/usage-event';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
@@ -16,9 +17,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ articl
   const database = await createClient();
   const staff = viewer.role !== 'end_user';
   const { data: article, error } = await database
-    .from('knowledge_articles')
+    .from('readable_knowledge_articles')
     .select('*')
-    .eq('organization_id', viewer.organizationId)
+    .or(`organization_id.eq.${viewer.organizationId},organization_id.is.null`)
     .eq('id', articleId)
     .maybeSingle();
   if (error)
@@ -29,6 +30,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ articl
       </div>
     );
   if (!article) notFound();
+  if (article.organization_id === null) return <LibraryArticleDetail article={article} />;
   const [assetResult, relatedResult, feedback, views, helpful, unhelpful] = await Promise.all([
     database
       .from('knowledge_attachments')

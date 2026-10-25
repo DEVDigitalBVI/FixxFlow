@@ -25,8 +25,8 @@ export async function searchWorkspace(raw: string) {
         target_organization_id: viewer.organizationId,
         search_text: q,
       })
-      .select('id,title,audience')
-      .eq('organization_id', viewer.organizationId)
+      .select('id,title,audience,organization_id')
+      .or(`organization_id.eq.${viewer.organizationId},organization_id.is.null`)
       .eq('status', 'published')
       .order('title')
       .order('id')
@@ -70,7 +70,12 @@ export async function searchWorkspace(raw: string) {
       id: article.id,
       group: 'Articles',
       label: article.title,
-      ...(viewer.role !== 'end_user' ? { detail: knowledgeAudiences[article.audience].label } : {}),
+      detail: [
+        article.organization_id === null ? 'FixxFlow library' : '',
+        viewer.role !== 'end_user' ? knowledgeAudiences[article.audience].label : '',
+      ]
+        .filter(Boolean)
+        .join(' · '),
       href: `/app/help/${article.id}`,
     })),
   ] as SearchResult[];

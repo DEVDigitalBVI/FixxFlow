@@ -23,9 +23,9 @@ export default async function NewTicketPage({ searchParams }: Props) {
   const message = await searchParams;
   const supabase = await createClient();
   let articleQuery = supabase
-    .from('knowledge_articles')
-    .select('id, title, summary, category, audience')
-    .eq('organization_id', viewer.organizationId)
+    .from('readable_knowledge_articles')
+    .select('id, title, summary, category, audience, organization_id')
+    .or(`organization_id.eq.${viewer.organizationId},organization_id.is.null`)
     .eq('status', 'published');
   if (viewer.role === 'end_user') articleQuery = articleQuery.eq('audience', 'employees');
   const articlesResult = await articleQuery

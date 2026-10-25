@@ -31,10 +31,10 @@ export default async function HelpPage({
         target_organization_id: viewer.organizationId,
         search_text: q,
       })
-    : database.from('knowledge_articles');
+    : database.from('readable_knowledge_articles');
   let query = source
-    .select('id,title,summary,category,status,audience,updated_at')
-    .eq('organization_id', viewer.organizationId);
+    .select('id,organization_id,title,summary,category,status,audience,updated_at')
+    .or(`organization_id.eq.${viewer.organizationId},organization_id.is.null`);
   if (!staff || filters.view !== 'all') query = query.eq('status', 'published');
   const audience = staff && isKnowledgeAudience(filters.audience) ? filters.audience : '';
   if (!staff) query = query.eq('audience', 'employees');
@@ -61,7 +61,7 @@ export default async function HelpPage({
           <p>
             {staff
               ? 'Employee guides and internal IT procedures.'
-              : 'Answers and guides from your IT team.'}
+              : 'Answers and guides from your IT team and FixxFlow.'}
           </p>
         </div>
         {staff && (
@@ -159,6 +159,7 @@ export default async function HelpPage({
               {data.slice(0, 24).map((a) => (
                 <article className="portal-detail-card" key={a.id}>
                   <p className="muted">
+                    {a.organization_id === null ? 'FixxFlow library · ' : ''}
                     {a.category}
                     {staff ? ` · ${knowledgeAudiences[a.audience].label}` : ''}
                     {a.status !== 'published' ? ` · ${a.status}` : ''}
