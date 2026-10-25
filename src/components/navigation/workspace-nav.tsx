@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 import { NotificationLink } from '@/features/notifications/notification-link';
 import { GlobalSearch } from '@/features/search/global-search';
@@ -19,7 +19,10 @@ export function WorkspaceNav({
   platform = false,
   workspaceAvailable = true,
   inventoryAccess = false,
+  signOutControl,
 }: {
+  /** Shown at the end of the compact navigation sheet; the sidebar keeps its own. */
+  signOutControl?: ReactNode;
   platform?: boolean;
   workspaceAvailable?: boolean;
   inventoryAccess?: boolean;
@@ -314,9 +317,12 @@ export function WorkspaceNav({
             }
           >
             <ul className="nav-list">{linksFor(accountPaths)}</ul>
+            {/* Infrequent setting: kept with account controls so short screens fit the nav. */}
+            <ThemeControl />
           </NavigationDisclosure>
         )}
-        <ThemeControl />
+        {platform && <ThemeControl />}
+        {signOutControl && <div className="nav-sign-out">{signOutControl}</div>}
       </div>
     </>
   );

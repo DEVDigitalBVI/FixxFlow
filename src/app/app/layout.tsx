@@ -24,6 +24,13 @@ export default async function WorkspaceLayout({ children }: Readonly<{ children:
             role={viewer.role}
             organizationId={viewer.organizationId}
             userId={viewer.id}
+            signOutControl={
+              <form action={signOut}>
+                <button className="button button-secondary" type="submit">
+                  Sign out
+                </button>
+              </form>
+            }
           />
         }
         account={
