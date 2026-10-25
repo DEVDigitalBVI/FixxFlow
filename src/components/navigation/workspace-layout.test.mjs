@@ -30,10 +30,11 @@ test('employees and administrators use the same shell, brand and account control
       },
       '@/components/navigation/workspace-nav': {
         WorkspaceNav: (props) =>
-          React.createElement('nav', {
-            'data-role': props.role,
-            'data-inventory': props.inventoryAccess,
-          }),
+          React.createElement(
+            'nav',
+            { 'data-role': props.role, 'data-inventory': props.inventoryAccess },
+            props.signOutControl,
+          ),
       },
       'next/navigation': { usePathname: () => '/app/profile' },
       'next/image': {
@@ -52,6 +53,8 @@ test('employees and administrators use the same shell, brand and account control
     assert.match(html, /class="sidebar-account"/);
     assert.match(html, /Jordan Morgan/);
     assert.match(html, /aria-label="Sign out"/);
+    // Compact screens sign out from the navigation sheet, away from the menu button.
+    assert.match(html, /<nav[^>]*>.*<button[^>]*type="submit"[^>]*>Sign out<\/button>.*<\/nav>/s);
     assert.match(html, new RegExp(`data-role="${role}"`));
     assert.match(html, /data-inventory="false"/);
     assert.match(

@@ -27,6 +27,13 @@ export default async function PlatformLayout({ children }: { children: ReactNode
           userId={owner.id}
           platform
           workspaceAvailable={!!memberships?.length}
+          signOutControl={
+            <form action={signOut}>
+              <button className="button button-secondary" type="submit">
+                Sign out
+              </button>
+            </form>
+          }
         />
       }
       account={

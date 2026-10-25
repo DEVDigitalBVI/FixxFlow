@@ -7894,21 +7894,76 @@ details.settings-card[open] > summary {
     max-height: none;
     overflow: visible;
   }
+  /* Compact card: checkbox beside the title, badges on one line, then owner,
+     SLA and age. Badges and SLA text are self-describing, so only the owner
+     and age keep inline labels. */
   .ticket-queue-panel .ticket-table tbody tr {
-    padding: 16px;
+    display: grid;
+    grid-template-columns: 24px auto auto minmax(0, 1fr);
+    grid-template-areas:
+      'check ticket ticket ticket'
+      '. status priority .'
+      '. assigned assigned assigned'
+      '. sla sla updated';
+    gap: 8px 12px;
+    padding: 14px 16px;
   }
   .ticket-queue-panel .ticket-table td {
+    width: auto;
     height: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    border: 0;
+    text-align: left;
+    font-size: 13px;
+  }
+  .ticket-queue-panel .ticket-table td::before {
+    display: none;
+  }
+  .ticket-queue-panel
+    .ticket-table
+    td:is([data-label='Assigned to'], [data-label='Updated'])::before {
+    display: inline;
+    content: attr(data-label);
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .ticket-queue-panel .ticket-table td:first-child {
+    grid-area: check;
+    align-items: flex-start;
+    padding-top: 2px;
   }
   .ticket-queue-panel .ticket-table td[data-label='Ticket'] {
-    width: 100%;
-    padding-block: 12px 16px;
+    grid-area: ticket;
+    width: auto; /* overrides the 30% desktop column */
+  }
+  .ticket-queue-panel .ticket-table td[data-label='Status'] {
+    grid-area: status;
+  }
+  .ticket-queue-panel .ticket-table td[data-label='Priority'] {
+    grid-area: priority;
+  }
+  .ticket-queue-panel .ticket-table td[data-label='Assigned to'] {
+    grid-area: assigned;
+  }
+  .ticket-queue-panel .ticket-table td[data-label='SLA'] {
+    grid-area: sla;
+  }
+  .ticket-queue-panel .ticket-table td[data-label='Updated'] {
+    grid-area: updated;
+    justify-content: flex-end;
+  }
+  .ticket-queue-panel .ticket-table .sla-compact {
+    min-width: 0;
+    width: auto;
   }
   .ticket-queue-panel .ticket-link strong {
     font-size: 16px;
-  }
-  .ticket-queue-panel .ticket-table td[data-label='Updated'] {
-    font-size: 13px;
   }
   .ticket-queue-footer .notification-pagination {
     width: 100%;
@@ -10880,5 +10935,39 @@ details.settings-card[open] > summary {
 @media (max-width: 767px) {
   .ticket-reopen-disclosure > summary {
     width: 100%;
+  }
+}
+
+/* Compact screens: sign out lives at the end of the navigation sheet, away from
+   the menu button, instead of beside it in the top bar. */
+.nav-sign-out {
+  display: none;
+}
+@media (max-width: 767px) {
+  .nav-sign-out {
+    display: block;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+  }
+  .nav-sign-out .button {
+    width: 100%;
+  }
+  .app-shell .sidebar-account {
+    display: none;
+  }
+}
+
+/* Appearance sits inside the Account disclosure; denser rows from tablet up keep
+   every destination visible on 800–900px tall laptop screens. */
+.staff-more-nav .theme-control {
+  margin: 8px 0 4px;
+  padding: 12px 12px 0;
+  border-top: 1px solid var(--color-border);
+  justify-items: start;
+}
+@media (min-width: 768px) {
+  .app-shell[data-sidebar] .nav-link {
+    min-height: 44px;
+    padding-block: 10px;
   }
 }
