@@ -12,6 +12,27 @@ import { UsageEvent } from '@/features/product-analytics/usage-event';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
 
+type Database = Awaited<ReturnType<typeof createClient>>;
+
+async function loadTicketHistory(db: Database, organizationId: string, assetId: string) {
+  const links = await db
+    .from('ticket_assets')
+    .select('ticket_id')
+    .eq('organization_id', organizationId)
+    .eq('asset_id', assetId);
+  const ids = links.data?.map((l) => l.ticket_id) ?? [];
+  const tickets = ids.length
+    ? await db
+        .from('tickets')
+        .select('id,ticket_number,title,status')
+        .eq('organization_id', organizationId)
+        .in('id', ids)
+        .order('updated_at', { ascending: false })
+        .limit(50)
+    : null;
+  return { links, tickets };
+}
+
 export default async function AssetPage({
   params,
   searchParams,
@@ -23,44 +44,31 @@ export default async function AssetPage({
   const { assetId } = await params;
   const { saved } = await searchParams;
   const db = await createClient();
-  const { data: asset, error } = await db
-    .from('assets')
-    .select('*')
-    .eq('organization_id', viewer.organizationId)
-    .eq('id', assetId)
-    .maybeSingle();
+  const [{ data: asset, error }, access] = await Promise.all([
+    db
+      .from('assets')
+      .select('*')
+      .eq('organization_id', viewer.organizationId)
+      .eq('id', assetId)
+      .maybeSingle(),
+    inventoryAccess(viewer),
+  ]);
   if (error) throw Error('Asset unavailable');
   if (!asset) notFound();
-  const inventoryManager = (await inventoryAccess(viewer)).manager;
-  const inventoryUnit = inventoryManager
-    ? await db
-        .from('inventory_equipment')
-        .select('item_id')
-        .eq('organization_id', viewer.organizationId)
-        .eq('asset_id', asset.id)
-        .maybeSingle()
-    : null;
   const staff = viewer.role !== 'end_user';
-  const options = staff
-    ? await assetOptions(viewer.organizationId, asset.assigned_user_id, asset.location_id)
-    : null;
-  const links = staff
-    ? await db
-        .from('ticket_assets')
-        .select('ticket_id')
-        .eq('organization_id', viewer.organizationId)
-        .eq('asset_id', asset.id)
-    : null;
-  const ids = links?.data?.map((l) => l.ticket_id) ?? [];
-  const tickets = ids.length
-    ? await db
-        .from('tickets')
-        .select('id,ticket_number,title,status')
-        .eq('organization_id', viewer.organizationId)
-        .in('id', ids)
-        .order('updated_at', { ascending: false })
-        .limit(50)
-    : null;
+  // Independent lookups run together; ticket history is its own two-step chain.
+  const [inventoryUnit, options, { links, tickets }] = await Promise.all([
+    access.manager
+      ? db
+          .from('inventory_equipment')
+          .select('item_id')
+          .eq('organization_id', viewer.organizationId)
+          .eq('asset_id', asset.id)
+          .maybeSingle()
+      : null,
+    staff ? assetOptions(viewer.organizationId, asset.assigned_user_id, asset.location_id) : null,
+    staff ? loadTicketHistory(db, viewer.organizationId, asset.id) : { links: null, tickets: null },
+  ]);
   return (
     <div className={staff ? 'page assets-page' : 'portal-page assets-page'}>
       {viewer.usageSharing && (
