@@ -1,2 +1,14 @@
 'use client';
-export default function AssetsError({ retry }: { retry: () => void }) { return <div className="page"><h1>Assets could not load</h1><p role="alert">Please try again. Your assets have not changed.</p><button className="button button-primary" onClick={retry}>Try again</button></div>; }
+
+import { RouteError } from '@/components/route-error';
+
+export default function ErrorBoundary({ retry }: { retry: () => void }) {
+  return (
+    <RouteError
+      retry={retry}
+      title="Assets could not load"
+      message="Please try again. Your assets have not changed."
+      layout="page"
+    />
+  );
+}

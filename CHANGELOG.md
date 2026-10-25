@@ -1,6 +1,6 @@
 # Changelog
 
-Release notes follow this file and the evidence record in `docs/release-template.md`.
+Release notes follow this file and the evidence record in `docs/operations/release-template.md`.
 
 ## Unreleased
 

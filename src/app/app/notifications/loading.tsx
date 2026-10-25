@@ -1,2 +1,5 @@
-import { PageLoading } from "@/components/ui/page-loading";
-export default function Loading() { return <PageLoading title="Notifications" message="Loading your updates…"/>; }
+import { PageLoading } from '@/components/ui/page-loading';
+
+export default function Loading() {
+  return <PageLoading title="Notifications" message="Loading your updates…" />;
+}

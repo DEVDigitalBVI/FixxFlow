@@ -1,32 +1,316 @@
-import { Timestamp } from '@/features/timezones/provider';
 import Link from 'next/link';
-import type { HealthState, OperationsOverview, OperationsHistoryRow } from './operations-model';
-import { healthLabels, serviceHealth, queueHealth, operationsPolicy } from './operations-model';
+
+import { Timestamp } from '@/features/timezones/provider';
+
+import {
+  healthLabels,
+  operationsPolicy,
+  queueHealth,
+  serviceHealth,
+  type HealthState,
+  type OperationsHistoryRow,
+  type OperationsOverview,
+} from './operations-model';
 import { automationPath, executionDuration, executionLabel, triggerLabel } from './ui-model';
+
 export const operationsPath = `${automationPath}/operations`;
-const date = (value: string | null) => value ? <Timestamp value={value}/> : 'Never recorded';
-const seconds = (value: number | null) => value === null ? 'Not observed' : `${Math.max(0,Math.ceil(value))} seconds`;
+const date = (value: string | null) => (value ? <Timestamp value={value} /> : 'Never recorded');
+const seconds = (value: number | null) =>
+  value === null ? 'Not observed' : `${Math.max(0, Math.ceil(value))} seconds`;
 export function HealthBadge({ state }: { state: HealthState }) {
-  return <span className="badge">{state === 'healthy' ? '✓ ' : state === 'degraded' || state === 'delayed' ? '⚠ ' : '— '}{healthLabels[state]}</span>;
+  return (
+    <span className="badge">
+      {state === 'healthy' ? '✓ ' : state === 'degraded' || state === 'delayed' ? '⚠ ' : '— '}
+      {healthLabels[state]}
+    </span>
+  );
 }
-function Metric({label,value}:{label:string;value:import('react').ReactNode}) { return <div><dt className="muted">{label}</dt><dd><strong>{value}</strong></dd></div>; }
-export function OperationsOverviewView({ data }: { data: OperationsOverview }) {
-  const worker = serviceHealth(data.processingActive,data.worker,data.now), discovery = serviceHealth(data.processingActive,data.discovery,data.now);
-  return <div className="stack">
-    <div className="automation-operations-grid">
-      <section className="settings-card stack"><h2>Processing</h2><p><strong>{data.processingActive?'On':'Off'}</strong></p><p className="muted">{data.processingActive?'Deployment availability, separate from individual rule enablement.':'Automation processing is currently disabled. Rules remain available; automated actions will not execute. Enabled rules do not activate processing.'}</p></section>
-      <section className="settings-card stack"><h2>Worker</h2><HealthBadge state={worker}/><p>Last successful run<br/>{date(data.worker.lastSuccessfulAt)}</p>{worker==='unknown'&&<p className="muted">Insufficient run history. Never run does not mean healthy.</p>}</section>
-      <section className="settings-card stack"><h2>Temporal discovery</h2><HealthBadge state={discovery}/><p>Last successful run<br/>{date(data.discovery.lastSuccessfulAt)}</p>{discovery==='unknown'&&<p className="muted">No successful discovery has been recorded yet.</p>}</section>
+function Metric({ label, value }: { label: string; value: import('react').ReactNode }) {
+  return (
+    <div>
+      <dt className="muted">{label}</dt>
+      <dd>
+        <strong>{value}</strong>
+      </dd>
     </div>
-    <details className="settings-card"><summary>How service health is determined</summary><p>Each service is scheduled every {operationsPolicy.intervalSeconds} seconds. Success is recent for {operationsPolicy.intervalSeconds*(1+operationsPolicy.graceIntervals)} seconds. An unfinished invocation is delayed after {operationsPolicy.runtimeSeconds+operationsPolicy.intervalSeconds} seconds. A recent failed run or run with retries, interrupted work or failures is degraded. Work delayed only by capacity is shown in the delivery queue and does not make the service degraded.</p><p>These are shared service availability signals. All work counts below belong only to your organization.</p><dl className="automation-operations-metrics"><Metric label="Worker last started" value={date(data.worker.lastStartedAt)}/><Metric label="Worker last completed" value={date(data.worker.lastCompletedAt)}/><Metric label="Discovery last started" value={date(data.discovery.lastStartedAt)}/><Metric label="Discovery last completed" value={date(data.discovery.lastCompletedAt)}/></dl></details>
-    <section className="settings-card stack"><h2>Recent executions</h2><p className="muted">Last 24 hours · {data.executions.truncated?'most recent 1,000 executions; totals are partial':'all executions in this window'}</p><dl className="automation-operations-metrics"><Metric label="Total" value={data.executions.total}/><Metric label="Completed" value={data.executions.completed}/><Metric label="Conditions not met" value={data.executions.skipped}/><Metric label="In progress" value={data.executions.running}/><Metric label="Safety limit reached" value={data.executions.guardrailTerminated??0}/><Metric label="Action failed" value={data.executions.actionFailed}/><Metric label="Retry exhausted" value={data.executions.retryExhausted}/><Metric label="Delivery failed" value={data.executions.deliveryFailed}/></dl>{!data.executions.total&&<p>No executions in this window. Dry runs do not create execution history.</p>}<Link className="button button-secondary" href={`${operationsPath}/history`}>View global execution history</Link></section>
-    <section className="settings-card stack"><h2>Delivery queue</h2>{!!data.queue.capacityDeferred&&<p className="alert alert-info">Automation processing is delayed because queued work exceeds current safe processing capacity. No work has been lost.</p>}<HealthBadge state={queueHealth(data.processingActive,data.queue,data.now)}/>{data.queue.truncated&&<p className="alert alert-info">Showing the first 1,000 outstanding records. Counts are lower bounds; work beyond this sample is unknown.</p>}<dl className="automation-operations-metrics"><Metric label="Ready / expired lease" value={data.queue.ready}/><Metric label="Leased / in progress" value={data.queue.leased}/><Metric label="Delayed by capacity" value={data.queue.capacityDeferred??0}/><Metric label="Notification capacity delay" value={data.queue.notificationDeferred??0}/><Metric label="Oldest capacity delay" value={data.queue.oldestCapacityDeferredAt?date(data.queue.oldestCapacityDeferredAt):'None observed'}/><Metric label="Retry scheduled" value={data.queue.retryScheduled}/><Metric label="Pending without current eligibility" value={data.queue.ineligiblePending}/><Metric label="Oldest observed eligible work" value={data.queue.oldestEligibleAt?seconds((Date.parse(data.now)-Date.parse(data.queue.oldestEligibleAt))/1000):'None observed'}/></dl>{!data.queue.sampled&&<p>No pending work.</p>}<details><summary>Recent delivery outcomes</summary><p>Last 24 hours{data.queue.recent.truncated?' · most recent 1,000; partial counts':''}.</p><dl className="automation-operations-metrics"><Metric label="Completed" value={data.queue.recent.acknowledged}/><Metric label="Completed after retry" value={data.queue.recent.recovered}/><Metric label="Retry exhausted" value={data.queue.recent.exhausted}/><Metric label="Chain safety limit reached" value={data.queue.recent.guardrailTerminated??0}/><Metric label="Other terminal failures" value={data.queue.recent.failed}/></dl><p className="muted">Events without an eligible rule can remain pending by design. They are shown separately from actionable backlog. Eligible work older than three scheduled intervals is delayed.</p></details></section>
-    <section className="settings-card stack"><h2>Discovery lag and SLA windows</h2><p className="muted">Last 24 hours{data.lag.truncated||data.lag.missedTruncated?' · bounded samples; counts and maximums may be incomplete':''}. Lag measures trusted discovery time minus threshold eligibility time.</p><dl className="automation-operations-metrics"><Metric label="Most recent lag" value={seconds(data.lag.latestSeconds)}/><Metric label="Maximum observed lag" value={seconds(data.lag.maxSeconds)}/><Metric label="Approaching: within cadence" value={data.lag.withinWindow}/><Metric label="Approaching: late, before deadline" value={data.lag.lateBeforeDeadline}/><Metric label="Approaching: missed window" value={data.lag.missedWindow}/></dl>{!data.lag.sampled&&!data.lag.missedWindow&&<p>No threshold observations in this window.</p>}<p className="muted">Late means more than one scheduled minute after eligibility. A threshold discovered at or after its deadline is recorded as missed and is not executed or converted to a breach event.</p><p className="muted">Missed observations cover only tickets still eligible when scanned. Completed tickets or old thresholds outside the enablement cutoff cannot be reconstructed.</p>
-      {!data.temporalRules.length?<p>No enabled temporal rules.</p>:<details><summary>Temporal rule progress and window risk</summary>{data.temporalRulesTruncated&&<p>Showing the first 50 enabled temporal rules.</p>}<ul className="automation-results">{data.temporalRules.map(rule=><li key={rule.id}><Link href={`${automationPath}/${rule.id}`}>{rule.name}</Link> · Version {rule.version}<p>Last scanned: {date(rule.lastScannedAt)}</p>{rule.trigger==='ticket.sla_approaching'&&<p>{!data.processingActive?'Processing off · risk is not an active alert':rule.atRisk?'⚠ Window at risk or insufficient progress history':'No window risk observed'} · {rule.durationMinutes} minute window</p>}</li>)}</ul><p className="muted">Risk means no scan has been recorded, scan age reaches the approaching duration, or recent observed lag reaches it. It is a warning, not proof of a missed ticket.</p></details>}
-    </section>
-    <p className="muted">As of <time dateTime={data.now}><Timestamp value={data.now}/></time>. Refresh to update these observations.</p>
-  </div>;
+  );
+}
+export function OperationsOverviewView({ data }: { data: OperationsOverview }) {
+  const worker = serviceHealth(data.processingActive, data.worker, data.now),
+    discovery = serviceHealth(data.processingActive, data.discovery, data.now);
+  return (
+    <div className="stack">
+      <div className="automation-operations-grid">
+        <section className="settings-card stack">
+          <h2>Processing</h2>
+          <p>
+            <strong>{data.processingActive ? 'On' : 'Off'}</strong>
+          </p>
+          <p className="muted">
+            {data.processingActive
+              ? 'Deployment availability, separate from individual rule enablement.'
+              : 'Automation processing is currently disabled. Rules remain available; automated actions will not execute. Enabled rules do not activate processing.'}
+          </p>
+        </section>
+        <section className="settings-card stack">
+          <h2>Worker</h2>
+          <HealthBadge state={worker} />
+          <p>
+            Last successful run
+            <br />
+            {date(data.worker.lastSuccessfulAt)}
+          </p>
+          {worker === 'unknown' && (
+            <p className="muted">Insufficient run history. Never run does not mean healthy.</p>
+          )}
+        </section>
+        <section className="settings-card stack">
+          <h2>Temporal discovery</h2>
+          <HealthBadge state={discovery} />
+          <p>
+            Last successful run
+            <br />
+            {date(data.discovery.lastSuccessfulAt)}
+          </p>
+          {discovery === 'unknown' && (
+            <p className="muted">No successful discovery has been recorded yet.</p>
+          )}
+        </section>
+      </div>
+      <details className="settings-card">
+        <summary>How service health is determined</summary>
+        <p>
+          Each service is scheduled every {operationsPolicy.intervalSeconds} seconds. Success is
+          recent for {operationsPolicy.intervalSeconds * (1 + operationsPolicy.graceIntervals)}{' '}
+          seconds. An unfinished invocation is delayed after{' '}
+          {operationsPolicy.runtimeSeconds + operationsPolicy.intervalSeconds} seconds. A recent
+          failed run or run with retries, interrupted work or failures is degraded. Work delayed
+          only by capacity is shown in the delivery queue and does not make the service degraded.
+        </p>
+        <p>
+          These are shared service availability signals. All work counts below belong only to your
+          organization.
+        </p>
+        <dl className="automation-operations-metrics">
+          <Metric label="Worker last started" value={date(data.worker.lastStartedAt)} />
+          <Metric label="Worker last completed" value={date(data.worker.lastCompletedAt)} />
+          <Metric label="Discovery last started" value={date(data.discovery.lastStartedAt)} />
+          <Metric label="Discovery last completed" value={date(data.discovery.lastCompletedAt)} />
+        </dl>
+      </details>
+      <section className="settings-card stack">
+        <h2>Recent executions</h2>
+        <p className="muted">
+          Last 24 hours ·{' '}
+          {data.executions.truncated
+            ? 'most recent 1,000 executions; totals are partial'
+            : 'all executions in this window'}
+        </p>
+        <dl className="automation-operations-metrics">
+          <Metric label="Total" value={data.executions.total} />
+          <Metric label="Completed" value={data.executions.completed} />
+          <Metric label="Conditions not met" value={data.executions.skipped} />
+          <Metric label="In progress" value={data.executions.running} />
+          <Metric label="Safety limit reached" value={data.executions.guardrailTerminated ?? 0} />
+          <Metric label="Action failed" value={data.executions.actionFailed} />
+          <Metric label="Retry exhausted" value={data.executions.retryExhausted} />
+          <Metric label="Delivery failed" value={data.executions.deliveryFailed} />
+        </dl>
+        {!data.executions.total && (
+          <p>No executions in this window. Dry runs do not create execution history.</p>
+        )}
+        <Link className="button button-secondary" href={`${operationsPath}/history`}>
+          View global execution history
+        </Link>
+      </section>
+      <section className="settings-card stack">
+        <h2>Delivery queue</h2>
+        {!!data.queue.capacityDeferred && (
+          <p className="alert alert-info">
+            Automation processing is delayed because queued work exceeds current safe processing
+            capacity. No work has been lost.
+          </p>
+        )}
+        <HealthBadge state={queueHealth(data.processingActive, data.queue, data.now)} />
+        {data.queue.truncated && (
+          <p className="alert alert-info">
+            Showing the first 1,000 outstanding records. Counts are lower bounds; work beyond this
+            sample is unknown.
+          </p>
+        )}
+        <dl className="automation-operations-metrics">
+          <Metric label="Ready / expired lease" value={data.queue.ready} />
+          <Metric label="Leased / in progress" value={data.queue.leased} />
+          <Metric label="Delayed by capacity" value={data.queue.capacityDeferred ?? 0} />
+          <Metric
+            label="Notification capacity delay"
+            value={data.queue.notificationDeferred ?? 0}
+          />
+          <Metric
+            label="Oldest capacity delay"
+            value={
+              data.queue.oldestCapacityDeferredAt
+                ? date(data.queue.oldestCapacityDeferredAt)
+                : 'None observed'
+            }
+          />
+          <Metric label="Retry scheduled" value={data.queue.retryScheduled} />
+          <Metric
+            label="Pending without current eligibility"
+            value={data.queue.ineligiblePending}
+          />
+          <Metric
+            label="Oldest observed eligible work"
+            value={
+              data.queue.oldestEligibleAt
+                ? seconds((Date.parse(data.now) - Date.parse(data.queue.oldestEligibleAt)) / 1000)
+                : 'None observed'
+            }
+          />
+        </dl>
+        {!data.queue.sampled && <p>No pending work.</p>}
+        <details>
+          <summary>Recent delivery outcomes</summary>
+          <p>
+            Last 24 hours{data.queue.recent.truncated ? ' · most recent 1,000; partial counts' : ''}
+            .
+          </p>
+          <dl className="automation-operations-metrics">
+            <Metric label="Completed" value={data.queue.recent.acknowledged} />
+            <Metric label="Completed after retry" value={data.queue.recent.recovered} />
+            <Metric label="Retry exhausted" value={data.queue.recent.exhausted} />
+            <Metric
+              label="Chain safety limit reached"
+              value={data.queue.recent.guardrailTerminated ?? 0}
+            />
+            <Metric label="Other terminal failures" value={data.queue.recent.failed} />
+          </dl>
+          <p className="muted">
+            Events without an eligible rule can remain pending by design. They are shown separately
+            from actionable backlog. Eligible work older than three scheduled intervals is delayed.
+          </p>
+        </details>
+      </section>
+      <section className="settings-card stack">
+        <h2>Discovery lag and SLA windows</h2>
+        <p className="muted">
+          Last 24 hours
+          {data.lag.truncated || data.lag.missedTruncated
+            ? ' · bounded samples; counts and maximums may be incomplete'
+            : ''}
+          . Lag measures trusted discovery time minus threshold eligibility time.
+        </p>
+        <dl className="automation-operations-metrics">
+          <Metric label="Most recent lag" value={seconds(data.lag.latestSeconds)} />
+          <Metric label="Maximum observed lag" value={seconds(data.lag.maxSeconds)} />
+          <Metric label="Approaching: within cadence" value={data.lag.withinWindow} />
+          <Metric label="Approaching: late, before deadline" value={data.lag.lateBeforeDeadline} />
+          <Metric label="Approaching: missed window" value={data.lag.missedWindow} />
+        </dl>
+        {!data.lag.sampled && !data.lag.missedWindow && (
+          <p>No threshold observations in this window.</p>
+        )}
+        <p className="muted">
+          Late means more than one scheduled minute after eligibility. A threshold discovered at or
+          after its deadline is recorded as missed and is not executed or converted to a breach
+          event.
+        </p>
+        <p className="muted">
+          Missed observations cover only tickets still eligible when scanned. Completed tickets or
+          old thresholds outside the enablement cutoff cannot be reconstructed.
+        </p>
+        {!data.temporalRules.length ? (
+          <p>No enabled temporal rules.</p>
+        ) : (
+          <details>
+            <summary>Temporal rule progress and window risk</summary>
+            {data.temporalRulesTruncated && <p>Showing the first 50 enabled temporal rules.</p>}
+            <ul className="automation-results">
+              {data.temporalRules.map((rule) => (
+                <li key={rule.id}>
+                  <Link href={`${automationPath}/${rule.id}`}>{rule.name}</Link> · Version{' '}
+                  {rule.version}
+                  <p>Last scanned: {date(rule.lastScannedAt)}</p>
+                  {rule.trigger === 'ticket.sla_approaching' && (
+                    <p>
+                      {!data.processingActive
+                        ? 'Processing off · risk is not an active alert'
+                        : rule.atRisk
+                          ? '⚠ Window at risk or insufficient progress history'
+                          : 'No window risk observed'}{' '}
+                      · {rule.durationMinutes} minute window
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+            <p className="muted">
+              Risk means no scan has been recorded, scan age reaches the approaching duration, or
+              recent observed lag reaches it. It is a warning, not proof of a missed ticket.
+            </p>
+          </details>
+        )}
+      </section>
+      <p className="muted">
+        As of{' '}
+        <time dateTime={data.now}>
+          <Timestamp value={data.now} />
+        </time>
+        . Refresh to update these observations.
+      </p>
+    </div>
+  );
 }
 export function OperationsHistoryTable({ rows }: { rows: OperationsHistoryRow[] }) {
-  return <div className="table-region" role="region" aria-label="Organization automation executions" tabIndex={0}><table className="table responsive-table"><caption className="sr-only">Immutable automation versions and execution outcomes</caption><thead><tr>{['Automation','Started','Ticket','Trigger','Result','Duration','Actions'].map(label=><th key={label} scope="col">{label}</th>)}</tr></thead><tbody>{rows.map(row=><tr key={row.id}><th scope="row" data-label="Automation"><Link href={`${automationPath}/${row.rule_id}/history/${row.id}`}>{row.rule_name}</Link><p className="muted">Version {row.rule_version}</p></th><td data-label="Started"><time dateTime={row.started_at}><Timestamp value={row.started_at}/></time></td><td data-label="Ticket"><Link href={`/app/tickets/${row.entity_id}`}>{row.ticket_number?`Ticket #${row.ticket_number}`:'Ticket unavailable'}</Link></td><td data-label="Trigger">{triggerLabel(row.trigger_type)}</td><td data-label="Result">{executionLabel(row.status,row.error_code)}</td><td data-label="Duration">{executionDuration(row.duration_ms,row.status)}</td><td data-label="Actions">{row.completed_actions} of {row.total_actions} completed</td></tr>)}</tbody></table></div>;
+  return (
+    <div
+      className="table-region"
+      role="region"
+      aria-label="Organization automation executions"
+      tabIndex={0}
+    >
+      <table className="table responsive-table">
+        <caption className="sr-only">Immutable automation versions and execution outcomes</caption>
+        <thead>
+          <tr>
+            {['Automation', 'Started', 'Ticket', 'Trigger', 'Result', 'Duration', 'Actions'].map(
+              (label) => (
+                <th key={label} scope="col">
+                  {label}
+                </th>
+              ),
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.id}>
+              <th scope="row" data-label="Automation">
+                <Link href={`${automationPath}/${row.rule_id}/history/${row.id}`}>
+                  {row.rule_name}
+                </Link>
+                <p className="muted">Version {row.rule_version}</p>
+              </th>
+              <td data-label="Started">
+                <time dateTime={row.started_at}>
+                  <Timestamp value={row.started_at} />
+                </time>
+              </td>
+              <td data-label="Ticket">
+                <Link href={`/app/tickets/${row.entity_id}`}>
+                  {row.ticket_number ? `Ticket #${row.ticket_number}` : 'Ticket unavailable'}
+                </Link>
+              </td>
+              <td data-label="Trigger">{triggerLabel(row.trigger_type)}</td>
+              <td data-label="Result">{executionLabel(row.status, row.error_code)}</td>
+              <td data-label="Duration">{executionDuration(row.duration_ms, row.status)}</td>
+              <td data-label="Actions">
+                {row.completed_actions} of {row.total_actions} completed
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }

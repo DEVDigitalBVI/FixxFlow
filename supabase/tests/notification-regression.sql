@@ -13,12 +13,12 @@ insert into public.tickets(id,organization_id,requester_id,assigned_technician_i
 select pg_temp.check_notification((select count(*)=1 from public.notifications where kind='ticket_assigned'),'assignment alert');
 insert into public.ticket_messages(organization_id,ticket_id,author_id,kind,body) values
  ('20000000-0000-0000-0000-000000000061','30000000-0000-0000-0000-000000000061','10000000-0000-0000-0000-000000000061','internal_note','Private content');
-select pg_temp.check_notification((select count(*)=1 from public.notifications),'internal notes stay silent');
+select pg_temp.check_notification((select count(*)=2 from public.notifications),'internal notes stay silent');
 insert into public.ticket_messages(organization_id,ticket_id,author_id,kind,body) values
  ('20000000-0000-0000-0000-000000000061','30000000-0000-0000-0000-000000000061','10000000-0000-0000-0000-000000000061','reply','Public one'),
  ('20000000-0000-0000-0000-000000000061','30000000-0000-0000-0000-000000000061','10000000-0000-0000-0000-000000000061','reply','Public two');
 select pg_temp.check_notification((select count(*)=2 from public.notifications where kind='ticket_response'),'both replies recorded');
-select pg_temp.check_notification((select count(*)=2 from private.notification_email_outbox),'reply emails coalesced');
+select pg_temp.check_notification((select count(*)=3 from private.notification_email_outbox),'reply emails coalesced');
 update public.tickets set status='resolved' where id='30000000-0000-0000-0000-000000000061';
 update public.tickets set status='closed' where id='30000000-0000-0000-0000-000000000061';
 select pg_temp.check_notification((select count(*)=2 from public.notifications where kind='ticket_resolved'),'resolve then close does not double notify');
@@ -32,12 +32,12 @@ reset role;
 select pg_temp.check_notification((select count(*)=3 from public.notifications where read_at is not null),'mark read cannot change another recipient');
 update private.notification_email_outbox set available_at=now();
 create temporary table claimed as select * from public.claim_notification_emails(20);
-select pg_temp.check_notification((select count(*)=2 from claimed),'read notifications skipped');
+select pg_temp.check_notification((select count(*)=3 from claimed),'read notifications skipped');
 select pg_temp.check_notification((select count(*)=0 from public.claim_notification_emails(20)),'active leases cannot be claimed twice');
 select pg_temp.check_notification(not public.finish_notification_email((select notification_id from claimed limit 1),gen_random_uuid(),'fake',null),'incorrect lease cannot acknowledge');
 select public.finish_notification_email(notification_id,lease_token,'mock-provider-id',null) from claimed;
-select pg_temp.check_notification((select count(*)=2 from private.notification_email_outbox where status='sent'),'delivery acknowledgement');
-update public.tickets set status='open' where id='30000000-0000-0000-0000-000000000061';
+select pg_temp.check_notification((select count(*)=3 from private.notification_email_outbox where status='sent'),'delivery acknowledgement');
+select public.reopen_ticket('30000000-0000-0000-0000-000000000061',(select revision from public.tickets where id='30000000-0000-0000-0000-000000000061'),'The issue returned.',gen_random_uuid());
 select pg_temp.check_notification((select count(*)=1 from public.notifications where kind='ticket_reopened'),'reopen suppresses actor notification');
 select set_config('request.jwt.claims','{}',true);
 update public.tickets set assigned_technician_id=null where id='30000000-0000-0000-0000-000000000061';

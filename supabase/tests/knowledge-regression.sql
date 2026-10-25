@@ -33,7 +33,7 @@ do $$ begin
  raise exception 'Draft view allowed'; exception when insufficient_privilege then null; end;
 end $$;
 select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000091","aal":"aal1"}',true);
-update public.knowledge_articles set status='published' where id='30000000-0000-0000-0000-000000000091' and revision=1;
+update public.knowledge_articles set status='published',audience='employees' where id='30000000-0000-0000-0000-000000000091' and revision=1;
 select pg_temp.check_knowledge((select revision=2 from public.knowledge_articles where id='30000000-0000-0000-0000-000000000091'),'revision incremented');
 with changed as(update public.knowledge_articles set title='Stale edit' where id='30000000-0000-0000-0000-000000000091' and revision=1 returning id)
 select pg_temp.check_knowledge((select count(*)=0 from changed),'stale edit rejected');

@@ -1,4 +1,5 @@
 import { unstable_rethrow } from 'next/navigation';
+
 import { automationPickerChoices } from '@/features/automation/ui-service';
 
 const headers = { 'Cache-Control': 'private, no-store' };
@@ -8,8 +9,10 @@ export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   try {
     const value = await automationPickerChoices(
-      params.get('resource') ?? '', params.get('q') ?? '',
-      Number(params.get('page') ?? 1), params.getAll('selected'),
+      params.get('resource') ?? '',
+      params.get('q') ?? '',
+      Number(params.get('page') ?? 1),
+      params.getAll('selected'),
     );
     return Response.json(value, { headers });
   } catch (error) {

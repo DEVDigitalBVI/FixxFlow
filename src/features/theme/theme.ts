@@ -5,9 +5,12 @@ export function normalizeTheme(value: unknown): ThemePreference {
 }
 export function applyTheme(preference: ThemePreference) {
   document.documentElement.dataset.themePreference = preference;
-  document.documentElement.dataset.theme = preference === 'system'
-    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-    : preference;
+  document.documentElement.dataset.theme =
+    preference === 'system'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      : preference;
 }
 // Self-contained so the same initializer can run before the first paint.
 export function initializeTheme() {
@@ -15,10 +18,15 @@ export function initializeTheme() {
   try {
     const saved = localStorage.getItem('fixxflow-theme');
     if (saved === 'light' || saved === 'dark') preference = saved;
-  } catch { /* Storage can be unavailable in private or restricted browsers. */ }
+  } catch {
+    /* Storage can be unavailable in private or restricted browsers. */
+  }
   document.documentElement.dataset.themePreference = preference;
-  document.documentElement.dataset.theme = preference === 'system'
-    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-    : preference;
+  document.documentElement.dataset.theme =
+    preference === 'system'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      : preference;
 }
 export const themeScript = `(${initializeTheme.toString()})()`;

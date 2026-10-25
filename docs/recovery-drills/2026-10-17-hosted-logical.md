@@ -76,13 +76,13 @@ existing user's copied factor can be challenged successfully.
 
 ## Evidence and cleanup
 
-Sanitized release evidence is recorded in `docs/pilot-release-2026-10-17.md`.
+Sanitized release evidence is recorded in `docs/releases/2026-10-17-pilot.md`.
 Private exports, credentials and detailed digests are held in the mode-0700 temporary
 directory `/private/tmp/fixxflow-hosted-recovery-20261017/`, with sensitive files 0600.
 They must not be committed or treated as a durable independent backup.
 
 The paid target could not be paused. After evidence retention, the owner explicitly
-approved deletion under `docs/production-readiness.md`. Supabase accepted deletion
+approved deletion under `docs/operations/production-readiness.md`. Supabase accepted deletion
 at `2026-10-17T13:40:26.562Z` (HTTP 200); a fresh inventory omitted the target and
 confirmed production `ACTIVE_HEALTHY`. The local recovered app was stopped. The
 production Gmail pilot account and its conversation/tickets are explicitly retained

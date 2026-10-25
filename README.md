@@ -6,7 +6,7 @@ FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 
 1. Install Node.js 24.x.
 2. Copy `.env.example` to `.env.local` and add the project URL and publishable key from the Supabase Connect dialog.
-3. Install packages with `npm install`.
+3. Install the locked packages with `npm ci`.
 4. Start the app with `npm run dev`.
 
 ## Project structure
@@ -16,24 +16,37 @@ FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 - `src/features` — domain-oriented product modules
 - `src/lib` — infrastructure and service clients
 - `src/types` — shared and generated TypeScript types
+- `tests` — shared test helpers and fixtures; feature tests live beside their source
+- `scripts` — development, release, and operational commands
+- `content/knowledge` — curated knowledge article sources
+- `public/brand` — approved brand assets, fonts, and licenses
+
 - `supabase/migrations` — versioned database schema changes
+- `docs` — indexed architecture, feature guides, operating procedures, and release evidence
+
+The local `brand/fixxflow` handoff folder is generated and ignored by Git. After changing approved assets, run `npm run brand:sync` to refresh every logo, icon, source master, font, token file and manifest. Run `npm run brand:check` to verify that the handoff package matches the approved files byte for byte.
 
 ## Documentation
 
-- [Design system](DESIGN_SYSTEM.md) and [interface audit](docs/apple-interface-audit-2026-10-11.md): UI requirements, findings, verification evidence, and remaining browser checks.
-- [Architecture](PLATFORM_ARCHITECTURE.md) and [code review](docs/code-review.md): application boundaries, implementation history, and outstanding engineering/product work.
-- [Automation rollout](docs/automation-rollout.md): deployment status, release gates, recovery, and links to stage-specific runbooks.
-- [Production readiness](docs/production-readiness.md), [release record](docs/release-template.md), and [incident response](docs/incident-response.md): application-wide deployment gates, staging, monitoring, rollback, and recovery.
-- [Email delivery](docs/resend-email.md), [notifications](NOTIFICATIONS.md), [inventory](docs/inventory.md), and [asset import](docs/asset-import.md): setup and operational behavior.
-- [Knowledge base](KNOWLEDGE_BASE.md), [search](SEARCH.md), [reporting](REPORTING.md), [analytics](PRODUCT_ANALYTICS.md), and [audit log](AUDIT_LOG.md): domain behavior and validation.
+Start with the [documentation index](docs/README.md). Keep implementation rules in
+`AGENTS.md` and the authoritative design specification in `DESIGN_SYSTEM.md`.
+
+- [Design system](DESIGN_SYSTEM.md): authoritative UI requirements and shared interaction patterns.
+- [Architecture](PLATFORM_ARCHITECTURE.md) and [code review](docs/architecture/code-review.md): application boundaries, implementation history, and outstanding engineering/product work.
+- [Automation rollout](docs/automation/rollout.md): deployment status, release gates, recovery, and links to stage-specific runbooks.
+- [Production readiness](docs/operations/production-readiness.md), [release record](docs/operations/release-template.md), and [incident response](docs/operations/incident-response.md): application-wide deployment gates, staging, monitoring, rollback, and recovery.
+- [Notifications and email](docs/features/notifications.md), [inventory](docs/features/inventory.md), and [asset import](docs/features/asset-import.md): setup and operational behavior.
+- [Knowledge base](docs/features/knowledge-base.md), [search](docs/features/search.md), [reporting](docs/features/reporting.md), [analytics](docs/features/product-analytics.md), and [audit log](docs/features/audit-log.md): domain behavior and validation.
 
 ## Supabase types
 
 With the local Supabase stack running, regenerate database types with:
 
 ```sh
-npx supabase gen types typescript --local > src/types/database.generated.ts
+npm run db:types -- --local
 ```
+
+Use `npm run db:types` to read the linked project instead. The generator captures successful output before replacing the file, so a CLI or authentication failure preserves the existing types.
 
 `database.generated.ts` contains generated schema and relationships. Keep domain aliases,
 CHECK-constraint refinements, and trigger-populated insert fields in `database.ts`;
@@ -78,13 +91,13 @@ Run the transactional SQL regression with `supabase db query --local --file supa
 
 ### Security and database verification
 
-See the [Automation rollout runbook](docs/automation-rollout.md) for recorded
+See the [Automation rollout runbook](docs/automation/rollout.md) for recorded
 migration deployments and release gates. Historical preflight reports describe
 their verification date; they do not establish the current state of a database.
 
 `20260925010358_enforce_mfa_and_server_owned_timestamps.sql` enforces verified MFA factors across all application tables, Storage and Realtime. Accounts without a verified factor can still use AAL1; enrolled accounts require AAL2. Authenticated callers cannot provide ticket/chat system timestamps or SLA completion fields. It also serializes administrator demotions and indexes chat foreign keys.
 
-Run `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build`. Run `supabase test db` against a local stack for the pgTAP suites, plus the transactional `supabase/tests/security-regression.sql` and `supabase/tests/sla-regression.sql` using the SQL runner. All fixtures roll back. Production verification should use the same transactional isolation and must not send invitations or recovery emails.
+Run `npm run format:check`, `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build`. Use `npm run format` to apply the shared Prettier and import-order rules. Generated files are excluded. Run `supabase test db` against a local stack for the pgTAP suites, plus the transactional `supabase/tests/security-regression.sql` and `supabase/tests/sla-regression.sql` using the SQL runner. All fixtures roll back. Production verification should use the same transactional isolation and must not send invitations or recovery emails.
 
 Production Auth uses `https://www.fixxflow.app`, confirmed email signup, an eight-character minimum, and leaked-password protection. Leaked-password protection is managed in the hosted Auth dashboard. Keep `NEXT_PUBLIC_SITE_URL` aligned with this domain. The server secret is required for organization bootstrap, invitations, and queued notification delivery; never expose it to the browser.
 

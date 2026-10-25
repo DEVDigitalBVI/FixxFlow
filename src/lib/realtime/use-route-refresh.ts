@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useTransition } from 'react';
 
 /** Coalesce realtime bursts and keep only one background route transition active. */
 export function useRouteRefresh(intervalMs = 30000) {
@@ -10,9 +10,12 @@ export function useRouteRefresh(intervalMs = 30000) {
   const inFlight = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => { inFlight.current = pending; }, [pending]);
+  useEffect(() => {
+    inFlight.current = pending;
+  }, [pending]);
   const refresh = useCallback(() => {
-    if (document.visibilityState !== 'visible' || timer.current !== null || inFlight.current) return;
+    if (document.visibilityState !== 'visible' || timer.current !== null || inFlight.current)
+      return;
     timer.current = setTimeout(() => {
       timer.current = null;
       if (document.visibilityState !== 'visible' || inFlight.current) return;

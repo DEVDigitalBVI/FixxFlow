@@ -1,0 +1,17 @@
+node_modules/
+.next/
+.vercel/
+coverage/
+supabase/.temp/
+# Keep the schema generator output reproducible.
+src/types/database.generated.ts
+next-env.d.ts
+# Generated and external artifacts.
+/public/
+/brand/
+/artifacts/
+*.lock
+package-lock.json
+# Scope this cleanup to maintained code and configuration.
+**/*.md
+/supabase/

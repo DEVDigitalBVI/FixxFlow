@@ -1,18 +1,30 @@
 // Generate a SQL reproduction for an EMPTY disposable PostgreSQL database.
 // No connection, credential or hosted URL is accepted. SQL goes to stdout.
-import { readFile, readdir } from 'node:fs/promises';
-import { definition, group, action } from '../fixtures/automation.mjs';
+import { readdir, readFile } from 'node:fs/promises';
+
+import { action, definition, group } from '../fixtures/automation.mjs';
+
 const org = '20000000-0000-0000-0000-000000000401';
 const other = '20000000-0000-0000-0000-000000000402';
 const admin = '10000000-0000-0000-0000-000000000401';
 const otherAdmin = '10000000-0000-0000-0000-000000000402';
-const draft = definition({ conditions: group(), trigger: { type: 'ticket.open_duration_reached', configuration: { durationMinutes: 1 } }, actions: Array.from({ length: 5 }, (_, i) => action('add_internal_note', { body: '界'.repeat(18000) }, i)) });
-const literal = value => `'${JSON.stringify(value).replaceAll("'", "''")}'::jsonb`;
-const migrations = (await readdir('supabase/migrations')).filter(name => name.endsWith('.sql')).sort();
-if (migrations.length !== 40 || migrations.at(-1) !== '20261002202406_automation_guardrails.sql') throw Error('Recheck audit baseline before replay');
+const draft = definition({
+  conditions: group(),
+  trigger: { type: 'ticket.open_duration_reached', configuration: { durationMinutes: 1 } },
+  actions: Array.from({ length: 5 }, (_, i) =>
+    action('add_internal_note', { body: '界'.repeat(18000) }, i),
+  ),
+});
+const literal = (value) => `'${JSON.stringify(value).replaceAll("'", "''")}'::jsonb`;
+const migrations = (await readdir('supabase/migrations'))
+  .filter((name) => name.endsWith('.sql'))
+  .sort();
+if (migrations.length !== 40 || migrations.at(-1) !== '20261002202406_automation_guardrails.sql')
+  throw Error('Recheck audit baseline before replay');
 console.log('\\set ON_ERROR_STOP on\n\\o /dev/null');
 console.log(await readFile('tests/fixtures/supabase-bootstrap.sql', 'utf8'));
-for (const file of migrations.slice(0, -1)) console.log(await readFile(`supabase/migrations/${file}`, 'utf8'));
+for (const file of migrations.slice(0, -1))
+  console.log(await readFile(`supabase/migrations/${file}`, 'utf8'));
 console.log(await readFile('tests/fixtures/domain-events.sql', 'utf8'));
 console.log(`begin;
 set local role authenticated;

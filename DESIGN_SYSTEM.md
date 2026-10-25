@@ -30,57 +30,78 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
 
 ```css
 :root {
-  --color-brand-primary: #007aff;
-  --color-brand-secondary: #00c6ff;
-  --color-brand-navy: #0f172a;
-  --color-brand-purple: #865cf6;
-  --color-canvas: #f8fafc;
-  --color-surface: #ffffff;
-  --color-surface-subtle: #f9fafb;
-  --color-surface-raised: #ffffff;
-  --color-border: #e5e7eb;
-  --color-border-strong: #d1d5db;
-  --color-text: #0f172a;
-  --color-text-muted: #64748b;
-  --color-text-subtle: #64748b;
-  --color-accent: #0066d6;
-  --color-accent-hover: #0058b8;
-  --color-accent-subtle: #eaf5ff;
+  color-scheme: light;
+  --color-on-accent: #fbfffe;
+  --color-action-fill: #bd212c;
+  --color-action-hover: #a71d27;
+  --color-on-action: #fbfffe;
+  --color-inverse: #fbfffe;
+  --color-inverse-hover: #f1f2f3;
+  --color-brand-text-muted: #e1e3e5;
+  --color-cyan: #725000;
+  --color-cyan-subtle: #f1f2f3;
+  --color-purple: #6842c7;
+  --color-purple-subtle: #f1edff;
+  --color-neutral: #6e676f;
+  --color-neutral-subtle: #eeeeee;
+  --color-note-border: var(--color-accent);
+  --color-note-surface: var(--color-surface-subtle);
+  --color-auth-tint: #f1f2f3;
+
+  --color-brand-primary: #bd212c;
+  --color-brand-secondary: #fba917;
+  --color-brand-ink: #282d33;
+  --color-brand-purple: #282d33;
+  --color-canvas: #f1f2f3;
+  --color-surface: #fbfffe;
+  --color-surface-subtle: #f6f7f7;
+  --color-surface-raised: #fbfffe;
+  --color-border: #e1e3e5;
+  --color-border-strong: #cdd0d3;
+  --color-text: #282d33;
+  --color-text-muted: #6e676f;
+  --color-text-subtle: #6e676f;
+  --color-accent: #a71d27;
+  --color-accent-hover: #8e1821;
+  --color-accent-subtle: #f1f2f3;
+  --color-info: var(--color-accent-hover);
+  --color-info-subtle: var(--color-accent-subtle);
   --color-success: #15803d;
-  --color-success-brand: #22c55e;
   --color-success-subtle: #ecfdf3;
   --color-warning: #a15c00;
-  --color-warning-brand: #f59e0b;
   --color-warning-subtle: #fff7e6;
-  --color-danger: #c92a2a;
-  --color-danger-brand: #ef4444;
-  --color-danger-subtle: #fff1f1;
-  --color-info: #0066d6;
-  --color-info-subtle: #eaf5ff;
-  --color-focus: #0066d6;
-  --color-control-border: #8291a5;
-  --shadow-card: 0 1px 2px rgb(16 24 40 / 5%), 0 4px 12px rgb(16 24 40 / 4%);
-  --shadow-overlay: 0 16px 40px rgb(16 24 40 / 18%);
+  --color-danger: #bd212c;
+  --color-danger-subtle: #f1f2f3;
+  --color-focus: #a71d27;
+  --color-control-border: #817b83;
+  --color-field-surface: #f1f2f3;
+  --color-field-hover: #e9ebed;
+  --brand-flow: linear-gradient(100deg, var(--color-brand-primary), var(--color-brand-secondary));
+  --shadow-card: 0 1px 2px rgb(26 26 26 / 2%), 0 4px 12px rgb(26 26 26 / 2%);
+  --shadow-overlay: 0 16px 40px rgb(26 26 26 / 18%);
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-panel: 16px;
 }
 ```
 
-Functional links and primary buttons use the darker `--color-accent` alias to meet normal-text contrast. The logo and brand artwork retain the primary brand blue. Focus indicators use a solid outline rather than a translucent tint.
+Functional links use the accessible red `--color-accent` alias to meet normal-text contrast on light surfaces. Filled actions use `--color-action-fill: #BD212C`, `--color-action-hover: #A71D27`, and `--color-on-action: #FBFFFE`. Brand artwork uses red with gunmetal folds. Focus indicators use a solid outline rather than a translucent tint.
 
-The core brand-board palette is `#007AFF` primary blue, `#00C6FF` secondary cyan, `#0F172A` navy, `#64748B` slate, `#E2E8F0` border, `#F8FAFC` background, `#22C55E` success, `#F59E0B` warning, `#EF4444` critical, and `#865CF6` innovation/accent. The darker semantic aliases above are used where the raw brand colors would not meet text contrast. Validate normal text at WCAG AA contrast (4.5:1), large text and essential graphical objects at 3:1, and interactive state contrast in context. Use blue primarily for interactive emphasis. Reserve green, amber, and red for their meanings; purple is optional and should be rare.
+The core brand palette is American red `#BD212C`, gunmetal `#282D33`, dark tangerine `#FBA917`, off-white `#FBFFFE`, and dim gray `#6E676F`. Red anchors brand artwork and primary actions; amber is reserved for warnings and small highlights with dark text. Use off-white text on solid red actions, accessible darker red links on light surfaces, and palette amber links/focus cues in dark mode. Derived neutral surfaces keep the workspace calm. Preserve green for success, and distinguish destructive actions with explicit labels and icons. Validate normal text at WCAG AA (4.5:1) and essential controls and focus indicators at 3:1.
 
 ### 3.2 Brand identity and logo flow
 
-- The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its cyan-to-blue motion and deep navy folds express speed, continuity, and dependable technical support.
+- The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its red ribbon motion and deep charcoal folds express speed, continuity, and dependable technical support.
 - The product name is always written **FixxFlow** with two lowercase x characters and capital F characters. The primary tagline is **IT SUPPORT IN MOTION**.
 - Application navigation uses a responsive lockup built from the approved standalone mark and a live product wordmark. Keep its size and spacing identical in light and dark themes; change only the token-driven text contrast. Do not place the navigation logo on a contrasting plaque.
-- Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Existing favicon and app-launcher icons remain unchanged.
-- Use `logo/fixxflow-logo-horizontal-full.png` for spacious light-surface placements, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode.png` for the dark stacked lockup. Compact and operational navigation use `icon/fixxflow-icon-primary.png` inside the responsive navigation lockup. Do not recolor, stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
+- Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Favicons and app-launcher icons use the same red-and-gunmetal mark.
+- Use `logo/fixxflow-logo-horizontal-full.png` for spacious light-surface placements, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode-transparent.png` for the dark stacked lockup. Compact and operational navigation use `icon/fixxflow-icon-primary.png` inside the responsive navigation lockup. Use the approved red-and-gunmetal artwork; do not stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
 - Keep clear space around the logo. At small sizes, drop the tagline before reducing legibility; use the icon rather than forcing the wordmark into a square.
 - The logo gradient belongs to brand artwork and occasional brand-forward moments. Functional controls should normally use solid semantic token colors, not gradients.
 - Prefer motion cues that echo the mark's forward sweep: short horizontal reveals, progress movement, and directional transitions. Keep them subtle, 120–200ms, and fully compatible with reduced-motion settings.
 - Product copy should sound clear, capable, and active. Favor outcome language such as “Resolve ticket,” “Route request,” and “Keep work moving.” Avoid mechanical jargon in the employee portal.
 
-The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its PNG masters as approved artwork; do not recreate the wordmark with live text. A designer-authored vector master should replace raster artwork if large-format print production is required.
+The approved, versioned asset package lives under `public/brand/fixxflow/`. Refresh the ignored local handoff package in `brand/fixxflow/` with `npm run brand:sync` and verify byte-for-byte parity with `npm run brand:check`. Treat its PNG masters as approved artwork; do not recreate the wordmark with live text. A designer-authored vector master should replace raster artwork if large-format print production is required.
 
 ### 3.3 Typography
 
@@ -100,7 +121,7 @@ The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its
 - Default page padding: 24px desktop, 20px tablet, 16px mobile.
 - Card padding: 16–24px; do not nest multiple bordered cards without a clear hierarchy.
 - Radius: 8px controls, 10–12px cards, 14–16px major panels. Pills are reserved for compact status, filters, and avatars.
-- Use borders and surface shifts before shadows. Shadows should indicate elevation, not decorate every object.
+- Use quiet 1px borders and surface shifts before shadows. Decorative borders use `#E1E3E5` / `#CDD0D3` in light mode and `#3a414a` / `#626a75` in dark mode. Keep card shadows faint; avoid dark outlines and saturated red borders around ordinary content. Text fields use a neutral filled surface, 8px corners, and a single lower edge instead of a full outline. The lower edge uses the control-border token and retains 3:1 contrast. Focus uses a full red ring; errors retain their explicit treatment. Forced-colors mode restores full system-color borders. Keep focus, selection, and semantic state cues distinct. Shadows should indicate elevation, not decorate every object.
 - Icons should be from one consistent outline icon family. Default size 16–20px. Every unfamiliar icon-only action requires an accessible name and tooltip.
 
 ### 3.5 Motion
@@ -115,9 +136,9 @@ The drop-in raster asset package lives under `public/brand/fixxflow/`. Treat its
 ### 4.1 Agent/admin workspace
 
 - Use persistent left navigation on desktop. Target width: 232–264px expanded and 64–72px collapsed.
-- Navigation groups should reflect stable product areas, not every available page. Provide icon, label, active state, and optional count. The active state must include more than color.
+- Navigation groups should reflect stable product areas, not every available page. Use softly filled, subtly bordered rounded boxes with spacing between groups instead of visible section headers. Keep group names available to assistive technology through labeled lists. Apply the same grouping to employee, staff, and platform navigation, including the compact rail and mobile sheet; keep account controls in their own box. Provide icon, label, active state, and optional count. The active state must include more than color.
 - Prefer task labels in primary navigation: Dashboard, Tickets, Live chat, and Settings. Avoid internal product terminology when a common destination name is clearer.
-- Keep account/workspace controls separate from primary navigation.
+- Keep account/workspace controls separate from primary navigation. Do not repeat the company name in navigation; show organization context within page content where relevant.
 - The main content area should have a clear page header containing title, concise context, primary action, and only the most relevant secondary controls.
 - Use a contextual right-side detail drawer for rapid inspection and editing without losing queue context. Provide an optional full detail view for long work, deep linking, complex history, or narrow screens.
 - Preserve the user's list position, filters, and selection when opening and closing a drawer.
@@ -236,24 +257,30 @@ Recommended initial priorities: Low, Normal, High, Urgent. Always display the wr
 ## 7. Chat and conversation UI
 
 - Treat chat as a continuous support conversation tied to ticket context, not a decorative messaging clone.
+- The chat center keeps a compact conversation inbox beside the active thread on desktop. Inbox rows show requester, public message or file preview, written assignment/status, and the current viewer's unread update count. Preserve the selected queue view in conversation links. On compact screens, show the inbox and active conversation as separate routes with a visible return link. Staff assignment and ticket tools belong in a native details disclosure; it becomes a right-side panel when there is enough space. Employees do not receive staff tools.
+- Keep the composer below a bounded, independently scrolling thread. Short viewports and zoom must allow the page to grow so controls remain reachable. Photos and playable video/audio appear in chronological order with messages, using private signed links and native controls without autoplay. Keep download/open links and recoverable expired-link states. File guidance includes supported types, the 10 MB limit, and a request for text descriptions of visual or spoken content. Uploads remain shared with the employee even when composing an internal note.
+- Chat unread counts represent the viewer's existing unread notifications, including media uploads. A visible thread at its latest entries acknowledges only notifications covered by the loaded snapshot. Keep newer and background-tab updates unread. The navigation badge and notifications page subscribe to live changes, retaining focus and polling recovery.
 - Clearly distinguish employee, agent, system event, and internal note using labels, alignment/surface treatment, and icons—not color alone.
-- Keep message width readable. Show sender and timestamp at logical group boundaries rather than repeating noisy metadata on every bubble.
-- Internal notes use a cool neutral surface with a solid blue edge and the shared blue primary action. Reserve amber for warnings, never for message visibility. Apply this treatment to ticket composers, timelines, live chat and linked history. Internal notes must be unmistakable before composition and after posting. The composer mode label and submit action must state “Internal note” when active.
+- Keep the chat inbox to one heading and its view filters. Use compact timestamps with the exact date and timezone available to assistive technology and on hover. Keep history and file browsing together in a quiet toolbar, with attachments shown once in the timeline. The composer has one heading row, message field, audience/keyboard hint, and attachment/send actions. Keep message width readable. Show sender and timestamp at logical group boundaries rather than repeating noisy metadata on every bubble.
+- Internal notes use a cool neutral surface with a solid accent edge and the shared red primary action. Keep note visibility explicit in text, independently of the shared red brand accent. Apply this treatment to ticket composers, timelines, live chat and linked history. Internal notes must be unmistakable before composition and after posting. The composer mode label and submit action must state “Internal note” when active.
 - The composer supports keyboard entry, attachments, drafts, sending progress, retry after failure, and multiline content. `Enter` versus `Shift+Enter` behavior must be visible or configurable; never surprise users with an accidental send.
 - New messages should not force-scroll a user who is reading history. Show a “new messages” affordance instead. Maintain focus and announce incoming messages politely.
 - System events such as assignment or status changes should be compact timeline items, not chat bubbles.
+- Sent chat messages offer a visible, keyboard-accessible Edit action for their author while the conversation is open, including in chat history. Keep the draft during save failures and revision conflicts, offer Save and Cancel, restore focus, and show an Edited timestamp after saving. Editing never changes the sender, audience, or original send time and does not generate another new-message alert.
 - Sanitize rendered content, constrain attachments, and never render untrusted HTML directly.
 
 ## 8. Simplified employee support portal
 
 The employee portal is intentionally simpler than the agent workspace.
 
+- Reuse the admin workspace shell and navigation branding for employees: the same responsive logo, collapsible desktop sidebar, mobile navigation sheet, search, account area, and appearance controls. Keep employee task labels and destinations permission-scoped; expose My chats and Notifications directly. Preserve larger employee content typography and readable page widths.
 - Lead with a prominent plain-language request/search entry point: “How can we help?”
 - Keep navigation shallow: Home, My requests, Help/knowledge, and account controls are usually sufficient.
 - Present three distinct next steps on the home page: chat for immediate questions, a tracked request for work that needs follow-up, and help articles for self-service. Show existing requests in their own section rather than as another competing action.
 - Use larger type and targets, more whitespace, and fewer visible metadata fields than the agent workspace.
 - Guide request creation with progressive disclosure and human language. Ask only for information needed to route or solve the issue.
 - Show request status, latest response, and next expected step. Translate internal workflow terms into employee-friendly language where needed.
+- My requests uses the shared page header and one quiet bordered panel for request-type links, search, and results. Keep search tips in a native disclosure, preserve filters when searching or clearing search, and show pagination only when another page is available.
 - Make adding a reply or attachment obvious. Hide assignment mechanics, internal notes, SLA machinery, and operational analytics.
 - Provide confirmation and a durable request reference after submission; never leave success dependent on a transient toast.
 
@@ -326,7 +353,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ## 13. Shared visual refinement (September 2026)
 
-- A short blue-to-cyan rule anchors workspace page headers, the sidebar identity, and the employee home introduction. This is decorative brand artwork, never a status indicator or a gradient control.
+- A short red-to-amber rule anchors workspace page headers, the sidebar identity, and the employee home introduction. This is decorative brand artwork, never a status indicator or a gradient control.
 - Use `--brand-flow` for that rule and existing surface tokens for softly shaded metric panels. Keep functional actions solid and data cards stationary.
 - Avatar initials use solid `--color-accent` for readable white text. Input boundaries use `--color-control-border`. Text fields use the subtle surface, 12px card radius, regular-weight input text, and no shadow. Focus uses one solid 2px `--color-focus` outline aligned to the border (−1px offset), avoiding a doubled ring; other controls retain their offset focus outlines.
 - Action-card arrows sit in a small outlined circle. Only a pressed arrow moves, by 2px; reduced motion removes that movement.
@@ -334,7 +361,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Operational overview hierarchy
 
-- Lead the staff overview with a compact navy introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with navy text; the focus outline uses cyan for contrast against navy.
+- Lead the staff overview with a compact charcoal introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with gunmetal text; the focus outline uses palette amber for contrast against charcoal.
 - Place real metrics before shortcuts and personal support actions. On wide screens, group comparable metrics in one divided panel; on compact screens, use two columns and a single column below 360px.
 - Queue shortcuts use native links, a title, brief supporting text, and a decorative arrow. Numbered markers indicate reading order, never ticket counts. Keep secondary support actions neutral so they do not compete with the queue.
 - Shared cards favor borders over shadows. Preserve clear input boundaries, visible focus, and the employee portal’s larger controls.
@@ -363,9 +390,9 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Appearance themes
 
 - Offer a soft, rounded Appearance group with native icon buttons for System (monitor), Light (sun), and Dark (moon). Each button has an accessible name, tooltip, pressed state, and a selected dot in addition to color. Keep 44px targets and visible keyboard focus. Place these choices centered below Notifications in workspace navigation, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.
-- Keep the existing semantic tokens as the single color system. Dark mode uses navy surfaces, light text, brighter semantic foregrounds, and darker tinted status backgrounds. `--color-on-accent` controls text on filled actions; `--color-inverse` stays white for fixed navy brand panels. Chart series retain their distinct line styles and data tables.
+- Keep the existing semantic tokens as the single color system. Dark mode uses the approved red-and-gunmetal palette: `#282D33` canvas, `#282d33` charcoal surfaces, `#BD212C` actions and amber `#FBA917` links and focus, `#FBFFFE` primary text, `#C2C2C2` secondary text, and `#C2BDC4` placeholders. Use derived charcoal tones for elevation and borders and neutral gunmetal surfaces for selection. Both themes and all brand artwork use this palette. Light mode uses white surfaces, a soft neutral canvas, gunmetal primary text, gray secondary text, and accessible red links and focus outlines. Preserve distinct success, warning, danger, and chart colors with darker tinted backgrounds. `--color-on-action` controls off-white text on red filled actions; `--color-inverse` stays white for fixed charcoal brand panels. Chart series retain their distinct line styles and data tables.
 - Use native dark form controls via `color-scheme`. Keep focus outlines and control boundaries visible. Theme changes are immediate and introduce no animation.
-- Full shared logos use the approved primary (light mode) and dark-mode (dark mode) PNGs at their original 1353:1334 proportions; compact sidebar logos use the approved 1139:1151 color icon, with no light backing, cropping, or recoloring. The authentication brand panel follows theme surfaces to keep the selected artwork legible.
+- Full shared logos use the approved primary (light mode) and dark-mode (dark mode) PNGs at their original 1353:1334 proportions; compact sidebar logos use the approved 1139:1151 color icon, with no light backing, cropping, or recoloring. All shared logo variants, including the full inverse artwork, must have genuine alpha transparency around the mark and lettering. Never bake a background into application logo assets. Keep launcher icons separate from transparent application logos.
 
 ### Cross-screen consistency (October 2026)
 
@@ -380,8 +407,120 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Brand presence (October 2026)
 
-- Keep the operational shell neutral and use a thin blue-to-cyan signature at the top of persistent navigation. Selected navigation uses a subtle blue surface, blue text, and an inset edge so the active location remains clear without turning the full control into a saturated block. Keep the existing focus outline and forced-colors selected outline.
-- Concentrate expressive brand color in a few deliberate moments: the staff overview introduction, the authentication brand panel, primary actions, selection, and small directional details. Standard page headers, settings rows, knowledge categories, tables, and form surfaces stay neutral. Cyan is a micro accent within brand artwork and signature rules, not a default card fill or workflow color.
-- Administration is a grouped settings index with bordered rows and lightweight destination links. Knowledge browsing uses neutral destination surfaces with blue interaction feedback. Green, amber, and red remain reserved for semantic feedback.
-- The overview introduction uses a restrained navy-to-blue brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded navigation uses the responsive mark-and-wordmark lockup in every theme; compact sidebars and mobile headers retain the mark alone. Preserve the approved mark without cropping or recoloring.
+- Keep the operational shell neutral and use a thin red-to-amber signature at the top of persistent navigation. Selected navigation uses a subtle red surface, accessible red text, and an inset edge so the active location remains clear without turning the full control into a saturated block. Keep the existing focus outline and forced-colors selected outline.
+- Concentrate expressive brand color in a few deliberate moments: the staff overview introduction, the authentication brand panel, primary actions, selection, and small directional details. Standard page headers, settings rows, knowledge categories, tables, and form surfaces stay neutral. Red highlights belong within brand artwork and signature rules, not a default card fill or workflow color.
+- Administration is a grouped settings index with bordered rows and lightweight destination links. Knowledge browsing uses neutral destination surfaces with red interaction feedback. Green and amber retain semantic roles; destructive red actions require explicit labels and icons.
+- The overview introduction uses a restrained charcoal-to-black brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded navigation uses the responsive mark-and-wordmark lockup in every theme; compact sidebars and mobile headers retain the mark alone. Preserve the approved mark without distortion.
 - Employee pages should feel warmer and simpler through larger type, plain-language tasks, and whitespace rather than additional decorative color. Authentication may carry the strongest brand panel because it has no competing operational data.
+
+### Employee home hierarchy
+
+- Keep the employee home within a centered 960px maximum width, with a compact 24–28px heading and no decorative introduction rule. This supersedes the employee-home rule treatment in section 13.
+- Offer two support cards, with a soft accent surface on Chat with IT and a neutral surface on Submit a request, followed by a lightly tinted help-article search and recent requests. Reuse the existing accent tokens for the organization label, directional details, and small section markers. Submit this entry search explicitly with Enter or Search to open the results page; live search remains on article lists.
+- Recent request rows use shared ticket status presentation, request numbers, and updated timestamps in the viewer’s timezone. Stack controls and wrap request metadata on compact screens.
+
+### Employee request creation
+
+- Continue the home page’s compact heading, accent eyebrow, and lightly tinted optional surfaces within a centered 720px form layout. Lead with subject and description; use brief guidance instead of repeated section introductions. Keep category/location and helpful guides in native disclosures, closed initially. Equipment-linked requests retain the equipment identity and omit location.
+- Keep attachment guidance, Cancel, and Open ticket together at the end. Preserve draft protection, pending state, recoverable errors, and mobile wrapping.
+- Employee category and location dropdowns show search and its guidance only when the unfiltered choices span more than one page. Keep search visible while filtering and retain paging for larger organizations. Single-page dropdowns omit inactive paging controls.
+- Empty optional lookups must not block creation when their choices are loading or unavailable. Once a value is selected, retain the shared save guard until it can be resolved.
+
+### Shared page design principles
+
+- Apply the employee home’s hierarchy principles across non-chat pages: compact 24–28px titles, concise context, a clear primary task, neutral content surfaces, and restrained accent details. Adapt layouts to the task: operational queues and reports retain density; forms and articles retain readable widths. Do not duplicate the home page composition.
+- Keep infrequent tools in labeled native disclosures, with controls mounted so selections and drafts remain intact. Examples include workplace details, purchase/warranty dates, related articles, content previews, and adding organization entries. Keep required inputs, safety instructions, status, primary actions, validation, and recoverable errors discoverable.
+- Use the existing surface, border, spacing, and accent tokens. Allow light tint in bounded search/tool areas; avoid coloring whole pages or adding decorative containers around every section.
+- Scope shared page refinements through the workspace’s `data-page-flow="standard"`. All `/app/chat` routes, including conversation and history routes, are excluded. Shared conversation components retain their existing treatment.
+
+### Quiet form hierarchy
+
+- Apply Apple's [HIG layout](https://developer.apple.com/design/human-interface-guidelines/layout) and [text-field](https://developer.apple.com/design/human-interface-guidelines/text-fields) principles through spacing, clear hierarchy, persistent labels, and predictable feedback. This is a web interface with its own identity.
+- Across employee, staff, settings, queues and chat, shared inputs use field-surface and field-hover tokens, medium-weight labels, readable subdued placeholders, and a single accessible lower edge. Avoid bright rectangular outlines in the resting state. Filled primary actions use a matching red edge; ordinary card and secondary-action hover borders remain neutral. Selection and focus retain explicit accent cues.
+- Ticket creation uses one calm surface without an enclosing border; optional sections retain quiet separators and native disclosures. Supporting text is quieter than entered content. Preserve 44px targets, compact-screen wrapping, native textarea resizing, keyboard focus and error recovery.
+
+- Email templates share the white/gray/gunmetal/red palette and quiet hierarchy: borderless white content surface, red actions with gunmetal labels, gray supporting copy, and soft filled verification codes. Preserve table-based email compatibility, written security notices, fallback links, and authentication template tokens. Generate Supabase templates from the shared renderer.
+
+### Incident tickets — Step 1
+
+- Keep existing ticket statuses, priority, conversation, attachments and resolution. Staff can select Incident when creating a ticket or declare an existing support ticket an incident. Keep employee request creation unchanged and exclude equipment/inventory requests from declaration.
+- Severity (Critical, Major, Moderate, Minor) describes business impact independently of ticket priority. Require an active IT incident owner and a business-impact description. The owner coordinates the incident; the assigned technician still owns ticket work.
+- Keep coordination details staff-only. Show a concise incident summary before the conversation, with severity written out, business impact, owner and affected services/locations. For Step 1, services and locations are names entered one per line, with bounded lists; reusable catalogs and workflow templates are later work.
+- Reuse LookupSelect, ActionForm, SubmitButton, native disclosures, shared badges, filled field surfaces and responsive detail layouts. Preserve incident drafts on validation/server failures, reject stale ticket revisions, and offer explicit review/reload on conflicts.
+- Queue type filters remain distinct from ownership views, persist in pagination and drawer context, and have individually removable chips. Do not change the status model or introduce checklists, communication scheduling, approvals, employee-to-incident links or workflow templates in this step.
+
+### Incident tickets — Step 2
+
+- Response checklists belong inside staff-only incident coordination. Keep ordinary tickets and employee request creation simple. Each step has a title, optional instructions, active staff assignee, optional timezone-aware deadline, and explicit acknowledgement/completion timestamps.
+- Assigned staff acknowledge before completing. Staff can revise pending steps, reassign them, and reopen completed work. Reassignment and reopening clear acknowledgement so responsibility is explicit. Preserve immutable history with actor, timestamp and saved details. Existing ticket status and priority remain independent.
+- Reuse quiet list rows, written states, native disclosures, ActionForm, LookupSelect, DeadlineField, Timestamp and SubmitButton. Keep drafts on errors, reject stale step revisions, and provide latest-detail review. No hover-only or drag-only actions. Bound checklist and history rendering; retain older history in the database.
+
+### Incident tickets — Step 3
+
+- Keep communication planning inside staff-only incident coordination. Name stakeholder groups using existing active company members. Bound groups, rosters and recipient snapshots; reuse adaptive LookupSelect searches for large organizations. External mailing lists and reusable workflow templates remain later scope.
+- Staff prepare a plain-text draft with selected groups and an optional next-update time. Saving captures a deduplicated, explicit recipient snapshot. Show the saved content and audience for review; only the incident owner or an administrator can approve and send it. Approval is an explicit confirmation of the saved revision. Published content and approval identity are immutable; retries cannot enqueue duplicate deliveries.
+- Stakeholders receive only approved content, through recipient-scoped notifications, an approved-update page and branded email. Do not grant access to internal incident data or copy impact, checklist, draft or roster information into the public message. Preserve the shared email renderer, transparent logo, palette and quiet surfaces.
+- Keep the communication owner and next-update reminder explicit and timezone-aware. Notify once for each scheduled reminder; suppress reminders for resolved/closed incidents. Published updates set the next reminder, including clearing it when no next update is promised. Show written due states and separate queued, provider-accepted, skipped and failed email counts. Paginate approved update history.
+
+### Incident tickets — Step 4
+
+- Add staff-only backup ownership, configurable acknowledgement time and overdue grace. Escalate missed step acknowledgements, unfinished step deadlines, approval deadlines and stakeholder-update deadlines through the existing notification/email queue. Record each escalation once per work/schedule episode; suppress resolved/closed incidents and use active same-company recipients, falling back to administrators when designated owners are unavailable.
+- The backup can explicitly take over incident coordination. Preserve ticket assignment and communication ownership; record the ownership change and retain the previous active owner as backup. Alerts never silently reassign ownership.
+- The incident owner or an administrator can request a controlled decision, optionally linked to an unfinished response step. Require a different active staff approver, a decision deadline and an optional distinct backup approver. Only designated approvers decide; backups become eligible after the deadline. Record a reason for approval, rejection or cancellation. Preserve decisions and replacement history.
+- Link approval to the saved work. Editing, reassigning, changing the deadline or reopening a linked step requires fresh approval before completion; acknowledgement alone does not invalidate approval. New requests explicitly replace earlier requests for that step. Cancelling a pending request is a manager action with a recorded reason and removes that request’s completion requirement.
+- Reuse native disclosures, quiet rows, semantic state labels, ActionForm, SubmitButton, adaptive LookupSelect, DeadlineField and Timestamp. Keep drafts on failures, reject stale revisions, provide explicit review/reload and paginate immutable history. Employee incident updates remain limited to Step 3 approved content. No workflow templates or changes to ticket status semantics in this step.
+
+### Ticket procedures — Step 5
+
+- Company administrators create workflow templates for incident response, planned maintenance or general procedures. Keep drafts separate from immutable published versions. Review the saved draft and explicitly confirm publishing with version notes. Archiving prevents new applications and preserves existing ticket procedures; restoring makes published templates available again.
+- A shared staff-only coordination record lets maintenance and general procedures reuse the existing checklist, communication, escalation and approval primitives without declaring an incident. Preserve incident severity/classification and employee request simplicity. Declare an incident explicitly before applying an incident-specific template.
+- Templates contain 1–20 ordered response steps, coordinator/backup role assignments, relative deadlines, required approvals, communication guidance, named stakeholder groups and escalation defaults. Applying selects active company staff, pins the exact published version, records provenance and adds work atomically. It never resets existing progress, replaces existing settings or sends stakeholder messages. New stakeholder groups start empty; staff select recipients before approving updates.
+- Only the coordinator or an administrator applies a procedure to an existing workflow. Pin one application of a given template per ticket, with up to five procedures and the existing checklist/approval limits. Later template edits do not migrate active work. Preserve original step order, keyboard-accessible move/remove/add controls, explicit destructive confirmation and history.
+- Reuse PageHeader, ActionForm, SubmitButton, adaptive LookupSelect, native disclosures, quiet field surfaces, list rows and semantic tokens. Preserve drafts after failures, guard stale template/ticket revisions, paginate catalogs and published versions, and keep procedure controls out of employee pages and equipment requests. No design-system exception is required.
+
+### Guided staff ticket workflow
+
+- Every staff ticket uses a guided wizard: Review request, Assign & start, Coordinate, Respond, Resolve, Activity history. Omit Coordinate for tickets that do not offer coordination tools. Each step explains its purpose and provides labeled Back/Next controls. Navigation never changes ticket state; explicit save/actions do. Keep the employee portal unchanged.
+- Keep all step panels mounted so navigation preserves drafts. Expose only the current panel, mark the current step in text/ARIA, and move keyboard focus to its heading after explicit navigation. Step links are directly accessible; URL fragments retain the chosen step. Existing work resumes at the relevant step without forcing a reply or unnecessary reassignment.
+- Offer explicit Assign to me and Start work actions. Use the Status dropdown and Save status for every status change, including resolution; do not duplicate it with a Mark resolved button. Mutations change only named fields and reject stale revisions; taking a ticket never replaces another worker. Keep assignment/priority easy to find and classification/deadlines in a native disclosure.
+- Coordination and activity history are wizard steps, not disclosures below the flow. Coordinate explains active work when present and clearly marks coordination as optional for routine tickets. Show recent activity directly within its step and retain the full-history link. All steps remain directly accessible from the numbered navigation.
+- Ticket replies start addressed to the requester, with a visible audience and explicit send label. Internal notes require an explicit audience choice and retain their own draft and staff-only labels. Reuse shared forms, tokens and failure recovery. The wizard is an intentional update to the earlier detail-page ordering: the request, work actions and conversation now have their own focused steps.
+
+### Employee-reported work impact
+
+- Employee support and equipment ticket creation asks “How is this affecting work?” with a required, initially empty native select: Minor inconvenience, Work blocked, Team affected, Operations stopped. Include plain descriptions and explain that the choice sets initial priority and SLA targets, which IT can adjust after review.
+- Store the original reported impact separately from priority; show it in employee request details and staff Review request. Historical and staff-created tickets may have no reported impact. Map Minor inconvenience to Low (8h response / 48h resolution), Work blocked to Normal (4h / 24h), Team affected to High (1h / 8h), and Operations stopped to Critical (15min / 4h). Apply on creation only, before SLA calculation; retain IT priority overrides and the original report. Selecting impact does not declare an incident. Reuse shared field, input, form, and feedback primitives.
+
+### Ticket workflow guidance
+
+- Each staff workflow step groups its heading, short purpose/action sentence and native “Show guidance” disclosure in one subtle neutral surface with a small red heading accent. Expanded guidance uses short ordered instructions with action names emphasized; the disclosure label becomes “Hide guidance” when open. Keep audience, optional work and explicit save actions clear. Explain once beside Back/Next that navigation only changes the view; Back/Next never save or change status. Reuse existing typography and surface tokens without separate instruction cards. Keep the redundant progress announcement available to assistive technology without repeating it visually.
+
+### Pagination visibility
+
+- Show page numbers and pagination navigation only when a previous or next page is available. Hide the complete pagination region for empty or single-page results, including import previews. Keep result counts visible. Retain a way back on later pages, including when a filtered or stale URL returns no rows. Preserve filters and independent paging parameters in navigation links.
+
+### Simpler task flows (October 2026)
+
+- Use Settings consistently for the workspace configuration destination. Keep employee Help articles and staff Knowledge base as audience-specific names. Assets identifies individual equipment records; Inventory handles stock requests, receiving and fulfillment.
+- Show active checklist work and pending decisions before coordination configuration. Keep completed step detail and backup/alert settings in native disclosures. Preserve the guided ticket wizard, its mounted drafts and direct coordination links.
+- Template authoring leads with the reusable checklist. Summarize collapsed role, deadline and approval choices. Ask only for roles needed by a procedure or its existing settings. Publishing and applying remain explicit actions.
+- Automation creation leads with practical templates, followed by custom creation. Article authoring leads with title and content, with format/reorder controls in section options and publication scope explicit below the writing area.
+- Inventory receiving validates item quantities and equipment before showing a receipt review with department, storage and selected equipment. Keep entry controls mounted when reviewing, preserve the retry token and reveal them on save failure. Corrections remain a separate action with a required reason.
+- Reports lead with existing operational results. A new custom report does not query results before a definition is chosen or run. Changed builder options clearly require Run report; result exports use the last run definition. Entity filters use labeled checkboxes instead of modifier-key multi-selects.
+- Reveal enclosing disclosures for native validation and named server field errors. Error feedback links focus the corresponding control without discarding values. Reuse shared ActionForm, existing typography, surfaces, focus and responsive tokens.
+
+### Palette fidelity
+
+Do not use pink or rose tints for brand, selection, chat bubbles, or errors. Light selections use cool neutral surfaces; dark selections use elevated gunmetal. Dark-mode links and focus use palette amber for contrast. The navigation wordmark uses exact American red `#BD212C` in both themes, independently of functional link colors. Error labels use red in light mode and off-white on neutral dark surfaces, with explicit error text and icons.
+
+### Activity history readability
+
+Recent and full ticket activity share a semantic chronological list without visible numbering. Use compact separated rows, a clear actor/action line, recorded before-and-after status, priority or assignment details, and quieter timestamps. Place time alongside the event on wide screens and below it on compact screens. Use existing text and border tokens in both themes; retain machine-readable times and the user's timezone. Do not invent missing historical details or show raw record identifiers.
+
+### Employee reopening
+
+On the employee's own resolved or closed ticket, show a prominent Reopen ticket disclosure near the top, before the description and conversation. It opens a required explanation field and a Reopen ticket submit action. Preserve the explanation on errors and keep its revision and retry key stable across background refreshes. Reopening returns the same ticket to Open, preserves ownership and conversation history, and records the explanation for IT and the reopening email. This employee action is separate from staff status controls.
+
+### Knowledge audiences
+
+Knowledge articles have separate Publication status and Audience controls. New articles default to IT only. Employees can read only published Employee-facing articles; IT staff can read both audiences plus drafts and archived content. Staff browsing provides an Audience filter and written audience labels on articles and search/suggestion results. Drafts and archived articles remain staff-only regardless of their intended audience. Related links, search, feedback, suggestions and attachments must respect the same database policy; hiding a control is insufficient.

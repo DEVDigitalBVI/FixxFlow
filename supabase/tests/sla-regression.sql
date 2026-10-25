@@ -47,7 +47,7 @@ update public.tickets set status = 'closed', priority = 'low' where id = '300000
 select pg_temp.assert_sla((select resolved_at is not null and closed_at is not null and resolution_sla_due_at = created_at + interval '8 hours' from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'closing preserves resolution timestamp and completed target');
 
 select set_config('request.jwt.claims', '{"sub":"10000000-0000-0000-0000-000000000031","role":"authenticated"}', true);
-update public.tickets set status = 'open' where id = '30000000-0000-0000-0000-000000000031';
+select public.reopen_ticket('30000000-0000-0000-0000-000000000031',(select revision from public.tickets where id='30000000-0000-0000-0000-000000000031'),'The issue is not resolved.',gen_random_uuid());
 select pg_temp.assert_sla((select status = 'open' and resolved_at is null and closed_at is null and first_response_at is not null and resolution_sla_due_at = created_at + interval '8 hours' and sla_next_due_at = resolution_sla_due_at from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'employee reopening works and resumes the original deadline');
 
 reset role;
