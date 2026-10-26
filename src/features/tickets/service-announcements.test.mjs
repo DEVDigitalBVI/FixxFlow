@@ -70,6 +70,7 @@ test('editor has persistent labels, native constraints, safe draft and pending a
   const html = renderToStaticMarkup(
     React.createElement(AnnouncementEditor, {
       ticketId: 'ticket',
+      requestKey: '90000000-0000-0000-0000-000000000401',
       revision: 2,
       title: 'Email outage',
       body: 'IT is working on it',

@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import { RetryButton } from '@/components/ui/retry-button';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -69,6 +71,7 @@ export async function ServiceAnnouncementPanel({
       title={draft?.title ?? live?.title ?? ''}
       body={draft?.body ?? live?.body ?? ''}
       update={!!live}
+      requestKey={randomUUID()}
     />
   );
   return (

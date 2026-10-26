@@ -14,16 +14,18 @@ export function AnnouncementForm({
   operation,
   children,
   label,
+  requestKey: initialRequestKey = '',
 }: {
   ticketId: string;
   revision: number;
   operation: 'publish' | 'withdraw';
   children?: ReactNode;
   label?: string;
+  requestKey?: string;
 }) {
   const router = useRouter(),
     [version, setVersion] = useState(revision),
-    [requestKey, setRequestKey] = useState(() => crypto.randomUUID()),
+    [requestKey, setRequestKey] = useState(initialRequestKey),
     [failed, setFailed] = useState(false);
   return (
     <ActionForm
@@ -69,12 +71,14 @@ export function AnnouncementEditor({
   title,
   body,
   update = false,
+  requestKey,
 }: {
   ticketId: string;
   revision: number;
   title: string;
   body: string;
   update?: boolean;
+  requestKey: string;
 }) {
   const id = useId();
   return (
@@ -82,6 +86,7 @@ export function AnnouncementEditor({
       ticketId={ticketId}
       revision={revision}
       operation="publish"
+      requestKey={requestKey}
       label={update ? 'Publish update' : 'Publish announcement'}
     >
       <label className="field" htmlFor={`${id}-title`}>
