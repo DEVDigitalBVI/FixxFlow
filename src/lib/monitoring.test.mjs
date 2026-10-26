@@ -68,7 +68,7 @@ test('provider errors cannot echo credential-bearing response bodies', async () 
       token: 'provider-secret',
       readinessToken: 'health-secret',
       request: async (url) =>
-        url.includes('fixxflow.com')
+        new URL(url).hostname === 'fixxflow.com'
           ? Response.json({ status: 'ready', checks: { database: 'ok' } })
           : Response.json({ error: 'health-secret' }, { status: 422 }),
     }),
