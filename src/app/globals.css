@@ -11220,3 +11220,84 @@ details.settings-card[open] > summary {
   margin: 0;
   padding-left: 20px;
 }
+
+/* Announcements stay together as a compact notice beside the home page's tasks. */
+.service-notices {
+  min-width: 0;
+  align-self: start;
+  margin: 0 0 24px;
+  padding: 16px 20px;
+  border: 1px solid var(--color-border);
+  border-inline-start: 3px solid var(--color-warning);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+}
+.service-notices h2,
+.service-notices h3,
+.service-notices p {
+  margin: 0;
+}
+.service-notices h2 {
+  margin-bottom: 10px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+}
+.service-notices h3 {
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+}
+.service-notices-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.service-notice {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+  scroll-margin-top: 24px;
+  overflow-wrap: anywhere;
+}
+.service-notice + .service-notice {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+.service-notice-message {
+  max-width: 75ch;
+  color: var(--color-text);
+  font-size: 15px;
+  line-height: 22px;
+  white-space: pre-wrap;
+}
+.service-notice-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 20px;
+}
+.service-notices-more {
+  display: inline-block;
+  margin-top: 12px;
+}
+.service-notices-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+@media (max-width: 767px) {
+  .service-notices {
+    padding: 14px 16px;
+    margin-bottom: 20px;
+  }
+}

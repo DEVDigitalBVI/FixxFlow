@@ -531,3 +531,8 @@ Knowledge articles have separate Publication status and Audience controls. New a
 - State the audience next to the action: emails all active workspace members and appears on their home page. Email only active members with verified email addresses, once per publication, including the publisher. Use the existing queued delivery, retry and provider idempotency rules; never include internal ticket context. Keep publication receipts so lost responses cannot duplicate delivery.
 - Show the published message with Edit announcement and Remove announcement disclosures. Publish update replaces the home notice and emails the new version. Preserve entered text after failures and reject stale edits. Resolution/closure removes the home notice and cancels unsent emails; reopening never republishes automatically. Removal cannot recall delivered emails.
 - Reuse ActionForm, SubmitButton, RetryButton, Timestamp, quiet surfaces and existing responsive/wrapping tokens. Preserve native validation, accessible field names, focus and draft recovery. Keep Stakeholder updates separate and unchanged.
+
+
+### Compact home announcements
+
+Show employee announcements as one quiet notice with a small IT announcements label, the issue title, message and subdued publication time grouped together. Use the surface/border tokens and a small warning edge, with written text conveying the issue. Avoid a large section heading or repeated instructions. Keep spacing content-sized, reset heading/paragraph margins locally, wrap long content on compact screens, preserve long-message links and keep the home page's support actions close by.
