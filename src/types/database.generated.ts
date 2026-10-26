@@ -2590,6 +2590,55 @@ export type Database = {
           },
         ]
       }
+      ticket_links: {
+        Row: {
+          created_at: string
+          created_by: string
+          kind: string
+          linked_ticket_id: string
+          organization_id: string
+          ticket_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          kind: string
+          linked_ticket_id: string
+          organization_id: string
+          ticket_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          kind?: string
+          linked_ticket_id?: string
+          organization_id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_links_organization_id_created_by_fkey"
+            columns: ["organization_id", "created_by"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["organization_id", "user_id"]
+          },
+          {
+            foreignKeyName: "ticket_links_organization_id_linked_ticket_id_fkey"
+            columns: ["organization_id", "linked_ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "ticket_links_organization_id_ticket_id_fkey"
+            columns: ["organization_id", "ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
       ticket_messages: {
         Row: {
           author_id: string | null
@@ -3636,6 +3685,16 @@ export type Database = {
           org: string
           payload: Json
           target: string
+        }
+        Returns: number
+      }
+      mark_ticket_duplicate: {
+        Args: {
+          duplicate: string
+          expected_revision: number
+          main: string
+          org: string
+          requester_message?: string
         }
         Returns: number
       }

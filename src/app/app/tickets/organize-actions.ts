@@ -63,3 +63,97 @@ export async function removeTicketTag(form: FormData): Promise<ActionResult> {
   refresh(ticketId);
   return { success: `Tag “${tag}” removed.` };
 }
+
+function ticketNumber(value: string): number | null {
+  const match = value.trim().match(/^#?(\d{1,12})$/);
+  const number = match ? Number(match[1]) : NaN;
+  return Number.isSafeInteger(number) && number > 0 ? number : null;
+}
+
+/** Resolves a ticket number within the viewer's own workspace only. */
+async function ticketByNumber(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  organizationId: string,
+  number: number,
+) {
+  const { data, error } = await supabase
+    .from('tickets')
+    .select('id, ticket_number')
+    .eq('organization_id', organizationId)
+    .eq('ticket_number', number)
+    .maybeSingle();
+  return error ? { error: true as const } : { ticket: data };
+}
+
+export async function linkTicket(form: FormData): Promise<ActionResult> {
+  const context = await staffTicket(form);
+  if ('error' in context) return { error: context.error };
+  const { viewer, ticketId, supabase } = context;
+  const number = ticketNumber(formString(form, 'ticketNumber', ''));
+  if (!number) return { error: 'Enter a ticket number, such as #1042.' };
+  const found = await ticketByNumber(supabase, viewer.organizationId, number);
+  if ('error' in found) return { error: 'Tickets could not be checked. Try again.' };
+  if (!found.ticket) return { error: `Ticket #${number} was not found in this workspace.` };
+  if (found.ticket.id === ticketId) return { error: 'A ticket cannot be linked to itself.' };
+  const { error } = await supabase.from('ticket_links').insert({
+    organization_id: viewer.organizationId,
+    ticket_id: ticketId,
+    linked_ticket_id: found.ticket.id,
+    kind: 'related',
+    created_by: viewer.id,
+  });
+  if (error?.code === '23505') return { success: `Ticket #${number} is already linked.` };
+  if (error) return { error: 'The tickets could not be linked. Try again.' };
+  refresh(ticketId);
+  revalidatePath(`/app/tickets/${found.ticket.id}`);
+  return { success: `Linked to ticket #${number}.` };
+}
+
+export async function unlinkTicket(form: FormData): Promise<ActionResult> {
+  const context = await staffTicket(form);
+  if ('error' in context) return { error: context.error };
+  const { viewer, ticketId, supabase } = context;
+  const linkedId = formString(form, 'linkedId', '');
+  if (!isUuid(linkedId)) return { error: 'Reload the ticket and try again.' };
+  const { error } = await supabase
+    .from('ticket_links')
+    .delete()
+    .eq('organization_id', viewer.organizationId)
+    .or(
+      `and(ticket_id.eq.${ticketId},linked_ticket_id.eq.${linkedId}),and(ticket_id.eq.${linkedId},linked_ticket_id.eq.${ticketId})`,
+    );
+  if (error) return { error: 'The link could not be removed. Try again.' };
+  refresh(ticketId);
+  revalidatePath(`/app/tickets/${linkedId}`);
+  return { success: 'Link removed.' };
+}
+
+export async function markTicketDuplicate(form: FormData): Promise<ActionResult> {
+  const context = await staffTicket(form);
+  if ('error' in context) return { error: context.error };
+  const { viewer, ticketId, supabase } = context;
+  const revision = Number(formString(form, 'revision', ''));
+  const number = ticketNumber(formString(form, 'mainNumber', ''));
+  const message = formString(form, 'message', '').trim();
+  if (!Number.isSafeInteger(revision)) return { error: 'Reload the ticket and try again.' };
+  if (!number) return { error: 'Enter the main ticket number, such as #1042.' };
+  if (message.length > 20000)
+    return { error: 'Keep the message to the requester under 20,000 characters.' };
+  const found = await ticketByNumber(supabase, viewer.organizationId, number);
+  if ('error' in found) return { error: 'Tickets could not be checked. Try again.' };
+  if (!found.ticket) return { error: `Ticket #${number} was not found in this workspace.` };
+  const { error } = await supabase.rpc('mark_ticket_duplicate', {
+    org: viewer.organizationId,
+    duplicate: ticketId,
+    main: found.ticket.id,
+    expected_revision: revision,
+    requester_message: message || undefined,
+  });
+  if (error?.code === 'PT409')
+    return { error: 'This ticket changed. Review the refreshed ticket before trying again.' };
+  if (error?.code === '22023') return { error: `${error.message}.` };
+  if (error) return { error: 'The ticket could not be closed as a duplicate. Try again.' };
+  refresh(ticketId);
+  revalidatePath(`/app/tickets/${found.ticket.id}`);
+  return { success: `Closed as a duplicate of ticket #${number}.` };
+}

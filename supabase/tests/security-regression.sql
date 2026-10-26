@@ -70,9 +70,9 @@ select pg_temp.check_security((select created_at=now() and response_sla_due_at=n
  from public.tickets where title='Legitimate ticket'),'legitimate creation uses server time');
 
 reset role;
-select pg_temp.check_security((select count(*)=24 from pg_policies
+select pg_temp.check_security((select count(*)=25 from pg_policies
  where policyname='require_enrolled_mfa' and permissive='RESTRICTIVE' and cmd='ALL'),
- 'all 22 app tables plus Storage and Realtime have restrictive assurance policies');
+ 'all 23 app tables plus Storage and Realtime have restrictive assurance policies');
 select pg_temp.check_security(not has_column_privilege('authenticated','public.chat_messages','created_at','INSERT')
  and not has_column_privilege('authenticated','public.chat_conversations','created_at','INSERT')
  and not has_column_privilege('authenticated','public.tickets','first_response_at','INSERT')

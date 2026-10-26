@@ -11142,3 +11142,42 @@ details.settings-card[open] > summary {
 .ticket-tag-add .field {
   flex: 1 1 240px;
 }
+
+/* Related and duplicate ticket links. */
+.ticket-link-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ticket-link-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+}
+.ticket-link-list li > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.ticket-link-list .muted {
+  font-size: 13px;
+}
+.ticket-heading-duplicate {
+  margin: 6px 0 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+.ticket-duplicate > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.ticket-duplicate > summary::-webkit-details-marker {
+  display: none;
+}
