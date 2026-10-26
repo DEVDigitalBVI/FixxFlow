@@ -86,8 +86,10 @@ create trigger service_announcements_queue after insert on public.service_announ
 -- A stable request key makes lost responses safe to retry without re-emailing.
 create table private.service_announcement_commands (
  organization_id uuid not null,request_key uuid not null,actor_id uuid not null,ticket_id uuid not null,
- payload jsonb not null,result jsonb not null,primary key(organization_id,request_key)
+ payload jsonb not null,result jsonb not null,primary key(organization_id,request_key),
+ foreign key(organization_id,ticket_id) references public.tickets(organization_id,id) on delete cascade
 );
+create index service_announcement_commands_ticket_idx on private.service_announcement_commands(organization_id,ticket_id);
 alter table private.service_announcement_commands enable row level security;
 revoke all on private.service_announcement_commands from public,anon,authenticated,service_role;
 create function private.publish_employee_announcement(org uuid,ticket uuid,expected_revision bigint,heading text,message text,request_key uuid)
