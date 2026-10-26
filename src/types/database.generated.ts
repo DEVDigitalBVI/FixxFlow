@@ -1978,10 +1978,12 @@ export type Database = {
           organization_id: string
           read_at: string | null
           recipient_id: string
+          service_announcement_id: string | null
           staff_only: boolean
           ticket_id: string | null
           title: string
         }
+        ComputedFields: never
         Insert: {
           conversation_id?: string | null
           created_at?: string
@@ -1992,6 +1994,7 @@ export type Database = {
           organization_id: string
           read_at?: string | null
           recipient_id: string
+          service_announcement_id?: string | null
           staff_only?: boolean
           ticket_id?: string | null
           title: string
@@ -2006,6 +2009,7 @@ export type Database = {
           organization_id?: string
           read_at?: string | null
           recipient_id?: string
+          service_announcement_id?: string | null
           staff_only?: boolean
           ticket_id?: string | null
           title?: string
@@ -2046,6 +2050,13 @@ export type Database = {
             referencedRelation: "tickets"
             referencedColumns: ["organization_id", "id"]
           },
+          {
+            foreignKeyName: "notifications_service_announcement_fk"
+            columns: ["organization_id", "service_announcement_id"]
+            isOneToOne: false
+            referencedRelation: "service_announcements"
+            referencedColumns: ["organization_id", "id"]
+          }
         ]
       }
       organization_memberships: {
@@ -3576,6 +3587,7 @@ export type Database = {
           reply_author: string
           reply_created_at: string
           reply_preview: string
+          service_announcement_id: string
           status_changed_by: string
           ticket_id: string
           ticket_owner: string
@@ -4047,6 +4059,17 @@ export type Database = {
           target_id?: string
         }
         Returns: undefined
+      }
+      publish_employee_announcement: {
+        Args: {
+          expected_revision: number
+          heading: string
+          message: string
+          org: string
+          request_key: string
+          ticket: string
+        }
+        Returns: Json
       }
       register_invited_member: {
         Args: {

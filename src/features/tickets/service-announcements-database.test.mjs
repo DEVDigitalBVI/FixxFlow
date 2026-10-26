@@ -39,6 +39,7 @@ test('workspace announcement publication protects drafts, authority, history and
       "insert into public.organization_memberships(organization_id,user_id,role) values($1,$2,'technician')",
       [org, author],
     );
+    await db.exec('update auth.users set email_confirmed_at=now()');
     const ticket = (
       await one(
         db,
@@ -123,7 +124,7 @@ test('workspace announcement publication protects drafts, authority, history and
       },
     );
     await scenario(
-      'approval retries are idempotent, audited and send no notification or email',
+      'approval retries are idempotent, audited and queue one email per active member',
       async () => {
         await db.exec('reset role');
         const before = await one(
@@ -139,8 +140,8 @@ test('workspace announcement publication protects drafts, authority, history and
           db,
           'select (select count(*) from public.notifications) notices,(select count(*) from private.notification_email_outbox) emails,(select count(*) from public.audit_events) audit',
         );
-        assert.equal(after.notices, before.notices);
-        assert.equal(after.emails, before.emails);
+        assert.equal(Number(after.notices) - Number(before.notices), 4);
+        assert.equal(Number(after.emails) - Number(before.emails), 4);
         assert.equal(Number(after.audit) - Number(before.audit), 2);
         assert.equal((await db.query('select * from public.service_announcements')).rows.length, 1);
       },

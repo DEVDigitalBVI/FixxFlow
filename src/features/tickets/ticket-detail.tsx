@@ -32,6 +32,7 @@ import { IncidentPanel } from './incident-panel';
 import { safeQueueReturn } from './queue-navigation';
 import { ReopenTicketForm } from './reopen-ticket-form';
 import { ReportedImpact } from './reported-impact';
+import { ServiceAnnouncementPanel } from './service-announcement-panel';
 import { TicketWorkflow } from './ticket-workflow';
 import { TicketWorkActions } from './work-actions';
 
@@ -340,6 +341,7 @@ export async function TicketDetail({
     ticket.ticket_type === 'incident' || Boolean(workflowR.data) || Boolean(workflowR.error);
   const coordination = ticket.request_kind !== 'inventory' && (
     <div className="ticket-coordination">
+      <ServiceAnnouncementPanel organizationId={viewer.organizationId} ticketId={ticket.id} />
       <TicketProcedures organizationId={viewer.organizationId} ticketId={ticket.id} />
       <IncidentPanel
         organizationId={viewer.organizationId}

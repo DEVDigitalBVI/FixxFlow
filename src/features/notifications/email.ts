@@ -108,7 +108,10 @@ export async function sendNotificationEmail(
 ): Promise<string> {
   const { base } = parseNotificationEmailConfiguration(config);
   const url = new URL(notificationHref(item), base.origin).href;
-  const incident = Boolean(item.incident_bulletin_id && item.approved_body);
+  const announcement = Boolean(item.service_announcement_id && item.approved_body);
+  const incident = Boolean(
+    (item.incident_bulletin_id || item.service_announcement_id) && item.approved_body,
+  );
   const reason = item.email_kind ? emailReasons[item.email_kind] : undefined;
   const reply = Boolean(
     !incident &&
@@ -182,13 +185,15 @@ export async function sendNotificationEmail(
       : '';
   // Replies route back to the ticket only when inbound email is configured.
   const emailReplies = Boolean(!incident && routing.replyTo && routing.ticketNumber);
-  const note = incident
-    ? `You received this approved update as a selected stakeholder.${nextUpdate}`
-    : emailReplies
-      ? `You can reply to this email to add a message to ticket #${routing.ticketNumber}. Keep [#${routing.ticketNumber}] in the subject.`
-      : reply
-        ? 'Reply in FixxFlow to keep the conversation with the ticket. This email shows a short preview of the public reply.'
-        : 'Sign in to your account to view the conversation.';
+  const note = announcement
+    ? 'You received this employee announcement because you are an active member of your workspace.'
+    : incident
+      ? `You received this approved update as a selected stakeholder.${nextUpdate}`
+      : emailReplies
+        ? `You can reply to this email to add a message to ticket #${routing.ticketNumber}. Keep [#${routing.ticketNumber}] in the subject.`
+        : reply
+          ? 'Reply in FixxFlow to keep the conversation with the ticket. This email shows a short preview of the public reply.'
+          : 'Sign in to your account to view the conversation.';
   const ticketTag = !incident && routing.ticketNumber ? ` [#${routing.ticketNumber}]` : '';
   const response = await request('https://api.resend.com/emails', {
     method: 'POST',
@@ -205,14 +210,18 @@ export async function sendNotificationEmail(
       reply_to: emailReplies ? routing.replyTo : 'support@fixxflow.app',
       subject: `FixxFlow: ${subject}${ticketTag}`,
       text: incident
-        ? `${item.title}\n\n${message}\n\n${note}\n\nView approved update:\n${url}`
+        ? `${item.title}\n\n${message}\n\n${note}\n\n${announcement ? 'View announcement' : 'View approved update'}:\n${url}`
         : reason
           ? `${label}\n${item.title}\n\n${message}${details.length ? `\n\n${details.map((detail) => `${detail.label}: ${detail.value}`).join('\n')}${reply ? `\n\nReply preview:\n${item.reply_preview}` : ''}` : ''}${reopenReason ? `\n\nReason for reopening:\n${reopenReason}` : ''}\n\n${action}:\n${url}\n\n${note}`
           : `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\n${note}`,
       html: renderEmail({
         title: reason && !incident ? label! : item.title,
         message: reason && !incident ? `${item.title}\n\n${message}` : message,
-        action: incident ? 'View approved update' : (action ?? 'View update'),
+        action: incident
+          ? announcement
+            ? 'View announcement'
+            : 'View approved update'
+          : (action ?? 'View update'),
         href: url,
         note,
         preserveLines: incident || Boolean(reason),

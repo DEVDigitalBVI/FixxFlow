@@ -53,11 +53,12 @@ type AssetFields = { kind: AssetKind; status: AssetStatus };
 export type Asset = Omit<Tables['assets']['Row'], keyof AssetFields> & AssetFields;
 export type NotificationEmail = Omit<
   Functions['claim_notification_emails']['Returns'][number],
-  'ticket_id' | 'conversation_id'
+  'ticket_id' | 'conversation_id' | 'service_announcement_id'
 > & {
   ticket_id: string | null;
   conversation_id: string | null;
   incident_bulletin_id?: string | null;
+  service_announcement_id?: string | null;
   approved_body?: string | null;
   email_kind?: NotificationKind | null;
   reply_author?: string | null;

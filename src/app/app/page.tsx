@@ -51,6 +51,7 @@ export default async function OverviewPage() {
           </Link>
         }
       />
+      <ServiceAnnouncements />
       <Suspense fallback={<TodayMetrics report={null} />}>
         <OverviewMetrics organizationId={viewer.organizationId} />
       </Suspense>

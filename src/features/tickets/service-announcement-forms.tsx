@@ -13,50 +13,51 @@ export function AnnouncementForm({
   revision,
   operation,
   children,
+  label,
 }: {
   ticketId: string;
   revision: number;
-  operation: 'save' | 'publish' | 'withdraw';
-  children: ReactNode;
+  operation: 'publish' | 'withdraw';
+  children?: ReactNode;
+  label?: string;
 }) {
   const router = useRouter(),
     [version, setVersion] = useState(revision),
+    [requestKey, setRequestKey] = useState(() => crypto.randomUUID()),
     [failed, setFailed] = useState(false);
   return (
     <ActionForm
       className="stack"
-      protectDraft={operation === 'save'}
+      protectDraft={operation === 'publish'}
       action={async (form) => {
         const result = await manageServiceAnnouncement(form);
         setFailed(!!result.error);
         if (result.success) {
           setVersion(result.revision!);
+          setRequestKey(crypto.randomUUID());
           router.refresh();
         }
         return result;
       }}
     >
       <input type="hidden" name="ticketId" value={ticketId} />
-      <input type="hidden" name="revision" value={operation === 'save' ? version : revision} />
+      <input type="hidden" name="revision" value={version} />
       <input type="hidden" name="operation" value={operation} />
+      <input type="hidden" name="requestKey" value={requestKey} />
       {children}
       <SubmitButton
         className={`button button-${operation === 'publish' ? 'primary' : 'secondary'}`}
-        pendingLabel={operation === 'publish' ? 'Publishing…' : 'Saving…'}
+        pendingLabel={operation === 'publish' ? 'Publishing…' : 'Removing…'}
       >
-        {operation === 'save'
-          ? 'Save announcement draft'
-          : operation === 'publish'
-            ? 'Publish to everyone'
-            : 'Remove announcement'}
+        {label ?? (operation === 'publish' ? 'Publish announcement' : 'Remove announcement')}
       </SubmitButton>
       {failed && (
         <a
-          href={`/app/tickets/${ticketId}#communication-plan`}
+          href={`/app/tickets/${ticketId}#employee-announcement`}
           target="_blank"
           rel="noopener noreferrer"
         >
-          Review latest coordination in a new tab
+          Review latest announcement in a new tab
         </a>
       )}
     </ActionForm>
@@ -67,17 +68,24 @@ export function AnnouncementEditor({
   revision,
   title,
   body,
+  update = false,
 }: {
   ticketId: string;
   revision: number;
   title: string;
   body: string;
+  update?: boolean;
 }) {
   const id = useId();
   return (
-    <AnnouncementForm ticketId={ticketId} revision={revision} operation="save">
+    <AnnouncementForm
+      ticketId={ticketId}
+      revision={revision}
+      operation="publish"
+      label={update ? 'Publish update' : 'Publish announcement'}
+    >
       <label className="field" htmlFor={`${id}-title`}>
-        Announcement title (required)
+        Title (required)
         <input
           className="input"
           id={`${id}-title`}
@@ -89,7 +97,7 @@ export function AnnouncementEditor({
         />
       </label>
       <label className="field" htmlFor={`${id}-body`}>
-        Message for everyone (required)
+        Message (required)
         <textarea
           className="input"
           id={`${id}-body`}
@@ -101,10 +109,7 @@ export function AnnouncementEditor({
           defaultValue={body}
         />
       </label>
-      <p className="muted">
-        Only this saved title and message will be shared. Leave out internal troubleshooting, names
-        and private details. Saving does not replace the current notice.
-      </p>
+      <p className="muted">Emails all active workspace members and appears on their home page.</p>
     </AnnouncementForm>
   );
 }

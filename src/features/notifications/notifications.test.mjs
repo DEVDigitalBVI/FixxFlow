@@ -546,3 +546,38 @@ test('ticket emails carry the ticket number and route replies only when email to
   assert.doesNotMatch(numbered.text, /reply to this email/i);
   assert.doesNotMatch(plain.subject, /\[#/);
 });
+
+test('employee announcement emails contain the public message and home-page link without ticket routing', async () => {
+  const { notificationHref } = load('src/features/notifications/presentation.ts');
+  const announcement = {
+    ...item,
+    ticket_id: null,
+    title: 'Email outage',
+    service_announcement_id: 'announcement-123',
+    email_kind: 'incident_update',
+    approved_body:
+      'We are working with the provider.\nUse chat for urgent assistance. <script>example</script>',
+  };
+  assert.equal(notificationHref(announcement), '/app/service-status#notice-announcement-123');
+  const keys = [];
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await sendNotificationEmail(
+      announcement,
+      config,
+      async (_url, options) => {
+        keys.push(options.headers['Idempotency-Key']);
+        const body = JSON.parse(options.body);
+        assert.deepEqual(body.to, ['recipient@example.test']);
+        assert.equal(body.subject, 'FixxFlow: Email outage');
+        assert.match(body.text, /We are working with the provider/);
+        assert.match(body.text, /View announcement:/);
+        assert.match(body.html, /&lt;script&gt;example&lt;\/script&gt;/);
+        assert.match(body.html, /service-status#notice-announcement-123/);
+        assert.doesNotMatch(body.text, /selected stakeholder|\[#|Reply preview/);
+        return Response.json({ id: 'announcement-message' });
+      },
+      { ticketNumber: 123, replyTo: 'internal@example.invalid' },
+    );
+  }
+  assert.deepEqual(keys, ['notification/notice-1', 'notification/notice-1']);
+});
