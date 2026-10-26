@@ -8,7 +8,7 @@ const key = Buffer.from('route-signing-key').toString('base64');
 const env = {
   RESEND_API_KEY: 're_test',
   RESEND_INBOUND_WEBHOOK_SECRET: `whsec_${key}`,
-  INBOUND_EMAIL_DOMAIN: 'in.fixxflow.app',
+  INBOUND_EMAIL_DOMAIN: 'support.fixxflow.com',
 };
 function signedRequest(payload, { tamper = false } = {}) {
   const body = JSON.stringify(payload);
@@ -45,7 +45,7 @@ function setup({ email, rpcError = null, fetchStatus = 200 } = {}) {
 }
 const received = {
   type: 'email.received',
-  data: { email_id: 'em_123', to: ['Northwind <northwind@in.fixxflow.app>'] },
+  data: { email_id: 'em_123', to: ['Northwind <northwind@support.fixxflow.com>'] },
 };
 const original = { ...process.env };
 

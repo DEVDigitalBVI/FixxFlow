@@ -54,7 +54,7 @@ export default async function UnassignedPage({ searchParams }: Props) {
         <div className="field">
           <label htmlFor="organizationSlug">Workspace identifier</label>
           <div className="input-prefix">
-            <span aria-hidden="true">fixxflow.app/</span>
+            <span aria-hidden="true">fixxflow.com/</span>
             <input
               id="organizationSlug"
               name="organizationSlug"

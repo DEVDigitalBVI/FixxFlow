@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 
-const origin = 'https://www.fixxflow.app';
+const origin = 'https://fixxflow.com';
 const api = 'https://incidents.betterstack.com/api/v2';
 
 export async function configureMonitoring({ token, readinessToken, request = fetch }) {
@@ -36,7 +36,9 @@ export async function configureMonitoring({ token, readinessToken, request = fet
     ['/api/health/ready', 'FixxFlow database readiness', '"status":"ready"'],
   ]) {
     const url = origin + path;
-    const existing = monitors.filter((m) => m.attributes.url === url);
+    const existing = monitors.filter(
+      (m) => m.attributes.url === url || m.attributes.url === `https://www.fixxflow.app${path}`,
+    );
     assert.ok(existing.length <= 1, 'Duplicate production monitors require review');
     const configuration = {
       url,

@@ -533,12 +533,12 @@ test('ticket emails carry the ticket number and route replies only when email to
   };
   await sendNotificationEmail(item, config, capture, {
     ticketNumber: 1042,
-    replyTo: 'northwind@in.fixxflow.app',
+    replyTo: 'northwind@support.fixxflow.com',
   });
   await sendNotificationEmail(item, config, capture, { ticketNumber: 1042 });
   await sendNotificationEmail(item, config, capture);
   const [routed, numbered, plain] = sentBodies;
-  assert.equal(routed.reply_to, 'northwind@in.fixxflow.app');
+  assert.equal(routed.reply_to, 'northwind@support.fixxflow.com');
   assert.match(routed.subject, / \[#1042\]$/);
   assert.match(routed.text, /reply to this email to add a message to ticket #1042/i);
   assert.equal(numbered.reply_to, 'support@fixxflow.app', 'no inbound address, no email replies');

@@ -50,7 +50,7 @@ export const templates = [
     'Your password was changed',
     'The password for your FixxFlow account was changed.',
     '',
-    'If this was not you, reset your password at https://www.fixxflow.app/forgot-password and contact support@fixxflow.app immediately.',
+    'If this was not you, reset your password at https://fixxflow.com/forgot-password and contact support@fixxflow.app immediately.',
   ],
   [
     'email-address-changed',

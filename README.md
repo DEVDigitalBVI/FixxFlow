@@ -99,7 +99,7 @@ their verification date; they do not establish the current state of a database.
 
 Run `npm run format:check`, `npm test`, `npm run lint`, `npm run typecheck`, and `npm run build`. Use `npm run format` to apply the shared Prettier and import-order rules. Generated files are excluded. Run `supabase test db` against a local stack for the pgTAP suites, plus the transactional `supabase/tests/security-regression.sql` and `supabase/tests/sla-regression.sql` using the SQL runner. All fixtures roll back. Production verification should use the same transactional isolation and must not send invitations or recovery emails.
 
-Production Auth uses `https://www.fixxflow.app`, confirmed email signup, an eight-character minimum, and leaked-password protection. Leaked-password protection is managed in the hosted Auth dashboard. Keep `NEXT_PUBLIC_SITE_URL` aligned with this domain. The server secret is required for organization bootstrap, invitations, and queued notification delivery; never expose it to the browser.
+Production Auth uses `https://fixxflow.com`, confirmed email signup, an eight-character minimum, and leaked-password protection. Leaked-password protection is managed in the hosted Auth dashboard. Keep `NEXT_PUBLIC_SITE_URL` aligned with this domain. The server secret is required for organization bootstrap, invitations, and queued notification delivery; never expose it to the browser.
 
 ### Delete or deactivate organization data
 

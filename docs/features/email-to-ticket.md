@@ -33,13 +33,19 @@ their Reply-To is the workspace address and the email says replies are added to 
 
 ## Enabling it
 
-1. In Resend, add the receiving domain `in.fixxflow.app` and create the MX record it shows in
-   DNS for that subdomain only. The Zoho inbox at `support@fixxflow.app` is unaffected.
-2. In Resend → Webhooks, add `https://www.fixxflow.app/api/inbound/email` with the
+1. In Resend, add the receiving domain `support.fixxflow.com`, enable Receiving and disable
+   Sending. Publish its DKIM TXT verification record and the receiving MX record shown by
+   Resend, for that subdomain only. Wait until both show Verified. The Zoho inbox at
+   `support@fixxflow.app` is unaffected.
+2. In Resend → Webhooks, add `https://fixxflow.com/api/inbound/email` with the
    `email.received` event, then copy its signing secret.
 3. In Vercel (Production), set `RESEND_INBOUND_WEBHOOK_SECRET` (the `whsec_…` secret) and
-   `INBOUND_EMAIL_DOMAIN=in.fixxflow.app`. `RESEND_API_KEY` is already set for notifications.
+   `INBOUND_EMAIL_DOMAIN=support.fixxflow.com`. `RESEND_API_KEY` must have Full access:
+   a Sending access key cannot retrieve incoming messages and results in webhook errors.
 4. Redeploy, then send a test email from a member's address and check **Email to ticket**.
 
 Until all three settings are present the endpoint returns 503 and the Settings page says the
 feature is not switched on.
+
+The primary application origin is `https://fixxflow.com`. The old `in.fixxflow.app`
+receiving address is retired; it is not an inbound alias.

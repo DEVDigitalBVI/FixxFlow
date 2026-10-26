@@ -13,9 +13,9 @@ test('monitor setup reuses availability, creates readiness, and confines credent
     assert.equal(options.redirect, 'error');
     assert.equal(
       options.headers.authorization,
-      target.hostname === 'www.fixxflow.app' ? 'Bearer health-secret' : 'Bearer provider-secret',
+      target.hostname === 'fixxflow.com' ? 'Bearer health-secret' : 'Bearer provider-secret',
     );
-    if (target.hostname === 'www.fixxflow.app')
+    if (target.hostname === 'fixxflow.com')
       return Response.json({ status: 'ready', checks: { database: 'ok' } });
     assert.equal(target.hostname, 'incidents.betterstack.com');
     if (target.search)
@@ -42,6 +42,7 @@ test('monitor setup reuses availability, creates readiness, and confines credent
   });
   assert.deepEqual(methods, ['PATCH', 'POST']);
   assert.equal(evidence.length, 2);
+  assert.equal(saved.get('live').attributes.url, 'https://fixxflow.com/api/health/live');
   assert.doesNotMatch(JSON.stringify(evidence), /secret/);
 });
 
@@ -67,7 +68,7 @@ test('provider errors cannot echo credential-bearing response bodies', async () 
       token: 'provider-secret',
       readinessToken: 'health-secret',
       request: async (url) =>
-        url.includes('www.fixxflow.app')
+        new URL(url).hostname === 'fixxflow.com'
           ? Response.json({ status: 'ready', checks: { database: 'ok' } })
           : Response.json({ error: 'health-secret' }, { status: 422 }),
     }),
