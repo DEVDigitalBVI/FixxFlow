@@ -119,8 +119,10 @@ export default async function AdministrationSection({
     content = (
       <>
         <p>
-          These values are fixed. SLAs count calendar hours, including weekends. Business hours and
-          custom policies are planned.
+          Targets count support time from 7 AM to 10 PM, seven days a week, in the workspace
+          timezone ({viewer.organizationTimezone}). Both clocks stop overnight. Waiting on user
+          pauses only resolution; the requester’s reply resumes it. On-hold time counts during
+          support hours. Priority targets are unchanged.
         </p>
         <div
           className="table-region"
@@ -129,7 +131,7 @@ export default async function AdministrationSection({
           tabIndex={0}
         >
           <table className="table table-policy responsive-table">
-            <caption>Current response and resolution targets</caption>
+            <caption>Current response and resolution targets in support hours</caption>
             <thead>
               <tr>
                 <th scope="col">Priority</th>

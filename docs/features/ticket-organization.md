@@ -43,3 +43,20 @@ links, watchers or saved views, including on their own tickets.
 - Only known queue parameters are stored (`QUEUE_VIEW_KEYS` in
   `src/features/tickets/queue-views.ts`), re-derived on the server. Paging, the selected ticket
   and messages are never saved.
+
+## SLA support hours and pauses
+
+- Support hours are **7 AM–10 PM every day**, including weekends, in the workspace timezone.
+  Each ticket snapshots that timezone so later workspace changes do not move its deadlines.
+  Existing priority allowances are measured in support time; both clocks stop overnight.
+- **Waiting on user** additionally freezes the resolution allowance. The first-response clock
+  continues during support hours until a staff public reply. Internal notes do not count.
+  A requester public reply, including an accepted email reply, resumes the ticket as
+  **In progress**. Staff can also resume by changing status. **On hold** still counts.
+- Paused resolution targets have no projected due timestamp until resumed; the queue displays
+  a written paused state and remaining support time. A breach before waiting remains visible.
+  SLA warning notifications are held outside support hours.
+- At rollout, unfinished objectives switch to support time without creating audit or automation
+  events. Existing waiting tickets begin pausing at rollout; historic waiting time is not guessed.
+  Completed calendar-hour results remain historical. Reopened tickets use support time for
+  resolution while preserving their completed first-response result.

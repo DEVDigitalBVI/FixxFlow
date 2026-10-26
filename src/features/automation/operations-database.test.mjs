@@ -440,6 +440,7 @@ test('Stage 10 durable health and bounded tenant operational reads', async (t) =
 test('Stage 10 upgrade preserves existing ticket/runtime records and processing OFF', async () => {
   let before;
   const db = await migratedPostgres({
+    throughMigration: '20261025203000_inbound_email.sql', // Later SLA policy intentionally converts unfinished deadlines.
     beforeMigration: async (db, name) => {
       if (name !== '20261001165514_automation_operations.sql') return;
       await db.exec('begin');

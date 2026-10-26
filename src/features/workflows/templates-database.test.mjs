@@ -535,6 +535,7 @@ test('template upgrade preserves existing incident data, approvals, approved com
     return result;
   };
   const db = await migratedPostgres({
+    throughMigration: '20261025203000_inbound_email.sql', // Later SLA policy intentionally converts unfinished deadlines.
     beforeMigration: async (db, name) => {
       if (!name.endsWith('_reusable_workflow_templates.sql')) return;
       await fixtures(db);

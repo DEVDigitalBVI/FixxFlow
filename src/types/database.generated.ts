@@ -3032,12 +3032,16 @@ export type Database = {
           reported_impact: string | null
           request_kind: string
           requester_id: string
-          resolution_sla_due_at: string
+          resolution_sla_due_at: string | null
+          resolution_sla_paused_at: string | null
+          resolution_sla_remaining_seconds: number | null
           resolved_at: string | null
           response_sla_due_at: string
           revision: number
           routing_mode: string
           sla_next_due_at: string | null
+          sla_paused_business_seconds: number
+          sla_timezone: string | null
           status: Database["public"]["Enums"]["ticket_status"]
           subcategory_id: string | null
           team_id: string | null
@@ -3066,12 +3070,16 @@ export type Database = {
           reported_impact?: string | null
           request_kind?: string
           requester_id: string
-          resolution_sla_due_at: string
+          resolution_sla_due_at?: string | null
+          resolution_sla_paused_at: string | null
+          resolution_sla_remaining_seconds: number | null
           resolved_at?: string | null
           response_sla_due_at: string
           revision?: number
           routing_mode?: string
           sla_next_due_at?: string | null
+          sla_paused_business_seconds?: number
+          sla_timezone?: string | null
           status?: Database["public"]["Enums"]["ticket_status"]
           subcategory_id?: string | null
           team_id?: string | null
@@ -3100,12 +3108,16 @@ export type Database = {
           reported_impact?: string | null
           request_kind?: string
           requester_id?: string
-          resolution_sla_due_at?: string
+          resolution_sla_due_at?: string | null
+          resolution_sla_paused_at?: string | null
+          resolution_sla_remaining_seconds?: number | null
           resolved_at?: string | null
           response_sla_due_at?: string
           revision?: number
           routing_mode?: string
           sla_next_due_at?: string | null
+          sla_paused_business_seconds?: number
+          sla_timezone?: string | null
           status?: Database["public"]["Enums"]["ticket_status"]
           subcategory_id?: string | null
           team_id?: string | null
@@ -4075,12 +4087,16 @@ export type Database = {
           reported_impact: string | null
           request_kind: string
           requester_id: string
-          resolution_sla_due_at: string
+          resolution_sla_due_at: string | null
+          resolution_sla_paused_at: string | null
+          resolution_sla_remaining_seconds: number | null
           resolved_at: string | null
           response_sla_due_at: string
           revision: number
           routing_mode: string
           sla_next_due_at: string | null
+          sla_paused_business_seconds: number
+          sla_timezone: string | null
           status: Database["public"]["Enums"]["ticket_status"]
           subcategory_id: string | null
           team_id: string | null

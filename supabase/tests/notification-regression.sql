@@ -54,8 +54,10 @@ insert into public.chat_messages(organization_id,conversation_id,author_id,body,
  ('20000000-0000-0000-0000-000000000061','40000000-0000-0000-0000-000000000061','10000000-0000-0000-0000-000000000061','Internal diagnosis','internal_note'),
  ('20000000-0000-0000-0000-000000000061','40000000-0000-0000-0000-000000000061','10000000-0000-0000-0000-000000000061','Public response','message');
 select pg_temp.check_notification((select count(*)=2 from public.notifications where conversation_id is not null),'chat notes silent and public responses delivered');
-insert into public.tickets(id,organization_id,requester_id,title,description,priority,created_at) values
- ('30000000-0000-0000-0000-000000000062','20000000-0000-0000-0000-000000000061','10000000-0000-0000-0000-000000000062','SLA fixture','Test','critical',now()-interval '13 minutes');
+alter table public.tickets disable trigger tickets_sla_prepare;
+insert into public.tickets(id,organization_id,requester_id,title,description,priority,created_at,response_sla_due_at,resolution_sla_due_at) values
+ ('30000000-0000-0000-0000-000000000062','20000000-0000-0000-0000-000000000061','10000000-0000-0000-0000-000000000062','SLA fixture','Test','critical',now()-interval '13 minutes',now()+interval '2 minutes',now()+interval '4 hours');
+alter table public.tickets enable trigger tickets_sla_prepare;
 select public.enqueue_sla_notifications();
 select public.enqueue_sla_notifications();
 select pg_temp.check_notification((select count(*)=1 from public.notifications where kind='sla_approaching'),'SLA warning emitted once per objective deadline');

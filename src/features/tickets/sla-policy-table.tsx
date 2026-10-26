@@ -4,7 +4,7 @@ import { fixedSlaTargets, formatMinutes } from './sla-policy';
 export function SlaPolicy() {
   return (
     <table className="table table-policy">
-      <caption>Targets from ticket creation</caption>
+      <caption>Support-time targets from ticket creation · 7 AM–10 PM every day</caption>
       <thead>
         <tr>
           <th scope="col">Priority</th>

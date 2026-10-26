@@ -54,6 +54,9 @@ test('support submission receipts preserve atomicity, permissions and retry iden
       await db.exec('begin');
       try {
         await db.exec(await readFile('tests/fixtures/domain-events.sql', 'utf8'));
+        await db.exec(
+          "create function pg_temp.support_minutes(a timestamptz,b timestamptz,z text) returns double precision language sql security definer as 'select private.sla_business_seconds(a,b,z)/60'",
+        );
         await identity(db, employee);
         await run();
       } finally {
@@ -87,7 +90,7 @@ test('support submission receipts preserve atomicity, permissions and retry iden
             assert.equal(await submit(db, kind, request, token), id);
             let row = (
               await db.query(
-                'select reported_impact,priority,extract(epoch from (response_sla_due_at-created_at))/60 response_minutes,extract(epoch from (resolution_sla_due_at-created_at))/60 resolution_minutes from public.tickets where id=$1',
+                'select reported_impact,priority,pg_temp.support_minutes(created_at,response_sla_due_at,sla_timezone) response_minutes,pg_temp.support_minutes(created_at,resolution_sla_due_at,sla_timezone) resolution_minutes from public.tickets where id=$1',
                 [id],
               )
             ).rows[0];

@@ -778,6 +778,7 @@ test('revision migration initializes existing tickets without artificial events,
   let original;
   let auditCount;
   const db = await migratedPostgres({
+    throughMigration: '20261025203000_inbound_email.sql', // Later SLA policy intentionally converts unfinished deadlines.
     beforeMigration: async (db, name) => {
       if (name !== '20261001020338_durable_domain_events.sql') return;
       await db.exec('begin');
