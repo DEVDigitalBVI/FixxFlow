@@ -524,3 +524,9 @@ On the employee's own resolved or closed ticket, show a prominent Reopen ticket 
 ### Knowledge audiences
 
 Knowledge articles have separate Publication status and Audience controls. New articles default to IT only. Employees can read only published Employee-facing articles; IT staff can read both audiences plus drafts and archived content. Staff browsing provides an Audience filter and written audience labels on articles and search/suggestion results. Drafts and archived articles remain staff-only regardless of their intended audience. Related links, search, feedback, suggestions and attachments must respect the same database policy; hiding a control is insufficient.
+
+### Workspace service announcements
+
+- Add workspace-wide notices within ticket coordination, separately from selected-stakeholder updates. Staff save a plain-text draft; only the coordinator or an administrator explicitly approves the saved revision for everyone in the workspace. Keep the currently published snapshot visible while a replacement is drafted. Preserve drafts after failures and reject stale approval.
+- Show only approved title/message snapshots on employee home and request creation, with compact summaries and a paginated service-announcement page. Never expose internal ticket, impact, checklist or draft content, or block contact with IT. Refresh visible notices periodically without remounting request controls.
+- Resolution/closure removes the notice automatically; reopening does not republish it. Keep manual removal in a native disclosure, preserve publication/audit history, and send no email automatically. Reuse ActionForm, SubmitButton, RetryButton, Timestamp, quiet lists, native disclosures and existing responsive/wrapping tokens. Preserve keyboard labels, native validation, focus and draft recovery.

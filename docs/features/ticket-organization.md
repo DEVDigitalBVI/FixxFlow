@@ -60,3 +60,26 @@ links, watchers or saved views, including on their own tickets.
   events. Existing waiting tickets begin pausing at rollout; historic waiting time is not guessed.
   Completed calendar-hour results remain historical. Reopened tickets use support time for
   resolution while preserving their completed first-response result.
+
+## Workspace service announcements
+
+From a ticket’s **Coordinate → Workspace announcement**, staff save a title and plain-text
+message. The coordinator or an administrator reviews the saved revision and explicitly
+approves its audience: everyone in the workspace. Saving edits leaves the current notice
+visible until the replacement is approved. Approvals reject stale revisions and retries do
+not duplicate publication. Publishing does not send email or notifications.
+
+Employees see the latest three active notices on their home page and before opening a
+request, with short summaries and links to complete updates at `/app/service-status`.
+The list refreshes every minute while visible and when returning to the page. Request
+forms stay mounted during refresh. The full list is paginated. Notices never block a request.
+
+Only approved title/message snapshots are shared; drafts, ticket descriptions, business
+impact and coordination details remain staff-only. Active membership, workspace isolation
+and MFA checks apply in the database. Publication and manual removal are audited.
+
+Resolving or closing the ticket removes its announcement automatically. Manual removal
+preserves publication history. Reopening never republishes old content; save and approve a
+new draft revision to announce the issue again. Maintenance/general workflows can use the
+same controls without being declared an incident. Stakeholder communications remain a
+separate approval and delivery flow.

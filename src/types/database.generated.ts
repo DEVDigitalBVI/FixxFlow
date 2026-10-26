@@ -2407,6 +2407,111 @@ export type Database = {
           },
         ]
       }
+      service_announcement_drafts: {
+        Row: {
+          body: string
+          organization_id: string
+          revision: number
+          ticket_id: string
+          title: string
+          updated_at: string
+          updated_by: string
+        }
+        ComputedFields: never
+        Insert: {
+          body: string
+          organization_id: string
+          revision?: number
+          ticket_id: string
+          title: string
+          updated_at?: string
+          updated_by: string
+        }
+        Update: {
+          body?: string
+          organization_id?: string
+          revision?: number
+          ticket_id?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_announcement_drafts_organization_id_ticket_id_fkey"
+            columns: ["organization_id", "ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "service_announcement_drafts_organization_id_updated_by_fkey"
+            columns: ["organization_id", "updated_by"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["organization_id", "user_id"]
+          },
+          {
+            foreignKeyName: "service_announcement_drafts_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: true
+            referencedRelation: "ticket_workflows"
+            referencedColumns: ["ticket_id"]
+          }
+        ]
+      }
+      service_announcements: {
+        Row: {
+          body: string
+          draft_revision: number
+          id: string
+          organization_id: string
+          published_at: string
+          published_by: string
+          ticket_id: string
+          title: string
+          withdrawn_at: string | null
+        }
+        ComputedFields: never
+        Insert: {
+          body: string
+          draft_revision: number
+          id?: string
+          organization_id: string
+          published_at?: string
+          published_by: string
+          ticket_id: string
+          title: string
+          withdrawn_at?: string | null
+        }
+        Update: {
+          body?: string
+          draft_revision?: number
+          id?: string
+          organization_id?: string
+          published_at?: string
+          published_by?: string
+          ticket_id?: string
+          title?: string
+          withdrawn_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_announcements_organization_id_published_by_fkey"
+            columns: ["organization_id", "published_by"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["organization_id", "user_id"]
+          },
+          {
+            foreignKeyName: "service_announcements_organization_id_ticket_id_fkey"
+            columns: ["organization_id", "ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          }
+        ]
+      }
       teams: {
         Row: {
           created_at: string
@@ -3828,6 +3933,16 @@ export type Database = {
           org: string
           payload: Json
           target: string
+        }
+        Returns: number
+      }
+      manage_service_announcement: {
+        Args: {
+          expected_revision: number
+          operation: string
+          org: string
+          payload?: Json
+          ticket: string
         }
         Returns: number
       }

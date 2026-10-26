@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 
 import { PageHeader } from '@/components/ui/page-header';
 import { EmployeeHome } from '@/features/portal/employee-home';
+import { ServiceAnnouncements } from '@/features/portal/service-announcements';
 import { ReportUnavailable, TodayMetrics } from '@/features/reporting/components';
 import { getReport } from '@/features/reporting/data';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -29,6 +30,7 @@ export default async function OverviewPage() {
     const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
     return (
       <EmployeeHome
+        announcements={<ServiceAnnouncements />}
         firstName={viewer.displayName.split(' ')[0]}
         greeting={greeting}
         organizationName={viewer.organizationName}

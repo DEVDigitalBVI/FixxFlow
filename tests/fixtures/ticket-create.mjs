@@ -40,6 +40,8 @@ export async function renderTicketCreate({ role = 'technician', errors = [], par
   const Page = load('src/app/app/tickets/new/page.tsx', {
     'next/link': { default: (props) => React.createElement('a', props) },
     'next/navigation': { useRouter: () => ({ push() {}, refresh() {} }) },
+    // Async server boundary is covered separately by announcement rendering tests.
+    '@/features/portal/service-announcements': { ServiceAnnouncements: () => null },
     '@/lib/auth/viewer': {
       requireViewer: async () => ({
         role,
