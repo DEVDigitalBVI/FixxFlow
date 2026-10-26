@@ -56,6 +56,33 @@ test('employee notices render approved plain text, short summaries, safe full li
     if (!full && data.length) assert.match(html, /href="\/app\/service-status#notice-notice-1"/);
   }
 });
+test('home announcements keep the issue, message and timestamp in one notice without repeated guidance', async () => {
+  const { ServiceAnnouncements } = load('src/features/portal/service-announcements.tsx', {
+    ...mocks,
+    '@/lib/supabase/server': {
+      createClient: async () => ({
+        from: () =>
+          query([
+            {
+              id: 'versa',
+              title: 'VERSA DOWN',
+              body: 'IT is working to resolve the issue.',
+              published_at: '2026-10-26T20:47:00Z',
+            },
+          ]),
+      }),
+    },
+  });
+  const html = renderToStaticMarkup(await ServiceAnnouncements({}));
+  assert.match(html, /class="service-notices"/);
+  assert.match(html, /<h3>VERSA DOWN<\/h3>/);
+  assert.match(html, /class="service-notice-message"/);
+  assert.match(html, /<time dateTime="2026-10-26T20:47:00Z">/);
+  assert.doesNotMatch(
+    html,
+    /Known service issues|IT is aware of these issues|class="stack"|response-checklist/,
+  );
+});
 test('editor has persistent labels, native constraints, safe draft and pending actions', () => {
   const { AnnouncementEditor } = load('src/features/tickets/service-announcement-forms.tsx', {
     ...mocks,
