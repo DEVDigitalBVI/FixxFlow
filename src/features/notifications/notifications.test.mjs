@@ -524,3 +524,25 @@ test('requester reopening email includes the recorded explanation safely in both
     },
   );
 });
+
+test('ticket emails carry the ticket number and route replies only when email to ticket is on', async () => {
+  const sentBodies = [];
+  const capture = async (_url, options) => {
+    sentBodies.push(JSON.parse(options.body));
+    return new Response(JSON.stringify({ id: 'provider-id' }), { status: 200 });
+  };
+  await sendNotificationEmail(item, config, capture, {
+    ticketNumber: 1042,
+    replyTo: 'northwind@in.fixxflow.app',
+  });
+  await sendNotificationEmail(item, config, capture, { ticketNumber: 1042 });
+  await sendNotificationEmail(item, config, capture);
+  const [routed, numbered, plain] = sentBodies;
+  assert.equal(routed.reply_to, 'northwind@in.fixxflow.app');
+  assert.match(routed.subject, / \[#1042\]$/);
+  assert.match(routed.text, /reply to this email to add a message to ticket #1042/i);
+  assert.equal(numbered.reply_to, 'support@fixxflow.app', 'no inbound address, no email replies');
+  assert.match(numbered.subject, /\[#1042\]$/);
+  assert.doesNotMatch(numbered.text, /reply to this email/i);
+  assert.doesNotMatch(plain.subject, /\[#/);
+});

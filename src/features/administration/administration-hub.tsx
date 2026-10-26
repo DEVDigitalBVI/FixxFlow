@@ -83,6 +83,12 @@ const groups: readonly {
         destinations: ['saved-replies'],
       },
       {
+        title: 'Email to ticket',
+        description: 'Let members create and reply to tickets by email.',
+        icon: 'notifications',
+        destinations: ['email-to-ticket'],
+      },
+      {
         title: 'Teams & routing',
         description: 'Organize support teams and route requests by category.',
         icon: 'routing',

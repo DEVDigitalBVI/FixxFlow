@@ -1338,6 +1338,54 @@ export type Database = {
           },
         ]
       }
+      inbound_emails: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          provider_email_id: string
+          sender: string
+          status: string
+          subject: string
+          ticket_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          provider_email_id: string
+          sender: string
+          status: string
+          subject?: string
+          ticket_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          provider_email_id?: string
+          sender?: string
+          status?: string
+          subject?: string
+          ticket_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbound_emails_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inbound_emails_organization_id_ticket_id_fkey"
+            columns: ["organization_id", "ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
       inventory_equipment: {
         Row: {
           asset_context: Json
@@ -3244,6 +3292,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_inbound_email: {
+        Args: {
+          attachment_count?: number
+          authenticated: boolean
+          body: string
+          org_slug: string
+          provider_id: string
+          sender_email: string
+          subject: string
+        }
+        Returns: Json
+      }
       apply_workflow_template: {
         Args: {
           expected_ticket_revision: number
