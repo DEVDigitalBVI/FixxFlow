@@ -20,6 +20,7 @@ export const auditEntities: Record<string, string> = {
   chat_conversations: 'Chats',
   ticket_messages: 'Replies & notes',
   saved_reports: 'Saved reports',
+  saved_replies: 'Saved replies',
   report_schedules: 'Report schedules',
 };
 export const auditFields: Record<string, string> = {

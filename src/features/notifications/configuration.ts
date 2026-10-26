@@ -39,3 +39,20 @@ export function getNotificationEmailConfiguration(
     return null;
   }
 }
+
+export type InboundEmailConfiguration = { apiKey: string; webhookSecret: string; domain: string };
+
+/** Email to ticket is off unless the Resend key, inbound webhook secret and domain are all set. */
+export function getInboundEmailConfiguration(
+  environment: Record<string, string | undefined>,
+): InboundEmailConfiguration | null {
+  const apiKey = environment.RESEND_API_KEY?.trim();
+  const webhookSecret = environment.RESEND_INBOUND_WEBHOOK_SECRET?.trim();
+  const domain = environment.INBOUND_EMAIL_DOMAIN?.trim().toLowerCase();
+  if (!apiKey || !webhookSecret?.startsWith('whsec_') || !domain) return null;
+  if (!/^(?!-)[a-z0-9-]{1,63}(?:\.(?!-)[a-z0-9-]{1,63})+$/.test(domain)) return null;
+  return { apiKey, webhookSecret, domain };
+}
+
+/** The address a workspace's members email to create or reply to tickets. */
+export const inboundAddress = (slug: string, domain: string) => `${slug}@${domain}`;

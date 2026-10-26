@@ -97,10 +97,14 @@ const emailReasons: Record<NotificationKind, { label: string; message: string; a
   },
 };
 
+/** Email-to-ticket routing for ticket notifications, resolved by the dispatcher. */
+export type NotificationEmailRouting = { ticketNumber?: number; replyTo?: string };
+
 export async function sendNotificationEmail(
   item: NotificationEmail,
   config: NotificationEmailConfiguration,
   request: typeof fetch = fetch,
+  routing: NotificationEmailRouting = {},
 ): Promise<string> {
   const { base } = parseNotificationEmailConfiguration(config);
   const url = new URL(notificationHref(item), base.origin).href;
@@ -176,11 +180,16 @@ export async function sendNotificationEmail(
     incident && item.next_update_at
       ? ` Next update expected: ${new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(item.next_update_at))} UTC.`
       : '';
+  // Replies route back to the ticket only when inbound email is configured.
+  const emailReplies = Boolean(!incident && routing.replyTo && routing.ticketNumber);
   const note = incident
     ? `You received this approved update as a selected stakeholder.${nextUpdate}`
-    : reply
-      ? 'Reply in FixxFlow to keep the conversation with the ticket. This email shows a short preview of the public reply.'
-      : 'Sign in to your account to view the conversation.';
+    : emailReplies
+      ? `You can reply to this email to add a message to ticket #${routing.ticketNumber}. Keep [#${routing.ticketNumber}] in the subject.`
+      : reply
+        ? 'Reply in FixxFlow to keep the conversation with the ticket. This email shows a short preview of the public reply.'
+        : 'Sign in to your account to view the conversation.';
+  const ticketTag = !incident && routing.ticketNumber ? ` [#${routing.ticketNumber}]` : '';
   const response = await request('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -193,13 +202,13 @@ export async function sendNotificationEmail(
     body: JSON.stringify({
       from: config.from.trim(),
       to: [item.recipient_email],
-      reply_to: 'support@fixxflow.app',
-      subject: `FixxFlow: ${subject}`,
+      reply_to: emailReplies ? routing.replyTo : 'support@fixxflow.app',
+      subject: `FixxFlow: ${subject}${ticketTag}`,
       text: incident
         ? `${item.title}\n\n${message}\n\n${note}\n\nView approved update:\n${url}`
         : reason
           ? `${label}\n${item.title}\n\n${message}${details.length ? `\n\n${details.map((detail) => `${detail.label}: ${detail.value}`).join('\n')}${reply ? `\n\nReply preview:\n${item.reply_preview}` : ''}` : ''}${reopenReason ? `\n\nReason for reopening:\n${reopenReason}` : ''}\n\n${action}:\n${url}\n\n${note}`
-          : `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\nSign in to your account to view the conversation.`,
+          : `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\n${note}`,
       html: renderEmail({
         title: reason && !incident ? label! : item.title,
         message: reason && !incident ? `${item.title}\n\n${message}` : message,

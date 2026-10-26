@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 
 export type FailureOperation =
   | 'workspace.search'
+  | 'inbound.email'
   | 'inventory.mutation'
   | 'viewer.membership'
   | 'viewer.platform'

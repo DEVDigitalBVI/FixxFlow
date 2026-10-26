@@ -17,7 +17,11 @@ import { MessageComposer } from '@/features/tickets/message-composer';
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 import { SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { SlaPolicy } from '@/features/tickets/sla-policy-table';
+import { popularTags } from '@/features/tickets/tags';
 import { TicketAssignmentEditor } from '@/features/tickets/ticket-details-form';
+import { TicketLinks, type LinkedTicket } from '@/features/tickets/ticket-links';
+import { TicketTags } from '@/features/tickets/ticket-tags';
+import { TicketWatchers } from '@/features/tickets/ticket-watchers';
 import { Timestamp } from '@/features/timezones/provider';
 import { TicketProcedures } from '@/features/workflows/ticket-procedures';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -223,7 +227,17 @@ export async function TicketDetail({
       </div>
     );
   }
-  const [messagesR, attachmentsR, activityR, workflowR] = await Promise.all([
+  const [
+    messagesR,
+    attachmentsR,
+    activityR,
+    workflowR,
+    savedRepliesR,
+    tagsR,
+    tagUsageR,
+    linksR,
+    watchersR,
+  ] = await Promise.all([
     supabase
       .from('ticket_messages')
       .select('id, author_id, author_type, automation_name, kind, body, created_at')
@@ -254,8 +268,63 @@ export async function TicketDetail({
       .eq('organization_id', viewer.organizationId)
       .eq('ticket_id', ticketId)
       .maybeSingle(),
+    supabase
+      .from('saved_replies')
+      .select('id, title, body')
+      .eq('organization_id', viewer.organizationId)
+      .order('title')
+      .order('id')
+      .limit(200),
+    supabase
+      .from('ticket_tags')
+      .select('tag')
+      .eq('organization_id', viewer.organizationId)
+      .eq('ticket_id', ticketId)
+      .order('tag'),
+    // Recent tag usage across the workspace, for consistent suggestions.
+    supabase
+      .from('ticket_tags')
+      .select('tag')
+      .eq('organization_id', viewer.organizationId)
+      .order('created_at', { ascending: false })
+      .limit(500),
+    // Links in either direction, with the other ticket's summary embedded.
+    supabase
+      .from('ticket_links')
+      .select(
+        'ticket_id, linked_ticket_id, kind, source:tickets!ticket_links_organization_id_ticket_id_fkey(id, ticket_number, title, status), target:tickets!ticket_links_organization_id_linked_ticket_id_fkey(id, ticket_number, title, status)',
+      )
+      .eq('organization_id', viewer.organizationId)
+      .or(`ticket_id.eq.${ticket.id},linked_ticket_id.eq.${ticket.id}`),
+    supabase
+      .from('ticket_watchers')
+      .select('user_id')
+      .eq('organization_id', viewer.organizationId)
+      .eq('ticket_id', ticket.id)
+      .order('created_at'),
   ]);
+  const watcherIds = (watchersR.data ?? []).map((row) => row.user_id);
+  const tags = (tagsR.data ?? []).map((row) => row.tag);
+  const links: LinkedTicket[] = (linksR.data ?? []).flatMap((row) => {
+    const outgoing = row.ticket_id === ticket.id;
+    const other = outgoing ? row.target : row.source;
+    if (!other) return [];
+    const relation: LinkedTicket['relation'] =
+      row.kind === 'related' ? 'related' : outgoing ? 'main' : 'duplicate';
+    return [
+      {
+        id: other.id,
+        number: other.ticket_number,
+        title: other.title,
+        status: other.status,
+        relation,
+      },
+    ];
+  });
+  const mainTicket = links.find((link) => link.relation === 'main');
+  const tagSuggestions = popularTags((tagUsageR.data ?? []).map((row) => row.tag));
   const profiles = await profileLabels(supabase, viewer.organizationId, [
+    ...watcherIds,
     ticket.requester_id,
     ...(ticket.assigned_technician_id ? [ticket.assigned_technician_id] : []),
     ...(messagesR.data ?? []).map((row) => row.author_id),
@@ -311,6 +380,24 @@ export async function TicketDetail({
             Requested by {names.get(ticket.requester_id) ?? 'Unknown'} ·{' '}
             <Timestamp value={ticket.created_at} />
           </p>
+          {mainTicket && (
+            <p className="ticket-heading-duplicate">
+              Duplicate of{' '}
+              <Link href={`/app/tickets/${mainTicket.id}`}>
+                #{mainTicket.number} {mainTicket.title}
+              </Link>
+            </p>
+          )}
+          {tags.length > 0 && (
+            <p className="ticket-heading-tags">
+              <span className="sr-only">Tags: </span>
+              {tags.map((tag) => (
+                <span key={tag} className="ticket-tag">
+                  {tag}
+                </span>
+              ))}
+            </p>
+          )}
         </div>
       </header>
       {message.error && (
@@ -335,6 +422,29 @@ export async function TicketDetail({
               <p className="ticket-description">{ticket.description}</p>
               <ReportedImpact value={ticket.reported_impact} />
             </section>
+            <TicketTags
+              ticketId={ticket.id}
+              tags={tags}
+              suggestions={tagSuggestions}
+              error={Boolean(tagsR.error)}
+            />
+            <TicketLinks
+              ticketId={ticket.id}
+              revision={ticket.revision}
+              status={ticket.status}
+              links={links}
+              error={Boolean(linksR.error)}
+            />
+            <TicketWatchers
+              ticketId={ticket.id}
+              viewerId={viewer.id}
+              admin={viewer.role === 'administrator'}
+              watchers={watcherIds.map((userId) => ({
+                userId,
+                name: names.get(userId) ?? 'Staff member',
+              }))}
+              error={Boolean(watchersR.error)}
+            />
             <InventoryRequestPanel ticketId={ticket.id} />
             <TicketAssets ticketId={ticket.id} />
             <section className="settings-card">
@@ -426,7 +536,18 @@ export async function TicketDetail({
                 staff
                 error={!!messagesR.error}
               />
-              <MessageComposer key={ticket.id} ticketId={ticket.id} action={addTicketMessage} />
+              <MessageComposer
+                key={ticket.id}
+                ticketId={ticket.id}
+                action={addTicketMessage}
+                // Optional: if saved replies fail to load, the composer still works without them.
+                savedReplies={savedRepliesR.error ? undefined : (savedRepliesR.data ?? [])}
+                replyContext={{
+                  requesterName: names.get(ticket.requester_id) ?? null,
+                  agentName: viewer.displayName,
+                  ticketNumber: ticket.ticket_number,
+                }}
+              />
             </section>
             <LinkedChatHistory
               ticketId={ticket.id}

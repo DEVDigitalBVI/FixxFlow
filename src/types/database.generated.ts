@@ -1338,6 +1338,54 @@ export type Database = {
           },
         ]
       }
+      inbound_emails: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          provider_email_id: string
+          sender: string
+          status: string
+          subject: string
+          ticket_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          provider_email_id: string
+          sender: string
+          status: string
+          subject?: string
+          ticket_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          provider_email_id?: string
+          sender?: string
+          status?: string
+          subject?: string
+          ticket_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbound_emails_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inbound_emails_organization_id_ticket_id_fkey"
+            columns: ["organization_id", "ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
       inventory_equipment: {
         Row: {
           asset_context: Json
@@ -2225,6 +2273,89 @@ export type Database = {
           },
         ]
       }
+      saved_queue_views: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          organization_id: string
+          query: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          organization_id: string
+          query: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          query?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_queue_views_organization_id_user_id_fkey"
+            columns: ["organization_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["organization_id", "user_id"]
+          },
+        ]
+      }
+      saved_replies: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string
+          id: string
+          organization_id: string
+          revision: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by: string
+          id?: string
+          organization_id: string
+          revision?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          organization_id?: string
+          revision?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_replies_organization_id_created_by_fkey"
+            columns: ["organization_id", "created_by"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["organization_id", "user_id"]
+          },
+          {
+            foreignKeyName: "saved_replies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saved_reports: {
         Row: {
           created_at: string
@@ -2542,6 +2673,55 @@ export type Database = {
           },
         ]
       }
+      ticket_links: {
+        Row: {
+          created_at: string
+          created_by: string
+          kind: string
+          linked_ticket_id: string
+          organization_id: string
+          ticket_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          kind: string
+          linked_ticket_id: string
+          organization_id: string
+          ticket_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          kind?: string
+          linked_ticket_id?: string
+          organization_id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_links_organization_id_created_by_fkey"
+            columns: ["organization_id", "created_by"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["organization_id", "user_id"]
+          },
+          {
+            foreignKeyName: "ticket_links_organization_id_linked_ticket_id_fkey"
+            columns: ["organization_id", "linked_ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "ticket_links_organization_id_ticket_id_fkey"
+            columns: ["organization_id", "ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
       ticket_messages: {
         Row: {
           author_id: string | null
@@ -2648,6 +2828,81 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "ticket_categories"
             referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      ticket_tags: {
+        Row: {
+          created_at: string
+          created_by: string
+          organization_id: string
+          tag: string
+          ticket_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          organization_id: string
+          tag: string
+          ticket_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          organization_id?: string
+          tag?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_tags_organization_id_created_by_fkey"
+            columns: ["organization_id", "created_by"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["organization_id", "user_id"]
+          },
+          {
+            foreignKeyName: "ticket_tags_organization_id_ticket_id_fkey"
+            columns: ["organization_id", "ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+        ]
+      }
+      ticket_watchers: {
+        Row: {
+          created_at: string
+          organization_id: string
+          ticket_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          organization_id: string
+          ticket_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          organization_id?: string
+          ticket_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_watchers_organization_id_ticket_id_fkey"
+            columns: ["organization_id", "ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "ticket_watchers_organization_id_user_id_fkey"
+            columns: ["organization_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["organization_id", "user_id"]
           },
         ]
       }
@@ -3037,6 +3292,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_inbound_email: {
+        Args: {
+          attachment_count?: number
+          authenticated: boolean
+          body: string
+          org_slug: string
+          provider_id: string
+          sender_email: string
+          subject: string
+        }
+        Returns: Json
+      }
       apply_workflow_template: {
         Args: {
           expected_ticket_revision: number
@@ -3549,6 +3816,16 @@ export type Database = {
           org: string
           payload: Json
           target: string
+        }
+        Returns: number
+      }
+      mark_ticket_duplicate: {
+        Args: {
+          duplicate: string
+          expected_revision: number
+          main: string
+          org: string
+          requester_message?: string
         }
         Returns: number
       }

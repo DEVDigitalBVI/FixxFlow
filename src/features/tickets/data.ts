@@ -10,6 +10,7 @@ import type { TicketPriority, TicketStatus } from '@/types/database';
 
 import { ticketPriorities, ticketStatuses } from './presentation';
 import { normalizeQueueFilters } from './queue-filters';
+import { normalizeTag, popularTags } from './tags';
 
 export type TicketQueueFilters = {
   ticket?: string;
@@ -24,6 +25,7 @@ export type TicketQueueFilters = {
   sort?: string;
   overdue?: string;
   sla?: string;
+  tag?: string;
   success?: string;
   error?: string;
 };
@@ -41,7 +43,10 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
     : supabase.from('tickets');
   let query = source
     .select(
-      'id, ticket_number, request_kind, ticket_type, title, requester_id, assigned_technician_id, team_id, priority, status, due_at, created_at, updated_at, first_response_at, resolved_at, closed_at, response_sla_due_at, resolution_sla_due_at, sla_next_due_at',
+      // `tags` lists every tag for display; `tag_match` is a second embed used only to
+      // filter by a tag (with `not is null` it behaves like an inner join). Tag rows are
+      // staff-only under row-level security, so employees always get empty lists.
+      'id, ticket_number, request_kind, ticket_type, title, requester_id, assigned_technician_id, team_id, priority, status, due_at, created_at, updated_at, first_response_at, resolved_at, closed_at, response_sla_due_at, resolution_sla_due_at, sla_next_due_at, tags:ticket_tags(tag), tag_match:ticket_tags(tag)',
     )
     .eq('organization_id', viewer.organizationId);
   if (viewer.role === 'end_user' && filters.kind !== 'inventory')
@@ -63,6 +68,29 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
     query = query.eq('status', filters.status as TicketStatus);
   if (filters.priority && filters.priority in ticketPriorities)
     query = query.eq('priority', filters.priority as TicketPriority);
+  const tag = viewer.role === 'end_user' ? null : normalizeTag(filters.tag);
+  const savedViews = Promise.resolve(
+    viewer.role === 'end_user'
+      ? { data: [] as { id: string; name: string; query: string }[], error: null }
+      : supabase
+          .from('saved_queue_views')
+          .select('id, name, query')
+          .eq('organization_id', viewer.organizationId)
+          .eq('user_id', viewer.id)
+          .order('name'),
+  );
+  // Started now so it runs alongside the queue query instead of after it.
+  const tagUsage = Promise.resolve(
+    viewer.role === 'end_user'
+      ? { data: [] as { tag: string }[] }
+      : supabase
+          .from('ticket_tags')
+          .select('tag')
+          .eq('organization_id', viewer.organizationId)
+          .order('created_at', { ascending: false })
+          .limit(500),
+  );
+  if (tag) query = query.eq('tag_match.tag', tag).not('tag_match', 'is', null);
   if (sort === 'oldest') query = query.order('updated_at', { ascending: true });
   else if (sort === 'newest') query = query.order('created_at', { ascending: false });
   else if (sort === 'sla')
@@ -108,5 +136,21 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
     throw new Error('Team names could not load. Please try again.');
   }
   const teams = teamResult.data;
-  return { view, sort, search, page, rows, error, profiles, teams, knowledgeCount };
+  const tagOptions = popularTags(((await tagUsage).data ?? []).map((row) => row.tag));
+  const views = await savedViews;
+  return {
+    view,
+    sort,
+    search,
+    page,
+    rows,
+    error,
+    profiles,
+    teams,
+    knowledgeCount,
+    tag,
+    tagOptions,
+    savedViews: views.data ?? [],
+    savedViewsError: Boolean(views.error),
+  };
 }

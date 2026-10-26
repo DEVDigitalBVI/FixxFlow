@@ -7,6 +7,8 @@ import { useUnsavedChanges } from '@/components/ui/unsaved-changes';
 import type { TicketMessageKind } from '@/types/database';
 
 import { messageKinds } from './message-presentation';
+import { insertIntoDraft, type SavedReply, type SavedReplyContext } from './saved-replies';
+import { SavedReplyPicker } from './saved-reply-picker';
 
 export type MessageResult = { error?: string; success?: string };
 
@@ -14,10 +16,15 @@ export function MessageComposer({
   ticketId,
   action,
   staff = true,
+  savedReplies,
+  replyContext = {},
 }: {
   ticketId: string;
   staff?: boolean;
   action: (formData: FormData) => Promise<MessageResult>;
+  /** Staff only: reusable replies offered in the composer. */
+  savedReplies?: SavedReply[];
+  replyContext?: SavedReplyContext;
 }) {
   const router = useRouter();
   const [kind, setKind] = useState<TicketMessageKind>('reply');
@@ -29,6 +36,24 @@ export function MessageComposer({
   const textarea = useRef<HTMLTextAreaElement>(null);
   const mode = messageKinds[kind];
   useUnsavedChanges(Boolean(drafts.reply.trim() || drafts.internal_note.trim()));
+
+  function insertSavedReply(text: string) {
+    const field = textarea.current;
+    const current = drafts[kind];
+    const { value, caret } = insertIntoDraft(
+      current,
+      text,
+      field?.selectionStart ?? current.length,
+      field?.selectionEnd ?? current.length,
+    );
+    setDrafts((existing) => ({ ...existing, [kind]: value }));
+    requestId.current = null;
+    // Return to the draft with the caret after the inserted text.
+    requestAnimationFrame(() => {
+      field?.focus();
+      field?.setSelectionRange?.(caret, caret);
+    });
+  }
 
   async function send(formData: FormData) {
     if (inFlight.current) return;
@@ -118,6 +143,14 @@ export function MessageComposer({
         }
       />
       <div className="composer-footer">
+        {staff && savedReplies && (
+          <SavedReplyPicker
+            replies={savedReplies}
+            context={replyContext}
+            onInsert={insertSavedReply}
+            disabled={pending}
+          />
+        )}
         <small id="message-hint">
           Enter adds a new line. {staff && 'Drafts stay separate for each message type.'}
         </small>

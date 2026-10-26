@@ -30,6 +30,7 @@ export const queueRows = [
   first_response_at: null,
   resolved_at: null,
   closed_at: null,
+  tags: [],
 }));
 export async function renderTicketQueue({
   filters = {},
@@ -56,6 +57,10 @@ export async function renderTicketQueue({
         teams: [{ id: 'team', name: 'IT support' }],
         members: [{ user_id: 'worker' }],
         knowledgeCount: 0,
+        tag: null,
+        tagOptions: [],
+        savedViews: [],
+        savedViewsError: false,
       }),
     },
     '@/features/product-analytics/usage-event': { UsageEvent: () => null },
