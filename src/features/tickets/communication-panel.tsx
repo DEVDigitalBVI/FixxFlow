@@ -16,7 +16,6 @@ import {
   PlanEditor,
 } from './communication-forms';
 import { PublishedUpdates } from './published-updates';
-import { ServiceAnnouncementPanel } from './service-announcement-panel';
 
 export async function CommunicationPanel({
   organizationId,
@@ -123,11 +122,6 @@ export async function CommunicationPanel({
     : { data: [], error: null };
   return (
     <section id="communication-plan" className="stack" aria-labelledby="communication-plan-heading">
-      <ServiceAnnouncementPanel
-        organizationId={organizationId}
-        ticketId={ticketId}
-        ownerId={ownerId}
-      />
       <div className="section-heading-row">
         <h3 id="communication-plan-heading">Stakeholder updates</h3>
         {due && <span className="ticket-badge tone-warning">Update due</span>}

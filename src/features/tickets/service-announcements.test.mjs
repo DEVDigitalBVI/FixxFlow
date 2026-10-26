@@ -70,6 +70,7 @@ test('editor has persistent labels, native constraints, safe draft and pending a
   const html = renderToStaticMarkup(
     React.createElement(AnnouncementEditor, {
       ticketId: 'ticket',
+      requestKey: '90000000-0000-0000-0000-000000000401',
       revision: 2,
       title: 'Email outage',
       body: 'IT is working on it',
@@ -81,10 +82,10 @@ test('editor has persistent labels, native constraints, safe draft and pending a
     /<input(?=[^>]*name="title")(?=[^>]*required="")(?=[^>]*minLength="3")(?=[^>]*maxLength="180")/,
   );
   assert.match(html, /name="body" required="" minLength="3" maxLength="3000"/);
-  assert.match(html, /Save announcement draft/);
-  assert.match(html, /Saving does not replace the current notice/);
+  assert.match(html, /Publish announcement/);
+  assert.match(html, /Emails all active workspace members/);
 });
-test('server action rejects employee access, malformed drafts and unconfirmed publication before database calls', async () => {
+test('server action rejects employee access, malformed content and missing retry keys before database calls', async () => {
   const ticket = '30000000-0000-0000-0000-000000000401';
   let calls = 0;
   for (const [role, operation, confirm] of [
@@ -116,4 +117,48 @@ test('server action rejects employee access, malformed drafts and unconfirmed pu
     assert.ok((await manageServiceAnnouncement(form)).error);
   }
   assert.equal(calls, 0);
+});
+
+test('Coordinate shows one direct publishing form for the assignee, coordinator or administrator', async () => {
+  for (const [role, assigned, owner, allowed] of [
+    ['technician', viewer.id, null, true],
+    ['technician', null, viewer.id, true],
+    ['administrator', null, null, true],
+    ['technician', null, null, false],
+  ]) {
+    const { ServiceAnnouncementPanel } = load(
+      'src/features/tickets/service-announcement-panel.tsx',
+      {
+        ...mocks,
+        '@/lib/auth/viewer': { requireViewer: async () => ({ ...viewer, role }) },
+        '@/lib/supabase/server': {
+          createClient: async () => ({
+            from: (table) =>
+              query(
+                table === 'tickets'
+                  ? { status: 'open', assigned_technician_id: assigned }
+                  : table === 'ticket_workflows'
+                    ? { owner_id: owner }
+                    : null,
+              ),
+          }),
+        },
+        '@/components/ui/action-form': {
+          ActionForm: ({ children }) => React.createElement('form', null, children),
+        },
+        '@/components/ui/submit-button': {
+          SubmitButton: ({ children }) =>
+            React.createElement('button', { type: 'submit' }, children),
+        },
+        './service-announcement-actions': { manageServiceAnnouncement: async () => ({}) },
+      },
+    );
+    const html = renderToStaticMarkup(
+      await ServiceAnnouncementPanel({ organizationId: viewer.organizationId, ticketId: 'ticket' }),
+    );
+    assert.match(html, /id="employee-announcement"/);
+    assert.match(html, /<h2[^>]*>Employee announcement/);
+    assert.equal(html.includes('Publish announcement'), allowed);
+    assert.doesNotMatch(html, /Save announcement draft|Review saved announcement|type="checkbox"/);
+  }
 });

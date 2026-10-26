@@ -61,25 +61,29 @@ links, watchers or saved views, including on their own tickets.
   Completed calendar-hour results remain historical. Reopened tickets use support time for
   resolution while preserving their completed first-response result.
 
-## Workspace service announcements
+## Employee announcements
 
-From a ticket’s **Coordinate → Workspace announcement**, staff save a title and plain-text
-message. The coordinator or an administrator reviews the saved revision and explicitly
-approves its audience: everyone in the workspace. Saving edits leaves the current notice
-visible until the replacement is approved. Approvals reject stale revisions and retries do
-not duplicate publication. Publishing does not send email or notifications.
+**Coordinate → Employee announcement** is a separate section for the assigned technician,
+coordinator or administrator. Enter a title and plain-text message, then select
+**Publish announcement**. No separate draft-save or approval step is needed, and the ticket
+does not need an incident declaration or workflow template.
 
-Employees see the latest three active notices on their home page and before opening a
-request, with short summaries and links to complete updates at `/app/service-status`.
-The list refreshes every minute while visible and when returning to the page. Request
-forms stay mounted during refresh. The full list is paginated. Notices never block a request.
+Publication atomically captures the message, displays it on workspace home pages and before
+request creation, and queues one email for every active member with a verified email address,
+including IT staff and the publisher. Inactive and unactivated/unverified accounts are excluded.
+Email uses the existing retry/lease/provider-idempotency queue. A stable publication request
+key prevents a retry from sending the announcement twice. Reading the notice does not cancel
+its email. Only the entered title/message is shared; internal ticket details remain private.
 
-Only approved title/message snapshots are shared; drafts, ticket descriptions, business
-impact and coordination details remain staff-only. Active membership, workspace isolation
-and MFA checks apply in the database. Publication and manual removal are audited.
+**Edit announcement → Publish update** replaces the home notice and emails the update.
+The current notice remains visible until the replacement is successfully published. Stale
+edits fail without losing entered text. **Remove announcement** removes the home notice;
+resolution/closure does the same automatically. Pending email delivery is cancelled for removed
+notices. Emails already sent cannot be recalled. Reopening does not republish old content.
 
-Resolving or closing the ticket removes its announcement automatically. Manual removal
-preserves publication history. Reopening never republishes old content; save and approve a
-new draft revision to announce the issue again. Maintenance/general workflows can use the
-same controls without being declared an incident. Stakeholder communications remain a
-separate approval and delivery flow.
+Home pages refresh notices every minute while visible and when returning to the page, keeping
+request controls mounted. Long messages link to `/app/service-status`; the full list is
+paginated. Notices never block contacting IT. Database checks enforce current membership,
+MFA, assignee/coordinator/administrator authority and workspace isolation. Publication/removal
+are audited, and immutable publication history is retained. Stakeholder updates remain a
+separate communication flow.

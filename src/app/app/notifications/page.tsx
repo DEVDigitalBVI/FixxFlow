@@ -21,9 +21,12 @@ export default async function NotificationsPage({
   const supabase = await createClient();
   let query = supabase
     .from('notifications')
-    .select('id,kind,title,ticket_id,conversation_id,incident_bulletin_id,created_at,read_at', {
-      count: 'exact',
-    })
+    .select(
+      'id,kind,title,ticket_id,conversation_id,incident_bulletin_id,service_announcement_id,created_at,read_at',
+      {
+        count: 'exact',
+      },
+    )
     .eq('organization_id', viewer.organizationId)
     .eq('recipient_id', viewer.id);
   if (unread) query = query.is('read_at', null);
