@@ -1,0 +1,119 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+
+import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+
+import { load } from '../../../tests/helpers/load-module.mjs';
+
+const viewer = {
+  id: '10000000-0000-0000-0000-000000000401',
+  organizationId: '20000000-0000-0000-0000-000000000401',
+  role: 'administrator',
+};
+const link = { default: ({ children, ...props }) => React.createElement('a', props, children) };
+function query(data, error = null) {
+  const q = {
+    then(resolve) {
+      return Promise.resolve({ data, error }).then(resolve);
+    },
+  };
+  for (const name of ['select', 'eq', 'is', 'order', 'range', 'maybeSingle']) q[name] = () => q;
+  return q;
+}
+const mocks = {
+  'next/link': link,
+  'next/navigation': { useRouter: () => ({ refresh() {} }) },
+  '@/features/timezones/provider': {
+    Timestamp: ({ value }) => React.createElement('time', null, value),
+  },
+  '@/lib/auth/viewer': { requireViewer: async () => viewer },
+  './announcement-refresh': { AnnouncementRefresh: () => null },
+};
+test('employee notices render approved plain text, short summaries, safe full links, empty and recoverable errors', async () => {
+  const rows = [
+    {
+      id: 'notice-1',
+      title: '<script>email</script>',
+      body: 'Safe update '.repeat(40),
+      published_at: '2026-10-26T18:00Z',
+    },
+  ];
+  for (const [data, error, full, expected] of [
+    [rows, null, false, /Read full update/],
+    [rows, null, true, /Safe update Safe update/],
+    [[], null, true, /No active service announcements/],
+    [[], { message: 'unavailable' }, false, /role="alert"/],
+  ]) {
+    const { ServiceAnnouncements } = load('src/features/portal/service-announcements.tsx', {
+      ...mocks,
+      '@/lib/supabase/server': { createClient: async () => ({ from: () => query(data, error) }) },
+    });
+    const html = renderToStaticMarkup(await ServiceAnnouncements({ full }));
+    assert.match(html, expected);
+    assert.doesNotMatch(html, /<script>/);
+    if (data.length) assert.match(html, /aria-labelledby="service-announcements-heading"/);
+    if (!full && data.length) assert.match(html, /href="\/app\/service-status#notice-notice-1"/);
+  }
+});
+test('editor has persistent labels, native constraints, safe draft and pending actions', () => {
+  const { AnnouncementEditor } = load('src/features/tickets/service-announcement-forms.tsx', {
+    ...mocks,
+    '@/components/ui/action-form': {
+      ActionForm: ({ children }) => React.createElement('form', null, children),
+    },
+    '@/components/ui/submit-button': {
+      SubmitButton: ({ children }) => React.createElement('button', { type: 'submit' }, children),
+    },
+    './service-announcement-actions': { manageServiceAnnouncement: async () => ({}) },
+  });
+  const html = renderToStaticMarkup(
+    React.createElement(AnnouncementEditor, {
+      ticketId: 'ticket',
+      revision: 2,
+      title: 'Email outage',
+      body: 'IT is working on it',
+    }),
+  );
+  assert.match(html, /<label[^>]*for=/);
+  assert.match(
+    html,
+    /<input(?=[^>]*name="title")(?=[^>]*required="")(?=[^>]*minLength="3")(?=[^>]*maxLength="180")/,
+  );
+  assert.match(html, /name="body" required="" minLength="3" maxLength="3000"/);
+  assert.match(html, /Save announcement draft/);
+  assert.match(html, /Saving does not replace the current notice/);
+});
+test('server action rejects employee access, malformed drafts and unconfirmed publication before database calls', async () => {
+  const ticket = '30000000-0000-0000-0000-000000000401';
+  let calls = 0;
+  for (const [role, operation, confirm] of [
+    ['end_user', 'save', ''],
+    ['administrator', 'save', ''],
+    ['administrator', 'publish', ''],
+  ]) {
+    const { manageServiceAnnouncement } = load(
+      'src/features/tickets/service-announcement-actions.ts',
+      {
+        'next/cache': { revalidatePath() {} },
+        '@/lib/auth/viewer': { requireViewer: async () => ({ ...viewer, role }) },
+        '@/lib/supabase/server': {
+          createClient: async () => {
+            calls++;
+            return {};
+          },
+        },
+      },
+    );
+    const form = new FormData();
+    for (const [key, value] of Object.entries({
+      ticketId: ticket,
+      operation,
+      confirm,
+      revision: '0',
+    }))
+      form.set(key, value);
+    assert.ok((await manageServiceAnnouncement(form)).error);
+  }
+  assert.equal(calls, 0);
+});

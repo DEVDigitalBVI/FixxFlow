@@ -6,6 +6,7 @@ import { SubmissionKey } from '@/components/ui/submission-key';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { TicketSuggestions } from '@/features/knowledge/ticket-suggestions';
 import { LookupSelect } from '@/features/lookups/lookup-select';
+import { ServiceAnnouncements } from '@/features/portal/service-announcements';
 import { CategoryFields } from '@/features/tickets/category-fields';
 import { DeadlineField } from '@/features/tickets/deadline-field';
 import { ticketImpacts } from '@/features/tickets/impact';
@@ -93,6 +94,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
           {message.error}
         </div>
       )}
+      {!staff && <ServiceAnnouncements />}
       <ActionForm
         action={createTicket}
         className={`ticket-create-form${staff ? '' : ' portal-request-form'}`}

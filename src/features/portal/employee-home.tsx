@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 import { formatTicketDate, ticketStatuses } from '@/features/tickets/presentation';
 import { SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
@@ -18,6 +19,7 @@ type EmployeeHomeProps = {
   organizationName: string;
   recent: RecentRequest[];
   timeZone?: string;
+  announcements?: ReactNode;
 };
 
 const actions = [
@@ -41,6 +43,7 @@ export function EmployeeHome({
   organizationName,
   recent,
   timeZone = 'UTC',
+  announcements,
 }: EmployeeHomeProps) {
   return (
     <div className="portal-page portal-home">
@@ -51,6 +54,7 @@ export function EmployeeHome({
         </p>
         <h1 id="portal-home-heading">How can IT help today?</h1>
       </section>
+      {announcements}
       <div className="portal-actions">
         {actions.map((action) => (
           <Link

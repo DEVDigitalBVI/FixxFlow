@@ -21,6 +21,7 @@ export const auditEntities: Record<string, string> = {
   ticket_messages: 'Replies & notes',
   saved_reports: 'Saved reports',
   saved_replies: 'Saved replies',
+  service_announcements: 'Service announcements',
   report_schedules: 'Report schedules',
 };
 export const auditFields: Record<string, string> = {
@@ -34,6 +35,7 @@ export const auditFields: Record<string, string> = {
   warranty_until: 'Warranty end',
   asset_id: 'Asset',
   title: 'Title',
+  announcement_action: 'Announcement action',
   description: 'Description',
   status: 'Status',
   priority: 'Priority',
