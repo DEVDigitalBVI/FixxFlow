@@ -7,6 +7,12 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useUnsavedChanges } from '@/components/ui/unsaved-changes';
 import { HISTORY_PAGE_SIZE } from '@/features/conversations/history';
+import {
+  insertIntoDraft,
+  type SavedReply,
+  type SavedReplyContext,
+} from '@/features/tickets/saved-replies';
+import { SavedReplyPicker } from '@/features/tickets/saved-reply-picker';
 import { useRouteRefresh } from '@/lib/realtime/use-route-refresh';
 import { createClient } from '@/lib/supabase/client';
 import { uploadAndRegister } from '@/lib/uploads';
@@ -44,6 +50,8 @@ export function ChatRoom({
   supportName = 'IT support team',
   assigned = false,
   participantId,
+  savedReplies,
+  replyContext = {},
 }: {
   conversationId: string;
   organizationId: string;
@@ -57,6 +65,9 @@ export function ChatRoom({
   supportName?: string;
   assigned?: boolean;
   participantId?: string;
+  /** Staff only: reusable replies offered in the composer. */
+  savedReplies?: SavedReply[];
+  replyContext?: SavedReplyContext;
 }) {
   const router = useRouter();
   const [supabase] = useState(createClient);
@@ -111,6 +122,23 @@ export function ChatRoom({
     isWorker ? 'internal_note' : 'message',
   );
   const draft = drafts[kind];
+  const draftField = useRef<HTMLTextAreaElement>(null);
+
+  function insertSavedReply(text: string) {
+    const field = draftField.current;
+    const { value, caret } = insertIntoDraft(
+      draft,
+      text,
+      field?.selectionStart ?? draft.length,
+      field?.selectionEnd ?? draft.length,
+    );
+    setDrafts((current) => ({ ...current, [kind]: value }));
+    // Return to the draft with the caret after the inserted text.
+    requestAnimationFrame(() => {
+      field?.focus();
+      field?.setSelectionRange?.(caret, caret);
+    });
+  }
   const pendingMessage = useRef<{ id: string; body: string; kind: typeof kind } | null>(null);
   const sendInFlight = useRef(false);
   const uploadInFlight = useRef(false);
@@ -572,6 +600,7 @@ export function ChatRoom({
             )}
           </div>
           <textarea
+            ref={draftField}
             id="chat-draft"
             className="input textarea"
             value={draft}
@@ -603,6 +632,14 @@ export function ChatRoom({
             Enter to send · Shift+Enter for a new line.
           </p>
           <div className="chat-composer-actions">
+            {isWorker && savedReplies && (
+              <SavedReplyPicker
+                replies={savedReplies}
+                context={replyContext}
+                onInsert={insertSavedReply}
+                disabled={sending}
+              />
+            )}
             <label className="button button-secondary chat-file-button">
               <input
                 type="file"

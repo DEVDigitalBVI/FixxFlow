@@ -223,7 +223,7 @@ export async function TicketDetail({
       </div>
     );
   }
-  const [messagesR, attachmentsR, activityR, workflowR] = await Promise.all([
+  const [messagesR, attachmentsR, activityR, workflowR, savedRepliesR] = await Promise.all([
     supabase
       .from('ticket_messages')
       .select('id, author_id, author_type, automation_name, kind, body, created_at')
@@ -254,6 +254,13 @@ export async function TicketDetail({
       .eq('organization_id', viewer.organizationId)
       .eq('ticket_id', ticketId)
       .maybeSingle(),
+    supabase
+      .from('saved_replies')
+      .select('id, title, body')
+      .eq('organization_id', viewer.organizationId)
+      .order('title')
+      .order('id')
+      .limit(200),
   ]);
   const profiles = await profileLabels(supabase, viewer.organizationId, [
     ticket.requester_id,
@@ -426,7 +433,18 @@ export async function TicketDetail({
                 staff
                 error={!!messagesR.error}
               />
-              <MessageComposer key={ticket.id} ticketId={ticket.id} action={addTicketMessage} />
+              <MessageComposer
+                key={ticket.id}
+                ticketId={ticket.id}
+                action={addTicketMessage}
+                // Optional: if saved replies fail to load, the composer still works without them.
+                savedReplies={savedRepliesR.error ? undefined : (savedRepliesR.data ?? [])}
+                replyContext={{
+                  requesterName: names.get(ticket.requester_id) ?? null,
+                  agentName: viewer.displayName,
+                  ticketNumber: ticket.ticket_number,
+                }}
+              />
             </section>
             <LinkedChatHistory
               ticketId={ticket.id}

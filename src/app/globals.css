@@ -10988,3 +10988,88 @@ details.settings-card[open] > summary {
     padding-block: 10px;
   }
 }
+
+/* Saved replies: a staff-only picker shared by the ticket and chat composers.
+   When open it takes a full row above the composer actions, so nothing overlaps. */
+.chat-composer-actions {
+  flex-wrap: wrap;
+}
+.saved-reply-picker > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.saved-reply-picker > summary::-webkit-details-marker {
+  display: none;
+}
+.saved-reply-picker[open] {
+  flex-basis: 100%;
+  order: -1;
+}
+.saved-reply-panel {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+.saved-reply-panel p {
+  margin: 0;
+  font-size: 13px;
+}
+.saved-reply-list {
+  display: grid;
+  gap: 4px;
+  max-height: 16rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.saved-reply-list button {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.saved-reply-list button span {
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.saved-reply-list button:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+}
+.saved-reply-list button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.saved-reply-manage {
+  justify-self: start;
+  color: var(--color-accent);
+  font-size: 13px;
+}
+.saved-reply-placeholders dl {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+}
+.saved-reply-placeholders dd {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+.saved-reply-preview {
+  white-space: pre-wrap;
+}

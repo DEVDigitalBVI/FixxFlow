@@ -9,6 +9,14 @@ export const administrationSections = [
     href: '/app/administration/workflows',
   },
   {
+    slug: 'saved-replies',
+    title: 'Saved replies',
+    group: 'Service delivery',
+    status: 'Available',
+    description: 'Reusable answers staff can insert into ticket replies and live chat.',
+    href: '/app/administration/saved-replies',
+  },
+  {
     slug: 'automations',
     title: 'Automations',
     group: 'Service delivery',

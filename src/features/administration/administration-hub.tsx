@@ -20,6 +20,9 @@ const iconPaths = {
   automation: 'm13 2-9 12h7l-1 8 10-13h-7l1-7Z',
   routing: 'M5 3v12a3 3 0 0 0 3 3h11m-4-4 4 4-4 4M5 6h14m-4-4 4 4-4 4',
   knowledge: 'M12 5v15M12 5C8 2 4 3 3 4v15c3-2 6-1 9 1 3-2 6-3 9-1V4c-1-1-5-2-9 1Z',
+  // Same outline as the navigation's chat icon.
+  reply:
+    'M8 19.5 3.5 21v-5.5a4 4 0 0 1-1-2.5V7a3.5 3.5 0 0 1 3.5-3.5h12A3.5 3.5 0 0 1 21.5 7v9a3.5 3.5 0 0 1-3.5 3.5ZM7 9h10M7 13h6',
   clock: 'M12 8v4l3 2m6-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
   notifications: 'M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8M9 20a3 3 0 0 0 6 0',
   security: 'm12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Zm-4 9 3 3 5-6',
@@ -72,6 +75,12 @@ const groups: readonly {
         description: 'Create reusable checklists staff can add to tickets.',
         icon: 'routing',
         destinations: ['workflows'],
+      },
+      {
+        title: 'Saved replies',
+        description: 'Keep answers your team sends often ready to insert and edit.',
+        icon: 'reply',
+        destinations: ['saved-replies'],
       },
       {
         title: 'Teams & routing',

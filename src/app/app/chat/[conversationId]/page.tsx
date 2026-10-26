@@ -40,7 +40,7 @@ export default async function ConversationPage({
   const worker = viewer.role !== 'end_user';
   const view = normalizeChatView(notice.view);
   const readThrough = new Date().toISOString();
-  const [messagesR, attachmentsR, ticketsR, inbox] = await Promise.all([
+  const [messagesR, attachmentsR, ticketsR, inbox, savedRepliesR] = await Promise.all([
     supabase
       .from('chat_messages')
       .select('id, author_id, kind, body, created_at, revision, edited_at')
@@ -67,6 +67,15 @@ export default async function ConversationPage({
           .limit(30)
       : Promise.resolve({ data: [] }),
     loadChatInbox(supabase, viewer, view),
+    worker
+      ? supabase
+          .from('saved_replies')
+          .select('id, title, body')
+          .eq('organization_id', viewer.organizationId)
+          .order('title')
+          .order('id')
+          .limit(200)
+      : Promise.resolve({ data: null, error: null }),
   ]);
   const profiles = await profileLabels(supabase, viewer.organizationId, [
     conversation.requester_id,
@@ -261,6 +270,13 @@ export default async function ConversationPage({
             assigned={Boolean(supportId)}
             participantId={worker ? conversation.requester_id : supportId}
             readThrough={messagesR.error || attachmentsR.error ? undefined : readThrough}
+            savedReplies={
+              worker && !savedRepliesR.error ? (savedRepliesR.data ?? undefined) : undefined
+            }
+            replyContext={{
+              requesterName: names[conversation.requester_id] ?? null,
+              agentName: viewer.displayName,
+            }}
           />
         </div>
       </section>
