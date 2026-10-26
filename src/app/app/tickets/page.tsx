@@ -12,6 +12,8 @@ import { loadTicketQueue, type TicketQueueFilters } from '@/features/tickets/dat
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 import { TicketQueueContext } from '@/features/tickets/queue-context';
 import { ticketDetailHref } from '@/features/tickets/queue-navigation';
+import { QUEUE_VIEW_KEYS, queueViewQuery } from '@/features/tickets/queue-views';
+import { SavedQueueViews } from '@/features/tickets/saved-queue-views';
 import { RelativeAge, SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { TicketDetail } from '@/features/tickets/ticket-detail';
 import { Timestamp } from '@/features/timezones/provider';
@@ -51,23 +53,12 @@ export default async function TicketsPage({
     knowledgeCount,
     tag,
     tagOptions,
+    savedViews,
+    savedViewsError,
   } = await loadTicketQueue(viewer, filters);
   const pageHref = (next: number) => {
     const params = new URLSearchParams();
-    for (const key of [
-      'q',
-      'kind',
-      'type',
-      'view',
-      'team',
-      'status',
-      'priority',
-      'sort',
-      'overdue',
-      'sla',
-      'tag',
-    ] as const)
-      if (filters[key]) params.set(key, filters[key]);
+    for (const key of QUEUE_VIEW_KEYS) if (filters[key]) params.set(key, filters[key]);
     params.set('page', String(next));
     return `/app/tickets?${params}`;
   };
@@ -260,21 +251,8 @@ export default async function TicketsPage({
   const clearHref = `/app/tickets?view=${view}`;
   const withoutFilter = (key: keyof TicketQueueFilters) => {
     const params = new URLSearchParams();
-    for (const name of [
-      'q',
-      'kind',
-      'type',
-      'view',
-      'team',
-      'status',
-      'priority',
-      'sort',
-      'overdue',
-      'sla',
-      'tag',
-    ] as const) {
+    for (const name of QUEUE_VIEW_KEYS)
       if (name !== key && filters[name]) params.set(name, filters[name]);
-    }
     return `/app/tickets?${params}`;
   };
   const filterChips = [
@@ -367,6 +345,11 @@ export default async function TicketsPage({
           </header>
 
           <div className="ticket-queue-toolbar">
+            <SavedQueueViews
+              views={savedViews}
+              currentQuery={queueViewQuery(filters)}
+              error={savedViewsError}
+            />
             <LiveSearchForm
               action="/app/tickets"
               className="queue-filters"

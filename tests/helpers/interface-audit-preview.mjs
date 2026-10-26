@@ -22,7 +22,7 @@ const mocks = {
   '@/app/app/help/actions': `exports.saveArticle=async()=>({error:'Synthetic article save failure. Your draft is preserved.'});`,
   '@/app/app/notifications/actions': `exports.markNotificationsRead=async(_,data)=>{window.fixtureReadCommand=Object.fromEntries(data);return {error:'Synthetic failure. Try again.'};};`,
   '@/features/tickets/ticket-detail': `exports.TicketDetail=()=>null;`,
-  '@/features/tickets/data': `exports.loadTicketQueue=async(_,filters)=>({view:'all',sort:'updated',search:filters.q||'',page:1,error:null,profiles:[],teams:[],knowledgeCount:0,tag:null,tagOptions:[],rows:filters.q?[ ]:[{id:'request-fixture',tags:[],title:'Pilot Wi-Fi request',ticket_number:42,status:'open',priority:'normal',request_kind:'ticket',updated_at:'2026-10-19T12:00:00Z',created_at:'2026-10-19T12:00:00Z',requester_id:'fixture',assigned_technician_id:null,team_id:null,due_at:null}]});`,
+  '@/features/tickets/data': `exports.loadTicketQueue=async(_,filters)=>({view:'all',sort:'updated',search:filters.q||'',page:1,error:null,profiles:[],teams:[],knowledgeCount:0,tag:null,tagOptions:[],savedViews:[],savedViewsError:false,rows:filters.q?[ ]:[{id:'request-fixture',tags:[],title:'Pilot Wi-Fi request',ticket_number:42,status:'open',priority:'normal',request_kind:'ticket',updated_at:'2026-10-19T12:00:00Z',created_at:'2026-10-19T12:00:00Z',requester_id:'fixture',assigned_technician_id:null,team_id:null,due_at:null}]});`,
   'server-only': `module.exports={};`,
   '@/app/app/assets/actions': `exports.saveAsset=async()=>({error:'Synthetic asset save failure. Your draft is preserved.'});exports.changeAssetLink=async()=>({error:'Synthetic preview only.'});`,
   '@/features/product-analytics/usage-event': `exports.UsageEvent=()=>null;`,

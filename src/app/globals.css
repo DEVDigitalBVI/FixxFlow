@@ -11181,3 +11181,25 @@ details.settings-card[open] > summary {
 .ticket-duplicate > summary::-webkit-details-marker {
   display: none;
 }
+
+/* Personal saved queue views, in the queue toolbar. */
+.saved-queue-views {
+  margin-bottom: 12px;
+}
+.saved-queue-views > summary {
+  width: fit-content;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-subtle);
+  cursor: pointer;
+}
+.saved-queue-views[open] > summary {
+  margin-bottom: 12px;
+}
+.saved-queue-views a[aria-current='page'] {
+  font-weight: 600;
+}

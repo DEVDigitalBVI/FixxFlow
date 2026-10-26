@@ -69,6 +69,16 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
   if (filters.priority && filters.priority in ticketPriorities)
     query = query.eq('priority', filters.priority as TicketPriority);
   const tag = viewer.role === 'end_user' ? null : normalizeTag(filters.tag);
+  const savedViews = Promise.resolve(
+    viewer.role === 'end_user'
+      ? { data: [] as { id: string; name: string; query: string }[], error: null }
+      : supabase
+          .from('saved_queue_views')
+          .select('id, name, query')
+          .eq('organization_id', viewer.organizationId)
+          .eq('user_id', viewer.id)
+          .order('name'),
+  );
   // Started now so it runs alongside the queue query instead of after it.
   const tagUsage = Promise.resolve(
     viewer.role === 'end_user'
@@ -127,6 +137,7 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
   }
   const teams = teamResult.data;
   const tagOptions = popularTags(((await tagUsage).data ?? []).map((row) => row.tag));
+  const views = await savedViews;
   return {
     view,
     sort,
@@ -139,5 +150,7 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
     knowledgeCount,
     tag,
     tagOptions,
+    savedViews: views.data ?? [],
+    savedViewsError: Boolean(views.error),
   };
 }

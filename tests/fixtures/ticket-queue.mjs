@@ -59,6 +59,8 @@ export async function renderTicketQueue({
         knowledgeCount: 0,
         tag: null,
         tagOptions: [],
+        savedViews: [],
+        savedViewsError: false,
       }),
     },
     '@/features/product-analytics/usage-event': { UsageEvent: () => null },
