@@ -51,7 +51,7 @@ test('employee notices render approved plain text, short summaries, safe full li
     });
     const html = renderToStaticMarkup(await ServiceAnnouncements({ full }));
     assert.match(html, expected);
-    assert.doesNotMatch(html, /<script>/);
+    if (data.length) assert.match(html, /&lt;script&gt;email&lt;\/script&gt;/);
     if (data.length) assert.match(html, /aria-labelledby="service-announcements-heading"/);
     if (!full && data.length) assert.match(html, /href="\/app\/service-status#notice-notice-1"/);
   }
