@@ -68,7 +68,7 @@ export function SavedQueueViews({
               />
             </div>
             <SubmitButton className="button button-secondary" pendingLabel="Saving…">
-              Save view
+              Save filters
             </SubmitButton>
           </ActionForm>
         )}
