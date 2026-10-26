@@ -62,7 +62,10 @@ test('sender and workspace addresses are parsed strictly', () => {
     'northwind-it',
   );
   assert.equal(
-    workspaceSlug(['bad_slug@support.fixxflow.com', 'x@support.fixxflow.com.evil.com'], 'support.fixxflow.com'),
+    workspaceSlug(
+      ['bad_slug@support.fixxflow.com', 'x@support.fixxflow.com.evil.com'],
+      'support.fixxflow.com',
+    ),
     null,
   );
 });
