@@ -11073,3 +11073,72 @@ details.settings-card[open] > summary {
 .saved-reply-preview {
   white-space: pre-wrap;
 }
+
+/* Ticket tags: quiet neutral labels; meaning comes from the text, never color. */
+.ticket-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  padding: 2px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface-subtle);
+  color: var(--color-text);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.ticket-heading-tags,
+.ticket-row-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 6px 0 0;
+  font-size: 12px;
+}
+.ticket-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ticket-tag-list .ticket-tag {
+  padding-right: 0;
+  font-size: 13px;
+}
+.ticket-tag-list form {
+  display: contents;
+}
+.ticket-tag-remove {
+  display: inline-grid;
+  place-items: center;
+  min-width: 40px;
+  min-height: 40px;
+  margin: -8px 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+.ticket-tag-remove:hover:not(:disabled) {
+  color: var(--color-text);
+}
+.ticket-tag-remove:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -4px;
+}
+.ticket-tag-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+.ticket-tag-add .field {
+  flex: 1 1 240px;
+}

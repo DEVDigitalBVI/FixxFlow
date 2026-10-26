@@ -39,8 +39,19 @@ export default async function TicketsPage({
 }) {
   const viewer = await requireViewer();
   const filters = await searchParams;
-  const { view, sort, search, page, rows, error, profiles, teams, knowledgeCount } =
-    await loadTicketQueue(viewer, filters);
+  const {
+    view,
+    sort,
+    search,
+    page,
+    rows,
+    error,
+    profiles,
+    teams,
+    knowledgeCount,
+    tag,
+    tagOptions,
+  } = await loadTicketQueue(viewer, filters);
   const pageHref = (next: number) => {
     const params = new URLSearchParams();
     for (const key of [
@@ -54,6 +65,7 @@ export default async function TicketsPage({
       'sort',
       'overdue',
       'sla',
+      'tag',
     ] as const)
       if (filters[key]) params.set(key, filters[key]);
     params.set('page', String(next));
@@ -259,6 +271,7 @@ export default async function TicketsPage({
       'sort',
       'overdue',
       'sla',
+      'tag',
     ] as const) {
       if (name !== key && filters[name]) params.set(name, filters[name]);
     }
@@ -287,6 +300,7 @@ export default async function TicketsPage({
     { key: 'team', label: filters.team ? (teamNames.get(filters.team) ?? 'Selected team') : null },
     { key: 'overdue', label: filters.overdue === '1' ? 'Manual date overdue' : null },
     { key: 'sla', label: filters.sla === 'breached' ? 'SLA breached' : null },
+    { key: 'tag', label: tag ? `Tag: ${tag}` : null },
   ] as const;
   const appliedFilters = filterChips.filter((item) => item.label);
   const activeFilterCount = appliedFilters.filter((item) => item.key !== 'q').length;
@@ -447,6 +461,18 @@ export default async function TicketsPage({
                     guardSave={false}
                     compact
                   />
+                  <label>
+                    Tag
+                    <select className="input" name="tag" defaultValue={tag ?? ''}>
+                      <option value="">Any tag</option>
+                      {tag && !tagOptions.includes(tag) && <option value={tag}>{tag}</option>}
+                      {tagOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                   <label className="queue-check">
                     <input
                       type="checkbox"
@@ -632,6 +658,19 @@ export default async function TicketsPage({
                                     : ''}
                                 </span>
                               </Link>
+                              {ticket.tags.length > 0 && (
+                                <p className="ticket-row-tags">
+                                  <span className="sr-only">Tags: </span>
+                                  {ticket.tags.slice(0, 3).map(({ tag: label }) => (
+                                    <span key={label} className="ticket-tag">
+                                      {label}
+                                    </span>
+                                  ))}
+                                  {ticket.tags.length > 3 && (
+                                    <span className="muted">+{ticket.tags.length - 3} more</span>
+                                  )}
+                                </p>
+                              )}
                             </td>
                             <td data-label="Status">
                               <span

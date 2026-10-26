@@ -17,6 +17,7 @@ function setup(role = 'technician', count = 51) {
     status: 'open',
     priority: 'normal',
     updated_at: '2026-09-25T00:00:00Z',
+    tags: [],
   }));
   const builder = (data) =>
     new Proxy(

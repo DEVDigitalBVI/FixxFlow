@@ -17,7 +17,9 @@ import { MessageComposer } from '@/features/tickets/message-composer';
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 import { SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { SlaPolicy } from '@/features/tickets/sla-policy-table';
+import { popularTags } from '@/features/tickets/tags';
 import { TicketAssignmentEditor } from '@/features/tickets/ticket-details-form';
+import { TicketTags } from '@/features/tickets/ticket-tags';
 import { Timestamp } from '@/features/timezones/provider';
 import { TicketProcedures } from '@/features/workflows/ticket-procedures';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -223,45 +225,61 @@ export async function TicketDetail({
       </div>
     );
   }
-  const [messagesR, attachmentsR, activityR, workflowR, savedRepliesR] = await Promise.all([
-    supabase
-      .from('ticket_messages')
-      .select('id, author_id, author_type, automation_name, kind, body, created_at')
-      .eq('organization_id', viewer.organizationId)
-      .eq('ticket_id', ticketId)
-      .order('created_at', { ascending: false })
-      .order('id', { ascending: false })
-      .limit(HISTORY_PAGE_SIZE),
-    supabase
-      .from('ticket_attachments')
-      .select('id, file_name, storage_path, size_bytes, created_at')
-      .eq('organization_id', viewer.organizationId)
-      .eq('ticket_id', ticketId)
-      .order('created_at', { ascending: false })
-      .order('id', { ascending: false })
-      .limit(HISTORY_PAGE_SIZE),
-    supabase
-      .from('ticket_activity')
-      .select('id, actor_id, action, details, created_at')
-      .eq('organization_id', viewer.organizationId)
-      .eq('ticket_id', ticketId)
-      .order('created_at', { ascending: false })
-      .order('id', { ascending: false })
-      .limit(HISTORY_PAGE_SIZE),
-    supabase
-      .from('ticket_workflows')
-      .select('ticket_id')
-      .eq('organization_id', viewer.organizationId)
-      .eq('ticket_id', ticketId)
-      .maybeSingle(),
-    supabase
-      .from('saved_replies')
-      .select('id, title, body')
-      .eq('organization_id', viewer.organizationId)
-      .order('title')
-      .order('id')
-      .limit(200),
-  ]);
+  const [messagesR, attachmentsR, activityR, workflowR, savedRepliesR, tagsR, tagUsageR] =
+    await Promise.all([
+      supabase
+        .from('ticket_messages')
+        .select('id, author_id, author_type, automation_name, kind, body, created_at')
+        .eq('organization_id', viewer.organizationId)
+        .eq('ticket_id', ticketId)
+        .order('created_at', { ascending: false })
+        .order('id', { ascending: false })
+        .limit(HISTORY_PAGE_SIZE),
+      supabase
+        .from('ticket_attachments')
+        .select('id, file_name, storage_path, size_bytes, created_at')
+        .eq('organization_id', viewer.organizationId)
+        .eq('ticket_id', ticketId)
+        .order('created_at', { ascending: false })
+        .order('id', { ascending: false })
+        .limit(HISTORY_PAGE_SIZE),
+      supabase
+        .from('ticket_activity')
+        .select('id, actor_id, action, details, created_at')
+        .eq('organization_id', viewer.organizationId)
+        .eq('ticket_id', ticketId)
+        .order('created_at', { ascending: false })
+        .order('id', { ascending: false })
+        .limit(HISTORY_PAGE_SIZE),
+      supabase
+        .from('ticket_workflows')
+        .select('ticket_id')
+        .eq('organization_id', viewer.organizationId)
+        .eq('ticket_id', ticketId)
+        .maybeSingle(),
+      supabase
+        .from('saved_replies')
+        .select('id, title, body')
+        .eq('organization_id', viewer.organizationId)
+        .order('title')
+        .order('id')
+        .limit(200),
+      supabase
+        .from('ticket_tags')
+        .select('tag')
+        .eq('organization_id', viewer.organizationId)
+        .eq('ticket_id', ticketId)
+        .order('tag'),
+      // Recent tag usage across the workspace, for consistent suggestions.
+      supabase
+        .from('ticket_tags')
+        .select('tag')
+        .eq('organization_id', viewer.organizationId)
+        .order('created_at', { ascending: false })
+        .limit(500),
+    ]);
+  const tags = (tagsR.data ?? []).map((row) => row.tag);
+  const tagSuggestions = popularTags((tagUsageR.data ?? []).map((row) => row.tag));
   const profiles = await profileLabels(supabase, viewer.organizationId, [
     ticket.requester_id,
     ...(ticket.assigned_technician_id ? [ticket.assigned_technician_id] : []),
@@ -318,6 +336,16 @@ export async function TicketDetail({
             Requested by {names.get(ticket.requester_id) ?? 'Unknown'} ·{' '}
             <Timestamp value={ticket.created_at} />
           </p>
+          {tags.length > 0 && (
+            <p className="ticket-heading-tags">
+              <span className="sr-only">Tags: </span>
+              {tags.map((tag) => (
+                <span key={tag} className="ticket-tag">
+                  {tag}
+                </span>
+              ))}
+            </p>
+          )}
         </div>
       </header>
       {message.error && (
@@ -342,6 +370,12 @@ export async function TicketDetail({
               <p className="ticket-description">{ticket.description}</p>
               <ReportedImpact value={ticket.reported_impact} />
             </section>
+            <TicketTags
+              ticketId={ticket.id}
+              tags={tags}
+              suggestions={tagSuggestions}
+              error={Boolean(tagsR.error)}
+            />
             <InventoryRequestPanel ticketId={ticket.id} />
             <TicketAssets ticketId={ticket.id} />
             <section className="settings-card">
