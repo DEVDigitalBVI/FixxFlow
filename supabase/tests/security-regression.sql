@@ -3,6 +3,11 @@ begin;
 create function pg_temp.check_security(ok boolean, message text) returns void language plpgsql as $$
 begin if ok is distinct from true then raise exception 'Security assertion failed: %', message; end if; end;
 $$;
+-- The server owns creation time; its SLA now excludes 22:00–07:00.
+create function pg_temp.expected_response_deadline(at_time timestamptz) returns timestamptz
+language sql security definer set search_path='' as $$
+ select private.ticket_sla_deadline(at_time,'normal',true,'UTC');
+$$;
 insert into auth.users (id, email) values
  ('10000000-0000-0000-0000-000000000051', 'audit-admin@example.test'),
  ('10000000-0000-0000-0000-000000000052', 'audit-employee@example.test');
@@ -66,7 +71,7 @@ do $$ begin
 end $$;
 insert into public.tickets (organization_id,requester_id,title,description) values
  ('20000000-0000-0000-0000-000000000051','10000000-0000-0000-0000-000000000052','Legitimate ticket','Fixture');
-select pg_temp.check_security((select created_at=now() and response_sla_due_at=now()+interval '4 hours'
+select pg_temp.check_security((select created_at=now() and response_sla_due_at=pg_temp.expected_response_deadline(now())
  from public.tickets where title='Legitimate ticket'),'legitimate creation uses server time');
 
 reset role;
