@@ -34,7 +34,64 @@ export function verifyWebhookSignature(
 export function emailAddress(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const address = (value.match(/<([^<>\s]+)>/)?.[1] ?? value).trim().toLowerCase();
-  return /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(address) && address.length <= 320 ? address : null;
+  if (address.length > 320 || /[\s<>]/.test(address)) return null;
+  const parts = address.split('@');
+  if (parts.length !== 2 || !parts[0]) return null;
+  const labels = parts[1].split('.');
+  return labels.length >= 2 && labels.every(Boolean) ? address : null;
+}
+
+/** Extracts text only; the result must always be rendered as text, never HTML. */
+function htmlText(html: string): string {
+  const output: string[] = [];
+  let hidden: string | null = null;
+  let cursor = 0;
+  while (cursor < html.length) {
+    if (html[cursor] !== '<') {
+      if (!hidden) output.push(html[cursor]);
+      cursor++;
+      continue;
+    }
+    if (html.startsWith('<!--', cursor)) {
+      const end = html.indexOf('-->', cursor + 4);
+      cursor = end < 0 ? html.length : end + 3;
+      continue;
+    }
+    let end = cursor + 1;
+    let quote: string | null = null;
+    for (; end < html.length; end++) {
+      const character = html[end];
+      if (quote) {
+        if (character === quote) quote = null;
+      } else if (character === '"' || character === "'") quote = character;
+      else if (character === '>') break;
+    }
+    if (end === html.length) break;
+    const tag = html
+      .slice(cursor + 1, end)
+      .trim()
+      .toLowerCase();
+    const closing = tag.startsWith('/');
+    const name = (closing ? tag.slice(1).trimStart() : tag).match(/^[a-z0-9]+/)?.[0];
+    if (hidden) {
+      if (closing && name === hidden) hidden = null;
+    } else if (!closing && (name === 'script' || name === 'style')) hidden = name;
+    else if (name === 'br' || (closing && ['p', 'div', 'li'].includes(name ?? '')))
+      output.push('\n');
+    cursor = end + 1;
+  }
+  const entities: Record<string, string> = {
+    nbsp: ' ',
+    amp: '&',
+    lt: '<',
+    gt: '>',
+    quot: '"',
+    '#39': "'",
+  };
+  // One pass prevents an encoded ampersand from starting a second decode.
+  return output
+    .join('')
+    .replace(/&(nbsp|amp|lt|gt|quot|#39);/g, (_, name: string) => entities[name]);
 }
 
 /** First recipient on the inbound domain, as a workspace slug. */
@@ -54,18 +111,7 @@ export function workspaceSlug(recipients: unknown[], domain: string): string | n
  * and drops ">" quote lines. Falls back to HTML with tags removed.
  */
 export function messageBody(text: string | null | undefined, html: string | null | undefined) {
-  const source =
-    text?.trim() ||
-    (html ?? '')
-      .replace(/<(br|\/p|\/div|\/li)\b[^>]*>/gi, '\n')
-      .replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>/gi, '')
-      .replace(/<[^>]+>/g, '')
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'");
+  const source = text?.trim() || htmlText(html ?? '');
   const kept: string[] = [];
   for (const line of source.replace(/\r\n?/g, '\n').split('\n')) {
     if (

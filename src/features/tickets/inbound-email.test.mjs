@@ -85,3 +85,22 @@ test('message bodies drop quoted history and fall back to HTML text', () => {
   );
   assert.equal(messageBody('x'.repeat(20000), null).length, 19000);
 });
+
+test('address parsing rejects adversarial and empty domain labels', () => {
+  for (const address of ['!@!.' + '!.'.repeat(100000), 'a@@b.com', 'a@b..com', 'a@.com', 'a@b.'])
+    assert.equal(emailAddress(address), null);
+});
+
+test('HTML fallback extracts text without decoding entities twice', () => {
+  assert.equal(
+    messageBody(null, '<p>&amp;lt;script&amp;gt; &lt;literal&gt;</p>'),
+    '&lt;script&gt; <literal>',
+  );
+  assert.equal(
+    messageBody(null, '<SCRIPT>hidden</SCRIPT ><style>hidden</style >visible'),
+    'visible',
+  );
+  assert.equal(messageBody(null, '<!-- hidden --><p title="a > b">visible</p>'), 'visible');
+  assert.equal(messageBody(null, '<script>never closed'), '');
+  assert.equal(messageBody(null, '<p>visible</p><unfinished'), 'visible');
+});
