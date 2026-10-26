@@ -2787,6 +2787,42 @@ export type Database = {
           },
         ]
       }
+      ticket_watchers: {
+        Row: {
+          created_at: string
+          organization_id: string
+          ticket_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          organization_id: string
+          ticket_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          organization_id?: string
+          ticket_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_watchers_organization_id_ticket_id_fkey"
+            columns: ["organization_id", "ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["organization_id", "id"]
+          },
+          {
+            foreignKeyName: "ticket_watchers_organization_id_user_id_fkey"
+            columns: ["organization_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "organization_memberships"
+            referencedColumns: ["organization_id", "user_id"]
+          },
+        ]
+      }
       ticket_workflow_applications: {
         Row: {
           applied_at: string

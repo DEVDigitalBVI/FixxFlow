@@ -157,3 +157,40 @@ export async function markTicketDuplicate(form: FormData): Promise<ActionResult>
   revalidatePath(`/app/tickets/${found.ticket.id}`);
   return { success: `Closed as a duplicate of ticket #${number}.` };
 }
+
+export async function watchTicket(form: FormData): Promise<ActionResult> {
+  const context = await staffTicket(form);
+  if ('error' in context) return { error: context.error };
+  const { viewer, ticketId, supabase } = context;
+  const { error } = await supabase
+    .from('ticket_watchers')
+    .insert({ organization_id: viewer.organizationId, ticket_id: ticketId, user_id: viewer.id });
+  if (error && error.code !== '23505') return { error: 'You could not start watching. Try again.' };
+  refresh(ticketId);
+  return {
+    success: 'You are watching this ticket. You will be notified of replies and resolution.',
+  };
+}
+
+/** Stops watching. Administrators may also remove another staff member's watch. */
+export async function unwatchTicket(form: FormData): Promise<ActionResult> {
+  const context = await staffTicket(form);
+  if ('error' in context) return { error: context.error };
+  const { viewer, ticketId, supabase } = context;
+  const userId = formString(form, 'userId', viewer.id);
+  if (!isUuid(userId)) return { error: 'Reload the ticket and try again.' };
+  const { data, error } = await supabase
+    .from('ticket_watchers')
+    .delete()
+    .eq('organization_id', viewer.organizationId)
+    .eq('ticket_id', ticketId)
+    .eq('user_id', userId)
+    .select('user_id');
+  if (error) return { error: 'The watcher could not be removed. Try again.' };
+  if (!data?.length && userId !== viewer.id)
+    return { error: 'Only administrators can remove another person’s watch.' };
+  refresh(ticketId);
+  return {
+    success: userId === viewer.id ? 'You stopped watching this ticket.' : 'Watcher removed.',
+  };
+}
