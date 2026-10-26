@@ -5,6 +5,8 @@ create function pg_temp.assert_sla(ok boolean, message text) returns void langua
 begin if ok is distinct from true then raise exception 'SLA assertion failed: %', message; end if; end;
 $$;
 
+create function pg_temp.deadline(a timestamptz,p public.ticket_priority,r boolean) returns timestamptz language sql security definer as 'select private.ticket_sla_deadline(a,p,r,''UTC'')';
+
 insert into auth.users (id, email) values
   ('10000000-0000-0000-0000-000000000031', 'sla-employee@example.test'),
   ('10000000-0000-0000-0000-000000000032', 'sla-technician@example.test');
@@ -16,16 +18,13 @@ insert into public.organization_memberships (organization_id, user_id, role, sta
 insert into public.tickets (organization_id, requester_id, title, description, priority, created_at)
 select '20000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000031', priority::text, 'Test', priority, '2026-09-24T08:00:00Z'
 from unnest(enum_range(null::public.ticket_priority)) priority;
-select pg_temp.assert_sla(
-  (select bool_and(response_sla_due_at = created_at + make_interval(mins => case priority when 'critical' then 15 when 'high' then 60 when 'normal' then 240 when 'low' then 480 end)
-    and resolution_sla_due_at = created_at + make_interval(mins => case priority when 'critical' then 240 when 'high' then 480 when 'normal' then 1440 when 'low' then 2880 end))
-   from public.tickets where organization_id = '20000000-0000-0000-0000-000000000031'), 'all four response and resolution targets');
+select pg_temp.assert_sla((select bool_and(response_sla_due_at=pg_temp.deadline(created_at,priority,true) and resolution_sla_due_at=pg_temp.deadline(created_at,priority,false)) from public.tickets where organization_id='20000000-0000-0000-0000-000000000031'),'all four support-hour targets');
 
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"10000000-0000-0000-0000-000000000031","role":"authenticated"}', true);
 insert into public.tickets (id, organization_id, requester_id, title, description, priority)
 values ('30000000-0000-0000-0000-000000000031', '20000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000031', 'Lifecycle', 'Test', 'normal');
-select pg_temp.assert_sla((select response_sla_due_at = created_at + interval '4 hours' and resolution_sla_due_at = created_at + interval '24 hours' from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'server computes deadlines');
+select pg_temp.assert_sla((select response_sla_due_at = pg_temp.deadline(created_at,'normal',true) and resolution_sla_due_at = pg_temp.deadline(created_at,'normal',false) from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'server computes deadlines');
 insert into public.ticket_messages (organization_id, ticket_id, author_id, kind, body)
 values ('20000000-0000-0000-0000-000000000031', '30000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000031', 'reply', 'Requester follow-up');
 select pg_temp.assert_sla((select first_response_at is null from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'requester reply does not satisfy response');
@@ -35,20 +34,20 @@ insert into public.ticket_messages (organization_id, ticket_id, author_id, kind,
 values ('20000000-0000-0000-0000-000000000031', '30000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000032', 'internal_note', 'IT note');
 select pg_temp.assert_sla((select first_response_at is null from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'internal note does not satisfy response');
 update public.tickets set priority = 'critical' where id = '30000000-0000-0000-0000-000000000031';
-select pg_temp.assert_sla((select response_sla_due_at = created_at + interval '15 minutes' and resolution_sla_due_at = created_at + interval '4 hours' from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'priority changes pending deadlines from creation');
+select pg_temp.assert_sla((select response_sla_due_at = pg_temp.deadline(created_at,'critical',true) and resolution_sla_due_at = pg_temp.deadline(created_at,'critical',false) from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'priority changes pending deadlines from creation');
 insert into public.ticket_messages (organization_id, ticket_id, author_id, kind, body)
 values ('20000000-0000-0000-0000-000000000031', '30000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000032', 'reply', 'Public staff response');
 select pg_temp.assert_sla((select first_response_at is not null and sla_next_due_at = resolution_sla_due_at from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'public staff response completes response and advances next deadline');
 update public.tickets set priority = 'high', status = 'on_hold' where id = '30000000-0000-0000-0000-000000000031';
-select pg_temp.assert_sla((select response_sla_due_at = created_at + interval '15 minutes' and resolution_sla_due_at = created_at + interval '8 hours' and sla_next_due_at = resolution_sla_due_at from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'completed response target freezes and on-hold does not pause resolution');
+select pg_temp.assert_sla((select response_sla_due_at = pg_temp.deadline(created_at,'critical',true) and resolution_sla_due_at = pg_temp.deadline(created_at,'high',false) and sla_next_due_at = resolution_sla_due_at from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'completed response target freezes and on-hold does not pause resolution');
 update public.tickets set status = 'resolved' where id = '30000000-0000-0000-0000-000000000031';
 select pg_temp.assert_sla((select resolved_at is not null and sla_next_due_at is null from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'resolution stops queue SLA clock');
 update public.tickets set status = 'closed', priority = 'low' where id = '30000000-0000-0000-0000-000000000031';
-select pg_temp.assert_sla((select resolved_at is not null and closed_at is not null and resolution_sla_due_at = created_at + interval '8 hours' from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'closing preserves resolution timestamp and completed target');
+select pg_temp.assert_sla((select resolved_at is not null and closed_at is not null and resolution_sla_due_at = pg_temp.deadline(created_at,'high',false) from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'closing preserves resolution timestamp and completed target');
 
 select set_config('request.jwt.claims', '{"sub":"10000000-0000-0000-0000-000000000031","role":"authenticated"}', true);
 select public.reopen_ticket('30000000-0000-0000-0000-000000000031',(select revision from public.tickets where id='30000000-0000-0000-0000-000000000031'),'The issue is not resolved.',gen_random_uuid());
-select pg_temp.assert_sla((select status = 'open' and resolved_at is null and closed_at is null and first_response_at is not null and resolution_sla_due_at = created_at + interval '8 hours' and sla_next_due_at = resolution_sla_due_at from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'employee reopening works and resumes the original deadline');
+select pg_temp.assert_sla((select status = 'open' and resolved_at is null and closed_at is null and first_response_at is not null and resolution_sla_due_at = pg_temp.deadline(created_at,'high',false) and sla_next_due_at = resolution_sla_due_at from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'employee reopening works and resumes the original deadline');
 
 reset role;
 rollback;

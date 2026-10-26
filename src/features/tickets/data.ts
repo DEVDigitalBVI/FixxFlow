@@ -46,7 +46,7 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
       // `tags` lists every tag for display; `tag_match` is a second embed used only to
       // filter by a tag (with `not is null` it behaves like an inner join). Tag rows are
       // staff-only under row-level security, so employees always get empty lists.
-      'id, ticket_number, request_kind, ticket_type, title, requester_id, assigned_technician_id, team_id, priority, status, due_at, created_at, updated_at, first_response_at, resolved_at, closed_at, response_sla_due_at, resolution_sla_due_at, sla_next_due_at, tags:ticket_tags(tag), tag_match:ticket_tags(tag)',
+      'id, ticket_number, request_kind, ticket_type, title, requester_id, assigned_technician_id, team_id, priority, status, due_at, created_at, updated_at, first_response_at, resolved_at, closed_at, response_sla_due_at, resolution_sla_due_at, sla_next_due_at, sla_timezone, resolution_sla_paused_at, resolution_sla_remaining_seconds, tags:ticket_tags(tag), tag_match:ticket_tags(tag)',
     )
     .eq('organization_id', viewer.organizationId);
   if (viewer.role === 'end_user' && filters.kind !== 'inventory')

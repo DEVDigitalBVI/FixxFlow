@@ -145,6 +145,12 @@ export function TicketWorkActions({
                   ? `Unsaved status: ${ticketStatuses[statusDraft].label}. Select Save status to apply it.`
                   : 'Choose a status, then select Save status to apply it.'}
               </p>
+              {statusDraft === 'waiting_on_user' && (
+                <p className="muted">
+                  Ask the requester what you need in a public reply. Waiting pauses only the
+                  resolution SLA; their next reply resumes work automatically.
+                </p>
+              )}
             </ActionForm>
           )}
         </div>

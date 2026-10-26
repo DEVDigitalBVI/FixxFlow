@@ -573,14 +573,17 @@ export async function TicketDetail({
                 <SlaIndicator ticket={ticket} />
               </SlaClock>
               <p className="muted">
-                Calendar hours · Includes nights and weekends. Waiting and on-hold time counts.
+                {ticket.sla_timezone
+                  ? `Support hours: 7 AM–10 PM every day (${ticket.sla_timezone}). Both clocks stop overnight. Waiting on user pauses resolution only; on-hold time counts during support hours.`
+                  : 'Completed under the previous calendar-hours policy. Historical SLA results are preserved.'}
               </p>
               <details>
                 <summary>SLA targets</summary>
                 <SlaPolicy />
                 <p className="muted">
                   Priority changes adjust unfinished targets from creation. Reopening resumes the
-                  original resolution deadline.
+                  existing resolution target, including recorded waiting pauses. A requester reply
+                  resumes waiting tickets automatically.
                 </p>
               </details>
             </section>

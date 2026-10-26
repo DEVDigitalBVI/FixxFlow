@@ -473,7 +473,7 @@ test('Stage 9 clean replay: episodes, scheduler, trusted pipeline, isolation and
         assert.equal(
           (
             await db.query(
-              'select resolution_sla_due_at=private.ticket_sla_deadline(created_at,priority,false) correct from public.tickets where id=$1',
+              'select resolution_sla_due_at=private.ticket_sla_deadline(created_at,priority,false,sla_timezone) correct from public.tickets where id=$1',
               [a.id],
             )
           ).rows[0].correct,

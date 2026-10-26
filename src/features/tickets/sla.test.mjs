@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { evaluateSla, queueSlaSummary, ticketSla } from './sla.ts';
+import { load } from '../../../tests/helpers/load-module.mjs';
+
+const { evaluateSla, queueSlaSummary, ticketSla } = load('src/features/tickets/sla.ts');
 
 const start = '2026-09-24T08:00:00Z';
 const due = '2026-09-24T12:00:00Z';

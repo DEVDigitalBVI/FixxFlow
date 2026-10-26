@@ -29,6 +29,7 @@ const presentation: Record<SlaState, { tone: string; icon: string }> = {
   missed: { tone: 'danger', icon: '!' },
   missing: { tone: 'warning', icon: '⚠' },
   unavailable: { tone: 'neutral', icon: '—' },
+  paused: { tone: 'neutral', icon: 'Ⅱ' },
 };
 function Objective({ label, result }: { label: string; result: SlaResult }) {
   const style = presentation[result.state];
