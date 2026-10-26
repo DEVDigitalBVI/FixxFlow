@@ -19,6 +19,7 @@ const mocks = {
   '@/features/platform/owner-link': `exports.OwnerConsoleLink=()=>null;`,
   '@/features/identity/viewer-avatar': `exports.ViewerAvatar=props=>require('react').createElement('span',{'aria-label':props.name},'JM');`,
   './actions': `exports.updateProfile=async()=>({error:'Synthetic save failure. Your entries are preserved.'});exports.updateUsagePreference=async()=>{};exports.saveTimezone=async()=>({error:'Synthetic save failure.'});exports.bulkUpdateTickets=async()=>({error:'Synthetic save failure.'});`,
+  '@/app/app/tickets/view-actions': `exports.saveQueueView=async()=>({error:'Synthetic preview only. Views are not saved.'});exports.deleteQueueView=async()=>({error:'Synthetic preview only.'});`,
   '@/app/app/help/actions': `exports.saveArticle=async()=>({error:'Synthetic article save failure. Your draft is preserved.'});`,
   '@/app/app/notifications/actions': `exports.markNotificationsRead=async(_,data)=>{window.fixtureReadCommand=Object.fromEntries(data);return {error:'Synthetic failure. Try again.'};};`,
   '@/features/tickets/ticket-detail': `exports.TicketDetail=()=>null;`,
