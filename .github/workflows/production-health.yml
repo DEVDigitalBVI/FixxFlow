@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      DEPLOYMENT_URL: ${{ vars.PRODUCTION_URL || 'https://www.fixxflow.app' }}
+      DEPLOYMENT_URL: ${{ vars.PRODUCTION_URL || 'https://fixxflow.com' }}
       REQUIRE_READINESS: 'true'
       SMOKE_READINESS_TOKEN: ${{ secrets.HEALTH_CHECK_SECRET }}
       SMOKE_TIMEOUT_MS: '10000'

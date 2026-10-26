@@ -10,8 +10,8 @@ const { beforeSend } = WebAnalytics().props;
 
 test('web page views strip search terms, auth parameters and fragments without changing the source event', () => {
   for (const url of [
-    'https://www.fixxflow.app/app/tickets?q=private+request&requester=person@example.test',
-    'https://www.fixxflow.app/auth/callback?token_hash=private-token&type=invite#access_token=private-token',
+    'https://fixxflow.com/app/tickets?q=private+request&requester=person@example.test',
+    'https://fixxflow.com/auth/callback?token_hash=private-token&type=invite#access_token=private-token',
   ]) {
     const event = { type: 'pageview', url };
     const result = beforeSend(event);
@@ -24,11 +24,11 @@ test('web page views strip search terms, auth parameters and fragments without c
 test('web page views retain feature paths while redacting every record ID', () => {
   const result = beforeSend({
     type: 'pageview',
-    url: 'https://www.fixxflow.app/app/administration/automations/50000000-0000-0000-0000-000000000401/history/AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE',
+    url: 'https://fixxflow.com/app/administration/automations/50000000-0000-0000-0000-000000000401/history/AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE',
   });
   assert.equal(
     result.url,
-    'https://www.fixxflow.app/app/administration/automations/[id]/history/[id]',
+    'https://fixxflow.com/app/administration/automations/[id]/history/[id]',
   );
   assert.equal(beforeSend({ type: 'pageview', url: 'not a URL' }), null);
 });

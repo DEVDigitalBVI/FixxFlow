@@ -55,7 +55,7 @@ export function renderEmail({
   note,
   invitation = false,
   purpose = 'notification',
-  siteUrl = 'https://www.fixxflow.app',
+  siteUrl = 'https://fixxflow.com',
   preserveLines = false,
   notificationLabel,
   details = [],

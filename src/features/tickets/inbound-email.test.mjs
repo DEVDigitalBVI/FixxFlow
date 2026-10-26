@@ -56,13 +56,13 @@ test('sender and workspace addresses are parsed strictly', () => {
   for (const bad of ['', 'not an email', 'a@b', 42, null]) assert.equal(emailAddress(bad), null);
   assert.equal(
     workspaceSlug(
-      ['someone@else.com', 'Northwind <northwind-it@in.fixxflow.app>'],
-      'in.fixxflow.app',
+      ['someone@else.com', 'Northwind <northwind-it@support.fixxflow.com>'],
+      'support.fixxflow.com',
     ),
     'northwind-it',
   );
   assert.equal(
-    workspaceSlug(['bad_slug@in.fixxflow.app', 'x@in.fixxflow.app.evil.com'], 'in.fixxflow.app'),
+    workspaceSlug(['bad_slug@support.fixxflow.com', 'x@support.fixxflow.com.evil.com'], 'support.fixxflow.com'),
     null,
   );
 });

@@ -57,7 +57,7 @@ jobs:
   monitoring:
     name: Configure independent monitoring
     needs: smoke
-    if: inputs.configure_monitors && inputs.deployment_url == 'https://www.fixxflow.app'
+    if: inputs.configure_monitors && inputs.deployment_url == 'https://fixxflow.com'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     environment: Production

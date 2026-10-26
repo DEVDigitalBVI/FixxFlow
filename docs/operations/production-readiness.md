@@ -39,7 +39,7 @@ Activated external controls (verified 2026-10-16):
 
 - Matching encrypted GitHub repository/`Production` environment and Vercel production
   secrets named `HEALTH_CHECK_SECRET`, plus repository variable `PRODUCTION_URL` set to
-  `https://www.fixxflow.app`. `CRON_SECRET` remains a compatibility fallback and was
+  `https://fixxflow.com`. `CRON_SECRET` remains a compatibility fallback and was
   not copied, disclosed, or rotated.
 - GitHub protects `main` with strict application, database, and CodeQL checks before
   merge. Vercel's native TypeCheck and Lint checks target production and use
@@ -158,8 +158,8 @@ data and are not substitutes for end-to-end acceptance.
 Better Stack is the permanent independent uptime provider. Use the same account for
 two production monitors, each checking every 180 seconds with email alerts:
 
-- `https://www.fixxflow.app/api/health/live` checks application availability.
-- `https://www.fixxflow.app/api/health/ready` checks application configuration and a
+- `https://fixxflow.com/api/health/live` checks application availability.
+- `https://fixxflow.com/api/health/ready` checks application configuration and a
   bounded read-only database query. It requires `Authorization: Bearer` with the
   existing `HEALTH_CHECK_SECRET`.
 
