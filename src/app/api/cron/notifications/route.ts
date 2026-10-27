@@ -38,6 +38,24 @@ export async function GET(request: Request) {
       ...new Set((batch.data ?? []).flatMap((item) => (item.ticket_id ? [item.ticket_id] : []))),
     ];
     const routes = new Map<string, NotificationEmailRouting>();
+    const workspaceNames = new Map<string, string>();
+    if (batch.data?.length) {
+      try {
+        const contexts = await database
+          .from('notifications')
+          .select('id, organization:organizations(name)')
+          .in(
+            'id',
+            batch.data.map((item) => item.notification_id),
+          );
+        // Presentation context is optional; its failure must not delay delivery.
+        if (contexts.error) reportServerError('notification.send', contexts.error, correlationId);
+        for (const context of contexts.data ?? [])
+          if (context.organization?.name) workspaceNames.set(context.id, context.organization.name);
+      } catch (error) {
+        reportServerError('notification.send', error, correlationId);
+      }
+    }
     if (ticketIds.length) {
       const tickets = await database
         .from('tickets')
@@ -59,12 +77,10 @@ export async function GET(request: Request) {
       let providerId: string | undefined;
       let failure: string | undefined;
       try {
-        providerId = await sendNotificationEmail(
-          item,
-          emailConfiguration,
-          fetch,
-          item.ticket_id ? routes.get(item.ticket_id) : undefined,
-        );
+        providerId = await sendNotificationEmail(item, emailConfiguration, fetch, {
+          ...(item.ticket_id ? routes.get(item.ticket_id) : undefined),
+          workspaceName: workspaceNames.get(item.notification_id),
+        });
       } catch (error) {
         reportServerError('notification.send', error, correlationId);
         failure = 'Email delivery failed; scheduled for retry';

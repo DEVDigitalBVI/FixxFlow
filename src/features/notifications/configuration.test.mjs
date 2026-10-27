@@ -103,6 +103,7 @@ test('configured cron sends and acknowledges queued mail using the shared config
     const { GET } = load('src/app/api/cron/notifications/route.ts', {
       '@/lib/supabase/admin': {
         createAdminClient: () => ({
+          from: () => ({ select: () => ({ in: async () => ({ data: [], error: null }) }) }),
           rpc: async (name, args) => {
             calls.push(name);
             if (name === 'enqueue_incident_escalations') return { data: 0, error: null };

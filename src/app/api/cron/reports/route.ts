@@ -64,6 +64,7 @@ async function deliver(database: DatabaseClient, item: Delivery, config: EmailCo
       deliveryId: item.delivery_id,
       reportId: item.report_id,
       reportName: item.report_name,
+      workspaceName: organization.data.name,
       recipient: item.recipient_email,
       filename: filename(item.report_name, report.endDate, item.format),
       bytes,

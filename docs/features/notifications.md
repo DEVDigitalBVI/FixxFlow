@@ -90,11 +90,12 @@ Inline styles and presentation tables support mail clients; a fixed light surfac
 keeps the primary artwork legible. Client-forced dark mode and font availability
 can still affect rendering. The app uses system fallbacks when Inter is unavailable.
 
-The layout uses a compact, proportional logo and a decorative blue-to-cyan top
-rule (solid blue in clients without gradient support). Semantic email purposes
-provide workspace, account access, security, and notification labels. Security
-alerts place recovery guidance in a warning-tinted panel with a written heading;
-actions remain solid blue. Utility links retain underlines and full fallback URLs.
+The shared layout uses the approved compact horizontal logo, a red top rule,
+and left-aligned content. Operational emails identify the workspace when available.
+Service announcements separate their written status from the message. Actions use
+compact solid-red buttons and a short underlined alternative link; full URLs remain
+in the plain-text message. Security alerts retain a distinct written warning panel.
+The footer provides one support link without repeating the brand tagline.
 
 Run `node scripts/generate-email-templates.mjs` to regenerate the 13 Supabase HTML
 templates in `supabase/templates/`. Paste these into the corresponding hosted

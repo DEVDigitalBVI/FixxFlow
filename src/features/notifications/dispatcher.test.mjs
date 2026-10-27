@@ -17,6 +17,7 @@ async function dispatch({
   send = async () => 'provider-id',
   rpcError,
   acknowledgement = true,
+  contextError = false,
 } = {}) {
   const previous = Object.fromEntries(
     Object.keys(environment).map((key) => [key, process.env[key]]),
@@ -29,6 +30,27 @@ async function dispatch({
       '@/lib/server-errors': { reportServerError: (...args) => failures.push(args) },
       '@/lib/supabase/admin': {
         createAdminClient: () => ({
+          from: (table) => ({
+            select: (columns) => ({
+              in: async (key, ids) => {
+                assert.equal(table, 'notifications');
+                assert.equal(columns, 'id, organization:organizations(name)');
+                assert.equal(key, 'id');
+                assert.deepEqual(
+                  ids,
+                  batch.map((item) => item.notification_id),
+                );
+                if (contextError) throw new Error('Workspace lookup unavailable');
+                return {
+                  data: batch.map((item) => ({
+                    id: item.notification_id,
+                    organization: { name: 'Example workspace' },
+                  })),
+                  error: null,
+                };
+              },
+            }),
+          }),
           rpc: async (name, args) => {
             calls.push({ name, args });
             if (name === rpcError) return { error: new Error('private database details') };
@@ -45,7 +67,8 @@ async function dispatch({
         }),
       },
       '@/features/notifications/email': {
-        sendNotificationEmail: async (item, config) => {
+        sendNotificationEmail: async (item, config, _request, context) => {
+          assert.equal(context.workspaceName, contextError ? undefined : 'Example workspace');
           calls.push({ name: 'send', item });
           assert.equal(config.apiKey, environment.RESEND_API_KEY);
           return send(item);
@@ -157,3 +180,9 @@ for (const options of [{ acknowledgement: false }, { rpcError: 'finish_notificat
     assert.equal(result.failures[0][2], result.reference);
   });
 }
+
+test('workspace context failure does not delay notification delivery', async () => {
+  const result = await dispatch({ contextError: true });
+  assert.equal(result.status, 200);
+  assert.equal(result.body.sent, 2);
+});

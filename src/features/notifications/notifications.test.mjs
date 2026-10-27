@@ -19,7 +19,7 @@ const config = {
 };
 const { renderEmail } = load('src/features/notifications/template.ts');
 
-test('all email variants share the invitation layout and centered content', () => {
+test('all email variants share a compact header and left-aligned content', () => {
   const emails = fs
     .readdirSync('supabase/templates')
     .filter((name) => name.endsWith('.html'))
@@ -40,7 +40,7 @@ test('all email variants share the invitation layout and centered content', () =
   for (const [name, html] of emails) {
     assert.match(
       html,
-      /<td align="center" style="padding:24px;text-align:center;overflow-wrap:anywhere">/,
+      /<td align="left" style="padding:20px 24px 24px;text-align:left;overflow-wrap:anywhere">/,
       name,
     );
     assert.match(
@@ -48,21 +48,27 @@ test('all email variants share the invitation layout and centered content', () =
       /<p style="margin:0 0 8px;color:#6e676f;font-size:14px;line-height:22px;font-weight:500">/,
       name,
     );
-    assert.match(html, /<p style="max-width:420px;margin:0 auto 20px;color:#6e676f;">/, name);
+    assert.match(html, /<p style="margin:0 0 20px;color:#282d33;">/, name);
     assert.match(
       html,
-      /<td align="center" style="text-align:center;padding:16px 24px;border-top:/,
+      /<td align="left" style="text-align:left;padding:16px 24px;border-top:/,
       name,
     );
     assert.match(html, /width="100%"[^>]*style="max-width:560px/, name);
     assert.match(html, /max-width:560px;background:#fbfffe;border:0;border-radius:16px/, name);
     assert.doesNotMatch(html, /border:1px solid #795500/, name);
-    if (html.includes('Button not working?')) {
-      assert.match(html, /<table role="presentation" align="center" style="margin:0 auto"/, name);
-      assert.match(html, /word-break:break-all;overflow-wrap:anywhere/, name);
+    assert.match(html, /fixxflow-logo-horizontal\.png[^>]*width="136"/, name);
+    assert.doesNotMatch(
+      html,
+      /Button not working\?|Copy this link|Here to help|IT support in motion/,
+      name,
+    );
+    if (html.includes('>open this link</a>')) {
+      assert.match(html, /<table role="presentation" style="margin:0"/, name);
+      assert.match(html, /padding:10px 18px/, name);
     }
     if (html.includes('Security notice'))
-      assert.match(html, /<td align="center" bgcolor="#fff7e6" style="text-align:center;/, name);
+      assert.match(html, /<td align="left" bgcolor="#fff7e6" style="text-align:left;/, name);
   }
 });
 
@@ -106,7 +112,7 @@ test('security guidance is distinguished by a written heading and preserves esca
     message: 'Open your workspace.',
     note: 'Sign in to view.',
   });
-  assert.match(notification, /Workspace update/);
+  assert.match(notification, /IT update/);
   assert.doesNotMatch(notification, /Security notice/);
 });
 
@@ -186,7 +192,7 @@ test('Resend receives an idempotency key and authenticated link without conversa
   assert.equal(body.reply_to, 'support@fixxflow.app');
   assert.deepEqual(Object.keys(body).sort(), ['from', 'html', 'reply_to', 'subject', 'text', 'to']);
   assert.match(body.text, /https:\/\/example.test\/app\/tickets\/ticket-1/);
-  assert.match(body.html, /fixxflow-logo-primary.png/);
+  assert.match(body.html, /fixxflow-logo-horizontal.png/);
   assert.match(body.html, /View update/);
   assert.match(body.html, /font-family:Inter,ui-sans-serif,system-ui/);
 });
@@ -359,13 +365,13 @@ test('approved incident emails use the shared brand and deliver only the saved m
   );
   assert.match(body.text, /Service is returning\.\n<script>Unsafe<\/script>/);
   assert.match(body.text, /Next update expected:.*UTC/);
-  assert.match(body.html, /white-space:pre-line/);
+  assert.match(body.html, /Service is returning\.<br>&lt;script&gt;Unsafe&lt;\/script&gt;/);
   assert.match(body.html, /&lt;script&gt;Unsafe&lt;\/script&gt;/);
   assert.doesNotMatch(body.html, /<script>/);
   assert.match(body.html, /\/app\/incident-updates\/bulletin-1/);
   assert.doesNotMatch(body.html, /\/app\/tickets\/ticket-1/);
   assert.match(body.html, /#bd212c/);
-  assert.match(body.html, /fixxflow-logo-primary\.png/);
+  assert.match(body.html, /fixxflow-logo-horizontal\.png/);
 });
 
 test('ticket email subject and both bodies include the number and escaped ticket name', async () => {
@@ -580,4 +586,30 @@ test('employee announcement emails contain the public message and home-page link
     );
   }
   assert.deepEqual(keys, ['notification/notice-1', 'notification/notice-1']);
+});
+
+test('announcement status and workspace are separate from escaped multiline content', async () => {
+  await sendNotificationEmail(
+    {
+      ...item,
+      ticket_id: null,
+      service_announcement_id: 'notice-public',
+      title: 'Email outage',
+      email_kind: 'incident_update',
+      approved_body: 'Status: Investigating\n\nIT is working on it.\nUse chat <safely>.',
+    },
+    config,
+    async (_url, options) => {
+      const email = JSON.parse(options.body);
+      assert.match(email.html, /Example &amp; Co/);
+      assert.match(email.html, /IT service update/);
+      assert.match(email.html, /<strong>Status:<\/strong> Investigating<\/p>/);
+      assert.match(email.html, /IT is working on it\.<br>Use chat &lt;safely&gt;\./);
+      assert.doesNotMatch(email.html, /Status: Investigating<br>/);
+      assert.match(email.text, /Status: Investigating\n\nIT is working on it/);
+      assert.match(email.text, /https:\/\/example.test\/app\/service-status#notice-notice-public/);
+      return Response.json({ id: 'public-email' });
+    },
+    { workspaceName: 'Example & Co' },
+  );
 });
