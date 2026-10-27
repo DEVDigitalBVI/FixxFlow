@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import { normalizeSearch, SEARCH_LIMIT } from '@/lib/search';
 import type { AppRole } from '@/types/database';
@@ -169,10 +170,7 @@ export function GlobalSearch({
         aria-haspopup="dialog"
       >
         <span className="global-search-label">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="6.5" />
-            <path d="m16 16 4 4" />
-          </svg>
+          <NavigationIcon name="search" />
           <span>Search</span>
         </span>
         <kbd aria-hidden="true">⌘/Ctrl K</kbd>

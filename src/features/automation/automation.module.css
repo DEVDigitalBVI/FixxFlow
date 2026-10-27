@@ -1,0 +1,559 @@
+@layer components {
+  :where(.scope) :global(.automation-page) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.automation-page > *) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.automation-page .table-region) {
+    position: relative;
+    min-width: 0;
+  }
+  :where(.scope) :global(.automation-inline) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  :where(.scope) :global(.automation-filters) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 12px;
+  }
+  :where(.scope) :global(.automation-filters > .field) {
+    flex: 1 1 180px;
+  }
+  :where(.scope) :global(.automation-row) {
+    min-width: 0;
+    margin: 0;
+    padding: 16px 0;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.automation-row legend) {
+    padding-right: 12px;
+    font-weight: 700;
+  }
+  :where(.scope) :global(.automation-condition-grid) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 16px;
+    align-items: start;
+    margin-bottom: 12px;
+  }
+  :where(.scope) :global(.automation-action-grid) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  :where(.scope) :global(.automation-page textarea) {
+    resize: vertical;
+  }
+  :where(.scope) :global(.automation-page .settings-card > h2),
+  :where(.scope) :global(.automation-page .settings-card > p) {
+    margin-top: 0;
+  }
+  :where(.scope) :global(.automation-results) {
+    display: grid;
+    gap: 16px;
+    padding-left: 24px;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.automation-results p) {
+    margin: 6px 0 0;
+  }
+  :where(.scope) :global(.automation-test-result) {
+    border-top: 1px solid var(--color-border);
+    padding-top: 20px;
+  }
+  :where(.scope) :global(.automation-empty) {
+    text-align: center;
+    padding-block: 36px;
+  }
+  :where(.scope) :global(.automation-page .check-field) {
+    min-height: 44px;
+    align-items: center;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-condition-grid),
+    :where(.scope) :global(.automation-action-grid) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-filters) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-page .settings-card) {
+      padding: 16px;
+    }
+  }
+  :where(.scope) :global(.automation-page .alert-info) {
+    background: var(--color-active-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-page .responsive-table th[scope='row']) {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+  }
+  :where(.scope) :global(.automation-template-grid) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 20px;
+  }
+  :where(.scope) :global(.automation-template-grid article) {
+    min-width: 0;
+    align-content: start;
+  }
+  :where(.scope) :global(.automation-template-grid h3),
+  :where(.scope) :global(.automation-template-grid p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.automation-template-grid summary) {
+    min-height: 40px;
+    padding-block: 8px;
+    cursor: pointer;
+  }
+  :where(.scope) :global(.automation-template-grid details p) {
+    margin-top: 12px;
+  }
+  :where(.scope) :global(.automation-template-grid button) {
+    justify-self: start;
+  }
+  :where(.scope) :global(.automation-summary) {
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.automation-page [tabindex='-1']:focus) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-template-grid) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-template-grid button) {
+      width: 100%;
+    }
+  }
+  :where(.scope) :global(.automation-operations-grid) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 16px;
+  }
+  :where(.scope) :global(.automation-operations-grid > *) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.automation-operations-metrics) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 16px;
+    margin: 0;
+  }
+  :where(.scope) :global(.automation-operations-metrics dd) {
+    margin: 4px 0 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.automation-operations-identifiers dd) {
+    margin: 4px 0 12px;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.automation-page > aside.alert) {
+    margin: 0;
+    background: var(--color-surface-subtle);
+    border-color: var(--color-border);
+  }
+  :where(.scope) :global(.automation-collection) {
+    min-width: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-panel);
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.automation-collection-heading) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px;
+  }
+  :where(.scope) :global(.automation-collection-heading h2) {
+    font-size: 18px;
+    margin: 0 0 4px;
+    letter-spacing: -0.02em;
+  }
+  :where(.scope) :global(.automation-collection-heading p) {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.automation-collection-toolbar) {
+    padding: 20px 24px 16px;
+    border-block: 1px solid var(--color-border);
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.automation-collection-toolbar .automation-filters > .field:first-child) {
+    flex-grow: 2;
+  }
+  :where(.scope) :global(.automation-collection-toolbar .live-search-status) {
+    margin: 12px 0 0;
+    font-size: 12px;
+  }
+  :where(.scope) :global(.automation-list-welcome) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+    padding: 40px;
+  }
+  :where(.scope) :global(.automation-list-welcome-copy) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.automation-list-welcome-copy h3) {
+    font-size: 24px;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+    margin: 0 0 12px;
+    max-width: 20ch;
+  }
+  :where(.scope) :global(.automation-list-welcome-copy p) {
+    margin: 0 0 24px;
+    max-width: 45ch;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.automation-list-welcome-copy .automation-list-welcome-note) {
+    margin: 16px 0 0;
+    font-size: 12px;
+  }
+  :where(.scope) :global(.automation-workflow-example) {
+    min-width: 0;
+    padding: 24px;
+    border-radius: var(--radius-card);
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.automation-workflow-example h3) {
+    margin: 12px 0 0;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.automation-workflow-example ol) {
+    list-style: none;
+    display: grid;
+    gap: 20px;
+    padding: 0;
+    margin: 24px 0;
+  }
+  :where(.scope) :global(.automation-workflow-example li) {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  :where(.scope) :global(.automation-example-step) {
+    display: grid;
+    place-items: center;
+    flex: 0 0 36px;
+    height: 36px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+  :where(.scope) :global(.automation-workflow-example li strong),
+  :where(.scope) :global(.automation-workflow-example li div > span) {
+    display: block;
+  }
+  :where(.scope) :global(.automation-workflow-example li strong) {
+    color: var(--color-accent);
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  :where(.scope) :global(.automation-workflow-example > p) {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.automation-list-no-results) {
+    padding: 48px 24px;
+    text-align: center;
+  }
+  :where(.scope) :global(.automation-list-no-results h3) {
+    margin: 0 0 8px;
+    font-size: 18px;
+  }
+  :where(.scope) :global(.automation-list-no-results p) {
+    color: var(--color-text-muted);
+    margin: 0 0 20px;
+  }
+  :where(.scope) :global(.automation-page .automation-list-region) {
+    border: 0;
+    border-radius: 0;
+  }
+  :where(.scope) :global(.automation-list-table th[scope='row']) {
+    background: transparent;
+    font-size: inherit;
+    font-weight: inherit;
+    color: var(--color-text);
+    vertical-align: middle;
+  }
+  :where(.scope) :global(.automation-list-table tr:last-child th[scope='row']) {
+    border-bottom: 0;
+  }
+  :where(.scope) :global(.automation-list-identity) {
+    min-width: 180px;
+    max-width: 32ch;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.automation-list-identity strong),
+  :where(.scope) :global(.automation-list-identity span),
+  :where(.scope) :global(.automation-list-activity > *) {
+    display: block;
+  }
+  :where(.scope) :global(.automation-list-identity strong) {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.automation-list-identity span),
+  :where(.scope) :global(.automation-list-activity > span) {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+  :where(.scope) :global(.automation-list-activity) {
+    min-width: 150px;
+  }
+  :where(.scope) :global(.automation-list-activity > strong) {
+    font-weight: 600;
+  }
+  :where(.scope) :global(.automation-list-actions) {
+    min-width: 200px;
+  }
+  :where(.scope) :global(.automation-list-actions .automation-inline) {
+    gap: 8px;
+  }
+  :where(.scope) :global(.automation-list-manage) {
+    margin-top: 8px;
+  }
+  :where(.scope) :global(.automation-list-manage > summary) {
+    width: fit-content;
+    cursor: pointer;
+  }
+  :where(.scope) :global(.automation-list-manage > summary::-webkit-details-marker) {
+    display: none;
+  }
+  :where(.scope) :global(.automation-list-manage[open] > summary) {
+    margin-bottom: 12px;
+  }
+  :where(.scope) :global(.automation-list-manage[open] > summary > [aria-hidden]) {
+    transform: rotate(180deg);
+  }
+  :where(.scope) :global(.automation-list-manage > .automation-inline) {
+    display: grid;
+    justify-items: stretch;
+  }
+  :where(.scope) :global(.automation-collection-footer) {
+    padding: 16px 24px;
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.automation-list-loading) {
+    padding: 24px;
+  }
+  :where(.scope) :global(.automation-list-loading p) {
+    margin: 0 0 24px;
+  }
+  :where(.scope) :global(.automation-list-loading-bars) {
+    display: grid;
+    gap: 16px;
+  }
+  :where(.scope) :global(.automation-list-loading-bars span) {
+    height: 48px;
+    border-radius: var(--radius-control);
+    background: var(--color-surface-subtle);
+  }
+  @media (min-width: 768px) and (max-width: 1199px) {
+    :where(.scope) :global(.automation-list-welcome) {
+      gap: 24px;
+      padding: 24px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-collection-heading),
+    :where(.scope) :global(.automation-collection-toolbar) {
+      padding: 20px 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-list-welcome) {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 24px 20px;
+      gap: 32px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-list-welcome-copy h3) {
+      max-width: none;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-workflow-example) {
+      padding: 20px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-page .automation-list-table td.automation-list-actions) {
+      display: block;
+      text-align: left;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-list-actions::before) {
+      display: block;
+      margin-bottom: 12px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-list-identity) {
+      max-width: none;
+      min-width: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-list-activity) {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-list-manage > summary) {
+      width: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-collection-footer) {
+      padding: 16px;
+    }
+  }
+  :where(.scope)
+    :global(.page:not(.stack):not(.automation-page) > .settings-card + .settings-card) {
+    margin-top: 20px;
+  }
+  :where(.scope) :global(.automation-scratch) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  :where(.scope) :global(.automation-scratch > div:first-child) {
+    flex: 1 1 280px;
+  }
+  :where(.scope) :global(.automation-scratch h2) {
+    margin: 0 0 8px;
+    font-size: 18px;
+  }
+  :where(.scope) :global(.automation-scratch p) {
+    margin: 0;
+    max-width: 65ch;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.automation-templates > div:first-child h2) {
+    margin: 8px 0;
+    font-size: 18px;
+  }
+  :where(.scope) :global(.automation-template-grid article) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+  }
+  :where(.scope) :global(.automation-template-grid h3) {
+    font-size: 18px;
+    line-height: 1.4;
+    letter-spacing: -0.015em;
+  }
+  :where(.scope) :global(.automation-template-grid article > p) {
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.automation-template-grid article > p.muted) {
+    font-size: 13px;
+  }
+  :where(.scope) :global(.automation-template-grid article > button) {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+  :where(.scope) :global(.automation-template-grid article > details) {
+    border-top: 1px solid var(--color-border);
+    padding-top: 8px;
+  }
+  :where(.scope) :global(.automation-builder .settings-card > h2) {
+    font-size: 18px;
+    margin: 0;
+  }
+  :where(.scope) :global(.automation-builder .settings-card > .muted) {
+    margin: 0;
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.automation-portability) {
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.automation-portability input[type='file']) {
+    width: 100%;
+    min-width: 0;
+  }
+  :where(.scope) :global(.automation-builder .automation-row) {
+    padding-block: 20px;
+  }
+  :where(.scope) :global(.automation-builder .automation-row legend) {
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.automation-operations-grid .settings-card) {
+    gap: 12px;
+  }
+  :where(.scope) :global(.automation-operations-metrics > div) {
+    padding: 16px;
+    background: var(--color-surface-subtle);
+    border-radius: var(--radius-control);
+  }
+  :where(.scope) :global(.automation-operations-metrics dd) {
+    font-size: 20px;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-scratch) {
+      gap: 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-scratch > div) {
+      width: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-scratch button),
+    :where(.scope) :global(.automation-template-grid article > button) {
+      width: 100%;
+    }
+  }
+}

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import { signOut } from '@/app/(auth)/actions';
 import { BrandLogo } from '@/components/brand/brand-logo';
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { WorkspaceNav } from '@/components/navigation/workspace-nav';
 import { WorkspaceShell } from '@/components/navigation/workspace-shell';
 import { rolePresentation } from '@/features/identity/role';
@@ -47,9 +48,7 @@ export default async function WorkspaceLayout({ children }: Readonly<{ children:
                 aria-label="Sign out"
                 title="Sign out"
               >
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4m7-4 4-4-4-4m4 4H9" />
-                </svg>
+                <NavigationIcon name="signOut" />
               </button>
             </form>
           </div>

@@ -1,0 +1,470 @@
+@layer components {
+  :where(.scope) :global(.administration-group) {
+    margin-top: 28px;
+  }
+  :where(.scope) :global(.administration-group > h2) {
+    font-size: 18px;
+  }
+  :where(.scope) :global(.administration-link) {
+    display: block;
+    color: var(--color-text);
+    text-decoration: none;
+    height: 100%;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.administration-link:hover) {
+    border-color: var(--color-border-strong);
+  }
+  :where(.scope) :global(.administration-card-heading) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  :where(.scope) :global(.administration-card-heading h3) {
+    margin: 0;
+    font-size: 16px;
+  }
+  :where(.scope) :global(.administration-link p) {
+    color: var(--color-text-muted);
+    margin-bottom: 0;
+  }
+  :where(.scope) :global(.administration-list) {
+    list-style: none;
+    padding: 0;
+  }
+  :where(.scope) :global(.administration-list li) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.administration-link) {
+    box-shadow: none;
+  }
+  :where(.scope) :global(.administration-link:hover) {
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.administration-card-heading .badge) {
+    background: var(--color-surface-subtle);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.admin-status-available .badge) {
+    color: var(--color-success);
+    background: var(--color-success-subtle);
+  }
+  @media (min-width: 1200px) {
+    :where(.scope) :global(.administration-group .settings-grid) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  :where(.scope) :global(.people-page) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  :where(.scope) :global(.people-directory) {
+    min-width: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-panel);
+  }
+  :where(.scope) :global(.people-directory-heading),
+  :where(.scope) :global(.people-directory-footer) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+  }
+  :where(.scope) :global(.people-directory-heading h2) {
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+  }
+  :where(.scope) :global(.people-directory-heading p) {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.people-count) {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    color: var(--color-text-muted);
+    background: var(--color-surface-subtle);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.scope) :global(.people-count strong) {
+    color: var(--color-text);
+    font-size: 16px;
+  }
+  :where(.scope) :global(.people-directory > .people-views) {
+    margin: 0;
+    padding: 0 24px 20px;
+    gap: 8px;
+  }
+  :where(.scope) :global(.people-directory-toolbar) {
+    padding: 20px 24px;
+    background: var(--color-surface-subtle);
+    border-block: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.people-search) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 12px;
+  }
+  :where(.scope) :global(.people-search > .field) {
+    flex: 1 1 280px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.people-search .live-search-status) {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: 12px;
+  }
+  :where(.scope) :global(.people-list) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  :where(.scope) :global(.person-access-change .settings-editor) {
+    padding: 0;
+    border: 0;
+  }
+  :where(.scope) :global(.people-directory-footer) {
+    border-top: 1px solid var(--color-border);
+    font-size: 13px;
+  }
+  :where(.scope) :global(.people-pagination),
+  :where(.scope) :global(.people-invite-actions) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  :where(.scope) :global(.people-invitation) {
+    display: grid;
+    gap: 20px;
+  }
+  :where(.scope) :global(.people-invitation h2) {
+    margin: 8px 0;
+    font-size: 20px;
+  }
+  :where(.scope) :global(.people-invitation p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.people-invite-form) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: end;
+  }
+  :where(.scope) :global(.people-invite-actions) {
+    grid-column: 1 / -1;
+  }
+  :where(.scope) :global(.people-empty h3) {
+    margin: 0;
+    font-size: 20px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.people-directory > .people-views) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: 0 16px 20px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.people-directory > .people-views a) {
+      padding: 10px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.people-search > .field) {
+      flex-basis: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.people-pagination) {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+  :where(.scope) :global(.administration-task-links) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-top: 12px;
+  }
+  :where(.scope) :global(.administration-task-links a) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+  :where(.scope) :global(.administration-task-links a:hover) {
+    text-decoration: underline;
+  }
+  :where(.scope) :global(.administration-planned) {
+    margin-top: 24px;
+    border-top: 1px solid var(--color-border);
+    padding-top: 12px;
+  }
+  :where(.scope) :global(.administration-planned summary) {
+    cursor: pointer;
+    min-height: 44px;
+    padding: 12px 0;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.administration-link) {
+    transition:
+      border-color 160ms ease-out,
+      background-color 160ms ease-out;
+  }
+  :where(.scope) :global(.settings-editor) {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+    min-width: 0;
+  }
+  :where(.scope) :global(.settings-editor > summary) {
+    cursor: pointer;
+    padding: 12px;
+    min-height: 44px;
+    overflow-wrap: anywhere;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.settings-editor > summary:hover) {
+    border-color: var(--color-border-strong);
+  }
+  :where(.scope) :global(.settings-editor[open] > summary) {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  :where(.scope) :global(.settings-editor > summary > *) {
+    margin-inline-end: 8px;
+  }
+  :where(.scope) :global(.settings-editor > form),
+  :where(.scope) :global(.settings-editor > section) {
+    margin-top: 16px;
+  }
+  :where(.scope) :global(.settings-editor summary:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
+  }
+  :where(.scope) :global(.management-item:has(> .settings-editor[open])) {
+    flex-wrap: wrap;
+  }
+  :where(.scope) :global(.management-item > .settings-editor[open]) {
+    order: 3;
+    flex-basis: 100%;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.responsive-table .member-details-cell > .settings-editor) {
+      grid-column: 1 / -1;
+      width: 100%;
+      text-align: left;
+    }
+  }
+  :where(.scope) :global(.automation-page .settings-editor) {
+    min-width: 0;
+    max-width: 100%;
+  }
+  :where(.scope) :global(.automation-page .settings-editor > .stack) {
+    min-width: min(280px, 100%);
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.automation-page .automation-inline > .settings-editor) {
+      width: 100%;
+    }
+  }
+  :where(.scope) :global(.automation-list-welcome-copy > .administration-card-icon) {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 20px;
+  }
+  :where(.scope) :global(.automation-list-manage .settings-editor) {
+    padding: 0;
+    border: 0;
+  }
+  :where(.scope) :global(.automation-list-manage .settings-editor > summary) {
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    font-weight: 600;
+  }
+  :where(.scope) :global(.automation-list-manage .settings-editor > summary:hover) {
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.automation-list-manage .settings-editor > .stack) {
+    min-width: 0;
+    width: 260px;
+    max-width: 100%;
+    padding-bottom: 12px;
+  }
+  :where(.scope) :global(.automation-list-manage .settings-editor > .stack p) {
+    white-space: normal;
+  }
+  :where(.scope) :global(.administration-hub) {
+    max-width: 1240px;
+  }
+  :where(.scope) :global(.administration-hub-header) {
+    align-items: center;
+  }
+  :where(.scope) :global(.administration-workspace-name) {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    padding: 8px 12px;
+  }
+  :where(.scope) :global(.administration-jump-nav) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  :where(.scope) :global(.administration-hub-group) {
+    scroll-margin-top: 96px;
+    margin-top: 32px;
+  }
+  :where(.scope) :global(.administration-section-heading) {
+    margin-bottom: 16px;
+  }
+  :where(.scope) :global(.administration-section-heading h2) {
+    margin: 0 0 4px;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  :where(.scope) :global(.administration-section-heading p) {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.administration-panel) {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-panel);
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.administration-setting-row) {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 44px minmax(220px, 1fr) minmax(220px, 0.9fr);
+    align-items: center;
+    gap: 16px;
+    padding: 20px 22px;
+  }
+  :where(.scope) :global(.administration-setting-row + .administration-setting-row) {
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.administration-card-icon) {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: var(--color-surface-subtle);
+    color: var(--color-accent);
+  }
+  :where(.scope) :global(.administration-card-icon svg) {
+    width: 21px;
+    height: 21px;
+  }
+  :where(.scope) :global(.administration-setting-copy) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.administration-setting-title) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  :where(.scope) :global(.administration-setting-title h3) {
+    margin: 0;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: -0.01em;
+  }
+  :where(.scope) :global(.administration-setting-copy p) {
+    max-width: 58ch;
+    margin: 4px 0 0;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.administration-card-note) {
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--color-neutral-subtle);
+    color: var(--color-neutral);
+    font-size: 11px;
+    line-height: 16px;
+  }
+  :where(.scope) :global(.administration-card-actions) {
+    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+  }
+  :where(.scope) :global(.administration-action-link) {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-accent);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  :where(.scope) :global(.administration-action-link:hover span:first-child) {
+    text-decoration: underline;
+  }
+  :where(.scope) :global(.administration-action-link span:last-child) {
+    font-size: 16px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.administration-hub-header) {
+      align-items: flex-start;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.administration-setting-row) {
+      grid-template-columns: 40px minmax(0, 1fr);
+      align-items: start;
+      padding: 18px 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.administration-card-actions) {
+      grid-column: 2;
+      justify-content: flex-start;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.administration-jump-nav) {
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.administration-hub-group) {
+      margin-top: 24px;
+    }
+  }
+}

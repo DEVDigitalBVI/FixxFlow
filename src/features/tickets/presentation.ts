@@ -1,21 +1,26 @@
+import type { NavigationIconName } from '@/components/navigation/navigation-icon';
 import { formatTimestamp } from '@/features/timezones/model';
 import type { TicketPriority, TicketStatus } from '@/types/database';
 
-export const ticketStatuses: Record<TicketStatus, { label: string; tone: string }> = {
-  new: { label: 'New', tone: 'slate' },
-  open: { label: 'Open', tone: 'blue' },
-  in_progress: { label: 'In progress', tone: 'blue' },
-  waiting_on_user: { label: 'Waiting on user', tone: 'amber' },
-  on_hold: { label: 'On hold', tone: 'slate' },
-  resolved: { label: 'Resolved', tone: 'green' },
-  closed: { label: 'Closed', tone: 'slate' },
+type BadgePresentation = {
+  label: string;
+  tone: 'neutral' | 'active' | 'warning' | 'success' | 'danger';
+  icon: NavigationIconName;
 };
-
-export const ticketPriorities: Record<TicketPriority, { label: string; tone: string }> = {
-  low: { label: 'Low', tone: 'slate' },
-  normal: { label: 'Normal', tone: 'slate' },
-  high: { label: 'High', tone: 'amber' },
-  critical: { label: 'Urgent', tone: 'red' },
+export const ticketStatuses: Record<TicketStatus, BadgePresentation> = {
+  new: { label: 'New', tone: 'neutral', icon: 'inbox' },
+  open: { label: 'Open', tone: 'active', icon: 'open' },
+  in_progress: { label: 'In progress', tone: 'active', icon: 'progress' },
+  waiting_on_user: { label: 'Waiting on user', tone: 'warning', icon: 'clock' },
+  on_hold: { label: 'On hold', tone: 'neutral', icon: 'pause' },
+  resolved: { label: 'Resolved', tone: 'success', icon: 'check' },
+  closed: { label: 'Closed', tone: 'neutral', icon: 'lock' },
+};
+export const ticketPriorities: Record<TicketPriority, BadgePresentation> = {
+  low: { label: 'Low', tone: 'neutral', icon: 'priorityLow' },
+  normal: { label: 'Normal', tone: 'neutral', icon: 'priorityNormal' },
+  high: { label: 'High', tone: 'warning', icon: 'priorityHigh' },
+  critical: { label: 'Urgent', tone: 'danger', icon: 'alert' },
 };
 
 export const formatTicketDate = (value: string | null, timeZone = 'UTC') =>

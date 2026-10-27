@@ -1,0 +1,16 @@
+.scope {
+  composes: scope from '../features/tickets/tickets.module.css';
+  composes: scope from '../features/chat/chat.module.css';
+  composes: scope from '../features/portal/portal.module.css';
+  composes: scope from '../features/administration/administration.module.css';
+  composes: scope from '../features/automation/automation.module.css';
+  composes: scope from '../features/knowledge/knowledge.module.css';
+  composes: scope from '../features/assets/assets.module.css';
+  composes: scope from '../features/inventory/inventory.module.css';
+  composes: scope from '../features/reporting/reporting.module.css';
+  composes: scope from '../features/workflows/workflows.module.css';
+  composes: scope from '../features/dashboard/dashboard.module.css';
+  composes: scope from '../features/lookups/lookups.module.css';
+  composes: scope from '../features/authentication/authentication.module.css';
+  composes: scope from '../features/navigation/navigation.module.css';
+}

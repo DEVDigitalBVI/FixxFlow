@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { PageHeader } from '@/components/ui/page-header';
 
 import { administrationSections } from './sections';
@@ -8,25 +9,22 @@ type Section = (typeof administrationSections)[number]['slug'];
 type HubCard = {
   title: string;
   description: string;
-  icon: keyof typeof iconPaths;
+  icon: keyof typeof iconNames;
   destinations: readonly Section[];
   note?: string;
 };
-const iconPaths = {
-  organization: 'M4 21V5l8-3v19M12 8h8v13M2 21h20M7 7h2m-2 4h2m-2 4h2m6-3h2m-2 4h2',
-  people:
-    'M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20m6-8a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-1a3 3 0 0 0 0-6m3 15v-1.5a3.5 3.5 0 0 0-2.5-3.35',
-  assets: 'M3 4h18v13H3V4Zm5 17h8m-4-4v4',
-  automation: 'm13 2-9 12h7l-1 8 10-13h-7l1-7Z',
-  routing: 'M5 3v12a3 3 0 0 0 3 3h11m-4-4 4 4-4 4M5 6h14m-4-4 4 4-4 4',
-  knowledge: 'M12 5v15M12 5C8 2 4 3 3 4v15c3-2 6-1 9 1 3-2 6-3 9-1V4c-1-1-5-2-9 1Z',
-  // Same outline as the navigation's chat icon.
-  reply:
-    'M8 19.5 3.5 21v-5.5a4 4 0 0 1-1-2.5V7a3.5 3.5 0 0 1 3.5-3.5h12A3.5 3.5 0 0 1 21.5 7v9a3.5 3.5 0 0 1-3.5 3.5ZM7 9h10M7 13h6',
-  clock: 'M12 8v4l3 2m6-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
-  notifications: 'M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8M9 20a3 3 0 0 0 6 0',
-  security: 'm12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Zm-4 9 3 3 5-6',
-};
+const iconNames = {
+  organization: 'organization',
+  people: 'people',
+  assets: 'assets',
+  automation: 'automation',
+  routing: 'routing',
+  knowledge: 'knowledge',
+  reply: 'chat',
+  clock: 'clock',
+  notifications: 'notifications',
+  security: 'security',
+} as const;
 const groups: readonly {
   id: string;
   title: string;
@@ -149,7 +147,9 @@ function DestinationLink({ section }: { section: Section }) {
       href={'href' in item ? item.href : `/app/administration/${item.slug}`}
     >
       <span>{actionLabels[section] ?? item.title}</span>
-      <span aria-hidden="true">→</span>
+      <span aria-hidden="true">
+        <NavigationIcon name="arrowRight" className="inline-icon" size={16} />
+      </span>
     </Link>
   );
 }
@@ -184,17 +184,7 @@ export function AdministrationHub({ organizationName }: { organizationName: stri
             {group.cards.map((card) => (
               <article className="administration-setting-row" key={card.title}>
                 <span className="administration-card-icon">
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d={iconPaths[card.icon]} />
-                  </svg>
+                  <NavigationIcon name={iconNames[card.icon]} />
                 </span>
                 <div className="administration-setting-copy">
                   <div className="administration-setting-title">
@@ -210,7 +200,9 @@ export function AdministrationHub({ organizationName }: { organizationName: stri
                   {card.icon === 'knowledge' && (
                     <Link className="administration-action-link" href="/app/help/new">
                       <span>Write an article</span>
-                      <span aria-hidden="true">→</span>
+                      <span aria-hidden="true">
+                        <NavigationIcon name="arrowRight" className="inline-icon" size={16} />
+                      </span>
                     </Link>
                   )}
                 </div>

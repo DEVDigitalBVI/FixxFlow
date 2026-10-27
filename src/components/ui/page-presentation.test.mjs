@@ -6,6 +6,7 @@ import React from 'react';
 import { renderToStaticMarkup as render } from 'react-dom/server';
 
 import { load } from '../../../tests/helpers/load-module.mjs';
+import { productStyles } from '../../../tests/helpers/styles.mjs';
 
 const mocks = { 'next/link': { default: (props) => React.createElement('a', props) } };
 const { PageHeader } = load('src/components/ui/page-header.tsx', mocks);
@@ -50,10 +51,7 @@ test('shared loading state announces the wait once without fake data or animated
   assert.doesNotMatch(html, /<button|<input|<a |aria-valuenow|animation/);
 });
 test('navigation and pagination controls retain button treatment without inheriting tab borders', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   // Real regression: the former .queue-views a selector overrode pagination button borders and padding.
   assert.doesNotMatch(css, /\.queue-views a \{[^}]*border-bottom:/);
   assert.match(css, /\.queue-views a:not\(\.button\)/);

@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
 import test from 'node:test';
 
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { load } from '../../../tests/helpers/load-module.mjs';
+import { productStyles } from '../../../tests/helpers/styles.mjs';
 
 const navMocks = {
   '@/features/search/global-search': { GlobalSearch: () => null },
@@ -178,10 +178,7 @@ test('pending submit buttons prevent duplicate submission and announce progress'
   assert.match(html, /Saving profile/);
 });
 test('interactive blue and muted text meet normal-text contrast on white', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const luminance = (hex) => {
     const rgb = hex
       .match(/[0-9a-f]{2}/gi)
@@ -290,10 +287,7 @@ test('desktop navigation does not move focus to the hidden mobile menu button', 
 });
 
 test('input boundaries and focus contrast meet 3:1 on adjacent light surfaces', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const luminance = (hex) => {
     const rgb = hex
       .match(/[0-9a-f]{2}/gi)
@@ -313,10 +307,7 @@ test('input boundaries and focus contrast meet 3:1 on adjacent light surfaces', 
 });
 
 test('overview charcoal header maintains readable text and visible keyboard focus', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const luminance = (name) => {
     const hex = css.match(new RegExp(`--color-${name}: (#\\w+);`))[1];
     const rgb = hex

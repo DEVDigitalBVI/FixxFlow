@@ -131,7 +131,7 @@ export async function AuditLog({
                     <span>
                       <AuditValue field={change.field} value={change.from} />
                     </span>
-                    <span aria-label="changed to"> → </span>
+                    <span> to </span>
                     <span>
                       <AuditValue field={change.field} value={change.to} />
                     </span>

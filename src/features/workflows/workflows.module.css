@@ -1,0 +1,82 @@
+@layer components {
+  :where(.scope) :global(.workflow-builder-actions),
+  :where(.scope) :global(.workflow-catalog-filters) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 0.75rem;
+  }
+  :where(.scope) :global(.workflow-catalog-filters) {
+    margin-block: 1rem 1.5rem;
+  }
+  :where(.scope) :global(.workflow-catalog-filters .field) {
+    flex: 1 1 14rem;
+    min-width: 0;
+  }
+  :where(.scope) :global(.workflow-catalog h2),
+  :where(.scope) :global(.workflow-definition h3) {
+    margin: 0;
+    font-size: 1rem;
+  }
+  :where(.scope) :global(.workflow-catalog > li > div) {
+    flex: 1 1 20rem;
+    min-width: 0;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.workflow-builder-actions > *),
+    :where(.scope) :global(.workflow-catalog-filters > button) {
+      flex: 1 1 auto;
+    }
+  }
+  :where(.scope) :global(.workflow-builder-intro) {
+    padding: 20px;
+    background: var(--color-surface-subtle);
+    border-radius: 12px;
+  }
+  :where(.scope) :global(.workflow-builder-intro h2),
+  :where(.scope) :global(.workflow-builder-section h2),
+  :where(.scope) :global(.workflow-builder-save h2) {
+    margin: 0;
+    font-size: 18px;
+  }
+  :where(.scope) :global(.workflow-builder-intro p),
+  :where(.scope) :global(.workflow-builder-section > div > p),
+  :where(.scope) :global(.workflow-builder-save p) {
+    margin: 8px 0 0;
+    max-width: 70ch;
+  }
+  :where(.scope) :global(.workflow-builder-section) {
+    padding-block: 16px;
+  }
+  :where(.scope) :global(.workflow-builder-options) {
+    min-width: 0;
+    border-block-start: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.workflow-builder-options > summary) {
+    cursor: pointer;
+    min-height: 44px;
+    padding-block: 12px;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.workflow-builder-options > .stack) {
+    padding-block: 8px 16px;
+  }
+  :where(.scope) :global(.workflow-builder-save) {
+    display: grid;
+    justify-items: start;
+    gap: 16px;
+    padding-block-start: 20px;
+    border-block-start: 1px solid var(--color-border);
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.workflow-builder-intro) {
+      padding: 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.workflow-builder-save > button) {
+      width: 100%;
+    }
+  }
+}

@@ -87,7 +87,7 @@ test('ticket search calls the permission-scoped RPC and preserves filters in pag
   assert.match(html, /q=VPN\+error\+809&amp;status=open&amp;page=3/);
   assert.match(html, /aria-label="Ticket pages"/);
   assert.match(html, /aria-describedby="ticket-search-hint"/);
-  assert.equal((html.match(/Search result/g) || []).length, 50);
+  assert.equal((html.match(/<strong>Search result<\/strong>/g) || []).length, 50);
 });
 
 test('employee ticket lists do not fetch staff-only lookup data', async () => {

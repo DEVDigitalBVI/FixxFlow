@@ -1,0 +1,25 @@
+@layer components {
+  :where(.scope) :global(.lookup-picker) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.lookup-picker-compact) {
+    gap: 6px;
+  }
+  :where(.scope) :global(.lookup-compact-error) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: var(--color-danger);
+    font-size: 13px;
+  }
+  :where(.scope) :global(.lookup-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  :where(.scope) :global(.lookup-picker small),
+  :where(.scope) :global(.lookup-picker [role='status']) {
+    overflow-wrap: anywhere;
+  }
+}

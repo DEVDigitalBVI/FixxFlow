@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { PageHeader } from '@/components/ui/page-header';
+import { QueueShortcuts, WorkQueues } from '@/features/dashboard/work-queues';
 import { EmployeeHome } from '@/features/portal/employee-home';
 import { ServiceAnnouncements } from '@/features/portal/service-announcements';
 import { ReportUnavailable, TodayMetrics } from '@/features/reporting/components';
@@ -62,43 +64,22 @@ export default async function OverviewPage() {
             <p>Choose the work that needs attention.</p>
           </div>
           <Link className="button button-secondary" href="/app/reports">
-            View reports &amp; trends <span aria-hidden="true">↗</span>
+            View reports &amp; trends{' '}
+            <span aria-hidden="true">
+              <NavigationIcon name="arrowUpRight" className="inline-icon" size={16} />
+            </span>
           </Link>
         </div>
-        <nav className="overview-queues" aria-label="Support shortcuts">
-          {[
-            {
-              href: '/app/tickets?view=mine',
-              title: 'My assigned tickets',
-              description: 'Continue the work you own',
-            },
-            {
-              href: '/app/tickets?view=unassigned',
-              title: 'Unassigned tickets',
-              description: 'Find requests that need an owner',
-            },
-            {
-              href: '/app/tickets?sla=breached',
-              title: 'Overdue tickets',
-              description: 'Review requests past their SLA',
-            },
-            {
-              href: '/app/chat?view=unassigned',
-              title: 'Incoming chats',
-              description: 'Pick up a new conversation',
-            },
-          ].map((item) => (
-            <Link key={item.href} href={item.href} className="overview-queue">
-              <span className="overview-queue-copy">
-                <strong>{item.title}</strong>
-                <span>{item.description}</span>
-              </span>
-              <span className="overview-queue-arrow" aria-hidden="true">
-                →
-              </span>
-            </Link>
-          ))}
-        </nav>
+        <Suspense
+          fallback={
+            <QueueShortcuts
+              loading
+              counts={{ mine: null, unassigned: null, overdue: null, chats: null }}
+            />
+          }
+        >
+          <WorkQueues viewer={viewer} />
+        </Suspense>
       </section>
     </div>
   );

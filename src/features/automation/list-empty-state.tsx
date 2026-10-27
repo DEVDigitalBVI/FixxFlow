@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
+
 import { automationPath } from './ui-model';
 
 export function AutomationListEmptyState({
@@ -26,17 +28,7 @@ export function AutomationListEmptyState({
     <div className="automation-list-welcome">
       <div className="automation-list-welcome-copy">
         <span className="administration-card-icon">
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m13 2-9 12h7l-1 8 10-13h-7l1-7Z" />
-          </svg>
+          <NavigationIcon name="automation" />
         </span>
         <h3>{title}</h3>
         <p>{description}</p>

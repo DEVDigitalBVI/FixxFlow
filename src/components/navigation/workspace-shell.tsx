@@ -3,6 +3,8 @@
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
+
 /** Keeps server-rendered identity and account controls outside the client data boundary. */
 export function WorkspaceShell({
   brand,
@@ -55,19 +57,7 @@ export function WorkspaceShell({
               setCollapsed((value) => !(value ?? window.matchMedia('(max-width: 1199px)').matches))
             }
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.65"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="m14 7-5 5 5 5" />
-            </svg>
+            <NavigationIcon name="chevronLeft" />
           </button>
         </div>
         {navigation}

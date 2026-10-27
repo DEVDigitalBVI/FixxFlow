@@ -14,7 +14,10 @@ import { AttachmentUpload } from '@/features/tickets/attachment-upload';
 import { ConversationRefresh } from '@/features/tickets/conversation-refresh';
 import { ConversationTimeline } from '@/features/tickets/conversation-timeline';
 import { MessageComposer } from '@/features/tickets/message-composer';
-import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
+import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
+
+import '@/features/tickets/presentation';
+
 import { SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { SlaPolicy } from '@/features/tickets/sla-policy-table';
 import { popularTags } from '@/features/tickets/tags';
@@ -122,9 +125,7 @@ export async function TicketDetail({
             </Link>
             <p className="portal-reference">Request #{employeeTicket.ticket_number}</p>
             <Heading>{employeeTicket.title}</Heading>
-            <span className={`ticket-badge tone-${ticketStatuses[employeeTicket.status].tone}`}>
-              {ticketStatuses[employeeTicket.status].label}
-            </span>
+            <TicketStatusBadge status={employeeTicket.status} />
           </div>
         </div>
         {canReopen && (
@@ -370,12 +371,8 @@ export async function TicketDetail({
             {ticket.ticket_type === 'incident' && (
               <span className="ticket-badge tone-info">Incident</span>
             )}
-            <span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>
-              {ticketStatuses[ticket.status].label}
-            </span>
-            <span className={`ticket-badge tone-${ticketPriorities[ticket.priority].tone}`}>
-              {ticketPriorities[ticket.priority].label}
-            </span>
+            <TicketStatusBadge status={ticket.status} />
+            <TicketStatusBadge priority={ticket.priority} />
           </div>
           <Heading>{ticket.title}</Heading>
           <p>

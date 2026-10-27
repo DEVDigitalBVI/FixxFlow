@@ -36,7 +36,7 @@ export function activityDetail(row: Activity, names: ReadonlyMap<string, string>
     const mapping = row.action === 'status_changed' ? ticketStatuses : ticketPriorities;
     const from = label(details.from, mapping),
       to = label(details.to, mapping);
-    return from && to ? `${from} → ${to}` : to ? `Changed to ${to}` : null;
+    return from && to ? `${from} to ${to}` : to ? `Changed to ${to}` : null;
   }
   if (row.action === 'assignment_changed') {
     const person = (id: Json | undefined) =>
@@ -47,7 +47,7 @@ export function activityDetail(row: Activity, names: ReadonlyMap<string, string>
           : null;
     const from = person(details.from),
       to = person(details.to);
-    return from && to ? `${from} → ${to}` : to ? `Assigned to ${to}` : null;
+    return from && to ? `${from} to ${to}` : to ? `Assigned to ${to}` : null;
   }
   if (row.action === 'created') {
     const status = label(details.status, ticketStatuses),

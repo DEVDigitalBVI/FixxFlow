@@ -6,6 +6,7 @@ import {
   findAutomationEvents,
   runAutomationTest,
 } from '@/app/app/administration/automations/actions';
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 import { Timestamp } from '@/features/timezones/provider';
 
@@ -369,8 +370,14 @@ export function DryRunResultView({
       )}
       <h4>Trigger</h4>
       <p>
-        {result.trigger.compatible ? '✓ Compatible' : '— Not compatible'} ·{' '}
-        {result.trigger.explanation}
+        {result.trigger.compatible ? (
+          <>
+            <NavigationIcon name="check" className="inline-icon" size={16} /> Compatible
+          </>
+        ) : (
+          '— Not compatible'
+        )}{' '}
+        · {result.trigger.explanation}
       </p>
       {result.temporal && (
         <section className="stack" aria-label="Temporal test context">
@@ -381,8 +388,14 @@ export function DryRunResultView({
               : 'Hypothetical temporal evaluation'}
           </p>
           <p>
-            {result.temporal.met ? '✓ Threshold met' : '— Threshold not met'} ·{' '}
-            {result.temporal.explanation}
+            {result.temporal.met ? (
+              <>
+                <NavigationIcon name="check" className="inline-icon" size={16} /> Threshold met
+              </>
+            ) : (
+              '— Threshold not met'
+            )}{' '}
+            · {result.temporal.explanation}
           </p>
           <dl>
             <dt>Evaluated at (database time)</dt>
@@ -420,13 +433,19 @@ export function DryRunResultView({
           {result.conditions.map((item) => (
             <li key={item.id}>
               <strong>
-                {item.status === 'passed'
-                  ? '✓ Passed'
-                  : item.status === 'failed'
-                    ? '✕ Not met'
-                    : item.status === 'error'
-                      ? 'Could not evaluate'
-                      : 'Not evaluated'}
+                {item.status === 'passed' ? (
+                  <>
+                    <NavigationIcon name="check" className="inline-icon" size={16} /> Passed
+                  </>
+                ) : item.status === 'failed' ? (
+                  <>
+                    <NavigationIcon name="close" className="inline-icon" size={16} /> Not met
+                  </>
+                ) : item.status === 'error' ? (
+                  'Could not evaluate'
+                ) : (
+                  'Not evaluated'
+                )}
               </strong>{' '}
               · {item.label} {operatorLabels[item.operator]}{' '}
               {item.expected !== undefined ? conditionValue(item.field, item.expected, labels) : ''}
@@ -451,11 +470,19 @@ export function DryRunResultView({
             <li key={item.id}>
               <strong>{actionDescription(item, labels)}</strong>
               <p>
-                {item.validation === 'valid'
-                  ? '✓ Current validation passed'
-                  : item.validation === 'invalid'
-                    ? '✕ Would fail validation'
-                    : '— Would not execute'}{' '}
+                {item.validation === 'valid' ? (
+                  <>
+                    <NavigationIcon name="check" className="inline-icon" size={16} /> Current
+                    validation passed
+                  </>
+                ) : item.validation === 'invalid' ? (
+                  <>
+                    <NavigationIcon name="close" className="inline-icon" size={16} /> Would fail
+                    validation
+                  </>
+                ) : (
+                  '— Would not execute'
+                )}{' '}
                 · {item.explanation}
               </p>
             </li>
