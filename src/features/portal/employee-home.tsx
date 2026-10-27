@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
-import { formatTicketDate, ticketStatuses } from '@/features/tickets/presentation';
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { formatTicketDate } from '@/features/tickets/presentation';
+import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
 import { SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
 import type { TicketStatus } from '@/types/database';
 
@@ -64,7 +66,9 @@ export function EmployeeHome({
           >
             <strong>{action.title}</strong>
             <span>{action.description}</span>
-            <span aria-hidden="true">→</span>
+            <span aria-hidden="true">
+              <NavigationIcon name="arrowRight" className="inline-icon" size={16} />
+            </span>
           </Link>
         ))}
       </div>
@@ -120,9 +124,7 @@ export function EmployeeHome({
                       )}
                     </div>
                   </div>
-                  <span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>
-                    {ticketStatuses[ticket.status].label}
-                  </span>
+                  <TicketStatusBadge status={ticket.status} />
                 </Link>
               </li>
             ))}

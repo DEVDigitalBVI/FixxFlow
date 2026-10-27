@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
 import test from 'node:test';
 
 import React from 'react';
@@ -15,6 +14,7 @@ import {
 } from '../../../tests/fixtures/automation.mjs';
 import { componentHarness } from '../../../tests/helpers/component-harness.mjs';
 import { load } from '../../../tests/helpers/load-module.mjs';
+import { productStyles } from '../../../tests/helpers/styles.mjs';
 
 const { automationTemplates, templateDraft } = load('src/features/automation/templates.ts');
 const { validateDefinition } = load('src/features/automation/validation.ts');
@@ -431,10 +431,7 @@ test('processing-state presentation stays administrator-gated and cannot turn pr
 });
 
 test('template layout stacks and error destinations retain visible focus without new motion', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   assert.match(css, /automation-template-grid[^}]*minmax\(min\(100%,\s*320px\),\s*1fr\)/);
   assert.match(
     css,

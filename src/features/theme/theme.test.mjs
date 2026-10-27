@@ -9,6 +9,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import sharp from 'sharp';
 
 import { load } from '../../../tests/helpers/load-module.mjs';
+import { productStyles } from '../../../tests/helpers/styles.mjs';
 
 const theme = load('src/features/theme/theme.ts');
 test('first paint honors saved choices and falls back safely to the system', () => {
@@ -100,16 +101,13 @@ function contrast(a, b) {
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
 test('explicit and system dark themes share the approved red-and-gunmetal palette', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const explicit = css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1];
   const system = css.match(/:root:not\(\[data-theme\]\) \{([^}]+)\}/)[1];
   assert.equal(explicit.trim(), system.trim());
   for (const [token, value] of Object.entries({
-    canvas: '#282d33',
-    surface: '#282d33',
+    canvas: '#23282e',
+    surface: '#30363e',
     accent: '#fba917',
     text: '#fbfffe',
     'text-muted': '#c2c2c2',
@@ -118,10 +116,7 @@ test('explicit and system dark themes share the approved red-and-gunmetal palett
     assert.ok(explicit.includes(`--color-${token}: ${value};`), token);
 });
 test('dark text, states, buttons, charts and focus meet contrast thresholds', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const block = css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1];
   const tokens = Object.fromEntries(
     [...block.matchAll(/--color-([\w-]+): (#[\da-f]+);/g)].map((m) => [m[1], m[2]]),
@@ -132,16 +127,26 @@ test('dark text, states, buttons, charts and focus meet contrast thresholds', ()
     for (const cue of ['focus', 'control-border', 'success'])
       assert.ok(contrast(tokens[cue], tokens[surface]) >= 3, `${cue} on ${surface}`);
   }
-  for (const state of ['accent', 'success', 'warning', 'danger', 'cyan', 'purple', 'neutral'])
-    assert.ok(contrast(tokens[state], tokens[`${state}-subtle`]) >= 4.5, state);
+  for (const state of [
+    'accent',
+    'active',
+    'success',
+    'warning',
+    'danger',
+    'highlight',
+    'purple',
+    'neutral',
+  ]) {
+    const surface = ['active', 'danger', 'highlight'].includes(state)
+      ? `${state}-surface`
+      : `${state}-subtle`;
+    assert.ok(contrast(tokens[state], tokens[surface]) >= 4.5, state);
+  }
   for (const fill of ['accent', 'accent-hover'])
     assert.ok(contrast(tokens['on-accent'], tokens[fill]) >= 4.5, fill);
 });
 test('light surfaces and red filled actions retain readable contrast in both themes', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const read = (block) =>
     Object.fromEntries(
       [...block.matchAll(/--color-([\w-]+): (#[\da-f]+);/g)].map((m) => [m[1], m[2]]),
@@ -397,10 +402,7 @@ test('product surfaces source FixxFlow artwork through the shared brand componen
     );
   }
   const authLayout = fs.readFileSync('src/app/(auth)/layout.tsx', 'utf8');
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   assert.match(authLayout, /<BrandLogo[^>]*variant="full-inverse"[^>]*priority/);
   assert.doesNotMatch(
     css.match(/\.auth-logo \{[^}]+\}/)?.[0] ?? '',
@@ -409,10 +411,7 @@ test('product surfaces source FixxFlow artwork through the shared brand componen
 });
 
 test('brand surfaces retain readable navigation, category copy and overview text in both themes', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const light = css.match(/:root \{([^}]+)\}/)[1];
   const dark = css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1];
   const tokens = (block) =>
@@ -424,9 +423,9 @@ test('brand surfaces retain readable navigation, category copy and overview text
     for (const [foreground, background] of [
       ['on-accent', 'accent'],
       ['neutral', 'accent-subtle'],
-      ['neutral', 'cyan-subtle'],
-      ['cyan', 'cyan-subtle'],
-      ['text', 'cyan-subtle'],
+      ['neutral', 'highlight-surface'],
+      ['highlight', 'highlight-surface'],
+      ['text', 'highlight-surface'],
     ]) {
       assert.ok(
         contrast(theme[foreground], theme[background]) >= 4.5,
@@ -469,10 +468,7 @@ test('rebranded artwork versions are allowed by image optimization and favicon c
 });
 
 test('brand wordmark keeps palette red independently of dark-mode link accents', () => {
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   assert.match(css, /--color-brand-primary: #bd212c;/);
   assert.match(
     css,

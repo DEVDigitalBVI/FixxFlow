@@ -52,7 +52,9 @@ test('recent requests expose human-readable status and timestamp alongside their
   assert.match(html, /href="\/app\/tickets\/request-1"/);
   assert.match(html, /Laptop access/);
   assert.match(html, /#1003/);
-  assert.match(html, /ticket-badge tone-amber">Waiting on user/);
+  assert.match(html, /ticket-badge tone-warning/);
+  assert.match(html, /class="badge-icon" aria-hidden="true"/);
+  assert.match(html, /Waiting on user/);
   assert.match(html, /Updated <time dateTime="2026-10-19T16:30:00Z">/);
   assert.doesNotMatch(html, /No requests yet/);
 });

@@ -38,8 +38,8 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-inverse: #fbfffe;
   --color-inverse-hover: #f1f2f3;
   --color-brand-text-muted: #e1e3e5;
-  --color-cyan: #725000;
-  --color-cyan-subtle: #f1f2f3;
+  --color-highlight: #725000;
+  --color-highlight-surface: #f1f2f3;
   --color-purple: #6842c7;
   --color-purple-subtle: #f1edff;
   --color-neutral: #6e676f;
@@ -51,7 +51,6 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-brand-primary: #bd212c;
   --color-brand-secondary: #fba917;
   --color-brand-ink: #282d33;
-  --color-brand-purple: #282d33;
   --color-canvas: #f1f2f3;
   --color-surface: #fbfffe;
   --color-surface-subtle: #f6f7f7;
@@ -64,14 +63,14 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-accent: #a71d27;
   --color-accent-hover: #8e1821;
   --color-accent-subtle: #f1f2f3;
-  --color-info: var(--color-accent-hover);
-  --color-info-subtle: var(--color-accent-subtle);
+  --color-active: #3156a6;
+  --color-active-surface: #eef2fc;
   --color-success: #15803d;
   --color-success-subtle: #ecfdf3;
   --color-warning: #a15c00;
   --color-warning-subtle: #fff7e6;
   --color-danger: #bd212c;
-  --color-danger-subtle: #f1f2f3;
+  --color-danger-surface: #f1f2f3;
   --color-focus: #a71d27;
   --color-control-border: #817b83;
   --color-field-surface: #f1f2f3;
@@ -88,6 +87,18 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
 Functional links use the accessible red `--color-accent` alias to meet normal-text contrast on light surfaces. Filled actions use `--color-action-fill: #BD212C`, `--color-action-hover: #A71D27`, and `--color-on-action: #FBFFFE`. Brand artwork uses red with gunmetal folds. Focus indicators use a solid outline rather than a translucent tint.
 
 The core brand palette is American red `#BD212C`, gunmetal `#282D33`, dark tangerine `#FBA917`, off-white `#FBFFFE`, and dim gray `#6E676F`. Red anchors brand artwork and primary actions; amber is reserved for warnings and small highlights with dark text. Use off-white text on solid red actions, accessible darker red links on light surfaces, and palette amber links/focus cues in dark mode. Derived neutral surfaces keep the workspace calm. Preserve green for success, and distinguish destructive actions with explicit labels and icons. Validate normal text at WCAG AA (4.5:1) and essential controls and focus indicators at 3:1.
+
+
+Active work uses slate blue (`--color-active` / `--color-active-surface`), separate from brand actions and amber warnings. Neutral highlights use the role-named `--color-highlight` tokens; gunmetal brand text uses `--color-brand-ink`. `--color-danger-surface` names the neutral surface used beneath danger text, without implying a red or pink fill. The former info/cyan/brand-purple/danger-subtle token names are retired.
+
+| Role | Light text / surface | Dark text / surface |
+|---|---|---|
+| Active work / Incident | `#3156a6` / `#eef2fc` | `#a8c3ff` / `#263653` |
+| Waiting / High | `#a15c00` / `#fff7e6` | `#f6c76b` / `#3d301b` |
+| Resolved | `#15803d` / `#ecfdf3` | `#77dea0` / `#153c2b` |
+| Urgent / breach | `#bd212c` / `#f1f2f3` | `#ff8a80` / `#353b43` |
+
+Dark mode separates page canvas (`#23282e`) from cards (`#30363e`); automatic dark mode uses the same values as the explicit theme. Badge text meets 4.5:1 in both themes. Icons use currentColor, remain hidden from assistive technology, and never replace the written state. Forced-colors mode keeps system-colored text, outlines and icons.
 
 ### 3.2 Brand identity and logo flow
 
@@ -235,18 +246,18 @@ Use a shared `TicketStatus` model and one presentation mapping everywhere. Recom
 | Status | Label treatment | Additional cue |
 |---|---|---|
 | New | neutral subtle badge | inbox/new icon or “New” text |
-| Open | accent subtle badge | open-circle icon |
-| In progress | accent subtle badge | progress icon or “In progress” text |
+| Open | active-work surface | open-circle icon |
+| In progress | active-work surface | progress icon |
 | Waiting on user | warning subtle badge | pause/clock icon |
 | On hold | neutral subtle badge | pause icon or “On hold” text |
 | Resolved | success subtle badge | check icon |
 | Closed | neutral muted badge | lock/check icon |
 
-Status badges use text plus color and may include an icon. Do not invent a new color per workflow state. State transitions must provide immediate feedback and surface failures with recovery.
+Status and priority badges use the shared `TicketStatusBadge`, with visible text and a decorative outline icon from `NavigationIcon`. Do not invent a new color per workflow state. State transitions must provide immediate feedback and surface failures with recovery.
 
 ### 6.2 Priority
 
-Recommended initial priorities: Low, Normal, High, Urgent. Always display the written label. A compact icon or bar count may supplement it, but color alone is forbidden. Reserve danger styling for Urgent or a breached critical condition; High should not visually overwhelm every queue.
+Recommended initial priorities: Low, Normal, High, Urgent. Always display the written label. A compact outline icon accompanies each label; color alone is forbidden. Reserve danger styling for Urgent or a breached critical condition; High should not visually overwhelm every queue.
 
 ### 6.3 SLA and time
 
@@ -511,7 +522,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Palette fidelity
 
-Do not use pink or rose tints for brand, selection, chat bubbles, or errors. Light selections use cool neutral surfaces; dark selections use elevated gunmetal. Dark-mode links and focus use palette amber for contrast. The navigation wordmark uses exact American red `#BD212C` in both themes, independently of functional link colors. Error labels use red in light mode and off-white on neutral dark surfaces, with explicit error text and icons.
+Do not use pink or rose tints for brand, selection, chat bubbles, or errors. Light selections use cool neutral surfaces; dark selections use elevated gunmetal. Dark-mode links and focus use palette amber for contrast. The navigation wordmark uses exact American red `#BD212C` in both themes, independently of functional link colors. Error labels use the semantic danger color in both themes on neutral surfaces, with explicit error text and icons.
 
 ### Activity history readability
 
@@ -546,3 +557,13 @@ Coordinate presents the employee announcement, incident summary and response che
 Extend the existing employee announcement with a written status (Investigating, Working on a fix, Monitoring, Resolved). Keep optional employee instructions and a committed next-update time in a native disclosure. Publish these fields together with the message using the existing explicit publication, retry receipt and delivery flow; never copy internal impact, ownership or response work into public content. Home notices retain their compact card, quiet timestamp and wrapping layout.
 
 Keep optional Disruption started and Service restored fields within incident editing, using the shared timezone-aware date control and explicit handling of ambiguous local times. Do not infer these times from ticket creation/resolution. Incident reporting shows the last 30 days and all currently open incidents, with a small metric row and collapsed breakdown/details disclosures. Distinguish ticket resolution from service downtime, show missing data and sample counts, and paginate incident details. Reuse shared surfaces, written severity badges, native disclosures and existing typography; no new design tokens.
+
+### Queue scanning and live workload
+
+Keep each staff queue subject as the first line, with ticket number, requester and team together beneath it. Classification stays alongside the subject; staff tags remain in ticket details. Display overdue due dates alongside the SLA summary, not in identity metadata. Dashboard shortcuts show exact active-work counts for the current assignee, unassigned tickets, breached SLAs and unassigned open chats. Explain zero counts, reserve Loading while pending, and show Unavailable with retry on failures. Never substitute zero for a failed count.
+
+### Shared icon and stylesheet ownership
+
+Use `NavigationIcon` for interface glyphs, including status/priority, SLA cues, navigation, search, theme controls, empty states, close and directional actions. Keep visible action labels and accessible names; decorative icons are hidden from assistive technology. Report chart SVGs remain data visualizations, separate from interface icons. Internal notes use the brand-colored edge and explicit audience labels.
+
+Declare cascade layers in the order tokens, base, components, pages. Shared tokens, reset, shell and control primitives remain in globals.css. Feature styles live in CSS Modules, composed onto the root product scope. During migration, retain existing domain class names beneath a zero-specificity local scope so component specificity and responsive selectors stay stable. Feature modules share the components layer; pages is reserved for deliberate route overrides. Merge repeated base definitions within the same responsive condition; retain distinct media conditions and contextual controls. Validate declaration/condition parity and rendered screens when moving styles.

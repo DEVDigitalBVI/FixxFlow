@@ -205,7 +205,7 @@ test('employee inventory managers can read linked inventory history without inte
 test('full activity archive reuses readable activity rows and retains pagination', async () => {
   const html = renderToStaticMarkup(await setup('technician').render({ view: 'activity' }));
   assert.match(html, /aria-label="Ticket activity, newest first"/);
-  assert.match(html, /Open → In progress/);
+  assert.match(html, /Open to In progress/);
   assert.match(html, /Support/);
   assert.match(html, /Earlier activity/);
   assert.equal((html.match(/class="ticket-activity-item"/g) ?? []).length, 50);

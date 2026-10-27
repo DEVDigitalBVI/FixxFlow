@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { PageHeader } from '@/components/ui/page-header';
 import { LookupSelect } from '@/features/lookups/lookup-select';
@@ -16,6 +17,7 @@ import { QUEUE_VIEW_KEYS, queueViewQuery } from '@/features/tickets/queue-views'
 import { SavedQueueViews } from '@/features/tickets/saved-queue-views';
 import { RelativeAge, SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { TicketDetail } from '@/features/tickets/ticket-detail';
+import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
 import { isUuid } from '@/lib/ids';
@@ -204,10 +206,10 @@ export default async function TicketsPage({
                           #{ticket.ticket_number} · Updated <Timestamp value={ticket.updated_at} />
                         </small>
                       </span>
-                      <span className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}>
-                        {ticketStatuses[ticket.status].label}
+                      <TicketStatusBadge status={ticket.status} />
+                      <span aria-hidden="true">
+                        <NavigationIcon name="arrowRight" className="inline-icon" size={16} />
                       </span>
-                      <span aria-hidden="true">→</span>
                     </Link>
                   </li>
                 ))}
@@ -493,7 +495,9 @@ export default async function TicketsPage({
                       aria-label={`Remove ${item.key === 'q' ? 'search' : item.key} filter: ${item.label}`}
                     >
                       <span>{item.label}</span>
-                      <span aria-hidden="true">×</span>
+                      <span aria-hidden="true">
+                        <NavigationIcon name="close" className="inline-icon" size={16} />
+                      </span>
                     </Link>
                   </li>
                 ))}
@@ -618,56 +622,33 @@ export default async function TicketsPage({
                               <Link
                                 className="ticket-link"
                                 data-queue-ticket={ticket.id}
+                                title={ticket.title}
                                 href={detailHref(ticket.id)}
                               >
-                                <strong>{ticket.title}</strong>
-                                {ticket.ticket_type === 'incident' && (
-                                  <span className="ticket-badge tone-info">Incident</span>
-                                )}
-                                {ticket.request_kind === 'inventory' && (
-                                  <small>Inventory request</small>
-                                )}
-                                <span>
+                                <span className="ticket-subject-line">
+                                  <strong>{ticket.title}</strong>
+                                  {ticket.ticket_type === 'incident' && (
+                                    <span className="ticket-badge tone-info">Incident</span>
+                                  )}
+                                  {ticket.request_kind === 'inventory' && (
+                                    <small>Inventory request</small>
+                                  )}
+                                </span>
+                                <span className="ticket-row-meta">
                                   #{ticket.ticket_number} ·{' '}
                                   <span className="sr-only">Requested by </span>
                                   {names.get(ticket.requester_id) ?? 'Unknown requester'} ·{' '}
                                   {ticket.team_id
                                     ? (teamNames.get(ticket.team_id) ?? 'Team')
                                     : 'No team'}
-                                  {ticket.due_at &&
-                                  new Date(ticket.due_at) < new Date() &&
-                                  active.includes(ticket.status)
-                                    ? ' · Overdue'
-                                    : ''}
                                 </span>
                               </Link>
-                              {ticket.tags.length > 0 && (
-                                <p className="ticket-row-tags">
-                                  <span className="sr-only">Tags: </span>
-                                  {ticket.tags.slice(0, 3).map(({ tag: label }) => (
-                                    <span key={label} className="ticket-tag">
-                                      {label}
-                                    </span>
-                                  ))}
-                                  {ticket.tags.length > 3 && (
-                                    <span className="muted">+{ticket.tags.length - 3} more</span>
-                                  )}
-                                </p>
-                              )}
                             </td>
                             <td data-label="Status">
-                              <span
-                                className={`ticket-badge tone-${ticketStatuses[ticket.status].tone}`}
-                              >
-                                {ticketStatuses[ticket.status].label}
-                              </span>
+                              <TicketStatusBadge status={ticket.status} />
                             </td>
                             <td data-label="Priority">
-                              <span
-                                className={`ticket-badge tone-${ticketPriorities[ticket.priority].tone}`}
-                              >
-                                {ticketPriorities[ticket.priority].label}
-                              </span>
+                              <TicketStatusBadge priority={ticket.priority} />
                             </td>
                             <td data-label="Assigned to">
                               {ticket.assigned_technician_id ? (
@@ -678,6 +659,11 @@ export default async function TicketsPage({
                             </td>
                             <td data-label="SLA">
                               <SlaIndicator ticket={ticket} compact />
+                              {ticket.due_at &&
+                                new Date(ticket.due_at) < new Date() &&
+                                active.includes(ticket.status) && (
+                                  <span className="ticket-manual-overdue">Due date overdue</span>
+                                )}
                             </td>
                             <td data-label="Updated" className="muted">
                               <RelativeAge value={ticket.updated_at} />
@@ -690,7 +676,7 @@ export default async function TicketsPage({
                 ) : (
                   <div className="empty-state ticket-queue-empty">
                     <span className="empty-icon" aria-hidden="true">
-                      ✓
+                      <NavigationIcon name="check" className="inline-icon" size={16} />
                     </span>
                     <h3>
                       {appliedFilters.length

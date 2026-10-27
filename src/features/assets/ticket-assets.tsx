@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
 
@@ -44,7 +45,10 @@ export async function TicketAssets({ ticketId }: { ticketId: string }) {
             <p className="muted">No equipment linked to this ticket.</p>
           )}
           <AssetLinkForm ticketId={ticketId} />
-          <Link href={`/app/assets?ticket=${ticketId}`}>Browse assets to link →</Link>
+          <Link href={`/app/assets?ticket=${ticketId}`}>
+            Browse assets to link{' '}
+            <NavigationIcon name="arrowRight" className="inline-icon" size={16} />
+          </Link>
         </>
       )}
     </section>

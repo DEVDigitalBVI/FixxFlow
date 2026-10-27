@@ -1,0 +1,164 @@
+@layer components {
+  :where(.scope) :global(.nav-list) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+  :where(.scope) :global(.nav-group),
+  :where(.scope) :global(.staff-more-nav) {
+    min-width: 0;
+    padding: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--color-surface) 80%, var(--color-surface-subtle));
+  }
+  :where(.scope) :global(.nav-link) {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: var(--color-neutral);
+    text-decoration: none;
+    font-weight: 600;
+    transition:
+      color 160ms ease-out,
+      background-color 160ms ease-out;
+  }
+  :where(.scope) :global(.nav-link svg) {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  :where(.scope) :global(.nav-link:hover) {
+    color: var(--color-text);
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.nav-link[aria-current='page']) {
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    box-shadow: inset 3px 0 var(--color-accent);
+  }
+  :where(.scope) :global(.staff-more-nav > summary) {
+    list-style: none;
+    cursor: pointer;
+  }
+  :where(.scope) :global(.staff-more-nav > summary::-webkit-details-marker) {
+    display: none;
+  }
+  :where(.scope) :global(.staff-more-nav > summary::after) {
+    content: '+';
+    margin-left: auto;
+    color: var(--color-text-muted);
+    font-size: 16px;
+    font-weight: 400;
+  }
+  :where(.scope) :global(.staff-more-nav[open] > summary::after) {
+    content: '−';
+  }
+  :where(.scope) :global(.staff-more-nav > .nav-list) {
+    margin-top: 3px;
+    padding-left: 8px;
+  }
+  @media (max-width: 1199px) {
+    :where(.scope) :global(.nav-link) {
+      justify-content: center;
+      padding-inline: 0;
+    }
+  }
+  @media (max-width: 1199px) {
+    :where(.scope) :global(.staff-more-nav > .nav-list) {
+      padding-left: 0;
+    }
+  }
+  @media (max-width: 1199px) {
+    :where(.scope) :global(.staff-more-nav > summary::after) {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.nav-list) {
+      display: grid;
+      gap: 5px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.nav-link) {
+      width: 100%;
+      min-height: 48px;
+      justify-content: flex-start;
+      padding: 11px 12px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.nav-link span) {
+      display: inline;
+    }
+  }
+  :where(.scope) :global(.staff-more-nav .nav-account-start) {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+  :where(.scope) :global(.nav-close) {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.nav-close) {
+      display: flex;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+  }
+  :where(.scope) :global(.nav-link[aria-current='page']) {
+    font-weight: 600;
+  }
+  :where(.scope) :global(.nav-link) {
+    font-weight: 500;
+  }
+  :where(.scope) :global(.nav-link[aria-current='page']) {
+    font-weight: 700;
+  }
+  :where(.scope) :global(.staff-more-nav > summary) {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 10px 12px;
+    color: var(--color-text-muted);
+    border-radius: var(--radius-control);
+  }
+  :where(.scope) :global(.staff-more-nav > summary svg) {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  :where(.scope) :global(.staff-more-nav > summary:has([data-active])) {
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+  }
+  :where(.scope) :global(.nav-sign-out) {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.nav-sign-out) {
+      display: block;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border);
+    }
+  }
+  :where(.scope) :global(.staff-more-nav .theme-control) {
+    margin: 8px 0 4px;
+    padding: 12px 12px 0;
+    border-top: 1px solid var(--color-border);
+    justify-items: start;
+  }
+}

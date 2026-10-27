@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
+import { NavigationIcon, type NavigationIconName } from '@/components/navigation/navigation-icon';
 import { formatRelativeAge, formatTimestamp } from '@/features/timezones/model';
 import { Timestamp, useTimezone } from '@/features/timezones/provider';
 
@@ -21,15 +22,15 @@ export function SlaClock({ initialNow, children }: { initialNow: number; childre
   }, []);
   return <Clock value={now}>{children}</Clock>;
 }
-const presentation: Record<SlaState, { tone: string; icon: string }> = {
-  on_track: { tone: 'neutral', icon: '◷' },
-  warning: { tone: 'warning', icon: '⚠' },
-  breached: { tone: 'danger', icon: '!' },
-  met: { tone: 'success', icon: '✓' },
-  missed: { tone: 'danger', icon: '!' },
-  missing: { tone: 'warning', icon: '⚠' },
-  unavailable: { tone: 'neutral', icon: '—' },
-  paused: { tone: 'neutral', icon: 'Ⅱ' },
+const presentation: Record<SlaState, { tone: string; icon: NavigationIconName }> = {
+  on_track: { tone: 'neutral', icon: 'clock' },
+  warning: { tone: 'warning', icon: 'alert' },
+  breached: { tone: 'danger', icon: 'alert' },
+  met: { tone: 'success', icon: 'check' },
+  missed: { tone: 'danger', icon: 'alert' },
+  missing: { tone: 'warning', icon: 'alert' },
+  unavailable: { tone: 'neutral', icon: 'minus' },
+  paused: { tone: 'neutral', icon: 'pause' },
 };
 function Objective({ label, result }: { label: string; result: SlaResult }) {
   const style = presentation[result.state];
@@ -37,7 +38,7 @@ function Objective({ label, result }: { label: string; result: SlaResult }) {
     <div className={`sla-objective sla-${style.tone}`}>
       <strong>{label} SLA</strong>
       <div className="sla-label">
-        <span aria-hidden="true">{style.icon}</span>
+        <NavigationIcon name={style.icon} className="inline-icon" size={16} />
         <span>{result.label}</span>
       </div>
       {result.deadline && (
@@ -73,7 +74,7 @@ export function SlaIndicator({
     return (
       <div className={`sla-indicator sla-compact sla-${style.tone}`} title={detail}>
         <div className="sla-label" aria-hidden="true">
-          <span>{style.icon}</span>
+          <NavigationIcon name={style.icon} className="inline-icon" size={16} />
           <span>{summary.text}</span>
         </div>
         <span className="sr-only">{detail}</span>

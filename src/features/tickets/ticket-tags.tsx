@@ -1,4 +1,5 @@
 import { addTicketTag, removeTicketTag } from '@/app/app/tickets/organize-actions';
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { ActionForm } from '@/components/ui/action-form';
 import { SubmitButton } from '@/components/ui/submit-button';
 
@@ -36,7 +37,9 @@ export function TicketTags({
                   title={`Remove tag ${tag}`}
                   pendingLabel="…"
                 >
-                  <span aria-hidden="true">×</span>
+                  <span aria-hidden="true">
+                    <NavigationIcon name="close" className="inline-icon" size={16} />
+                  </span>
                 </SubmitButton>
               </ActionForm>
             </li>

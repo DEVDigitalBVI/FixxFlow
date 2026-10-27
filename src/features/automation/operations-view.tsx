@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { Timestamp } from '@/features/timezones/provider';
 
 import {
@@ -20,7 +21,17 @@ const seconds = (value: number | null) =>
 export function HealthBadge({ state }: { state: HealthState }) {
   return (
     <span className="badge">
-      {state === 'healthy' ? '✓ ' : state === 'degraded' || state === 'delayed' ? '⚠ ' : '— '}
+      <NavigationIcon
+        name={
+          state === 'healthy'
+            ? 'check'
+            : state === 'degraded' || state === 'delayed'
+              ? 'alert'
+              : 'minus'
+        }
+        className="inline-icon"
+        size={16}
+      />
       {healthLabels[state]}
     </span>
   );
@@ -233,11 +244,16 @@ export function OperationsOverviewView({ data }: { data: OperationsOverview }) {
                   <p>Last scanned: {date(rule.lastScannedAt)}</p>
                   {rule.trigger === 'ticket.sla_approaching' && (
                     <p>
-                      {!data.processingActive
-                        ? 'Processing off · risk is not an active alert'
-                        : rule.atRisk
-                          ? '⚠ Window at risk or insufficient progress history'
-                          : 'No window risk observed'}{' '}
+                      {!data.processingActive ? (
+                        'Processing off · risk is not an active alert'
+                      ) : rule.atRisk ? (
+                        <>
+                          <NavigationIcon name="alert" className="inline-icon" size={16} /> Window
+                          at risk or insufficient progress history
+                        </>
+                      ) : (
+                        'No window risk observed'
+                      )}{' '}
                       · {rule.durationMinutes} minute window
                     </p>
                   )}

@@ -15,6 +15,7 @@ import {
 } from '../../../tests/fixtures/automation.mjs';
 import { load } from '../../../tests/helpers/load-module.mjs';
 import { searchNavigation } from '../../../tests/helpers/search-navigation.mjs';
+import { productStyles } from '../../../tests/helpers/styles.mjs';
 
 const model = load('src/features/automation/ui-model.ts');
 const navigation = {
@@ -460,10 +461,7 @@ test('conflicts and recoverable validation leave the mounted draft and provide f
   assert.match(builder, /aria-live="polite"/);
   const form = fs.readFileSync('src/components/ui/action-form.tsx', 'utf8');
   assert.match(form, /feedback.current\?\.focus/);
-  const css = fs
-    .readFileSync('src/app/globals.css', 'utf8')
-    .replace(/\s+/g, ' ')
-    .replace(/'/g, '"');
+  const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   assert.match(
     css,
     /@media \(max-width: 767px\)[\s\S]*automation-condition-grid[\s\S]*grid-template-columns: minmax\(0,\s*1fr\)/,

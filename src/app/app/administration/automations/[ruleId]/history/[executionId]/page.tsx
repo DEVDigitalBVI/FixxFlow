@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { executionError, executionRecord } from '@/features/automation/execution-records';
 import { AutomationHeader } from '@/features/automation/page-parts';
 import {
@@ -64,13 +65,19 @@ export default async function ExecutionPage({
               return (
                 <li key={condition.id}>
                   <strong>
-                    {outcome?.status === 'passed'
-                      ? '✓ Passed'
-                      : outcome?.status === 'failed'
-                        ? '✕ Not met'
-                        : outcome?.status === 'error'
-                          ? 'Could not evaluate'
-                          : 'Not evaluated'}
+                    {outcome?.status === 'passed' ? (
+                      <>
+                        <NavigationIcon name="check" className="inline-icon" size={16} /> Passed
+                      </>
+                    ) : outcome?.status === 'failed' ? (
+                      <>
+                        <NavigationIcon name="close" className="inline-icon" size={16} /> Not met
+                      </>
+                    ) : outcome?.status === 'error' ? (
+                      'Could not evaluate'
+                    ) : (
+                      'Not evaluated'
+                    )}
                   </strong>{' '}
                   · {conditionDescription(condition, data.labels)}
                 </li>
@@ -93,15 +100,21 @@ export default async function ExecutionPage({
               <li key={action.id}>
                 <strong>{actionDescription(action, data.labels)}</strong>
                 <p>
-                  {step?.status === 'succeeded'
-                    ? '✓ Completed'
-                    : step?.status === 'failed'
-                      ? '✕ Failed'
-                      : step?.status === 'not_attempted'
-                        ? '— Not executed'
-                        : step?.status === 'running'
-                          ? 'Processing'
-                          : 'Waiting'}
+                  {step?.status === 'succeeded' ? (
+                    <>
+                      <NavigationIcon name="check" className="inline-icon" size={16} /> Completed
+                    </>
+                  ) : step?.status === 'failed' ? (
+                    <>
+                      <NavigationIcon name="close" className="inline-icon" size={16} /> Failed
+                    </>
+                  ) : step?.status === 'not_attempted' ? (
+                    '— Not executed'
+                  ) : step?.status === 'running' ? (
+                    'Processing'
+                  ) : (
+                    'Waiting'
+                  )}
                   {step?.error_code ? ` · ${executionError(step.error_code)?.message}` : ''}
                 </p>
                 {step?.status === 'not_attempted' && (

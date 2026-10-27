@@ -1,3 +1,5 @@
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
+
 const steps = ['Create account', 'Verify email', 'Set up workspace'];
 export function SignupProgress({ current }: { current: 1 | 2 | 3 }) {
   return (
@@ -14,7 +16,7 @@ export function SignupProgress({ current }: { current: 1 | 2 | 3 }) {
               }
               aria-hidden="true"
             >
-              {index + 1 < current ? '✓' : index + 1}
+              {index + 1 < current ? <NavigationIcon name="check" size={16} /> : index + 1}
             </span>
             <span className="sr-only">
               {label}

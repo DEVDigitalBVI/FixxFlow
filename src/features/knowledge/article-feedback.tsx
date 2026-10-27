@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { rateArticle, recordArticleView } from '@/app/app/help/actions';
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 
 export function ArticleFeedback({
   articleId,
@@ -43,7 +44,8 @@ export function ArticleFeedback({
           disabled={busy}
           onClick={() => vote(true)}
         >
-          Helpful{selected === true ? ' ✓' : ''}
+          Helpful
+          {selected === true && <NavigationIcon name="check" className="inline-icon" size={16} />}
         </button>
         <button
           className="button button-secondary"
@@ -51,7 +53,8 @@ export function ArticleFeedback({
           disabled={busy}
           onClick={() => vote(false)}
         >
-          Not helpful{selected === false ? ' ✓' : ''}
+          Not helpful
+          {selected === false && <NavigationIcon name="check" className="inline-icon" size={16} />}
         </button>
       </div>
       <p role="status">{busy ? 'Saving feedback…' : message}</p>

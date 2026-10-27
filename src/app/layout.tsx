@@ -9,6 +9,8 @@ import { ThemeController } from '@/features/theme/theme-control';
 
 import './globals.css';
 
+import productStyles from './product.module.css';
+
 const inter = localFont({
   src: [
     {
@@ -53,7 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>
+      <body className={productStyles.scope}>
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>

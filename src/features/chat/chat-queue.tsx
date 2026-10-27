@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { Avatar } from '@/components/ui/avatar';
+import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
 
 import { ChatTime } from './chat-time';
 import {
@@ -115,11 +116,7 @@ export function ChatQueue({
                         : 'No messages yet.'}
                     </p>
                     <div className="chat-conversation-meta">
-                      <span
-                        className={`ticket-badge tone-${chat.status === 'open' ? 'blue' : 'slate'}`}
-                      >
-                        {chat.status === 'open' ? 'Open' : 'Closed'}
-                      </span>
+                      <TicketStatusBadge status={chat.status === 'open' ? 'open' : 'closed'} />
                       {!personal && (
                         <span>
                           {chat.assigned_technician_id

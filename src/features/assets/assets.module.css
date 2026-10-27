@@ -1,0 +1,377 @@
+@layer components {
+  :where(.scope) :global(.asset-link-list li) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  :where(.scope) :global(.asset-facts) {
+    display: grid;
+    gap: 8px;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.asset-facts dt) {
+    font-weight: 600;
+  }
+  :where(.scope) :global(.asset-facts dd) {
+    margin: 0 0 12px;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.assets-page) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  :where(.scope) :global(.asset-inventory) {
+    min-width: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+  }
+  :where(.scope) :global(.asset-inventory-heading),
+  :where(.scope) :global(.asset-inventory-footer) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px 24px;
+  }
+  :where(.scope) :global(.asset-inventory-heading h2) {
+    margin: 0 0 4px;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  :where(.scope) :global(.asset-inventory-heading p) {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.asset-inventory-heading > span),
+  :where(.scope) :global(.asset-inventory-footer) {
+    font-size: 13px;
+  }
+  :where(.scope) :global(.asset-inventory-toolbar) {
+    padding: 20px 24px;
+    background: var(--color-surface-subtle);
+    border-block: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.asset-search) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: end;
+  }
+  :where(.scope) :global(.asset-search-query) {
+    flex: 1 1 320px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.asset-search-lifecycle) {
+    flex: 0 1 180px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.asset-inventory-toolbar .live-search-status) {
+    margin: 12px 0 0;
+    font-size: 12px;
+  }
+  :where(.scope) :global(.asset-inventory .table-region) {
+    border: 0;
+    border-radius: 0;
+  }
+  :where(.scope) :global(.asset-inventory .table-region:focus-visible) {
+    outline-offset: -3px;
+  }
+  :where(.scope) :global(.asset-inventory-table .asset-name) {
+    font-weight: 600;
+  }
+  :where(.scope) :global(.asset-tag) {
+    color: var(--color-text-muted);
+    margin-top: 4px;
+    font-size: 12px;
+  }
+  :where(.scope) :global(.asset-row-actions),
+  :where(.scope) :global(.asset-pagination) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  :where(.scope) :global(.asset-status-available) {
+    color: var(--color-success);
+    background: var(--color-success-subtle);
+  }
+  :where(.scope) :global(.asset-status-in_use) {
+    color: var(--color-active);
+    background: var(--color-active-surface);
+  }
+  :where(.scope) :global(.asset-status-repair) {
+    color: var(--color-warning);
+    background: var(--color-warning-subtle);
+  }
+  :where(.scope) :global(.asset-status-retired) {
+    color: var(--color-text-muted);
+    background: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.asset-inventory-footer) {
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.asset-inventory-feedback) {
+    padding: 24px;
+  }
+  :where(.scope) :global(.asset-empty h3) {
+    font-size: 20px;
+    margin: 0;
+  }
+  :where(.scope) :global(.asset-ticket-context) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  :where(.scope) :global(.asset-ticket-context p) {
+    margin: 4px 0 0;
+  }
+  :where(.scope) :global(.asset-editor) {
+    display: grid;
+    gap: 24px;
+  }
+  :where(.scope) :global(.asset-record-header) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.asset-record-header h2) {
+    margin: 0 0 8px;
+    font-size: 18px;
+  }
+  :where(.scope) :global(.asset-record-header p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.asset-overview-grid) {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+  :where(.scope) :global(.asset-overview-grid > section) {
+    padding: 24px;
+    min-width: 0;
+    border-left: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.asset-overview-grid > section:first-child) {
+    border-left: 0;
+    padding-left: 0;
+  }
+  :where(.scope) :global(.asset-overview-grid > section:last-child) {
+    padding-right: 0;
+  }
+  :where(.scope) :global(.asset-overview-grid h3) {
+    font-size: 14px;
+    margin: 0 0 20px;
+  }
+  :where(.scope) :global(.asset-record-facts) {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+  }
+  :where(.scope) :global(.asset-record-facts dt) {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  :where(.scope) :global(.asset-record-facts dd) {
+    font-weight: 500;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.asset-editor-intro h2),
+  :where(.scope) :global(.asset-history h2) {
+    margin: 0 0 8px;
+    font-size: 18px;
+  }
+  :where(.scope) :global(.asset-editor p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.asset-form-section) {
+    min-width: 0;
+    margin: 0;
+    padding: 20px 0 0;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.asset-form-section legend) {
+    padding: 0 12px 0 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.asset-form-section .form-grid) {
+    margin-block: 16px;
+  }
+  :where(.scope) :global(.asset-editor-actions) {
+    border-top: 1px solid var(--color-border);
+    padding-top: 24px;
+  }
+  :where(.scope) :global(.asset-history-list) {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+  }
+  :where(.scope) :global(.asset-history-list li) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 16px;
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.asset-history-list li > div) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.asset-history-list p) {
+    margin: 4px 0 0;
+    font-weight: 600;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-record-header) {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-overview-grid) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-overview-grid > section),
+    :where(.scope) :global(.asset-overview-grid > section:first-child),
+    :where(.scope) :global(.asset-overview-grid > section:last-child) {
+      padding: 24px 0;
+      border-left: 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-overview-grid > section:last-child) {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-record-facts) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-inventory-heading),
+    :where(.scope) :global(.asset-inventory-toolbar),
+    :where(.scope) :global(.asset-inventory-footer) {
+      padding: 20px 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-search-query) {
+      flex-basis: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-search-lifecycle) {
+      flex: 1 1 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-inventory-table td) {
+      overflow-wrap: anywhere;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-row-actions) {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-row-actions > a),
+    :where(.scope) :global(.asset-row-actions > form) {
+      flex: 1 1 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-inventory-table td:last-child) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-inventory-table td:last-child::before) {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-pagination) {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-editor-actions) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-history-list li) {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+  :where(.scope) :global(.asset-import-guide) {
+    display: grid;
+    gap: 16px;
+  }
+  :where(.scope) :global(.asset-import-guide dt) {
+    font-weight: 600;
+  }
+  :where(.scope) :global(.asset-import-guide dd) {
+    margin: 4px 0 0;
+    color: var(--color-text-muted);
+    max-width: 75ch;
+  }
+  :where(.scope) :global(.asset-import-issues) {
+    max-height: 320px;
+    overflow-y: auto;
+    padding-left: 24px;
+  }
+  :where(.scope) :global(.asset-import-issues li) {
+    margin-block: 8px;
+  }
+  :where(.scope) :global(.asset-import-table) {
+    min-width: 1500px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.asset-import-table) {
+      min-width: 0;
+    }
+  }
+  :where(.scope) :global(.asset-import h2) {
+    margin: 0 0 8px;
+    font-size: 18px;
+    line-height: 24px;
+  }
+  :where(.scope) :global(.asset-import summary) {
+    min-height: 44px;
+    padding-block: 12px;
+    cursor: pointer;
+  }
+  :where(.scope) :global(.asset-import input[type='file']) {
+    min-width: 0;
+    max-width: 100%;
+  }
+  :where(.scope) :global(.asset-inventory-footer .inventory-facts) {
+    width: 100%;
+    margin: 0;
+  }
+}

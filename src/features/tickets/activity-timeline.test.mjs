@@ -28,19 +28,19 @@ const event = (action, details) => ({
 test('activity renders recorded changes with readable labels and no raw identifiers', () => {
   assert.equal(
     activityDetail(event('status_changed', { from: 'open', to: 'in_progress' }), names),
-    'Open → In progress',
+    'Open to In progress',
   );
   assert.equal(
     activityDetail(event('priority_changed', { from: 'normal', to: 'critical' }), names),
-    'Normal → Urgent',
+    'Normal to Urgent',
   );
   assert.equal(
     activityDetail(event('assignment_changed', { from: null, to: 'worker' }), names),
-    'Unassigned → Taylor',
+    'Unassigned to Taylor',
   );
   assert.equal(
     activityDetail(event('assignment_changed', { from: 'missing-id', to: null }), names),
-    'Staff member → Unassigned',
+    'Staff member to Unassigned',
   );
   assert.equal(activityDetail(event('details_updated', {}), names), null);
   assert.equal(
@@ -66,7 +66,7 @@ test('shared activity rows keep semantic list order, timestamps and escaped cont
     React.createElement(ActivityTimeline, { items, names: new Map([['actor', '<Alex>']]) }),
   );
   assert.match(html, /role="list" aria-label="Ticket activity, newest first"/);
-  assert.match(html, /Open → Resolved/);
+  assert.match(html, /Open to Resolved/);
   assert.match(html, /&lt;Alex&gt;/);
   assert.match(html, /<time dateTime="2026-10-24T00:00:00Z"/);
   assert.equal((html.match(/class="ticket-activity-item"/g) ?? []).length, 2);
@@ -87,7 +87,7 @@ test('employee reopening history identifies the action and shows the recorded re
     }),
   );
   assert.match(html, /reopened the ticket/);
-  assert.match(html, /Closed → Open/);
+  assert.match(html, /Closed to Open/);
   assert.match(html, /Reason:/);
   assert.match(html, /Still broken &lt;script&gt;bad&lt;\/script&gt;/);
   assert.doesNotMatch(html, /<script>/);

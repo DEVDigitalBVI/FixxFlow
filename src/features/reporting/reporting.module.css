@@ -1,0 +1,613 @@
+@layer components {
+  :where(.scope) :global(.report-metrics) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 16px 0 24px;
+  }
+  :where(.scope) :global(.report-metrics dt) {
+    font-weight: 600;
+  }
+  :where(.scope) :global(.report-metrics dd) {
+    margin: 8px 0;
+    font-size: 28px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.scope) :global(.report-metrics p) {
+    margin: 4px 0 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+  }
+  :where(.scope) :global(.report-shortcuts) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  :where(.scope) :global(.report-download) {
+    margin-block: 16px 24px;
+  }
+  :where(.scope) :global(.report-download form) {
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  :where(.scope) :global(.report-download .field) {
+    flex: 0 1 220px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.report-download > p) {
+    margin-block: 8px 0;
+    font-size: 13px;
+  }
+  :where(.scope) :global(.report-download > p:empty) {
+    display: none;
+  }
+  :where(.scope) :global(.report-download .alert) {
+    margin-top: 12px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-download .field),
+    :where(.scope) :global(.report-download button) {
+      flex: 1 1 100%;
+      width: 100%;
+    }
+  }
+  :where(.scope) :global(.report-chart-grid) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+  }
+  :where(.scope) :global(.report-chart) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.report-chart h3) {
+    font-size: 16px;
+    margin: 0;
+  }
+  :where(.scope) :global(.report-chart > p) {
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.report-chart svg) {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 16px;
+    overflow: visible;
+  }
+  :where(.scope) :global(.report-chart svg line) {
+    stroke-width: 2;
+  }
+  :where(.scope) :global(.report-series-0) {
+    stroke: var(--color-accent);
+    fill: var(--color-accent);
+  }
+  :where(.scope) :global(.report-series-1) {
+    stroke: var(--color-success);
+    fill: var(--color-success);
+    stroke-dasharray: 5 3;
+  }
+  :where(.scope) :global(.report-axis) {
+    stroke: var(--color-border-strong);
+  }
+  :where(.scope) :global(.report-axis-labels) {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.report-legend) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 0;
+    list-style: none;
+  }
+  :where(.scope) :global(.report-line-key) {
+    display: inline-block;
+    width: 24px;
+    border-top: 2px solid var(--color-accent);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  :where(.scope) :global(.report-line-key.report-series-1) {
+    border-color: var(--color-success);
+    border-top-style: dashed;
+  }
+  :where(.scope) :global(.report-chart summary) {
+    min-height: 44px;
+    padding: 12px 0;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.report-chart details) {
+    margin-top: 12px;
+  }
+  :where(.scope) :global(.report-data-region) {
+    max-height: min(24rem, 55vh);
+    overflow: auto;
+  }
+  :where(.scope) :global(.report-data-region thead th) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    box-shadow: 0 1px 0 var(--color-border);
+  }
+  :where(.scope) :global(.report-data-region th[scope='row']) {
+    white-space: nowrap;
+  }
+  :where(.scope) :global(.report-data-region td) {
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.scope) :global(.report-bars) {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 16px;
+  }
+  :where(.scope) :global(.report-bars li > div) {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  :where(.scope) :global(.report-bars li > div span) {
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.report-bars strong) {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.scope) :global(.report-bars small) {
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.report-bar-track) {
+    display: block;
+    margin-top: 6px;
+    height: 8px;
+    background: var(--color-surface-subtle);
+    border-radius: 4px;
+  }
+  :where(.scope) :global(.report-bar-track > span) {
+    display: block;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: inherit;
+  }
+  :where(.scope) :global(.report-empty) {
+    padding: 24px 0;
+    color: var(--color-text-muted);
+  }
+  @media (max-width: 999px) {
+    :where(.scope) :global(.report-chart-grid) {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-metrics) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-metrics .settings-card) {
+      padding: 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-axis-labels) {
+      flex-wrap: wrap;
+    }
+  }
+  @media (max-width: 359px) {
+    :where(.scope) :global(.report-metrics) {
+      grid-template-columns: 1fr;
+    }
+  }
+  :where(.scope) :global(.reports-page > section) {
+    margin-bottom: 32px;
+  }
+  :where(.scope) :global(.reports-page .tech-section-heading) {
+    border: 0;
+    padding: 0 0 16px;
+  }
+  :where(.scope) :global(.reports-page .report-metrics) {
+    margin: 0;
+  }
+  :where(.scope) :global(.report-toolbar) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  :where(.scope) :global(.report-toolbar h2) {
+    margin: 0;
+    font-size: 18px;
+  }
+  :where(.scope) :global(.report-toolbar p) {
+    margin: 4px 0;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.report-toolbar > div > .muted) {
+    font-size: 13px;
+  }
+  :where(.scope) :global(.report-toolbar .report-download) {
+    margin: 0;
+    max-width: 440px;
+  }
+  :where(.scope) :global(.report-toolbar .report-download form) {
+    flex-wrap: nowrap;
+  }
+  :where(.scope) :global(.report-toolbar .report-download .field) {
+    flex: 1;
+  }
+  :where(.scope) :global(.report-toolbar .report-download button) {
+    flex-shrink: 0;
+  }
+  :where(.scope) :global(.report-sla-grid) {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 32px;
+  }
+  :where(.scope) :global(.report-sla-grid h3) {
+    margin: 0 0 16px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.report-sla-grid h3 .muted) {
+    font-weight: 400;
+  }
+  :where(.scope) :global(.report-sla-current) {
+    border-left: 1px solid var(--color-border);
+    padding-left: 32px;
+  }
+  :where(.scope) :global(.report-sla-count) {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0;
+  }
+  :where(.scope) :global(.report-sla-count strong) {
+    font-size: 32px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.scope) :global(.report-sla-count span) {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+  :where(.scope) :global(.report-footnote) {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin-bottom: 0;
+  }
+  :where(.scope) :global(.report-service-levels .report-empty) {
+    padding: 16px;
+    background: var(--color-surface-subtle);
+    border-radius: var(--radius-control);
+  }
+  :where(.scope) :global(.report-service-levels .report-empty strong) {
+    color: var(--color-text);
+    font-size: 14px;
+  }
+  :where(.scope) :global(.report-service-levels .report-empty p) {
+    margin: 4px 0 0;
+    font-size: 13px;
+  }
+  :where(.scope) :global(.reports-page .report-chart-grid) {
+    align-items: stretch;
+  }
+  :where(.scope) :global(.reports-page .report-chart) {
+    display: flex;
+    flex-direction: column;
+  }
+  :where(.scope) :global(.reports-page .report-chart > p) {
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 8px 0 0;
+  }
+  :where(.scope) :global(.reports-page .report-chart details) {
+    margin-top: auto;
+    padding-top: 16px;
+  }
+  :where(.scope) :global(.reports-page .report-chart summary) {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    padding: 10px 12px;
+    font-size: 13px;
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.reports-page .report-chart summary:hover) {
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.reports-page .report-chart details[open] summary) {
+    margin-bottom: 12px;
+  }
+  :where(.scope) :global(.reports-page .report-empty) {
+    font-size: 14px;
+  }
+  :where(.scope) :global(.report-template-card) {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  :where(.scope) :global(.report-template-card span) {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    line-height: 20px;
+  }
+  :where(.scope) :global(.report-template-card:hover) {
+    border-color: var(--color-border-strong);
+    background: var(--color-accent-subtle);
+  }
+  :where(.scope) :global(.report-template-card:focus-visible) {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  :where(.scope) :global(.report-type-options) {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+  :where(.scope) :global(.report-field-grid) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  :where(.scope) :global(.report-measure-options),
+  :where(.scope) :global(.report-check-grid) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-bottom: 16px;
+  }
+  :where(.scope) :global(.report-filter-panel) {
+    border-top: 1px solid var(--color-border);
+    padding-top: 12px;
+  }
+  :where(.scope) :global(.report-output-actions) {
+    justify-content: flex-end;
+    margin: 16px 0 24px;
+  }
+  :where(.scope) :global(.report-save-panel) {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+    gap: 32px;
+    align-items: start;
+  }
+  :where(.scope) :global(.report-save-panel h2),
+  :where(.scope) :global(.report-schedule-form h3) {
+    margin-top: 0;
+  }
+  :where(.scope) :global(.report-schedule-layout) {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+    gap: 24px;
+    align-items: start;
+  }
+  :where(.scope) :global(.report-schedule-form) {
+    display: grid;
+    gap: 12px;
+  }
+  :where(.scope) :global(.report-schedule-form .report-field-grid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  :where(.scope) :global(.report-schedule-list) {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  :where(.scope) :global(.report-schedule-list li) {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  :where(.scope) :global(.report-schedule-list p) {
+    margin: 4px 0 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.report-schedule-actions) {
+    display: flex;
+    flex-shrink: 0;
+    align-items: start;
+    gap: 8px;
+  }
+  :where(.scope) :global(.report-delivery-history) {
+    margin-top: 20px;
+  }
+  @media (max-width: 999px) {
+    :where(.scope) :global(.report-toolbar) {
+      align-items: stretch;
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+  @media (max-width: 999px) {
+    :where(.scope) :global(.report-toolbar .report-download) {
+      max-width: none;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-sla-grid) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-sla-current) {
+      border-left: 0;
+      border-top: 1px solid var(--color-border);
+      padding: 24px 0 0;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-toolbar .report-download form) {
+      flex-wrap: wrap;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-toolbar .report-download .field) {
+      flex-basis: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-output-actions) {
+      justify-content: stretch;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-output-actions > *),
+    :where(.scope) :global(.report-output-actions .report-download) {
+      width: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-schedule-list li),
+    :where(.scope) :global(.report-schedule-actions) {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+  :where(.scope) :global(.report-metrics .settings-card) {
+    box-shadow: none;
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.report-metrics dd > span) {
+    display: block;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+  }
+  :where(.scope) :global(.overview-page .report-metrics) {
+    margin: 0;
+  }
+  :where(.scope) :global(.report-metrics .settings-card) {
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.report-metrics dt) {
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+  :where(.scope) :global(.report-metrics dd) {
+    margin-bottom: 0;
+  }
+  :where(.scope) :global(.report-metrics dd > span) {
+    font-size: 32px;
+    font-weight: 600;
+    margin-block: 12px;
+  }
+  :where(.scope) :global(.report-metrics p) {
+    font-size: 12px;
+    line-height: 18px;
+    max-width: 32ch;
+  }
+  @media (min-width: 1200px) {
+    :where(.scope) :global(.overview-page .report-metrics) {
+      gap: 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-panel);
+      background: var(--color-surface);
+    }
+  }
+  @media (min-width: 1200px) {
+    :where(.scope) :global(.overview-page .report-metrics .settings-card) {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      padding: 24px;
+    }
+  }
+  @media (min-width: 1200px) {
+    :where(.scope) :global(.overview-page .report-metrics .settings-card:not(:nth-child(3n))) {
+      border-right: 1px solid var(--color-border);
+    }
+  }
+  @media (min-width: 1200px) {
+    :where(.scope) :global(.overview-page .report-metrics .settings-card:nth-child(n + 4)) {
+      border-top: 1px solid var(--color-border);
+    }
+  }
+  :where(.scope) :global(.report-choice-list) {
+    display: grid;
+    gap: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 4px;
+  }
+  :where(.scope) :global(.report-entity-filter) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.incident-report) {
+    display: grid;
+    gap: 16px;
+  }
+  :where(.scope) :global(.incident-report h2),
+  :where(.scope) :global(.incident-report p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.incident-report .section-heading-row) {
+    margin-bottom: 0;
+  }
+  :where(.scope) :global(.incident-report-metrics),
+  :where(.scope) :global(.incident-report-breakdowns) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 16px;
+    margin: 0;
+  }
+  :where(.scope) :global(.incident-report-metrics dt) {
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+  :where(.scope) :global(.incident-report-metrics dd) {
+    margin: 4px 0;
+    font-size: 24px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.scope) :global(.incident-report-list),
+  :where(.scope) :global(.incident-report-breakdowns ul) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  :where(.scope) :global(.incident-report-list > li) {
+    display: grid;
+    gap: 6px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.incident-report-breakdowns li) {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.incident-report summary) {
+    cursor: pointer;
+    min-height: 44px;
+    padding-block: 10px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.incident-report-metrics) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.incident-report-metrics > div) {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+}

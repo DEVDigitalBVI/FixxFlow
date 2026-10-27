@@ -1,0 +1,2044 @@
+@layer components {
+  :where(.scope) :global(.ticket-filters) {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) 190px 170px auto;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  :where(.scope) :global(.ticket-table) {
+    min-width: 980px;
+  }
+  :where(.scope) :global(.ticket-link) {
+    color: var(--color-text);
+    text-decoration: none;
+    display: grid;
+    gap: 2px;
+  }
+  :where(.scope) :global(.ticket-link:hover strong) {
+    color: var(--color-accent);
+  }
+  :where(.scope) :global(.ticket-link span:not(.ticket-badge):not(.ticket-subject-line)) {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+  :where(.scope) :global(.ticket-badge) {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 999px;
+    padding: 4px 9px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  :where(.scope) :global(.ticket-form) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  :where(.scope) :global(.ticket-topbar) {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.ticket-topbar a) {
+    text-decoration: none;
+  }
+  :where(.scope) :global(.ticket-heading) {
+    margin-bottom: 20px;
+  }
+  :where(.scope) :global(.ticket-heading h1) {
+    margin-top: 9px;
+  }
+  :where(.scope) :global(.ticket-heading-badges) {
+    display: flex;
+    gap: 7px;
+  }
+  :where(.scope) :global(.ticket-layout) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    align-items: start;
+    gap: 18px;
+  }
+  :where(.scope) :global(.ticket-main),
+  :where(.scope) :global(.ticket-sidebar) {
+    display: grid;
+    gap: 18px;
+  }
+  :where(.scope) :global(.ticket-main .settings-card h2),
+  :where(.scope) :global(.ticket-sidebar .settings-card h2) {
+    margin: 0 0 18px;
+    font-size: 17px;
+  }
+  :where(.scope) :global(.ticket-description) {
+    margin: 10px 0 0;
+    white-space: pre-wrap;
+    font-size: 15px;
+    line-height: 24px;
+  }
+  :where(.scope) :global(.conversation) {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  :where(.scope) :global(.ticket-update) {
+    display: grid;
+    gap: 13px;
+  }
+  :where(.scope) :global(.ticket-update label) {
+    display: grid;
+    gap: 6px;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.ticket-facts dl) {
+    margin: 0;
+    display: grid;
+    gap: 13px;
+  }
+  :where(.scope) :global(.ticket-facts dl div) {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  :where(.scope) :global(.ticket-facts dt) {
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.ticket-facts dd) {
+    margin: 0;
+    text-align: right;
+  }
+  @media (max-width: 1199px) {
+    :where(.scope) :global(.ticket-layout) {
+      grid-template-columns: minmax(0, 1fr) 300px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-filters),
+    :where(.scope) :global(.ticket-layout),
+    :where(.scope) :global(.ticket-form) {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-facts dd) {
+      max-width: 60%;
+      overflow-wrap: anywhere;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.portal-ticket-list .ticket-badge) {
+      order: 3;
+    }
+  }
+  :where(.scope) :global(.queue-views) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 4px;
+    overflow-x: auto;
+  }
+  :where(.scope) :global(.queue-views a[aria-current='page']) {
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    border-color: var(--color-accent);
+    font-weight: 700;
+    box-shadow: inset 0 -2px var(--color-accent);
+  }
+  :where(.scope) :global(.queue-filters) {
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  :where(.scope) :global(.queue-filters label) {
+    display: grid;
+    gap: 8px;
+    min-width: 130px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  :where(.scope) :global(.queue-filters label:first-of-type) {
+    flex: 1 1 220px;
+  }
+  :where(.scope) :global(.queue-filters .queue-check) {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 40px;
+    min-width: auto;
+    font-size: 13px;
+    color: var(--color-text);
+  }
+  :where(.scope) :global(.queue-check input),
+  :where(.scope) :global(.queue-row-check),
+  :where(.scope) :global(.ticket-table th input) {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--color-accent);
+  }
+  :where(.scope) :global(.queue-clear) {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+  }
+  :where(.scope) :global(.queue-count) {
+    margin: 10px 2px 0;
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+  :where(.scope) :global(.ticket-table) {
+    min-width: 880px;
+  }
+  :where(.scope) :global(.ticket-table th:first-child),
+  :where(.scope) :global(.ticket-table td:first-child) {
+    width: 46px;
+    text-align: center;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.tech-recent li a .ticket-badge) {
+      justify-self: start;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.queue-filters label),
+    :where(.scope) :global(.queue-filters label:first-of-type) {
+      flex: 1 1 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.queue-filters .queue-check) {
+      flex: 1 1 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-table td:first-child) {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-table td:first-child::before) {
+      content: 'Select';
+      display: inline;
+    }
+  }
+  :where(.scope) :global(.chat-inbox-toolbar .queue-views) {
+    margin: 0;
+    padding: 0;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.chat-inbox-toolbar .queue-views) {
+      gap: 8px;
+    }
+  }
+  :where(.scope) :global(.ticket-conversation) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0;
+    margin: 20px 0 24px;
+    list-style: none;
+  }
+  :where(.scope) :global(.conversation-item) {
+    width: min(90%, 68ch);
+    align-self: flex-start;
+    min-width: 0;
+  }
+  :where(.scope) :global(.conversation-item-own) {
+    align-self: flex-end;
+  }
+  :where(.scope) :global(.conversation-bubble) {
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px 12px 12px 0;
+    background: var(--color-surface-subtle);
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.conversation-item-own .conversation-bubble) {
+    border-radius: 12px 12px 0 12px;
+    background: var(--color-active-surface);
+  }
+  :where(.scope) :global(.conversation-item-note) {
+    width: min(100%, 72ch);
+    align-self: center;
+  }
+  :where(.scope) :global(.conversation-item-note .conversation-bubble) {
+    background: var(--color-note-surface);
+    border: 1px solid var(--color-border);
+    border-inline-start: 4px solid var(--color-note-border);
+    border-radius: 12px;
+  }
+  :where(.scope) :global(.conversation-bubble header) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    align-items: baseline;
+  }
+  :where(.scope) :global(.conversation-bubble header span),
+  :where(.scope) :global(.conversation-bubble time) {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+  :where(.scope) :global(.conversation-bubble time) {
+    margin-inline-start: auto;
+  }
+  :where(.scope) :global(.conversation-bubble p) {
+    white-space: pre-wrap;
+    margin: 12px 0 0;
+  }
+  :where(.scope) :global(.conversation-item-note .message-visibility) {
+    color: var(--color-accent);
+  }
+  :where(.scope) :global(.conversation-empty) {
+    padding: 24px 0;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.message-composer) {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.composer-internal_note) {
+    border-color: var(--color-border-strong);
+    border-top: 4px solid var(--color-note-border);
+    background: var(--color-note-surface);
+  }
+  :where(.scope) :global(.composer-modes) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  :where(.scope) :global(.composer-modes legend) {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+  }
+  :where(.scope) :global(.composer-modes label) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+    background: var(--color-surface);
+    cursor: pointer;
+  }
+  :where(.scope) :global(.composer-modes label:has(:checked)) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  :where(.scope) :global(.composer-modes input) {
+    accent-color: var(--color-active);
+  }
+  :where(.scope) :global(.composer-audience) {
+    display: grid;
+    gap: 4px;
+    color: var(--color-active);
+  }
+  :where(.scope) :global(.composer-internal_note .composer-audience) {
+    color: var(--color-accent);
+  }
+  :where(.scope) :global(.composer-audience span),
+  :where(.scope) :global(.composer-footer small) {
+    font-size: 13px;
+  }
+  :where(.scope) :global(.composer-footer) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  :where(.scope) :global(.composer-footer small) {
+    color: var(--color-text-muted);
+    flex: 1 1 200px;
+  }
+  :where(.scope) :global(.composer-result) {
+    margin: 0;
+    color: var(--color-success);
+  }
+  :where(.scope) :global(.composer-result:empty) {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.conversation-item) {
+      width: 95%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.conversation-item-note) {
+      width: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.conversation-bubble) {
+      padding: 12px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.conversation-bubble time) {
+      width: 100%;
+      margin-inline-start: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.message-composer) {
+      padding: 12px;
+    }
+  }
+  :where(.scope) :global(.sla-indicator) {
+    display: grid;
+    gap: 12px;
+  }
+  :where(.scope) :global(.sla-objective) {
+    display: grid;
+    gap: 4px;
+    padding-inline-start: 12px;
+    border-inline-start: 3px solid currentColor;
+    font-size: 13px;
+  }
+  :where(.scope) :global(.sla-objective strong) {
+    color: var(--color-text);
+    font-size: 12px;
+  }
+  :where(.scope) :global(.sla-neutral) {
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.sla-warning) {
+    color: var(--color-warning);
+  }
+  :where(.scope) :global(.sla-danger) {
+    color: var(--color-danger);
+  }
+  :where(.scope) :global(.sla-success) {
+    color: var(--color-success);
+  }
+  :where(.scope) :global(.sla-date) {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+  :where(.scope) :global(.sla-compact) {
+    min-width: 150px;
+    font-size: 13px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.sla-compact) {
+      min-width: 0;
+      width: 100%;
+      text-align: start;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-table) {
+      min-width: 0;
+    }
+  }
+  :where(.scope) :global(.sla-label) {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  :where(.scope) :global(.sla-label > span:last-child) {
+    color: var(--color-text);
+  }
+  :where(.scope) :global(.table .ticket-link) {
+    min-width: 200px;
+  }
+  :where(.scope) :global(.queue-views) {
+    flex-wrap: wrap;
+  }
+  :where(.scope) :global(.queue-views a) {
+    white-space: normal;
+  }
+  :where(.scope) :global(.queue-filters) {
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.queue-filters label) {
+    flex: 1 1 140px;
+  }
+  :where(.scope) :global(.queue-filters label:first-of-type) {
+    flex-basis: 280px;
+  }
+  :where(.scope) :global(.queue-count) {
+    margin-block: 12px;
+  }
+  :where(.scope) :global(.ticket-heading h1) {
+    line-height: 1.25;
+  }
+  @media (min-width: 768px) and (max-width: 1199px) {
+    :where(.scope) :global(.ticket-layout) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (min-width: 768px) and (max-width: 1199px) {
+    :where(.scope) :global(.ticket-sidebar) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-sidebar) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.queue-filters) {
+      gap: 12px;
+      padding: 12px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.queue-filters label),
+    :where(.scope) :global(.queue-filters label:first-of-type) {
+      flex-basis: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.queue-views) {
+      gap: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.queue-views a) {
+      padding-inline: 10px;
+      font-size: 13px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-table td[data-label='Ticket']) {
+      display: block;
+      text-align: left;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-table td[data-label='Ticket']::before) {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.table .ticket-link) {
+      min-width: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-table td[data-label='SLA']) {
+      grid-template-columns: 1fr;
+      text-align: left;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-table td[data-label='SLA'] > *) {
+      justify-self: stretch;
+    }
+  }
+  :where(.scope) :global(.queue-filter-options) {
+    flex: 1 1 100%;
+    order: 2;
+    min-width: 0;
+  }
+  :where(.scope) :global(.queue-filter-options summary),
+  :where(.scope) :global(.ticket-sidebar summary) {
+    min-height: 44px;
+    padding: 12px 0;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.queue-filter-fields) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 8px;
+  }
+  :where(.scope) :global(.queue-filter-fields label) {
+    flex: 1 1 150px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.queue-filter-fields label) {
+      flex-basis: 100%;
+    }
+  }
+  :where(.scope) :global(.queue-selection-control label) {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    cursor: pointer;
+  }
+  :where(.scope) :global(.queue-selection-control input),
+  :where(.scope) :global(.queue-row-check) {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--color-accent);
+  }
+  :where(.scope) :global(.ticket-suggestions) {
+    border-top: 1px solid var(--color-border);
+    padding-top: 16px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-suggestions h2) {
+    font-size: 18px;
+    margin: 0 0 8px;
+  }
+  :where(.scope) :global(.ticket-suggestions ul) {
+    padding-left: 20px;
+  }
+  :where(.scope) :global(.ticket-suggestions li) {
+    margin-block: 12px;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.ticket-suggestions li p) {
+    margin: 4px 0;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.automation-collection-footer .queue-views) {
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-queue-panel) {
+    min-width: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-panel);
+  }
+  :where(.scope) :global(.ticket-queue-heading),
+  :where(.scope) :global(.ticket-queue-footer) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 8px 20px;
+  }
+  :where(.scope) :global(.ticket-queue-heading h2) {
+    margin: 0 0 4px;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  :where(.scope) :global(.ticket-queue-heading p) {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.ticket-queue-page-count) {
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.scope) :global(.ticket-queue-heading > .queue-views) {
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    gap: 2px;
+    overflow: visible;
+  }
+  :where(.scope) :global(.ticket-queue-heading > .queue-views a[aria-current='page']) {
+    background: transparent;
+    border-color: var(--color-accent);
+    box-shadow: none;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar) {
+    padding: 16px 20px;
+    border-block: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .queue-filters) {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    gap: 12px;
+  }
+  :where(.scope) :global(.ticket-queue-search) {
+    max-width: 640px;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .queue-filter-options) {
+    padding-top: 4px;
+    border-top: 0;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .queue-filter-options summary) {
+    width: fit-content;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .queue-filter-options[open] summary) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .queue-filter-fields) {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .queue-filter-fields label) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .lookup-picker-compact) {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 12px;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .lookup-picker-compact > label) {
+    grid-column: 1 / -1;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .queue-check) {
+    align-self: end;
+    min-height: 48px;
+  }
+  :where(.scope) :global(.ticket-queue-apply) {
+    margin-top: 16px;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .live-search-status) {
+    flex-basis: 100%;
+    order: 3;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar .live-search-status:empty) {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-toolbar .queue-filters .ticket-queue-search) {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-toolbar .queue-filter-options) {
+      flex-basis: 100%;
+    }
+  }
+  :where(.scope) :global(.ticket-queue-filter-chips) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+  }
+  :where(.scope) :global(.ticket-queue-filter-chips li) {
+    min-width: 0;
+    max-width: 100%;
+  }
+  :where(.scope) :global(.ticket-queue-filter-chips a) {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+    background: var(--color-surface);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  :where(.scope) :global(.ticket-queue-filter-chips a:hover) {
+    border-color: var(--color-border-strong);
+    color: var(--color-accent);
+  }
+  :where(.scope) :global(.ticket-queue-filter-chips a > span:first-child) {
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-queue-filter-chips a > span:last-child) {
+    flex-shrink: 0;
+    font-size: 18px;
+  }
+  :where(.scope) :global(.ticket-queue-list-heading) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding: 8px 20px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+  :where(.scope) :global(.ticket-queue-list-heading label) {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+  :where(.scope) :global(.ticket-queue-panel .bulk-selection) {
+    margin: 0;
+    padding: 16px 24px;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-accent-subtle);
+  }
+  :where(.scope) :global(.ticket-queue-panel .table-region) {
+    max-height: 65vh;
+    border-inline: 0;
+    border-bottom: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  :where(.scope) :global(.ticket-queue-panel .table-region:focus-visible) {
+    outline-offset: -3px;
+  }
+  :where(.scope) :global(.ticket-queue-panel .ticket-table thead th) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  @media (min-width: 768px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table th) {
+      white-space: nowrap;
+      overflow-wrap: normal;
+    }
+  }
+  @media (min-width: 768px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table :is(th, td)) {
+      padding-inline: 12px;
+    }
+  }
+  @media (min-width: 768px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Assigned to']) {
+      min-width: 116px;
+    }
+  }
+  @media (min-width: 768px) {
+    :where(.scope) :global(.ticket-queue-panel .sla-compact) {
+      min-width: 140px;
+    }
+  }
+  @media (min-width: 768px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Updated']) {
+      white-space: nowrap;
+    }
+  }
+  :where(.scope) :global(.ticket-queue-panel .ticket-table td) {
+    height: 56px;
+  }
+  :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Ticket']) {
+    width: 30%;
+  }
+  :where(.scope) :global(.ticket-queue-panel .ticket-link) {
+    gap: 6px;
+    max-width: 34rem;
+  }
+  :where(.scope) :global(.ticket-queue-panel .ticket-link strong) {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.ticket-queue-panel .ticket-table tr:has(.queue-row-check:checked)) {
+    background: var(--color-accent-subtle);
+  }
+  :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Updated']) {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.ticket-queue-footer) {
+    min-height: 56px;
+    border-top: 1px solid var(--color-border);
+    font-size: 13px;
+  }
+  :where(.scope) :global(.ticket-queue-footer .notification-pagination) {
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-queue-feedback) {
+    padding: 24px;
+  }
+  :where(.scope) :global(.ticket-queue-feedback .alert) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  :where(.scope) :global(.ticket-queue-empty h3) {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 18px;
+  }
+  @media (min-width: 768px) and (max-width: 1199px) {
+    :where(.scope) :global(.ticket-queue-toolbar .queue-filter-fields) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 768px) and (max-width: 1199px) {
+    :where(.scope) :global(.ticket-queue-sla-note) {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-heading),
+    :where(.scope) :global(.ticket-queue-toolbar),
+    :where(.scope) :global(.ticket-queue-footer),
+    :where(.scope) :global(.ticket-queue-panel .bulk-selection) {
+      padding: 20px 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-heading > .queue-views) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .queue-views a) {
+      padding: 10px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-toolbar .queue-filter-fields) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-toolbar .lookup-picker-compact) {
+      grid-column: auto;
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-toolbar .queue-check) {
+      grid-column: auto;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-toolbar .queue-filter-options summary) {
+      width: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-apply) {
+      width: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-list-heading) {
+      padding: 8px 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-sla-note) {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .table-region) {
+      max-height: none;
+      overflow: visible;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table tbody tr) {
+      display: grid;
+      grid-template-columns: 24px auto auto minmax(0, 1fr);
+      grid-template-areas:
+        'check ticket ticket ticket'
+        '. status priority .'
+        '. assigned assigned assigned'
+        '. sla sla updated';
+      gap: 8px 12px;
+      padding: 14px 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td) {
+      width: auto;
+      height: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+      border: 0;
+      text-align: left;
+      font-size: 13px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td::before) {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope)
+      :global(
+        .ticket-queue-panel
+          .ticket-table
+          td:is([data-label='Assigned to'], [data-label='Updated'])::before
+      ) {
+      display: inline;
+      content: attr(data-label);
+      color: var(--color-text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td:first-child) {
+      grid-area: check;
+      align-items: flex-start;
+      padding-top: 2px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Ticket']) {
+      grid-area: ticket;
+      width: auto; /* overrides the 30% desktop column */
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Status']) {
+      grid-area: status;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Priority']) {
+      grid-area: priority;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Assigned to']) {
+      grid-area: assigned;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='SLA']) {
+      grid-area: sla;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Updated']) {
+      grid-area: updated;
+      justify-content: flex-end;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-table .sla-compact) {
+      min-width: 0;
+      width: auto;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-panel .ticket-link strong) {
+      font-size: 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-footer .notification-pagination) {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-feedback) {
+      padding: 16px;
+    }
+  }
+  :where(.scope) :global(.ticket-create-form) {
+    min-width: 0;
+    display: grid;
+    gap: 0;
+    border: 0;
+    border-radius: var(--radius-panel);
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.ticket-create-intro) {
+    padding: 20px 24px;
+    background: var(--color-surface-subtle);
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  }
+  :where(.scope) :global(.ticket-create-intro p) {
+    margin: 0;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.ticket-create-section) {
+    min-width: 0;
+    padding: 24px;
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.ticket-create-section-heading) {
+    margin-bottom: 20px;
+  }
+  :where(.scope) :global(.ticket-create-section-heading h2) {
+    margin: 0 0 6px;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  :where(.scope) :global(.ticket-create-section-heading p) {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    max-width: 65ch;
+  }
+  :where(.scope) :global(.ticket-create-fields) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-create-fields .field) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-create-fields small) {
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.ticket-create-form .textarea) {
+    resize: vertical;
+    min-height: 160px;
+  }
+  :where(.scope) :global(.ticket-create-routing) {
+    padding: 8px 24px;
+    border-top: 1px solid var(--color-border);
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-create-routing summary) {
+    cursor: pointer;
+    min-height: 44px;
+    padding-block: 12px;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.ticket-create-routing summary .muted) {
+    font-size: 13px;
+    font-weight: 400;
+    margin-left: 12px;
+  }
+  :where(.scope) :global(.ticket-create-routing > p) {
+    margin: 8px 0 20px;
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.ticket-create-routing[open]) {
+    padding-bottom: 24px;
+  }
+  :where(.scope) :global(.ticket-create-help) {
+    padding: 24px;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.ticket-create-help .ticket-suggestions) {
+    border: 0;
+    padding: 0;
+  }
+  :where(.scope) :global(.ticket-create-help .ticket-suggestions > p) {
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.ticket-create-footer) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px 24px;
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.ticket-create-footer .form-note) {
+    flex: 1 1 240px;
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.ticket-create-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  :where(.scope) :global(.ticket-create-form > .alert) {
+    margin: 20px 24px;
+  }
+  :where(.scope) :global(.ticket-create-form > [role='status']) {
+    margin: 0 24px 16px;
+    font-size: 13px;
+  }
+  :where(.scope) :global(.ticket-create-form > [role='status']:empty) {
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-create-equipment) {
+    display: grid;
+    gap: 4px;
+    padding: 20px 24px;
+    border-top: 1px solid var(--color-border);
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.ticket-create-equipment .muted) {
+    font-size: 13px;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-fields) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-fields .field-wide) {
+    grid-column: auto;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-create-intro),
+    :where(.scope) :global(.ticket-create-section),
+    :where(.scope) :global(.ticket-create-help),
+    :where(.scope) :global(.ticket-create-footer),
+    :where(.scope) :global(.ticket-create-equipment) {
+      padding: 20px 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-create-routing) {
+      padding-inline: 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-create-fields) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-create-fields .field-wide) {
+      grid-column: auto;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-create-actions) {
+      width: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-create-form > .alert) {
+      margin-inline: 16px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-create-form > [role='status']) {
+      margin-inline: 16px;
+    }
+  }
+  :where(.scope) :global(.inventory-request-list .ticket-badge) {
+    align-self: flex-start;
+  }
+  :where(.scope) :global(.ticket-edit-conflict) {
+    background: var(--color-warning-subtle);
+    border-color: var(--color-border);
+    color: var(--color-text);
+    display: grid;
+    gap: 12px;
+  }
+  :where(.scope) :global(.ticket-edit-conflict p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-queue-context) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-detail-drawer) {
+    position: fixed;
+    inset: 0 0 0 auto;
+    z-index: 25;
+    width: min(560px, 48vw);
+    overflow: auto;
+    overscroll-behavior: contain;
+    border-left: 1px solid var(--color-border-strong);
+    background: var(--color-canvas);
+    box-shadow: var(--shadow-overlay);
+  }
+  :where(.scope) :global(.ticket-panel-toolbar) {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px;
+    border-bottom: 1px solid var(--color-border-strong);
+    background: var(--color-surface);
+  }
+  :where(.scope) :global(.ticket-panel-toolbar h2) {
+    flex: 1 1 100%;
+    font-size: 18px;
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-detail-drawer > .page) {
+    padding: 16px;
+  }
+  :where(.scope) :global(.ticket-detail-drawer .ticket-layout) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :where(.scope) :global(.ticket-detail-drawer .ticket-heading h2) {
+    font-size: 24px;
+    line-height: 30px;
+    margin: 12px 0;
+  }
+  :where(.scope) :global(.ticket-detail-drawer .ticket-sidebar) {
+    position: static;
+  }
+  @media (min-width: 1200px) {
+    :where(.scope) :global(.ticket-queue-context.has-detail > div) {
+      padding-right: min(560px, 48vw);
+    }
+  }
+  @media (max-width: 1199px) {
+    :where(.scope) :global(.ticket-detail-drawer) {
+      width: 100%;
+      border: 0;
+    }
+  }
+  :where(.scope) :global(.ticket-queue-heading) {
+    padding-block: 16px;
+    gap: 12px;
+  }
+  :where(.scope) :global(.ticket-queue-toolbar) {
+    padding-block: 16px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-queue-heading > .queue-views) {
+      flex-basis: 100%;
+    }
+  }
+  :where(.scope) :global(.chat-center .queue-views) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  :where(.scope) :global(.chat-center .queue-views a) {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 12px;
+    min-height: 40px;
+  }
+  :where(.scope) :global(.chat-conversation-meta > .ticket-badge) {
+    font-size: 11px;
+  }
+  :where(.scope) :global(.portal-home .portal-recent li .ticket-badge) {
+    flex-shrink: 0;
+  }
+  :where(.scope) :global(.portal-form-page.ticket-create-page .portal-page-heading) {
+    margin-bottom: 24px;
+    padding-bottom: 0;
+    border: 0;
+  }
+  :where(.scope) :global(.portal-form-page.ticket-create-page .portal-page-heading h1) {
+    font-size: 28px;
+    line-height: 36px;
+    margin-top: 0;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-section) {
+    border-top: 0;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-required) {
+    margin: 0 0 20px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-fields) {
+    gap: 24px;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-fields small) {
+    font-size: 14px;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-optional summary) {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-optional .ticket-suggestions) {
+    margin-top: 12px;
+    padding: 0;
+    border: 0;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-footer) {
+    gap: 16px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.portal-form-page.ticket-create-page .portal-page-heading h1) {
+      font-size: 24px;
+      line-height: 32px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.portal-request-form .ticket-create-optional summary .muted) {
+      display: block;
+      margin: 4px 0 0;
+    }
+  }
+  :where(.scope) :global(.portal-form-page.ticket-create-page) {
+    width: 100%;
+    max-width: 720px;
+    padding: 40px 24px 64px;
+  }
+  :where(.scope) :global(.portal-form-page.ticket-create-page .portal-kicker) {
+    margin: 0 0 8px;
+    color: var(--color-accent);
+  }
+  :where(.scope) :global(.portal-form-page.ticket-create-page .portal-page-heading h1) {
+    margin: 0 0 8px;
+    letter-spacing: -0.025em;
+  }
+  :where(.scope) :global(.portal-form-page.ticket-create-page .portal-page-heading p) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-section) {
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-optional) {
+    background: color-mix(in srgb, var(--color-accent-subtle) 35%, var(--color-surface));
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-optional summary) {
+    color: var(--color-accent);
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-equipment) {
+    border-top: 0;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+    background: var(--color-accent-subtle);
+  }
+  :where(.scope) :global(.portal-request-form .ticket-create-footer) {
+    border-radius: 0 0 var(--radius-panel) var(--radius-panel);
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.portal-form-page.ticket-create-page) {
+      padding: 24px 16px 40px;
+    }
+  }
+  :where(.scope) :global(.incident-fields) {
+    min-width: 0;
+    margin: 0;
+    padding: 16px 0 0;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.incident-fields legend) {
+    padding: 0 8px 0 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.incident-fields textarea) {
+    resize: vertical;
+  }
+  :where(.scope) :global(.incident-summary) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 16px;
+    margin: 0;
+  }
+  :where(.scope) :global(.incident-summary dt) {
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+  :where(.scope) :global(.incident-summary dd) {
+    margin: 4px 0 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(#incident-summary details[open] > summary) {
+    margin-bottom: 16px;
+  }
+  :where(.scope) :global(.response-checklist) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  :where(.scope) :global(.response-checklist > li) {
+    padding-block: 1rem;
+    border-block-end: 1px solid var(--color-border);
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.response-checklist h4) {
+    margin: 0;
+    font-size: 1rem;
+  }
+  :where(.scope) :global(.response-step-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  :where(.scope) :global(.response-step-actions > details) {
+    flex: 1 1 16rem;
+    min-width: 0;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.response-step-actions) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.response-step-actions > details) {
+      flex-basis: auto;
+    }
+  }
+  :where(.scope) :global(.communication-choice) {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    min-height: 44px;
+    padding-block: 0.5rem;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.communication-choice input) {
+    flex: 0 0 auto;
+    margin-block-start: 0.25rem;
+    accent-color: var(--color-accent);
+  }
+  :where(.scope) :global(#communication-plan) {
+    padding-block: 1rem;
+    border-block-start: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(#communication-plan h4) {
+    margin: 0;
+    font-size: 1rem;
+  }
+  :where(.scope) :global(#communication-plan .section-heading-row > *) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(#incident-approvals) {
+    padding-block: 1rem;
+    border-block-start: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(#incident-approvals h4) {
+    margin: 0;
+    font-size: 1rem;
+  }
+  :where(.scope) :global(#incident-approvals .section-heading-row > *) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.ticket-work) {
+    margin-bottom: 20px;
+  }
+  :where(.scope) :global(.ticket-work h2) {
+    margin: 0;
+    font-size: 17px;
+  }
+  :where(.scope) :global(.ticket-work .section-heading-row p) {
+    margin: 8px 0 0;
+  }
+  :where(.scope) :global(.ticket-work-controls),
+  :where(.scope) :global(.ticket-status-action .action-form-fields) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: end;
+  }
+  :where(.scope) :global(.ticket-work-controls > form) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-status-action) {
+    flex: 1 1 320px;
+  }
+  :where(.scope) :global(.ticket-status-hint) {
+    flex-basis: 100%;
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-status-action label) {
+    display: grid;
+    gap: 6px;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.ticket-work-controls .action-form-fields) {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+  }
+  :where(.scope) :global(.ticket-coordination) {
+    display: grid;
+    gap: 16px;
+  }
+  :where(.scope) :global(.ticket-assignment .ticket-update) {
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+  :where(.scope) :global(.ticket-assignment .ticket-update h2) {
+    display: none;
+  }
+  :where(.scope) :global(#ticket-conversation),
+  :where(.scope) :global(#ticket-assignment) {
+    scroll-margin-top: 24px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-work-controls),
+    :where(.scope) :global(.ticket-status-action .action-form-fields) {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-work-controls > form),
+    :where(.scope) :global(.ticket-work-controls button),
+    :where(.scope) :global(.ticket-status-action) {
+      width: 100%;
+    }
+  }
+  :where(.scope) :global(.ticket-wizard) {
+    display: grid;
+    gap: 20px;
+    max-width: 1040px;
+    margin-inline: auto;
+  }
+  :where(.scope) :global(.ticket-wizard-steps) {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-wizard-steps button) {
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+    padding: 12px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--color-surface-subtle);
+    color: var(--color-text-muted);
+    font: inherit;
+    cursor: pointer;
+  }
+  :where(.scope) :global(.ticket-wizard-steps button[aria-current='step']) {
+    background: var(--color-accent-subtle);
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  :where(.scope) :global(.ticket-step-number) {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.scope) :global(.ticket-wizard-steps button[aria-current='step'] .ticket-step-number) {
+    background: var(--color-action-fill);
+    color: var(--color-on-action);
+  }
+  :where(.scope) :global(.ticket-wizard-progress) {
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-wizard-panel[hidden]) {
+    display: none;
+  }
+  :where(.scope) :global(.ticket-step-heading) {
+    margin-bottom: 24px;
+    padding: 20px 24px;
+    border-radius: 12px;
+    background: var(--color-surface-subtle);
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-step-heading h2) {
+    margin: 0 0 8px;
+    padding-inline-start: 12px;
+    border-inline-start: 3px solid var(--color-action-fill);
+    font-size: 22px;
+  }
+  :where(.scope) :global(.ticket-step-heading p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-step-content) {
+    display: grid;
+    gap: 16px;
+  }
+  :where(.scope) :global(.ticket-step-content h3) {
+    margin: 0 0 12px;
+    font-size: 17px;
+  }
+  :where(.scope) :global(.ticket-step-content .ticket-update) {
+    max-width: 640px;
+  }
+  :where(.scope) :global(.ticket-wizard-navigation) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  :where(.scope) :global(.ticket-wizard-navigation p) {
+    margin: 0;
+    max-width: 520px;
+  }
+  :where(.scope) :global(.ticket-work h3) {
+    margin: 0;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-wizard-steps) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-wizard-navigation) {
+      flex-direction: column-reverse;
+      align-items: stretch;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-wizard-navigation > span:empty) {
+      display: none;
+    }
+  }
+  :where(.scope) :global(.ticket-step-help) {
+    margin-top: 8px;
+  }
+  :where(.scope) :global(.ticket-step-help summary) {
+    cursor: pointer;
+    min-height: 44px;
+    align-content: center;
+    width: fit-content;
+    border-radius: 4px;
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+  :where(.scope) :global(.ticket-guidance-hide),
+  :where(.scope) :global(.ticket-step-help[open] .ticket-guidance-show) {
+    display: none;
+  }
+  :where(.scope) :global(.ticket-step-help[open] .ticket-guidance-hide) {
+    display: inline;
+  }
+  :where(.scope) :global(.ticket-step-help ol) {
+    display: grid;
+    gap: 8px;
+    max-width: 70ch;
+    margin: 4px 0 0;
+    padding-inline-start: 24px;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.ticket-step-help li) {
+    padding-inline-start: 4px;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.ticket-step-help strong) {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  :where(.scope) :global(.ticket-wizard-footer) {
+    display: grid;
+    gap: 12px;
+  }
+  :where(.scope) :global(.ticket-navigation-note) {
+    margin: 0;
+    font-size: 13px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-step-heading) {
+      padding: 16px;
+    }
+  }
+  :where(.scope)
+    :global(.ticket-wizard-steps button.ticket-step-secondary:not([aria-current='step'])) {
+    background: transparent;
+  }
+  :where(.scope) :global(.checklist-step-details > summary) {
+    min-height: 44px;
+    padding-block: 12px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  :where(.scope) :global(.checklist-step-details > p) {
+    margin-block: 8px;
+  }
+  :where(.scope) :global(.ticket-activity-list) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  :where(.scope) :global(.ticket-activity-item) {
+    display: grid;
+    grid-template-columns: 8px minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 8px 12px;
+    padding-block: 16px;
+  }
+  :where(.scope) :global(.ticket-activity-item + .ticket-activity-item) {
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.ticket-activity-marker) {
+    width: 8px;
+    height: 8px;
+    margin-top: 6px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+  }
+  :where(.scope) :global(.ticket-activity-content) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-activity-content p) {
+    margin: 0;
+    font-size: 14px;
+    line-height: 22px;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.ticket-activity-content strong) {
+    font-weight: 600;
+  }
+  :where(.scope) :global(.ticket-activity-content .ticket-activity-detail) {
+    margin-top: 4px;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.ticket-activity-item time) {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    line-height: 22px;
+    text-align: right;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-activity-item) {
+      grid-template-columns: 8px minmax(0, 1fr);
+      gap: 4px 12px;
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-activity-item time) {
+      grid-column: 2;
+      text-align: left;
+    }
+  }
+  :where(.scope) :global(.ticket-reopen-disclosure > summary) {
+    width: fit-content;
+    min-height: 44px;
+    cursor: pointer;
+  }
+  :where(.scope) :global(.ticket-reopen-disclosure[open] > summary) {
+    margin-bottom: 16px;
+  }
+  :where(.scope) :global(.ticket-reopen-disclosure .field p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-activity-content .ticket-activity-reason) {
+    margin-top: 8px;
+    white-space: pre-wrap;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-reopen-disclosure > summary) {
+      width: 100%;
+    }
+  }
+  :where(.scope) :global(.ticket-tag) {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 24px;
+    padding: 2px 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface-subtle);
+    color: var(--color-text);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  :where(.scope) :global(.ticket-heading-tags),
+  :where(.scope) :global(.ticket-row-tags) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin: 6px 0 0;
+    font-size: 12px;
+  }
+  :where(.scope) :global(.ticket-tag-list) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  :where(.scope) :global(.ticket-tag-list .ticket-tag) {
+    padding-right: 0;
+    font-size: 13px;
+  }
+  :where(.scope) :global(.ticket-tag-list form) {
+    display: contents;
+  }
+  :where(.scope) :global(.ticket-tag-remove) {
+    display: inline-grid;
+    place-items: center;
+    min-width: 40px;
+    min-height: 40px;
+    margin: -8px 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-text-muted);
+    font: inherit;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  :where(.scope) :global(.ticket-tag-remove:hover:not(:disabled)) {
+    color: var(--color-text);
+  }
+  :where(.scope) :global(.ticket-tag-remove:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -4px;
+  }
+  :where(.scope) :global(.ticket-tag-add) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  :where(.scope) :global(.ticket-tag-add .field) {
+    flex: 1 1 240px;
+  }
+  :where(.scope) :global(.ticket-link-list) {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  :where(.scope) :global(.ticket-link-list li) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+  }
+  :where(.scope) :global(.ticket-link-list li > div) {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-link-list .muted) {
+    font-size: 13px;
+  }
+  :where(.scope) :global(.ticket-heading-duplicate) {
+    margin: 6px 0 0;
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+  :where(.scope) :global(.ticket-duplicate > summary) {
+    list-style: none;
+    cursor: pointer;
+  }
+  :where(.scope) :global(.ticket-duplicate > summary::-webkit-details-marker) {
+    display: none;
+  }
+  :where(.scope) :global(.incident-coordination),
+  :where(.scope) :global(.incident-checklist),
+  :where(.scope) :global(.ticket-procedures) {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.incident-coordination h2),
+  :where(.scope) :global(.incident-coordination h3),
+  :where(.scope) :global(.incident-coordination p),
+  :where(.scope) :global(.ticket-procedures h2),
+  :where(.scope) :global(.ticket-procedures > p),
+  :where(.scope) :global(.ticket-procedures > p.muted) {
+    margin: 0;
+  }
+  :where(.scope) :global(.incident-coordination h2),
+  :where(.scope) :global(.ticket-procedures h2) {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  :where(.scope) :global(.incident-coordination h3) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  :where(.scope) :global(.incident-impact) {
+    display: grid;
+    gap: 4px;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.incident-impact p) {
+    max-width: 75ch;
+  }
+  :where(.scope) :global(.incident-checklist) {
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.incident-coordination .section-heading-row),
+  :where(.scope) :global(.ticket-procedures .section-heading-row) {
+    margin-bottom: 0;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.incident-coordination .section-heading-row > *),
+  :where(.scope) :global(.ticket-procedures .section-heading-row > *) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.ticket-procedures > .response-checklist:empty),
+  :where(.scope) :global(.incident-checklist > .response-checklist:empty) {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.incident-summary) {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }
+  :where(.scope) :global(.service-notice-heading .ticket-badge) {
+    font-size: 12px;
+  }
+  @media (forced-colors: active) {
+    :where(.scope) :global(.ticket-badge) {
+      color: CanvasText;
+      background: Canvas;
+      border: 1px solid CanvasText;
+    }
+  }
+  :where(.scope) :global(.ticket-link .ticket-subject-line) {
+    display: flex;
+    flex-wrap: nowrap;
+    min-width: 0;
+    min-height: 24px;
+    align-items: baseline;
+    gap: 4px 8px;
+    color: var(--color-text);
+    font-size: 14px;
+  }
+  :where(.scope) :global(.ticket-link .ticket-subject-line strong) {
+    color: var(--color-text);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :where(.scope) :global(.ticket-link .ticket-row-meta) {
+    display: block;
+    margin-top: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :where(.scope) :global(.ticket-manual-overdue) {
+    display: block;
+    color: var(--color-warning);
+    font-size: 12px;
+  }
+}
