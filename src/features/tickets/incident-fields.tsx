@@ -3,7 +3,9 @@
 import { useId, useState } from 'react';
 
 import { LookupSelect } from '@/features/lookups/lookup-select';
+import { useTimezone } from '@/features/timezones/provider';
 
+import { DeadlineField } from './deadline-field';
 import { incidentSeverities, type Incident } from './incidents';
 
 export function IncidentFields({
@@ -16,6 +18,7 @@ export function IncidentFields({
   disabled?: boolean;
 }) {
   const id = useId();
+  const timeZone = useTimezone();
   return (
     <fieldset className="stack incident-fields" disabled={disabled}>
       <legend>Incident coordination</legend>
@@ -87,6 +90,25 @@ export function IncidentFields({
           aria-describedby={`${id}-names-hint`}
         />
       </label>
+      <details>
+        <summary>Service timing (optional)</summary>
+        <div className="stack">
+          <DeadlineField
+            name="disruption"
+            timeZone={timeZone}
+            value={incident?.disruption_started_at}
+            label="Disruption started"
+            hint="When service was affected, even if before this ticket."
+          />
+          <DeadlineField
+            name="restored"
+            timeZone={timeZone}
+            value={incident?.service_restored_at}
+            label="Service restored"
+            hint="Used for downtime reporting, separate from ticket resolution."
+          />
+        </div>
+      </details>
       <small className="muted" id={`${id}-names-hint`}>
         Enter names, one per line. Up to 30 per field, 120 characters per name.
       </small>

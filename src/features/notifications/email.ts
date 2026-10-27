@@ -186,7 +186,7 @@ export async function sendNotificationEmail(
   // Replies route back to the ticket only when inbound email is configured.
   const emailReplies = Boolean(!incident && routing.replyTo && routing.ticketNumber);
   const note = announcement
-    ? 'You received this employee announcement because you are an active member of your workspace.'
+    ? `You received this employee announcement because you are an active member of your workspace.${nextUpdate}`
     : incident
       ? `You received this approved update as a selected stakeholder.${nextUpdate}`
       : emailReplies

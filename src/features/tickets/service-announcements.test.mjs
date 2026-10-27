@@ -10,6 +10,7 @@ const viewer = {
   id: '10000000-0000-0000-0000-000000000401',
   organizationId: '20000000-0000-0000-0000-000000000401',
   role: 'administrator',
+  timeZone: 'UTC',
 };
 const link = { default: ({ children, ...props }) => React.createElement('a', props, children) };
 function query(data, error = null) {
@@ -37,6 +38,9 @@ test('employee notices render approved plain text, short summaries, safe full li
       title: '<script>email</script>',
       body: 'Safe update '.repeat(40),
       published_at: '2026-10-26T18:00Z',
+      public_status: 'monitoring',
+      workaround: 'Use webmail.',
+      next_update_at: '2027-01-01T12:00:00Z',
     },
   ];
   for (const [data, error, full, expected] of [
@@ -52,6 +56,11 @@ test('employee notices render approved plain text, short summaries, safe full li
     const html = renderToStaticMarkup(await ServiceAnnouncements({ full }));
     assert.match(html, expected);
     if (data.length) assert.match(html, /&lt;script&gt;email&lt;\/script&gt;/);
+    if (data.length) {
+      assert.match(html, /Monitoring/);
+      assert.match(html, /Use webmail/);
+      assert.match(html, /Next update/);
+    }
     if (data.length) assert.match(html, /aria-labelledby="service-announcements-heading"/);
     if (!full && data.length) assert.match(html, /href="\/app\/service-status#notice-notice-1"/);
   }

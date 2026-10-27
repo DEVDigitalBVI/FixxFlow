@@ -1,5 +1,6 @@
 import { RetryButton } from '@/components/ui/retry-button';
 import { profileLabels } from '@/features/lookups/labels';
+import { Timestamp } from '@/features/timezones/provider';
 import { createClient } from '@/lib/supabase/server';
 
 import { ChecklistPanel } from './checklist-panel';
@@ -99,6 +100,17 @@ export async function IncidentPanel({
         <h3>Business impact</h3>
         <p className="ticket-description">{data.business_impact}</p>
       </div>
+      {data.disruption_started_at && (
+        <p className="muted">
+          Disruption started <Timestamp value={data.disruption_started_at} />
+          {data.service_restored_at && (
+            <>
+              {' '}
+              · Restored <Timestamp value={data.service_restored_at} />
+            </>
+          )}
+        </p>
+      )}
       <details>
         <summary className="button button-secondary">Edit incident details</summary>
         <IncidentEditor

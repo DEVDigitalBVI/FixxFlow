@@ -6,6 +6,8 @@ import { useId, useState, type ReactNode } from 'react';
 import { ActionForm } from '@/components/ui/action-form';
 import { SubmitButton } from '@/components/ui/submit-button';
 
+import { announcementStatuses, type AnnouncementDetails } from './announcement-status';
+import { DeadlineField } from './deadline-field';
 import { manageServiceAnnouncement } from './service-announcement-actions';
 
 export function AnnouncementForm({
@@ -72,6 +74,8 @@ export function AnnouncementEditor({
   body,
   update = false,
   requestKey,
+  details,
+  timeZone,
 }: {
   ticketId: string;
   revision: number;
@@ -79,6 +83,8 @@ export function AnnouncementEditor({
   body: string;
   update?: boolean;
   requestKey: string;
+  details?: AnnouncementDetails;
+  timeZone: string;
 }) {
   const id = useId();
   return (
@@ -101,6 +107,21 @@ export function AnnouncementEditor({
           defaultValue={title}
         />
       </label>
+      <label className="field" htmlFor={`${id}-status`}>
+        Status
+        <select
+          className="input"
+          id={`${id}-status`}
+          name="publicStatus"
+          defaultValue={details?.public_status ?? 'investigating'}
+        >
+          {Object.entries(announcementStatuses).map(([value, status]) => (
+            <option key={value} value={value}>
+              {status.label}
+            </option>
+          ))}
+        </select>
+      </label>
       <label className="field" htmlFor={`${id}-body`}>
         Message (required)
         <textarea
@@ -114,6 +135,29 @@ export function AnnouncementEditor({
           defaultValue={body}
         />
       </label>
+      <details>
+        <summary>Workaround &amp; next update (optional)</summary>
+        <div className="stack">
+          <label className="field" htmlFor={`${id}-workaround`}>
+            What employees should do
+            <textarea
+              className="input"
+              id={`${id}-workaround`}
+              name="workaround"
+              maxLength={1000}
+              rows={2}
+              defaultValue={details?.workaround ?? ''}
+            />
+          </label>
+          <DeadlineField
+            name="nextUpdate"
+            timeZone={timeZone}
+            value={details?.next_update_at}
+            label="Next update"
+            hint="Only set a time you can commit to."
+          />
+        </div>
+      </details>
       <p className="muted">Emails all active workspace members and appears on their home page.</p>
     </AnnouncementForm>
   );

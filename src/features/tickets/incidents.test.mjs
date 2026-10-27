@@ -215,3 +215,24 @@ test('incident summaries retain safe error recovery, written severity and compan
     }
   }
 });
+
+test('service timing remains optional and rejects future, reversed and ambiguous local times', () => {
+  const valid = form();
+  valid.set('disruptionAt', '2026-01-01T10:00');
+  valid.set('disruptionTimezone', 'UTC');
+  valid.set('restoredAt', '2026-01-01T11:30');
+  valid.set('restoredTimezone', 'UTC');
+  const result = model.parseIncident(valid);
+  assert.equal(result.data.disruption_started_at, '2026-01-01T10:00:00.000Z');
+  assert.equal(result.data.service_restored_at, '2026-01-01T11:30:00.000Z');
+  valid.set('restoredAt', '2026-01-01T09:00');
+  assert.match(model.parseIncident(valid).error, /on or after/);
+  valid.set('restoredAt', '');
+  valid.set('disruptionAt', '2099-01-01T10:00');
+  assert.match(model.parseIncident(valid).error, /past/);
+  valid.set('disruptionAt', '2025-11-02T01:30');
+  valid.set('disruptionTimezone', 'America/New_York');
+  assert.ok(model.parseIncident(valid).error);
+  valid.set('disruptionOccurrence', 'earlier');
+  assert.equal(model.parseIncident(valid).data.disruption_started_at, '2025-11-02T05:30:00.000Z');
+});

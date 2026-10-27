@@ -5,6 +5,7 @@ import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
 
+import { announcementStatus } from './announcement-status';
 import { AnnouncementEditor, AnnouncementForm } from './service-announcement-forms';
 
 export async function ServiceAnnouncementPanel({
@@ -72,6 +73,8 @@ export async function ServiceAnnouncementPanel({
       body={draft?.body ?? live?.body ?? ''}
       update={!!live}
       requestKey={randomUUID()}
+      details={draft ?? live ?? undefined}
+      timeZone={viewer.timeZone}
     />
   );
   return (
@@ -84,9 +87,19 @@ export async function ServiceAnnouncementPanel({
       {live && (
         <div>
           <h3>{live.title}</h3>
+          <span className={`ticket-badge tone-${announcementStatus(live.public_status).tone}`}>
+            {announcementStatus(live.public_status).label}
+          </span>
           <p className="ticket-description">{live.body}</p>
+          {live.workaround && <p>What to do: {live.workaround}</p>}
           <p className="muted">
-            Published <Timestamp value={live.published_at} />
+            Updated <Timestamp value={live.published_at} />
+            {live.next_update_at && (
+              <>
+                {' '}
+                · Next update <Timestamp value={live.next_update_at} />
+              </>
+            )}
           </p>
         </div>
       )}

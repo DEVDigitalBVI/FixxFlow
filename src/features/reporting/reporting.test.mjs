@@ -41,6 +41,9 @@ test('employee cannot request reports and failures never masquerade as zeros', a
         return null;
       },
     },
+    '@/features/reporting/incident-report': {
+      IncidentReport: () => React.createElement('section', null, 'Incidents'),
+    },
     '@/features/reporting/custom-data': { getSavedReports: async () => [] },
     '@/features/reporting/custom-components': {
       SavedReportList: () => React.createElement('section', null, 'Saved reports'),
@@ -49,7 +52,8 @@ test('employee cannot request reports and failures never masquerade as zeros', a
       ReportUnavailable: () => React.createElement('div', { role: 'alert' }, 'Unavailable'),
     },
   };
-  const page = () => load('src/app/app/reports/page.tsx', mocks).default();
+  const page = () =>
+    load('src/app/app/reports/page.tsx', mocks).default({ searchParams: Promise.resolve({}) });
   await assert.rejects(page, /NOT_FOUND/);
   assert.equal(calls, 0);
   mocks['@/lib/auth/viewer'].requireViewer = async () => ({
@@ -253,6 +257,9 @@ test('reports page passes administrator-only SLA navigation without altering tec
         requireViewer: async () => ({ role, organizationId: 'org', organizationName: 'Workspace' }),
       },
       '@/features/reporting/data': { getReport: async () => reportFixture },
+      '@/features/reporting/incident-report': {
+        IncidentReport: () => React.createElement('section', null, 'Incidents'),
+      },
       '@/features/reporting/custom-data': { getSavedReports: async () => [] },
       '@/features/reporting/custom-components': {
         SavedReportList: () => React.createElement('section', {}, 'Saved reports'),
@@ -261,7 +268,7 @@ test('reports page passes administrator-only SLA navigation without altering tec
         ReportDownload: () => React.createElement('button', {}, 'Download report'),
       },
     }).default;
-    const html = renderToStaticMarkup(await page());
+    const html = renderToStaticMarkup(await page({ searchParams: Promise.resolve({}) }));
     assert.match(html, /At a glance/);
     assert.match(html, /Download report/);
     assert.equal(html.includes('href="/app/administration/slas"'), role === 'administrator');

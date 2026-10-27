@@ -540,3 +540,9 @@ Show employee announcements as one quiet notice with a small IT announcements la
 ### Incident coordination hierarchy
 
 Coordinate presents the employee announcement, incident summary and response checklist before applied procedures. Keep severity next to the summary heading, owner/service/location in a compact responsive row, and business impact directly below. Use content-sized spacing, existing typography and surface tokens, and consistent secondary-action disclosures for editing and adding steps. Empty checklists show a short message and Add step without a zero-progress count. Keep staff-only guidance out of repeated section introductions; preserve explicit audience labels where messages are sent. Procedure details and saved provenance remain available in native disclosures.
+
+### Public incident updates and reporting
+
+Extend the existing employee announcement with a written status (Investigating, Working on a fix, Monitoring, Resolved). Keep optional employee instructions and a committed next-update time in a native disclosure. Publish these fields together with the message using the existing explicit publication, retry receipt and delivery flow; never copy internal impact, ownership or response work into public content. Home notices retain their compact card, quiet timestamp and wrapping layout.
+
+Keep optional Disruption started and Service restored fields within incident editing, using the shared timezone-aware date control and explicit handling of ambiguous local times. Do not infer these times from ticket creation/resolution. Incident reporting shows the last 30 days and all currently open incidents, with a small metric row and collapsed breakdown/details disclosures. Distinguish ticket resolution from service downtime, show missing data and sample counts, and paginate incident details. Reuse shared surfaces, written severity badges, native disclosures and existing typography; no new design tokens.
