@@ -342,13 +342,13 @@ export async function TicketDetail({
   const coordination = ticket.request_kind !== 'inventory' && (
     <div className="ticket-coordination">
       <ServiceAnnouncementPanel organizationId={viewer.organizationId} ticketId={ticket.id} />
-      <TicketProcedures organizationId={viewer.organizationId} ticketId={ticket.id} />
       <IncidentPanel
         organizationId={viewer.organizationId}
         ticketId={ticket.id}
         revision={ticket.revision}
         ownerId={viewer.id}
       />
+      <TicketProcedures organizationId={viewer.organizationId} ticketId={ticket.id} />
     </div>
   );
   return (

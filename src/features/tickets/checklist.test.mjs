@@ -222,9 +222,12 @@ test('checklist panel renders safe staff-only actions, history and failure recov
       assert.match(html, /could not load/);
       continue;
     }
-    assert.match(html, /IT staff only/);
-    if (mode === 'empty') assert.match(html, /No response steps/);
-    else {
+    assert.doesNotMatch(html, /IT staff only/);
+    if (mode === 'empty') {
+      assert.match(html, /No response steps yet/);
+      assert.match(html, />Add step</);
+      assert.doesNotMatch(html, /0 of 0 completed/);
+    } else {
       assert.match(html, /Call &lt;provider&gt;/);
       assert.match(
         html,

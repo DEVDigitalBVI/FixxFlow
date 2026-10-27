@@ -58,7 +58,7 @@ export async function TicketProcedures({
             Incident procedures require an incident declaration.
           </p>
           <Link className="button button-secondary" href={`/app/workflows?ticket=${ticketId}`}>
-            Apply company procedure
+            Apply procedure
           </Link>
         </details>
       </section>
@@ -87,7 +87,7 @@ export async function TicketProcedures({
   return (
     <section
       id="ticket-procedures"
-      className="settings-card stack"
+      className="settings-card ticket-procedures"
       aria-labelledby="ticket-procedure-heading"
     >
       <div className="section-heading-row">
@@ -96,19 +96,17 @@ export async function TicketProcedures({
         </h2>
         {runs.length < 5 && (
           <Link className="button button-secondary" href={`/app/workflows?ticket=${ticketId}`}>
-            Apply company procedure
+            Apply procedure
           </Link>
         )}
       </div>
-      {workflow.kind !== 'incident' && (
-        <p>Coordinator: {name(workflow.owner_id)} · IT staff only</p>
-      )}
+      {workflow.kind !== 'incident' && <p>Coordinator: {name(workflow.owner_id)}</p>}
       {nameError && (
         <p role="alert">
           Staff names could not load. <RetryButton />
         </p>
       )}
-      {!runs.length && <p className="muted">No published company procedure applied yet.</p>}
+      {!runs.length && <p className="muted">No procedure applied.</p>}
       <ul className="response-checklist">
         {runs.map((run) => (
           <li key={run.id}>
@@ -127,7 +125,7 @@ export async function TicketProcedures({
                 </p>
                 <p className="muted">
                   This saved version stays with this ticket. Current progress and any later changes
-                  appear in the response checklist and history below.
+                  appear in the response checklist and history.
                 </p>
                 <DefinitionPreview definition={run.definition_snapshot} />
               </div>

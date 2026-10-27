@@ -78,23 +78,25 @@ export async function ChecklistPanel({
   const now = new Date().getTime();
   const completed = steps.filter((s) => s.completed_at).length;
   return (
-    <section id="response-checklist" className="stack" aria-labelledby="response-checklist-heading">
+    <section
+      id="response-checklist"
+      className="incident-checklist"
+      aria-labelledby="response-checklist-heading"
+    >
       <div className="section-heading-row">
         <h3 id="response-checklist-heading">Response checklist</h3>
-        <span className="muted">
-          {completed} of {steps.length} completed
-        </span>
+        {steps.length > 0 && (
+          <span className="muted">
+            {completed} of {steps.length} completed
+          </span>
+        )}
       </div>
-      <p className="muted">
-        IT staff only. Assigned staff acknowledge each step before completing it. Ticket status
-        stays separate.
-      </p>
       {namesFailed && (
         <p role="alert">
           Staff names could not load. <RetryButton />
         </p>
       )}
-      {!steps.length && <p>No response steps yet. Add the actions your team needs to follow.</p>}
+      {!steps.length && <p>No response steps yet.</p>}
       {approvalsResult.error && (
         <p role="alert">
           Step approval status could not load. Completion still requires any configured approval.{' '}
@@ -192,7 +194,7 @@ export async function ChecklistPanel({
       </ol>
       {steps.length < 100 ? (
         <details>
-          <summary>Add response step</summary>
+          <summary className="button button-secondary">Add step</summary>
           <ChecklistEditor ticketId={ticketId} stepId={randomUUID()} assigneeId={ownerId} />
         </details>
       ) : (
