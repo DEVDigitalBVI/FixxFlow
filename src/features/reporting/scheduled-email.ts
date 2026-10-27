@@ -10,6 +10,7 @@ export async function sendScheduledReportEmail({
   deliveryId,
   reportId,
   reportName,
+  workspaceName,
   recipient,
   filename,
   bytes,
@@ -20,6 +21,7 @@ export async function sendScheduledReportEmail({
   deliveryId: string;
   reportId: string;
   reportName: string;
+  workspaceName?: string;
   recipient: string;
   filename: string;
   bytes: Uint8Array;
@@ -44,6 +46,8 @@ export async function sendScheduledReportEmail({
       subject: `FixxFlow report: ${reportName}`,
       text: `Your scheduled FixxFlow report is attached.\n\nOpen the live report: ${href}`,
       html: renderEmail({
+        workspaceName,
+        notificationLabel: 'Scheduled report',
         title: reportName,
         message:
           'Your scheduled FixxFlow report is ready. The requested file is attached to this email.',

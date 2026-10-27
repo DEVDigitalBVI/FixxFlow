@@ -98,7 +98,11 @@ const emailReasons: Record<NotificationKind, { label: string; message: string; a
 };
 
 /** Email-to-ticket routing for ticket notifications, resolved by the dispatcher. */
-export type NotificationEmailRouting = { ticketNumber?: number; replyTo?: string };
+export type NotificationEmailRouting = {
+  ticketNumber?: number;
+  replyTo?: string;
+  workspaceName?: string;
+};
 
 export async function sendNotificationEmail(
   item: NotificationEmail,
@@ -179,6 +183,11 @@ export async function sendNotificationEmail(
     : statusUpdate
       ? `The ticket status changed${item.previous_status ? ` from ${ticketStatuses[item.previous_status].label}` : ''} to ${statusLabel}. ${item.email_kind === 'ticket_reopened' ? 'Further work is needed. Open the ticket to review the next steps.' : 'Review the outcome in FixxFlow. If the issue continues, return to the ticket to follow up.'}`
       : (reason?.message ?? 'There is an update waiting for you in FixxFlow.');
+  // The queue prefixes public announcement bodies with a written status. Older
+  // stakeholder updates remain plain messages and must not be reinterpreted.
+  const publicStatus = announcement
+    ? /^(?:Status: )(Investigating|Working on a fix|Monitoring|Resolved)\r?\n\r?\n/.exec(message)
+    : null;
   const nextUpdate =
     incident && item.next_update_at
       ? ` Next update expected: ${new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(item.next_update_at))} UTC.`
@@ -186,7 +195,7 @@ export async function sendNotificationEmail(
   // Replies route back to the ticket only when inbound email is configured.
   const emailReplies = Boolean(!incident && routing.replyTo && routing.ticketNumber);
   const note = announcement
-    ? `You received this employee announcement because you are an active member of your workspace.${nextUpdate}`
+    ? `Sent to all active workspace members.${nextUpdate}`
     : incident
       ? `You received this approved update as a selected stakeholder.${nextUpdate}`
       : emailReplies
@@ -216,7 +225,14 @@ export async function sendNotificationEmail(
           : `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\n${note}`,
       html: renderEmail({
         title: reason && !incident ? label! : item.title,
-        message: reason && !incident ? `${item.title}\n\n${message}` : message,
+        message:
+          reason && !incident
+            ? `${item.title}\n\n${message}`
+            : publicStatus
+              ? message.slice(publicStatus[0].length)
+              : message,
+        status: publicStatus?.[1],
+        workspaceName: routing.workspaceName,
         action: incident
           ? announcement
             ? 'View announcement'
@@ -226,13 +242,15 @@ export async function sendNotificationEmail(
         note,
         preserveLines: incident || Boolean(reason),
         siteUrl: base.origin,
-        notificationLabel: statusUpdate
-          ? 'Ticket status update'
-          : reply
-            ? 'New public reply'
-            : reason && !incident
-              ? 'Workspace notification'
-              : undefined,
+        notificationLabel: incident
+          ? 'IT service update'
+          : statusUpdate
+            ? 'Ticket status update'
+            : reply
+              ? 'New public reply'
+              : reason && !incident
+                ? 'Workspace notification'
+                : undefined,
         details,
         reopenReason: reopenReason ?? undefined,
         replyPreview: reply ? item.reply_preview! : undefined,
