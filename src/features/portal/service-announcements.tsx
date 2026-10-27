@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { RetryButton } from '@/components/ui/retry-button';
+import { announcementStatus } from '@/features/tickets/announcement-status';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
@@ -19,7 +20,7 @@ export async function ServiceAnnouncements({
     size = full ? 20 : 3;
   const { data, error } = await db
     .from('service_announcements')
-    .select('id,title,body,published_at')
+    .select('id,title,body,published_at,public_status,workaround,next_update_at')
     .eq('organization_id', viewer.organizationId)
     .is('withdrawn_at', null)
     .order('published_at', { ascending: false })
@@ -44,15 +45,35 @@ export async function ServiceAnnouncements({
       <ul className="service-notices-list">
         {(data ?? []).slice(0, size).map((notice) => (
           <li id={`notice-${notice.id}`} key={notice.id} className="service-notice">
-            <h3>{notice.title}</h3>
+            <div className="section-heading-row service-notice-heading">
+              <h3>{notice.title}</h3>
+              <span
+                className={`ticket-badge tone-${announcementStatus(notice.public_status).tone}`}
+              >
+                {announcementStatus(notice.public_status).label}
+              </span>
+            </div>
             <p className="service-notice-message">
               {full || notice.body.length <= 240 ? notice.body : `${notice.body.slice(0, 240)}…`}
             </p>
+            {notice.workaround && (
+              <p className="service-notice-message">
+                <strong>What to do:</strong>{' '}
+                {full || notice.workaround.length <= 240
+                  ? notice.workaround
+                  : `${notice.workaround.slice(0, 240)}…`}
+              </p>
+            )}
             <div className="service-notice-footer">
               <time dateTime={notice.published_at}>
-                Published <Timestamp value={notice.published_at} />
+                Updated <Timestamp value={notice.published_at} />
               </time>
-              {!full && notice.body.length > 240 && (
+              {notice.next_update_at && (
+                <span>
+                  Next update <Timestamp value={notice.next_update_at} />
+                </span>
+              )}
+              {!full && (notice.body.length > 240 || notice.workaround?.length > 240) && (
                 <Link href={`/app/service-status#notice-${notice.id}`}>Read full update</Link>
               )}
             </div>

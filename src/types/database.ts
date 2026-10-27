@@ -96,7 +96,16 @@ type LibraryTable = {
   >;
   Relationships: [];
 };
-type RuntimeTables = AutomationTables &
+type RuntimeTables = {
+  service_announcements: Omit<Tables['service_announcements'], 'Row'> & {
+    Row: Tables['service_announcements']['Row'] &
+      import('@/features/tickets/announcement-status').AnnouncementDetails;
+  };
+  service_announcement_drafts: Omit<Tables['service_announcement_drafts'], 'Row'> & {
+    Row: Tables['service_announcement_drafts']['Row'] &
+      import('@/features/tickets/announcement-status').AnnouncementDetails;
+  };
+} & AutomationTables &
   AutomationExecutionTables &
   InventoryTables & {
     ticket_workflows: {
@@ -358,7 +367,24 @@ type RuntimeTables = AutomationTables &
     };
   };
 
-type RuntimeFunctions = AutomationFunctions &
+type RuntimeFunctions = {
+  publish_employee_update: {
+    Args: {
+      org: string;
+      ticket: string;
+      expected_revision: number;
+      heading: string;
+      message: string;
+      request_key: string;
+      details: import('./database.generated').Json;
+    };
+    Returns: import('./database.generated').Json;
+  };
+  incident_report: {
+    Args: { org: string; page?: number };
+    Returns: import('./database.generated').Json;
+  };
+} & AutomationFunctions &
   DomainEventFunctions &
   AutomationExecutionFunctions &
   AutomationWorkerFunctions &

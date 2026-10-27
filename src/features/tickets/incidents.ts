@@ -1,6 +1,8 @@
 import { formString } from '@/lib/form-data';
 import { isUuid } from '@/lib/ids';
 
+import { parseDeadline } from './deadlines';
+
 export const incidentSeverities = {
   critical: {
     label: 'Critical',
@@ -30,10 +32,18 @@ export type Incident = {
   affected_locations: string[];
   created_at: string;
   updated_at: string;
+  disruption_started_at?: string | null;
+  service_restored_at?: string | null;
 };
 export type IncidentInput = Pick<
   Incident,
-  'severity' | 'business_impact' | 'owner_id' | 'affected_services' | 'affected_locations'
+  | 'severity'
+  | 'business_impact'
+  | 'owner_id'
+  | 'affected_services'
+  | 'affected_locations'
+  | 'disruption_started_at'
+  | 'service_restored_at'
 >;
 export function parseIncident(
   form: FormData,
@@ -70,5 +80,35 @@ export function parseIncident(
       error:
         'Enter up to 30 services and 30 locations, one per line, with at most 120 characters per name.',
     };
-  return { data: { severity, business_impact, owner_id, affected_services, affected_locations } };
+  const data: IncidentInput = {
+    severity,
+    business_impact,
+    owner_id,
+    affected_services,
+    affected_locations,
+  };
+  for (const [prefix, key] of [
+    ['disruption', 'disruption_started_at'],
+    ['restored', 'service_restored_at'],
+  ] as const) {
+    if (!form.has(`${prefix}At`)) continue;
+    const value = parseDeadline(
+      formString(form, `${prefix}At`, ''),
+      formString(form, `${prefix}Timezone`, ''),
+      formString(form, `${prefix}Occurrence`, ''),
+    );
+    if (value === undefined || (value && Date.parse(value) > Date.now()))
+      return {
+        error:
+          'Choose valid incident times in the past, including an occurrence when the clock changes.',
+      };
+    data[key] = value;
+  }
+  if (
+    data.service_restored_at &&
+    (!data.disruption_started_at ||
+      Date.parse(data.service_restored_at) < Date.parse(data.disruption_started_at))
+  )
+    return { error: 'Service restored must be on or after disruption started.' };
+  return { data };
 }

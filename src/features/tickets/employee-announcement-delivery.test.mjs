@@ -213,7 +213,9 @@ test('one-step employee announcements publish atomically and email active member
         assert.ok(claimed.some((r) => r.recipient_email === 'events-requester@example.invalid'));
         assert.ok(
           claimed.every(
-            (r) => r.approved_body === 'IT is working with the provider.' && r.ticket_id === null,
+            (r) =>
+              r.approved_body === 'Status: Investigating\n\nIT is working with the provider.' &&
+              r.ticket_id === null,
           ),
         );
         assert.doesNotMatch(JSON.stringify(claimed), /SECRET|INTERNAL/);

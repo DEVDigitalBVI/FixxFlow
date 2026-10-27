@@ -9,6 +9,9 @@ import { reportServerError } from '@/lib/server-errors';
 import { createClient } from '@/lib/supabase/server';
 import type { Json } from '@/types/database';
 
+import { announcementStatuses } from './announcement-status';
+import { parseDeadline } from './deadlines';
+
 export async function manageServiceAnnouncement(
   form: FormData,
 ): Promise<{ error?: string; success?: string; revision?: number }> {
@@ -33,16 +36,35 @@ export async function manageServiceAnnouncement(
     (title.length < 3 || title.length > 180 || body.length < 3 || body.length > 3000)
   )
     return { error: 'Enter a title (3–180 characters) and message (3–3,000 characters).' };
+  const publicStatus = formString(form, 'publicStatus', 'investigating'),
+    workaround = formString(form, 'workaround', '').trim(),
+    nextUpdate = parseDeadline(
+      formString(form, 'nextUpdateAt', ''),
+      viewer.timeZone,
+      formString(form, 'nextUpdateOccurrence', ''),
+    );
+  if (
+    operation === 'publish' &&
+    (!Object.hasOwn(announcementStatuses, publicStatus) ||
+      workaround.length > 1000 ||
+      nextUpdate === undefined ||
+      (nextUpdate && Date.parse(nextUpdate) <= Date.now()))
+  )
+    return {
+      error:
+        'Choose a status, keep the workaround under 1,000 characters, and choose a valid future update time.',
+    };
   const db = await createClient();
   const { data, error } =
     operation === 'publish'
-      ? await db.rpc('publish_employee_announcement', {
+      ? await db.rpc('publish_employee_update', {
           org: viewer.organizationId,
           ticket,
           expected_revision: revision,
           heading: title,
           message: body,
           request_key: requestKey,
+          details: { public_status: publicStatus, workaround, next_update_at: nextUpdate ?? null },
         })
       : await db.rpc('manage_service_announcement', {
           org: viewer.organizationId,

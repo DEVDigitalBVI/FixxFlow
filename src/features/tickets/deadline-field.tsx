@@ -6,12 +6,14 @@ import { deadlineCandidates, deadlineInputValue } from './deadlines';
 
 export function DeadlineField({
   timeZone,
+  name = 'due',
   value = null,
   required = false,
   label = 'Manual due date',
   hint = 'Optional. SLA targets are calculated separately.',
 }: {
   timeZone: string;
+  name?: string;
   value?: string | null;
   label?: string;
   hint?: string;
@@ -31,12 +33,12 @@ export function DeadlineField({
   const candidates = deadlineCandidates(local, zone);
   return (
     <div className="field">
-      <input type="hidden" name="dueTimezone" value={zone} />
+      <input type="hidden" name={`${name}Timezone`} value={zone} />
       <label htmlFor={id}>{label}</label>
       <input
         className="input"
         id={id}
-        name="dueAt"
+        name={`${name}At`}
         type="datetime-local"
         required={required}
         value={local}
@@ -57,7 +59,7 @@ export function DeadlineField({
           This time occurs twice
           <select
             className="input"
-            name="dueOccurrence"
+            name={`${name}Occurrence`}
             required
             value={occurrence}
             onChange={(event) => setOccurrence(event.target.value)}

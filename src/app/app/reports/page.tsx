@@ -11,6 +11,7 @@ import {
 import { SavedReportList } from '@/features/reporting/custom-components';
 import { getSavedReports } from '@/features/reporting/custom-data';
 import { getReport } from '@/features/reporting/data';
+import { IncidentReport } from '@/features/reporting/incident-report';
 import { ReportDownload } from '@/features/reporting/report-download';
 import { requireViewer } from '@/lib/auth/viewer';
 import { reportServerError } from '@/lib/server-errors';
@@ -24,7 +25,13 @@ async function loadSavedReports(organizationId: string) {
   }
 }
 
-export default async function ReportsPage() {
+export default async function ReportsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ incidentPage?: string }>;
+}) {
+  const params = await searchParams;
+  const incidentPage = Math.min(100000, Math.max(1, Number(params.incidentPage) || 1));
   const viewer = await requireViewer();
   if (viewer.role === 'end_user') notFound();
   const [report, savedReports] = await Promise.all([
@@ -60,6 +67,7 @@ export default async function ReportsPage() {
       ) : (
         <ReportUnavailable />
       )}
+      <IncidentReport organizationId={viewer.organizationId} page={Math.floor(incidentPage)} />
       <SavedReportList reports={savedReports} viewerId={viewer.id} />
     </div>
   );
