@@ -11301,3 +11301,70 @@ details.settings-card[open] > summary {
     margin-bottom: 20px;
   }
 }
+
+/* Coordinate leads with context and work, with content-sized spacing. */
+.incident-coordination,
+.incident-checklist,
+.ticket-procedures {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-width: 0;
+}
+.incident-coordination h2,
+.incident-coordination h3,
+.incident-coordination p,
+.ticket-procedures h2,
+.ticket-procedures > p,
+.ticket-procedures > p.muted {
+  margin: 0;
+}
+.incident-coordination h2,
+.ticket-procedures h2 {
+  font-size: 18px;
+  line-height: 24px;
+}
+.incident-coordination h3 {
+  font-size: 16px;
+  line-height: 24px;
+}
+.incident-impact {
+  display: grid;
+  gap: 4px;
+  overflow-wrap: anywhere;
+}
+.incident-impact p {
+  max-width: 75ch;
+}
+.incident-checklist {
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+.incident-coordination > details > summary.button,
+.incident-checklist > details > summary.button {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 40px;
+}
+.incident-coordination .section-heading-row,
+.ticket-procedures .section-heading-row {
+  margin-bottom: 0;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  min-width: 0;
+}
+.incident-coordination .section-heading-row > *,
+.ticket-procedures .section-heading-row > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ticket-procedures > .response-checklist:empty,
+.incident-checklist > .response-checklist:empty {
+  display: none;
+}
+@media (max-width: 767px) {
+  .incident-summary {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

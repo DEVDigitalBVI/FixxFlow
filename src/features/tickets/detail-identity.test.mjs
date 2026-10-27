@@ -8,6 +8,9 @@ import { load } from '../../../tests/helpers/load-module.mjs';
 test('full page and queue drawer isolate the entire workflow by ticket identity, not revision', async () => {
   let selected = 'ticket-a';
   const Workflow = () => null;
+  const Announcement = () => null;
+  const Incident = () => null;
+  const Procedures = () => null;
   const db = {
     from(table) {
       const response = () => ({
@@ -53,6 +56,9 @@ test('full page and queue drawer isolate the entire workflow by ticket identity,
     '@/lib/supabase/server': { createClient: async () => db },
     '@/features/lookups/labels': { profileLabels: async () => [] },
     './ticket-workflow': { TicketWorkflow: Workflow },
+    './service-announcement-panel': { ServiceAnnouncementPanel: Announcement },
+    './incident-panel': { IncidentPanel: Incident },
+    '@/features/workflows/ticket-procedures': { TicketProcedures: Procedures },
   });
   const find = (node) => {
     if (!React.isValidElement(node)) return null;
@@ -69,6 +75,11 @@ test('full page and queue drawer isolate the entire workflow by ticket identity,
     selected = 'ticket-b';
     const second = find(await TicketDetail({ ticketId: selected, embedded }));
     assert.ok(first);
+    assert.deepEqual(
+      React.Children.toArray(first.props.tools.props.children).map((child) => child.type),
+      [Announcement, Incident, Procedures],
+      'coordination leads with the announcement and incident work before procedures',
+    );
     assert.ok(second);
     assert.ok(first.key.endsWith('ticket-a'));
     assert.ok(second.key.endsWith('ticket-b'));

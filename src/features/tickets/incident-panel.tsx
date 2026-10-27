@@ -65,16 +65,13 @@ export async function IncidentPanel({
   return (
     <section
       id="incident-summary"
-      className="settings-card stack"
+      className="settings-card incident-coordination"
       aria-labelledby="incident-summary-heading"
     >
       <div className="section-heading-row">
         <h2 id="incident-summary-heading">Incident summary</h2>
         <span className={`ticket-badge tone-${severity.tone}`}>Severity: {severity.label}</span>
       </div>
-      <p className="muted">
-        IT staff only · Severity describes impact; ticket priority controls urgency.
-      </p>
       {ownerError && (
         <p role="alert">
           The incident owner name could not load. <RetryButton />
@@ -98,12 +95,12 @@ export async function IncidentPanel({
           </dd>
         </div>
       </dl>
-      <div>
+      <div className="incident-impact">
         <h3>Business impact</h3>
         <p className="ticket-description">{data.business_impact}</p>
       </div>
       <details>
-        <summary>Edit incident details</summary>
+        <summary className="button button-secondary">Edit incident details</summary>
         <IncidentEditor
           ticketId={ticketId}
           ticketRevision={revision}

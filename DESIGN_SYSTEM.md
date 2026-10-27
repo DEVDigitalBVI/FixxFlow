@@ -536,3 +536,7 @@ Knowledge articles have separate Publication status and Audience controls. New a
 ### Compact home announcements
 
 Show employee announcements as one quiet notice with a small IT announcements label, the issue title, message and subdued publication time grouped together. Use the surface/border tokens and a small warning edge, with written text conveying the issue. Avoid a large section heading or repeated instructions. Keep spacing content-sized, reset heading/paragraph margins locally, wrap long content on compact screens, preserve long-message links and keep the home page's support actions close by.
+
+### Incident coordination hierarchy
+
+Coordinate presents the employee announcement, incident summary and response checklist before applied procedures. Keep severity next to the summary heading, owner/service/location in a compact responsive row, and business impact directly below. Use content-sized spacing, existing typography and surface tokens, and consistent secondary-action disclosures for editing and adding steps. Empty checklists show a short message and Add step without a zero-progress count. Keep staff-only guidance out of repeated section introductions; preserve explicit audience labels where messages are sent. Procedure details and saved provenance remain available in native disclosures.
