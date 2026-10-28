@@ -220,3 +220,22 @@
     gap: 12px;
   }
 }
+
+@layer components {
+  :where(.scope) :global(.knowledge-step-screenshot) {
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.knowledge-step-screenshot > a) {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+  }
+  :where(.scope) :global(.knowledge-step-screenshot figcaption) {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}

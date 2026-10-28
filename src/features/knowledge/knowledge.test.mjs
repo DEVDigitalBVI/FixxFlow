@@ -343,3 +343,21 @@ test('reviewed catalog explicitly separates employee guides from operational pro
       assert.equal(article.audience, 'it_only', article.title);
   }
 });
+
+test('support article links open a separate tab with an accessible announcement', () => {
+  const html = renderToStaticMarkup(
+    React.createElement(ArticleContent, {
+      content: [
+        {
+          type: 'link',
+          text: 'Microsoft: Fix camera problems',
+          url: 'https://support.microsoft.com/en-us/teams/meetings/my-camera-isn-t-working-in-microsoft-teams',
+        },
+      ],
+    }),
+  );
+  assert.match(html, /target="_blank"/);
+  assert.match(html, /rel="noopener noreferrer"/);
+  assert.match(html, /aria-label="Microsoft: Fix camera problems \(opens in a new tab\)"/);
+  assert.match(html, />Microsoft: Fix camera problems<\/a>/);
+});

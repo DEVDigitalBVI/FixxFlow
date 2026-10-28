@@ -5,9 +5,9 @@ import type { Viewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
 import type { LibraryArticle } from '@/types/database';
 
-import { ArticleContent } from './article-content';
 import { ArticleFeedback } from './article-feedback';
 import { knowledgeAudiences } from './audience';
+import { LibraryArticleContent } from './library-article-content';
 
 export async function LibraryArticleDetail({
   article,
@@ -62,7 +62,7 @@ export async function LibraryArticleDetail({
       </header>
       <p className="muted">Maintained by FixxFlow and shared across workspaces.</p>
       <article className="portal-detail-card">
-        <ArticleContent content={article.content} showContents />
+        <LibraryArticleContent content={article.content} />
       </article>
       {(related.error || !!related.data?.length) && (
         <section className="settings-card">
