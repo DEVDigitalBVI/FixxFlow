@@ -46,13 +46,12 @@ function contrast(a, b) {
     y = luminance(b);
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
-test('status colors meet WCAG AA in explicit and automatic themes, with distinct active, waiting, urgent and resolved tones', () => {
+test('status colors meet WCAG AA in explicit and automatic themes, within the shared yellow and neutral palette', () => {
   const base = tokens(css.match(/:root \{([\s\S]*?)\n\s*\}/)[1]);
   const explicit = tokens(css.match(/:root\[data-theme='dark'\] \{([\s\S]*?)\n\s*\}/)[1]);
   const automatic = tokens(css.match(/:root:not\(\[data-theme\]\) \{([\s\S]*?)\n\s*\}/)[1]);
   assert.deepEqual(automatic, explicit);
   for (const vars of [base, { ...base, ...explicit }]) {
-    const foregrounds = [];
     for (const role of ['active', 'warning', 'success', 'danger', 'neutral']) {
       const fg = resolve(vars[`--color-${role}`], vars),
         bg = resolve(
@@ -62,9 +61,7 @@ test('status colors meet WCAG AA in explicit and automatic themes, with distinct
           vars,
         );
       assert.ok(contrast(fg, bg) >= 4.5, `${role}: ${contrast(fg, bg).toFixed(2)} must meet 4.5:1`);
-      if (role !== 'neutral') foregrounds.push(fg);
     }
-    assert.equal(new Set(foregrounds).size, 4);
   }
   assert.notEqual(explicit['--color-surface'], explicit['--color-canvas']);
   assert.doesNotMatch(css, /--color-(?:info|cyan|brand-purple|danger-subtle)(?:\s*:|\))/);

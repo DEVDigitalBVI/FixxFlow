@@ -1,5 +1,5 @@
 {
-  "source": "Product-owner-authorized red, gunmetal, dark tangerine, off-white and dim gray rebrand, October 23 2026",
+  "source": "Product-owner-authorized yellow, charcoal, white and gray palette migration, October 28 2026",
   "iconSourceDimensions": [
     1254,
     1254
@@ -11,17 +11,16 @@
   "format": "PNG RGBA",
   "vectorOriginalIncluded": false,
   "palette": {
-    "red": "#BD212C",
-    "gunmetal": "#282D33",
-    "amber": "#FBA917",
-    "white": "#FBFFFE",
-    "dimGray": "#6E676F"
+    "yellow": "#FFD700",
+    "charcoal": "#212529",
+    "white": "#FFFFFF",
+    "gray": "#ADB5BD"
   },
-  "method": "Built-in imagegen palette reference followed by deterministic Sharp palette normalization of original artwork, preserving exact alpha masks and dimensions.",
+  "method": "Built-in imagegen palette reference, followed by deterministic Sharp normalization of all existing artwork to the four exact palette colors; original alpha channels and dimensions preserved.",
   "prompts": {
-    "paletteMigration": "Recolor the exact FixxFlow logo: American red #BD212C ribbon and Flow, gunmetal #282D33 folds, off-white #FBFFFE wrench and inverse wordmark. Preserve silhouette, typography, layout and transparency."
+    "paletteMigration": "Recolor this exact FixxFlow logo as a palette migration reference. Preserve ribbon F with wrench, wordmark FixxFlow, tagline IT SUPPORT IN MOTION, composition and transparency. Replace red ribbon and Flow with golden yellow #FFD700. Replace dark gunmetal with charcoal #212529. White wrench #FFFFFF. Gray #ADB5BD secondary details. No new shapes or text."
   },
-  "derivatives": "All logo variants, source masters, app icons, favicon PNGs and ICO use the red-and-gunmetal palette. Monochrome variants retain their single-color role.",
+  "derivatives": "All logo variants, source masters, app icons, favicon PNGs and ICO use the yellow-and-charcoal palette. Monochrome variants retain their single-color role.",
   "darkArtwork": "Original alpha masks preserved. No backing plaque added. Launcher icons retain their intentional background.",
   "alphaFingerprints": {
     "logo/fixxflow-logo-dark-mode-transparent.png": "4e00e4065859eec47e3d7ab80487f025b3c5072323528cd5b03239ce9e4e37f7",

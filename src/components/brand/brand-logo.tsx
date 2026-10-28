@@ -20,7 +20,7 @@ export function BrandLogo({
       <Link className={classes} href={href} aria-label="FixxFlow home">
         <Image
           className="brand-logo-navigation-icon"
-          src="/brand/fixxflow/icon/fixxflow-icon-primary.png?v=red-gunmetal-20261023"
+          src="/brand/fixxflow/icon/fixxflow-icon-primary.png?v=yellow-charcoal-20261028"
           width={1139}
           height={1151}
           alt=""
@@ -41,7 +41,7 @@ export function BrandLogo({
       {variant === 'full-inverse' ? (
         <Image
           className="brand-logo-image"
-          src="/brand/fixxflow/logo/fixxflow-logo-dark-mode-transparent.png?v=red-gunmetal-20261023"
+          src="/brand/fixxflow/logo/fixxflow-logo-dark-mode-transparent.png?v=yellow-charcoal-20261028"
           width={1353}
           height={1334}
           alt="FixxFlow — IT Support in Motion"
@@ -51,7 +51,7 @@ export function BrandLogo({
       ) : variant === 'compact' ? (
         <Image
           className="brand-logo-image"
-          src="/brand/fixxflow/icon/fixxflow-icon-primary.png?v=red-gunmetal-20261023"
+          src="/brand/fixxflow/icon/fixxflow-icon-primary.png?v=yellow-charcoal-20261028"
           width={1139}
           height={1151}
           alt="FixxFlow"
@@ -61,7 +61,7 @@ export function BrandLogo({
       ) : variant === 'horizontal' ? (
         <Image
           className="brand-logo-image"
-          src="/brand/fixxflow/logo/fixxflow-logo-horizontal-full.png?v=red-gunmetal-20261023"
+          src="/brand/fixxflow/logo/fixxflow-logo-horizontal-full.png?v=yellow-charcoal-20261028"
           width={2172}
           height={724}
           alt="FixxFlow — IT Support in Motion"
@@ -73,7 +73,7 @@ export function BrandLogo({
           <Image
             key={theme}
             className={`brand-logo-image brand-logo-image-${theme}`}
-            src={`/brand/fixxflow/logo/fixxflow-logo-${theme === 'light' ? 'primary' : 'dark-mode-transparent'}.png?v=red-gunmetal-20261023`}
+            src={`/brand/fixxflow/logo/fixxflow-logo-${theme === 'light' ? 'primary' : 'dark-mode-transparent'}.png?v=yellow-charcoal-20261028`}
             width={1353}
             height={1334}
             alt="FixxFlow — IT Support in Motion"

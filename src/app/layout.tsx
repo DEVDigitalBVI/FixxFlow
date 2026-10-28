@@ -38,14 +38,14 @@ export const metadata: Metadata = {
   manifest: '/brand/fixxflow/site.webmanifest',
   icons: {
     icon: [
-      { url: '/brand/fixxflow/favicon/favicon.ico?v=red-gunmetal-20261023' },
+      { url: '/brand/fixxflow/favicon/favicon.ico?v=yellow-charcoal-20261028' },
       {
-        url: '/brand/fixxflow/favicon/favicon-32x32.png?v=red-gunmetal-20261023',
+        url: '/brand/fixxflow/favicon/favicon-32x32.png?v=yellow-charcoal-20261028',
         sizes: '32x32',
         type: 'image/png',
       },
     ],
-    apple: '/brand/fixxflow/favicon/apple-touch-icon.png?v=red-gunmetal-20261023',
+    apple: '/brand/fixxflow/favicon/apple-touch-icon.png?v=yellow-charcoal-20261028',
   },
 };
 

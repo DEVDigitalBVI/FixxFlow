@@ -91,10 +91,10 @@ export async function createOrganizationPdf(data: OrganizationExport): Promise<U
     height = 595.28,
     margin = 32,
     content = width - margin * 2,
-    ink = rgb(40 / 255, 45 / 255, 51 / 255),
-    muted = rgb(110 / 255, 103 / 255, 111 / 255),
-    border = rgb(229 / 255, 229 / 255, 229 / 255),
-    surface = rgb(242 / 255, 242 / 255, 242 / 255);
+    ink = rgb(33 / 255, 37 / 255, 41 / 255),
+    muted = rgb(84 / 255, 91 / 255, 98 / 255),
+    border = rgb(173 / 255, 181 / 255, 189 / 255),
+    surface = rgb(241 / 255, 243 / 255, 245 / 255);
   // Name and address get room to wrap; counts stay narrow.
   const weights = [3.2, 2.2, 2, 1.5, 1, 1, 1.2, 1.1, 1, 0.9, 1, 0.9, 0.9, 1.5];
   const unit = content / weights.reduce((sum, value) => sum + value, 0);

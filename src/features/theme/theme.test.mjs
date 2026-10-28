@@ -100,18 +100,18 @@ function contrast(a, b) {
     y = luminance(b);
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
-test('explicit and system dark themes share the approved red-and-gunmetal palette', () => {
+test('explicit and system dark themes share the approved yellow-and-charcoal palette', () => {
   const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const explicit = css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1];
   const system = css.match(/:root:not\(\[data-theme\]\) \{([^}]+)\}/)[1];
   assert.equal(explicit.trim(), system.trim());
   for (const [token, value] of Object.entries({
-    canvas: '#23282e',
-    surface: '#30363e',
-    accent: '#fba917',
-    text: '#fbfffe',
-    'text-muted': '#c2c2c2',
-    focus: '#fba917',
+    canvas: '#212529',
+    surface: '#2b3035',
+    accent: '#ffd700',
+    text: '#ffffff',
+    'text-muted': '#adb5bd',
+    focus: '#ffd700',
   }))
     assert.ok(explicit.includes(`--color-${token}: ${value};`), token);
 });
@@ -145,7 +145,7 @@ test('dark text, states, buttons, charts and focus meet contrast thresholds', ()
   for (const fill of ['accent', 'accent-hover'])
     assert.ok(contrast(tokens['on-accent'], tokens[fill]) >= 4.5, fill);
 });
-test('light surfaces and red filled actions retain readable contrast in both themes', () => {
+test('light surfaces and yellow filled actions retain readable contrast in both themes', () => {
   const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const read = (block) =>
     Object.fromEntries(
@@ -318,12 +318,12 @@ test('brand logo variants use approved artwork at its original proportions', () 
     if (variant !== 'full') assert.equal(imageProps.at(-1).preload, true);
     assert.doesNotMatch(html, /raster-master/);
   }
-  // Fingerprints of the product-owner-authorized red-and-gunmetal brand artwork.
+  // Fingerprints of the product-owner-authorized yellow-and-charcoal brand artwork.
   const approved = {
-    primary: '9ab9a2cd89da79c574dddfc383961812ffb92693b0d3aa4fc2ef111a2674fc85',
-    'dark-mode': '8f9d96be959afec6d96e792eea3cd2c536cc0d1398663989c5df52d6456b940f',
-    'dark-mode-transparent': '8f9d96be959afec6d96e792eea3cd2c536cc0d1398663989c5df52d6456b940f',
-    'horizontal-full': '01f97921fdc5d139c7cbf860dd60b3bd692e4250b0d3eeaa3666ce2213ff5e82',
+    primary: '7c2b002b68a9dfbc4f253cf54e493f15e292cf7eaa46385fd70ad1fb3a1d3ecf',
+    'dark-mode': '93ce120db191847b89308d5c0a627f0182d8515e7a819a37a38bb776a85259dc',
+    'dark-mode-transparent': '93ce120db191847b89308d5c0a627f0182d8515e7a819a37a38bb776a85259dc',
+    'horizontal-full': '817a2551ea75272feb956a815a1dc401a0eea603cefd952c39a140c8b528024a',
   };
   for (const [name, fingerprint] of Object.entries(approved)) {
     assert.equal(
@@ -464,15 +464,53 @@ test('rebranded artwork versions are allowed by image optimization and favicon c
     fs.readFileSync('public/brand/fixxflow/favicon/favicon.ico'),
   );
   const manifest = JSON.parse(fs.readFileSync('public/brand/fixxflow/site.webmanifest', 'utf8'));
-  assert.equal(manifest.theme_color, '#BD212C');
+  assert.equal(manifest.theme_color, '#ffd700');
 });
 
-test('brand wordmark keeps palette red independently of dark-mode link accents', () => {
+test('brand wordmark keeps readable theme accents', () => {
   const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
-  assert.match(css, /--color-brand-primary: #bd212c;/);
+  assert.match(css, /--color-brand-primary: #ffd700;/);
   assert.match(
     css,
-    /\.brand-logo-navigation-wordmark span:last-child \{ color: var\(--color-brand-primary\); \}/,
+    /\.brand-logo-navigation-wordmark span:last-child \{ color: var\(--color-accent\); \}/,
   );
   assert.doesNotMatch(css, /#(?:fff0f1|fff1f1|ffadb5|ffc2c8|42272e|ff9a9a|44262f)\b/i);
+});
+
+test('every shipped brand bitmap uses only the four approved colors', async () => {
+  const visit = (dir) =>
+    fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const file = `${dir}/${entry.name}`;
+      return entry.isDirectory() ? visit(file) : file.endsWith('.png') ? [file] : [];
+    });
+  const palette = new Set(['255,215,0', '33,37,41', '255,255,255', '173,181,189']);
+  for (const file of visit('public/brand/fixxflow')) {
+    const { data } = await sharp(file).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i + 3] === 0) continue;
+      assert.ok(palette.has(`${data[i]},${data[i + 1]},${data[i + 2]}`), file);
+    }
+  }
+});
+
+test('product styles and email templates cannot reintroduce the retired brand palette', () => {
+  const oldPalette = /#(?:bd212c|a71d27|fba917|282d33|fbfffe|6e676f)\b/i;
+  assert.doesNotMatch(productStyles(), oldPalette);
+  for (const name of fs.readdirSync('supabase/templates')) {
+    if (name.endsWith('.html'))
+      assert.doesNotMatch(fs.readFileSync(`supabase/templates/${name}`, 'utf8'), oldPalette, name);
+  }
+});
+
+test('all four reference colors have explicit shared product roles', () => {
+  const css = productStyles();
+  for (const [role, value] of Object.entries({
+    'brand-primary': '#ffd700',
+    'brand-secondary': '#adb5bd',
+    'brand-ink': '#212529',
+    surface: '#ffffff',
+  }))
+    assert.ok(css.includes(`--color-${role}: ${value};`), `${role} uses ${value}`);
+  assert.match(css, /--color-border-strong: #adb5bd;/);
+  assert.match(css, /--color-text-muted: #adb5bd;/);
 });

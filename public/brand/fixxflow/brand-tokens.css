@@ -1,22 +1,22 @@
 :root {
-  --fixxflow-red: #bd212c;
-  --fixxflow-amber: #fba917;
-  --fixxflow-red-link: #a71d27;
-  --fixxflow-red-soft: #f1f2f3;
-  --fixxflow-ink: #282d33;
-  --fixxflow-black: #282d33;
-  --fixxflow-canvas: #f1f2f3;
-  --fixxflow-card: #fbfffe;
-  --fixxflow-dark: #282d33;
-  --fixxflow-text-primary: #282d33;
-  --fixxflow-text-secondary: #6e676f;
-  --fixxflow-text-inverse: #fbfffe;
-  --fixxflow-border-subtle: #e1e3e5;
-  --fixxflow-info: #bd212c;
-  --fixxflow-success: #22c55e;
-  --fixxflow-warning: #f59e0b;
-  --fixxflow-critical: #ef4444;
-  --fixxflow-inactive: #6e676f;
+  --fixxflow-yellow: #ffd700;
+  --fixxflow-gray: #adb5bd;
+  --fixxflow-link: #212529;
+  --fixxflow-soft: #f1f3f5;
+  --fixxflow-ink: #212529;
+  --fixxflow-black: #212529;
+  --fixxflow-canvas: #f1f3f5;
+  --fixxflow-card: #ffffff;
+  --fixxflow-dark: #212529;
+  --fixxflow-text-primary: #212529;
+  --fixxflow-text-secondary: #545b62;
+  --fixxflow-text-inverse: #ffffff;
+  --fixxflow-border-subtle: #dee2e6;
+  --fixxflow-info: #ffd700;
+  --fixxflow-success: #343a40;
+  --fixxflow-warning: #ffd700;
+  --fixxflow-critical: #212529;
+  --fixxflow-inactive: #545b62;
   --fixxflow-font-ui: Inter, ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
 }

@@ -45,17 +45,17 @@ test('all email variants share a compact header and left-aligned content', () =>
     );
     assert.match(
       html,
-      /<p style="margin:0 0 8px;color:#6e676f;font-size:14px;line-height:22px;font-weight:500">/,
+      /<p style="margin:0 0 8px;color:#545b62;font-size:14px;line-height:22px;font-weight:500">/,
       name,
     );
-    assert.match(html, /<p style="margin:0 0 20px;color:#282d33;">/, name);
+    assert.match(html, /<p style="margin:0 0 20px;color:#212529;">/, name);
     assert.match(
       html,
       /<td align="left" style="text-align:left;padding:16px 24px;border-top:/,
       name,
     );
     assert.match(html, /width="100%"[^>]*style="max-width:560px/, name);
-    assert.match(html, /max-width:560px;background:#fbfffe;border:0;border-radius:16px/, name);
+    assert.match(html, /max-width:560px;background:#ffffff;border:0;border-radius:16px/, name);
     assert.doesNotMatch(html, /border:1px solid #795500/, name);
     assert.match(html, /fixxflow-logo-horizontal\.png[^>]*width="136"/, name);
     assert.doesNotMatch(
@@ -68,7 +68,7 @@ test('all email variants share a compact header and left-aligned content', () =>
       assert.match(html, /padding:10px 18px/, name);
     }
     if (html.includes('Security notice'))
-      assert.match(html, /<td align="left" bgcolor="#fff7e6" style="text-align:left;/, name);
+      assert.match(html, /<td align="left" bgcolor="#fff8cc" style="text-align:left;/, name);
   }
 });
 
@@ -373,7 +373,7 @@ test('approved incident emails use the shared brand and deliver only the saved m
   assert.doesNotMatch(body.html, /<script>/);
   assert.match(body.html, /\/app\/incident-updates\/bulletin-1/);
   assert.doesNotMatch(body.html, /\/app\/tickets\/ticket-1/);
-  assert.match(body.html, /#bd212c/);
+  assert.match(body.html, /#ffd700/);
   assert.match(body.html, /fixxflow-logo-horizontal\.png/);
 });
 
