@@ -1,6 +1,6 @@
 /* Private authenticated images intentionally bypass the public image optimizer. */
 /* eslint-disable @next/next/no-img-element */
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 
 import { parseArticleContent, safeArticleLink } from './content';
 
@@ -21,10 +21,19 @@ export function ArticleContent({
   content,
   images = {},
   showContents = false,
+  stepScreenshots = [],
 }: {
   content: unknown;
   images?: Record<string, string>;
   showContents?: boolean;
+  stepScreenshots?: {
+    afterText: string;
+    src: string;
+    alt: string;
+    source: string;
+    width: number;
+    height: number;
+  }[];
 }) {
   const blocks = parseArticleContent(content);
   if (!blocks)
@@ -80,7 +89,12 @@ export function ArticleContent({
           case 'link':
             return (
               <p key={i}>
-                <a href={safeArticleLink(block.url ?? '') ?? undefined} rel="noreferrer">
+                <a
+                  href={safeArticleLink(block.url ?? '') ?? undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${block.text} (opens in a new tab)`}
+                >
                   {block.text}
                 </a>
               </p>
@@ -94,7 +108,53 @@ export function ArticleContent({
               <p key={i}>Image unavailable: {block.text}</p>
             );
           default:
-            return <p key={i}>{inline(block.text)}</p>;
+            return (
+              <Fragment key={i}>
+                <p>{inline(block.text)}</p>
+                {stepScreenshots
+                  .filter((shot) => shot.afterText === block.text)
+                  .map((shot) => (
+                    <figure key={shot.src} className="knowledge-step-screenshot">
+                      <a
+                        href={shot.src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open full-size screenshot: ${shot.alt} (opens in a new tab)`}
+                      >
+                        <img
+                          src={shot.src}
+                          alt={shot.alt}
+                          width={shot.width}
+                          height={shot.height}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </a>
+                      <figcaption>
+                        {shot.alt}{' '}
+                        <a
+                          href={shot.src}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Open full-size screenshot: ${shot.alt} (opens in a new tab)`}
+                        >
+                          Open full-size screenshot
+                        </a>
+                        {' · '}
+                        <a
+                          href={shot.source}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Microsoft source (opens in a new tab)"
+                        >
+                          Microsoft source
+                        </a>
+                        <span className="muted"> Screens may vary by app version and device.</span>
+                      </figcaption>
+                    </figure>
+                  ))}
+              </Fragment>
+            );
         }
       })}
     </div>
