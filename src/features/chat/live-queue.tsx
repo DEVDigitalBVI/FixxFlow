@@ -77,7 +77,7 @@ export function LiveChatQueue({
   }, [organizationId, viewerId, personal, refresh]);
   return (
     <span className="chat-connection" data-connected={connected} role="status">
-      {connected ? 'Live queue' : 'Refreshing queue'}
+      {connected ? 'Connected' : 'Reconnecting…'}
     </span>
   );
 }

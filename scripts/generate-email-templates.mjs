@@ -20,7 +20,7 @@ export const templates = [
   [
     'invite-user',
     'You are invited to FixxFlow',
-    'FixxFlow brings your team’s IT support into one place. Accept your invitation to get started.',
+    'Accept your invitation to join your team’s FixxFlow workspace.',
     'Accept invitation',
     'If you were not expecting this invitation, contact your workspace administrator.',
   ],

@@ -319,6 +319,8 @@ test('Enter sends while Shift+Enter and IME composition retain native entry', ()
 test('media uploads render in the thread with private links and prevent duplicate uploads', async () => {
   const f = fixture({ worker: true });
   try {
+    f.h.find((n) => n.type === 'select').props.onChange({ target: { value: 'message' } });
+    f.h.render();
     const file = new File(['video'], 'recording.mp4', { type: 'video/mp4' });
     f.upload(file);
     f.upload(file);
@@ -418,6 +420,28 @@ test('compact composer keeps staff audiences explicit and preserves each draft w
     );
   } finally {
     employee.h.close();
+  }
+});
+
+test('internal notes cannot carry attachments because chat files are shared with the employee', async () => {
+  const f = fixture({ worker: true });
+  try {
+    const input = () => f.h.find((n) => n.type === 'input' && n.props.type === 'file');
+    assert.equal(input().props.disabled, true);
+    assert.equal(input().props['aria-describedby'], 'chat-audience');
+    assert.match(
+      f.h.find((n) => n.props.id === 'chat-audience').props.children.join(''),
+      /Files are always shared with the employee/,
+    );
+    f.upload(new File(['photo'], 'photo.png', { type: 'image/png' }));
+    await tick();
+    assert.equal(f.uploads.length, 0);
+    f.h.find((n) => n.type === 'select').props.onChange({ target: { value: 'message' } });
+    f.h.render();
+    assert.equal(input().props.disabled, false);
+    assert.equal(input().props['aria-label'], 'Attach a file for the employee');
+  } finally {
+    f.h.close();
   }
 });
 

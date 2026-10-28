@@ -181,6 +181,7 @@ The approved, versioned asset package lives under `public/brand/fixxflow/`. Refr
 - Prefer a small number of meaningful metrics over decorative charts. Charts require accessible summaries and must not rely on color alone.
 - Align comparable values and keep card heights consistent within a row. Empty cards explain why no data exists and what the user can do next.
 - Report trends keep exact daily values in a native disclosure, collapsed initially and labeled with the day count. Expanded data uses a keyboard-focusable scroll region capped at 24rem or 55% of viewport height, with sticky column headers. Preserve all dates, including zero activity and missing timing samples, without expanding the entire report to the table's full height.
+- The Reports page opens with a labeled row of section links, using the same quiet buttons as the Settings section links, so long reports can be navigated without scrolling. Links target section headings that exist even when a section fails to load.
 - Reports offer a labeled file-format selector and Download report action for Excel, CSV, and PDF. Include all detailed rows, the reporting period, timezone, and snapshot time. Distinguish missing measurements from zero. Announce preparation and download status, retain format choice after errors, and stack controls on compact screens. PDF exports use the approved full logo, repeated table headings, and page numbers.
 
 ### 5.2 Ticket queue: list first, board later
@@ -375,7 +376,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Operational overview hierarchy
 
 - Lead the staff overview with a compact charcoal introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with gunmetal text; the focus outline uses palette amber for contrast against charcoal.
-- Place real metrics before shortcuts and personal support actions. On wide screens, group comparable metrics in one divided panel; on compact screens, use two columns and a single column below 360px.
+- Place work queue shortcuts first, then today’s metrics, then workload and trends. Link to Reports once, from the workload and trends section. On wide screens, group comparable metrics in one divided panel; on compact screens, use two columns and a single column below 360px.
 - Queue shortcuts use native links, a title, brief supporting text, and a decorative arrow. Numbered markers indicate reading order, never ticket counts. Keep secondary support actions neutral so they do not compete with the queue.
 - Shared cards favor borders over shadows. Preserve clear input boundaries, visible focus, and the employee portal’s larger controls.
 
@@ -435,7 +436,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Employee request creation
 
 - Continue the home page’s compact heading, accent eyebrow, and lightly tinted optional surfaces within a centered 720px form layout. Lead with subject and description; use brief guidance instead of repeated section introductions. Keep category/location and helpful guides in native disclosures, closed initially. Equipment-linked requests retain the equipment identity and omit location.
-- Keep attachment guidance, Cancel, and Open ticket together at the end. Preserve draft protection, pending state, recoverable errors, and mobile wrapping.
+- Keep the optional Screenshots or files picker (up to 5 files), Cancel, and Submit request together at the end. Files upload directly to storage after the request is created; a failed file never blocks the request and is named in the confirmation so it can be added again. Preserve draft protection, pending state, recoverable errors, and mobile wrapping.
 - Employee category and location dropdowns show search and its guidance only when the unfiltered choices span more than one page. Keep search visible while filtering and retain paging for larger organizations. Single-page dropdowns omit inactive paging controls.
 - Empty optional lookups must not block creation when their choices are loading or unavailable. Once a value is selected, retain the shared save guard until it can be resolved.
 
@@ -493,7 +494,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Guided staff ticket workflow
 
-- Every staff ticket uses a guided wizard: Review request, Assign & start, Coordinate, Respond, Resolve, Activity history. Omit Coordinate for tickets that do not offer coordination tools. Each step explains its purpose and provides labeled Back/Next controls. Navigation never changes ticket state; explicit save/actions do. Keep the employee portal unchanged.
+- The full staff ticket route uses a guided wizard: Review request, Assign & start, Coordinate, Respond, Resolve, Activity history. Omit Coordinate for tickets that do not offer coordination tools. Each step explains its purpose and provides labeled Back/Next controls. Navigation never changes ticket state; explicit save/actions do. Keep the employee portal unchanged.
 - Keep all step panels mounted so navigation preserves drafts. Expose only the current panel, mark the current step in text/ARIA, and move keyboard focus to its heading after explicit navigation. Step links are directly accessible; URL fragments retain the chosen step. Existing work resumes at the relevant step without forcing a reply or unnecessary reassignment.
 - Offer explicit Assign to me and Start work actions. Use the Status dropdown and Save status for every status change, including resolution; do not duplicate it with a Mark resolved button. Mutations change only named fields and reject stale revisions; taking a ticket never replaces another worker. Keep assignment/priority easy to find and classification/deadlines in a native disclosure.
 - Coordination and activity history are wizard steps, not disclosures below the flow. Coordinate explains active work when present and clearly marks coordination as optional for routine tickets. Show recent activity directly within its step and retain the full-history link. All steps remain directly accessible from the numbered navigation.
@@ -599,3 +600,15 @@ Show relevant guides directly below a request subject as it is typed, without re
 ### Provider sign-in branding
 
 Microsoft and Google sign-in controls may use their official logos, provider button colors and provider fonts, as requested for company sign-in. Keep this exception scoped to those controls; the rest of FixxFlow retains the shared tokens and Inter typography. Host assets locally, preserve the logos' original colors and proportions, use explicit sign-in labels, provide at least 44px targets and the shared keyboard focus indicator, and give providers equal prominence. The permitted light button treatment may remain light within the dark page theme.
+
+### Compact queue drawer (October 2026)
+
+- On phones, keep New ticket beside the queue title and place Saved views and Filters and sort side by side below the search field, so the first ticket appears without scrolling. An open disclosure takes the full width. People uses the same approach: invite actions share a row, and the count sits beside the directory heading.
+- The queue drawer is for quick handling, not the guided wizard. Order: ticket number, identity and state (badges, subject, requester, tags), SLA summary, ownership and status actions (Assign to me, Start work, Status), the request description and reported impact, then the recent conversation with the reply composer. Reassignment, priority, classification, coordination, files, tags, watchers and activity stay on the full ticket route, reached through Open full ticket.
+- The drawer close control reads Close details so it is never mistaken for a status change. Reply drafts reset by ticket identity when another ticket is selected.
+- Staff chat shows the owner beside the conversation heading and offers Assign to me for unassigned open chats; reassignment, ticket linking and conversion stay in Details. Chat attachments are always shared with the employee, so attaching is disabled while composing an internal note.
+
+### Employee request details and home (October 2026)
+
+- Employee request details keep First reply and Resolution targets visible; the support-hours explanation sits in a closed How these times work disclosure. The attach action sits directly below the reply composer; the Attachments section lists files and offers upload only when the request is resolved or closed.
+- Employee home explains the two routes: Chat with IT for quick questions during support hours, Submit a request for problems, equipment and follow-up work. Search tips sit in a closed disclosure.

@@ -48,10 +48,13 @@ export function RequestExpectations({ ticket }: { ticket: SlaTicket & { status: 
         {resolution && <Row term="Resolution" item={resolution} />}
       </dl>
       {active && ticket.sla_timezone && (
-        <p className="muted">
-          Targets count support hours, {SUPPORT_HOURS} ({ticket.sla_timezone}). IT may adjust the
-          urgency after review, which updates these times.
-        </p>
+        <details className="request-expectations-policy">
+          <summary>How these times work</summary>
+          <p className="muted">
+            Targets count support hours, {SUPPORT_HOURS} ({ticket.sla_timezone}). IT may adjust the
+            urgency after review, which updates these times.
+          </p>
+        </details>
       )}
     </section>
   );

@@ -72,27 +72,30 @@ test('all email variants share a compact header and left-aligned content', () =>
   }
 });
 
-test('invitation overview has three semantic role lists before its primary action', () => {
+test('invitation leads with inviter and workspace, then the action, then one role sentence', () => {
   const html = fs.readFileSync('supabase/templates/invite-user.html', 'utf8');
-  assert.match(html, /What you can do in FixxFlow/);
   assert.match(html, /\{\{ \.Data.invited_by \}\}/);
   assert.match(html, /\{\{ \.Data.workspace_name \}\}/);
+  assert.doesNotMatch(html, /What you can do|brings your team’s IT support into one place/);
   const branches = html.match(
     /\{\{ if eq \.Data.invitation_role "administrator" \}\}([\s\S]*?)\{\{ else if eq \.Data.invitation_role "technician" \}\}([\s\S]*?)\{\{ else \}\}([\s\S]*?)\{\{ end \}\}/,
   );
   assert.ok(branches, 'Role branches include an employee fallback for missing metadata');
   for (const branch of branches.slice(1)) {
-    assert.match(branch, /<ul[^>]*>/);
-    assert.equal((branch.match(/<li /g) || []).length, 3);
-    assert.doesNotMatch(branch, /<a /);
+    assert.doesNotMatch(branch, /<a |<ul|<li/);
+    assert.ok(branch.length < 160, 'each role note is one short sentence');
   }
   assert.match(branches[1], /manage workspace access/);
   assert.match(branches[2], /internal notes/);
-  assert.match(branches[3], /Submit IT requests/);
-  assert.ok(html.indexOf('What you can do') < html.indexOf('>Accept invitation</a>'));
+  assert.match(branches[3], /submit IT requests/);
+  const invited = html.indexOf('invited you');
+  const action = html.indexOf('>Accept invitation</a>');
+  const role = html.indexOf('As an administrator');
+  assert.ok(invited > 0 && invited < action, 'inviter and workspace come before the action');
+  assert.ok(action < role, 'the role note follows the action');
   assert.doesNotMatch(
     fs.readFileSync('supabase/templates/reset-password.html', 'utf8'),
-    /What you can do/,
+    /invited you|As an administrator/,
   );
 });
 

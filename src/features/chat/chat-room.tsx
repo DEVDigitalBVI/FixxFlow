@@ -127,6 +127,8 @@ export function ChatRoom({
     isWorker ? 'internal_note' : 'message',
   );
   const draft = drafts[kind];
+  // Chat files are always visible to the employee, so notes cannot carry them.
+  const noteMode = isWorker && kind === 'internal_note';
   const draftField = useRef<HTMLTextAreaElement>(null);
 
   function insertSavedReply(text: string) {
@@ -362,7 +364,7 @@ export function ChatRoom({
   }
 
   async function upload(file: File | undefined) {
-    if (!file || !open || uploadInFlight.current) return;
+    if (!file || !open || noteMode || uploadInFlight.current) return;
     if (!validChatAttachment(file)) {
       setFeedback(
         'Choose a nonempty photo, MP4, WebM, MOV, audio, PDF, text, Word, or Excel file up to 10 MB.',
@@ -633,7 +635,7 @@ export function ChatRoom({
           />
           <p id="chat-audience" className="muted">
             {kind === 'internal_note'
-              ? 'Only IT staff can see this note. Attachments are shared with the employee.'
+              ? 'Only IT staff can see this note. Files are always shared with the employee, so attaching is off for notes.'
               : isWorker
                 ? 'Visible to the employee.'
                 : 'Shared with IT support.'}{' '}
@@ -648,19 +650,26 @@ export function ChatRoom({
                 disabled={sending}
               />
             )}
-            <label className="button button-secondary chat-file-button">
+            <label
+              className="button button-secondary chat-file-button"
+              data-disabled={noteMode || undefined}
+            >
               <input
                 type="file"
-                aria-label="Attach a photo, video, audio or file"
+                aria-label={
+                  isWorker
+                    ? 'Attach a file for the employee'
+                    : 'Attach a photo, video, audio or file'
+                }
                 accept={chatAttachmentTypes.join(',')}
-                aria-describedby="chat-upload-hint"
-                disabled={uploading}
+                aria-describedby={noteMode ? 'chat-audience' : 'chat-upload-hint'}
+                disabled={uploading || noteMode}
                 onChange={(event) => {
                   void upload(event.target.files?.[0]);
                   event.target.value = '';
                 }}
               />
-              {uploading ? 'Uploading…' : 'Attach'}
+              {uploading ? 'Uploading…' : isWorker ? 'Attach for employee' : 'Attach'}
             </label>
             <details className="chat-upload-guide">
               <summary>Files · 10 MB</summary>
@@ -689,7 +698,7 @@ export function ChatRoom({
           {feedback}
         </p>
       )}
-      {failedUpload && !uploading && open && (
+      {failedUpload && !uploading && open && !noteMode && (
         <button
           className="button button-secondary chat-upload-retry"
           type="button"

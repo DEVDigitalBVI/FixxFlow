@@ -17,6 +17,19 @@ import { SatisfactionReport } from '@/features/reporting/satisfaction-report';
 import { requireViewer } from '@/lib/auth/viewer';
 import { reportServerError } from '@/lib/server-errors';
 
+const reportSections = [
+  ['tickets-today', 'At a glance'],
+  ['report-sla-title', 'Service levels'],
+  ['report-trends-title', 'Activity & turnaround'],
+  ['report-workload-title', 'Current workload'],
+  ['report-breakdowns-title', 'Where requests come from'],
+];
+const supportingSections = [
+  ['report-satisfaction', 'Satisfaction'],
+  ['incident-report', 'Incidents'],
+  ['saved-reports', 'Saved reports'],
+];
+
 async function loadSavedReports(organizationId: string) {
   try {
     return await getSavedReports(organizationId);
@@ -51,6 +64,13 @@ export default async function ReportsPage({
           </Link>
         }
       />
+      <nav className="report-jump-nav" aria-label="Report sections">
+        {[...(report ? reportSections : []), ...supportingSections].map(([id, label]) => (
+          <a key={id} className="button button-quiet" href={`#${id}`}>
+            {label}
+          </a>
+        ))}
+      </nav>
       {report ? (
         <>
           <section className="settings-card report-toolbar" aria-labelledby="report-period-title">

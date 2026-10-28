@@ -299,7 +299,11 @@ export async function addTicketMessage(formData: FormData) {
   revalidatePath('/app/tickets');
   return {
     success:
-      kind === 'internal_note' ? 'Internal note added · IT staff only.' : 'Public reply sent.',
+      kind === 'internal_note'
+        ? 'Internal note added · IT staff only.'
+        : viewer.role === 'end_user'
+          ? 'Message sent to IT.'
+          : 'Public reply sent.',
   };
 }
 

@@ -184,7 +184,7 @@ test('empty, search and technician states explain different next steps', async (
 test('read authorization, query scope, paging and failures remain server enforced', async () => {
   await assert.rejects(page('end_user').render(), /NOT_FOUND/);
   const readOnly = await page('technician').render({ invite: '1' });
-  assert.doesNotMatch(readOnly, /Invite member|invite-name|Back to Administration/);
+  assert.doesNotMatch(readOnly, /Invite member|invite-name|Back to settings/);
   const directory = page('administrator', 60);
   const html = await directory.render({ page: '2', q: 'Alex', view: 'technicians' });
   assert.ok(

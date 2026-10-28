@@ -129,17 +129,35 @@ export default async function ConversationPage({
             <p>
               {worker ? person : `Chatting with ${person}`}{' '}
               <span>· {conversation.status === 'open' ? 'Open' : 'Closed'}</span>
+              {worker && (
+                <span>
+                  {' '}
+                  · Owner:{' '}
+                  {conversation.assigned_technician_id
+                    ? conversation.assigned_technician_id === viewer.id
+                      ? 'You'
+                      : (names[conversation.assigned_technician_id] ?? 'IT support')
+                    : 'Unassigned'}
+                </span>
+              )}
             </p>
-            {!worker && conversation.status === 'open' && (
+            {!worker && conversation.status === 'open' && !conversation.assigned_technician_id && (
               <p>
-                {conversation.assigned_technician_id
-                  ? 'Your assigned technician can reply here.'
-                  : lastSupportReply
-                    ? `IT support · Last replied by ${supportName}.`
-                    : 'Your conversation is in the IT support inbox. A technician has not picked it up yet.'}
+                {lastSupportReply
+                  ? `Last replied by ${supportName}.`
+                  : 'Waiting for a technician to pick this up.'}
               </p>
             )}
           </div>
+          {worker && conversation.status === 'open' && !conversation.assigned_technician_id && (
+            <ActionForm action={assignChat} className="chat-take-form" protectDraft={false}>
+              <input type="hidden" name="conversationId" value={conversation.id} />
+              <input type="hidden" name="assigneeId" value={viewer.id} />
+              <SubmitButton className="button button-primary" pendingLabel="Assigning…">
+                Assign to me
+              </SubmitButton>
+            </ActionForm>
+          )}
         </header>
         {worker && (
           <details className="chat-context">

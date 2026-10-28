@@ -280,3 +280,36 @@ test('reports page passes administrator-only SLA navigation without altering tec
     assert.equal(html.includes('href="/app/administration/slas"'), role === 'administrator');
   }
 });
+test('reports page links each section from one labelled jump list', async () => {
+  const fs = await import('node:fs');
+  const page = load('src/app/app/reports/page.tsx', {
+    'next/link': { default: (props) => React.createElement('a', props) },
+    'next/navigation': { notFound: () => assert.fail('unexpected notFound') },
+    '@/lib/auth/viewer': {
+      requireViewer: async () => ({
+        role: 'technician',
+        organizationId: 'org',
+        organizationName: 'Workspace',
+      }),
+    },
+    '@/features/reporting/data': { getReport: async () => reportFixture },
+    '@/features/reporting/satisfaction-report': { SatisfactionReport: () => null },
+    '@/features/reporting/incident-report': { IncidentReport: () => null },
+    '@/features/reporting/custom-data': { getSavedReports: async () => [] },
+    '@/features/reporting/custom-components': { SavedReportList: () => null },
+    '@/features/reporting/report-download': { ReportDownload: () => null },
+  }).default;
+  const html = renderToStaticMarkup(await page({ searchParams: Promise.resolve({}) }));
+  assert.match(html, /<nav class="report-jump-nav" aria-label="Report sections">/);
+  const targets = [...html.matchAll(/class="button button-quiet" href="#([^"]+)"/g)].map(
+    (m) => m[1],
+  );
+  assert.equal(targets.length, 8);
+  // Links into the main report land on headings rendered by this page.
+  for (const id of targets.slice(0, 5)) assert.match(html, new RegExp(`id="${id}"`));
+  // Supporting sections keep their id in both the loaded and the failure layout.
+  const source = (file) => fs.readFileSync(`src/features/reporting/${file}`, 'utf8');
+  assert.equal(source('satisfaction-report.tsx').match(/id="report-satisfaction"/g).length, 2);
+  assert.equal(source('incident-report.tsx').match(/id="incident-report"/g).length, 2);
+  assert.match(source('custom-components.tsx'), /<section id="saved-reports"/);
+});

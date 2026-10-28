@@ -279,6 +279,23 @@
     :where(.scope) :global(.chat-intake-form > .alert) {
       margin: 16px 16px 0;
     }
+    /* Keep Start a chat within reach on phones; the field still grows on demand. */
+    :where(.scope) :global(.chat-intake-fields) {
+      gap: 16px;
+    }
+    :where(.scope) :global(.chat-intake-fields textarea) {
+      min-height: 120px;
+      height: 132px;
+    }
+    :where(.scope) :global(.chat-recipient) {
+      padding-block: 12px;
+    }
+    :where(.scope) :global(.chat-intake-page > .page-back-link) {
+      margin-bottom: 16px;
+    }
+    :where(.scope) :global(.chat-intake-page > .page-header) {
+      margin-bottom: 16px;
+    }
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.chat-intake-footer > div) {
@@ -455,6 +472,13 @@
     height: 100%;
     opacity: 0;
     cursor: pointer;
+  }
+  :where(.scope) :global(.chat-file-button[data-disabled]) {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  :where(.scope) :global(.chat-file-button[data-disabled] input) {
+    cursor: not-allowed;
   }
   :where(.scope) :global(.chat-file-button:focus-within) {
     outline: 3px solid var(--color-focus);
@@ -789,6 +813,11 @@
   :where(.scope) :global(.chat-active-header .avatar) {
     flex-shrink: 0;
   }
+  :where(.scope) :global(.chat-take-form) {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
   :where(.scope) :global(.chat-active-identity) {
     min-width: 0;
     overflow-wrap: anywhere;
@@ -1073,11 +1102,16 @@
     }
   }
   @media (max-width: 767px) {
+    /* Give the conversation more of a phone screen: no avatar, tighter padding. */
     :where(.scope) :global(.chat-active-header) {
       display: grid;
-      grid-template-columns: 40px minmax(0, 1fr);
-      gap: 8px 12px;
-      padding: 12px 16px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 4px 12px;
+      min-height: 0;
+      padding: 8px 16px;
+    }
+    :where(.scope) :global(.chat-active-header .avatar) {
+      display: none;
     }
   }
   @media (max-width: 767px) {

@@ -164,7 +164,7 @@ export function TicketQueueContext({
               Ticket details
             </h2>
             <button type="button" className="button button-quiet" data-close-ticket onClick={close}>
-              Close ticket
+              Close details
             </button>
             <a className="button button-secondary" href={ticketDetailHref(selected!, returnTo)}>
               Open full ticket

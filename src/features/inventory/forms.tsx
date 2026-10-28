@@ -427,7 +427,7 @@ export function PermissionsForm({
               </div>
             ) : (
               <p className="inventory-permissions-empty">
-                No active departments. Add a department in Administration to enable requests.
+                No active departments. Add a department in Settings to enable requests.
               </p>
             )}
           </fieldset>

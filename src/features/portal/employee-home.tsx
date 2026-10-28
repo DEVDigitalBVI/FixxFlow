@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { SUPPORT_HOURS } from '@/features/tickets/expectations';
 import { formatTicketDate } from '@/features/tickets/presentation';
 import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
 import { SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
@@ -29,13 +30,14 @@ const actions = [
     href: '/app/chat?start=1',
     title: 'Chat with IT',
     emphasis: true,
-    description: 'Ask a question and continue the conversation',
+    description: `Best for quick questions. IT replies during support hours, ${SUPPORT_HOURS}.`,
   },
   {
     href: '/app/tickets/new',
     title: 'Submit a request',
     emphasis: false,
-    description: 'Describe an issue and track its progress',
+    description:
+      'Best for problems, equipment or anything that needs follow-up. Add screenshots and track progress.',
   },
 ] as const;
 
@@ -93,7 +95,10 @@ export function EmployeeHome({
               Search
             </button>
           </div>
-          <p id="home-help-hint">{SEARCH_HINT}</p>
+          <details className="portal-search-tips">
+            <summary>Search tips</summary>
+            <p id="home-help-hint">{SEARCH_HINT}</p>
+          </details>
         </form>
       </section>
       <section className="portal-recent" aria-labelledby="recent-heading">

@@ -129,6 +129,36 @@ test('a pending save rejects duplicate submissions and a successful redirect rel
   }
 });
 
+test('beforeRedirect runs after a successful save and may replace the destination', async () => {
+  const seen = [];
+  const f = fixture(async () => ({ redirectTo: '/app/tickets/created?success=Sent' }), {
+    beforeRedirect: async (url) => {
+      seen.push(url);
+      return `${url}%20with%20note`;
+    },
+  });
+  try {
+    f.submit();
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(seen, ['/app/tickets/created?success=Sent']);
+    assert.deepEqual(f.navigations, ['/app/tickets/created?success=Sent%20with%20note']);
+  } finally {
+    f.close();
+  }
+  const failing = fixture(async () => ({ redirectTo: '/app/tickets/created' }), {
+    beforeRedirect: async () => {
+      throw new Error('upload crashed');
+    },
+  });
+  try {
+    failing.submit();
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(failing.navigations, ['/app/tickets/created'], 'a saved ticket still opens');
+  } finally {
+    failing.close();
+  }
+});
+
 test('native validation reveals all enclosing disclosures without losing values', () => {
   const f = fixture(async () => ({}));
   try {

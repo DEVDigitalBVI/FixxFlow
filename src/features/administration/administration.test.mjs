@@ -32,7 +32,7 @@ function load(file, role, rows = [], error = null) {
     '@/features/identity/role': {
       rolePresentation: {
         technician: { label: 'Technician' },
-        end_user: { label: 'End User' },
+        end_user: { label: 'Employee' },
         administrator: { label: 'Administrator' },
       },
     },

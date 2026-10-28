@@ -180,9 +180,29 @@
       padding: 10px;
     }
   }
+  /* Phone directory: keep header actions, the count and Search on shared rows so
+     people appear sooner. */
   @media (max-width: 767px) {
     :where(.scope) :global(.people-search > .field) {
-      flex-basis: 100%;
+      flex: 1 1 0;
+    }
+    :where(.scope) :global(.people-page > .page-header .page-header-actions > .button) {
+      width: auto;
+      flex: 1 1 0;
+    }
+    :where(.scope) :global(.people-directory > .people-directory-heading) {
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      padding: 16px;
+    }
+    :where(.scope) :global(.people-directory > .people-directory-heading > div) {
+      min-width: 0;
+    }
+    :where(.scope) :global(.people-directory > .people-views) {
+      padding-bottom: 16px;
+    }
+    :where(.scope) :global(.people-directory > .people-directory-toolbar) {
+      padding: 16px;
     }
   }
   @media (max-width: 767px) {
@@ -361,7 +381,7 @@
     grid-template-columns: 44px minmax(220px, 1fr) minmax(220px, 0.9fr);
     align-items: center;
     gap: 16px;
-    padding: 20px 22px;
+    padding: 14px 22px;
   }
   :where(.scope) :global(.administration-setting-row + .administration-setting-row) {
     border-top: 1px solid var(--color-border);
@@ -441,7 +461,8 @@
     :where(.scope) :global(.administration-setting-row) {
       grid-template-columns: 40px minmax(0, 1fr);
       align-items: start;
-      padding: 18px 16px;
+      padding: 14px 16px;
+      gap: 4px 12px;
     }
   }
   @media (max-width: 767px) {

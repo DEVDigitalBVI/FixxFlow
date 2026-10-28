@@ -16,7 +16,11 @@ export async function SatisfactionReport({ organizationId }: { organizationId: s
   if (error || !isSatisfactionSummary(data)) {
     if (error) reportServerError('report.satisfaction', error);
     return (
-      <section className="settings-card" aria-label="Resolution satisfaction">
+      <section
+        id="report-satisfaction"
+        className="settings-card"
+        aria-label="Resolution satisfaction"
+      >
         <p role="alert">
           Satisfaction ratings could not load. <RetryButton />
         </p>
@@ -27,6 +31,7 @@ export async function SatisfactionReport({ organizationId }: { organizationId: s
   const average = data.average === null ? null : Number(data.average);
   return (
     <section
+      id="report-satisfaction"
       className="settings-card report-satisfaction"
       aria-labelledby="report-satisfaction-title"
     >

@@ -17,7 +17,10 @@ export function ActionForm({
   resetOnSuccess = false,
   protectDraft = true,
   id,
+  beforeRedirect,
 }: {
+  /** Runs after a successful save and before navigation; may return a replacement URL. */
+  beforeRedirect?: (redirectTo: string) => Promise<string | void>;
   action: (data: FormData) => Promise<ActionResult>;
   children: ReactNode;
   className?: string;
@@ -90,7 +93,13 @@ export function ActionForm({
               baseline.current = null;
             }
             if (next.redirectTo) {
-              router.push(next.redirectTo);
+              let target = next.redirectTo;
+              try {
+                target = (await beforeRedirect?.(target)) || target;
+              } catch {
+                // The save already succeeded; never strand the user on the form.
+              }
+              router.push(target);
               return;
             }
             if (next.success && resetOnSuccess) form.reset();

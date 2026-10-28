@@ -19,31 +19,13 @@ const purposeLabels: Record<EmailPurpose, string> = {
 };
 
 // These Go template branches are evaluated by Supabase, using presentation-only metadata.
-function renderInvitationOverview(): string {
-  const list = (items: [string, string][]) =>
-    `<ul role="list" style="list-style:none;margin:0;padding:0;text-align:left">${items.map(([title, description], index) => `<li style="margin:${index ? '20px' : '0'} 0 0"><strong style="display:block;margin:0 0 4px;font-size:16px;line-height:24px;font-weight:600;color:#282d33">${escapeEmailHtml(title)}</strong><span style="display:block;font-size:14px;line-height:22px;color:#6e676f">${escapeEmailHtml(description)}</span></li>`).join('')}</ul>`;
-  return `<p style="max-width:420px;margin:0 0 24px;overflow-wrap:anywhere">{{ if .Data.invited_by }}<strong>{{ .Data.invited_by }}</strong> has invited you{{ else }}Your team has invited you{{ end }} to join {{ if .Data.workspace_name }}<strong>{{ .Data.workspace_name }}</strong> on FixxFlow{{ else }}its FixxFlow workspace{{ end }}.</p>
-<div style="margin:0 0 32px;padding:24px 16px;background:#f1f2f3;border-radius:12px;text-align:left">
-<h2 style="margin:0 0 24px;font-size:18px;line-height:24px;font-weight:600">What you can do in FixxFlow</h2>
-{{ if eq .Data.invitation_role "administrator" }}
-${list([
-  ['Keep support moving', 'Manage tickets, priorities, and team assignments.'],
-  ['Bring your team together', 'Invite teammates and manage workspace access.'],
-  ['Shape your workspace', 'Configure your workspace and review support reports.'],
-])}
-{{ else if eq .Data.invitation_role "technician" }}
-${list([
-  ['See what needs attention', 'Manage your ticket queue and track priorities.'],
-  ['Work together', 'Collaborate with teammates using internal notes.'],
-  ['Keep people informed', 'Reply to requests and keep employees updated.'],
-])}
-{{ else }}
-${list([
-  ['Get help when you need it', 'Submit IT requests in one place.'],
-  ['Follow every update', 'Track progress and see updates on your requests.'],
-  ['Stay connected', 'Reply to your support team and keep the conversation together.'],
-])}
-{{ end }}</div>`;
+// The invitation leads with who invited the person and where, then the action.
+function renderInvitationLead(): string {
+  return `<p style="margin:0 0 20px;color:#282d33;">{{ if .Data.invited_by }}<strong>{{ .Data.invited_by }}</strong> invited you{{ else }}Your team invited you{{ end }} to join {{ if .Data.workspace_name }}<strong>{{ .Data.workspace_name }}</strong> on FixxFlow{{ else }}its FixxFlow workspace{{ end }}, where your team handles IT support.</p>`;
+}
+
+function renderInvitationRole(): string {
+  return `<p style="margin:24px 0 0;color:#282d33;font-size:14px;line-height:22px">{{ if eq .Data.invitation_role "administrator" }}As an administrator, you can manage tickets, invite teammates and manage workspace access.{{ else if eq .Data.invitation_role "technician" }}As a technician, you can work the ticket queue, collaborate using internal notes and keep employees updated.{{ else }}You can submit IT requests, follow their progress and reply to your support team.{{ end }}</p>`;
 }
 
 export function renderEmail({
@@ -103,12 +85,12 @@ ${workspaceName ? `<p style="margin:12px 0 0;font-size:14px;line-height:22px;fon
 <p style="margin:0 0 8px;color:#6e676f;font-size:14px;line-height:22px;font-weight:500">${e(notificationLabel ?? purposeLabels[purpose])}</p>
 <h1 style="margin:0 0 16px;font-size:24px;line-height:32px;font-weight:700;letter-spacing:-0.3px;color:#282d33">${e(title)}</h1>
 ${status ? `<p style="margin:0 0 16px;font-size:14px;line-height:22px;color:#282d33"><strong>Status:</strong> ${e(status)}</p>` : ''}
-<p style="margin:0 0 20px;color:#282d33;">${preserveLines ? e(message).replace(/\r?\n/g, '<br>') : e(message)}</p>
+${invitation ? renderInvitationLead() : `<p style="margin:0 0 20px;color:#282d33;">${preserveLines ? e(message).replace(/\r?\n/g, '<br>') : e(message)}</p>`}
 ${details.length ? `<table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;text-align:left;font-size:14px;line-height:22px"><caption style="text-align:left;font-weight:600;color:#282d33;padding:0 0 8px">Ticket details</caption><tbody>${details.map((detail) => `<tr><th scope="row" style="width:35%;padding:6px 12px 6px 0;color:#6e676f;font-weight:500;vertical-align:top">${e(detail.label)}</th><td style="padding:6px 0;color:#282d33;overflow-wrap:anywhere">${e(detail.value)}</td></tr>`).join('')}</tbody></table>` : ''}
 ${reopenReason ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;text-align:left"><tr><td style="padding:16px;background:#f1f2f3;border-radius:8px"><h2 style="margin:0 0 8px;color:#282d33;font-size:16px;line-height:24px;font-weight:600">Reason for reopening</h2><p style="margin:0;color:#282d33;white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:24px">${e(reopenReason)}</p></td></tr></table>` : ''}
 ${replyPreview ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;text-align:left"><tr><td style="padding:16px;background:#f1f2f3;border-radius:8px"><h2 style="margin:0 0 8px;color:#282d33;font-size:16px;line-height:24px;font-weight:600">Reply preview</h2><p style="margin:0;color:#282d33;white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:24px">${e(replyPreview)}</p></td></tr></table>` : ''}
-${invitation ? `${renderInvitationOverview()}\n` : ''}${code ? `<p style="margin:0 0 24px;padding:16px;background:#f1f2f3;border:0;border-radius:8px;font-size:28px;line-height:36px;font-weight:700;letter-spacing:6px;text-align:left">${e(code)}</p>` : ''}
-${action && href ? `<table role="presentation" style="margin:0" cellpadding="0" cellspacing="0"><tr><td bgcolor="#bd212c" style="border-radius:8px"><a href="${e(href)}" style="display:inline-block;padding:10px 18px;border:1px solid #bd212c;border-radius:8px;background:#bd212c;color:#fbfffe;text-decoration:none;font-size:16px;font-weight:600;line-height:24px">${e(action)}</a></td></tr></table><p style="margin:12px 0 0;font-size:13px;line-height:20px;color:#6e676f">Or <a href="${e(href)}" style="color:#a71d27;text-decoration:underline">open this link</a>.</p>` : ''}
+${code ? `<p style="margin:0 0 24px;padding:16px;background:#f1f2f3;border:0;border-radius:8px;font-size:28px;line-height:36px;font-weight:700;letter-spacing:6px;text-align:left">${e(code)}</p>` : ''}
+${action && href ? `<table role="presentation" style="margin:0" cellpadding="0" cellspacing="0"><tr><td bgcolor="#bd212c" style="border-radius:8px"><a href="${e(href)}" style="display:inline-block;padding:10px 18px;border:1px solid #bd212c;border-radius:8px;background:#bd212c;color:#fbfffe;text-decoration:none;font-size:16px;font-weight:600;line-height:24px">${e(action)}</a></td></tr></table><p style="margin:12px 0 0;font-size:13px;line-height:20px;color:#6e676f">Or <a href="${e(href)}" style="color:#a71d27;text-decoration:underline">open this link</a>.</p>` : ''}${invitation ? `\n${renderInvitationRole()}` : ''}
 ${
   note
     ? purpose === 'security-alert'

@@ -529,7 +529,7 @@ export default async function TicketsPage({
                       {sortOptions[sort]}
                       <span className="ticket-queue-sla-note">
                         {' '}
-                        · SLA targets use calendar hours
+                        · SLA targets count support hours
                       </span>
                     </span>
                   </div>
@@ -691,7 +691,9 @@ export default async function TicketsPage({
                         ? 'Try a shorter search or remove a filter to broaden your results.'
                         : page > 1
                           ? 'Return to the first page to see the latest support work.'
-                          : 'New support work will appear here. Check all tickets or create a ticket to get started.'}
+                          : view === 'all'
+                            ? 'New support work will appear here. Create a ticket to get started.'
+                            : 'New support work will appear here. Check all tickets or create a ticket to get started.'}
                     </p>
                     <Link
                       href={
@@ -699,7 +701,9 @@ export default async function TicketsPage({
                           ? clearHref
                           : page > 1
                             ? pageHref(1)
-                            : '/app/tickets?view=all'
+                            : view === 'all'
+                              ? '/app/tickets/new'
+                              : '/app/tickets?view=all'
                       }
                       className="button button-secondary"
                     >
@@ -707,7 +711,9 @@ export default async function TicketsPage({
                         ? 'Clear filters'
                         : page > 1
                           ? 'Back to first page'
-                          : 'Show all tickets'}
+                          : view === 'all'
+                            ? 'Create a ticket'
+                            : 'Show all tickets'}
                     </Link>
                   </div>
                 )}

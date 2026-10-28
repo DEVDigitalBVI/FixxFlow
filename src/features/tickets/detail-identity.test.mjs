@@ -5,7 +5,7 @@ import React from 'react';
 
 import { load } from '../../../tests/helpers/load-module.mjs';
 
-test('full page and queue drawer isolate the entire workflow by ticket identity, not revision', async () => {
+test('full page isolates the entire workflow by ticket identity, not revision', async () => {
   let selected = 'ticket-a';
   const Workflow = () => null;
   const Announcement = () => null;
@@ -60,16 +60,17 @@ test('full page and queue drawer isolate the entire workflow by ticket identity,
     './incident-panel': { IncidentPanel: Incident },
     '@/features/workflows/ticket-procedures': { TicketProcedures: Procedures },
   });
-  const find = (node) => {
+  const findBy = (node, match) => {
     if (!React.isValidElement(node)) return null;
-    if (node.type === Workflow) return node;
+    if (match(node)) return node;
     for (const child of React.Children.toArray(node.props.children)) {
-      const match = find(child);
-      if (match) return match;
+      const found = findBy(child, match);
+      if (found) return found;
     }
     return null;
   };
-  for (const embedded of [false, true]) {
+  const find = (node) => findBy(node, (n) => n.type === Workflow);
+  for (const embedded of [false]) {
     selected = 'ticket-a';
     const first = find(await TicketDetail({ ticketId: selected, embedded }));
     selected = 'ticket-b';
@@ -86,5 +87,23 @@ test('full page and queue drawer isolate the entire workflow by ticket identity,
     assert.notEqual(first.key, second.key);
     const refreshed = find(await TicketDetail({ ticketId: selected, embedded }));
     assert.equal(refreshed.key, second.key, 'same-ticket refresh preserves mounted drafts');
+  }
+  // The queue drawer is a compact view: no wizard, actions before the request and reply.
+  for (const id of ['ticket-a', 'ticket-b']) {
+    selected = id;
+    const drawer = await TicketDetail({ ticketId: id, embedded: true });
+    assert.equal(find(drawer), null, 'the drawer does not mount the full workflow');
+    const order = [];
+    findBy(drawer, (n) => {
+      const name = n.type?.name;
+      if (['TicketWorkActions', 'MessageComposer'].includes(name)) order.push(name);
+      if (n.type === 'p' && n.props.className === 'ticket-description') order.push('request');
+      return false;
+    });
+    assert.deepEqual(order, ['TicketWorkActions', 'request', 'MessageComposer']);
+    const actions = findBy(drawer, (n) => n.type?.name === 'TicketWorkActions');
+    assert.equal(actions.props.stage, 'all');
+    const composer = findBy(drawer, (n) => n.type?.name === 'MessageComposer');
+    assert.ok(composer.key.endsWith(id), 'switching tickets resets reply drafts');
   }
 });

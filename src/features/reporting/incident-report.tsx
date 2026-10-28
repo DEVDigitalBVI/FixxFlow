@@ -47,7 +47,7 @@ export async function IncidentReport({
   const { data, error } = await db.rpc('incident_report', { org: organizationId, page });
   if (error || !data || typeof data !== 'object' || !('summary' in data))
     return (
-      <section className="settings-card" aria-label="Incidents">
+      <section id="incident-report" className="settings-card" aria-label="Incidents">
         <p role="alert">
           Incident reporting could not load. <RetryButton />
         </p>

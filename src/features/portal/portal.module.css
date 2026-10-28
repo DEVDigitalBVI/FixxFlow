@@ -764,19 +764,22 @@
   :where(.scope) :global(.employee-requests-toolbar .live-search-status:empty) {
     margin: 0;
   }
-  :where(.scope) :global(.employee-request-search-help) {
+  :where(.scope) :global(.employee-request-search-help),
+  :where(.scope) :global(.portal-search-tips) {
     margin-top: 8px;
     color: var(--color-text-muted);
     font-size: 13px;
   }
-  :where(.scope) :global(.employee-request-search-help summary) {
+  :where(.scope) :global(.employee-request-search-help summary),
+  :where(.scope) :global(.portal-search-tips summary) {
     cursor: pointer;
     min-height: 44px;
     display: list-item;
     align-content: center;
     width: fit-content;
   }
-  :where(.scope) :global(.employee-request-search-help p) {
+  :where(.scope) :global(.employee-request-search-help p),
+  :where(.scope) :global(.portal-search-tips p) {
     margin: 4px 0 0;
     max-width: 65ch;
   }

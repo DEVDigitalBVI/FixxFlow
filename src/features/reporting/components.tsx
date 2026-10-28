@@ -299,7 +299,7 @@ export function ServiceLevels({
           )}
           <p className="report-footnote">
             Only completed targets with a recorded deadline are measured. Pending targets are
-            excluded. SLAs use calendar hours, including weekends.
+            excluded. SLA targets count support hours (7 AM–10 PM every day).
           </p>
         </div>
         <div className="report-sla-current">
@@ -340,7 +340,9 @@ export function ReportCharts({ report }: { report: Report }) {
         <header className="overview-section-heading">
           <div>
             <h2 id="report-trends-title">Activity & turnaround</h2>
-            <p>Last 30 days · Includes today. Timing measures elapsed calendar hours.</p>
+            <p>
+              Last 30 days · Includes today. Turnaround shows elapsed time, not SLA support time.
+            </p>
           </div>
         </header>
         <div className="report-chart-grid">

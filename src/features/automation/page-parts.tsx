@@ -22,10 +22,10 @@ export function AutomationHeader({
     <PageHeader
       title={title}
       description={description}
-      eyebrow="Administration"
+      eyebrow="Settings"
       back={{
         href: back,
-        label: backLabel ?? (back === '/app/administration' ? 'Administration' : 'Automations'),
+        label: backLabel ?? (back === '/app/administration' ? 'Settings' : 'Automations'),
       }}
       actions={actions}
     />

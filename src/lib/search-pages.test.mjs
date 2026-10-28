@@ -102,7 +102,10 @@ test('asset search uses a scoped RPC, exact counts and stable pagination while p
   assert.ok(a.calls.some((c) => c[1] === 'eq' && c[2] === 'status' && c[3] === 'repair'));
   assert.ok(a.calls.some((c) => c[1] === 'range' && c[2] === 25 && c[3] === 49));
   assert.match(html, /q=HP\+12345&amp;status=repair&amp;page=3/);
-  assert.match(html, /data-label="Serial number">1234567890/);
+  assert.match(
+    html,
+    /data-label="Serial number"><span class="asset-serial" title="1234567890">1234567890/,
+  );
   assert.match(html, /role="search"/);
   assert.match(html, /aria-describedby="asset-search-hint"/);
   assert.match(html, /type="search"/);

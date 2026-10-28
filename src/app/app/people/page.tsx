@@ -141,9 +141,7 @@ export default async function PeoplePage({ searchParams }: Props) {
             ? 'Your people, their roles and the access they need.'
             : 'Find the people in your workspace.'
         }
-        back={
-          canManage ? { href: '/app/administration', label: 'Back to Administration' } : undefined
-        }
+        back={canManage ? { href: '/app/administration', label: 'Back to settings' } : undefined}
         actions={
           canManage ? (
             <>

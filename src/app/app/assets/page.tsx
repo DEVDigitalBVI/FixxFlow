@@ -288,10 +288,10 @@ export default async function AssetsPage({
               <thead>
                 <tr>
                   <th scope="col">Asset</th>
-                  <th scope="col">Serial number</th>
-                  <th scope="col">Type</th>
                   <th scope="col">Asset status</th>
+                  <th scope="col">Type</th>
                   <th scope="col">Model</th>
+                  <th scope="col">Serial number</th>
                   <th scope="col">
                     <span className="sr-only">Actions</span>
                   </th>
@@ -306,12 +306,17 @@ export default async function AssetsPage({
                       </Link>
                       <div className="asset-tag">{a.tag}</div>
                     </td>
-                    <td data-label="Serial number">{a.serial_number ?? 'Not set'}</td>
-                    <td data-label="Type">{assetKinds[a.kind]}</td>
                     <td data-label="Asset status">
                       <AssetStatusBadge status={a.status} />
                     </td>
+                    <td data-label="Type">{assetKinds[a.kind]}</td>
                     <td data-label="Model">{a.model ?? 'Not set'}</td>
+                    <td data-label="Serial number">
+                      {/* Long serials truncate visually; the full value stays in the text. */}
+                      <span className="asset-serial" title={a.serial_number ?? undefined}>
+                        {a.serial_number ?? 'Not set'}
+                      </span>
+                    </td>
                     <td data-label="Actions">
                       <div className="asset-row-actions">
                         <Link className="button button-secondary" href={`/app/assets/${a.id}`}>
