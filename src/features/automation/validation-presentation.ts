@@ -50,6 +50,7 @@ export function presentValidationIssue(
       set_priority: 'Select a priority before saving this action.',
       set_status: 'Select a status before saving this action.',
       add_internal_note: 'Enter an internal note of 1–20,000 characters.',
+      suggest_articles: 'Choose a ticket creation trigger to reply with suggested articles.',
       send_notification: 'Select Requester or Assigned technician for the standard ticket update.',
     };
     return {

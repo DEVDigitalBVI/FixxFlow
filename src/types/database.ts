@@ -9,7 +9,7 @@ import type {
   AutomationExecutionTables,
 } from './automation-execution-database';
 import type { AutomationWorkerFunctions } from './automation-worker-database';
-import type { Database as GeneratedDatabase } from './database.generated';
+import type { Database as GeneratedDatabase, Json } from './database.generated';
 import type { DomainEventFunctions } from './domain-event-database';
 import type { InventoryFunctions, InventoryTables } from './inventory-database';
 
@@ -33,10 +33,16 @@ export type NotificationKind =
   | 'incident_update_due'
   | 'incident_escalation'
   | 'incident_approval'
-  | 'incident_step_assigned';
+  | 'incident_step_assigned'
+  | 'chat_idle_warning'
+  | 'chat_auto_closed'
+  | 'asset_lifecycle'
+  | 'inventory_low_stock';
 export type Notification = Omit<Tables['notifications']['Row'], 'kind'> & {
   kind: NotificationKind;
   incident_bulletin_id: string | null;
+  asset_id?: string | null;
+  inventory_item_id?: string | null;
 };
 export type KnowledgeArticle = Tables['knowledge_articles']['Row'] & {
   audience: import('@/features/knowledge/audience').KnowledgeAudience;
@@ -49,7 +55,7 @@ export type KnowledgeAsset = Tables['knowledge_attachments']['Row'];
 // by the generator. Keep these small refinements separate from generated schema.
 export type AssetKind = 'computer' | 'phone' | 'printer' | 'network' | 'software' | 'other';
 export type AssetStatus = 'available' | 'in_use' | 'repair' | 'retired';
-type AssetFields = { kind: AssetKind; status: AssetStatus };
+type AssetFields = { kind: AssetKind; status: AssetStatus; end_of_life_on?: string | null };
 export type Asset = Omit<Tables['assets']['Row'], keyof AssetFields> & AssetFields;
 export type NotificationEmail = Omit<
   Functions['claim_notification_emails']['Returns'][number],
@@ -97,6 +103,81 @@ type LibraryTable = {
   Relationships: [];
 };
 type RuntimeTables = {
+  ticket_resolution_ratings: {
+    Row: {
+      id: string;
+      organization_id: string;
+      ticket_id: string;
+      requester_id: string | null;
+      assigned_technician_id: string | null;
+      resolved_at: string;
+      score: number;
+      comment: string | null;
+      created_at: string;
+      updated_at: string;
+    };
+    Insert: never;
+    Update: never;
+    Relationships: [];
+  };
+  workspace_security_policies: {
+    Row: {
+      organization_id: string;
+      require_mfa: boolean;
+      revision: number;
+      updated_by: string;
+      updated_at: string;
+    };
+    Insert: never;
+    Update: never;
+    Relationships: [];
+  };
+  notification_preferences: {
+    Row: import('@/features/notifications/preferences-model').NotificationPreferenceRow;
+    Insert: never;
+    Update: never;
+    Relationships: [];
+  };
+  library_article_views: {
+    Row: { organization_id: string; article_id: string; user_id: string; viewed_on: string };
+    Insert: { organization_id: string; article_id: string };
+    Update: never;
+    Relationships: [];
+  };
+  library_article_feedback: {
+    Row: {
+      organization_id: string;
+      article_id: string;
+      user_id: string;
+      helpful: boolean;
+      updated_at: string;
+    };
+    Insert: { organization_id: string; article_id: string; helpful: boolean };
+    Update: { helpful: boolean };
+    Relationships: [];
+  };
+  hidden_library_articles: {
+    Row: {
+      organization_id: string;
+      article_id: string;
+      created_by: string | null;
+      created_at: string;
+    };
+    Insert: { organization_id: string; article_id: string };
+    Update: never;
+    Relationships: [];
+  };
+  chat_conversations: Omit<Tables['chat_conversations'], 'Row' | 'Insert' | 'Update'> & {
+    Row: Tables['chat_conversations']['Row'] & {
+      idle_warning_at: string | null;
+      idle_warning_anchor: string | null;
+      idle_warning_due_at: string | null;
+      idle_closed_at: string | null;
+      closure_summary: string | null;
+    };
+    Insert: Tables['chat_conversations']['Insert'];
+    Update: Tables['chat_conversations']['Update'];
+  };
   service_announcements: Omit<Tables['service_announcements'], 'Row'> & {
     Row: Tables['service_announcements']['Row'] &
       import('@/features/tickets/announcement-status').AnnouncementDetails;
@@ -263,7 +344,7 @@ type RuntimeTables = {
         organization_id: string;
         report_id: string;
         created_by: string;
-        frequency: 'weekly' | 'monthly';
+        frequency: 'daily' | 'weekly' | 'monthly';
         weekday: number | null;
         monthday: number | null;
         run_hour: number;
@@ -281,7 +362,7 @@ type RuntimeTables = {
         organization_id: string;
         report_id: string;
         created_by: string;
-        frequency: 'weekly' | 'monthly';
+        frequency: 'daily' | 'weekly' | 'monthly';
         weekday?: number | null;
         monthday?: number | null;
         run_hour: number;
@@ -294,7 +375,7 @@ type RuntimeTables = {
         updated_at?: string;
       };
       Update: {
-        frequency?: 'weekly' | 'monthly';
+        frequency?: 'daily' | 'weekly' | 'monthly';
         weekday?: number | null;
         monthday?: number | null;
         run_hour?: number;
@@ -330,6 +411,20 @@ type RuntimeTables = {
         audience?: import('@/features/knowledge/audience').KnowledgeAudience;
       };
     };
+    asset_assignments: {
+      Row: {
+        id: string;
+        organization_id: string;
+        asset_id: string;
+        user_id: string;
+        assigned_at: string | null;
+        returned_at: string | null;
+        recorded_at: string;
+      };
+      Insert: never;
+      Update: never;
+      Relationships: [];
+    };
     notifications: Omit<Tables['notifications'], 'Row'> & { Row: Notification };
     ticket_messages: Omit<Tables['ticket_messages'], 'Row'> & {
       Row: Omit<Tables['ticket_messages']['Row'], 'author_id'> & {
@@ -362,12 +457,95 @@ type RuntimeTables = {
       Insert: Omit<Tables['assets']['Insert'], keyof AssetFields> & {
         kind: AssetKind;
         status?: AssetStatus;
+        end_of_life_on?: string | null;
       };
       Update: Omit<Tables['assets']['Update'], keyof AssetFields> & Partial<AssetFields>;
     };
   };
 
 type RuntimeFunctions = {
+  account_authentication_policy: {
+    Args: Record<string, never>;
+    Returns: import('@/features/auth/workspace-policy').AccountAuthenticationPolicy[];
+  };
+  save_workspace_security_policy: {
+    Args: { org: string; expected_revision: number; require_authenticator: boolean };
+    Returns: number;
+  };
+  save_notification_preferences: {
+    Args: { org: string; expected_revision: number; settings: import('./database.generated').Json };
+    Returns: number;
+  };
+  claim_notification_digests: {
+    Args: { batch_size?: number };
+    Returns: import('@/features/notifications/preferences-model').NotificationDigest[];
+  };
+  finish_notification_digest: {
+    Args: { target: string; token: string; provider_message_id: string | null; failure: boolean };
+    Returns: boolean;
+  };
+  technician_workload: {
+    Args: { org: string };
+    Returns: {
+      user_id: string | null;
+      label: string;
+      active: boolean;
+      open_count: number;
+      waiting_count: number;
+      overdue_count: number;
+    }[];
+  };
+  import_asset_updates: { Args: { org: string; records: Json; expected: Json }; Returns: number };
+  set_inventory_reorder_threshold: {
+    Args: { org: string; item: string; threshold: number | null; expected: number | null };
+    Returns: undefined;
+  };
+  process_equipment_reminders: { Args: { batch_size?: number }; Returns: number };
+  search_workspace: {
+    Args: { org: string; search_text: string };
+    Returns: {
+      id: string;
+      kind: string;
+      label: string;
+      detail: string;
+      audience: string | null;
+      shared: boolean;
+      approximate: boolean;
+      score: number;
+    }[];
+  };
+  library_article_usage: {
+    Args: { article: string };
+    Returns: { views: number; helpful: number; unhelpful: number; workspaces: number }[];
+  };
+  suggest_knowledge_articles: {
+    Args: { org: string; query: string; category_name?: string };
+    Returns: import('@/features/knowledge/suggestions').SuggestedArticle[];
+  };
+  workspace_library_choices: {
+    Args: { org: string; query?: string; page_number?: number };
+    Returns: {
+      id: string;
+      title: string;
+      summary: string;
+      category: string;
+      audience: import('@/features/knowledge/audience').KnowledgeAudience;
+      hidden: boolean;
+    }[];
+  };
+  set_library_article_hidden: {
+    Args: { org: string; article: string; hide: boolean };
+    Returns: undefined;
+  };
+  record_library_article_view: {
+    Args: { target_organization_id: string; target_article_id: string };
+    Returns: undefined;
+  };
+  rate_library_article: {
+    Args: { target_organization_id: string; target_article_id: string; is_helpful: boolean };
+    Returns: undefined;
+  };
+  process_idle_chats: { Args: { batch_size?: number }; Returns: Json };
   publish_employee_update: {
     Args: {
       org: string;
@@ -606,6 +784,24 @@ type RuntimeFunctions = {
       Returns: boolean;
     };
     report_delivery_history: { Args: { target_report_id: string }; Returns: ReportDelivery[] };
+    rate_ticket_resolution: {
+      Args: { target: string; rating: number; remark?: string | null };
+      Returns: number;
+    };
+    satisfaction_summary: {
+      Args: { target_organization_id: string; days?: number };
+      Returns: import('./database.generated').Json;
+    };
+    platform_organization_export: {
+      Args: { search_text?: string; export_format?: string };
+      Returns: import('./database.generated').Json;
+    };
+    platform_analytics_retention: { Args: never; Returns: import('./database.generated').Json };
+    platform_product_usage_cleanup: { Args: never; Returns: import('./database.generated').Json };
+    run_product_usage_cleanup: {
+      Args: { row_limit?: number };
+      Returns: import('./database.generated').Json;
+    };
   };
 
 export type Database = Omit<GeneratedDatabase, 'public'> & {

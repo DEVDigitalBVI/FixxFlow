@@ -14,7 +14,7 @@ export default async function NewLibraryArticle() {
     .from('library_articles')
     .select('id,title,audience')
     .order('title')
-    .limit(200);
+    .limit(24);
   if (related.error)
     return (
       <div className="page">

@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
+
 /** Shared workspace heading. Navigation stays a native link; actions retain their own semantics. */
 export function PageHeader({
   title,
@@ -21,7 +23,7 @@ export function PageHeader({
     <>
       {back && (
         <Link className="button button-quiet page-back-link" href={back.href}>
-          <span aria-hidden="true">←</span>
+          <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
           {back.label}
         </Link>
       )}

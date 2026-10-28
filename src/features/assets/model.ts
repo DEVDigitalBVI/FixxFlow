@@ -31,6 +31,7 @@ export function assetInput(form: FormData) {
     location_id: value('location_id') || null,
     purchased_on: value('purchased_on') || null,
     warranty_until: value('warranty_until') || null,
+    end_of_life_on: value('end_of_life_on') || null,
   };
   if (!data.tag || data.tag.length > 60)
     return { error: 'Asset tag is required and must be at most 60 characters.' };
@@ -46,7 +47,7 @@ export function assetInput(form: FormData) {
   if ([data.assigned_user_id, data.location_id].some((v) => v && !uuid.test(v)))
     return { error: 'Choose a valid employee and location.' };
   if (
-    [data.purchased_on, data.warranty_until].some(
+    [data.purchased_on, data.warranty_until, data.end_of_life_on].some(
       (v) =>
         v &&
         (!/^\d{4}-\d{2}-\d{2}$/.test(v) ||
@@ -58,6 +59,8 @@ export function assetInput(form: FormData) {
     return { error: 'Enter valid dates.' };
   if (data.purchased_on && data.warranty_until && data.warranty_until < data.purchased_on)
     return { error: 'Warranty end cannot be before the purchase date.' };
+  if (data.purchased_on && data.end_of_life_on && data.end_of_life_on < data.purchased_on)
+    return { error: 'End of life cannot be before the purchase date.' };
   if (data.status === 'retired' && data.assigned_user_id)
     return { error: 'Unassign the employee before retiring this asset.' };
   return { data };

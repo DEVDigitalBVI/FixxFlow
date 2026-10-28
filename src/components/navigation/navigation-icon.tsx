@@ -6,6 +6,7 @@ const glyphs = {
   automation: <path d="m13 2-9 12h7l-1 8 10-13h-7l1-7Z" />,
   routing: <path d="M5 3v12a3 3 0 0 0 3 3h11m-4-4 4 4-4 4M5 6h14m-4-4 4 4-4 4" />,
 
+  arrowLeft: <path d="M20 12H4m6-6-6 6 6 6" />,
   arrowRight: <path d="M4 12h16m-6-6 6 6-6 6" />,
   arrowUpRight: <path d="M6 18 18 6M6 6h12v12" />,
   close: <path d="m6 6 12 12M6 18 18 6" />,

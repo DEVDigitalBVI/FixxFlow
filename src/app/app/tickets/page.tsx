@@ -67,6 +67,7 @@ export default async function TicketsPage({
   const returnTo = pageHref(page);
   const detailHref = (id: string) => ticketDetailHref(id, returnTo);
   const tickets = rows?.slice(0, 50);
+  const renderedAt = new Date().getTime();
   const searchNoun = viewer.role === 'end_user' ? 'requests' : 'tickets';
   const searchSummary = error
     ? `${viewer.role === 'end_user' ? 'Requests' : 'Tickets'} could not load. Use Search to try again.`
@@ -515,7 +516,7 @@ export default async function TicketsPage({
               </div>
             </div>
           ) : (
-            <SlaClock initialNow={new Date().getTime()}>
+            <SlaClock initialNow={renderedAt}>
               <form id="bulk-ticket-form" action={bulkUpdateTickets}>
                 {!!tickets?.length && (
                   <div className="ticket-queue-list-heading">
@@ -660,7 +661,7 @@ export default async function TicketsPage({
                             <td data-label="SLA">
                               <SlaIndicator ticket={ticket} compact />
                               {ticket.due_at &&
-                                new Date(ticket.due_at) < new Date() &&
+                                Date.parse(ticket.due_at) < renderedAt &&
                                 active.includes(ticket.status) && (
                                   <span className="ticket-manual-overdue">Due date overdue</span>
                                 )}

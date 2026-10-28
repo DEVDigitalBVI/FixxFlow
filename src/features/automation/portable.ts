@@ -51,6 +51,7 @@ function reject(message: string): never {
 // Explicitly reviewed export surface. Future secret-backed capabilities must opt in
 // with a safe projection, never inherit export support from a registry addition.
 const actions = [
+  'suggest_articles',
   'assign_technician',
   'assign_team',
   'set_priority',
@@ -60,6 +61,7 @@ const actions = [
   'send_notification',
 ];
 const actionKeys: Record<string, string[]> = {
+  suggest_articles: [],
   assign_technician: ['technicianId'],
   assign_team: ['teamId'],
   set_priority: ['priority'],
@@ -69,6 +71,8 @@ const actionKeys: Record<string, string[]> = {
   send_notification: ['recipient', 'template'],
 };
 const triggers = [
+  'ticket.created_from_email',
+  'ticket.created_from_chat',
   'ticket.created',
   'ticket.updated',
   'ticket.assigned',

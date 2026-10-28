@@ -13,6 +13,7 @@ import { getSavedReports } from '@/features/reporting/custom-data';
 import { getReport } from '@/features/reporting/data';
 import { IncidentReport } from '@/features/reporting/incident-report';
 import { ReportDownload } from '@/features/reporting/report-download';
+import { SatisfactionReport } from '@/features/reporting/satisfaction-report';
 import { requireViewer } from '@/lib/auth/viewer';
 import { reportServerError } from '@/lib/server-errors';
 
@@ -67,6 +68,7 @@ export default async function ReportsPage({
       ) : (
         <ReportUnavailable />
       )}
+      <SatisfactionReport organizationId={viewer.organizationId} />
       <IncidentReport organizationId={viewer.organizationId} page={Math.floor(incidentPage)} />
       <SavedReportList reports={savedReports} viewerId={viewer.id} />
     </div>

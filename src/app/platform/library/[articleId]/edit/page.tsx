@@ -17,14 +17,15 @@ export default async function EditLibraryArticle({
   const { articleId } = await params;
   if (!validId(articleId)) notFound();
   const db = await createClient();
-  const [article, related] = await Promise.all([
+  const [usage, article, related] = await Promise.all([
+    db.rpc('library_article_usage', { article: articleId }),
     db.from('library_articles').select('*').eq('id', articleId).maybeSingle(),
     db
       .from('library_articles')
       .select('id,title,audience')
       .neq('id', articleId)
       .order('title')
-      .limit(200),
+      .limit(24),
   ]);
   if (article.error || related.error)
     return (
@@ -62,6 +63,34 @@ export default async function EditLibraryArticle({
         assets={[]}
         related={[...(related.data ?? []), ...(extra.data ?? [])]}
       />
+      <section className="settings-card">
+        <h2>Usage across workspaces</h2>
+        {usage.error || !usage.data?.[0] ? (
+          <p role="alert">Usage could not load. Refresh to retry.</p>
+        ) : (
+          <>
+            <dl className="knowledge-metrics">
+              {(
+                [
+                  ['Views', usage.data[0].views],
+                  ['Helpful', usage.data[0].helpful],
+                  ['Not helpful', usage.data[0].unhelpful],
+                  ['Workspaces', usage.data[0].workspaces],
+                ] as const
+              ).map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="muted">
+              Views count each reader once per UTC day. Votes reflect the latest choice. Totals
+              include all workspaces.
+            </p>
+          </>
+        )}
+      </section>
     </div>
   );
 }

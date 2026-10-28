@@ -9,6 +9,7 @@ import { inventoryAccess } from '@/features/inventory/access';
 import { RequestForm, StockForm } from '@/features/inventory/forms';
 import { InventoryStockSummary } from '@/features/inventory/inventory-table';
 import { contextLabel } from '@/features/inventory/model';
+import { ReorderSettings } from '@/features/inventory/reorder-settings';
 import { profileLabels } from '@/features/lookups/labels';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -114,6 +115,7 @@ export default async function InventoryItemPage({
         }
       />
       <InventoryStockSummary item={item} />
+      {access.manager && <ReorderSettings item={item} />}
       {access.departments.includes(item.department_id) && (
         <section className="settings-card stack" id="request-item">
           <h2>Request an item</h2>

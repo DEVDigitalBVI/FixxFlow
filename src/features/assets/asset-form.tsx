@@ -23,6 +23,7 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
     location_id: asset?.location_id ?? '',
     purchased_on: asset?.purchased_on ?? '',
     warranty_until: asset?.warranty_until ?? '',
+    end_of_life_on: asset?.end_of_life_on ?? '',
   };
   const [draft, setDraft] = useState(initialDraft);
   const [state, action, pending] = useActionState(
@@ -183,6 +184,16 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
               type="date"
               onChange={change}
               value={draft.warranty_until}
+            />
+          </label>
+          <label className="field">
+            End of life
+            <input
+              className="input"
+              name="end_of_life_on"
+              type="date"
+              onChange={change}
+              value={draft.end_of_life_on}
             />
           </label>
         </div>

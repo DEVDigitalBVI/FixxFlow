@@ -8,21 +8,23 @@ import { NavigationIcon } from '@/components/navigation/navigation-icon';
 export function ArticleFeedback({
   articleId,
   initial,
+  library = false,
 }: {
   articleId: string;
   initial: boolean | null;
+  library?: boolean;
 }) {
   const [selected, setSelected] = useState(initial);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   useEffect(() => {
-    void recordArticleView(articleId).catch(() => {});
-  }, [articleId]);
+    void recordArticleView(articleId, library).catch(() => {});
+  }, [articleId, library]);
   async function vote(helpful: boolean) {
     setBusy(true);
     setMessage('');
     try {
-      const result = await rateArticle(articleId, helpful);
+      const result = await rateArticle(articleId, helpful, library);
       if (result.error) setMessage(result.error);
       else {
         setSelected(helpful);

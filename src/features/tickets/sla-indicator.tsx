@@ -22,6 +22,10 @@ export function SlaClock({ initialNow, children }: { initialNow: number; childre
   }, []);
   return <Clock value={now}>{children}</Clock>;
 }
+/** The shared, periodically refreshed "now" from the nearest SlaClock. */
+export function useSlaNow() {
+  return useContext(Clock);
+}
 const presentation: Record<SlaState, { tone: string; icon: NavigationIconName }> = {
   on_track: { tone: 'neutral', icon: 'clock' },
   warning: { tone: 'warning', icon: 'alert' },

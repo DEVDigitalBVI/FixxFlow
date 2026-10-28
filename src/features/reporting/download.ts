@@ -11,7 +11,7 @@ export async function fetchReportDownloadUrl(
   const response = await fetch(url, { cache: 'no-store', credentials: 'same-origin', signal });
   if (response.redirected || response.headers.get('content-type')?.includes('text/html')) {
     throw new Error(
-      'Your session may have expired. Reload Reports, sign in if prompted, and try again.',
+      'Your session may have expired. Reload this page, sign in if prompted, and try again.',
     );
   }
   if (!response.ok) {
@@ -28,7 +28,8 @@ export async function fetchReportDownloadUrl(
   const filename =
     response.headers
       .get('content-disposition')
-      ?.match(/filename="(fixxflow-(?:custom-)?report-[a-z0-9-]+\.(?:xlsx|csv|pdf))"/i)?.[1] ??
-    `fixxflow-report.${format}`;
+      ?.match(
+        /filename="(fixxflow-(?:(?:custom-)?report|organizations)-[a-z0-9-]+\.(?:xlsx|csv|pdf))"/i,
+      )?.[1] ?? `fixxflow-report.${format}`;
   return { blob: await response.blob(), filename };
 }

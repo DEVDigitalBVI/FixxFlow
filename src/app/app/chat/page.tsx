@@ -30,7 +30,12 @@ export default async function ChatPage({
           back={{ href: '/app/chat', label: 'Back to chats' }}
         />
         <div className="chat-intake-layout">
-          <StartChatForm submissionKey={randomUUID()} initialError={message} />
+          <StartChatForm
+            submissionKey={randomUUID()}
+            initialError={message}
+            timeZone={viewer.organizationTimezone}
+            initialAt={new Date().getTime()}
+          />
           <ChatIntakeGuide />
         </div>
       </div>

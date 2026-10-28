@@ -1,0 +1,27 @@
+@layer components {
+  .compact {
+    min-width: 0;
+  }
+  :where(.compact) :global(.enrollment-panel) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :where(.compact) :global(.security-status) {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .policy {
+    max-width: 680px;
+  }
+  .choice {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    min-height: 44px;
+  }
+  .choice input {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin: 3px 0 0;
+  }
+}

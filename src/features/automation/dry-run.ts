@@ -45,6 +45,15 @@ export function evaluateDryRun(
     warnings.push(
       'Hypothetical creation using current ticket values. This does not prove a ticket-created event occurred with these values.',
     );
+  if (
+    source.kind === 'current_ticket' &&
+    ['ticket.created_from_email', 'ticket.created_from_chat'].includes(
+      context.definition.trigger.type,
+    )
+  )
+    warnings.push(
+      'The selected intake channel is simulated. This does not prove the ticket came from email or chat.',
+    );
   if (source.kind === 'simulated_transition')
     warnings.push('The selected after values are simulated. No transition occurred.');
   if (historicalDifference)
@@ -68,7 +77,9 @@ export function evaluateDryRun(
       ? 'Would fail current reference validation: a target or recipient is unavailable, inactive or not permitted.'
       : blocked
         ? 'Would not execute after a stale context or an earlier invalid action.'
-        : 'Current references pass. Runtime success is not guaranteed.';
+        : action.type === 'suggest_articles'
+          ? 'Would look for relevant employee-visible guides at execution time. No reply is sent when none are available, IT has already replied, or a guide reply was already sent.'
+          : 'Current references pass. Runtime success is not guaranteed.';
     if (!valid) blocked = true;
     return {
       id: action.id,

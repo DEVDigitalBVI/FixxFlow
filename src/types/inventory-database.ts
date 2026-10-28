@@ -9,6 +9,7 @@ export type InventoryItem = {
   location_id: string;
   department_name: string;
   location_name: string;
+  reorder_threshold?: number | null;
   stock: number;
   reserved: number;
   created_at: string;

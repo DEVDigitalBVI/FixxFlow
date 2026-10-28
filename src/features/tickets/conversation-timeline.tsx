@@ -6,6 +6,7 @@ import { RetryButton } from '@/components/ui/retry-button';
 import { Timestamp } from '@/features/timezones/provider';
 import type { TicketMessageKind } from '@/types/database';
 
+import { ArticleSuggestionReply } from './article-suggestion-reply';
 import { messageAuthorName, type MessageAuthor } from './authorship';
 import { messageKinds } from './message-presentation';
 
@@ -92,7 +93,11 @@ export function ConversationTimeline({
                     <span>{note ? 'IT staff only' : 'Visible to requester'}</span>
                   </div>
                 )}
-                <p>{message.body}</p>
+                {message.author_type === 'automation' && message.kind === 'reply' ? (
+                  <ArticleSuggestionReply body={message.body} />
+                ) : (
+                  <p>{message.body}</p>
+                )}
               </article>
             </li>
           );

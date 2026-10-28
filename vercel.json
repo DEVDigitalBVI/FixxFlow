@@ -4,9 +4,13 @@
   "installCommand": "env -u npm_config_cache_dir -u NPM_CONFIG_CACHE_DIR npm ci",
   "buildCommand": "env -u npm_config_cache_dir -u NPM_CONFIG_CACHE_DIR npm run build",
   "crons": [
+    { "path": "/api/cron/notification-digests", "schedule": "* * * * *" },
+    { "path": "/api/cron/equipment", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/chats", "schedule": "*/5 * * * *" },
     { "path": "/api/cron/notifications", "schedule": "* * * * *" },
     { "path": "/api/cron/automation", "schedule": "* * * * *" },
     { "path": "/api/cron/automation-scheduler", "schedule": "* * * * *" },
-    { "path": "/api/cron/reports", "schedule": "*/15 * * * *" }
+    { "path": "/api/cron/reports", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/analytics-cleanup", "schedule": "17 3 * * *" }
   ]
 }

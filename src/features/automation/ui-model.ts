@@ -67,6 +67,8 @@ export function triggerPhrase(type: string) {
   return (
     (
       {
+        'ticket.created_from_email': 'a ticket is created from email',
+        'ticket.created_from_chat': 'a chat is converted into a ticket',
         'ticket.created': 'a ticket is created',
         'ticket.updated': 'a ticket is updated',
         'ticket.assigned': 'a ticket is assigned',
@@ -81,6 +83,8 @@ export function actionDescription(
   action: Pick<AutomationAction, 'type' | 'configuration'>,
   labels: Labels = {},
 ) {
+  if (action.type === 'suggest_articles')
+    return 'Reply with relevant employee guides, if available';
   if (action.type === 'add_internal_note') return 'Add an internal note';
   return `${actionLabel(action.type)} → ${Object.entries(action.configuration)
     .filter(([key]) => key !== 'template')
@@ -153,6 +157,7 @@ export function newCondition(
 }
 export function newAction(id: string, position: number, type = 'assign_team'): AutomationAction {
   const config: Record<string, JsonValue> = {
+    suggest_articles: {},
     assign_team: { teamId: '' },
     assign_technician: { technicianId: '' },
     set_priority: { priority: 'critical' },

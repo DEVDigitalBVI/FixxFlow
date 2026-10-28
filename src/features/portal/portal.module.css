@@ -72,6 +72,7 @@
   :where(.scope) :global(.portal-home) {
     width: min(100%, 860px);
     padding-top: clamp(40px, 5vw, 64px);
+    position: relative;
   }
   :where(.scope) :global(.portal-home-intro) {
     position: relative;
@@ -170,12 +171,6 @@
   }
   :where(.scope) :global(.portal-recent) {
     margin-top: 48px;
-  }
-  :where(.scope) :global(.portal-section-heading) {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
   }
   :where(.scope) :global(.portal-section-heading > div > p) {
     margin: 3px 0 0;
@@ -345,9 +340,6 @@
     display: grid;
     gap: 12px;
   }
-  :where(.scope) :global(.portal-articles .portal-detail-card) {
-    margin: 0;
-  }
   :where(.scope) :global(.portal-articles p) {
     margin-bottom: 0;
   }
@@ -404,9 +396,6 @@
     }
   }
   @media (max-width: 767px) {
-    :where(.scope) :global(.portal-signout) {
-      margin-left: auto;
-    }
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.portal-page) {
@@ -430,10 +419,6 @@
     }
   }
   @media (max-width: 767px) {
-    :where(.scope) :global(.portal-action) {
-      min-height: 96px;
-      padding: 18px 20px;
-    }
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.portal-action span:last-child) {
@@ -582,6 +567,7 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.portal-signout) {
+      margin-left: auto;
       min-height: 44px;
       padding-inline: 8px;
     }
@@ -593,6 +579,8 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.portal-action) {
+      min-height: 96px;
+      padding: 18px 20px;
       padding-right: 48px;
     }
   }
@@ -604,9 +592,6 @@
   :where(.scope) :global(.portal-page-heading) {
     flex-wrap: wrap;
     gap: 16px;
-  }
-  :where(.scope) :global(.portal-home) {
-    position: relative;
   }
   :where(.scope) :global(.portal-home::before) {
     content: none;
@@ -673,12 +658,17 @@
     }
   }
   :where(.scope) :global(.portal-section-heading) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
     flex-wrap: wrap;
   }
   :where(.scope) :global(.portal-page-heading .page-back-link) {
     width: fit-content;
   }
   :where(.scope) :global(.portal-articles .portal-detail-card) {
+    margin: 0;
     display: flex;
     flex-direction: column;
     padding: 24px;
@@ -693,10 +683,6 @@
   :where(.scope) :global(.portal-articles .portal-detail-card p:last-child) {
     color: var(--color-text-muted);
     line-height: 1.6;
-  }
-  :where(.scope) :global(.employee-more-nav > summary) {
-    list-style: revert;
-    cursor: pointer;
   }
   :where(.scope) :global(.portal-header .global-search-trigger) {
     width: auto;
@@ -744,6 +730,8 @@
     }
   }
   :where(.scope) :global(.employee-more-nav > summary) {
+    list-style: revert;
+    cursor: pointer;
     display: inline-flex;
     align-items: center;
     min-height: 44px;
@@ -901,11 +889,6 @@
   :where(.scope) :global(.portal-home .portal-home-intro::before) {
     content: none;
   }
-  :where(.scope) :global(.portal-home .portal-kicker) {
-    color: var(--color-text-muted);
-    margin-bottom: 16px;
-    overflow-wrap: anywhere;
-  }
   :where(.scope) :global(.portal-home .portal-greeting) {
     font-size: 16px;
     line-height: 24px;
@@ -938,11 +921,6 @@
     font-size: 16px;
     line-height: 24px;
   }
-  :where(.scope) :global(.portal-home .portal-action span:last-child) {
-    top: 20px;
-    right: 16px;
-    color: var(--color-accent);
-  }
   :where(.scope) :global(.portal-home .portal-action:hover) {
     background: var(--color-surface-subtle);
   }
@@ -952,6 +930,8 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     background: var(--color-surface);
+    background: color-mix(in srgb, var(--color-accent-subtle) 35%, var(--color-surface));
+    border-color: var(--color-border-strong);
   }
   :where(.scope) :global(.portal-home .portal-section-heading) {
     flex-wrap: wrap;
@@ -1059,6 +1039,8 @@
     }
   }
   :where(.scope) :global(.portal-home .portal-kicker) {
+    margin-bottom: 16px;
+    overflow-wrap: anywhere;
     color: var(--color-accent);
   }
   :where(.scope) :global(.portal-home .portal-action-emphasis) {
@@ -1073,15 +1055,14 @@
     border-color: var(--color-border-strong);
   }
   :where(.scope) :global(.portal-home .portal-action span:last-child) {
+    top: 20px;
+    right: 16px;
+    color: var(--color-accent);
     background: var(--color-accent-subtle);
     border-color: var(--color-border-strong);
   }
   :where(.scope) :global(.portal-home .portal-action-emphasis span:last-child) {
     background: var(--color-surface);
-  }
-  :where(.scope) :global(.portal-home-search) {
-    background: color-mix(in srgb, var(--color-accent-subtle) 35%, var(--color-surface));
-    border-color: var(--color-border-strong);
   }
   :where(.scope) :global(.portal-home .portal-section-heading h2::before) {
     content: '';
@@ -1174,5 +1155,132 @@
   }
   :where(.scope) :global(.service-notice-heading) {
     margin: 0;
+  }
+}
+
+/* Employee expectations and resolution ratings: written state first, icons and
+   tone as support only; options stack on compact screens. */
+@layer components {
+  :where(.scope) :global(.request-expectations dl) {
+    display: grid;
+    gap: 12px;
+    margin: 0 0 12px;
+  }
+  :where(.scope) :global(.request-expectation) {
+    display: grid;
+    gap: 2px;
+    padding-inline-start: 12px;
+    border-inline-start: 3px solid currentColor;
+  }
+  :where(.scope) :global(.request-expectation dt) {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.request-expectation dd) {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0;
+  }
+  :where(.scope) :global(.request-expectation dd > span) {
+    color: var(--color-text);
+  }
+  :where(.scope) :global(.impact-expectations) {
+    margin-top: 8px;
+  }
+  :where(.scope) :global(.impact-expectations summary) {
+    color: var(--color-accent);
+    cursor: pointer;
+    font-weight: 500;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+  }
+  :where(.scope) :global(.impact-expectations table) {
+    margin-block: 8px;
+  }
+  :where(.scope) :global(.impact-expectations caption) {
+    caption-side: top;
+    text-align: start;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    padding-bottom: 6px;
+  }
+  :where(.scope) :global(.rating-scale) {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  :where(.scope) :global(.rating-scale legend) {
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding: 0;
+  }
+  :where(.scope) :global(.rating-options) {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+  :where(.scope) :global(.rating-option) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-control);
+    background: var(--color-surface);
+    cursor: pointer;
+  }
+  :where(.scope) :global(.rating-option span) {
+    display: grid;
+    font-size: 13px;
+    line-height: 18px;
+  }
+  :where(.scope) :global(.rating-option strong) {
+    font-size: 16px;
+  }
+  :where(.scope) :global(.rating-option:has(input:checked)) {
+    border-color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    box-shadow: inset 0 0 0 1px var(--color-accent);
+  }
+  :where(.scope) :global(.rating-option:has(input:focus-visible)) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  :where(.scope) :global(.resolution-rating-summary) {
+    margin-bottom: 12px;
+  }
+  :where(.scope) :global(.resolution-rating-comment) {
+    margin-top: 6px;
+    padding-inline-start: 12px;
+    border-inline-start: 3px solid var(--color-border-strong);
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.resolution-rating-change > summary) {
+    color: var(--color-accent);
+    cursor: pointer;
+    font-weight: 500;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+  }
+  :where(.scope) :global(.resolution-rating-form) {
+    margin-top: 12px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.rating-options) {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (forced-colors: active) {
+    :where(.scope) :global(.rating-option:has(input:checked)) {
+      border: 3px solid Highlight;
+    }
   }
 }

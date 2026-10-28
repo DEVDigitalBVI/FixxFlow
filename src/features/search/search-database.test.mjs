@@ -32,40 +32,16 @@ test('workspace ticket search executes the projected, sorted RPC query in Postgr
       'rollback to savepoint missing_sort_column; release savepoint missing_sort_column',
     );
 
-    let projectedFields;
     const client = {
-      rpc(name) {
-        const builder = {
-          select(fields) {
-            if (name === 'search_tickets') projectedFields = fields;
-            return this;
-          },
-          eq() {
-            return this;
-          },
-          or() {
-            return this;
-          },
-          order() {
-            return this;
-          },
-          limit() {
-            return this;
-          },
-          async then(resolve, reject) {
-            try {
-              const rows =
-                name === 'search_tickets'
-                  ? (await db.query(query(projectedFields), [ids.org, 'Worker'])).rows
-                  : [];
-              return resolve({ data: rows, error: null });
-            } catch (error) {
-              return reject(error);
-            }
-          },
-        };
-        return builder;
-      },
+      rpc: async (name, args) => ({
+        data: (
+          await db.query('select * from public.search_workspace($1,$2)', [
+            args.org,
+            args.search_text,
+          ])
+        ).rows,
+        error: null,
+      }),
     };
     const { searchWorkspace } = load('src/features/search/service.ts', {
       '@/lib/auth/viewer': {
@@ -78,9 +54,13 @@ test('workspace ticket search executes the projected, sorted RPC query in Postgr
       '@/lib/supabase/server': { createClient: async () => client },
     });
     const results = await searchWorkspace('Worker');
-    assert.equal(results.length, 1, 'Other-organization tickets stay excluded');
-    assert.equal(results[0].id, own.id);
-    assert.equal(results[0].group, 'Tickets');
+    assert.equal(
+      results.filter((r) => r.group === 'Tickets').length,
+      1,
+      'Other-organization tickets stay excluded',
+    );
+    assert.equal(results.find((r) => r.group === 'Tickets').id, own.id);
+
     assert.equal(
       'updated_at' in results[0],
       false,

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { saveAutomationDraft } from '@/app/app/administration/automations/actions';
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { ActionForm } from '@/components/ui/action-form';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { confirmDiscardChanges, useUnsavedChanges } from '@/components/ui/unsaved-changes';
@@ -143,7 +144,8 @@ export function AutomationBuilder({
               if (!dirty || confirmDiscardChanges()) onChooseTemplate();
             }}
           >
-            {imported ? '← Back to import review' : '← Choose another starting point'}
+            <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
+            {imported ? 'Back to import review' : 'Choose another starting point'}
           </button>
         </div>
       )}
@@ -462,7 +464,14 @@ export function AutomationBuilder({
                       }
                     >
                       {actionOptions.map((action) => (
-                        <option key={action.key} value={action.key}>
+                        <option
+                          key={action.key}
+                          value={action.key}
+                          disabled={Boolean(
+                            action.triggerTypes &&
+                            !action.triggerTypes.includes(definition.trigger.type),
+                          )}
+                        >
                           {action.label}
                         </option>
                       ))}
@@ -514,6 +523,13 @@ export function AutomationBuilder({
                   <p className="muted">
                     Changing the category clears an existing subcategory. Setting a subcategory is
                     not available.
+                  </p>
+                )}
+                {item.type === 'suggest_articles' && (
+                  <p className="muted">
+                    Sends up to three relevant employee guides once per ticket. Sends nothing if no
+                    guides match or IT has already replied. Available for ticket creation triggers
+                    only.
                   </p>
                 )}
                 {item.type === 'send_notification' && (

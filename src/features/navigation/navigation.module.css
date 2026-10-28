@@ -27,6 +27,7 @@
     transition:
       color 160ms ease-out,
       background-color 160ms ease-out;
+    font-weight: 500;
   }
   :where(.scope) :global(.nav-link svg) {
     width: 19px;
@@ -41,15 +42,6 @@
   :where(.scope) :global(.nav-link:hover) {
     color: var(--color-text);
     background: var(--color-surface-subtle);
-  }
-  :where(.scope) :global(.nav-link[aria-current='page']) {
-    color: var(--color-accent);
-    background: var(--color-accent-subtle);
-    box-shadow: inset 3px 0 var(--color-accent);
-  }
-  :where(.scope) :global(.staff-more-nav > summary) {
-    list-style: none;
-    cursor: pointer;
   }
   :where(.scope) :global(.staff-more-nav > summary::-webkit-details-marker) {
     display: none;
@@ -119,15 +111,14 @@
     }
   }
   :where(.scope) :global(.nav-link[aria-current='page']) {
-    font-weight: 600;
-  }
-  :where(.scope) :global(.nav-link) {
-    font-weight: 500;
-  }
-  :where(.scope) :global(.nav-link[aria-current='page']) {
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    box-shadow: inset 3px 0 var(--color-accent);
     font-weight: 700;
   }
   :where(.scope) :global(.staff-more-nav > summary) {
+    list-style: none;
+    cursor: pointer;
     display: flex;
     align-items: center;
     gap: 10px;

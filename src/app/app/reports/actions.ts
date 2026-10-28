@@ -130,10 +130,12 @@ export async function saveReportSchedule(data: FormData): Promise<ActionResult> 
   const reportId = uuid(data.get('reportId'));
   if (viewer.role !== 'administrator' || !reportId)
     return { error: 'Only administrators can schedule report delivery.' };
-  const frequency = data.get('frequency') === 'monthly' ? 'monthly' : 'weekly';
-  const weekday = Number(data.get('weekday')),
-    monthday = Number(data.get('monthday')),
-    runHour = Number(data.get('runHour'));
+  const frequency = data.get('frequency');
+  if (frequency !== 'daily' && frequency !== 'weekly' && frequency !== 'monthly')
+    return { error: 'Choose daily, weekly or monthly delivery.' };
+  const weekday = Number(data.get('weekday') || NaN),
+    monthday = Number(data.get('monthday') || NaN),
+    runHour = Number(data.get('runHour') || NaN);
   const format = ['xlsx', 'csv', 'pdf'].includes(String(data.get('format')))
     ? (data.get('format') as 'xlsx' | 'csv' | 'pdf')
     : 'xlsx';
@@ -145,7 +147,7 @@ export async function saveReportSchedule(data: FormData): Promise<ActionResult> 
     runHour > 23 ||
     (frequency === 'weekly'
       ? !Number.isInteger(weekday) || weekday < 0 || weekday > 6
-      : !Number.isInteger(monthday) || monthday < 1 || monthday > 31)
+      : frequency === 'monthly' && (!Number.isInteger(monthday) || monthday < 1 || monthday > 31))
   )
     return { error: 'Review the delivery day, hour and recipient email addresses.' };
   const database = await createClient();

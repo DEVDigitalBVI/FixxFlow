@@ -23,6 +23,7 @@ import { chatAttachmentTypes, validChatAttachment } from './media';
 import { ChatMediaAttachment } from './media-attachment';
 import { mergeChatMessages, parseChatMessage, type RoomMessage } from './message-model';
 import { ChatReadUpdates } from './read-updates';
+import { ChatSupportHours } from './support-hours';
 
 export type { RoomMessage } from './message-model';
 
@@ -52,6 +53,8 @@ export function ChatRoom({
   participantId,
   savedReplies,
   replyContext = {},
+  timeZone,
+  initialAt,
 }: {
   conversationId: string;
   organizationId: string;
@@ -68,6 +71,8 @@ export function ChatRoom({
   /** Staff only: reusable replies offered in the composer. */
   savedReplies?: SavedReply[];
   replyContext?: SavedReplyContext;
+  timeZone?: string;
+  initialAt?: number;
 }) {
   const router = useRouter();
   const [supabase] = useState(createClient);
@@ -433,6 +438,9 @@ export function ChatRoom({
 
   return (
     <section className="chat-room" aria-label="Conversation">
+      {!isWorker && open && !online && (
+        <ChatSupportHours timeZone={timeZone} initialAt={initialAt} />
+      )}
       <div className="chat-room-toolbar">
         <div className="chat-live-state" role="status">
           <span className={online ? 'chat-online' : ''}>

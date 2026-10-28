@@ -21,7 +21,7 @@ Custom exports support Excel, CSV, and PDF. They include the organization, repor
 
 ## Scheduled delivery
 
-Administrators can attach weekly or monthly delivery schedules to saved reports, using the organization timezone and Excel, CSV, or PDF attachments. A cron endpoint runs every 15 minutes (at :00, :15, :30 and :45, so on-the-hour schedules send on time) and performs two durable steps:
+Administrators can attach daily, weekly or monthly delivery schedules to saved reports, using the organization timezone and Excel, CSV, or PDF attachments. A cron endpoint runs every 15 minutes (at :00, :15, :30 and :45, so on-the-hour schedules send on time) and performs two durable steps:
 
 1. due schedules create one immutable delivery item per recipient with a snapshot of the report definition;
 2. workers lease batches of three, generate fresh report data, send a recipient-specific email, and acknowledge success or retry with exponential backoff. A run keeps leasing batches for up to 40 seconds of its 60-second limit, so large recipient lists clear in one run; retries wait for their backoff and the next run.
@@ -30,7 +30,7 @@ Leases are fenced, attempts are capped at five, and provider idempotency keys ar
 
 ## Definitions
 
-- Today is midnight to now in `America/Tortola`. This is fixed for V1 and displayed on screen.
+- Today is midnight to now in the workspace timezone, displayed on screen.
 - Created: tickets created today.
 - Resolved: distinct tickets with an active-to-resolved/closed activity transition today, including those subsequently reopened. Repeated resolutions count once per ticket per day. Historical imports without activity records are not included.
 - Open: all tickets currently outside resolved/closed, including waiting and on hold.
@@ -52,3 +52,19 @@ Leases are fenced, attempts are capped at five, and provider idempotency keys ar
 - Populated layouts were checked in Safari using synthetic fixtures, including mobile charts and expandable tables. No chart library or new tokens were introduced.
 - Custom-report unit checks cover definition validation, URL round-tripping, value formatting, accessible exact-data tables, export completeness, attachment delivery, and provider idempotency.
 - The migrated database integration check covers role and tenant isolation, personal/shared visibility, report calculation, schedule validation, redacted audit records, durable enqueue/claim/finish behavior, and administrator-only delivery history.
+
+## Daily delivery and dashboard insights
+
+Saved reports now support **Daily**, Weekly and Monthly delivery. Only administrators can create schedules. Daily has no weekday/month-day field; irrelevant controls stay hidden and disabled, while Hour and the existing format/recipient choices remain available. New schedules use the workspace timezone. Each saved schedule displays its own timezone, including after an organization timezone change. Existing schedules keep their cadence and next-run timestamp.
+
+Daily means every local calendar day, including weekends. A run at the exact scheduled instant advances to the next local day. PostgreSQL resolves a repeated fall-back hour to its standard-time occurrence and maps a missing spring-forward hour forward. The existing scheduler, delivery ledger, leases, recipient-specific provider keys, retry limits and delivery history are reused. Each delivery reruns the saved report definition; adding Daily does not change its selected date range or create a rolling period.
+
+The staff dashboard keeps work queues before the new **Workload & response** section. Technician workload shows the five largest current queues, including unassigned work, with Open, Waiting and Overdue counts. Waiting/overdue are subsets of Open, not extra tickets. Open means every status except resolved/closed. Inactive or no-longer-IT assignees remain visible when they still own open work. Source membership, ticket and profile RLS apply, with active staff and MFA checks in `technician_workload`. Employee callers receive no workload rows; anonymous execution is revoked.
+
+The response chart reuses the operational report's last 14 local reply dates and elapsed calendar minutes from creation to the first public IT reply. Internal notes do not establish first response. Null days stay as gaps; zero-minute samples remain valid. The shared Trend component retains exact daily data in a collapsed native disclosure. The operational report is request-memoized on the dashboard so metrics and the chart share one report query. Loading, empty and unavailable states remain distinct, with retry on failure. Counts refresh on page load.
+
+Apply `20261028003353_daily_reports_and_workload.sql` before releasing the UI. It is applied locally only during the current build-out. Tests cover daily boundaries, weekends, daylight-saving transitions, database authorization/MFA, inactive assignees, current backlog totals, waiting/overdue subsets, durable daily enqueue/deduplication, action validation, native timing fields, nullable chart samples and failure recovery. The native local database check contains 12 rollback-only assertions.
+
+## Resolution satisfaction
+
+Reports shows **Resolution satisfaction** for the last 30 days, from employee resolution ratings (see `docs/features/resolution-ratings.md`): the share rated 4 or 5, the average score, ratings received, the count for each score, and the five latest written comments with links to their tickets. The period uses when each rating was first submitted. `satisfaction_summary` runs as the caller and requires active IT staff with required MFA; employees are denied. With no ratings, the panel says so instead of showing zero. Satisfaction is not yet included in report downloads or custom reports.

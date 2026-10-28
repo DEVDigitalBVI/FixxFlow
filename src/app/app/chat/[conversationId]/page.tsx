@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { ActionForm } from '@/components/ui/action-form';
 import { Avatar } from '@/components/ui/avatar';
 import { SubmitButton } from '@/components/ui/submit-button';
@@ -9,6 +10,7 @@ import { ChatInbox } from '@/features/chat/chat-inbox';
 import { ChatRoom } from '@/features/chat/chat-room';
 import { loadChatInbox } from '@/features/chat/inbox-data';
 import { chatInboxHref, normalizeChatView } from '@/features/chat/inbox-model';
+import { ChatLifecycleNotice } from '@/features/chat/lifecycle-notice';
 import { HISTORY_PAGE_SIZE, recentMessages } from '@/features/conversations/history';
 import { profileLabels } from '@/features/lookups/labels';
 import { LookupSelect } from '@/features/lookups/lookup-select';
@@ -118,7 +120,8 @@ export default async function ConversationPage({
       <section className="chat-active" aria-labelledby="chat-active-title">
         <header className="chat-active-header">
           <Link className="button button-quiet chat-back" href={chatInboxHref(view)}>
-            ← {worker ? 'Inbox' : 'My chats'}
+            <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
+            {worker ? 'Inbox' : 'My chats'}
           </Link>
           <Avatar name={person} />
           <div className="chat-active-identity">
@@ -256,6 +259,13 @@ export default async function ConversationPage({
               View linked ticket
             </Link>
           )}
+          <ChatLifecycleNotice
+            open={conversation.status === 'open'}
+            warningAt={conversation.idle_warning_at}
+            warningDueAt={conversation.idle_warning_due_at}
+            closedAt={conversation.idle_closed_at}
+            summary={conversation.closure_summary}
+          />
           <ChatRoom
             key={conversation.id}
             conversationId={conversation.id}
@@ -267,6 +277,8 @@ export default async function ConversationPage({
             initialMessages={recentMessages(messagesR.data ?? [])}
             attachments={attachments}
             supportName={supportName}
+            timeZone={viewer.organizationTimezone}
+            initialAt={Date.parse(readThrough)}
             assigned={Boolean(supportId)}
             participantId={worker ? conversation.requester_id : supportId}
             readThrough={messagesR.error || attachmentsR.error ? undefined : readThrough}

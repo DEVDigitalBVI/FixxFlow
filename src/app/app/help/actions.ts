@@ -98,22 +98,22 @@ export async function saveArticle(form: FormData): Promise<{ error?: string; id?
   return { id };
 }
 
-export async function recordArticleView(articleId: string) {
+export async function recordArticleView(articleId: string, library = false) {
   const viewer = await requireViewer();
-  if (!validId(articleId)) return;
+  if (!validId(articleId) || typeof library !== 'boolean') return;
   const supabase = await createClient();
-  await supabase.rpc('record_article_view', {
+  await supabase.rpc(library ? 'record_library_article_view' : 'record_article_view', {
     target_organization_id: viewer.organizationId,
     target_article_id: articleId,
   });
 }
-export async function rateArticle(articleId: string, helpful: boolean) {
+export async function rateArticle(articleId: string, helpful: boolean, library = false) {
   const viewer = await requireViewer();
-  if (!validId(articleId) || typeof helpful !== 'boolean')
+  if (!validId(articleId) || typeof helpful !== 'boolean' || typeof library !== 'boolean')
     return { error: 'Choose a valid article.' };
   try {
     const supabase = await createClient();
-    const { error } = await supabase.rpc('rate_article', {
+    const { error } = await supabase.rpc(library ? 'rate_library_article' : 'rate_article', {
       target_organization_id: viewer.organizationId,
       target_article_id: articleId,
       is_helpful: helpful,
@@ -123,4 +123,25 @@ export async function rateArticle(articleId: string, helpful: boolean) {
   } catch {
     return { error: 'Your feedback could not be saved. Please retry.' };
   }
+}
+
+export async function setLibraryVisibility(articleId: string, hidden: boolean) {
+  const viewer = await requireViewer();
+  if (viewer.role !== 'administrator' || !validId(articleId) || typeof hidden !== 'boolean')
+    return { error: 'Only workspace administrators can change library visibility.' };
+  try {
+    const { error } = await (
+      await createClient()
+    ).rpc('set_library_article_hidden', {
+      org: viewer.organizationId,
+      article: articleId,
+      hide: hidden,
+    });
+    if (error) return { error: 'Visibility could not be saved. Please retry.' };
+  } catch {
+    return { error: 'Visibility could not be saved. Please retry.' };
+  }
+  revalidatePath('/app/help', 'layout');
+  revalidatePath('/app/administration/library');
+  return { success: true };
 }

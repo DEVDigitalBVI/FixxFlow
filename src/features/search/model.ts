@@ -1,6 +1,8 @@
 import type { AppRole } from '@/types/database';
 
+export const SEARCH_RESULT_LIMIT = 20;
 export type SearchResult = {
+  approximate?: boolean;
   id: string;
   label: string;
   detail?: string;
@@ -60,12 +62,13 @@ export function matchDestinations(results: SearchResult[], query: string) {
 }
 
 /** Retain flat indices so grouped options and keyboard selection share IDs. */
-export function groupSearchResults(results: SearchResult[]) {
-  const groups = new Map<SearchResult['group'], { result: SearchResult; index: number }[]>();
+export function groupSearchResults(results: SearchResult[], combineWorkspace = false) {
+  const groups = new Map<string, { result: SearchResult; index: number }[]>();
   results.forEach((result, index) => {
-    const entries = groups.get(result.group);
+    const label = combineWorkspace && result.group !== 'Navigation' ? 'Best matches' : result.group;
+    const entries = groups.get(label);
     if (entries) entries.push({ result, index });
-    else groups.set(result.group, [{ result, index }]);
+    else groups.set(label, [{ result, index }]);
   });
   return [...groups].map(([label, entries]) => ({ label, entries }));
 }

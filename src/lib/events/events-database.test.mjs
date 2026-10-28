@@ -187,7 +187,7 @@ test('Stage 3 database capture and durable delivery', async (t) => {
           first,
         );
         const captured = await events(db, first);
-        assert.deepEqual(types(captured), ['ticket.created']);
+        assert.deepEqual(types(captured), ['ticket.created', 'ticket.created_from_chat']);
         assert.equal(captured[0].after.status, 'open');
         assert.doesNotMatch(JSON.stringify(captured), /SECRET_CHAT_BODY/);
       },

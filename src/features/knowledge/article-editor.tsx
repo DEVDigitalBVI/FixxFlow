@@ -13,6 +13,7 @@ import type { KnowledgeArticle, KnowledgeAsset } from '@/types/database';
 import { ArticleContent } from './article-content';
 import { knowledgeAudiences, type KnowledgeAudience } from './audience';
 import { blockTypes, knowledgeCategories, parseArticleContent, type ArticleBlock } from './content';
+import { RelatedArticlePicker } from './related-article-picker';
 
 const assetTypes = [
   'image/jpeg',
@@ -418,23 +419,11 @@ export function ArticleEditor({
           </summary>
           <fieldset disabled={busy}>
             <legend className="sr-only">Related articles</legend>
-            <p className="muted">
-              Choose up to eight. Readers only see articles they have access to.
-            </p>
-            <div className="knowledge-related-options">
-              {related.map((a) => (
-                <label key={a.id}>
-                  <input
-                    type="checkbox"
-                    name="related"
-                    value={a.id}
-                    defaultChecked={article.related_article_ids.includes(a.id)}
-                  />
-                  {a.title}
-                  {a.audience ? ` · ${knowledgeAudiences[a.audience].label}` : ''}
-                </label>
-              ))}
-            </div>
+            <RelatedArticlePicker
+              articleId={article.id}
+              library={library}
+              initial={related.filter((item) => article.related_article_ids.includes(item.id))}
+            />
           </fieldset>
         </details>
         <div className="knowledge-actions">

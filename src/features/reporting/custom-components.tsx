@@ -22,6 +22,7 @@ import {
   type ReportSchedule,
   type SavedReport,
 } from './custom-model';
+import { ScheduleTimingFields } from './schedule-fields';
 
 export function DefinitionFields({ definition }: { definition: CustomReportDefinition }) {
   return (
@@ -338,7 +339,7 @@ export function ReportSchedules({
       <header className="overview-section-heading">
         <div>
           <h2 id="report-schedules-title">Scheduled delivery</h2>
-          <p>Email fresh report files automatically. Times follow {timezone}.</p>
+          <p>Send this report daily, weekly or monthly. New schedules use {timezone}.</p>
         </div>
       </header>
       <div className="report-schedule-layout">
@@ -346,44 +347,7 @@ export function ReportSchedules({
           <input type="hidden" name="reportId" value={report.id} />
           <h3>Add a schedule</h3>
           <div className="report-field-grid">
-            <label className="field">
-              Frequency
-              <select className="input" name="frequency" defaultValue="weekly">
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-              </select>
-            </label>
-            <label className="field">
-              Weekly day
-              <select className="input" name="weekday" defaultValue="1">
-                {weekdays.map((day, index) => (
-                  <option value={index} key={day}>
-                    {day}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="field">
-              Monthly day
-              <input
-                className="input"
-                type="number"
-                name="monthday"
-                min={1}
-                max={31}
-                defaultValue={1}
-              />
-            </label>
-            <label className="field">
-              Hour
-              <select className="input" name="runHour" defaultValue="8">
-                {Array.from({ length: 24 }, (_, hour) => (
-                  <option value={hour} key={hour}>
-                    {String(hour).padStart(2, '0')}:00
-                  </option>
-                ))}
-              </select>
-            </label>
+            <ScheduleTimingFields />
             <label className="field">
               File format
               <select className="input" name="format" defaultValue="xlsx">
@@ -416,17 +380,19 @@ export function ReportSchedules({
                 <li className="settings-card" key={schedule.id}>
                   <div>
                     <strong>
-                      {schedule.frequency === 'weekly'
-                        ? `Every ${weekdays[schedule.weekday ?? 1]}`
-                        : `Day ${schedule.monthday} of each month`}{' '}
-                      at {String(schedule.run_hour).padStart(2, '0')}:00
+                      {schedule.frequency === 'daily'
+                        ? 'Every day'
+                        : schedule.frequency === 'weekly'
+                          ? `Every ${weekdays[schedule.weekday ?? 1]}`
+                          : `Day ${schedule.monthday} of each month`}{' '}
+                      at {String(schedule.run_hour).padStart(2, '0')}:00 · {schedule.timezone}
                     </strong>
                     <p>
                       {schedule.format.toUpperCase()} · {schedule.recipient_emails.join(', ')}
                     </p>
                     <p className="muted">
                       {schedule.active
-                        ? `Next delivery ${new Intl.DateTimeFormat('en', { timeZone: timezone, dateStyle: 'medium', timeStyle: 'short' }).format(new Date(schedule.next_run_at))}`
+                        ? `Next delivery ${new Intl.DateTimeFormat('en', { timeZone: schedule.timezone, dateStyle: 'medium', timeStyle: 'short' }).format(new Date(schedule.next_run_at))}`
                         : 'Paused'}
                     </p>
                   </div>
@@ -450,7 +416,7 @@ export function ReportSchedules({
           ) : (
             <div className="empty-state">
               <strong>No scheduled delivery</strong>
-              <p>Create a weekly or monthly email schedule for this report.</p>
+              <p>Create a daily, weekly or monthly email schedule for this report.</p>
             </div>
           )}
         </div>

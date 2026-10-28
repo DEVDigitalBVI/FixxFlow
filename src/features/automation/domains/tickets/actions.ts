@@ -11,6 +11,10 @@ const property = (value: ValueSchema) => ({ value });
 
 /** Contracts only: registration does not install an executor or expose a UI. */
 export const ticketActions: readonly ActionRegistration[] = [
+  {
+    ...action('suggest_articles', 'Reply with suggested articles', {}),
+    triggerTypes: ['ticket.created', 'ticket.created_from_email', 'ticket.created_from_chat'],
+  },
   action('assign_technician', 'Assign technician', {
     technicianId: property({ kind: 'reference', resource: 'active_ticket_workers' }),
   }),

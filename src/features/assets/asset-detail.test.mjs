@@ -37,7 +37,7 @@ test('asset overview shows saved identity, ownership and timezone-safe dates wit
   for (const value of [
     'Identity',
     'Assignment',
-    'Purchase &amp; warranty',
+    'Purchase &amp; lifecycle',
     'PC-001',
     '001234',
     'Unassigned',

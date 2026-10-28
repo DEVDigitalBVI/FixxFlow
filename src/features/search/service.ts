@@ -1,82 +1,58 @@
 import 'server-only';
 
-import { knowledgeAudiences } from '@/features/knowledge/audience';
+import { isKnowledgeAudience, knowledgeAudiences } from '@/features/knowledge/audience';
 import { requireViewer } from '@/lib/auth/viewer';
 import { normalizeSearch } from '@/lib/search';
 import { createClient } from '@/lib/supabase/server';
 
-import type { SearchResult } from './model';
+import { SEARCH_RESULT_LIMIT, type SearchResult } from './model';
 
-export async function searchWorkspace(raw: string) {
-  const viewer = await requireViewer(),
-    q = normalizeSearch(raw);
+export async function searchWorkspace(raw: string): Promise<SearchResult[]> {
+  const viewer = await requireViewer();
+  const q = normalizeSearch(raw);
   if (!q) return [];
-  const db = await createClient();
-  // PostgREST orders RPC results after projection, so retain the sort column.
-  let tickets = db
-    .rpc('search_tickets', { target_organization_id: viewer.organizationId, search_text: q })
-    .select('id,ticket_number,title,updated_at')
-    .eq('organization_id', viewer.organizationId);
-  if (viewer.role === 'end_user') tickets = tickets.eq('requester_id', viewer.id);
-  const [ticketRows, articles, people] = await Promise.all([
-    tickets.order('updated_at', { ascending: false }).order('id').limit(8),
-    db
-      .rpc('search_knowledge_articles', {
-        target_organization_id: viewer.organizationId,
-        search_text: q,
-      })
-      .select('id,title,audience,organization_id')
-      .or(`organization_id.eq.${viewer.organizationId},organization_id.is.null`)
-      .eq('status', 'published')
-      .order('title')
-      .order('id')
-      .limit(8),
-    viewer.role !== 'end_user'
-      ? db
-          .rpc('search_members', { target_organization_id: viewer.organizationId, search_text: q })
-          .select('user_id')
-          .eq('organization_id', viewer.organizationId)
-          .order('user_id')
-          .limit(8)
-      : { data: [], error: null },
-  ]);
-  if (ticketRows.error || articles.error || people.error) throw new Error('Search unavailable');
-  const ids = (people.data ?? []).map((person) => person.user_id);
-  const profiles = ids.length
-    ? await db
-        .from('profiles')
-        .select('user_id,display_name,email')
-        .eq('organization_id', viewer.organizationId)
-        .in('user_id', ids)
-        .order('display_name')
-    : { data: [], error: null };
-  if (profiles.error) throw new Error('People unavailable');
-  return [
-    ...(ticketRows.data ?? []).map((ticket) => ({
-      id: ticket.id,
-      group: 'Tickets',
-      label: ticket.title,
-      detail: `#${ticket.ticket_number}`,
-      href: `/app/tickets/${ticket.id}`,
-    })),
-    ...(profiles.data ?? []).map((person) => ({
-      id: person.user_id,
-      group: 'People',
-      label: person.display_name,
-      detail: person.email,
-      href: `/app/people?${new URLSearchParams({ q: person.email ?? person.display_name })}`,
-    })),
-    ...(articles.data ?? []).map((article) => ({
-      id: article.id,
-      group: 'Articles',
-      label: article.title,
-      detail: [
-        article.organization_id === null ? 'FixxFlow library' : '',
-        viewer.role !== 'end_user' ? knowledgeAudiences[article.audience].label : '',
-      ]
-        .filter(Boolean)
-        .join(' · '),
-      href: `/app/help/${article.id}`,
-    })),
-  ] as SearchResult[];
+  const { data, error } = await (
+    await createClient()
+  ).rpc('search_workspace', {
+    org: viewer.organizationId,
+    search_text: q,
+  });
+  if (error || !data) throw new Error('Search unavailable');
+  return data.slice(0, SEARCH_RESULT_LIMIT).flatMap((row) => {
+    if (row.kind === 'person' && viewer.role === 'end_user') return [];
+    const group =
+      row.kind === 'ticket'
+        ? 'Tickets'
+        : row.kind === 'person'
+          ? 'People'
+          : row.kind === 'article'
+            ? 'Articles'
+            : null;
+    if (!group) return [];
+    return [
+      {
+        id: row.id,
+        group,
+        label: row.label,
+        approximate: row.approximate,
+        detail:
+          row.kind === 'article'
+            ? [
+                row.shared ? 'FixxFlow library' : '',
+                viewer.role !== 'end_user' && isKnowledgeAudience(row.audience)
+                  ? knowledgeAudiences[row.audience].label
+                  : '',
+              ]
+                .filter(Boolean)
+                .join(' · ')
+            : row.detail,
+        href:
+          row.kind === 'ticket'
+            ? `/app/tickets/${row.id}`
+            : row.kind === 'article'
+              ? `/app/help/${row.id}`
+              : `/app/people?${new URLSearchParams({ q: row.detail || row.label })}`,
+      } as SearchResult,
+    ];
+  });
 }

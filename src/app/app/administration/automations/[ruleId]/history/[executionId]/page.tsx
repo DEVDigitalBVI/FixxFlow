@@ -117,6 +117,15 @@ export default async function ExecutionPage({
                   )}
                   {step?.error_code ? ` · ${executionError(step.error_code)?.message}` : ''}
                 </p>
+                {step?.result &&
+                  typeof step.result === 'object' &&
+                  !Array.isArray(step.result) &&
+                  step.result.code === 'no_article_reply' && (
+                    <p className="muted">
+                      No reply sent: no relevant guides were available, IT had already replied, the
+                      ticket was inactive, or a guide reply had already been sent.
+                    </p>
+                  )}
                 {step?.status === 'not_attempted' && (
                   <p className="muted">
                     This action was not attempted. The conditions did not match or processing

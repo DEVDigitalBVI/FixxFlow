@@ -220,6 +220,10 @@ test('file size, format, row and column limits reject oversized inputs', () => {
 function actions(role = 'technician', fixtures = {}, failure = null) {
   const calls = [];
   const db = {
+    rpc: async (name, args) => {
+      calls.push([name, args]);
+      return { data: 1, error: failure };
+    },
     from: (table) => {
       let inserting = false;
       const filters = [];
@@ -374,4 +378,48 @@ test('batches with oversized Unicode payloads request smaller files before serve
     }),
   );
   assert.match(imports.validateImport(rows).error, /smaller files/);
+});
+
+test('explicit update preview retains revisions and sends the original snapshot to one atomic RPC', async () => {
+  const a = actions('technician', { assets: [{ tag: 'PC-001', revision: 7 }] });
+  const preview = await a.importAssets([row()], 'preview', { updateExisting: true });
+  assert.deepEqual(preview.issues, []);
+  assert.deepEqual(preview.versions, { 'PC-001': '7' });
+  assert.ok((await a.importAssets([row()], 'save', { updateExisting: true })).error);
+  const saved = await a.importAssets([row()], 'save', {
+    updateExisting: true,
+    versions: preview.versions,
+  });
+  assert.ok(saved.success);
+  const call = a.calls.find((c) => c[0] === 'import_asset_updates');
+  assert.equal(call[1].org, 'verified-org');
+  assert.deepEqual(call[1].expected, { 'PC-001': '7' });
+  assert.equal(call[1].records[0].id, undefined);
+  assert.equal(call[1].records[0].organization_id, 'verified-org');
+  assert.ok(!a.calls.some((c) => c[1] === 'insert'));
+  const stale = actions(
+    'technician',
+    { assets: [{ tag: 'PC-001', revision: 8 }] },
+    { code: '40001' },
+  );
+  assert.match(
+    (
+      await stale.importAssets([row()], 'save', {
+        updateExisting: true,
+        versions: preview.versions,
+      })
+    ).error,
+    /changed since preview/,
+  );
+});
+test('end-of-life dates survive spreadsheet parsing and cannot precede purchase', () => {
+  const parsed = parseAssetFile(
+    csv('tag,name,purchased_on,end_of_life_on\nPC-22,Laptop,2026-01-01,2030-01-01'),
+    'assets.csv',
+  );
+  assert.equal(parsed.rows[0].end_of_life_on, '2030-01-01');
+  assert.ok(
+    imports.validateImport([row({ purchased_on: '2031-01-01', end_of_life_on: '2030-01-01' })])
+      .issues.length,
+  );
 });

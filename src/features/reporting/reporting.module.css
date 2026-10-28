@@ -478,19 +478,11 @@
       flex-direction: column;
     }
   }
-  :where(.scope) :global(.report-metrics .settings-card) {
-    box-shadow: none;
-    background: var(--color-surface);
-  }
-  :where(.scope) :global(.report-metrics dd > span) {
-    display: block;
-    line-height: 1.2;
-    letter-spacing: -0.035em;
-  }
   :where(.scope) :global(.overview-page .report-metrics) {
     margin: 0;
   }
   :where(.scope) :global(.report-metrics .settings-card) {
+    box-shadow: none;
     background: var(--color-surface);
   }
   :where(.scope) :global(.report-metrics dt) {
@@ -501,6 +493,9 @@
     margin-bottom: 0;
   }
   :where(.scope) :global(.report-metrics dd > span) {
+    display: block;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
     font-size: 32px;
     font-weight: 600;
     margin-block: 12px;
@@ -608,6 +603,56 @@
     :where(.scope) :global(.incident-report-metrics > div) {
       min-width: 0;
       overflow-wrap: anywhere;
+    }
+  }
+}
+
+@layer components {
+  :where(.scope) :global(.report-schedule-form .field[hidden]) {
+    display: none;
+  }
+}
+
+@layer components {
+  @media (max-width: 999px) {
+    :where(.scope) :global(.report-schedule-layout) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.report-schedule-form .report-field-grid) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+/* Resolution satisfaction: score distribution beside the latest written comments. */
+@layer components {
+  :where(.scope) :global(.report-satisfaction .report-metrics) {
+    margin-block: 16px;
+  }
+  :where(.scope) :global(.report-satisfaction-grid) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+  }
+  :where(.scope) :global(.report-satisfaction-comments) {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  :where(.scope) :global(.report-satisfaction-comments p) {
+    margin: 0 0 2px;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.report-satisfaction-comments small) {
+    color: var(--color-text-muted);
+  }
+  @media (max-width: 899px) {
+    :where(.scope) :global(.report-satisfaction-grid) {
+      grid-template-columns: 1fr;
     }
   }
 }

@@ -169,17 +169,15 @@
   }
 }
 @layer components {
-  .brand-logo {
-    display: block;
-    flex: 0 0 auto;
-    line-height: 0;
-  }
   .brand-logo-image {
     display: block;
     width: 100%;
     height: auto;
   }
   .brand-logo {
+    display: block;
+    flex: 0 0 auto;
+    line-height: 0;
     aspect-ratio: 1353 / 1334;
   }
   .brand-logo-horizontal {
@@ -291,14 +289,6 @@
     border-radius: 50%;
     background: var(--color-success);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-success) 13%, transparent);
-  }
-  .check-field {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    color: var(--color-text-muted);
-    font-size: 13px;
-    cursor: pointer;
   }
   .check-field input {
     width: 17px;
@@ -636,10 +626,6 @@
     color: var(--color-text-muted);
     margin: 0;
   }
-  .page-eyebrow {
-    color: var(--color-accent);
-    margin-bottom: 5px;
-  }
   .header-summary {
     min-width: 112px;
     border-left: 1px solid var(--color-border);
@@ -705,8 +691,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    color: white;
-    background: linear-gradient(120deg, var(--color-brand-ink), #282d33);
+    color: var(--color-inverse);
+    background: var(--color-brand-ink);
     box-shadow: var(--shadow-card);
   }
   .welcome-card::after {
@@ -813,11 +799,6 @@
   .access-card p {
     margin: 0;
     color: var(--color-text-muted);
-  }
-  .section-kicker {
-    margin-bottom: 3px;
-    color: var(--color-text-subtle);
-    font-size: 10px;
   }
   .badge {
     width: fit-content;
@@ -1282,6 +1263,7 @@
       background: var(--color-surface);
       box-shadow: var(--shadow-overlay);
       transition: transform 180ms ease-out;
+      overscroll-behavior: contain;
     }
     .workspace-nav.is-open {
       visibility: visible;
@@ -1395,16 +1377,6 @@
       gap: 12px;
       border-bottom: 1px solid var(--color-border);
       text-align: right;
-    }
-    .responsive-table td::before {
-      content: attr(data-label);
-      color: var(--color-text-muted);
-      font-size: 11px;
-      line-height: 16px;
-      font-weight: 700;
-      text-align: left;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
     }
     .responsive-table td:first-child {
       grid-template-columns: 1fr;
@@ -1547,17 +1519,6 @@
     min-height: 44px;
     font-size: 14px;
   }
-  .bulk-toolbar {
-    display: flex;
-    align-items: end;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding: 12px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-control);
-    background: var(--color-surface);
-  }
   .bulk-toolbar > strong {
     align-self: center;
     margin-right: 4px;
@@ -1653,11 +1614,6 @@
     font-weight: 600;
     overflow-wrap: anywhere;
   }
-  .notification-pagination {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
   .notification-count {
     margin-left: 8px;
     font-size: 12px;
@@ -1733,6 +1689,8 @@
     grid-template-columns: 40px minmax(0, 1fr) 40px;
   }
   .section-kicker {
+    margin-bottom: 3px;
+    color: var(--color-text-subtle);
     font-size: 12px;
     letter-spacing: 0.06em;
   }
@@ -1775,10 +1733,6 @@
   .settings-card > p:first-child {
     margin-top: 0;
   }
-  .notification-pagination {
-    margin-top: 20px;
-    flex-wrap: wrap;
-  }
   .bulk-selection {
     margin-top: 16px;
   }
@@ -1794,6 +1748,15 @@
     margin-bottom: 8px;
   }
   .bulk-toolbar {
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: var(--color-surface);
     margin: 0 0 16px;
   }
   .ticket-heading-badges,
@@ -1845,9 +1808,6 @@
     .workspace-nav > .staff-more-nav {
       margin-top: 12px;
     }
-    .workspace-nav {
-      overscroll-behavior: contain;
-    }
     .page {
       padding: 20px 16px 32px;
     }
@@ -1871,15 +1831,17 @@
       min-height: 44px;
     }
     .responsive-table td::before {
+      content: attr(data-label);
+      color: var(--color-text-muted);
+      line-height: 16px;
+      font-weight: 700;
+      text-align: left;
       font-size: 12px;
       text-transform: none;
       letter-spacing: 0;
     }
     .responsive-table tbody {
       padding: 8px;
-    }
-    .portal-header .workspace-nav {
-      margin: 0;
     }
     .portal-header .workspace-nav nav {
       margin: 0;
@@ -2080,12 +2042,6 @@
   .support-entry-actions {
     margin-bottom: 24px;
   }
-  .page-header-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
   .saved-report-grid,
   .report-template-grid {
     display: grid;
@@ -2229,8 +2185,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .custom-report-fields,
-    .report-save-panel,
-    .report-schedule-layout {
+    .report-save-panel {
       grid-template-columns: minmax(0, 1fr);
     }
   }
@@ -2243,8 +2198,7 @@
     .report-template-grid,
     .report-type-options,
     .custom-report-filters,
-    .report-field-grid,
-    .report-schedule-form .report-field-grid {
+    .report-field-grid {
       grid-template-columns: minmax(0, 1fr);
     }
     .custom-report-download form {
@@ -2358,9 +2312,6 @@
       width: 100%;
     }
   } /* Shared brand expression: quiet surfaces, a directional accent, solid controls. */
-  .sidebar-brand {
-    position: relative;
-  }
   .sidebar-brand::after {
     content: none;
   }
@@ -2470,6 +2421,8 @@
     display: contents;
   } /* Workspace polish: quieter framing and a clear operational reading order. */
   .page-eyebrow {
+    color: var(--color-accent);
+    margin-bottom: 5px;
     font-size: 12px;
     letter-spacing: 0.06em;
     font-weight: 600;
@@ -2613,6 +2566,7 @@
     align-items: center;
     gap: 16px;
     min-width: 0;
+    overflow: visible;
   }
   @media (min-width: 768px) and (max-width: 1199px) {
     .sidebar .theme-control {
@@ -2630,9 +2584,6 @@
     }
   }
   @media (max-width: 767px) {
-    .portal-header .workspace-nav {
-      display: block;
-    }
   } /* Keep appearance available without competing with the primary navigation. */
   .workspace-nav > .theme-control {
     justify-items: center;
@@ -2854,6 +2805,7 @@
     }
   }
   .sidebar-brand {
+    position: relative;
     min-height: 56px;
     justify-content: flex-start;
   }
@@ -2904,6 +2856,9 @@
     overflow-wrap: anywhere;
   }
   .page-header-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
   }
   .page-header-actions > .button {
@@ -2945,6 +2900,9 @@
     outline-offset: 3px;
   }
   .notification-pagination {
+    display: flex;
+    margin-top: 20px;
+    flex-wrap: wrap;
     min-height: 44px;
     gap: 12px;
     align-items: center;
@@ -2966,6 +2924,12 @@
     line-height: 1.6;
   }
   .check-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    cursor: pointer;
     min-height: 44px;
   }
   .portal-section-heading .button {
@@ -3228,9 +3192,6 @@
     background: var(--color-accent-subtle);
     box-shadow: inset 3px 0 var(--color-accent);
   }
-  .portal-header .workspace-nav {
-    overflow: visible;
-  }
   .portal-header .workspace-nav > nav {
     position: relative;
     align-items: flex-start;
@@ -3267,6 +3228,8 @@
       padding: 16px;
     }
     .portal-header .workspace-nav {
+      margin: 0;
+      display: block;
       overflow-y: auto;
     }
     .sidebar .global-search-label > span {
@@ -3323,6 +3286,7 @@
       padding: 24px 16px 16px;
       gap: 24px;
       min-width: 0;
+      gap: 20px;
     }
     .sidebar-heading {
       padding-bottom: 20px;
@@ -3334,15 +3298,6 @@
     .app-shell[data-sidebar] .sidebar-brand {
       min-height: 44px;
       padding: 0;
-    }
-    .app-shell[data-sidebar] .workspace-nav {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding: 4px;
-      margin: -4px;
-      overflow: hidden;
     }
     .app-shell[data-sidebar] .workspace-nav > .global-search-trigger,
     .app-shell[data-sidebar] .workspace-nav > .theme-control,
@@ -3359,6 +3314,7 @@
       margin: -4px;
       overflow-y: auto;
       scrollbar-width: thin;
+      gap: 16px;
     }
     .app-shell[data-sidebar] .nav-list {
       gap: 2px;
@@ -3408,6 +3364,10 @@
       padding: 16px 0 0;
       gap: 8px;
       grid-template-columns: 40px minmax(0, 1fr) 44px;
+      padding: 12px 4px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      background: var(--color-surface-subtle);
     }
     .app-shell[data-sidebar] .sign-out-button {
       width: 44px;
@@ -3617,23 +3577,17 @@
     font-variant-numeric: tabular-nums;
   }
   @media (min-width: 768px) {
-    .app-shell[data-sidebar] .sidebar {
-      gap: 20px;
-    }
     .app-shell[data-sidebar] .sidebar-heading {
       border-bottom-color: var(--color-border);
     }
     .app-shell[data-sidebar] .workspace-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 4px;
+      margin: -4px;
+      overflow: hidden;
       gap: 16px;
-    }
-    .app-shell[data-sidebar] .workspace-nav nav {
-      gap: 16px;
-    }
-    .app-shell[data-sidebar] .sidebar-account {
-      padding: 12px 4px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-card);
-      background: var(--color-surface-subtle);
     }
     .app-shell[data-sidebar] .account-copy strong {
       font-size: 14px;

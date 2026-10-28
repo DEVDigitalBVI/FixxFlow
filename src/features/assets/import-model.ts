@@ -13,11 +13,13 @@ export const importColumns = [
   'location',
   'purchased_on',
   'warranty_until',
+  'end_of_life_on',
 ] as const;
 export type ImportColumn = (typeof importColumns)[number];
 export type ImportRow = Record<ImportColumn, string> & { row: number };
 export type ImportIssue = { row: number; message: string };
 export type ImportResult = {
+  versions?: Record<string, string>;
   rows?: ImportRow[];
   issues?: ImportIssue[];
   error?: string;

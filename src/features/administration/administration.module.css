@@ -5,16 +5,6 @@
   :where(.scope) :global(.administration-group > h2) {
     font-size: 18px;
   }
-  :where(.scope) :global(.administration-link) {
-    display: block;
-    color: var(--color-text);
-    text-decoration: none;
-    height: 100%;
-    overflow-wrap: anywhere;
-  }
-  :where(.scope) :global(.administration-link:hover) {
-    border-color: var(--color-border-strong);
-  }
   :where(.scope) :global(.administration-card-heading) {
     display: flex;
     flex-wrap: wrap;
@@ -44,10 +34,8 @@
     border-bottom: 1px solid var(--color-border);
     overflow-wrap: anywhere;
   }
-  :where(.scope) :global(.administration-link) {
-    box-shadow: none;
-  }
   :where(.scope) :global(.administration-link:hover) {
+    border-color: var(--color-border-strong);
     background: var(--color-surface-subtle);
   }
   :where(.scope) :global(.administration-card-heading .badge) {
@@ -231,6 +219,12 @@
     font-weight: 600;
   }
   :where(.scope) :global(.administration-link) {
+    display: block;
+    color: var(--color-text);
+    text-decoration: none;
+    height: 100%;
+    overflow-wrap: anywhere;
+    box-shadow: none;
     transition:
       border-color 160ms ease-out,
       background-color 160ms ease-out;

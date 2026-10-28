@@ -44,4 +44,5 @@ export const activityLabels: Record<string, string> = {
   first_response_recorded: 'sent the first response',
   reply_added: 'added a reply',
   internal_note_added: 'added an internal note',
+  resolution_rated: 'rated the resolution',
 };

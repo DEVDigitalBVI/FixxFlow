@@ -21,6 +21,8 @@
     "brand:check": "node scripts/sync-brand-assets.mjs --check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "visual:capture": "node scripts/visual-compare.mjs capture",
+    "visual:compare": "node scripts/visual-compare.mjs compare",
     "db:types": "node scripts/generate-database-types.mjs"
   },
   "dependencies": {

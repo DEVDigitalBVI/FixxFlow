@@ -1,6 +1,6 @@
 import { read, SSF, utils } from 'xlsx';
 
-import { FILE_LIMIT, headerName, IMPORT_LIMIT, rowsFromGrid } from './import-model';
+import { FILE_LIMIT, headerName, IMPORT_LIMIT, importColumns, rowsFromGrid } from './import-model';
 
 export function parseAssetFile(buffer: ArrayBuffer, filename: string, selected?: string) {
   if (buffer.byteLength > FILE_LIMIT) throw Error('Choose a file smaller than 2 MB.');
@@ -26,8 +26,10 @@ export function parseAssetFile(buffer: ArrayBuffer, filename: string, selected?:
       throw Error(
         `Use at most ${IMPORT_LIMIT} rows below the header. Remove extra rows or split the file.`,
       );
-    if (range.e.c >= 10)
-      throw Error('Use only the 10 template columns. Remove extra columns before importing.');
+    if (range.e.c >= importColumns.length)
+      throw Error(
+        `Use only the ${importColumns.length} template columns. Remove extra columns before importing.`,
+      );
     const grid: string[][] = [];
     for (let r = 0; r <= range.e.r; r++) {
       const row: string[] = [];
@@ -42,7 +44,7 @@ export function parseAssetFile(buffer: ArrayBuffer, filename: string, selected?:
         if (
           !csv &&
           r > 0 &&
-          ['purchased_on', 'warranty_until'].includes(header) &&
+          ['purchased_on', 'warranty_until', 'end_of_life_on'].includes(header) &&
           cell?.t === 'n'
         ) {
           const date = SSF.parse_date_code(cell.v, {

@@ -146,9 +146,14 @@ export default async function PeoplePage({ searchParams }: Props) {
         }
         actions={
           canManage ? (
-            <Link className="button button-primary" href={inviteHref}>
-              Invite member
-            </Link>
+            <>
+              <Link className="button button-secondary" href="/app/people/import">
+                Invite from CSV
+              </Link>
+              <Link className="button button-primary" href={inviteHref}>
+                Invite member
+              </Link>
+            </>
           ) : undefined
         }
       />

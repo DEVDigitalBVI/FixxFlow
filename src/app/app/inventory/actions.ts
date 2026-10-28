@@ -93,8 +93,9 @@ export async function inventoryMutation(form: FormData): Promise<ActionResult> {
           : 'Inventory could not be saved. Check your permissions and entries, then retry. Your draft is preserved.',
     };
   }
+  revalidatePath('/app/assets', 'layout');
   revalidatePath('/app/inventory');
-  revalidatePath('/app/people');
+  revalidatePath('/app/people', 'layout');
   revalidatePath('/app/tickets');
   if (command === 'request') {
     const { data: request } = await db
@@ -132,4 +133,40 @@ export async function inventoryMutation(form: FormData): Promise<ActionResult> {
     permissions: 'Inventory permissions saved.',
   };
   return { success: messages[command] ?? 'Inventory saved.' };
+}
+
+export async function setReorderThreshold(form: FormData): Promise<ActionResult> {
+  const viewer = await requireViewer();
+  const id = formString(form, 'id', '');
+  if (!isUuid(id)) return { error: 'Choose an inventory item.' };
+  if (!(await inventoryAccess(viewer)).manager)
+    return { error: 'Inventory manager permission required.' };
+  const parse = (key: string) => {
+    const raw = formString(form, key, '').trim();
+    return raw === '' ? null : /^\d+$/.test(raw) && Number(raw) <= 2147483647 ? Number(raw) : NaN;
+  };
+  const threshold = parse('threshold'),
+    expected = parse('expected');
+  if (Number.isNaN(threshold) || Number.isNaN(expected))
+    return { error: 'Enter a nonnegative whole threshold, or leave it blank to turn alerts off.' };
+  const { error } = await (
+    await createClient()
+  ).rpc('set_inventory_reorder_threshold', {
+    org: viewer.organizationId,
+    item: id,
+    threshold,
+    expected,
+  });
+  if (error)
+    return {
+      error:
+        error.code === '40001'
+          ? 'The threshold changed. Reload before saving.'
+          : 'Threshold could not be saved. Check permissions and try again.',
+    };
+  revalidatePath('/app/inventory');
+  revalidatePath(`/app/inventory/${id}`);
+  return {
+    success: threshold === null ? 'Low-stock alerts turned off.' : 'Reorder threshold saved.',
+  };
 }

@@ -41,6 +41,9 @@ test('employee cannot request reports and failures never masquerade as zeros', a
         return null;
       },
     },
+    '@/features/reporting/satisfaction-report': {
+      SatisfactionReport: () => React.createElement('section', null, 'Satisfaction'),
+    },
     '@/features/reporting/incident-report': {
       IncidentReport: () => React.createElement('section', null, 'Incidents'),
     },
@@ -257,6 +260,9 @@ test('reports page passes administrator-only SLA navigation without altering tec
         requireViewer: async () => ({ role, organizationId: 'org', organizationName: 'Workspace' }),
       },
       '@/features/reporting/data': { getReport: async () => reportFixture },
+      '@/features/reporting/satisfaction-report': {
+        SatisfactionReport: () => React.createElement('section', null, 'Satisfaction'),
+      },
       '@/features/reporting/incident-report': {
         IncidentReport: () => React.createElement('section', null, 'Incidents'),
       },
