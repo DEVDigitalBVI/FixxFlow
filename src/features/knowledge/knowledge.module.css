@@ -112,9 +112,9 @@
   }
   :where(.scope) :global(.knowledge-categories a) {
     display: grid;
-    gap: 8px;
+    gap: 2px;
     margin: 0;
-    padding: 16px;
+    padding: 10px 14px;
     color: var(--color-text);
     text-decoration: none;
     overflow-wrap: anywhere;
@@ -126,7 +126,8 @@
   }
   :where(.scope) :global(.knowledge-categories span) {
     color: var(--color-neutral);
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.4;
   }
   :where(.scope) :global(.knowledge-contents) {
     background: var(--color-surface-subtle);

@@ -210,12 +210,22 @@ export async function TicketDetail({
               Use Reopen ticket above to continue this request if the same issue remains.
             </p>
           ) : (
-            <MessageComposer
-              key={ticket.id}
-              ticketId={ticket.id}
-              action={addTicketMessage}
-              staff={false}
-            />
+            <>
+              <MessageComposer
+                key={ticket.id}
+                ticketId={ticket.id}
+                action={addTicketMessage}
+                staff={false}
+              />
+              <div className="portal-reply-attach">
+                <span className="muted">Add a screenshot or file for IT:</span>
+                <AttachmentUpload
+                  organizationId={viewer.organizationId}
+                  ticketId={employeeTicket.id}
+                  userId={viewer.id}
+                />
+              </div>
+            </>
           )}
         </section>
         <LinkedChatHistory
@@ -234,11 +244,13 @@ export async function TicketDetail({
             </Link>
           </div>
           <p className="muted">Files are visible to you and IT support.</p>
-          <AttachmentUpload
-            organizationId={viewer.organizationId}
-            ticketId={employeeTicket.id}
-            userId={viewer.id}
-          />
+          {canReopen && (
+            <AttachmentUpload
+              organizationId={viewer.organizationId}
+              ticketId={employeeTicket.id}
+              userId={viewer.id}
+            />
+          )}
           {attachmentsR.error && (
             <p role="alert">
               Attachments could not load. <RetryButton />
@@ -389,20 +401,11 @@ export async function TicketDetail({
       <TicketProcedures organizationId={viewer.organizationId} ticketId={ticket.id} />
     </div>
   );
-  return (
-    <div className="page">
-      <div className="ticket-topbar">
-        {!embedded && (
-          <Link className="button button-quiet page-back-link" href={back} scroll={false}>
-            <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
-            Back to tickets
-          </Link>
-        )}
-        <a className="button button-secondary" href="#ticket-assignment">
-          Assignment &amp; details
-        </a>
-        <span>#{ticket.ticket_number}</span>
-      </div>
+  const assignee = ticket.assigned_technician_id
+    ? (names.get(ticket.assigned_technician_id) ?? 'Assigned staff member')
+    : 'Unassigned';
+  const identity = (
+    <>
       <header className="page-header ticket-heading">
         <div>
           <div className="ticket-heading-badges">
@@ -447,6 +450,86 @@ export async function TicketDetail({
           {message.success}
         </div>
       )}
+    </>
+  );
+  const conversation = (
+    <section className="settings-card" id={embedded ? 'ticket-conversation' : undefined}>
+      <div className="section-heading-row">
+        <h3>Conversation</h3>
+        <Link
+          className="button button-quiet"
+          aria-label="View conversation history in a new tab"
+          href={`/app/tickets/${ticket.id}/history`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View history
+        </Link>
+      </div>
+      {viewer.usageSharing && (
+        <UsageEvent key={ticketId} event="ticket_viewed" surface="tickets" targetId={ticketId} />
+      )}
+      <ConversationRefresh />
+      <ConversationTimeline
+        messages={recentMessages(messagesR.data ?? [])}
+        names={names}
+        viewerId={viewer.id}
+        requesterId={ticket.requester_id}
+        staff
+        error={!!messagesR.error}
+      />
+      <MessageComposer
+        key={ticket.id}
+        ticketId={ticket.id}
+        action={addTicketMessage}
+        // Optional: if saved replies fail to load, the composer still works without them.
+        savedReplies={savedRepliesR.error ? undefined : (savedRepliesR.data ?? [])}
+        replyContext={{
+          requesterName: names.get(ticket.requester_id) ?? null,
+          agentName: viewer.displayName,
+          ticketNumber: ticket.ticket_number,
+        }}
+      />
+    </section>
+  );
+  // The queue drawer is for quick handling: identity, next actions, request and reply.
+  // Deeper work (reassignment, coordination, files, activity) stays on the full ticket.
+  if (embedded)
+    return (
+      <div className="page ticket-drawer-summary">
+        <p className="ticket-drawer-number muted">#{ticket.ticket_number}</p>
+        {identity}
+        <SlaClock initialNow={new Date().getTime()}>
+          <SlaIndicator ticket={ticket} compact />
+        </SlaClock>
+        <TicketWorkActions ticket={ticket} stage="all" assignee={assignee} />
+        <section className="settings-card">
+          <h3>Request from {names.get(ticket.requester_id) ?? 'the requester'}</h3>
+          <p className="ticket-description">{ticket.description}</p>
+          <ReportedImpact value={ticket.reported_impact} />
+        </section>
+        {conversation}
+        <p className="ticket-drawer-more muted">
+          Use Open full ticket to reassign, change priority, coordinate, manage files or review
+          activity.
+        </p>
+      </div>
+    );
+  return (
+    <div className="page">
+      <div className="ticket-topbar">
+        {!embedded && (
+          <Link className="button button-quiet page-back-link" href={back} scroll={false}>
+            <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
+            Back to tickets
+          </Link>
+        )}
+        <a className="button button-secondary" href="#ticket-assignment">
+          Assignment &amp; details
+        </a>
+        <span>#{ticket.ticket_number}</span>
+      </div>
+      {identity}
       <TicketWorkflow
         key={ticket.id}
         status={ticket.status}
@@ -523,15 +606,7 @@ export async function TicketDetail({
         }
         assignment={
           <>
-            <TicketWorkActions
-              ticket={ticket}
-              stage="assignment"
-              assignee={
-                ticket.assigned_technician_id
-                  ? (names.get(ticket.assigned_technician_id) ?? 'Assigned staff member')
-                  : 'Unassigned'
-              }
-            />
+            <TicketWorkActions ticket={ticket} stage="assignment" assignee={assignee} />
             <section className="settings-card ticket-assignment">
               <h3>Choose a technician or team</h3>
               <p className="muted">
@@ -543,49 +618,7 @@ export async function TicketDetail({
         }
         conversation={
           <>
-            <section className="settings-card">
-              <div className="section-heading-row">
-                <h3>Conversation</h3>
-                <Link
-                  className="button button-quiet"
-                  aria-label="View conversation history in a new tab"
-                  href={`/app/tickets/${ticket.id}/history`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View history
-                </Link>
-              </div>
-              {viewer.usageSharing && (
-                <UsageEvent
-                  key={ticketId}
-                  event="ticket_viewed"
-                  surface="tickets"
-                  targetId={ticketId}
-                />
-              )}
-              <ConversationRefresh />
-              <ConversationTimeline
-                messages={recentMessages(messagesR.data ?? [])}
-                names={names}
-                viewerId={viewer.id}
-                requesterId={ticket.requester_id}
-                staff
-                error={!!messagesR.error}
-              />
-              <MessageComposer
-                key={ticket.id}
-                ticketId={ticket.id}
-                action={addTicketMessage}
-                // Optional: if saved replies fail to load, the composer still works without them.
-                savedReplies={savedRepliesR.error ? undefined : (savedRepliesR.data ?? [])}
-                replyContext={{
-                  requesterName: names.get(ticket.requester_id) ?? null,
-                  agentName: viewer.displayName,
-                  ticketNumber: ticket.ticket_number,
-                }}
-              />
-            </section>
+            {conversation}
             <LinkedChatHistory
               ticketId={ticket.id}
               organizationId={viewer.organizationId}
@@ -595,15 +628,7 @@ export async function TicketDetail({
         }
         resolution={
           <>
-            <TicketWorkActions
-              ticket={ticket}
-              stage="resolution"
-              assignee={
-                ticket.assigned_technician_id
-                  ? (names.get(ticket.assigned_technician_id) ?? 'Assigned staff member')
-                  : 'Unassigned'
-              }
-            />
+            <TicketWorkActions ticket={ticket} stage="resolution" assignee={assignee} />
             <section className="settings-card">
               <h3>Service levels</h3>
               <SlaClock initialNow={new Date().getTime()}>

@@ -245,7 +245,7 @@ export function SavedReportList({
   viewerId: string;
 }) {
   return (
-    <section aria-labelledby="saved-reports-title">
+    <section id="saved-reports" aria-labelledby="saved-reports-title">
       <header className="overview-section-heading">
         <div>
           <h2 id="saved-reports-title">Saved reports</h2>

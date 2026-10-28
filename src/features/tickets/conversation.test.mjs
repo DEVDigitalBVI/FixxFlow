@@ -75,7 +75,8 @@ test('employee composer exposes only public replies', () => {
     }),
   );
   assert.match(html, /name="kind" value="reply"/);
-  assert.doesNotMatch(html, /type="radio"|Internal note/);
+  assert.match(html, /Send message/);
+  assert.doesNotMatch(html, /type="radio"|Internal note|public reply/i);
 });
 test('successful replies retain their audience and preserve the other draft', async () => {
   const submitted = [];
@@ -294,11 +295,12 @@ const chatProps = {
   initialMessages: [],
   attachments: [],
 };
-test('live support defaults to internal notes and labels shared attachments', () => {
+test('live support defaults to internal notes and blocks shared attachments on notes', () => {
   const html = renderToStaticMarkup(React.createElement(ChatRoom, chatProps));
   assert.match(html, /value="internal_note" selected=""/);
   assert.match(html, /Only IT staff can see this note/);
-  assert.match(html, /Attachments are shared with the employee/);
+  assert.match(html, /Files are always shared with the employee/);
+  assert.match(html, /type="file"[^>]*disabled=""/);
   assert.match(html, /aria-describedby="chat-audience"/);
 });
 test('employee live support offers a public composer only', () => {

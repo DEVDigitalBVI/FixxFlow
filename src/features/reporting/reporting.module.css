@@ -211,6 +211,21 @@
   :where(.scope) :global(.reports-page > section) {
     margin-bottom: 32px;
   }
+  /* Section links for the long report page; same rhythm as the Settings jump links. */
+  :where(.scope) :global(.report-jump-nav) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  :where(.scope) :global(.reports-page :is(section, h2)[id]) {
+    scroll-margin-top: 24px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.reports-page :is(section, h2)[id]) {
+      scroll-margin-top: 88px;
+    }
+  }
   :where(.scope) :global(.reports-page .tech-section-heading) {
     border: 0;
     padding: 0 0 16px;

@@ -35,7 +35,8 @@ test('staff creation groups labeled required fields and preserves routing defaul
   assert.match(html, /<option value="normal" selected="">/);
   assert.match(html, /<option value="worker" selected="">/);
   assert.match(html, /SLA targets are calculated separately/);
-  assert.match(html, /photos and files after creating the ticket/);
+  assert.match(html, /Screenshots or files \(optional\)/);
+  assert.match(html, /visible to the requester and IT staff/);
 });
 
 test('employee creation stays simple and equipment context retains its submitted identifier', async () => {
@@ -43,7 +44,9 @@ test('employee creation stays simple and equipment context retains its submitted
   for (const name of ['requesterId', 'priority', 'teamId', 'assignedTechnicianId', 'dueAt'])
     assert.ok(!employee.includes(`name="${name}"`), name);
   assert.match(employee, /Category \(optional\)/);
-  assert.match(employee, /Open ticket/);
+  assert.match(employee, /Submit request/);
+  assert.match(employee, /<input type="file" multiple=""/);
+  assert.match(employee, /visible to you and IT support/);
   const equipment = await renderTicketCreate({ role: 'end_user', params: { asset: 'asset' } });
   assert.match(equipment, /type="hidden" name="assetId" value="asset"/);
   assert.match(equipment, /Work laptop/);
@@ -142,7 +145,7 @@ test('employee full page keeps optional content collapsed and submission after a
   assert.ok(html.indexOf('ticket-suggestions') < html.indexOf('id="description"'));
   assert.ok(html.indexOf('ticket-create-footer') > html.lastIndexOf('</details>'));
   assert.match(html, /href="\/app"[^>]*>Cancel/);
-  assert.match(html, /type="submit"[^>]*>Open ticket/);
+  assert.match(html, /type="submit"[^>]*>Submit request/);
   const equipment = await renderTicketCreate({ role: 'end_user', params: { asset: 'asset' } });
   assert.match(equipment, /<summary>Add category <span/);
   assert.doesNotMatch(equipment, /Add category or location|name="locationId"/);

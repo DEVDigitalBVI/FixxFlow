@@ -27,7 +27,7 @@ export default async function WorkspaceSecurityPage() {
       <PageHeader
         title="Workspace security"
         description="Manage sign-in protection for your organization."
-        back={{ href: '/app/administration', label: 'Back to Administration' }}
+        back={{ href: '/app/administration', label: 'Back to settings' }}
       />
       <section className="settings-card">
         <h2>Two-step verification</h2>

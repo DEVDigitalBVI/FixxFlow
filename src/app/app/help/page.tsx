@@ -59,7 +59,7 @@ export default async function HelpPage({
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
             Home
           </Link>
-          <h1>Knowledge base</h1>
+          <h1>{staff ? 'Knowledge base' : 'Help articles'}</h1>
           <p>
             {staff
               ? 'Employee guides and internal IT procedures.'
@@ -80,7 +80,7 @@ export default async function HelpPage({
       <LiveSearchForm
         action="/app/help"
         className="queue-filters"
-        label="Search knowledge articles"
+        label={staff ? 'Search knowledge articles' : 'Search help articles'}
         resultSummary={
           error
             ? 'Articles could not load. Use Search to try again.'
@@ -135,9 +135,12 @@ export default async function HelpPage({
           Clear filters
         </Link>
       </LiveSearchForm>
-      <p className="muted" id="knowledge-search-hint">
-        {SEARCH_HINT}
-      </p>
+      <details className="portal-search-tips">
+        <summary>Search tips</summary>
+        <p className="muted" id="knowledge-search-hint">
+          {SEARCH_HINT}
+        </p>
+      </details>
       {!q && !filters.category && (
         <nav className="knowledge-categories" aria-label="Browse help topics">
           {knowledgeCategories.map((category) => (

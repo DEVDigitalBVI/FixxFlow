@@ -155,7 +155,7 @@ export function MessageComposer({
           Enter adds a new line. {staff && 'Drafts stay separate for each message type.'}
         </small>
         <button className="button button-primary" type="submit" disabled={pending}>
-          {pending ? 'Sending…' : mode.action}
+          {pending ? 'Sending…' : staff ? mode.action : 'Send message'}
         </button>
       </div>
       {result.error && (

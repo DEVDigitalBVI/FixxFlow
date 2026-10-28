@@ -92,7 +92,7 @@ try {
         .click();
       await page.waitForURL('**/app/help?q=Wi-Fi');
       assert.equal(new URL(page.url()).searchParams.get('q'), 'Wi-Fi');
-      await page.getByRole('heading', { name: 'Knowledge base', exact: true }).waitFor();
+      await page.getByRole('heading', { name: 'Help articles', exact: true }).waitFor();
       assert.equal(
         await page.getByRole('link', { name: 'Connect to Wi-Fi', exact: true }).count(),
         1,
@@ -105,10 +105,10 @@ try {
         await page.getByLabel('What do you need help with?', { exact: false }).waitFor();
         assert.equal(
           await page.locator('input[required],textarea[required],select[required]').count(),
-          2,
+          3,
         );
         assert.equal(await page.locator('.ticket-create-optional[open]').count(), 0);
-        await page.getByRole('button', { name: 'Open ticket', exact: true }).click();
+        await page.getByRole('button', { name: 'Submit request', exact: true }).click();
         assert.equal(await page.locator('#title').evaluate((el) => el.validity.valueMissing), true);
         assert.equal(await page.evaluate(() => window.fixtureSubmitted), undefined);
         await page.screenshot({
@@ -125,14 +125,15 @@ try {
         await page
           .locator('#description')
           .fill('Wi-Fi disconnects during a call. I tried reconnecting.');
+        await page.locator('#reportedImpact').selectOption({ index: 1 });
         const key = await page.locator('[name="submissionKey"]').inputValue();
-        await page.getByRole('button', { name: 'Open ticket', exact: true }).click();
+        await page.getByRole('button', { name: 'Submit request', exact: true }).click();
         await page.getByRole('alert').waitFor();
         assert.ok(await page.getByRole('alert').evaluate((el) => el === document.activeElement));
         assert.equal(await page.locator('#title').inputValue(), 'Pilot test — Wi-Fi access');
         assert.equal(await page.locator('[name="submissionKey"]').inputValue(), key);
         assert.ok(!(await page.evaluate(() => window.fixtureSubmitted.lookupLoadError)));
-        await page.getByRole('button', { name: 'Open ticket', exact: true }).click();
+        await page.getByRole('button', { name: 'Submit request', exact: true }).click();
         await page.waitForURL('**/app/tickets/fixture-created');
       },
     );
@@ -144,6 +145,32 @@ try {
       assert.equal(new URL(page.url()).pathname, '/app/tickets/new');
       assert.equal(await page.locator('#title').inputValue(), 'Keep my draft');
     });
+    await check(
+      'Request files skip invalid picks, cap at five and keep focus on removal',
+      async () => {
+        await go('/app/tickets/new?role=employee');
+        const input = page.getByLabel('Add files', { exact: true });
+        const file = (name, size = 100) => ({
+          name,
+          mimeType: 'image/png',
+          buffer: Buffer.alloc(size, 1),
+        });
+        await input.setInputFiles([file('a.png'), file('empty.png', 0)]);
+        assert.match(
+          await page.locator('.initial-attachments [role=status]').innerText(),
+          /skipped/,
+        );
+        await input.setInputFiles(['b', 'c', 'd', 'e', 'f'].map((name) => file(`${name}.png`)));
+        const removals = page.getByRole('list', { name: 'Files to attach' }).getByRole('button');
+        assert.equal(await removals.count(), 5);
+        assert.ok(await input.isDisabled());
+        await removals.nth(4).focus();
+        await page.keyboard.press('Enter');
+        assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Remove d.png');
+        for (let i = 0; i < 4; i++) await page.keyboard.press('Enter');
+        assert.ok(await input.evaluate((el) => el === document.activeElement));
+      },
+    );
     await check('Optional category/location and guides expand using keyboard', async () => {
       await go('/app/tickets/new?role=employee');
       const summary = page.locator('summary').filter({ hasText: 'Add category or location' });
@@ -151,8 +178,9 @@ try {
       await page.keyboard.press('Enter');
       assert.equal(await page.locator('.ticket-create-optional[open]').count(), 1);
       assert.ok(await page.getByLabel('Category (optional)', { exact: true }).isVisible());
-      await page.locator('summary').filter({ hasText: 'Browse helpful guides' }).click();
-      assert.ok(await page.getByRole('heading', { name: 'Guides that may help' }).isVisible());
+      // Guides appear once the subject has enough text to search.
+      await page.locator('#title').fill('Wi-Fi');
+      await page.getByRole('heading', { name: 'Guides that may help' }).waitFor();
     });
     await check(
       'Assigned equipment retains tag and serial without inventory administration',
@@ -175,10 +203,13 @@ try {
     );
     await check('Appearance switches immediately and persists after reload', async () => {
       await go('/app?role=employee');
+      // Appearance lives in the Account menu.
+      await page.locator('summary').filter({ hasText: 'Account' }).click();
       await page.getByRole('button', { name: 'Dark', exact: true }).click();
       assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
       await page.reload();
       assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
+      await page.locator('summary').filter({ hasText: 'Account' }).click();
       await page.getByRole('button', { name: 'Light', exact: true }).click();
     });
     await check(
@@ -212,7 +243,9 @@ try {
       await page.setViewportSize({ width: 720, height: 900 });
       await noOverflow();
       await page.setViewportSize({ width: 390, height: 844 });
-      assert.ok(await page.getByRole('button', { name: 'Open ticket', exact: true }).isVisible());
+      assert.ok(
+        await page.getByRole('button', { name: 'Submit request', exact: true }).isVisible(),
+      );
       await page.screenshot({
         path: path.join(output, 'employee-request-mobile.png'),
         fullPage: true,
@@ -393,7 +426,7 @@ try {
       const composer = drawer.locator('.message-composer');
       await composer.getByRole('radio', { name: 'Internal note', exact: true }).check();
       await composer.getByRole('textbox').fill('Private diagnostic draft');
-      await composer.getByRole('radio', { name: 'Public reply', exact: true }).check();
+      await composer.getByRole('radio', { name: 'Reply to requester', exact: true }).check();
       await composer.getByRole('textbox').fill('Public response draft');
       await composer.getByRole('button', { name: 'Send public reply', exact: true }).click();
       await composer.getByRole('alert').waitFor();
@@ -423,7 +456,7 @@ try {
   });
   await check('Administration groups settings links without horizontal overflow', async () => {
     await go('/app?role=administrator&surface=administration');
-    await page.getByRole('heading', { name: 'Administration', exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'Settings', exact: true }).waitFor();
     for (const name of ['Workspace', 'Support workflows', 'Policies & oversight'])
       assert.ok(await page.getByRole('heading', { name, exact: true }).isVisible());
     await page.setViewportSize({ width: 390, height: 844 });
@@ -499,7 +532,7 @@ try {
       assert.equal(await page.getByLabel('Related help guide', { exact: true }).isChecked(), true);
       await page.getByLabel('Title', { exact: true }).fill('Pilot updated guide');
       await page.getByRole('button', { name: 'Create article', exact: true }).click();
-      await page.getByRole('alert').waitFor();
+      await page.getByRole('alert').filter({ hasText: 'Synthetic article save failure' }).waitFor();
       assert.equal(
         await page.getByLabel('Title', { exact: true }).inputValue(),
         'Pilot updated guide',

@@ -1,6 +1,5 @@
 import { randomUUID } from 'node:crypto';
 
-import { ActionForm } from '@/components/ui/action-form';
 import { PageHeader } from '@/components/ui/page-header';
 import { SubmissionKey } from '@/components/ui/submission-key';
 import { SubmitButton } from '@/components/ui/submit-button';
@@ -12,6 +11,7 @@ import { DeadlineField } from '@/features/tickets/deadline-field';
 import { ticketImpacts } from '@/features/tickets/impact';
 import { ImpactExpectations } from '@/features/tickets/impact-expectations';
 import { IncidentCreateFields } from '@/features/tickets/incident-fields';
+import { InitialAttachmentsField, NewTicketForm } from '@/features/tickets/new-ticket-form';
 import { ticketPriorities } from '@/features/tickets/presentation';
 import { TicketDraftCancel } from '@/features/tickets/ticket-draft-cancel';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -79,9 +79,11 @@ export default async function NewTicketPage({ searchParams }: Props) {
         </div>
       )}
       {!staff && <ServiceAnnouncements />}
-      <ActionForm
+      <NewTicketForm
         action={createTicket}
         className={`ticket-create-form${staff ? '' : ' portal-request-form'}`}
+        organizationId={viewer.organizationId}
+        userId={viewer.id}
       >
         <SubmissionKey value={randomUUID()} />
         {staff && (
@@ -262,21 +264,19 @@ export default async function NewTicketPage({ searchParams }: Props) {
           </details>
         )}
 
+        <InitialAttachmentsField staff={staff} />
         <footer className="ticket-create-footer">
-          <p className="form-note">
-            You can add photos and files after creating {staff ? 'the ticket' : 'your request'}.
-          </p>
           <div className="ticket-create-actions">
             <TicketDraftCancel href={staff ? '/app/tickets' : '/app'} />
             <SubmitButton
               className="button button-primary"
-              pendingLabel={staff ? 'Creating ticket…' : 'Opening ticket…'}
+              pendingLabel={staff ? 'Creating ticket…' : 'Sending request…'}
             >
-              {staff ? 'Create ticket' : 'Open ticket'}
+              {staff ? 'Create ticket' : 'Submit request'}
             </SubmitButton>
           </div>
         </footer>
-      </ActionForm>
+      </NewTicketForm>
     </div>
   );
 }

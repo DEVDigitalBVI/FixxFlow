@@ -6,6 +6,40 @@ import { useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { attachmentTypes, uploadAndRegister, validAttachment } from '@/lib/uploads';
 
+type UploadResult = Awaited<ReturnType<typeof uploadAndRegister>>;
+
+/** Upload one file to a ticket and register it. Shared by the ticket page and new requests. */
+export async function uploadTicketAttachment({
+  organizationId,
+  ticketId,
+  userId,
+  file,
+}: {
+  organizationId: string;
+  ticketId: string;
+  userId: string;
+  file: File;
+}): Promise<UploadResult> {
+  const supabase = createClient();
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-');
+  const path = `${organizationId}/${ticketId}/${userId}/${crypto.randomUUID()}-${safeName}`;
+  const bucket = supabase.storage.from('ticket-attachments');
+  return uploadAndRegister({
+    upload: () => bucket.upload(path, file, { contentType: file.type, upsert: false }),
+    register: () =>
+      supabase.from('ticket_attachments').insert({
+        organization_id: organizationId,
+        ticket_id: ticketId,
+        uploaded_by: userId,
+        storage_path: path,
+        file_name: file.name,
+        content_type: file.type,
+        size_bytes: file.size,
+      }),
+    remove: () => bucket.remove([path]),
+  });
+}
+
 export function AttachmentUpload({
   organizationId,
   ticketId,
@@ -30,24 +64,7 @@ export function AttachmentUpload({
     setBusy(true);
     setMessage('');
     try {
-      const supabase = createClient();
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-');
-      const path = `${organizationId}/${ticketId}/${userId}/${crypto.randomUUID()}-${safeName}`;
-      const bucket = supabase.storage.from('ticket-attachments');
-      const result = await uploadAndRegister({
-        upload: () => bucket.upload(path, file, { contentType: file.type, upsert: false }),
-        register: () =>
-          supabase.from('ticket_attachments').insert({
-            organization_id: organizationId,
-            ticket_id: ticketId,
-            uploaded_by: userId,
-            storage_path: path,
-            file_name: file.name,
-            content_type: file.type,
-            size_bytes: file.size,
-          }),
-        remove: () => bucket.remove([path]),
-      });
+      const result = await uploadTicketAttachment({ organizationId, ticketId, userId, file });
       if (result === 'saved') {
         setMessage('Attachment added.');
         router.refresh();
