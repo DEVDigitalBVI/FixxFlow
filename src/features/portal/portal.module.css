@@ -933,7 +933,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     background: var(--color-surface);
-    background: color-mix(in srgb, var(--color-accent-subtle) 35%, var(--color-surface));
+    background: color-mix(in srgb, var(--color-accent-subtle) 65%, var(--color-surface));
     border-color: var(--color-border-strong);
   }
   :where(.scope) :global(.portal-home .portal-section-heading) {

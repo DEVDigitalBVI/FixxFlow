@@ -39,19 +39,19 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-inverse-hover: #f1f3f5;
   --color-brand-text-muted: #dee2e6;
   --color-highlight: #655600;
-  --color-highlight-surface: #f1f3f5;
+  --color-highlight-surface: #fff8cc;
   --color-purple: #545b62;
   --color-purple-subtle: #e9ecef;
   --color-neutral: #545b62;
   --color-neutral-subtle: #e9ecef;
-  --color-note-border: var(--color-accent);
+  --color-note-border: var(--color-brand-primary);
   --color-note-surface: var(--color-surface-subtle);
-  --color-auth-tint: #f1f3f5;
+  --color-auth-tint: #fff4b3;
 
   --color-brand-primary: #ffd700;
   --color-brand-secondary: #adb5bd;
   --color-brand-ink: #212529;
-  --color-canvas: #f1f3f5;
+  --color-canvas: #faf9f2;
   --color-surface: #ffffff;
   --color-surface-subtle: #f8f9fa;
   --color-surface-raised: #ffffff;
@@ -62,7 +62,7 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-text-subtle: #545b62;
   --color-accent: #212529;
   --color-accent-hover: #343a40;
-  --color-accent-subtle: #f1f3f5;
+  --color-accent-subtle: #fff4b3;
   --color-active: #343a40;
   --color-active-surface: #e9ecef;
   --color-success: #343a40;
@@ -101,7 +101,7 @@ Dark mode separates page canvas (`#212529`) from cards (`#2b3035`); automatic da
 
 ### 3.2 Brand identity and logo flow
 
-- The approved mark is a layeyellow ribbon-style capital **F** with an integrated circular wrench. Its yellow ribbon motion and deep charcoal folds express speed, continuity, and dependable technical support.
+- The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its yellow ribbon motion and deep charcoal folds express speed, continuity, and dependable technical support.
 - The product name is always written **FixxFlow** with two lowercase x characters and capital F characters. The primary tagline is **IT SUPPORT IN MOTION**.
 - Application navigation uses a responsive lockup built from the approved standalone mark and a live product wordmark. Keep its size and spacing identical in light and dark themes; change only the token-driven text contrast. Do not place the navigation logo on a contrasting plaque.
 - Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Favicons and app-launcher icons use the same yellow-and-charcoal mark.
@@ -420,7 +420,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Brand presence (October 2026)
 
-- Keep the operational shell neutral and use a thin yellow signature at the top of persistent navigation. Selected navigation uses a subtle neutral surface, accessible charcoal text, and an inset edge so the active location remains clear without turning the full control into a saturated block. Keep the existing focus outline and forced-colors selected outline.
+- Keep the operational shell neutral and use a thin yellow signature at the top of persistent navigation. Selected navigation uses a warm yellow surface, accessible charcoal text, and an inset edge so the active location remains clear without turning the full control into a saturated block. Keep the existing focus outline and forced-colors selected outline.
 - Concentrate expressive brand color in a few deliberate moments: the staff overview introduction, the authentication brand panel, primary actions, selection, and small directional details. Standard page headers, settings rows, knowledge categories, tables, and form surfaces stay neutral. Yellow highlights belong within brand artwork and signature rules, not a default card fill or workflow color.
 - Administration is a grouped settings index with bordered rows and lightweight destination links. Knowledge browsing uses neutral destination surfaces with charcoal interaction feedback. States retain explicit text and icons; destructive actions require explicit labels and icons.
 - The overview introduction uses a restrained charcoal-to-black brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded navigation uses the responsive mark-and-wordmark lockup in every theme; compact sidebars and mobile headers retain the mark alone. Preserve the approved mark without distortion.
@@ -524,7 +524,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Palette fidelity
 
-Do not use pink or rose tints for brand, selection, chat bubbles, or errors. Light selections use cool neutral surfaces; dark selections use elevated charcoal. Dark-mode links and focus use palette yellow for contrast. The navigation wordmark uses charcoal in light mode and yellow in dark mode for readability. Error labels use the semantic danger color in both themes on neutral surfaces, with explicit error text and icons.
+Do not use pink or rose tints for brand, selection, chat bubbles, or errors. Light selections use warm yellow surfaces; dark selections use elevated charcoal. Dark-mode links and focus use palette yellow for contrast. The navigation wordmark uses charcoal in light mode and yellow in dark mode for readability. Error labels use the semantic danger color in both themes on neutral surfaces, with explicit error text and icons.
 
 ### Activity history readability
 
@@ -611,3 +611,7 @@ Microsoft and Google sign-in controls may use their official logos, provider but
 
 - Employee request details keep First reply and Resolution targets visible; the support-hours explanation sits in a closed How these times work disclosure. The attach action sits directly below the reply composer; the Attachments section lists files and offers upload only when the request is resolved or closed.
 - Employee home explains the two routes: Chat with IT for quick questions during support hours, Submit a request for problems, equipment and follow-up work. Search tips sit in a closed disclosure.
+
+### Warm light theme
+
+Light mode uses a warm ivory canvas (`#FAF9F2`), white reading surfaces, and pale yellow (`#FFF4B3`) for selected navigation, the primary employee support card and contextual accents. A solid yellow sidebar signature reinforces the brand. Help search uses a quieter yellow wash; gray borders and charcoal text keep information legible. Retain existing responsive layouts, keyboard focus, forced-colors and reduced-motion behavior. Dark mode retains its charcoal surfaces. These are derived shades of the approved four-color palette, not additional brand colors.

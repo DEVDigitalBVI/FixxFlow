@@ -10,19 +10,19 @@
     --color-inverse-hover: #f1f3f5;
     --color-brand-text-muted: #dee2e6;
     --color-highlight: #655600;
-    --color-highlight-surface: #f1f3f5;
+    --color-highlight-surface: #fff8cc;
     --color-purple: #545b62;
     --color-purple-subtle: #e9ecef;
     --color-neutral: #545b62;
     --color-neutral-subtle: #e9ecef;
     --color-note-border: var(--color-brand-primary);
     --color-note-surface: var(--color-surface-subtle);
-    --color-auth-tint: #f1f3f5;
+    --color-auth-tint: #fff4b3;
 
     --color-brand-primary: #ffd700;
     --color-brand-secondary: #adb5bd;
     --color-brand-ink: #212529;
-    --color-canvas: #f1f3f5;
+    --color-canvas: #faf9f2;
     --color-surface: #ffffff;
     --color-surface-subtle: #f8f9fa;
     --color-surface-raised: #ffffff;
@@ -33,7 +33,7 @@
     --color-text-subtle: #545b62;
     --color-accent: #212529;
     --color-accent-hover: #343a40;
-    --color-accent-subtle: #f1f3f5;
+    --color-accent-subtle: #fff4b3;
     --color-active: #343a40;
     --color-active-surface: #e9ecef;
     --color-success: #343a40;
@@ -677,7 +677,7 @@
     height: 64px;
     font-size: 20px;
     box-shadow:
-      0 8px 22px rgb(189 33 44 / 18%),
+      0 8px 22px color-mix(in srgb, var(--color-brand-primary) 18%, transparent),
       inset 0 0 0 1px rgb(255 255 255 / 30%);
   }
   .welcome-card {
@@ -703,7 +703,7 @@
     border-radius: 50%;
     right: -90px;
     bottom: -150px;
-    border: 34px solid rgb(189 33 44 / 15%);
+    border: 34px solid color-mix(in srgb, var(--color-brand-primary) 15%, transparent);
   }
   .welcome-card > * {
     position: relative;
@@ -3484,7 +3484,8 @@
     border-right-color: var(--color-border);
   }
   .app-shell[data-sidebar] .sidebar::before {
-    content: none;
+    content: '';
+    background: var(--color-brand-primary);
   }
   .app-shell[data-sidebar] .sidebar-collapse {
     color: var(--color-text-muted);

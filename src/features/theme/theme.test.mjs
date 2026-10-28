@@ -496,6 +496,7 @@ test('every shipped brand bitmap uses only the four approved colors', async () =
 test('product styles and email templates cannot reintroduce the retired brand palette', () => {
   const oldPalette = /#(?:bd212c|a71d27|fba917|282d33|fbfffe|6e676f)\b/i;
   assert.doesNotMatch(productStyles(), oldPalette);
+  assert.doesNotMatch(productStyles(), /rgb\(189 33 44\b/);
   for (const name of fs.readdirSync('supabase/templates')) {
     if (name.endsWith('.html'))
       assert.doesNotMatch(fs.readFileSync(`supabase/templates/${name}`, 'utf8'), oldPalette, name);
