@@ -10,6 +10,18 @@ import { renderEmail } from './template';
 
 // Semantic reasons keep the first line, preview and action distinct across events.
 const emailReasons: Record<NotificationKind, { label: string; message: string; action: string }> = {
+  asset_lifecycle: {
+    label: 'Equipment lifecycle reminder',
+    message:
+      'An equipment warranty or end-of-life date needs attention. Review the asset and plan the next step.',
+    action: 'Review equipment',
+  },
+  inventory_low_stock: {
+    label: 'Stock needs replenishing',
+    message:
+      'Available stock has reached its reorder threshold. Review the item and arrange replenishment.',
+    action: 'Review inventory',
+  },
   ticket_created: {
     label: 'New ticket received',
     message:
@@ -53,6 +65,18 @@ const emailReasons: Record<NotificationKind, { label: string; message: string; a
     message:
       'An SLA deadline for this ticket is approaching. Review the ticket and its next required action.',
     action: 'Review SLA deadline',
+  },
+  chat_idle_warning: {
+    label: 'Your chat needs a reply',
+    message:
+      'IT has replied to your chat. Reply within the next 4 support hours to keep it open. Support hours are 7 AM–10 PM every day in your workspace timezone.',
+    action: 'Reply to chat',
+  },
+  chat_auto_closed: {
+    label: 'Chat closed after inactivity',
+    message:
+      'Your chat closed after 24 support hours without a reply. Its history and closing summary are available in FixxFlow. Start a new chat if you still need help.',
+    action: 'View chat summary',
   },
   new_chat: {
     label: 'New support chat',

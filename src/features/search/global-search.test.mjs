@@ -176,30 +176,20 @@ test('Escape closes search directly instead of only clearing the native search f
   }
 });
 
-test('a remote failure does not turn a usable navigation match into a retry error', () => {
+test('remote failure keeps navigation usable and offers retry', () => {
   const f = fixture('administrator');
   try {
-    f.find((node) => node.type === 'button').props.onClick();
+    f.find((n) => n.type === 'button').props.onClick();
     f.render();
-    f.find((node) => node.props.role === 'combobox').props.onChange({ target: { value: 'admin' } });
+    f.find((n) => n.props.role === 'combobox').props.onChange({ target: { value: 'admin' } });
     f.state(3, 'error');
     f.render();
     assert.equal(
-      f.find((node) => node.props.role === 'option')?.props.children[1]?.props.children,
+      f.find((n) => n.props.role === 'option')?.props.children[1]?.props.children,
       'Settings',
     );
-    assert.equal(
-      f.find((node) => node.type === 'button' && node.props.children === 'Retry search'),
-      undefined,
-    );
-    assert.ok(
-      f.find(
-        (node) =>
-          node.type === 'p' &&
-          node.props.children ===
-            'Showing navigation results. Tickets, people, and articles are temporarily unavailable.',
-      ),
-    );
+    assert.ok(f.find((n) => n.type === 'button' && n.props.children === 'Retry search'));
+    assert.ok(f.find((n) => n.props.role === 'alert'));
   } finally {
     f.close();
   }

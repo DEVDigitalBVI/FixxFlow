@@ -26,8 +26,10 @@ const labels = {
   location: 'Location',
   purchased_on: 'Purchase date',
   warranty_until: 'Warranty ends',
+  end_of_life_on: 'End of life',
 };
 export function AssetImport() {
+  const [updateExisting, setUpdateExisting] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [sheet, setSheet] = useState('');
   const [sheets, setSheets] = useState<string[]>([]);
@@ -86,7 +88,7 @@ export function AssetImport() {
         setResult(parsed);
         return;
       }
-      const checked = await importAssets(parsed.rows, 'preview');
+      const checked = await importAssets(parsed.rows, 'preview', { updateExisting });
       setResult(checked);
       setReady(!checked.error && !checked.issues?.length && !!checked.rows?.length);
     } catch (error) {
@@ -103,7 +105,10 @@ export function AssetImport() {
     lock.current = true;
     setBusy(true);
     try {
-      const saved = await importAssets(result.rows, 'save');
+      const saved = await importAssets(result.rows, 'save', {
+        updateExisting,
+        versions: result.versions,
+      });
       setResult(saved.error ? { ...result, ...saved } : saved);
       setReady(false);
     } catch {
@@ -121,6 +126,7 @@ export function AssetImport() {
   const rows = result.rows ?? [];
   const issues = result.issues ?? [];
   const pages = Math.ceil(rows.length / 25);
+  const updates = updateExisting ? Object.keys(result.versions ?? {}).length : 0;
   return (
     <div className="stack asset-import">
       <section className="settings-card stack" aria-labelledby="import-file-heading">
@@ -131,6 +137,25 @@ export function AssetImport() {
             imported.
           </p>
         </div>
+        <label>
+          <input
+            type="checkbox"
+            checked={updateExisting}
+            disabled={busy || !!result.success}
+            onChange={(event) => {
+              setUpdateExisting(event.target.checked);
+              setReady(false);
+              setResult({});
+            }}
+          />{' '}
+          Create or update by asset tag
+        </label>
+        {updateExisting && (
+          <p className="form-note">
+            Matching tags will be updated. Blank optional cells clear saved values; omitted columns
+            are treated as blank. Include every field you want to keep.
+          </p>
+        )}
         <div className="page-header-actions">
           <a
             className="button button-secondary"
@@ -177,10 +202,10 @@ export function AssetImport() {
               </dd>
             </div>
             <div>
-              <dt>purchased_on, warranty_until</dt>
+              <dt>purchased_on, warranty_until, end_of_life_on</dt>
               <dd>
-                Optional. Use YYYY-MM-DD or Excel date cells. Warranty cannot end before purchase.
-                Paste formulas as values and remove merged cells.
+                Optional. Use YYYY-MM-DD or Excel date cells. Warranty and end-of-life dates cannot
+                be before purchase. Paste formulas as values and remove merged cells.
               </dd>
             </div>
           </dl>
@@ -251,7 +276,7 @@ export function AssetImport() {
             result.success ??
             (issues.length
               ? `${issues.length} issue${issues.length === 1 ? '' : 's'} found. Fix your spreadsheet, choose the updated file, and preview again. Nothing has been imported.`
-              : `${rows.length} assets ready to import from ${sheet}. Review the rows below.`)}
+              : `Ready to save: ${rows.length - updates} to create, ${updates} to update.`)}
         </div>
       )}
       {issues.length > 0 && (
@@ -270,10 +295,7 @@ export function AssetImport() {
         <section className="stack" aria-labelledby="import-preview-heading">
           <div>
             <h2 id="import-preview-heading">2. Review assets</h2>
-            <p className="muted">
-              New assets only. Existing assets are never overwritten. If any row fails, the entire
-              batch is rejected.
-            </p>
+            <p className="muted">Review each row. The entire batch saves together.</p>
           </div>
           <div
             className="table-region"
@@ -294,6 +316,7 @@ export function AssetImport() {
               <thead>
                 <tr>
                   <th scope="col">Row</th>
+                  <th scope="col">Change</th>
                   {importColumns.map((k) => (
                     <th scope="col" key={k}>
                       {labels[k]}
@@ -305,6 +328,13 @@ export function AssetImport() {
                 {rows.slice((page - 1) * 25, page * 25).map((row: ImportRow) => (
                   <tr key={row.row}>
                     <td data-label="Row">Row {row.row}</td>
+                    <td data-label="Change">
+                      {result.versions?.[row.tag]
+                        ? updateExisting
+                          ? 'Update'
+                          : 'Tag exists'
+                        : 'Create'}
+                    </td>
                     {importColumns.map((k) => (
                       <td data-label={labels[k]} key={k}>
                         {k === 'kind'
@@ -351,7 +381,11 @@ export function AssetImport() {
               aria-busy={busy}
               onClick={() => void save()}
             >
-              {busy ? 'Importing…' : `Import ${rows.length} assets`}
+              {busy
+                ? 'Saving…'
+                : updateExisting
+                  ? 'Save reviewed changes'
+                  : `Import ${rows.length} asset${rows.length === 1 ? '' : 's'}`}
             </button>
           </div>
         </section>

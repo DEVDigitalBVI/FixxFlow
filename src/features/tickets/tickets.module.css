@@ -5,9 +5,6 @@
     gap: 10px;
     margin-bottom: 16px;
   }
-  :where(.scope) :global(.ticket-table) {
-    min-width: 980px;
-  }
   :where(.scope) :global(.ticket-link) {
     color: var(--color-text);
     text-decoration: none;
@@ -132,27 +129,12 @@
       order: 3;
     }
   }
-  :where(.scope) :global(.queue-views) {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    padding: 4px;
-    overflow-x: auto;
-  }
   :where(.scope) :global(.queue-views a[aria-current='page']) {
     color: var(--color-accent);
     background: var(--color-accent-subtle);
     border-color: var(--color-accent);
     font-weight: 700;
     box-shadow: inset 0 -2px var(--color-accent);
-  }
-  :where(.scope) :global(.queue-filters) {
-    display: flex;
-    align-items: end;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 18px;
   }
   :where(.scope) :global(.queue-filters label) {
     display: grid;
@@ -186,11 +168,6 @@
     display: inline-flex;
     align-items: center;
     font-size: 13px;
-  }
-  :where(.scope) :global(.queue-count) {
-    margin: 10px 2px 0;
-    color: var(--color-text-muted);
-    font-size: 12px;
   }
   :where(.scope) :global(.ticket-table) {
     min-width: 880px;
@@ -462,12 +439,23 @@
     min-width: 200px;
   }
   :where(.scope) :global(.queue-views) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 4px;
+    overflow-x: auto;
     flex-wrap: wrap;
   }
   :where(.scope) :global(.queue-views a) {
     white-space: normal;
   }
   :where(.scope) :global(.queue-filters) {
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
     padding: 16px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
@@ -480,6 +468,9 @@
     flex-basis: 280px;
   }
   :where(.scope) :global(.queue-count) {
+    margin: 10px 2px 0;
+    color: var(--color-text-muted);
+    font-size: 12px;
     margin-block: 12px;
   }
   :where(.scope) :global(.ticket-heading h1) {
@@ -903,6 +894,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       padding: 0;
+      flex-basis: 100%;
     }
   }
   @media (max-width: 767px) {
@@ -1188,9 +1180,6 @@
   :where(.scope) :global(.ticket-create-equipment .muted) {
     font-size: 13px;
   }
-  :where(.scope) :global(.portal-request-form .ticket-create-fields) {
-    grid-template-columns: minmax(0, 1fr);
-  }
   :where(.scope) :global(.portal-request-form .ticket-create-fields .field-wide) {
     grid-column: auto;
   }
@@ -1310,9 +1299,6 @@
     padding-block: 16px;
   }
   @media (max-width: 767px) {
-    :where(.scope) :global(.ticket-queue-heading > .queue-views) {
-      flex-basis: 100%;
-    }
   }
   :where(.scope) :global(.chat-center .queue-views) {
     display: flex;
@@ -1341,9 +1327,8 @@
     font-size: 28px;
     line-height: 36px;
     margin-top: 0;
-  }
-  :where(.scope) :global(.portal-request-form .ticket-create-section) {
-    border-top: 0;
+    margin: 0 0 8px;
+    letter-spacing: -0.025em;
   }
   :where(.scope) :global(.portal-request-form .ticket-create-required) {
     margin: 0 0 20px;
@@ -1351,22 +1336,16 @@
     font-size: 14px;
   }
   :where(.scope) :global(.portal-request-form .ticket-create-fields) {
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px;
   }
   :where(.scope) :global(.portal-request-form .ticket-create-fields small) {
     font-size: 14px;
   }
-  :where(.scope) :global(.portal-request-form .ticket-create-optional summary) {
-    font-size: 16px;
-    font-weight: 500;
-  }
   :where(.scope) :global(.portal-request-form .ticket-create-optional .ticket-suggestions) {
     margin-top: 12px;
     padding: 0;
     border: 0;
-  }
-  :where(.scope) :global(.portal-request-form .ticket-create-footer) {
-    gap: 16px;
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.portal-form-page.ticket-create-page .portal-page-heading h1) {
@@ -1389,21 +1368,20 @@
     margin: 0 0 8px;
     color: var(--color-accent);
   }
-  :where(.scope) :global(.portal-form-page.ticket-create-page .portal-page-heading h1) {
-    margin: 0 0 8px;
-    letter-spacing: -0.025em;
-  }
   :where(.scope) :global(.portal-form-page.ticket-create-page .portal-page-heading p) {
     font-size: 16px;
     line-height: 24px;
   }
   :where(.scope) :global(.portal-request-form .ticket-create-section) {
+    border-top: 0;
     border-radius: var(--radius-panel) var(--radius-panel) 0 0;
   }
   :where(.scope) :global(.portal-request-form .ticket-create-optional) {
     background: color-mix(in srgb, var(--color-accent-subtle) 35%, var(--color-surface));
   }
   :where(.scope) :global(.portal-request-form .ticket-create-optional summary) {
+    font-size: 16px;
+    font-weight: 500;
     color: var(--color-accent);
   }
   :where(.scope) :global(.portal-request-form .ticket-create-equipment) {
@@ -1412,6 +1390,7 @@
     background: var(--color-accent-subtle);
   }
   :where(.scope) :global(.portal-request-form .ticket-create-footer) {
+    gap: 16px;
     border-radius: 0 0 var(--radius-panel) var(--radius-panel);
   }
   @media (max-width: 767px) {
@@ -2040,5 +2019,29 @@
     display: block;
     color: var(--color-warning);
     font-size: 12px;
+  }
+}
+
+/* Staff view of requester ratings: written label first, comment as quoted text. */
+@layer components {
+  :where(.scope) :global(.requester-rating-list) {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  :where(.scope) :global(.requester-rating-list li) {
+    display: grid;
+    gap: 2px;
+  }
+  :where(.scope) :global(.requester-rating-list .muted) {
+    font-size: 13px;
+  }
+  :where(.scope) :global(.requester-rating-comment) {
+    margin: 4px 0 0;
+    padding-inline-start: 12px;
+    border-inline-start: 3px solid var(--color-border-strong);
+    overflow-wrap: anywhere;
   }
 }

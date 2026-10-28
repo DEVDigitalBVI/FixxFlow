@@ -108,17 +108,36 @@ test('owner action authorizes before reading input or accessing data', async () 
   await assert.rejects(saveLibraryArticle(new FormData()), /DENIED/);
 });
 
-test('shared reader identifies provenance, renders semantic contents and has no tenant edit or feedback controls', async () => {
+test('shared reader identifies provenance and supports feedback without tenant editing', async () => {
   const { LibraryArticleDetail } = load('src/features/knowledge/library-article-detail.tsx', {
     'next/link': link,
-    '@/lib/supabase/server': { createClient: async () => ({}) },
+    '@/lib/supabase/server': {
+      createClient: async () => ({
+        from: () => {
+          const q = new Proxy(
+            {},
+            {
+              get: (_, key) =>
+                key === 'maybeSingle' ? async () => ({ data: null, error: null }) : () => q,
+            },
+          );
+          return q;
+        },
+      }),
+    },
   });
-  const html = renderToStaticMarkup(await LibraryArticleDetail({ article }));
+  const html = renderToStaticMarkup(
+    await LibraryArticleDetail({
+      article,
+      viewer: { id: 'employee', organizationId: 'org', role: 'end_user' },
+    }),
+  );
   assert.match(html, /<h1>Shared Wi-Fi guide<\/h1>/);
   assert.match(html, /FixxFlow library/);
   assert.match(html, /aria-label="On this page"/);
   assert.match(html, /href="\/app\/tickets\/new"/);
-  assert.doesNotMatch(html, /Edit article|Was this helpful/);
+  assert.doesNotMatch(html, /Edit article|Usage in this workspace/);
+  assert.match(html, /Was this article helpful/);
 });
 
 test('owner listing paginates and exposes search labels, explicit audiences, recoverable errors and save receipt', async () => {

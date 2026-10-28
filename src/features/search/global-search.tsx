@@ -12,6 +12,7 @@ import type { AppRole } from '@/types/database';
 import {
   groupSearchResults,
   matchDestinations,
+  SEARCH_RESULT_LIMIT,
   searchDestinations,
   type SearchResult,
 } from './model';
@@ -79,7 +80,7 @@ export function GlobalSearch({
     [destinations, normalizedQuery],
   );
   const results = useMemo(() => [...navigationResults, ...remote], [navigationResults, remote]);
-  const groups = useMemo(() => groupSearchResults(results), [results]);
+  const groups = useMemo(() => groupSearchResults(results, true), [results]);
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
       if (
@@ -204,7 +205,11 @@ export function GlobalSearch({
               </button>
             </header>
             <label htmlFor="global-search-input">
-              {platform ? 'Search navigation' : 'Tickets, people, articles and navigation'}
+              {platform
+                ? 'Search navigation'
+                : role === 'end_user'
+                  ? 'Tickets and articles'
+                  : 'Tickets, people and articles'}
             </label>
             <input
               ref={input}
@@ -258,15 +263,11 @@ export function GlobalSearch({
             <p role="status">
               {status === 'loading'
                 ? 'Searching…'
-                : `${results.length} ${results.length === 1 ? 'result' : 'results'}${remote.length >= 8 ? ' · Open a feature to see more' : ''}.`}
+                : status === 'error'
+                  ? 'Workspace results unavailable.'
+                  : `${results.length} ${results.length === 1 ? 'result' : 'results'}${remote.length >= SEARCH_RESULT_LIMIT ? ' · Best matches shown · Refine your search for more' : ''}.`}
             </p>
-            {status === 'error' && navigationResults.length > 0 && (
-              <p className="form-note">
-                Showing navigation results. Tickets, people, and articles are temporarily
-                unavailable.
-              </p>
-            )}
-            {status === 'error' && navigationResults.length === 0 && (
+            {status === 'error' && (
               <div role="alert" className="alert alert-error">
                 Workspace results could not load.{' '}
                 <button
@@ -290,6 +291,9 @@ export function GlobalSearch({
             >
               {groups.map(({ label, entries }) => (
                 <div key={label} role="group" aria-label={label}>
+                  <p className="form-note" aria-hidden="true">
+                    {label === 'Navigation' ? 'Shortcuts' : label}
+                  </p>
                   {entries.map(({ result, index }) => (
                     <a
                       key={`${result.group}-${result.id}`}
@@ -313,7 +317,17 @@ export function GlobalSearch({
                         choose(result);
                       }}
                     >
-                      <small>{result.group}</small>
+                      <small>
+                        {
+                          {
+                            Navigation: 'Shortcut',
+                            Tickets: 'Ticket',
+                            People: 'Person',
+                            Articles: 'Article',
+                          }[result.group]
+                        }
+                        {result.approximate ? ' · Similar match' : ''}
+                      </small>
                       <strong>{result.label}</strong>
                       {result.detail && <span>{result.detail}</span>}
                     </a>

@@ -1,13 +1,23 @@
-# Ticket search
+# Search
 
-The ticket queue searches number, title/description, visible messages, requester/assigned technician display names and profile email, categories, and subcategories. Search includes resolved/closed history in All tickets. Queue filters still apply. Bare numeric input searches both ticket numbers and text error codes; prefix a number with `#` for exact ticket lookup.
+## Global search
 
-Text search uses case-insensitive whole words with all words required in the title/description pair or one message/person/category. It does not combine terms scattered across different messages or different sources. Input is bounded to 200 characters. Typo correction, substring matching, and relevance ranking are deferred; existing queue sorting remains available.
+The Search button and Cmd/Ctrl+K open the shared command dialog. Navigation shortcuts remain separate. Tickets, people and published articles share one **Best matches** list, with a written type on each row. Employees search permitted tickets and guides; people results remain staff-only.
 
-A SECURITY INVOKER SQL RPC reads source tables through their existing RLS policies, including MFA, organization membership, requester ownership, and internal-note audience. Message text is never copied into employee-readable ticket rows. Expression GIN indexes stay current as source rows change; there is no background indexing job or stale search cache.
+The database returns at most 20 results: exact ticket numbers first, followed by exact title/name matches, prefixes and fragments, other literal matches, then approximate word matches. Equal scores use stable title/type/ID ordering. Readable message content remains searchable. Errors offer Retry even when navigation shortcuts are available.
 
-API filters/sort are applied to the returned relation before pagination. Pages use 50 results plus one lookahead row, with a stable ID tie-breaker. Pagination retains search/filter URL parameters. Offset pagination can shift as tickets change; cursor pagination remains a future improvement.
+All query terms must match. Alphabetic words of 4–7 letters allow one edit; words of 8–32 letters allow two. Edits include insertion, deletion, replacement and adjacent transposition: `pritner` can find `printer`. Approximate results say **Similar match**. Numbers, email addresses, punctuation and shorter fragments remain literal. `#123` is an exact ticket lookup. Wi-Fi and wifi are normalized for relevance scoring. Empty queries show shortcuts without a database request.
 
-Knowledge articles now live in the database with indexed search and draft/publication permissions. Ticket search links to published knowledge matches. Unified relevance-ranked ticket/article results remain future work.
+`search_workspace` is a SECURITY INVOKER RPC using the authenticated client, live organization membership, MFA and source-table RLS. Existing literal RPCs preserve deep ticket/message/category and article-content matches. Typo matching applies to ticket title/description, profile name/email/job title, and article title/summary. Trigram GIN indexes prefilter candidates and bounded edit distance rejects loose matches. Private message text is never copied into employee-readable search documents. Hidden library preferences also apply to approximate matches. Responses are private and uncached.
 
-Validation: application tests, lint, typecheck, production build, and `supabase/tests/search-regression.sql` (transactional rollback fixtures). Database coverage includes title/description, messages, names, categories, exact numbers, error codes, duplicate suppression, organization isolation, internal-note confidentiality and MFA. A local PGlite check over 5,000 synthetic tickets found 50 expected matches in approximately 42 ms; this is not a production performance guarantee.
+Apply `20261027210812_ranked_workspace_search.sql` before releasing the application change. This migration remains local alongside the pending chat and knowledge-base work.
+
+## Feature lists
+
+Feature lists retain literal case-insensitive fragments with all whitespace-separated terms required across their searchable fields. Punctuation and wildcard characters are literal. Ticket queues search number, title/description, readable messages, requester/assigned technician profiles, categories and subcategories. All tickets includes resolved/closed history while preserving filters and sorting.
+
+Input is bounded to 200 characters. Bare numbers match ticket-number fragments and text error codes; `#123` remains exact. Feature lists are not typo-corrected. Filters and sorting apply before pagination, with stable ID tie-breakers. Offset pagination can shift as tickets change.
+
+## Validation
+
+Coverage includes mixed-entity ranking, exact numbers, transpositions, multiple typo terms, all-term matching, literal punctuation, private notes, hidden guides, publication/audience boundaries, staff-only people, organization isolation, bounded results and keyboard selection. Database tests execute the actual migrated SQL. Existing list-search regressions remain in place.

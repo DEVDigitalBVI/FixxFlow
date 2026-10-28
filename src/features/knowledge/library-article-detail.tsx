@@ -1,22 +1,57 @@
 import Link from 'next/link';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import type { Viewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
 import type { LibraryArticle } from '@/types/database';
 
 import { ArticleContent } from './article-content';
+import { ArticleFeedback } from './article-feedback';
 import { knowledgeAudiences } from './audience';
 
-export async function LibraryArticleDetail({ article }: { article: LibraryArticle }) {
+export async function LibraryArticleDetail({
+  article,
+  viewer,
+}: {
+  article: LibraryArticle;
+  viewer: Pick<Viewer, 'id' | 'organizationId' | 'role'>;
+}) {
   const db = await createClient();
-  const related = article.related_article_ids.length
-    ? await db.from('library_articles').select('id,title').in('id', article.related_article_ids)
-    : { data: [], error: null };
+  const staff = viewer.role !== 'end_user';
+  const [related, feedback, views, helpful, unhelpful] = await Promise.all([
+    article.related_article_ids.length
+      ? db.from('library_articles').select('id,title').in('id', article.related_article_ids)
+      : { data: [], error: null },
+    db
+      .from('library_article_feedback')
+      .select('helpful')
+      .eq('organization_id', viewer.organizationId)
+      .eq('article_id', article.id)
+      .eq('user_id', viewer.id)
+      .maybeSingle(),
+    ...[null, true, false].map((vote) => {
+      if (!staff) return Promise.resolve({ count: null, error: null });
+      if (vote === null)
+        return db
+          .from('library_article_views')
+          .select('article_id', { head: true, count: 'exact' })
+          .eq('organization_id', viewer.organizationId)
+          .eq('article_id', article.id);
+      return db
+        .from('library_article_feedback')
+        .select('article_id', { head: true, count: 'exact' })
+        .eq('organization_id', viewer.organizationId)
+        .eq('article_id', article.id)
+        .eq('helpful', vote);
+    }),
+  ]);
   return (
     <div className="portal-page knowledge-detail">
       <header className="portal-page-heading">
         <div>
           <Link className="button button-quiet page-back-link" href="/app/help">
-            ← Knowledge base
+            <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
+            Knowledge base
           </Link>
           <p className="muted">
             FixxFlow library · {article.category} · {knowledgeAudiences[article.audience].label}
@@ -42,6 +77,40 @@ export async function LibraryArticleDetail({ article }: { article: LibraryArticl
                 </li>
               ))}
             </ul>
+          )}
+        </section>
+      )}
+      {feedback.error ? (
+        <p role="alert">Your saved feedback could not load. Refresh to retry.</p>
+      ) : (
+        <ArticleFeedback articleId={article.id} initial={feedback.data?.helpful ?? null} library />
+      )}
+      {staff && (
+        <section className="settings-card">
+          <h2>Usage in this workspace</h2>
+          {views.error || helpful.error || unhelpful.error ? (
+            <p role="alert">Insights could not load. Refresh to retry.</p>
+          ) : (
+            <>
+              <dl className="knowledge-metrics">
+                <div>
+                  <dt>Views</dt>
+                  <dd>{views.count ?? 0}</dd>
+                </div>
+                <div>
+                  <dt>Helpful</dt>
+                  <dd>{helpful.count ?? 0}</dd>
+                </div>
+                <div>
+                  <dt>Not helpful</dt>
+                  <dd>{unhelpful.count ?? 0}</dd>
+                </div>
+              </dl>
+              <p className="muted">
+                Views count each signed-in reader once per UTC day. Votes reflect each reader’s
+                latest choice. Refresh to see new activity.
+              </p>
+            </>
           )}
         </section>
       )}

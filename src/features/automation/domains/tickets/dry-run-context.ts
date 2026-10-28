@@ -62,7 +62,13 @@ export function ticketDryRunEvent(context: DryRunContext, source: DryRunSource):
     entityType: 'ticket',
     entityId: context.ticketId,
     entityVersion: context.revision,
-    type: source.kind === 'current_ticket' ? 'ticket.created' : context.definition.trigger.type,
+    type:
+      source.kind === 'current_ticket' &&
+      !['ticket.created_from_email', 'ticket.created_from_chat'].includes(
+        context.definition.trigger.type,
+      )
+        ? 'ticket.created'
+        : context.definition.trigger.type,
     actorType: 'system',
     actorId: null,
     timestamp: '1970-01-01T00:00:00Z',

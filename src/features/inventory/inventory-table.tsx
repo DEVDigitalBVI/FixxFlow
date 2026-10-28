@@ -37,7 +37,13 @@ export function InventoryTable({ items }: { items: InventoryItem[] }) {
               <td data-label="Type">{item.kind === 'equipment' ? 'Equipment' : 'Consumable'}</td>
               <td data-label="In storage">{item.stock}</td>
               <td data-label="Reserved">{item.reserved}</td>
-              <td data-label="Available">{item.stock - item.reserved}</td>
+              <td data-label="Available">
+                {item.stock - item.reserved}
+                {item.reorder_threshold != null &&
+                  item.stock - item.reserved <= item.reorder_threshold && (
+                    <span className="ticket-badge tone-amber">Low stock</span>
+                  )}
+              </td>
               <td data-label="Action">
                 <Link className="button button-secondary" href={`/app/inventory/${item.id}`}>
                   View item<span className="sr-only"> {item.name}</span>
@@ -76,7 +82,13 @@ export function InventoryStockSummary({ item }: { item: InventoryItem }) {
           <dd>{item.reserved}</dd>
         </div>
         <div>
-          <dt>Available to request</dt>
+          <dt>
+            Available to request{' '}
+            {item.reorder_threshold != null &&
+              item.stock - item.reserved <= item.reorder_threshold && (
+                <span className="ticket-badge tone-amber">Low stock</span>
+              )}
+          </dt>
           <dd>{item.stock - item.reserved}</dd>
         </div>
       </dl>

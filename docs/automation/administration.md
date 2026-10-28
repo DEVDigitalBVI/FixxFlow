@@ -1,5 +1,7 @@
 # Automation administration
 
+See [Email and chat intake automations](intake-and-guides.md) for source-specific creation triggers and suggested-guide replies.
+
 ## Automation administration — Stage 7
 
 The Automation administration UI is implemented inside the existing Administration

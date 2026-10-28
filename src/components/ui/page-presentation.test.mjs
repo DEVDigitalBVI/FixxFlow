@@ -26,7 +26,10 @@ test('shared page heading separates native back navigation, title and primary ac
   );
   assert.equal((html.match(/<h1>/g) ?? []).length, 1);
   assert.match(html, /<a class="button button-quiet page-back-link" href="\/app\/help"/);
-  assert.match(html, /<span aria-hidden="true">←<\/span>Knowledge base/);
+  assert.match(
+    html,
+    /<svg class="inline-icon" aria-hidden="true"[^>]*><path[^>]*><\/path><\/svg>Knowledge base<\/a>/,
+  );
   assert.ok(html.indexOf('</a>') < html.indexOf('<header'));
   assert.match(html, /<button type="button" class="button button-primary">Save draft/);
   assert.doesNotMatch(html, /role="button"/);

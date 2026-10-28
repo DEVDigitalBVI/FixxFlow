@@ -1,5 +1,13 @@
 export const administrationSections = [
   {
+    slug: 'library',
+    title: 'FixxFlow library',
+    group: 'Service delivery',
+    status: 'Available',
+    description: 'Hide shared guides that do not apply to this workspace, or restore them.',
+    href: '/app/administration/library',
+  },
+  {
     slug: 'workflows',
     title: 'Workflow templates',
     group: 'Service delivery',
@@ -127,8 +135,9 @@ export const administrationSections = [
     slug: 'security',
     title: 'Security',
     group: 'Governance',
-    status: 'Fixed',
-    description: 'Review access protections and personal two-factor settings.',
+    status: 'Available',
+    description: 'Require workspace two-step verification and review company sign-in.',
+    href: '/app/administration/security',
   },
   {
     slug: 'audit-log',

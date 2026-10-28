@@ -59,3 +59,7 @@ This version excludes procurement, incoming orders, supplier management, shoppin
 Browser checks used the isolated fixture, not a signed-in production session: desktop and 375px/768px layouts, light/dark surfaces, 200% page zoom, keyboard focus, and simulated failure → retained draft → successful retry. The new inventory layouts add no animation and inherit the shared reduced-motion rules. Real hosted authentication, realtime delivery and outgoing email were not exercised.
 
 Visual direction follows the product owner's refined SaaS preference: existing asset table panels, quiet surface shifts, strong item typography, compact department filters, grouped stock arithmetic and native progressive disclosure. Employee request screens omit receiving, corrections and approval controls.
+
+## Reorder thresholds and equipment history
+
+Managers can configure a nullable reorder threshold on each item. Low-stock badges, one alert per low-stock episode, recovery/rearming, permission checks and email cancellation are described in [Assets and inventory enhancements](assets-and-inventory.md). Asset issuance also records assignment history, available to staff from People → Equipment. Apply the two pending equipment migrations before releasing this UI.

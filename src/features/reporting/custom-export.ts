@@ -11,7 +11,7 @@ import { formatCustomValue, groupLabels, reportTypes, type CustomReport } from '
 import { PdfCharacterError } from './export-pdf';
 
 type Cell = string | number | null;
-function safeCsv(value: Cell) {
+export function safeCsv(value: Cell) {
   let text = value === null ? '' : String(value);
   if (typeof value === 'string' && /^[\s\u0000-\u001f]*[=+@-]/u.test(text)) text = `'${text}`;
   return `"${text.replaceAll('"', '""')}"`;

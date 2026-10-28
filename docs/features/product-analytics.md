@@ -27,7 +27,9 @@ The retained counters contain only UTC day, event name, role, feature area and c
 
 An internal deduplication table stores SHA-256 keys for session/event/object combinations, without raw IDs. View and search keys expire after one day; login keys after 90 days. These are short-lived pseudonymous operational keys, so this system should be described as aggregate/de-identified analytics rather than guaranteed anonymity. No user-level journey or unique-user/tenant count is available. Counts represent the opted-in cohort only.
 
-Counter rows older than 365 days and expired deduplication keys are cleaned up opportunistically during opted-in event writes. Inactive installations need owner-run maintenance to physically purge expired rows; no dedicated scheduled cleanup job is configured yet. Opting out stops future collection. Previously combined counts cannot be separated by user for deletion.
+Counter rows older than 365 days and expired deduplication keys are cleaned up opportunistically during opted-in event writes, and by a scheduled job. `/api/cron/analytics-cleanup` runs daily at 03:17 UTC with the cron secret and calls the service-role-only `run_product_usage_cleanup`. It deletes in bounded batches of 5,000 (at most 50,000 rows per run), takes an advisory lock so overlapping runs skip, and records each run in `private.product_usage_cleanup_runs` (trigger, start/finish, rows removed, and whether anything expired remains). Remaining rows are picked up by the next run. Opting out stops future collection. Previously combined counts cannot be separated by user for deletion.
+
+`/platform/analytics` shows the retention rules, the last run, and how many expired rows are waiting. Verified owners can **Run cleanup now**; that applies the same rules immediately and is recorded in the platform audit log as `analytics_cleanup_run`.
 
 ## Event definitions
 
@@ -58,7 +60,7 @@ select * from public.product_usage_summary(30);
 
 The result contains `day`, `event`, `role`, `surface`, and `count`; the window is bounded to 1–366 days. Never expose the service credential in a browser. The separate platform-owner console at `/platform/analytics` now exposes a checked aggregate summary to explicitly provisioned owners with a live MFA-verified session. Customer roles cannot access it. See `PLATFORM_ARCHITECTURE.md`.
 
-For maintenance through the owner SQL connection:
+The scheduled job replaces routine manual maintenance. For emergency maintenance through the owner SQL connection:
 
 ```sql
 delete from private.product_usage_dedup where expires_at < now();

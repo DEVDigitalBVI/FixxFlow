@@ -1,11 +1,30 @@
 'use client';
 
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 
-import { fetchReportDownload } from './download';
+import { fetchReportDownloadUrl } from './download';
 import { exportFormats, isExportFormat } from './export-model';
 
-export function ReportDownload() {
+/** Format picker plus a fetched download with announced progress and recoverable errors. */
+export function ReportDownload({
+  action = '/app/reports/export',
+  params = {},
+  hint = 'Includes summary, all 30 days, SLA, and breakdowns. Downloads refresh the data.',
+  label = 'Download report',
+  pendingLabel = 'Preparing report…',
+  reload = { href: '/app/reports', label: 'Reload Reports' },
+}: {
+  action?: string;
+  /** Extra query parameters sent with the chosen format, such as a search term. */
+  params?: Record<string, string>;
+  hint?: string;
+  label?: string;
+  pendingLabel?: string;
+  reload?: { href: string; label: string };
+} = {}) {
+  const id = useId();
+  const formatId = `${id}-format`,
+    hintId = `${id}-hint`;
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
@@ -24,10 +43,15 @@ export function ReportDownload() {
     const request = new AbortController();
     controller.current = request;
     setError('');
-    setStatus('Preparing report…');
+    setStatus(pendingLabel);
     setPending(true);
     try {
-      const { blob, filename } = await fetchReportDownload(format, request.signal);
+      const query = new URLSearchParams({ ...params, format });
+      const { blob, filename } = await fetchReportDownloadUrl(
+        `${action}?${query}`,
+        format,
+        request.signal,
+      );
       if (request.signal.aborted) return;
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -54,22 +78,19 @@ export function ReportDownload() {
   }
   return (
     <div className="report-download">
-      <form
-        action="/app/reports/export"
-        method="get"
-        onSubmit={download}
-        aria-label="Download report"
-        aria-busy={pending}
-      >
+      <form action={action} method="get" onSubmit={download} aria-label={label} aria-busy={pending}>
+        {Object.entries(params).map(([name, value]) => (
+          <input key={name} type="hidden" name={name} value={value} />
+        ))}
         <div className="field">
-          <label htmlFor="report-format">File format</label>
+          <label htmlFor={formatId}>File format</label>
           <select
             className="input"
-            id="report-format"
+            id={formatId}
             name="format"
             defaultValue="xlsx"
             disabled={pending}
-            aria-describedby="report-download-hint"
+            aria-describedby={hintId}
           >
             {Object.entries(exportFormats).map(([format, { label }]) => (
               <option key={format} value={format}>
@@ -79,11 +100,11 @@ export function ReportDownload() {
           </select>
         </div>
         <button className="button button-primary" type="submit" disabled={pending}>
-          {pending ? 'Preparing report…' : 'Download report'}
+          {pending ? pendingLabel : label}
         </button>
       </form>
-      <p className="muted" id="report-download-hint">
-        Includes summary, all 30 days, SLA, and breakdowns. Downloads refresh the data.
+      <p className="muted" id={hintId}>
+        {hint}
       </p>
       <p className="muted" role="status" aria-live="polite">
         {status}
@@ -91,8 +112,8 @@ export function ReportDownload() {
       {error && (
         <div className="alert alert-error" role="alert" tabIndex={-1} ref={feedback}>
           <p>{error}</p>
-          <a className="button button-secondary" href="/app/reports">
-            Reload Reports
+          <a className="button button-secondary" href={reload.href}>
+            {reload.label}
           </a>
         </div>
       )}

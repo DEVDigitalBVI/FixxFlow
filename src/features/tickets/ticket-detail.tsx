@@ -18,6 +18,7 @@ import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
 
 import '@/features/tickets/presentation';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { SlaPolicy } from '@/features/tickets/sla-policy-table';
 import { popularTags } from '@/features/tickets/tags';
@@ -33,8 +34,12 @@ import { createClient } from '@/lib/supabase/server';
 import { activityProfileIds, ActivityTimeline } from './activity-timeline';
 import { IncidentPanel } from './incident-panel';
 import { safeQueueReturn } from './queue-navigation';
+import { rateResolution } from './rating-actions';
+import { describeRating, ratingWindowOpen } from './ratings';
 import { ReopenTicketForm } from './reopen-ticket-form';
 import { ReportedImpact } from './reported-impact';
+import { RequestExpectations } from './request-expectations';
+import { ResolutionRating } from './resolution-rating';
 import { ServiceAnnouncementPanel } from './service-announcement-panel';
 import { TicketWorkflow } from './ticket-workflow';
 import { TicketWorkActions } from './work-actions';
@@ -79,7 +84,9 @@ export async function TicketDetail({
     notFound();
   if (viewer.role === 'end_user') {
     const employeeTicket = ticket;
-    const [messagesR, attachmentsR] = await Promise.all([
+    const resolvedCycle =
+      (ticket.status === 'resolved' || ticket.status === 'closed') && ticket.resolved_at;
+    const [messagesR, attachmentsR, ratingR] = await Promise.all([
       supabase
         .from('ticket_messages')
         .select('id, author_id, author_type, automation_name, kind, body, created_at')
@@ -97,6 +104,15 @@ export async function TicketDetail({
         .order('created_at', { ascending: false })
         .order('id', { ascending: false })
         .limit(HISTORY_PAGE_SIZE),
+      resolvedCycle
+        ? supabase
+            .from('ticket_resolution_ratings')
+            .select('score, comment')
+            .eq('organization_id', viewer.organizationId)
+            .eq('ticket_id', ticketId)
+            .eq('resolved_at', resolvedCycle)
+            .maybeSingle()
+        : Promise.resolve({ data: null, error: null }),
     ]);
     const profiles = await profileLabels(
       supabase,
@@ -121,13 +137,26 @@ export async function TicketDetail({
         <div className="portal-page-heading">
           <div>
             <Link className="button button-quiet page-back-link" href={back} scroll={false}>
-              ← My requests
+              <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
+              My requests
             </Link>
             <p className="portal-reference">Request #{employeeTicket.ticket_number}</p>
             <Heading>{employeeTicket.title}</Heading>
             <TicketStatusBadge status={employeeTicket.status} />
           </div>
         </div>
+        <SlaClock initialNow={new Date().getTime()}>
+          <RequestExpectations ticket={employeeTicket} />
+        </SlaClock>
+        {canReopen && !ratingR.error && (
+          <ResolutionRating
+            key={`${employeeTicket.id}:${employeeTicket.resolved_at}`}
+            ticketId={employeeTicket.id}
+            rating={ratingR.data}
+            canRate={ratingWindowOpen(employeeTicket.resolved_at, new Date().getTime())}
+            action={rateResolution}
+          />
+        )}
         {canReopen && (
           <ReopenTicketForm
             key={employeeTicket.id}
@@ -239,6 +268,7 @@ export async function TicketDetail({
     tagUsageR,
     linksR,
     watchersR,
+    ratingsR,
   ] = await Promise.all([
     supabase
       .from('ticket_messages')
@@ -304,6 +334,13 @@ export async function TicketDetail({
       .eq('organization_id', viewer.organizationId)
       .eq('ticket_id', ticket.id)
       .order('created_at'),
+    supabase
+      .from('ticket_resolution_ratings')
+      .select('id, score, comment, resolved_at, updated_at')
+      .eq('organization_id', viewer.organizationId)
+      .eq('ticket_id', ticket.id)
+      .order('resolved_at', { ascending: false })
+      .limit(5),
   ]);
   const watcherIds = (watchersR.data ?? []).map((row) => row.user_id);
   const tags = (tagsR.data ?? []).map((row) => row.tag);
@@ -357,7 +394,8 @@ export async function TicketDetail({
       <div className="ticket-topbar">
         {!embedded && (
           <Link className="button button-quiet page-back-link" href={back} scroll={false}>
-            ← Back to tickets
+            <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
+            Back to tickets
           </Link>
         )}
         <a className="button button-secondary" href="#ticket-assignment">
@@ -586,6 +624,42 @@ export async function TicketDetail({
                 </p>
               </details>
             </section>
+            {(ratingsR.error || Boolean(ratingsR.data?.length) || ticket.resolved_at) && (
+              <section
+                className="settings-card requester-ratings"
+                aria-labelledby="requester-rating-heading"
+              >
+                <h3 id="requester-rating-heading">Requester rating</h3>
+                {ratingsR.error ? (
+                  <p role="alert">
+                    Ratings could not load. <RetryButton />
+                  </p>
+                ) : ratingsR.data?.length ? (
+                  <ul className="requester-rating-list">
+                    {ratingsR.data.map((rating) => (
+                      <li key={rating.id}>
+                        <strong>{describeRating(rating.score)}</strong>
+                        <span className="muted">
+                          {rating.resolved_at === ticket.resolved_at
+                            ? 'Current resolution'
+                            : 'Earlier resolution'}{' '}
+                          · rated <Timestamp value={rating.updated_at} />
+                        </span>
+                        {rating.comment && (
+                          <p className="requester-rating-comment">{rating.comment}</p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="muted">
+                    {ratingWindowOpen(ticket.resolved_at, new Date().getTime())
+                      ? 'No rating yet. The requester can rate this resolution for 30 days after it is resolved.'
+                      : 'The requester did not rate this resolution.'}
+                  </p>
+                )}
+              </section>
+            )}
           </>
         }
         tools={coordination}

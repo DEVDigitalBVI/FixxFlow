@@ -96,7 +96,7 @@ const groups: readonly {
         title: 'Knowledge base',
         description: 'Publish helpful answers and keep employee guidance up to date.',
         icon: 'knowledge',
-        destinations: ['knowledge'],
+        destinations: ['knowledge', 'library'],
       },
     ],
   },

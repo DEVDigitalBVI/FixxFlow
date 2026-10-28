@@ -299,7 +299,8 @@ test('leaving a changed draft requires confirmation and preserves it when cancel
     h.render();
     globalThis.window.confirm = () => false;
     h.find(
-      (n) => n.type === 'button' && n.props.children === '← Choose another starting point',
+      (n) =>
+        n.type === 'button' && [n.props.children].flat().includes('Choose another starting point'),
     ).props.onClick();
     assert.equal(left, 0);
     assert.equal(h.find((n) => n.props.id === 'automation-name').props.value, 'Keep my changes');

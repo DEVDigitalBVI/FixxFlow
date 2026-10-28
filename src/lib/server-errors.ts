@@ -4,7 +4,10 @@ import { randomUUID } from 'node:crypto';
 
 export type FailureOperation =
   | 'workspace.search'
+  | 'knowledge.choices'
+  | 'knowledge.suggestions'
   | 'inbound.email'
+  | 'equipment.reminders'
   | 'inventory.mutation'
   | 'viewer.membership'
   | 'viewer.platform'
@@ -19,8 +22,10 @@ export type FailureOperation =
   | 'incident.save'
   | 'ticket.create'
   | 'chat.assign'
+  | 'chat.idle'
   | 'notification.dispatch'
   | 'notification.send'
+  | 'report.workload.load'
   | 'report.export'
   | 'report.saved.load'
   | 'report.save'
@@ -30,7 +35,12 @@ export type FailureOperation =
   | 'report.schedule.delivery'
   | 'report.schedule.dispatch'
   | 'report.custom.export'
-  | 'health.readiness';
+  | 'health.readiness'
+  | 'ticket.rating'
+  | 'report.satisfaction'
+  | 'platform.organization.export'
+  | 'platform.analytics.cleanup'
+  | 'analytics.cleanup';
 
 /** Allowlisted metadata only. Never serialize errors, request data, tokens or PII. */
 export function reportServerError(

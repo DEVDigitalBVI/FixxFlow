@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { Avatar } from '@/components/ui/avatar';
@@ -67,6 +68,9 @@ export function PersonCard({
           </span>
         </div>
       </div>
+      <Link className="button button-quiet" href={`/app/people/${id}/equipment`}>
+        Equipment<span className="sr-only"> for {name}</span>
+      </Link>
       {canManage && (
         <details className="person-manage">
           <summary className="button button-secondary">

@@ -9,6 +9,7 @@ import ts from 'typescript';
 import { renderTicketQueue } from '../fixtures/ticket-queue.mjs';
 import { renderCompactPreview } from './compact-preview.mjs';
 import { load } from './load-module.mjs';
+import { productStyles } from './styles.mjs';
 
 const root = process.cwd(),
   modules = new Map(),
@@ -133,7 +134,8 @@ const server = http.createServer((request, response) => {
   }
   if (url.pathname === '/style.css') {
     response.setHeader('Content-Type', 'text/css');
-    response.end(fs.readFileSync('src/app/globals.css'));
+    // Shared and feature module styles, read per request so edits show on reload.
+    response.end(productStyles());
     return;
   }
   if (url.pathname.startsWith('/brand/')) {

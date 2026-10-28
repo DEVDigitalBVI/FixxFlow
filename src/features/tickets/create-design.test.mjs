@@ -51,14 +51,16 @@ test('employee creation stays simple and equipment context retains its submitted
   assert.doesNotMatch(equipment, /name="locationId"/);
 });
 
-test('creation guards pending lookup data, tolerates knowledge failure and escapes feedback', async () => {
+test('creation guards pending lookup data, leaves guide lookup to the client and escapes feedback', async () => {
   const html = await renderTicketCreate({
     errors: ['ticket_categories', 'readable_knowledge_articles'],
     params: { error: '<script>error</script>' },
   });
   assert.match(html, /name="lookupLoadError" value="true"/);
   assert.match(html, /Loading choices/);
-  assert.match(html, /Suggestions are unavailable. You can still submit your request./);
+  assert.match(html, /class="ticket-suggestions field-wide ticket-suggestions-empty"/);
+  assert.ok(html.indexOf('ticket-suggestions') > html.indexOf('id="title"'));
+  assert.ok(html.indexOf('ticket-suggestions') < html.indexOf('id="description"'));
   assert.match(html, /role="alert"/);
   assert.match(html, /&lt;script&gt;error&lt;\/script&gt;/);
 });
@@ -121,7 +123,7 @@ test('employee full page keeps optional content collapsed and submission after a
   assert.doesNotMatch(html, /ticket-create-intro|What’s happening|A little context/);
   assert.equal(
     (html.match(/<details class="ticket-create-routing ticket-create-optional">/g) || []).length,
-    2,
+    1,
   );
   assert.doesNotMatch(html, /<details[^>]*open=/);
   const context = html.match(
@@ -135,7 +137,9 @@ test('employee full page keeps optional content collapsed and submission after a
     /type="search"|Search category|Search location|Previous choices|More choices/,
   );
   assert.doesNotMatch(html, /name="lookupLoadError"/);
-  assert.match(html, /Suggestions are unavailable. You can still submit your request./);
+  assert.match(html, /class="ticket-suggestions field-wide ticket-suggestions-empty"/);
+  assert.ok(html.indexOf('ticket-suggestions') > html.indexOf('id="title"'));
+  assert.ok(html.indexOf('ticket-suggestions') < html.indexOf('id="description"'));
   assert.ok(html.indexOf('ticket-create-footer') > html.lastIndexOf('</details>'));
   assert.match(html, /href="\/app"[^>]*>Cancel/);
   assert.match(html, /type="submit"[^>]*>Open ticket/);

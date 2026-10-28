@@ -25,7 +25,7 @@
     border-radius: 50%;
     right: -300px;
     top: -220px;
-    border: 70px solid rgb(189 33 44 / 12%);
+    border: 70px solid color-mix(in srgb, var(--color-brand-primary) 12%, transparent);
   }
   :where(.scope) :global(.auth-brand::after) {
     content: '';
@@ -36,7 +36,12 @@
     width: 130%;
     height: 340px;
     transform: rotate(-7deg);
-    background: linear-gradient(90deg, rgb(189 33 44 / 8%), rgb(189 33 44 / 16%), transparent);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-brand-primary) 8%, transparent),
+      color-mix(in srgb, var(--color-brand-primary) 16%, transparent),
+      transparent
+    );
     border-radius: 50%;
   }
   :where(.scope) :global(.auth-logo) {
@@ -80,12 +85,6 @@
     font-size: 30px;
     line-height: 36px;
     letter-spacing: -0.04em;
-  }
-  :where(.scope) :global(.auth-intro) {
-    margin: 0 0 30px;
-    color: var(--color-text-muted);
-    font-size: 15px;
-    line-height: 23px;
   }
   :where(.scope) :global(.auth-card-wide) {
     width: min(100%, 520px);
@@ -166,11 +165,6 @@
     }
   }
   @media (max-width: 767px) {
-    :where(.scope) :global(.auth-mobile-brand) {
-      display: block;
-      width: min(180px, 64vw);
-      margin: 0 auto 42px;
-    }
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.auth-mobile-brand .brand-logo) {
@@ -229,6 +223,8 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.auth-mobile-brand) {
+      display: block;
+      margin: 0 auto 42px;
       width: 48px;
       margin-bottom: 28px;
     }
@@ -277,7 +273,76 @@
     letter-spacing: -0.025em;
   }
   :where(.scope) :global(.auth-intro) {
+    margin: 0 0 30px;
+    color: var(--color-text-muted);
+    font-size: 15px;
     max-width: 55ch;
     line-height: 1.5;
+  }
+}
+
+/* Provider-controlled branding is intentionally scoped to company sign-in. */
+@font-face {
+  font-family: 'FixxFlow Google Sign-In';
+  src: url('/brand/providers/google-sans-medium.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+@layer components {
+  :where(.scope) :global(.auth-company-sign-in) {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  :where(.scope) :global(.auth-company-sign-in form) {
+    margin: 0;
+  }
+  /* Fixed colors follow Google's sign-in button branding rules, so they
+     intentionally ignore the product theme tokens. */
+  :where(.scope) :global(.auth-card .company-provider) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    gap: 10px;
+    background: #fff;
+    color: #1f1f1f;
+    border: 1px solid #747775;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    border-radius: 4px;
+  }
+  :where(.scope) :global(.company-provider img) {
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+  :where(.scope) :global(.company-provider span) {
+    flex: 1;
+    text-align: center;
+  }
+  :where(.scope) :global(.company-provider-google) {
+    font-family: 'FixxFlow Google Sign-In', Arial, sans-serif;
+  }
+  :where(.scope) :global(.company-provider-microsoft) {
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  :where(.scope) :global(.auth-card .company-provider:hover) {
+    background: #f8f9fa;
+    color: #1f1f1f;
+    border-color: #747775;
+  }
+  :where(.scope) :global(.company-provider:focus-visible) {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+  @media (forced-colors: active) {
+    :where(.scope) :global(.auth-card .company-provider) {
+      border-color: ButtonText;
+      background: ButtonFace;
+      color: ButtonText;
+    }
   }
 }

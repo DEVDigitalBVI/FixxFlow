@@ -87,9 +87,13 @@ test('every organization-owned table denies foreign reads and writes', async () 
                         ? false
                         : c.typname === 'jsonb' || c.typname === 'json'
                           ? {}
-                          : c.typcategory === 'D'
-                            ? '2026-10-25T00:00:00Z'
-                            : 'Isolation canary'));
+                          : c.typname === 'time'
+                            ? '00:00:00'
+                            : c.typname === 'timetz'
+                              ? '00:00:00+00'
+                              : c.typcategory === 'D'
+                                ? '2026-10-25T00:00:00Z'
+                                : 'Isolation canary'));
         }
         await db.exec("set session_replication_role='replica'");
         await db.query(

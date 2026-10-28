@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { cache, Suspense } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { PageHeader } from '@/components/ui/page-header';
@@ -7,9 +7,12 @@ import { QueueShortcuts, WorkQueues } from '@/features/dashboard/work-queues';
 import { EmployeeHome } from '@/features/portal/employee-home';
 import { ServiceAnnouncements } from '@/features/portal/service-announcements';
 import { ReportUnavailable, TodayMetrics } from '@/features/reporting/components';
+import { DashboardInsights, getDashboardWorkload } from '@/features/reporting/dashboard-insights';
 import { getReport } from '@/features/reporting/data';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
+
+const getDashboardReport = cache((organizationId: string) => getReport(organizationId));
 
 export default async function OverviewPage() {
   const viewer = await requireViewer();
@@ -81,11 +84,22 @@ export default async function OverviewPage() {
           <WorkQueues viewer={viewer} />
         </Suspense>
       </section>
+      <Suspense fallback={<p role="status">Loading workload and response trends…</p>}>
+        <OverviewInsights organizationId={viewer.organizationId} />
+      </Suspense>
     </div>
   );
 }
 
 async function OverviewMetrics({ organizationId }: { organizationId: string }) {
-  const report = await getReport(organizationId);
+  const report = await getDashboardReport(organizationId);
   return report ? <TodayMetrics report={report} /> : <ReportUnavailable />;
+}
+
+async function OverviewInsights({ organizationId }: { organizationId: string }) {
+  const [report, workload] = await Promise.all([
+    getDashboardReport(organizationId),
+    getDashboardWorkload(organizationId),
+  ]);
+  return <DashboardInsights report={report} workload={workload} />;
 }

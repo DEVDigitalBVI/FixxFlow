@@ -12,7 +12,7 @@ export default async function AssetImportPage() {
       <PageHeader
         title="Import assets"
         eyebrow={viewer.organizationName}
-        description="Add equipment from a CSV or Excel spreadsheet. Review every batch before saving."
+        description="Add or update equipment from a spreadsheet. Review every batch before saving."
         back={{ href: '/app/assets', label: 'Back to assets' }}
       />
       <AssetImport />

@@ -73,13 +73,13 @@ The initial content review covers all 70 hosted articles: 42 employee-facing gui
 
 ## Shared FixxFlow library
 
-The knowledge base combines organization-owned articles with `library_articles` through the security-invoker `readable_knowledge_articles` view. A library article has no organization, and organizations cannot edit, hide, or copy it through the application. Existing imported organization copies remain unchanged to preserve customer edits. The library starts with the 70 reviewed guides from `content/knowledge/general-it.json`, including their related-article links. Its stable IDs use the import helper's all-zero namespace; they are independent of tenant article IDs.
+The knowledge base combines organization-owned articles with `library_articles` through the security-invoker `readable_knowledge_articles` view. A library article has no organization, and organizations cannot edit its shared source. Administrators can hide or restore a guide in their own workspace without changing other organizations. Existing imported organization copies remain unchanged to preserve customer edits. The library starts with the 70 reviewed guides from `content/knowledge/general-it.json`, including their related-article links. Its stable IDs use the import helper's all-zero namespace; they are independent of tenant article IDs.
 
 Active members can read published library articles. Employees see only the `employees` audience; technicians and administrators can also read `it_only` articles. Inactive and unassigned accounts, anonymous requests, and members with unmet MFA requirements cannot read the library. Only a platform owner with a valid session and completed MFA can create or update it. Drafts and archived library articles are visible only to that owner, including in search. Owner edits retain optimistic revision checks and produce platform audit entries without copying article bodies into the audit log.
 
 Owners use **Platform → FixxFlow library** to search, create, revise, publish, and archive guides. Library articles reuse the structured article editor, audience controls, preview, and unsaved-change protection. This first version supports text blocks and HTTP(S) links; uploads and image blocks remain organization-specific. Related library articles can link to one another, and reader RLS filters related links by audience and publication status. Organization article related selections remain within their organization.
 
-Shared guides appear alongside organization articles in knowledge browsing, category/audience filters, paginated search, global search, and new-ticket suggestions. They are labeled **FixxFlow library** and use the existing article detail URLs. Shared readers do not expose tenant article feedback or insights, which remain organization-specific.
+Shared guides appear alongside organization articles in knowledge browsing, category/audience filters, paginated search, global search, and new-ticket suggestions. They are labeled **FixxFlow library** and use the existing article detail URLs. Shared readers have helpful voting and daily view tracking. Workspace staff see only their organization’s usage; verified platform owners see aggregate totals on the shared article’s edit page.
 
 The `membership_and_shared_library` migration also enforces one organization membership per user, including inactive memberships. It stops on duplicates without deleting or selecting memberships. Before deployment, check for duplicates:
 
@@ -91,3 +91,44 @@ having count(*) > 1;
 ```
 
 `npm test` includes the permanent catalog-driven organization isolation sweep, so the existing Checks workflow runs it on pull requests and main pushes. It discovers every public organization-owned table, checks enabled RLS, inserts a foreign canary into each table, and verifies foreign reads/inserts/updates/deletes and anonymous reads. Only fixture checks and triggers are bypassed in that disposable PGlite database; migrated RLS and grants are unchanged. This is an authorization regression test, not a replacement for the domain constraint/trigger suites or live Storage and Realtime service tests. Library tests separately cover shared audiences, lifecycle, active membership, owner/session/MFA requirements, revisions, audit records, and cross-workspace updates.
+
+## Request suggestions and related selections
+
+As a request subject is typed, up to three ranked, permitted published guides appear
+beneath it. Queries include only the subject and optional category, not the request
+description. Suggestions search the full readable collection, including older
+articles and visible library guides. Word ranking and Wi-Fi normalization are
+handled in PostgreSQL, with indexed candidate filtering. Superseded requests are
+cancelled and ignored; guides open in a separate tab to preserve the request draft.
+
+No matching guide shows “No related guides found. Continue with your request.” A
+loading error instead offers Retry and states that the request can still be
+submitted. The form never depends on suggestion availability.
+
+Related-article selection searches titles across the entire allowed collection and
+pages 24 choices at a time. Up to eight selections stay visible and submitted
+across searches, pages and failures. Workspace editors choose their organization’s
+articles; platform owners choose library articles. Enter in the search field does
+not save or publish the article.
+
+## Library usage and workspace visibility
+
+Library views count each member once per UTC day. Helpful votes retain the latest
+choice per member and article. Identity and recording time are database-owned;
+inactive accounts, hidden guides, drafts, unmet MFA and inappropriate audiences
+cannot record usage. Workspace staff see only their organization’s counts. The
+platform owner’s aggregate totals contain no reader identities or organization
+names.
+
+Administrators use **Settings → Knowledge base → FixxFlow library**, or **Manage
+library guides** from the knowledge base, to hide and restore published guides.
+Hidden guides remain listed in that administrator-only page. Database policies
+exclude them from normal browsing, search, subject suggestions, related links and
+direct reading in that workspace, including for staff. Platform maintenance and
+other workspaces remain unaffected. Actual visibility changes are audited;
+repeated requests are idempotent.
+
+Apply `20261027173607_knowledge_library_enhancements.sql` before deploying these
+changes, after the pending chat migrations. This adds workspace preferences, scoped
+view/vote tables, aggregate usage and ranked suggestions; it does not alter existing
+workspace article feedback or imported copies.

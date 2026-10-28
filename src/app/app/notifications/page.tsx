@@ -22,7 +22,7 @@ export default async function NotificationsPage({
   let query = supabase
     .from('notifications')
     .select(
-      'id,kind,title,ticket_id,conversation_id,incident_bulletin_id,service_announcement_id,created_at,read_at',
+      'id,kind,title,asset_id,inventory_item_id,ticket_id,conversation_id,incident_bulletin_id,service_announcement_id,created_at,read_at',
       {
         count: 'exact',
       },
@@ -52,9 +52,12 @@ export default async function NotificationsPage({
         eyebrow="Your updates"
         description="Ticket and chat updates that need your attention."
         actions={
-          !error && !unreadTotal.error && (unreadTotal.count ?? 0) > 0 ? (
-            <ReadButton all />
-          ) : undefined
+          <>
+            <Link className="button button-secondary" href="/app/notifications/settings">
+              Email preferences
+            </Link>
+            {!error && !unreadTotal.error && (unreadTotal.count ?? 0) > 0 && <ReadButton all />}
+          </>
         }
       />
       <nav className="queue-views" aria-label="Notification filters">

@@ -93,7 +93,7 @@ export type AutomationExecutionStep = {
   readonly result: {
     readonly code: string;
     readonly entityType?: string;
-    readonly entityId?: string;
+    readonly entityId?: string | null;
   } | null;
   readonly error: SafeAutomationError | null;
 };

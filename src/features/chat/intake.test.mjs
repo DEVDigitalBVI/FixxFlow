@@ -118,6 +118,7 @@ test('chat form preserves controlled drafts on errors, associates feedback, focu
           return React.createElement('a', attributes);
         },
       },
+      './support-hours': { ChatSupportHours: () => null },
       '@/app/app/chat/actions': { startChat: () => {} },
       '@/components/ui/submit-button': {
         SubmitButton: ({ pendingLabel, ...props }) =>

@@ -4,11 +4,13 @@ import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { PageHeader } from '@/components/ui/page-header';
 import { rolePresentation } from '@/features/identity/role';
 import { Bars } from '@/features/reporting/components';
+import { ReportDownload } from '@/features/reporting/report-download';
 import { requirePlatformOwner } from '@/lib/auth/platform';
 import { pageNumber } from '@/lib/pagination';
 import { normalizeSearch, SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
 import { createClient } from '@/lib/supabase/server';
 
+import { AnalyticsRetention } from './analytics-retention';
 import { CustomerForm } from './customer-form';
 import { eventLabels, usageTotals } from './model';
 import { isPlatformData } from './payload';
@@ -139,6 +141,22 @@ export async function PlatformDashboard({
               )}
             </nav>
           )}
+          <section className="settings-card" aria-labelledby="organization-export-title">
+            <h2 id="organization-export-title">Export organization accounts</h2>
+            <p className="muted">
+              {q ? `Organizations matching “${q}”` : 'All organizations'}: workspace details, member
+              counts by role, and ticket, chat and asset totals. Customer tickets, messages and
+              people are not included. Each export is recorded in the platform audit log.
+            </p>
+            <ReportDownload
+              action="/platform/customers/export"
+              params={q ? { q } : {}}
+              label="Download export"
+              pendingLabel="Preparing export…"
+              hint="Up to 5,000 organizations, oldest first. Downloads use current data."
+              reload={{ href: '/platform/customers', label: 'Reload customers' }}
+            />
+          </section>
           <section className="settings-card page-narrow" id="new-customer">
             <h2>Create a customer workspace</h2>
             <p className="muted">Fields marked * are required.</p>
@@ -211,6 +229,7 @@ export async function PlatformDashboard({
               </div>
             </>
           )}
+          <AnalyticsRetention />
         </>
       )}
       {section === 'audit' && (
@@ -247,7 +266,9 @@ export async function PlatformDashboard({
           ) : (
             <div className="empty-state">
               <strong>No owner actions recorded yet</strong>
-              <p>Organization setup and name changes will appear here.</p>
+              <p>
+                Organization setup, renames, exports and analytics cleanup runs will appear here.
+              </p>
             </div>
           )}
         </>

@@ -61,7 +61,7 @@ export function AssetOverview({
         </dl>
       </section>
       <section aria-labelledby="asset-warranty-heading">
-        <h3 id="asset-warranty-heading">Purchase & warranty</h3>
+        <h3 id="asset-warranty-heading">Purchase & lifecycle</h3>
         <dl className="asset-record-facts">
           <div>
             <dt>Purchased</dt>
@@ -75,7 +75,16 @@ export function AssetOverview({
               <AssetDate value={asset.warranty_until} />
             </dd>
           </div>
+          <div>
+            <dt>End of life</dt>
+            <dd>
+              <AssetDate value={asset.end_of_life_on ?? null} />
+            </dd>
+          </div>
         </dl>
+        <p className="muted">
+          IT receives reminders 30 days before and when these dates are reached.
+        </p>
       </section>
     </div>
   );

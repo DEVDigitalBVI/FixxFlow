@@ -168,6 +168,8 @@ The approved, versioned asset package lives under `public/brand/fixxflow/`. Refr
 
 - Provide keyboard-accessible global command search, opened by a visible control and `Cmd/Ctrl+K`.
 - Use a semantic dialog with a labeled search input, grouped results, arrow-key navigation, Enter to select, and Escape to close.
+- Workspace results share one relevance-ranked **Best matches** group across tickets, people and published articles; each row names its type. Shortcuts stay in a separate navigation group. Exact ticket numbers rank first, then title/name matches, other literal matches, and similar word matches. Keep a maximum of 20 results and invite a narrower query when the limit is reached.
+- Global workspace search tolerates one edit in words of 4–7 letters and two edits in longer words, including adjacent transpositions. All query terms must match. Label approximate results **Similar match**; keep numbers, email addresses and punctuation literal, and preserve `#123` as an exact ticket lookup. Existing feature list searches keep their literal contract.
 - Include recent destinations and actions only when helpful. Clearly distinguish navigation, tickets, people, and commands.
 - Announce result counts and selection changes appropriately without excessive screen-reader chatter.
 
@@ -385,7 +387,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Search behavior
 
-- All search fields use case-insensitive literal substring matching: a fragment may occur at the beginning, middle, or end of a value. Every whitespace-separated term must match, in any order, across the feature's searchable fields. Preserve punctuation in names, emails, and identifiers; do not interpret user input as wildcard or query syntax.
+- Feature list and reference-picker search fields use case-insensitive literal substring matching: a fragment may occur at the beginning, middle, or end of a value. Every whitespace-separated term must match, in any order, across the feature's searchable fields. Preserve punctuation in names, emails, and identifiers; do not interpret user input as wildcard or query syntax.
 - Reuse `normalizeSearch`, `SEARCH_LIMIT`, and `SEARCH_HINT`. Keep searches submitted through native GET forms with persistent labels, linked guidance, and a clear-search or clear-filters action. Preserve the query and filters in pagination URLs; submitting a new search starts on page one.
 - Enhance list searches with the shared `LiveSearchForm`: search after a 300ms typing pause, wait for composition to finish, and search immediately on Enter, Search, or clearing the input. Keep GET submission available without JavaScript. Apply the current form filters and reset pagination; replace the URL without adding a history entry for every query. Keep controls mounted, focus and scroll stable, and existing results visible while loading. Announce progress and the resulting count politely without animation. Cancel queued work on navigation and restore controls on Back/Forward or clear-filter navigation.
 - Keep search permission-scoped and paginated in the database. Ticket search retains `#123` for an exact ticket number; a bare number matches fragments. Hidden notes, other organizations, and restricted records must never influence a result.
@@ -571,3 +573,29 @@ Declare cascade layers in the order tokens, base, components, pages. Shared toke
 ### Email readability
 
 All operational and account emails share a compact horizontal brand header, left-aligned title and message, and content-sized spacing. Identify the workspace in operational emails when available; keep account security messages account-scoped. Show public service status separately from the message. Use a compact solid-red action and a short underlined alternative link, with full destinations in the plain-text version. Keep one support link in the footer. Preserve explicit security guidance, semantic headings, escaped dynamic text, one-use authentication placeholders and readable phone layouts. Email uses inline equivalents of the existing light-theme tokens and system font fallbacks for mail-client compatibility.
+
+### Chat coverage and idle closure
+
+Use the shared daily 7 AM–10 PM support schedule in the workspace timezone. Show a short offline message at chat intake and in open employee conversations outside hours, preserving asynchronous messages and separate realtime presence. Existing saved replies remain shared with tickets. Warn after 20 support hours following an IT reply, show the recorded reply deadline, and close only after 24 support hours with at least four support hours of warning. Employee messages and uploads cancel the warning; unanswered chats remain open. Show an automatic closure summary and Start a new chat action using existing surfaces, typography and buttons. Never include internal notes in employee summaries or resolve a linked ticket automatically.
+
+### Knowledge guidance and library controls
+
+Show relevant guides directly below a request subject as it is typed, without requiring an employee to expand an optional section. Keep the form usable while guides load, when no guide matches, or when loading fails; use distinct written messages for those states and offer Retry only for errors. Use up to three concise, permission-scoped results, opening guides in a separate tab so drafts stay intact. Related-article selection uses labeled title search, native checkboxes, persistent selected choices and pagination, with an eight-article limit. Library readers reuse helpful voting and usage metrics; show organization-scoped counts to staff and aggregate totals to verified platform maintainers. Administrators manage library visibility on a quiet, searchable Settings page with explicit Hide/Show actions and recoverable failures. Reuse existing surfaces, typography, buttons and focus styles; no new color tokens.
+
+### Assets and inventory enhancements
+
+- Reuse the existing import preview. Default to Create only; require an explicit Create or update by asset tag option, show each row's planned change, and explain that optional blank/omitted cells clear values. Preserve file/draft on failure and require another preview after a version conflict.
+- Keep end-of-life dates in the optional purchase/warranty disclosure. Use date-only formatting in the overview; reminders must not change equipment lifecycle automatically.
+- Link People cards to a staff-only Equipment page with current assignments before paginated history. Label unknown pre-existing assignment dates honestly. Use responsive tables, written empty/error states and stable pagination.
+- Put reorder settings in a native Low-stock alerts disclosure on the inventory item. A blank threshold means off; zero is valid. Reuse ActionForm feedback/focus/draft behavior and native integer validation. Show a written Low stock badge beside available quantity; never rely on color alone.
+- Keep alerts in the existing notification/email flow. Recheck live membership/capabilities at read and dispatch; deduplicate each date milestone or low-stock episode and cancel obsolete pending email.
+
+### Daily report scheduling and dashboard insights
+
+- Keep work queues before workload/trend cards. Reuse the shared Trend component, exact-data disclosure, table-policy modifier, cards, focus states and existing semantic tokens. Use a compact native workload table on phone widths rather than expanding each small numeric row into a tall card.
+- Show at most five current workload rows and label the limit. Keep unassigned and inactive-assignee work visible. Explain that Waiting and Overdue are included in Open; do not sum them. Distinguish missing measurements and failed loads from zero, and provide retry. Response trends use the same elapsed-time definition as operational reports.
+- Daily scheduling shows Frequency and Hour, with no irrelevant day controls. Keep weekly/monthly controls mounted but hidden and disabled outside their cadence, retaining drafts. Use each schedule's recorded timezone in its delivery label; new schedules use workspace time. Reuse ActionForm, native selects/number fields and existing delivery history.
+
+### Provider sign-in branding
+
+Microsoft and Google sign-in controls may use their official logos, provider button colors and provider fonts, as requested for company sign-in. Keep this exception scoped to those controls; the rest of FixxFlow retains the shared tokens and Inter typography. Host assets locally, preserve the logos' original colors and proportions, use explicit sign-in labels, provide at least 44px targets and the shared keyboard focus indicator, and give providers equal prominence. The permitted light button treatment may remain light within the dark page theme.

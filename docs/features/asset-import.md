@@ -10,12 +10,12 @@ IT staff can open **Assets → Import spreadsheet**, or use the same link on **A
 
 Required columns: `tag`, `name`.
 
-Optional columns: `kind`, `status`, `serial_number`, `model`, `assigned_email`, `location`, `purchased_on`, `warranty_until`.
+Optional columns: `kind`, `status`, `serial_number`, `model`, `assigned_email`, `location`, `purchased_on`, `warranty_until`, `end_of_life_on`.
 
 Blank type and lifecycle default to `computer` and `available`. Enum keys and existing display labels are accepted. Employee email and active location name must match exactly within the current organization. Unmatched or ambiguous references block the batch. Leave them blank to assign equipment later.
 
-Format tags and serial numbers as text to preserve leading zeroes. Use `YYYY-MM-DD` or Excel date cells for dates. Formulas, merged cells, unknown or duplicate headers, invalid dates, duplicate tags and existing tags are rejected. Remove unused formatted rows and columns when they exceed the template limits.
+Format tags and serial numbers as text to preserve leading zeroes. Use `YYYY-MM-DD` or Excel date cells for dates. Formulas, merged cells, unknown or duplicate headers, invalid dates, duplicate tags and (in create-only mode) existing tags are rejected. Remove unused formatted rows and columns when they exceed the template limits.
 
-Imports only create assets. They never update existing equipment. After a network interruption, check inventory before retrying; unique tags prevent duplicate assets. Files are parsed in a browser worker with a 15-second timeout; the file itself is not uploaded or retained. Validated row data is sent to the app for organization-scoped preview checks and revalidated when saving. Normal asset RLS, membership checks and audit triggers apply. No database migration is needed.
+Imports default to creating assets. Select **Create or update by asset tag** to update matching equipment after reviewing Create/Update rows. Blank optional cells clear stored values in that mode. Original preview revisions protect concurrent edits and the batch remains atomic. After an uncertain response, check Assets and preview again before retrying. Files are parsed in a browser worker with a 15-second timeout; the file itself is not uploaded or retained. Validated row data is sent to the app for organization-scoped preview checks and revalidated when saving. Normal asset RLS, membership checks and audit triggers apply. Updating by tag and end-of-life dates require the pending Assets/Inventory migrations. See [Assets and inventory enhancements](assets-and-inventory.md).
 
 Validation: parser/action tests in `src/features/assets/import.test.mjs`; transactional database regression in `supabase/tests/asset-import.sql` (all test fixtures roll back).

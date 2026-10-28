@@ -11,8 +11,9 @@ test('download controls have visible format labels, native fallback and polite s
   const { ReportDownload } = load('src/features/reporting/report-download.tsx');
   const html = renderToStaticMarkup(React.createElement(ReportDownload));
   assert.match(html, /action="\/app\/reports\/export" method="get"/);
-  assert.match(html, /<label for="report-format">File format<\/label>/);
-  assert.match(html, /id="report-format" name="format"/);
+  const formatId = html.match(/<label for="([^"]+)">File format<\/label>/)?.[1];
+  assert.ok(formatId);
+  assert.ok(html.includes(`id="${formatId}" name="format"`));
   assert.match(html, /value="xlsx" selected=""/);
   for (const choice of ['Excel (.xlsx)', 'CSV (.csv)', 'PDF (.pdf)'])
     assert.ok(html.includes(choice));
@@ -66,6 +67,7 @@ function harness(t, download) {
   let focused = false;
   const react = {
     ...React,
+    useId: () => 'download-fixture',
     useRef(value) {
       const index = cursor++;
       return (hooks[index] ??= { current: value });
@@ -102,7 +104,12 @@ function harness(t, download) {
   );
   const { ReportDownload } = load('src/features/reporting/report-download.tsx', {
     react,
-    './download': { fetchReportDownload: download },
+    './download': {
+      fetchReportDownloadUrl: (url, format, signal) => {
+        assert.equal(url, `/app/reports/export?format=${format}`);
+        return download(format, signal);
+      },
+    },
   });
   function render() {
     cursor = 0;
@@ -160,4 +167,22 @@ test('preparation blocks duplicate requests, failures focus feedback and allow r
   assert.equal(calls[1].signal.aborted, true);
   reject(new Error('Aborted'));
   await retry;
+});
+
+test('multiple export controls keep their labels and hint IDs separate', () => {
+  const { ReportDownload } = load('src/features/reporting/report-download.tsx');
+  const html = renderToStaticMarkup(
+    React.createElement(
+      'div',
+      null,
+      React.createElement(ReportDownload),
+      React.createElement(ReportDownload),
+    ),
+  );
+  const ids = [...html.matchAll(/<label for="([^"]+)">File format<\/label>/g)].map(
+    (match) => match[1],
+  );
+  assert.equal(ids.length, 2);
+  assert.equal(new Set(ids).size, 2);
+  for (const id of ids) assert.ok(html.includes(`id="${id}" name="format"`));
 });

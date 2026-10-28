@@ -3,6 +3,7 @@ import type { Json } from '@/types/database';
 
 import { activityAuthorName } from './authorship';
 import { activityLabels, ticketPriorities, ticketStatuses } from './presentation';
+import { describeRating } from './ratings';
 
 type Activity = {
   id: string | number;
@@ -60,6 +61,10 @@ export function activityDetail(row: Activity, names: ReadonlyMap<string, string>
   }
   if (row.action === 'automatically_routed' && typeof details.team_name === 'string')
     return `Team: ${details.team_name}`;
+  if (row.action === 'resolution_rated' && typeof details.score === 'number')
+    return typeof details.previous === 'number'
+      ? `${describeRating(details.previous)} to ${describeRating(details.score)}`
+      : describeRating(details.score);
   return null;
 }
 

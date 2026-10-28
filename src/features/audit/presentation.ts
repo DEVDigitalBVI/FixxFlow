@@ -4,6 +4,7 @@ import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentatio
 import type { Json } from '@/types/database';
 
 export const auditEntities: Record<string, string> = {
+  workspace_security: 'Workspace security',
   inventory: 'Inventory',
   assets: 'Assets',
   ticket_assets: 'Ticket asset links',
@@ -25,6 +26,7 @@ export const auditEntities: Record<string, string> = {
   report_schedules: 'Report schedules',
 };
 export const auditFields: Record<string, string> = {
+  require_mfa: 'Require two-step verification',
   inventory_action: 'Inventory action',
   inventory_details: 'Inventory details',
   tag: 'Asset tag',

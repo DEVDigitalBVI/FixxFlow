@@ -34,7 +34,7 @@ export default async function EditArticlePage({
       .eq('organization_id', viewer.organizationId)
       .neq('id', articleId)
       .order('title')
-      .limit(200),
+      .limit(24),
   ]);
   if (article.error || assets.error || related.error)
     return (
@@ -44,7 +44,7 @@ export default async function EditArticlePage({
       </div>
     );
   if (!article.data) notFound();
-  // Keep older related selections available even if they fall beyond the first 200 choices.
+  // Keep older related selections available even if they fall beyond the first page of choices.
   const missing = article.data.related_article_ids.filter(
     (id) => !related.data?.some((a) => a.id === id),
   );

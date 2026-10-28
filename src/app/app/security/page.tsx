@@ -1,9 +1,13 @@
 import { PageHeader } from '@/components/ui/page-header';
 import { MfaEnrollment } from '@/features/auth/mfa-enrollment';
 import { requireViewer } from '@/lib/auth/viewer';
+import { createClient } from '@/lib/supabase/server';
 
 export default async function SecurityPage() {
   await requireViewer();
+  const db = await createClient();
+  const { data, error } = await db.rpc('account_authentication_policy');
+  if (error || !data?.length) throw new Error('Account protection could not load.');
   return (
     <div className="page">
       <PageHeader
@@ -17,7 +21,7 @@ export default async function SecurityPage() {
           Use an authenticator app as a second step when signing in. Add a second factor as a backup
           before removing your primary factor.
         </p>
-        <MfaEnrollment />
+        <MfaEnrollment required={data[0].mfa_required} />
       </section>
     </div>
   );

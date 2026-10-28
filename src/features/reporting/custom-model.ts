@@ -100,7 +100,7 @@ export type SavedReport = {
 export type ReportSchedule = {
   id: string;
   report_id: string;
-  frequency: 'weekly' | 'monthly';
+  frequency: 'daily' | 'weekly' | 'monthly';
   weekday: number | null;
   monthday: number | null;
   run_hour: number;

@@ -10,6 +10,7 @@ import { ServiceAnnouncements } from '@/features/portal/service-announcements';
 import { CategoryFields } from '@/features/tickets/category-fields';
 import { DeadlineField } from '@/features/tickets/deadline-field';
 import { ticketImpacts } from '@/features/tickets/impact';
+import { ImpactExpectations } from '@/features/tickets/impact-expectations';
 import { IncidentCreateFields } from '@/features/tickets/incident-fields';
 import { ticketPriorities } from '@/features/tickets/presentation';
 import { TicketDraftCancel } from '@/features/tickets/ticket-draft-cancel';
@@ -23,16 +24,6 @@ export default async function NewTicketPage({ searchParams }: Props) {
   const viewer = await requireViewer();
   const message = await searchParams;
   const supabase = await createClient();
-  let articleQuery = supabase
-    .from('readable_knowledge_articles')
-    .select('id, title, summary, category, audience, organization_id')
-    .or(`organization_id.eq.${viewer.organizationId},organization_id.is.null`)
-    .eq('status', 'published');
-  if (viewer.role === 'end_user') articleQuery = articleQuery.eq('audience', 'employees');
-  const articlesResult = await articleQuery
-    .order('updated_at', { ascending: false })
-    .order('id')
-    .limit(200);
   const equipment =
     viewer.role === 'end_user' && message.asset
       ? await supabase
@@ -58,14 +49,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
       )}
     </div>
   );
-  const suggestions = (
-    <TicketSuggestions
-      articles={articlesResult.data ?? []}
-      categories={[]}
-      unavailable={!!articlesResult.error}
-      showAudience={staff}
-    />
-  );
+
   return (
     <div
       className={
@@ -154,6 +138,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
                 {staff ? 'Use a short, specific subject.' : 'A short summary of the issue.'}
               </small>
             </div>
+            <TicketSuggestions showAudience={staff} />
             <div className="field field-wide">
               <label htmlFor="description">
                 {staff ? 'Description' : 'Tell us more'} <span aria-hidden="true">*</span>
@@ -200,6 +185,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
                   This sets the initial urgency and service targets. IT can adjust them after
                   review.
                 </small>
+                <ImpactExpectations />
               </div>
             )}
             {staff && (
@@ -275,16 +261,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
             </div>
           </details>
         )}
-        {staff ? (
-          <div className="ticket-create-help">{suggestions}</div>
-        ) : (
-          <details className="ticket-create-routing ticket-create-optional">
-            <summary>
-              Browse helpful guides <span className="muted">Optional</span>
-            </summary>
-            {suggestions}
-          </details>
-        )}
+
         <footer className="ticket-create-footer">
           <p className="form-note">
             You can add photos and files after creating {staff ? 'the ticket' : 'your request'}.

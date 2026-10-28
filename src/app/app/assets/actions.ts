@@ -46,6 +46,7 @@ export async function saveAsset(
       error:
         'This asset changed or is no longer available. Open it in another tab to compare the latest details before retrying.',
     };
+  revalidatePath('/app/people', 'layout');
   revalidatePath('/app/assets');
   revalidatePath(`/app/assets/${data.id}`);
   redirect(`/app/assets/${data.id}?saved=1`);

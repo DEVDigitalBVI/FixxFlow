@@ -36,6 +36,15 @@ const trigger = (
 
 export const ticketTriggers: readonly TriggerRegistration[] = [
   ...temporalTriggers,
+  ...['email', 'chat'].map((channel) => ({
+    ...trigger(
+      `ticket.created_from_${channel}`,
+      `Ticket created from ${channel}`,
+      [],
+      (event) => event.before === null,
+    ),
+    afterFields: ['status', 'priority', 'requester_id'],
+  })),
   {
     ...trigger('ticket.created', 'Ticket created', [], (event) => event.before === null),
     afterFields: ['status', 'priority', 'requester_id'],

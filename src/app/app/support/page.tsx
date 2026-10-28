@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
+
 export const metadata: Metadata = { title: 'Contact support | FixxFlow' };
 
 export default function SupportPage() {
@@ -9,7 +11,8 @@ export default function SupportPage() {
       <header className="portal-page-heading">
         <div>
           <Link className="button button-quiet page-back-link" href="/app">
-            ← Home
+            <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
+            Home
           </Link>
           <h1>Contact support</h1>
           <p>

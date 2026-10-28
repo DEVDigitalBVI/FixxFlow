@@ -28,6 +28,10 @@ Tickets, chat and knowledge share identity, organization isolation, notification
 
 `/platform/analytics` shows aggregate opt-in feature counts over 7, 30 or 90 UTC days, including event and role breakdowns. No per-customer/person journey is available. Zero counts are a valid empty state.
 
+`/platform/customers` also offers **Export organizations** as Excel, CSV or PDF, for all organizations or the current search (up to 5,000, oldest first). Each row contains the workspace name, address, timezone and creation date, active members by role, inactive members, ticket totals (all time, open, created in the last 30 days), chat and asset totals, and the last ticket activity date. It contains no people, ticket text, messages, articles or asset details. `platform_organization_export` requires a ready owner session and records `organizations_exported` with the format, search and row count in the platform audit log.
+
+The analytics page also shows product-usage retention status and lets owners run the daily cleanup on demand (audited as `analytics_cleanup_run`). See `docs/features/product-analytics.md`.
+
 `/platform/audit` shows the latest 50 platform operations with actor and time. Owner changes commit together with their audit events. Rows are append-only to application users.
 
 The console uses authenticated clients and narrow checked database functions. No service credential is sent to a browser or used to bypass customer RLS. Platform owners do not inherit customer ticket, chat, knowledge or asset access. Those require a separate active tenant membership.
@@ -43,6 +47,7 @@ No billing, tenant suspension, impersonation, owner delegation UI, inventory dis
 ## Verification
 
 - `npm test`: validation, tenant-derived mutations, stale-edit handling, form semantics, owner gate and analytics aggregation.
+- `src/features/platform/platform-operations-database.test.mjs`: export and cleanup owner/MFA gates, aggregate-only export content, audit records, retention-boundary deletion and scheduled runs.
 - `supabase/tests/assets_and_platform.sql`: rollback-only synthetic users, organizations, sessions and factors; employee/tenant isolation, immutable identity, equipment requests, asset view deduplication, owner MFA and revocation, create/rename operations, customer privacy and audit recording.
 - `npm run lint`, `npm run typecheck`, `npm run build`.
 - New screens reuse workspace/portal shells, responsive tables, navigation focus management, forms, SubmitButton and reporting bars. No new design tokens or UI dependencies.

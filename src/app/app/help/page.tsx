@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { isKnowledgeAudience, knowledgeAudiences } from '@/features/knowledge/audience';
 import { knowledgeCategories, knowledgeCategoryDescriptions } from '@/features/knowledge/content';
@@ -55,7 +56,8 @@ export default async function HelpPage({
       <header className="portal-page-heading">
         <div>
           <Link className="button button-quiet page-back-link" href="/app">
-            ← Home
+            <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
+            Home
           </Link>
           <h1>Knowledge base</h1>
           <p>
@@ -64,6 +66,11 @@ export default async function HelpPage({
               : 'Answers and guides from your IT team and FixxFlow.'}
           </p>
         </div>
+        {viewer.role === 'administrator' && (
+          <Link className="button button-secondary" href="/app/administration/library">
+            Manage library guides
+          </Link>
+        )}
         {staff && (
           <Link className="button button-primary" href="/app/help/new">
             New article

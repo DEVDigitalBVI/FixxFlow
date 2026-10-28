@@ -8,12 +8,18 @@ import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { SubmissionKey } from '@/components/ui/submission-key';
 import { SubmitButton } from '@/components/ui/submit-button';
 
+import { ChatSupportHours } from './support-hours';
+
 export function StartChatForm({
   initialError,
   submissionKey,
+  timeZone,
+  initialAt,
 }: {
   initialError?: string;
   submissionKey: string;
+  timeZone?: string;
+  initialAt?: number;
 }) {
   const [state, action, pending] = useActionState(startChat, {
     error: initialError,
@@ -39,9 +45,7 @@ export function StartChatForm({
         </span>
         <div>
           <h2 id="chat-compose-title">IT support team</h2>
-          <p className="chat-recipient-description">
-            IT may reply later. You can leave this page and return to My chats.
-          </p>
+          <ChatSupportHours timeZone={timeZone} initialAt={initialAt} />
         </div>
       </div>
       {state.error && (

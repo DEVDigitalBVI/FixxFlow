@@ -50,94 +50,54 @@ test('grouped results retain selection indices, group order and duplicate IDs fr
 });
 function service(role = 'administrator', error = false) {
   const calls = [];
-  const db = {
-    rpc(name, args) {
-      calls.push([name, args]);
-      return builder(name);
-    },
-    from(name) {
-      calls.push([name]);
-      return builder(name);
-    },
-  };
-  function builder(name) {
-    const query = new Proxy(
-      {},
-      {
-        get(_, key) {
-          if (key === 'then')
-            return (resolve) =>
-              Promise.resolve({
-                data:
-                  name === 'search_tickets'
-                    ? [{ id: 'ticket', ticket_number: 123, title: 'VPN' }]
-                    : name === 'search_members'
-                      ? [{ user_id: 'person' }]
-                      : name === 'profiles'
-                        ? [{ user_id: 'person', display_name: 'Pat', email: 'pat@example.invalid' }]
-                        : [{ id: 'article', title: 'VPN guide', audience: 'employees' }],
-                error: error ? new Error('private database detail') : null,
-              }).then(resolve);
-          return (...args) => {
-            calls.push([name, key, ...args]);
-            return query;
-          };
-        },
-      },
-    );
-    return query;
-  }
+  const rows = [
+    { id: 'article', kind: 'article', label: 'VPN guide', audience: 'employees', shared: true },
+    { id: 'ticket', kind: 'ticket', label: 'VPN', detail: '#123', approximate: true },
+    { id: 'person', kind: 'person', label: 'Pat', detail: 'pat@example.invalid' },
+  ];
   return {
     calls,
     search: load('src/features/search/service.ts', {
       '@/lib/auth/viewer': {
         requireViewer: async () => ({ role, id: 'viewer', organizationId: 'org' }),
       },
-      '@/lib/supabase/server': { createClient: async () => db },
+      '@/lib/supabase/server': {
+        createClient: async () => ({
+          rpc: async (name, args) => {
+            calls.push([name, args]);
+            return { data: rows, error: error ? new Error('private detail') : null };
+          },
+        }),
+      },
     }).searchWorkspace,
   };
 }
-test('workspace search uses bounded existing RPCs and organization scopes, never an admin client', async () => {
+test('workspace search preserves database ranking across entities using the viewer organization', async () => {
   const f = service();
-  const results = await f.search('  VPN  ');
+  const rows = await f.search('  VPN  ');
   assert.deepEqual(
-    results.map((row) => row.group),
-    ['Tickets', 'People', 'Articles'],
+    rows.map((r) => r.group),
+    ['Articles', 'Tickets', 'People'],
   );
-  assert.equal(f.calls.filter((row) => row[1] === 'limit' && row[2] === 8).length, 3);
-  assert.equal(
-    f.calls.filter((row) => row[1] === 'eq' && row[2] === 'organization_id' && row[3] === 'org')
-      .length,
-    3,
-  );
-  assert.ok(
-    f.calls.some(
-      (row) =>
-        row[0] === 'search_knowledge_articles' &&
-        row[1] === 'or' &&
-        row[2] === 'organization_id.eq.org,organization_id.is.null',
-    ),
-  );
-  assert.ok(f.calls.some((row) => row[0] === 'search_tickets' && row[1]?.search_text === 'VPN'));
-});
-test('employee search omits people queries and further restricts tickets to the requester', async () => {
-  const f = service('end_user');
-  const results = await f.search('VPN');
+  assert.deepEqual(f.calls, [['search_workspace', { org: 'org', search_text: 'VPN' }]]);
+  assert.equal(rows[1].approximate, true);
+  assert.equal(rows[0].href, '/app/help/article');
+  const groups = groupSearchResults(rows, true);
+  assert.equal(groups[0].label, 'Best matches');
   assert.deepEqual(
-    results.map((row) => row.group),
-    ['Tickets', 'Articles'],
-  );
-  assert.equal(
-    f.calls.some((row) => row[0] === 'search_members' || row[0] === 'profiles'),
-    false,
-  );
-  assert.ok(
-    f.calls.some((row) => row[1] === 'eq' && row[2] === 'requester_id' && row[3] === 'viewer'),
+    groups[0].entries.map((e) => e.index),
+    [0, 1, 2],
   );
 });
-test('empty searches avoid operational queries; failures reject without returning partial sensitive rows', async () => {
+test('employee results never include people even if an unexpected RPC row arrives', async () => {
+  assert.deepEqual(
+    (await service('end_user').search('VPN')).map((r) => r.group),
+    ['Articles', 'Tickets'],
+  );
+});
+test('empty queries avoid database calls and database failure is distinct from no matches', async () => {
   const f = service();
-  assert.deepEqual(await f.search('  '), []);
+  assert.deepEqual(await f.search(' '), []);
   assert.deepEqual(f.calls, []);
   await assert.rejects(service('administrator', true).search('VPN'), /Search unavailable/);
 });

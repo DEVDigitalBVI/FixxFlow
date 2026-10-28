@@ -341,6 +341,8 @@ test('Stage 10 durable health and bounded tenant operational reads', async (t) =
         await db.exec(
           "update private.automation_processing_state set activated_at=clock_timestamp()-interval '1 hour';update public.automation_rules set enabled_at=clock_timestamp()-interval '1 hour';alter table public.automation_rule_versions disable trigger automation_versions_immutable;update public.automation_rule_versions set created_at=clock_timestamp()-interval '1 hour';alter table public.automation_rule_versions enable trigger automation_versions_immutable;alter table public.tickets disable trigger tickets_sla_prepare",
         );
+        // Clock-only maintenance has no human subject; retain human attribution above.
+        await db.exec("select set_config('request.jwt.claims','{}',true)");
         for (const [i, minutes] of [4.5, 3, -1].entries())
           await db.query(
             "update public.tickets set resolution_sla_due_at=clock_timestamp()+$2*interval '1 minute' where id=$1",

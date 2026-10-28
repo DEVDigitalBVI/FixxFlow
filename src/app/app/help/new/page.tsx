@@ -16,7 +16,7 @@ export default async function NewArticlePage() {
     .select('id,title,audience')
     .eq('organization_id', viewer.organizationId)
     .order('title')
-    .limit(200);
+    .limit(24);
   if (error)
     return (
       <div className="page">
