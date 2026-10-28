@@ -18,6 +18,7 @@
   }
   :where(.scope) :global(.knowledge-editor legend) {
     font-weight: 600;
+    font-family: var(--font-heading);
     padding-inline: 4px;
   }
   :where(.scope) :global(.knowledge-editor label),
@@ -76,6 +77,7 @@
     margin: 8px 0 0;
     font-size: 24px;
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.knowledge-actions [aria-pressed='true']) {
     border-color: var(--color-accent);
@@ -173,6 +175,7 @@
     min-height: 44px;
     padding-block: 12px;
     font-weight: 500;
+    font-family: var(--font-body);
   }
   :where(.scope) :global(.knowledge-block-options > label) {
     margin-block: 12px;

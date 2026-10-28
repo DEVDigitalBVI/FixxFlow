@@ -147,7 +147,11 @@ const server = http.createServer((request, response) => {
     const file = path.join(root, 'public', url.pathname);
     response.setHeader(
       'Content-Type',
-      url.pathname.endsWith('.woff2') ? 'font/woff2' : 'image/png',
+      url.pathname.endsWith('.woff2')
+        ? 'font/woff2'
+        : url.pathname.endsWith('.ttf')
+          ? 'font/ttf'
+          : 'image/png',
     );
     response.end(fs.readFileSync(file));
     return;
@@ -211,7 +215,7 @@ const server = http.createServer((request, response) => {
       (url.searchParams.get('theme') === 'dark' ? 'dark' : 'light') +
       '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FixxFlow interface fixture</title><script>' +
       themeScript +
-      '</script><style>@font-face{font-family:Inter;src:url(/brand/fixxflow/fonts/InterVariable.woff2) format(woff2);font-weight:100 900}:root{--font-inter:Inter}</style><link rel="stylesheet" href="/style.css"></head><body><div id="root"></div><script>window.fixtureQueue=' +
+      '</script><style>@font-face{font-family:Outfit;src:url(/brand/fixxflow/fonts/Outfit-Variable.ttf) format(truetype);font-weight:100 900}@font-face{font-family:RethinkSans;src:url(/brand/fixxflow/fonts/RethinkSans-Variable.ttf) format(truetype);font-weight:400 800}:root{--font-outfit:Outfit;--font-rethink-sans:RethinkSans}</style><link rel="stylesheet" href="/style.css"></head><body><div id="root"></div><script>window.fixtureQueue=' +
       JSON.stringify(queueHtml).replaceAll('<', '\\u003c') +
       ';</script><script src="/bundle.js"></script></body></html>',
   );

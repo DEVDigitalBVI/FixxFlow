@@ -258,7 +258,7 @@ const server = http.createServer(async (req, res) => {
       );
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.end(
-      `<!doctype html><html lang="en" ${url.searchParams.has('dark') ? 'data-theme="dark"' : ''}><head><meta charset="utf-8"><style>@font-face{font-family:Inter;src:url('/public/brand/fixxflow/fonts/InterVariable.woff2');font-weight:100 900}:root{--font-inter:Inter}</style><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/src/app/globals.css"><title>Chat center · local preview</title></head><body>${shell}</body></html>`,
+      `<!doctype html><html lang="en" ${url.searchParams.has('dark') ? 'data-theme="dark"' : ''}><head><meta charset="utf-8"><style>@font-face{font-family:Outfit;src:url('/public/brand/fixxflow/fonts/Outfit-Variable.ttf');font-weight:100 900}@font-face{font-family:RethinkSans;src:url('/public/brand/fixxflow/fonts/RethinkSans-Variable.ttf');font-weight:400 800}:root{--font-outfit:Outfit;--font-rethink-sans:RethinkSans}</style><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/src/app/globals.css"><title>Chat center · local preview</title></head><body>${shell}</body></html>`,
     );
     return;
   }
@@ -290,7 +290,11 @@ const server = http.createServer(async (req, res) => {
   ) {
     res.setHeader(
       'Content-Type',
-      target.endsWith('.css') ? 'text/css' : 'application/octet-stream',
+      target.endsWith('.css')
+        ? 'text/css'
+        : target.endsWith('.ttf')
+          ? 'font/ttf'
+          : 'application/octet-stream',
     );
     res.end(fs.readFileSync(target));
     return;

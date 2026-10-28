@@ -27,6 +27,7 @@
     font-size: 12px;
     line-height: 16px;
     font-weight: 700;
+    font-family: var(--font-heading);
     white-space: nowrap;
   }
   :where(.scope) :global(.ticket-form) {
@@ -88,6 +89,7 @@
     display: grid;
     gap: 6px;
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.ticket-facts dl) {
     margin: 0;
@@ -134,6 +136,7 @@
     background: var(--color-accent-subtle);
     border-color: var(--color-accent);
     font-weight: 700;
+    font-family: var(--font-heading);
     box-shadow: inset 0 -2px var(--color-accent);
   }
   :where(.scope) :global(.queue-filters label) {
@@ -142,6 +145,7 @@
     min-width: 130px;
     font-size: 13px;
     font-weight: 600;
+    font-family: var(--font-heading);
     color: var(--color-text);
   }
   :where(.scope) :global(.queue-filters label:first-of-type) {
@@ -320,6 +324,7 @@
     border-color: var(--color-accent);
     color: var(--color-accent);
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.composer-modes input) {
     accent-color: var(--color-active);
@@ -553,6 +558,7 @@
     padding: 12px 0;
     cursor: pointer;
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.queue-filter-fields) {
     display: flex;
@@ -842,6 +848,7 @@
   :where(.scope) :global(.ticket-queue-list-heading label) {
     color: var(--color-text);
     font-weight: 500;
+    font-family: var(--font-body);
   }
   :where(.scope) :global(.ticket-queue-panel .bulk-selection) {
     margin: 0;
@@ -903,6 +910,7 @@
   :where(.scope) :global(.ticket-queue-panel .ticket-link strong) {
     font-size: 14px;
     font-weight: 600;
+    font-family: var(--font-heading);
     line-height: 1.5;
   }
   :where(.scope) :global(.ticket-queue-panel .ticket-table tr:has(.queue-row-check:checked)) {
@@ -1053,6 +1061,7 @@
       color: var(--color-text-muted);
       font-size: 13px;
       font-weight: 500;
+      font-family: var(--font-body);
       letter-spacing: 0;
       text-transform: none;
     }
@@ -1183,10 +1192,12 @@
     min-height: 44px;
     padding-block: 12px;
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.ticket-create-routing summary .muted) {
     font-size: 13px;
     font-weight: 400;
+    font-family: var(--font-body);
     margin-left: 12px;
   }
   :where(.scope) :global(.ticket-create-routing > p) {
@@ -1465,6 +1476,7 @@
   :where(.scope) :global(.portal-request-form .ticket-create-optional summary) {
     font-size: 16px;
     font-weight: 500;
+    font-family: var(--font-body);
     color: var(--color-accent);
   }
   :where(.scope) :global(.portal-request-form .ticket-create-equipment) {
@@ -1492,6 +1504,7 @@
     padding: 0 8px 0 0;
     font-size: 16px;
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.incident-fields textarea) {
     resize: vertical;
@@ -1616,6 +1629,7 @@
     display: grid;
     gap: 6px;
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.ticket-work-controls .action-form-fields) {
     margin: 0;
@@ -1687,6 +1701,7 @@
     background: var(--color-accent-subtle);
     color: var(--color-text);
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.ticket-step-number) {
     flex-shrink: 0;
@@ -1775,6 +1790,7 @@
     border-radius: 4px;
     color: var(--color-accent);
     font-weight: 500;
+    font-family: var(--font-body);
   }
   :where(.scope) :global(.ticket-guidance-hide),
   :where(.scope) :global(.ticket-step-help[open] .ticket-guidance-show) {
@@ -1798,6 +1814,7 @@
   :where(.scope) :global(.ticket-step-help strong) {
     color: var(--color-text);
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.ticket-wizard-footer) {
     display: grid;
@@ -1821,6 +1838,7 @@
     padding-block: 12px;
     cursor: pointer;
     font-weight: 500;
+    font-family: var(--font-body);
   }
   :where(.scope) :global(.checklist-step-details > p) {
     margin-block: 8px;
@@ -1858,6 +1876,7 @@
   }
   :where(.scope) :global(.ticket-activity-content strong) {
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.ticket-activity-content .ticket-activity-detail) {
     margin-top: 4px;
@@ -2134,6 +2153,7 @@
   }
   :where(.scope) :global(.initial-attachments-label) {
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.initial-attachments p) {
     margin: 0;

@@ -24,10 +24,12 @@
     color: var(--color-neutral);
     text-decoration: none;
     font-weight: 600;
+    font-family: var(--font-heading);
     transition:
       color 160ms ease-out,
       background-color 160ms ease-out;
     font-weight: 500;
+    font-family: var(--font-body);
   }
   :where(.scope) :global(.nav-link svg) {
     width: 19px;
@@ -52,6 +54,7 @@
     color: var(--color-text-muted);
     font-size: 16px;
     font-weight: 400;
+    font-family: var(--font-body);
   }
   :where(.scope) :global(.staff-more-nav[open] > summary::after) {
     content: '−';
@@ -115,6 +118,7 @@
     background: var(--color-accent-subtle);
     box-shadow: inset 3px 0 var(--color-accent);
     font-weight: 700;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.staff-more-nav > summary) {
     list-style: none;

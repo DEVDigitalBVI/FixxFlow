@@ -57,6 +57,7 @@
     min-height: 44px;
     padding-block: 12px;
     font-weight: 500;
+    font-family: var(--font-body);
     overflow-wrap: anywhere;
   }
   :where(.scope) :global(.workflow-builder-options > .stack) {

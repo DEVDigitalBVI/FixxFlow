@@ -197,7 +197,7 @@ test('Resend receives an idempotency key and authenticated link without conversa
   assert.match(body.text, /https:\/\/example.test\/app\/tickets\/ticket-1/);
   assert.match(body.html, /fixxflow-logo-horizontal.png/);
   assert.match(body.html, /View update/);
-  assert.match(body.html, /font-family:Inter,ui-sans-serif,system-ui/);
+  assert.match(body.html, /font-family:Outfit,ui-sans-serif,system-ui/);
 });
 test('HTML notification titles are escaped and plain text remains available', async () => {
   await sendNotificationEmail(
