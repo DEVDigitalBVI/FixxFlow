@@ -20,7 +20,7 @@
     --color-auth-tint: #fff4b3;
 
     --color-brand-primary: #ffd700;
-    --color-brand-secondary: #adb5bd;
+    --color-brand-secondary: #ff9800;
     --color-brand-ink: #212529;
     --color-canvas: #faf9f2;
     --color-surface: #ffffff;
@@ -38,8 +38,8 @@
     --color-active-surface: #e9ecef;
     --color-success: #343a40;
     --color-success-subtle: #f1f3f5;
-    --color-warning: #655600;
-    --color-warning-subtle: #fff8cc;
+    --color-warning: #8a4b00;
+    --color-warning-subtle: #fff0d9;
     --color-danger: #212529;
     --color-danger-surface: #f1f3f5;
     --color-focus: #212529;
@@ -72,7 +72,7 @@
     --color-active-surface: #343a40;
     --color-success: #ffffff;
     --color-success-subtle: #343a40;
-    --color-warning: #ffd700;
+    --color-warning: #ff9800;
     --color-warning-subtle: #343a40;
     --color-danger: #ffd700;
     --color-danger-surface: #343a40;
@@ -110,7 +110,7 @@
       --color-active-surface: #343a40;
       --color-success: #ffffff;
       --color-success-subtle: #343a40;
-      --color-warning: #ffd700;
+      --color-warning: #ff9800;
       --color-warning-subtle: #343a40;
       --color-danger: #ffd700;
       --color-danger-surface: #343a40;
@@ -3485,7 +3485,7 @@
   }
   .app-shell[data-sidebar] .sidebar::before {
     content: '';
-    background: var(--color-brand-primary);
+    background: var(--brand-flow);
   }
   .app-shell[data-sidebar] .sidebar-collapse {
     color: var(--color-text-muted);

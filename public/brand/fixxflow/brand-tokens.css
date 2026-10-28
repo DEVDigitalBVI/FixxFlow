@@ -1,5 +1,6 @@
 :root {
   --fixxflow-yellow: #ffd700;
+  --fixxflow-orange: #ff9800;
   --fixxflow-gray: #adb5bd;
   --fixxflow-link: #212529;
   --fixxflow-soft: #fff4b3;
@@ -14,7 +15,7 @@
   --fixxflow-border-subtle: #dee2e6;
   --fixxflow-info: #ffd700;
   --fixxflow-success: #343a40;
-  --fixxflow-warning: #ffd700;
+  --fixxflow-warning: #8a4b00;
   --fixxflow-critical: #212529;
   --fixxflow-inactive: #545b62;
   --fixxflow-font-ui: Inter, ui-sans-serif, system-ui, -apple-system,

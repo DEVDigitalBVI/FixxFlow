@@ -68,7 +68,7 @@ test('all email variants share a compact header and left-aligned content', () =>
       assert.match(html, /padding:10px 18px/, name);
     }
     if (html.includes('Security notice'))
-      assert.match(html, /<td align="left" bgcolor="#fff8cc" style="text-align:left;/, name);
+      assert.match(html, /<td align="left" bgcolor="#fff0d9" style="text-align:left;/, name);
   }
 });
 

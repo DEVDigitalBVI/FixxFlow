@@ -25,6 +25,10 @@
       "ink": {
         "$value": "#212529",
         "$type": "color"
+      },
+      "orange": {
+        "$value": "#FF9800",
+        "$type": "color"
       }
     },
     "surface": {
@@ -71,7 +75,7 @@
         "$type": "color"
       },
       "warning": {
-        "$value": "#ffd700",
+        "$value": "#8A4B00",
         "$type": "color"
       },
       "critical": {

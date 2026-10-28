@@ -94,7 +94,7 @@ ${action && href ? `<table role="presentation" style="margin:0" cellpadding="0" 
 ${
   note
     ? purpose === 'security-alert'
-      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px"><tr><td align="left" bgcolor="#fff8cc" style="text-align:left;padding:16px;background:#fff8cc;border-radius:8px"><h2 style="margin:0 0 8px;color:#655600;font-size:14px;line-height:22px;font-weight:700">Security notice</h2><p style="margin:0;color:#212529;font-size:14px;line-height:22px">${e(note)}</p></td></tr></table>`
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px"><tr><td align="left" bgcolor="#fff0d9" style="text-align:left;padding:16px;background:#fff0d9;border-radius:8px"><h2 style="margin:0 0 8px;color:#8a4b00;font-size:14px;line-height:22px;font-weight:700">Security notice</h2><p style="margin:0;color:#212529;font-size:14px;line-height:22px">${e(note)}</p></td></tr></table>`
       : `<p style="text-align:left;margin:24px 0 0;color:#545b62;font-size:14px;line-height:22px">${e(note)}</p>`
     : ''
 }

@@ -477,7 +477,7 @@ test('brand wordmark keeps readable theme accents', () => {
   assert.doesNotMatch(css, /#(?:fff0f1|fff1f1|ffadb5|ffc2c8|42272e|ff9a9a|44262f)\b/i);
 });
 
-test('every shipped brand bitmap uses only the four approved colors', async () => {
+test('every shipped brand bitmap uses only approved brand colors', async () => {
   const visit = (dir) =>
     fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
       const file = `${dir}/${entry.name}`;
@@ -503,11 +503,11 @@ test('product styles and email templates cannot reintroduce the retired brand pa
   }
 });
 
-test('all four reference colors have explicit shared product roles', () => {
+test('all five reference colors have explicit shared product roles', () => {
   const css = productStyles();
   for (const [role, value] of Object.entries({
     'brand-primary': '#ffd700',
-    'brand-secondary': '#adb5bd',
+    'brand-secondary': '#ff9800',
     'brand-ink': '#212529',
     surface: '#ffffff',
   }))

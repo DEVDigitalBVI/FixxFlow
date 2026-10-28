@@ -49,7 +49,7 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-auth-tint: #fff4b3;
 
   --color-brand-primary: #ffd700;
-  --color-brand-secondary: #adb5bd;
+  --color-brand-secondary: #ff9800;
   --color-brand-ink: #212529;
   --color-canvas: #faf9f2;
   --color-surface: #ffffff;
@@ -67,8 +67,8 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-active-surface: #e9ecef;
   --color-success: #343a40;
   --color-success-subtle: #f1f3f5;
-  --color-warning: #655600;
-  --color-warning-subtle: #fff8cc;
+  --color-warning: #8a4b00;
+  --color-warning-subtle: #fff0d9;
   --color-danger: #212529;
   --color-danger-surface: #f1f3f5;
   --color-focus: #212529;
@@ -84,7 +84,7 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
 }
 ```
 
-The core palette is yellow `#FFD700`, charcoal `#212529`, white `#FFFFFF`, and gray `#ADB5BD`. Yellow anchors artwork and primary actions; charcoal labels provide readable contrast on yellow. Gray is a supporting surface/detail color, never normal text on white. Derived neutral shades and restrained yellow tints supply surfaces, boundaries and readable secondary text.
+The core palette is yellow `#FFD700`, orange `#FF9800`, charcoal `#212529`, white `#FFFFFF`, and gray `#ADB5BD`. Yellow anchors artwork and primary actions; charcoal labels provide readable contrast on yellow. Gray is a supporting surface/detail color, never normal text on white. Derived neutral shades and restrained yellow tints supply surfaces, boundaries and readable secondary text.
 
 Functional links and focus outlines use charcoal on light surfaces and yellow on dark surfaces. Filled actions use yellow with charcoal labels and a darker yellow hover. Retain a visible charcoal boundary around yellow controls on light surfaces. Status, priority, success and errors use the same palette with explicit labels and existing distinct icons; color never carries state alone. Charts retain distinct line styles and exact-data tables. Validate normal text at WCAG AA (4.5:1) and essential controls/focus at 3:1.
 
@@ -93,7 +93,7 @@ Role-named semantic tokens remain shared across every feature. Legacy purple tok
 | Role | Light text / surface | Dark text / surface |
 |---|---|---|
 | Active work / Incident | `#343a40` / `#e9ecef` | `#ffffff` / `#343a40` |
-| Waiting / High | `#655600` / `#fff8cc` | `#ffd700` / `#343a40` |
+| Waiting / High | `#8a4b00` / `#fff0d9` | `#ff9800` / `#343a40` |
 | Resolved | `#343a40` / `#f1f3f5` | `#ffffff` / `#343a40` |
 | Urgent / breach | `#212529` / `#f1f3f5` | `#ffd700` / `#343a40` |
 
@@ -614,4 +614,8 @@ Microsoft and Google sign-in controls may use their official logos, provider but
 
 ### Warm light theme
 
-Light mode uses a warm ivory canvas (`#FAF9F2`), white reading surfaces, and pale yellow (`#FFF4B3`) for selected navigation, the primary employee support card and contextual accents. A solid yellow sidebar signature reinforces the brand. Help search uses a quieter yellow wash; gray borders and charcoal text keep information legible. Retain existing responsive layouts, keyboard focus, forced-colors and reduced-motion behavior. Dark mode retains its charcoal surfaces. These are derived shades of the approved four-color palette, not additional brand colors.
+Light mode uses a warm ivory canvas (`#FAF9F2`), white reading surfaces, and pale yellow (`#FFF4B3`) for selected navigation, the primary employee support card and contextual accents. A yellow-to-orange sidebar signature reinforces the brand. Help search uses a quieter yellow wash; gray borders and charcoal text keep information legible. Retain existing responsive layouts, keyboard focus, forced-colors and reduced-motion behavior. Dark mode retains its charcoal surfaces. These are derived shades of the approved five-color palette, not additional brand colors.
+
+### Orange supporting accent
+
+Orange `#FF9800` is the fifth approved brand color. Use it alongside yellow in the navigation signature, small decorative section markers and highlights on charcoal. Warning labels on light surfaces use the darker `#8A4B00` with a pale orange `#FFF0D9` surface; dark warning labels use exact orange on charcoal. Exact orange is not normal-sized text on white. Keep yellow as the primary action color and gray as the supporting neutral. Existing four-color logo artwork remains valid.
