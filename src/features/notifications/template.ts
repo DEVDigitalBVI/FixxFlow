@@ -1,8 +1,8 @@
 // Renders the React Email kit (src/emails) to static HTML with React Email's renderer, which
 // runs inside Next.js server code. Inline styles survive mail clients;
 // React escapes all text and attributes, so callers pass plain strings.
-import { render } from '@react-email/components';
 import { createElement } from 'react';
+import { render } from 'react-email';
 
 import { FixxFlowEmail, type EmailPurpose } from '@/emails/fixxflow-email';
 

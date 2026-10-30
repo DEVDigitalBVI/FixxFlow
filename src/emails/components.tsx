@@ -1,5 +1,5 @@
-import { Body, Container, Head, Heading, Html, Preview } from '@react-email/components';
 import type { CSSProperties, ReactNode } from 'react';
+import { Body, Container, Head, Heading, Html, Preview } from 'react-email';
 
 import { emailLogoPath } from './brand';
 
@@ -74,7 +74,8 @@ export function EmailLayout({
           lineHeight: '24px',
         }}
       >
-        <Preview>{preview}</Preview>
+        {/* The layout sets the document title; keep the preview text out of a second <title>. */}
+        <Preview useTitleTag={false}>{preview}</Preview>
         <table {...presentation} style={{ background: t.canvas }}>
           <tbody>
             <tr>
