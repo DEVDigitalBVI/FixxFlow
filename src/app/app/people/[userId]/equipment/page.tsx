@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { PageHeader } from '@/components/ui/page-header';
+import { Table, TableRegion } from '@/components/ui/table';
 import { AssetStatusBadge } from '@/features/assets/asset-status-badge';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -101,13 +102,8 @@ export default async function PersonEquipmentPage({
       <section className="settings-card stack">
         <h2>Assignment history</h2>
         {history.data?.length ? (
-          <div
-            className="table-region"
-            role="region"
-            tabIndex={0}
-            aria-label="Equipment assignment history"
-          >
-            <table className="table responsive-table">
+          <TableRegion role="region" tabIndex={0} aria-label="Equipment assignment history">
+            <Table className="responsive-table">
               <thead>
                 <tr>
                   <th scope="col">Equipment</th>
@@ -137,8 +133,8 @@ export default async function PersonEquipmentPage({
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+            </Table>
+          </TableRegion>
         ) : (
           <p>No recorded assignment history.</p>
         )}

@@ -2,6 +2,8 @@ import Link from 'next/link';
 
 import { linkTicket, markTicketDuplicate, unlinkTicket } from '@/app/app/tickets/organize-actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { buttonVariants } from '@/components/ui/button';
+import { Input, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import type { TicketStatus } from '@/types/database';
 
@@ -60,7 +62,7 @@ export function TicketLinks({
               <ActionForm action={unlinkTicket}>
                 <input type="hidden" name="ticketId" value={ticketId} />
                 <input type="hidden" name="linkedId" value={link.id} />
-                <SubmitButton className="button button-quiet" pendingLabel="Removing…">
+                <SubmitButton variant="quiet" pendingLabel="Removing…">
                   Unlink<span className="sr-only"> ticket #{link.number}</span>
                 </SubmitButton>
               </ActionForm>
@@ -75,9 +77,8 @@ export function TicketLinks({
           <input type="hidden" name="ticketId" value={ticketId} />
           <div className="field">
             <label htmlFor={`link-ticket-${ticketId}`}>Link a related ticket</label>
-            <input
+            <Input
               id={`link-ticket-${ticketId}`}
-              className="input"
               name="ticketNumber"
               required
               inputMode="numeric"
@@ -85,14 +86,14 @@ export function TicketLinks({
               autoComplete="off"
             />
           </div>
-          <SubmitButton className="button button-secondary" pendingLabel="Linking…">
+          <SubmitButton variant="secondary" pendingLabel="Linking…">
             Link ticket
           </SubmitButton>
         </ActionForm>
       )}
       {!error && status !== 'closed' && !isDuplicate && (
         <details className="ticket-duplicate">
-          <summary className="button button-quiet">Close as a duplicate…</summary>
+          <summary className={buttonVariants({ variant: 'quiet' })}>Close as a duplicate…</summary>
           <ActionForm action={markTicketDuplicate} className="stack">
             <input type="hidden" name="ticketId" value={ticketId} />
             <input type="hidden" name="revision" value={revision} />
@@ -102,9 +103,8 @@ export function TicketLinks({
             </p>
             <div className="field">
               <label htmlFor={`duplicate-main-${ticketId}`}>Main ticket number</label>
-              <input
+              <Input
                 id={`duplicate-main-${ticketId}`}
-                className="input"
                 name="mainNumber"
                 required
                 inputMode="numeric"
@@ -116,9 +116,9 @@ export function TicketLinks({
               <label htmlFor={`duplicate-message-${ticketId}`}>
                 Message to the requester (optional)
               </label>
-              <textarea
+              <Textarea
                 id={`duplicate-message-${ticketId}`}
-                className="input textarea"
+                fieldSize="tall"
                 name="message"
                 rows={3}
                 maxLength={20000}
@@ -129,7 +129,7 @@ export function TicketLinks({
                 Sent as a public reply on this ticket. Clear it to close without a message.
               </small>
             </div>
-            <SubmitButton className="button button-primary" pendingLabel="Closing…">
+            <SubmitButton variant="primary" pendingLabel="Closing…">
               Close as duplicate
             </SubmitButton>
           </ActionForm>

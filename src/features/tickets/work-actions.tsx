@@ -5,6 +5,8 @@ import { useId, useState } from 'react';
 
 import { workTicket } from '@/app/app/tickets/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import type { TicketStatus } from '@/types/database';
 
@@ -65,7 +67,7 @@ export function TicketWorkActions({
           </p>
         </div>
         {stage === 'all' && (
-          <a className="button button-quiet" href="#ticket-conversation">
+          <a className={buttonVariants({ variant: 'quiet' })} href="#ticket-conversation">
             Reply or add a note
           </a>
         )}
@@ -80,9 +82,9 @@ export function TicketWorkActions({
       {stale ? (
         <div role="status">
           <p>The ticket has changed. Review its current status and owner before continuing.</p>
-          <button
+          <Button
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             onClick={() => {
               setBaseline(ticket.revision);
               setDirty(false);
@@ -91,14 +93,14 @@ export function TicketWorkActions({
             }}
           >
             Use latest ticket
-          </button>
+          </Button>
         </div>
       ) : (
         <div className="ticket-work-controls">
           {stage !== 'resolution' && !done && !ticket.assigned_technician_id && (
             <ActionForm action={action} protectDraft={false}>
               {fields('take')}
-              <SubmitButton className="button button-primary" pendingLabel="Assigning…">
+              <SubmitButton variant="primary" pendingLabel="Assigning…">
                 Assign to me
               </SubmitButton>
             </ActionForm>
@@ -109,7 +111,7 @@ export function TicketWorkActions({
             ticket.status !== 'in_progress' && (
               <ActionForm action={action} protectDraft={false}>
                 {fields('start')}
-                <SubmitButton className="button button-primary" pendingLabel="Starting…">
+                <SubmitButton variant="primary" pendingLabel="Starting…">
                   Start work
                 </SubmitButton>
               </ActionForm>
@@ -119,9 +121,8 @@ export function TicketWorkActions({
               {fields('status')}
               <label>
                 Status
-                <select
+                <NativeSelect
                   name="status"
-                  className="input"
                   aria-describedby={statusHint}
                   value={dirty ? statusDraft : ticket.status}
                   onChange={(event) => {
@@ -135,9 +136,9 @@ export function TicketWorkActions({
                       {item.label}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </label>
-              <SubmitButton className="button button-primary" pendingLabel="Saving status…">
+              <SubmitButton variant="primary" pendingLabel="Saving status…">
                 Save status
               </SubmitButton>
               <p id={statusHint} className="muted ticket-status-hint">

@@ -1,5 +1,8 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { SignupProgress } from '@/components/ui/signup-progress';
 import { SubmitButton } from '@/components/ui/submit-button';
 
@@ -19,38 +22,23 @@ export default async function SignupPage({ searchParams }: Props) {
       </p>
       <form action={signUp} className="stack">
         {message.error && (
-          <div className="alert alert-error" role="alert" tabIndex={-1}>
+          <Alert tone="error" role="alert" tabIndex={-1}>
             {message.error}
-          </div>
+          </Alert>
         )}
         <div className="field">
           <label htmlFor="fullName">Your name</label>
-          <input
-            className="input"
-            id="fullName"
-            name="fullName"
-            autoComplete="name"
-            required
-            maxLength={120}
-          />
+          <Input id="fullName" name="fullName" autoComplete="name" required maxLength={120} />
         </div>
         <div className="field">
           <label htmlFor="email">Work email</label>
-          <input
-            className="input"
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
+          <Input id="email" name="email" type="email" autoComplete="email" required />
           <p className="form-note">We’ll send your verification link here.</p>
         </div>
         <div className="signup-fields">
           <div className="field">
             <label htmlFor="password">Password</label>
-            <input
-              className="input"
+            <Input
               id="password"
               name="password"
               type="password"
@@ -65,8 +53,7 @@ export default async function SignupPage({ searchParams }: Props) {
           </div>
           <div className="field">
             <label htmlFor="passwordConfirmation">Confirm password</label>
-            <input
-              className="input"
+            <Input
               id="passwordConfirmation"
               name="passwordConfirmation"
               type="password"
@@ -77,10 +64,10 @@ export default async function SignupPage({ searchParams }: Props) {
           </div>
         </div>
         <label className="check-field">
-          <input type="checkbox" name="terms" value="accepted" required />
+          <Checkbox name="terms" value="accepted" required />
           <span>I agree to the Terms of Service and Privacy Policy.</span>
         </label>
-        <SubmitButton className="button button-primary" pendingLabel="Creating account…">
+        <SubmitButton variant="primary" pendingLabel="Creating account…">
           Create administrator account
         </SubmitButton>
       </form>

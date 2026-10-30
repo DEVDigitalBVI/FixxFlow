@@ -247,7 +247,7 @@ export async function sendNotificationEmail(
         : reason
           ? `${label}\n${item.title}\n\n${message}${details.length ? `\n\n${details.map((detail) => `${detail.label}: ${detail.value}`).join('\n')}${reply ? `\n\nReply preview:\n${item.reply_preview}` : ''}` : ''}${reopenReason ? `\n\nReason for reopening:\n${reopenReason}` : ''}\n\n${action}:\n${url}\n\n${note}`
           : `${item.title}\n\nOpen FixxFlow to view this update:\n${url}\n\n${note}`,
-      html: renderEmail({
+      html: await renderEmail({
         title: reason && !incident ? label! : item.title,
         message:
           reason && !incident

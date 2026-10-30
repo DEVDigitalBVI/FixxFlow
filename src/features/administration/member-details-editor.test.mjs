@@ -6,6 +6,8 @@ import test from 'node:test';
 import React from 'react';
 import ts from 'typescript';
 
+import { kitHostMocks } from '../../../tests/helpers/kit-host-mocks.mjs';
+
 const require = createRequire(import.meta.url);
 function setup(result) {
   const details = { open: true };
@@ -13,6 +15,7 @@ function setup(result) {
     saved = '',
     refs = 0;
   const mocks = {
+    ...kitHostMocks(),
     react: {
       ...React,
       useRef: () => ({

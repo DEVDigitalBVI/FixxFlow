@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { PageHeader } from '@/components/ui/page-header';
 import { requireViewer } from '@/lib/auth/viewer';
 import { isUuid } from '@/lib/ids';
@@ -66,11 +68,17 @@ export async function WorkflowCatalog({
         }}
         actions={
           admin ? (
-            <Link className="button button-primary" href="/app/administration/workflows/new">
+            <Link
+              className={buttonVariants({ variant: 'primary' })}
+              href="/app/administration/workflows/new"
+            >
               Create template
             </Link>
           ) : viewer.role === 'administrator' ? (
-            <Link className="button button-secondary" href="/app/administration/workflows">
+            <Link
+              className={buttonVariants({ variant: 'secondary' })}
+              href="/app/administration/workflows"
+            >
               Manage templates
             </Link>
           ) : undefined
@@ -89,29 +97,29 @@ export async function WorkflowCatalog({
       <form className="workflow-catalog-filters" method="get">
         <label className="field">
           Search names
-          <input className="input" type="search" name="q" maxLength={200} defaultValue={q} />
+          <Input type="search" name="q" maxLength={200} defaultValue={q} />
         </label>
         <label className="field">
           Procedure type
-          <select className="input" name="kind" defaultValue={kind ?? ''}>
+          <NativeSelect name="kind" defaultValue={kind ?? ''}>
             <option value="">All types</option>
             {Object.entries(workflowKinds).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
         {ticket && <input type="hidden" name="ticket" value={ticket} />}{' '}
         {archived && <input type="hidden" name="view" value="archived" />}
-        <button className="button button-secondary" type="submit">
+        <Button variant="secondary" type="submit">
           Search procedures
-        </button>
+        </Button>
       </form>
       {error ? (
         <p role="alert">
           Procedures could not load.{' '}
-          <Link className="button button-secondary" href={href(page)}>
+          <Link className={buttonVariants({ variant: 'secondary' })} href={href(page)}>
             Try again
           </Link>
         </p>
@@ -140,7 +148,7 @@ export async function WorkflowCatalog({
                 <p className="ticket-description">{t.description}</p>
               </div>
               <Link
-                className="button button-secondary"
+                className={buttonVariants({ variant: 'secondary' })}
                 href={`${base}/${t.id}${ticket ? `?ticket=${ticket}` : ''}`}
               >
                 {admin ? 'Edit template' : ticket ? 'Review and apply' : 'Review procedure'}
@@ -152,13 +160,13 @@ export async function WorkflowCatalog({
       {!error && (page > 1 || page * 20 < (count ?? 0)) && (
         <nav className="section-heading-row" aria-label="Procedure pages">
           {page > 1 && (
-            <Link className="button button-secondary" href={href(page - 1)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
               Previous page
             </Link>
           )}
           <span>Page {page}</span>
           {page * 20 < (count ?? 0) && (
-            <Link className="button button-secondary" href={href(page + 1)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
               Next page
             </Link>
           )}

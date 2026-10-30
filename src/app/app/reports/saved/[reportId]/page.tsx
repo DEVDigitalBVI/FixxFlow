@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 
+import { Alert } from '@/components/ui/alert';
 import { PageHeader } from '@/components/ui/page-header';
 import {
   CustomReportResults,
@@ -50,10 +51,10 @@ export default async function SavedReportPage({
           <CustomReportResults report={report} />
         </>
       ) : (
-        <div className="alert alert-error" role="alert">
+        <Alert tone="error" role="alert">
           <strong>This report could not load.</strong>
           <p>The saved definition is still available. Try again shortly.</p>
-        </div>
+        </Alert>
       )}
       {viewer.role === 'administrator' && (
         <ReportSchedules

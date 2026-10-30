@@ -1,3 +1,5 @@
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { RetryButton } from '@/components/ui/retry-button';
 import { profileLabels } from '@/features/lookups/labels';
 import { Timestamp } from '@/features/timezones/provider';
@@ -71,7 +73,9 @@ export async function IncidentPanel({
     >
       <div className="section-heading-row">
         <h2 id="incident-summary-heading">Incident summary</h2>
-        <span className={`ticket-badge tone-${severity.tone}`}>Severity: {severity.label}</span>
+        <Badge tone={severity.tone} className="ticket-badge">
+          Severity: {severity.label}
+        </Badge>
       </div>
       {ownerError && (
         <p role="alert">
@@ -112,7 +116,9 @@ export async function IncidentPanel({
         </p>
       )}
       <details>
-        <summary className="button button-secondary">Edit incident details</summary>
+        <summary className={buttonVariants({ variant: 'secondary' })}>
+          Edit incident details
+        </summary>
         <IncidentEditor
           ticketId={ticketId}
           ticketRevision={revision}

@@ -45,7 +45,7 @@ export async function sendScheduledReportEmail({
       reply_to: 'support@fixxflow.app',
       subject: `FixxFlow report: ${reportName}`,
       text: `Your scheduled FixxFlow report is attached.\n\nOpen the live report: ${href}`,
-      html: renderEmail({
+      html: await renderEmail({
         workspaceName,
         notificationLabel: 'Scheduled report',
         title: reportName,

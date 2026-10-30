@@ -5,6 +5,9 @@ import { useActionState, useEffect, useRef, useState } from 'react';
 
 import { startChat, type StartChatState } from '@/app/app/chat/actions';
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
+import { Input, Textarea } from '@/components/ui/input';
 import { SubmissionKey } from '@/components/ui/submission-key';
 import { SubmitButton } from '@/components/ui/submit-button';
 
@@ -49,26 +52,25 @@ export function StartChatForm({
         </div>
       </div>
       {state.error && (
-        <div className="alert alert-error" role="alert" tabIndex={-1} ref={feedback}>
+        <Alert tone="error" role="alert" tabIndex={-1} ref={feedback}>
           <p>{state.error}</p>
           {state.fields?.topic && (
-            <a className="button button-quiet" href="#chat-topic">
+            <a className={buttonVariants({ variant: 'quiet' })} href="#chat-topic">
               Review subject
             </a>
           )}
           {state.fields?.message && (
-            <a className="button button-quiet" href="#chat-first-message">
+            <a className={buttonVariants({ variant: 'quiet' })} href="#chat-first-message">
               Review message
             </a>
           )}
-        </div>
+        </Alert>
       )}
       <div className="chat-intake-fields">
         <p className="form-note">Both fields are required.</p>
         <div className="field">
           <label htmlFor="chat-topic">What do you need help with?</label>
-          <input
-            className="input"
+          <Input
             id="chat-topic"
             name="topic"
             required
@@ -88,8 +90,8 @@ export function StartChatForm({
         </div>
         <div className="field">
           <label htmlFor="chat-first-message">Your message</label>
-          <textarea
-            className="input textarea"
+          <Textarea
+            fieldSize="tall"
             id="chat-first-message"
             name="message"
             required
@@ -113,14 +115,10 @@ export function StartChatForm({
       </div>
       <footer className="chat-intake-footer">
         <div>
-          <Link className="button button-secondary" href="/app/chat">
+          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/chat">
             Cancel
           </Link>
-          <SubmitButton
-            className="button button-primary"
-            disabled={pending}
-            pendingLabel="Starting chat…"
-          >
+          <SubmitButton variant="primary" disabled={pending} pendingLabel="Starting chat…">
             Start a chat
           </SubmitButton>
         </div>
@@ -137,7 +135,7 @@ export function ChatIntakeGuide() {
     <aside className="chat-intake-guide" aria-labelledby="chat-guide-title">
       <h2 id="chat-guide-title">Need a quick answer?</h2>
       <p>Search existing help before starting a conversation.</p>
-      <Link className="button button-secondary" href="/app/help">
+      <Link className={buttonVariants({ variant: 'secondary' })} href="/app/help">
         Browse help articles
       </Link>
     </aside>

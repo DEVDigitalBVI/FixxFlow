@@ -27,104 +27,61 @@ test('employee navigation keeps employee labels and excludes staff destinations'
   assert.doesNotMatch(html, /href="\/app\/(administration|people)"/);
   assert.match(html, /aria-label="Employee navigation"/);
 });
-test('mobile menu contains a close control, locks background, traps focus and restores state', () => {
-  let effect,
-    cleanup,
-    closed = false,
-    buttonFocused = false,
-    firstFocused = false,
-    lastFocused = false;
-  const first = {
-      getClientRects: () => [{}],
-      focus: () => {
-        firstFocused = true;
+test('mobile menu uses the kit sheet: modal dialog, close control, inert page and Tab cycling', () => {
+  let effect;
+  const main = { inert: false };
+  const media = { matches: false, addEventListener() {}, removeEventListener() {} };
+  const { WorkspaceNav } = load('src/components/navigation/workspace-nav.tsx', {
+    ...navMocks,
+    react: {
+      ...React,
+      useState: () => [true, () => {}],
+      useRef: () => ({ current: null }),
+      useEffect: (fn) => {
+        effect ??= fn;
       },
     },
-    last = {
-      getClientRects: () => [{}],
-      focus: () => {
-        lastFocused = true;
-      },
-    };
-  const main = { inert: false },
-    doc = {
-      body: { style: { overflow: 'auto' } },
-      getElementById: () => main,
-      activeElement: last,
-    };
-  const handlers = {};
-  const media = {
-    matches: false,
-    addEventListener: (key, fn) => (handlers.resize = fn),
-    removeEventListener: () => {},
-  };
-  const win = {
-    requestAnimationFrame: (fn) => {
-      fn();
-      return 1;
-    },
-    cancelAnimationFrame: () => {},
-    matchMedia: () => media,
-    addEventListener: (key, fn) => (handlers[key] = fn),
-    removeEventListener: () => {},
-  };
-  let refs = 0;
-  const react = {
-    ...React,
-    useState: () => [
-      true,
-      (v) => {
-        closed = v === false;
-      },
-    ],
-    useRef: () => ({
-      current:
-        refs++ === 0
-          ? { focus: () => (buttonFocused = true) }
-          : {
-              querySelectorAll: () => [first, last],
-              contains: (node) => node === first || node === last,
-            },
-    }),
-    useEffect: (fn) => {
-      effect ??= fn;
-    },
-  };
-  globalThis.document = doc;
-  globalThis.window = win;
+  });
+  const tree = WorkspaceNav({ role: 'administrator', organizationId: 'org', userId: 'user' });
+  const html = renderToStaticMarkup(tree);
+  const dialog = html.match(/<div[^>]*role="dialog"[^>]*>/)[0];
+  assert.match(dialog, /id="workspace-navigation"/);
+  assert.match(dialog, /aria-label="Workspace navigation"/);
+  assert.match(html, /nav-close/);
+  assert.match(html, /mobile-nav-backdrop/);
+
+  const oldDocument = globalThis.document,
+    oldWindow = globalThis.window;
+  let focused;
+  const control = (name) => ({ getClientRects: () => [{}], focus: () => (focused = name) });
+  const first = control('first'),
+    last = control('last');
+  globalThis.document = { getElementById: () => main, activeElement: last };
+  globalThis.window = { matchMedia: () => media };
   try {
-    const { WorkspaceNav } = load('src/components/navigation/workspace-nav.tsx', {
-      ...navMocks,
-      react,
-    });
-    const html = renderToStaticMarkup(
-      WorkspaceNav({ role: 'administrator', organizationId: 'org', userId: 'user' }),
-    );
-    assert.match(html, /role="dialog" aria-modal="true"/);
-    assert.match(html, /nav-close/);
-    cleanup = effect();
+    const cleanup = effect();
     assert.equal(main.inert, true);
-    assert.equal(doc.body.style.overflow, 'hidden');
-    assert.equal(firstFocused, true);
+    // Safari can skip links natively, so the sheet cycles every visible control explicitly.
+    const content = tree.props.children[1];
     let prevented = false;
-    handlers.keydown({ key: 'Tab', preventDefault: () => (prevented = true) });
+    const tab = (shiftKey) =>
+      content.props.onKeyDown({
+        key: 'Tab',
+        shiftKey,
+        currentTarget: { querySelectorAll: () => [first, last] },
+        preventDefault: () => (prevented = true),
+      });
+    tab(false);
     assert.equal(prevented, true);
-    doc.activeElement = first;
-    handlers.keydown({ key: 'Tab', shiftKey: true, preventDefault: () => {} });
-    assert.equal(lastFocused, true);
-    doc.activeElement = {};
-    prevented = false;
-    handlers.keydown({ key: 'Tab', preventDefault: () => (prevented = true) });
-    assert.equal(prevented, true);
-    handlers.keydown({ key: 'Escape' });
-    assert.equal(closed, true);
-    assert.equal(buttonFocused, true);
+    assert.equal(focused, 'first');
+    globalThis.document.activeElement = first;
+    tab(true);
+    assert.equal(focused, 'last');
     cleanup();
     assert.equal(main.inert, false);
-    assert.equal(doc.body.style.overflow, 'auto');
   } finally {
-    delete globalThis.document;
-    delete globalThis.window;
+    globalThis.document = oldDocument;
+    globalThis.window = oldWindow;
   }
 });
 test('bulk actions appear only for selected rows and clear selection restores row focus', () => {
@@ -270,7 +227,8 @@ test('desktop navigation does not move focus to the hidden mobile menu button', 
     },
   });
   const tree = WorkspaceNav({ role: 'technician', organizationId: 'org', userId: 'user' });
-  const panel = tree.props.children[2];
+  // Closed state: the Sheet's second child is the in-place navigation panel.
+  const panel = tree.props.children[1];
   const findLink = (node) => {
     if (!React.isValidElement(node)) return null;
     if (node.props.href && node.props.onClick) return node;

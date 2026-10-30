@@ -254,7 +254,9 @@ test('all navigation variants expose named groups without visible section header
         );
         assert.doesNotMatch(html, /nav-group-label|>Support<|>Work<|>Resources<|>Manage</);
         assert.match(html, /aria-current="page"/);
-        assert.match(html, /aria-controls="workspace-navigation" aria-expanded="false"/);
+        const toggle = html.match(/<button[^>]*class="[^"]*mobile-nav-toggle[^"]*"[^>]*>/)[0];
+        assert.match(toggle, /aria-controls="workspace-navigation"/);
+        assert.match(toggle, /aria-expanded="false"/);
         if (platform) assert.equal(html.includes('href="/app"'), workspaceAvailable);
         else assert.match(html, /<summary class="nav-link" aria-label="Account"/);
       }

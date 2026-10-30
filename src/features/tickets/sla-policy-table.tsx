@@ -1,9 +1,11 @@
+import { Table } from '@/components/ui/table';
+
 import { ticketPriorities } from './presentation';
 import { fixedSlaTargets, formatMinutes } from './sla-policy';
 
 export function SlaPolicy() {
   return (
-    <table className="table table-policy">
+    <Table className="table-policy">
       <caption>Support-time targets from ticket creation · 7 AM–10 PM every day</caption>
       <thead>
         <tr>
@@ -21,6 +23,6 @@ export function SlaPolicy() {
           </tr>
         ))}
       </tbody>
-    </table>
+    </Table>
   );
 }

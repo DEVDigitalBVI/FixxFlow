@@ -1,6 +1,9 @@
 import Link from 'next/link';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { isKnowledgeAudience, knowledgeAudiences } from '@/features/knowledge/audience';
 import { knowledgeCategories, knowledgeCategoryDescriptions } from '@/features/knowledge/content';
@@ -55,7 +58,10 @@ export default async function HelpPage({
       )}
       <header className="portal-page-heading">
         <div>
-          <Link className="button button-quiet page-back-link" href="/app">
+          <Link
+            className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
+            href="/app"
+          >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
             Home
           </Link>
@@ -67,12 +73,15 @@ export default async function HelpPage({
           </p>
         </div>
         {viewer.role === 'administrator' && (
-          <Link className="button button-secondary" href="/app/administration/library">
+          <Link
+            className={buttonVariants({ variant: 'secondary' })}
+            href="/app/administration/library"
+          >
             Manage library guides
           </Link>
         )}
         {staff && (
-          <Link className="button button-primary" href="/app/help/new">
+          <Link className={buttonVariants({ variant: 'primary' })} href="/app/help/new">
             New article
           </Link>
         )}
@@ -89,8 +98,7 @@ export default async function HelpPage({
       >
         <label>
           Search articles
-          <input
-            className="input"
+          <Input
             name="q"
             type="search"
             defaultValue={q}
@@ -101,37 +109,37 @@ export default async function HelpPage({
         </label>
         <label>
           Category
-          <select className="input" name="category" defaultValue={filters.category ?? ''}>
+          <NativeSelect name="category" defaultValue={filters.category ?? ''}>
             <option value="">All categories</option>
             {knowledgeCategories.map((c) => (
               <option key={c}>{c}</option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
         {staff && (
           <label>
             Publication status
-            <select className="input" name="view" defaultValue={filters.view ?? 'published'}>
+            <NativeSelect name="view" defaultValue={filters.view ?? 'published'}>
               <option value="published">Published articles</option>
               <option value="all">All, including drafts and archived</option>
-            </select>
+            </NativeSelect>
           </label>
         )}
         {staff && (
           <label>
             Audience
-            <select className="input" name="audience" defaultValue={audience}>
+            <NativeSelect name="audience" defaultValue={audience}>
               <option value="">All audiences</option>
               {Object.entries(knowledgeAudiences).map(([value, item]) => (
                 <option key={value} value={value}>
                   {item.label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
         )}
-        <button className="button button-secondary">Search</button>
-        <Link className="button button-secondary" href="/app/help">
+        <Button variant="secondary">Search</Button>
+        <Link className={buttonVariants({ variant: 'secondary' })} href="/app/help">
           Clear filters
         </Link>
       </LiveSearchForm>
@@ -156,12 +164,12 @@ export default async function HelpPage({
         </nav>
       )}
       {error ? (
-        <div className="alert alert-error" role="alert">
+        <Alert tone="error" role="alert">
           Articles could not be loaded.{' '}
-          <Link className="button button-secondary" href={pageHref(page)}>
+          <Link className={buttonVariants({ variant: 'secondary' })} href={pageHref(page)}>
             Try again
           </Link>
-        </div>
+        </Alert>
       ) : (
         <>
           {data?.length ? (
@@ -200,13 +208,19 @@ export default async function HelpPage({
           {(page > 1 || (data?.length ?? 0) > 24) && (
             <nav className="notification-pagination" aria-label="Article pages">
               {page > 1 && (
-                <Link className="button button-secondary" href={pageHref(page - 1)}>
+                <Link
+                  className={buttonVariants({ variant: 'secondary' })}
+                  href={pageHref(page - 1)}
+                >
                   Previous
                 </Link>
               )}
               <span>Page {page}</span>
               {(data?.length ?? 0) > 24 && (
-                <Link className="button button-secondary" href={pageHref(page + 1)}>
+                <Link
+                  className={buttonVariants({ variant: 'secondary' })}
+                  href={pageHref(page + 1)}
+                >
                   Next
                 </Link>
               )}

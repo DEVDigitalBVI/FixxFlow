@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { RetryButton } from '@/components/ui/retry-button';
 import { profileLabels } from '@/features/lookups/labels';
 import { Timestamp } from '@/features/timezones/provider';
@@ -114,11 +116,18 @@ export async function ChecklistPanel({
             <li className="stack" key={step.id}>
               <div className="section-heading-row">
                 <h4>{step.title}</h4>
-                <span
-                  className={`ticket-badge tone-${step.completed_at ? 'success' : step.due_at && Date.parse(step.due_at) < now ? 'warning' : 'neutral'}`}
+                <Badge
+                  tone={
+                    step.completed_at
+                      ? 'success'
+                      : step.due_at && Date.parse(step.due_at) < now
+                        ? 'warning'
+                        : 'neutral'
+                  }
+                  className="ticket-badge"
                 >
                   {stepState(step, now)}
-                </span>
+                </Badge>
               </div>
               <details
                 open={step.completed_at ? undefined : true}
@@ -194,7 +203,7 @@ export async function ChecklistPanel({
       </ol>
       {steps.length < 100 ? (
         <details>
-          <summary className="button button-secondary">Add step</summary>
+          <summary className={buttonVariants({ variant: 'secondary' })}>Add step</summary>
           <ChecklistEditor ticketId={ticketId} stepId={randomUUID()} assigneeId={ownerId} />
         </details>
       ) : (

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import type { ActionResult } from '@/lib/action-result';
 
@@ -49,8 +50,7 @@ export function OrganizationCreateForm({
               {field.label}
               {field.required && <span aria-hidden="true"> *</span>}
             </label>
-            <input
-              className="input"
+            <Input
               id={id}
               name={field.name}
               required={field.required}
@@ -69,7 +69,7 @@ export function OrganizationCreateForm({
           </div>
         );
       })}
-      <SubmitButton className="button button-primary" pendingLabel={`Adding ${kind}…`}>
+      <SubmitButton variant="primary" pendingLabel={`Adding ${kind}…`}>
         Add {kind}
       </SubmitButton>
     </ActionForm>

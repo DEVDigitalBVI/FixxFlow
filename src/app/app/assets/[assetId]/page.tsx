@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { AssetDetailEditor } from '@/features/assets/asset-detail-editor';
 import { AssetOverview } from '@/features/assets/asset-overview';
@@ -91,9 +93,9 @@ export default async function AssetPage({
         actions={<AssetStatusBadge status={asset.status} />}
       />
       {saved && (
-        <p className="alert alert-success" role="status">
+        <Alert as="p" tone="success" role="status">
           Asset saved.
-        </p>
+        </Alert>
       )}
       {staff && options ? (
         <AssetDetailEditor key={`${asset.id}:${asset.revision}:${saved ?? ''}`} asset={asset}>
@@ -125,7 +127,10 @@ export default async function AssetPage({
             <dd>{asset.warranty_until ?? 'Not set'}</dd>
           </dl>
           {asset.assigned_user_id === viewer.id && (
-            <Link className="button button-primary" href={`/app/tickets/new?asset=${asset.id}`}>
+            <Link
+              className={buttonVariants({ variant: 'primary' })}
+              href={`/app/tickets/new?asset=${asset.id}`}
+            >
               Get help with this equipment
             </Link>
           )}
@@ -144,7 +149,10 @@ export default async function AssetPage({
                     <span className="muted">Ticket #{t.ticket_number}</span>
                     <p>{t.title}</p>
                   </div>
-                  <Link className="button button-secondary" href={`/app/tickets/${t.id}`}>
+                  <Link
+                    className={buttonVariants({ variant: 'secondary' })}
+                    href={`/app/tickets/${t.id}`}
+                  >
                     Open ticket<span className="sr-only"> #{t.ticket_number}</span>
                   </Link>
                 </li>

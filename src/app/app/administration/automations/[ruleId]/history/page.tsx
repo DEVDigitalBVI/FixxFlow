@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { buttonVariants } from '@/components/ui/button';
+import { Table, TableRegion } from '@/components/ui/table';
 import { getAutomation } from '@/features/automation/admin-service';
 import { AutomationHeader, AutomationPages } from '@/features/automation/page-parts';
 import {
@@ -35,7 +37,10 @@ export default async function HistoryPage({
         title={`${rule.value.rule.definition.name} · History`}
         description="Each run keeps the exact version it used."
       />
-      <Link className="button button-quiet page-back-link" href={`${automationPath}/${ruleId}`}>
+      <Link
+        className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
+        href={`${automationPath}/${ruleId}`}
+      >
         Back to automation
       </Link>
       {!data.rows.length ? (
@@ -47,13 +52,8 @@ export default async function HistoryPage({
           </p>
         </section>
       ) : (
-        <div
-          className="table-region"
-          role="region"
-          aria-label="Automation execution history"
-          tabIndex={0}
-        >
-          <table className="table responsive-table">
+        <TableRegion role="region" aria-label="Automation execution history" tabIndex={0}>
+          <Table className="responsive-table">
             <caption className="sr-only">
               Execution time, immutable version and action completion
             </caption>
@@ -97,8 +97,8 @@ export default async function HistoryPage({
                 );
               })}
             </tbody>
-          </table>
-        </div>
+          </Table>
+        </TableRegion>
       )}
       <AutomationPages
         page={page}

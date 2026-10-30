@@ -136,7 +136,11 @@ test('custom results expose summaries, chart context and a keyboard-scrollable e
   assert.match(html, /Report results/);
   assert.match(html, /3 tickets measured/);
   assert.match(html, /aria-label="Ticket volume trend"/);
-  assert.match(html, /role="region" aria-label="Custom report exact data" tabindex="0"/);
+  // Kit TableRegion: a labelled, keyboard-focusable scroll region.
+  assert.match(
+    html,
+    /<div(?=[^>]*role="region")(?=[^>]*aria-label="Custom report exact data")(?=[^>]*tabindex="0")[^>]*class="table-region/,
+  );
   assert.match(html, /<caption>Ticket volume grouped by time<\/caption>/);
   assert.match(html, /<th scope="row"/);
   assert.match(html, />0<\/td>/);

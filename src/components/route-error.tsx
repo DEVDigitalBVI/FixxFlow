@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 
+import { Button, buttonVariants } from '@/components/ui/button';
+
 type Props = {
   retry: () => void;
   title: string;
@@ -18,17 +20,17 @@ export function RouteError({ retry, title, message, layout = 'page', back }: Pro
       <p role="alert">{message}</p>
       {back ? (
         <div className={layout === 'main' ? 'page-header-actions' : 'knowledge-actions'}>
-          <button type="button" className="button button-primary" onClick={retry}>
+          <Button type="button" variant="primary" onClick={retry}>
             Try again
-          </button>
-          <Link className="button button-secondary" href={back.href}>
+          </Button>
+          <Link className={buttonVariants({ variant: 'secondary' })} href={back.href}>
             {back.label}
           </Link>
         </div>
       ) : (
-        <button type="button" className="button button-primary" onClick={retry}>
+        <Button type="button" variant="primary" onClick={retry}>
           Try again
-        </button>
+        </Button>
       )}
     </>
   );

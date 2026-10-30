@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { Alert } from '@/components/ui/alert';
 import { PageHeader } from '@/components/ui/page-header';
 import { CustomReportBuilder } from '@/features/reporting/custom-builder';
 import {
@@ -95,13 +96,13 @@ export default async function CustomReportPage({
         </section>
       )}
       {!parsed && (
-        <div className="alert alert-error" role="alert">
+        <Alert tone="error" role="alert">
           <strong>Some report choices were not valid.</strong>
           <p>
             The previous valid definition is shown. Choose one to three matching measures and a
             period up to 366 days.
           </p>
-        </div>
+        </Alert>
       )}
       <CustomReportBuilder
         definition={definition}
@@ -121,10 +122,10 @@ export default async function CustomReportPage({
           />
         </>
       ) : hasDefinition || saved ? (
-        <div className="alert alert-error" role="alert">
+        <Alert tone="error" role="alert">
           <strong>The custom report could not load.</strong>
           <p>Your definition is preserved. Try running the report again.</p>
-        </div>
+        </Alert>
       ) : (
         <p className="muted">Your results will appear here after you run the report.</p>
       )}

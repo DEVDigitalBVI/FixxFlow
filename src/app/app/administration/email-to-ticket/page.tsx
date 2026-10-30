@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { PageHeader } from '@/components/ui/page-header';
+import { Table, TableRegion } from '@/components/ui/table';
 import {
   getInboundEmailConfiguration,
   inboundAddress,
@@ -83,13 +84,8 @@ export default async function EmailToTicketPage() {
         {log.error ? (
           <p role="alert">Recent messages could not load. Refresh to try again.</p>
         ) : log.data.length ? (
-          <div
-            className="table-region"
-            role="region"
-            aria-label="Recent inbound messages"
-            tabIndex={0}
-          >
-            <table className="table">
+          <TableRegion role="region" aria-label="Recent inbound messages" tabIndex={0}>
+            <Table>
               <thead>
                 <tr>
                   <th scope="col">Received</th>
@@ -118,8 +114,8 @@ export default async function EmailToTicketPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+            </Table>
+          </TableRegion>
         ) : (
           <p className="muted">
             No messages yet. Messages sent to your workspace address appear here.

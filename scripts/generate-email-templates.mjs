@@ -1,6 +1,9 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 
-import { invitationConfirmationHref, renderEmail } from '../src/features/notifications/template.ts';
+import { load } from '../tests/helpers/load-module.mjs';
+
+// The renderer composes React Email components (TSX), so load it through the TypeScript loader.
+const { invitationConfirmationHref, renderEmail } = load('src/features/notifications/template.ts');
 
 export const templates = [
   [
@@ -104,7 +107,7 @@ for (const [slug, title, message, action, note] of templates) {
       : 'security-alert';
   writeFileSync(
     `supabase/templates/${slug}.html`,
-    renderEmail({
+    await renderEmail({
       title,
       message,
       action,

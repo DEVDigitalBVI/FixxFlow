@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { useActionState, useEffect, useRef, useState, type ChangeEvent } from 'react';
 
 import { saveAsset } from '@/app/app/assets/actions';
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { revealField } from '@/components/ui/reveal-field';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { LookupSelect } from '@/features/lookups/lookup-select';
@@ -52,9 +55,9 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
       onInvalidCapture={(event) => revealField(event.target as HTMLElement)}
     >
       {state.error && (
-        <div ref={errorRef} tabIndex={-1} className="alert alert-error" role="alert">
+        <Alert ref={errorRef} tabIndex={-1} tone="error" role="alert">
           {state.error}
-        </div>
+        </Alert>
       )}
       <div className="asset-editor-intro">
         <h2>{asset ? 'Edit asset' : 'Register equipment'}</h2>
@@ -68,8 +71,7 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
         <div className="form-grid">
           <label className="field">
             Asset tag *
-            <input
-              className="input"
+            <Input
               name="tag"
               autoFocus={Boolean(onCancel)}
               onChange={change}
@@ -80,8 +82,7 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
           </label>
           <label className="field">
             Name *
-            <input
-              className="input"
+            <Input
               name="name"
               onChange={change}
               value={draft.name}
@@ -92,28 +93,21 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
           </label>
           <label className="field">
             Type *
-            <select className="input" name="kind" onChange={change} value={draft.kind}>
+            <NativeSelect name="kind" onChange={change} value={draft.kind}>
               {Object.entries(assetKinds).map(([id, label]) => (
                 <option key={id} value={id}>
                   {label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label className="field">
             Model
-            <input
-              className="input"
-              name="model"
-              onChange={change}
-              value={draft.model}
-              maxLength={160}
-            />
+            <Input name="model" onChange={change} value={draft.model} maxLength={160} />
           </label>
           <label className="field">
             Serial number
-            <input
-              className="input"
+            <Input
               name="serial_number"
               onChange={change}
               value={draft.serial_number}
@@ -128,13 +122,13 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
         <div className="form-grid">
           <label className="field">
             Asset status *
-            <select className="input" name="status" onChange={change} value={draft.status}>
+            <NativeSelect name="status" onChange={change} value={draft.status}>
               {Object.entries(assetStatuses).map(([id, label]) => (
                 <option key={id} value={id}>
                   {label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <LookupSelect
             resource="people"
@@ -168,18 +162,11 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
         <div className="form-grid">
           <label className="field">
             Purchase date
-            <input
-              className="input"
-              name="purchased_on"
-              type="date"
-              onChange={change}
-              value={draft.purchased_on}
-            />
+            <Input name="purchased_on" type="date" onChange={change} value={draft.purchased_on} />
           </label>
           <label className="field">
             Warranty ends
-            <input
-              className="input"
+            <Input
               name="warranty_until"
               type="date"
               onChange={change}
@@ -188,8 +175,7 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
           </label>
           <label className="field">
             End of life
-            <input
-              className="input"
+            <Input
               name="end_of_life_on"
               type="date"
               onChange={change}
@@ -199,21 +185,14 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
         </div>
       </details>
       <div className="page-header-actions asset-editor-actions">
-        <SubmitButton className="button button-primary">
-          {asset ? 'Save asset' : 'Add asset'}
-        </SubmitButton>
+        <SubmitButton variant="primary">{asset ? 'Save asset' : 'Add asset'}</SubmitButton>
         <>
           {onCancel ? (
-            <button
-              type="button"
-              className="button button-secondary"
-              disabled={pending}
-              onClick={cancel}
-            >
+            <Button type="button" variant="secondary" disabled={pending} onClick={cancel}>
               Cancel editing
-            </button>
+            </Button>
           ) : (
-            <Link href="/app/assets" className="button button-secondary">
+            <Link href="/app/assets" className={buttonVariants({ variant: 'secondary' })}>
               Back to assets
             </Link>
           )}

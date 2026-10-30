@@ -3,6 +3,9 @@
 import { useId, useRef, useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import type { ActionResult } from '@/lib/action-result';
 
@@ -26,12 +29,12 @@ export function ReopenTicketForm({
   };
   return (
     <details className="portal-detail-card ticket-reopen-disclosure">
-      <summary className="button button-primary">Reopen ticket</summary>
+      <summary className={buttonVariants({ variant: 'primary' })}>Reopen ticket</summary>
       <ActionForm action={submit} className="stack">
         <input type="hidden" name="ticketId" value={ticketId} />
         <input type="hidden" name="revision" value={baseline} />
         {revision !== baseline && (
-          <div className="alert alert-warning" role="status">
+          <Alert tone="warning" role="status">
             <p>
               This ticket changed while you were writing. Review its latest details before
               reopening.
@@ -39,24 +42,23 @@ export function ReopenTicketForm({
             <a href={`/app/tickets/${ticketId}`} target="_blank" rel="noopener noreferrer">
               Review current ticket in a new tab
             </a>
-            <button
+            <Button
               type="button"
-              className="button button-secondary"
+              variant="secondary"
               onClick={() => {
                 setBaseline(revision);
                 token.current = null;
               }}
             >
               Use latest ticket
-            </button>
-          </div>
+            </Button>
+          </Alert>
         )}
         <div className="field">
           <label htmlFor={id}>Why are you reopening this ticket?</label>
-          <textarea
+          <Textarea
             id={id}
             name="reason"
-            className="input"
             required
             rows={3}
             maxLength={2000}
@@ -72,7 +74,7 @@ export function ReopenTicketForm({
             ticket history and reopening email.
           </p>
         </div>
-        <SubmitButton className="button button-primary" pendingLabel="Reopening…">
+        <SubmitButton variant="primary" pendingLabel="Reopening…">
           Reopen ticket
         </SubmitButton>
       </ActionForm>

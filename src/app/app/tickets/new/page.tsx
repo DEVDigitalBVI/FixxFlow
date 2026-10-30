@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
+import { Alert } from '@/components/ui/alert';
+import { Input, NativeSelect, Textarea } from '@/components/ui/input';
 import { PageHeader } from '@/components/ui/page-header';
 import { SubmissionKey } from '@/components/ui/submission-key';
 import { SubmitButton } from '@/components/ui/submit-button';
@@ -74,9 +76,9 @@ export default async function NewTicketPage({ searchParams }: Props) {
         </header>
       )}
       {message.error && (
-        <div className="alert alert-error page-alert" role="alert">
+        <Alert tone="error" className="page-alert" role="alert">
           {message.error}
-        </div>
+        </Alert>
       )}
       {!staff && <ServiceAnnouncements />}
       <NewTicketForm
@@ -122,8 +124,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
                 {staff ? 'Subject' : 'What do you need help with?'}{' '}
                 <span aria-hidden="true">*</span>
               </label>
-              <input
-                className="input"
+              <Input
                 id="title"
                 name="title"
                 required
@@ -145,8 +146,8 @@ export default async function NewTicketPage({ searchParams }: Props) {
               <label htmlFor="description">
                 {staff ? 'Description' : 'Tell us more'} <span aria-hidden="true">*</span>
               </label>
-              <textarea
-                className="input textarea"
+              <Textarea
+                fieldSize="tall"
                 id="description"
                 name="description"
                 required
@@ -166,8 +167,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
                 <label htmlFor="reportedImpact">
                   How is this affecting work? <span aria-hidden="true">*</span>
                 </label>
-                <select
-                  className="input"
+                <NativeSelect
                   id="reportedImpact"
                   name="reportedImpact"
                   required
@@ -182,7 +182,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
                       {impact.label} — {impact.description}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
                 <small className="muted" id="ticket-impact-hint">
                   This sets the initial urgency and service targets. IT can adjust them after
                   review.
@@ -204,13 +204,13 @@ export default async function NewTicketPage({ searchParams }: Props) {
                 />
                 <div className="field">
                   <label htmlFor="priority">Priority</label>
-                  <select className="input" id="priority" name="priority" defaultValue="normal">
+                  <NativeSelect id="priority" name="priority" defaultValue="normal">
                     {Object.entries(ticketPriorities).map(([value, priority]) => (
                       <option key={value} value={value}>
                         {priority.label}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
               </>
             )}
@@ -269,7 +269,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
           <div className="ticket-create-actions">
             <TicketDraftCancel href={staff ? '/app/tickets' : '/app'} />
             <SubmitButton
-              className="button button-primary"
+              variant="primary"
               pendingLabel={staff ? 'Creating ticket…' : 'Sending request…'}
             >
               {staff ? 'Create ticket' : 'Submit request'}

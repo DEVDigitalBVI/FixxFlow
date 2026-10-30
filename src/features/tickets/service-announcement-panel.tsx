@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
+import { Badge } from '@/components/ui/badge';
 import { RetryButton } from '@/components/ui/retry-button';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -87,9 +88,9 @@ export async function ServiceAnnouncementPanel({
       {live && (
         <div>
           <h3>{live.title}</h3>
-          <span className={`ticket-badge tone-${announcementStatus(live.public_status).tone}`}>
+          <Badge tone={announcementStatus(live.public_status).tone} className="ticket-badge">
             {announcementStatus(live.public_status).label}
-          </span>
+          </Badge>
           <p className="ticket-description">{live.body}</p>
           {live.workaround && <p>What to do: {live.workaround}</p>}
           <p className="muted">

@@ -1,6 +1,7 @@
 import { addTicketTag, removeTicketTag } from '@/app/app/tickets/organize-actions';
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { ActionForm } from '@/components/ui/action-form';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 import { TAG_HINT, TICKET_TAG_LENGTH, TICKET_TAG_LIMIT } from './tags';
@@ -53,9 +54,8 @@ export function TicketTags({
           <input type="hidden" name="ticketId" value={ticketId} />
           <div className="field">
             <label htmlFor={`ticket-tag-${ticketId}`}>Add a tag</label>
-            <input
+            <Input
               id={`ticket-tag-${ticketId}`}
-              className="input"
               name="tag"
               required
               maxLength={TICKET_TAG_LENGTH}
@@ -72,7 +72,7 @@ export function TicketTags({
               {TAG_HINT}
             </small>
           </div>
-          <SubmitButton className="button button-secondary" pendingLabel="Adding…">
+          <SubmitButton variant="secondary" pendingLabel="Adding…">
             Add tag
           </SubmitButton>
         </ActionForm>

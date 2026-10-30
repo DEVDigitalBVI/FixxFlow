@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+
 import { portableFilename } from './portable';
 import { automationPath } from './ui-model';
 
@@ -10,9 +13,9 @@ export function ExportAutomationButton({ id, name }: { id: string; name: string 
     [error, setError] = useState('');
   return (
     <div className="stack">
-      <button
+      <Button
         type="button"
-        className="button button-secondary"
+        variant="secondary"
         disabled={pending}
         onClick={async () => {
           setPending(true);
@@ -56,11 +59,11 @@ export function ExportAutomationButton({ id, name }: { id: string; name: string 
       >
         {pending ? 'Exporting…' : 'Export'}
         <span className="sr-only"> {name}</span>
-      </button>
+      </Button>
       {error && (
-        <p role="alert" className="alert alert-error">
+        <Alert role="alert" as="p" tone="error">
           {error}
-        </p>
+        </Alert>
       )}
     </div>
   );

@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useId, useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import { LookupSelect } from '@/features/lookups/lookup-select';
@@ -53,9 +55,9 @@ export function ChecklistEditor({
       {saved ? (
         <div className="stack">
           <p>Step added to the checklist.</p>
-          <button
+          <Button
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             onClick={() => {
               setCurrentStepId(crypto.randomUUID());
               setRevision(0);
@@ -63,15 +65,14 @@ export function ChecklistEditor({
             }}
           >
             Add another step
-          </button>
+          </Button>
         </div>
       ) : (
         <>
           <label className="field" htmlFor={`${id}-title`}>
             Step title *
-            <input
+            <Input
               id={`${id}-title`}
-              className="input"
               name="title"
               required
               minLength={3}
@@ -81,9 +82,8 @@ export function ChecklistEditor({
           </label>
           <label className="field" htmlFor={`${id}-instructions`}>
             Instructions
-            <textarea
+            <Textarea
               id={`${id}-instructions`}
-              className="input"
               name="instructions"
               rows={3}
               maxLength={4000}
@@ -104,7 +104,7 @@ export function ChecklistEditor({
             label="Step deadline"
             hint="Optional. Applies to this response step only."
           />
-          <SubmitButton className="button button-primary" pendingLabel="Saving step…">
+          <SubmitButton variant="primary" pendingLabel="Saving step…">
             {draft ? 'Save step' : 'Add step'}
           </SubmitButton>
         </>
@@ -112,22 +112,22 @@ export function ChecklistEditor({
       {failed && (
         <>
           <a
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={`/app/tickets/${ticketId}#response-checklist`}
             target="_blank"
             rel="noopener noreferrer"
           >
             Review latest checklist (opens in a new tab)
           </a>
-          <button
+          <Button
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             onClick={() => {
               if (confirmDiscardChanges(true)) window.location.reload();
             }}
           >
             Reload latest checklist
-          </button>
+          </Button>
         </>
       )}
     </ActionForm>
@@ -158,7 +158,7 @@ export function ChecklistStepAction({
       <input type="hidden" name="stepId" value={step.id} />
       <input type="hidden" name="revision" value={step.revision} />
       <input type="hidden" name="operation" value={operation} />
-      <SubmitButton className="button button-secondary" pendingLabel="Saving…" aria-label={label}>
+      <SubmitButton variant="secondary" pendingLabel="Saving…" aria-label={label}>
         {operation === 'acknowledge'
           ? 'Acknowledge step'
           : operation === 'complete'

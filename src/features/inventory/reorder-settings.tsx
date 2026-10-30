@@ -2,6 +2,7 @@
 
 import { setReorderThreshold } from '@/app/app/inventory/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import type { InventoryItem } from '@/types/inventory-database';
 
@@ -14,8 +15,7 @@ export function ReorderSettings({ item }: { item: InventoryItem }) {
         <input type="hidden" name="expected" value={item.reorder_threshold ?? ''} />
         <label>
           Reorder when available stock reaches
-          <input
-            className="input"
+          <Input
             type="number"
             name="threshold"
             min="0"
@@ -28,7 +28,7 @@ export function ReorderSettings({ item }: { item: InventoryItem }) {
           Available means in storage minus reserved. Leave blank to turn alerts off. Inventory
           managers are notified once while stock stays low; alerts reset after it recovers.
         </p>
-        <SubmitButton className="button button-secondary">Save threshold</SubmitButton>
+        <SubmitButton variant="secondary">Save threshold</SubmitButton>
       </ActionForm>
     </details>
   );

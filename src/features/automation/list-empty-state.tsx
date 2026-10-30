@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 
 import { automationPath } from './ui-model';
 
@@ -18,7 +20,7 @@ export function AutomationListEmptyState({
       <div className="automation-list-no-results">
         <h3>{title}</h3>
         <p>{description}</p>
-        <Link className="button button-secondary" href={automationPath}>
+        <Link className={buttonVariants({ variant: 'secondary' })} href={automationPath}>
           Clear filters
         </Link>
       </div>
@@ -32,7 +34,7 @@ export function AutomationListEmptyState({
         </span>
         <h3>{title}</h3>
         <p>{description}</p>
-        <Link className="button button-primary" href={`${automationPath}/new`}>
+        <Link className={buttonVariants({ variant: 'primary' })} href={`${automationPath}/new`}>
           Create Automation
         </Link>
         <p className="automation-list-welcome-note">
@@ -42,7 +44,7 @@ export function AutomationListEmptyState({
       </div>
       <section className="automation-workflow-example" aria-labelledby="automation-example-heading">
         <header>
-          <span className="badge badge-inactive">Example workflow</span>
+          <Badge tone="muted">Example workflow</Badge>
           <h3 id="automation-example-heading">A head start on urgent tickets</h3>
         </header>
         <ol>

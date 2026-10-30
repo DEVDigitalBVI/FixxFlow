@@ -2,6 +2,8 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 
+import { Button } from '@/components/ui/button';
+
 export function BulkActions({ formId, children }: { formId: string; children: ReactNode }) {
   const [count, setCount] = useState(0);
   useEffect(() => {
@@ -18,8 +20,8 @@ export function BulkActions({ formId, children }: { formId: string; children: Re
         <strong role="status">
           {count} {count === 1 ? 'ticket' : 'tickets'} selected
         </strong>
-        <button
-          className="button button-quiet"
+        <Button
+          variant="quiet"
           type="button"
           onClick={() => {
             const form = document.getElementById(formId);
@@ -32,7 +34,7 @@ export function BulkActions({ formId, children }: { formId: string; children: Re
           }}
         >
           Clear selection
-        </button>
+        </Button>
       </div>
       {children}
     </section>

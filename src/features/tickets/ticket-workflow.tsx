@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
+import { Button } from '@/components/ui/button';
 import type { TicketStatus } from '@/types/database';
 
 const workflowSteps = [
@@ -248,16 +249,16 @@ export function TicketWorkflow({
         </p>
         <div className="ticket-wizard-navigation">
           {step > 0 ? (
-            <button type="button" className="button button-secondary" onClick={() => go(step - 1)}>
+            <Button type="button" variant="secondary" onClick={() => go(step - 1)}>
               Back: {steps[step - 1].title}
-            </button>
+            </Button>
           ) : (
             <span />
           )}
           {step < steps.length - 1 ? (
-            <button type="button" className="button button-secondary" onClick={() => go(step + 1)}>
+            <Button type="button" variant="secondary" onClick={() => go(step + 1)}>
               Next: {steps[step + 1].title}
-            </button>
+            </Button>
           ) : (
             <p className="muted">
               {status === 'resolved' || status === 'closed'

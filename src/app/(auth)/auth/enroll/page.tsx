@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
+import { Button } from '@/components/ui/button';
 import { RequiredEnrollment } from '@/features/auth/required-enrollment';
 import { readAccountPolicy } from '@/features/auth/workspace-policy';
 import { createClient } from '@/lib/supabase/server';
@@ -28,7 +29,7 @@ export default async function EnrollPage() {
       </p>
       <RequiredEnrollment />
       <form action={signOut}>
-        <button className="button button-secondary">Sign out</button>
+        <Button variant="secondary">Sign out</Button>
       </form>
     </section>
   );

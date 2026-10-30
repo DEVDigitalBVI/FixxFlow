@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/input';
 import { useUnsavedChanges } from '@/components/ui/unsaved-changes';
 import { Timestamp } from '@/features/timezones/provider';
 import { createClient } from '@/lib/supabase/client';
@@ -103,10 +105,10 @@ export function EditableChatMessage({
           <label htmlFor={`edit-${message.id}`}>
             Edit {message.kind === 'internal_note' ? 'internal note · IT only' : 'message'}
           </label>
-          <textarea
+          <Textarea
             ref={editor}
             id={`edit-${message.id}`}
-            className="input textarea"
+            fieldSize="tall"
             value={edit.body}
             maxLength={20000}
             required
@@ -143,14 +145,11 @@ export function EditableChatMessage({
             </p>
           )}
           <div className="chat-message-edit-actions">
-            <button
-              className="button button-primary"
-              disabled={pending || !canEdit || !edit.body.trim()}
-            >
+            <Button variant="primary" disabled={pending || !canEdit || !edit.body.trim()}>
               {pending ? 'Saving…' : 'Save changes'}
-            </button>
-            <button
-              className="button button-secondary"
+            </Button>
+            <Button
+              variant="secondary"
               type="button"
               disabled={pending}
               onClick={() => {
@@ -160,7 +159,7 @@ export function EditableChatMessage({
               }}
             >
               Cancel editing
-            </button>
+            </Button>
           </div>
         </form>
       ) : (
@@ -176,9 +175,10 @@ export function EditableChatMessage({
               </small>
             )}
             {canEdit && (
-              <button
+              <Button
                 ref={button}
-                className="button button-quiet chat-edit-button"
+                variant="quiet"
+                className="chat-edit-button"
                 type="button"
                 aria-label={`Edit your ${message.kind === 'internal_note' ? 'internal note' : 'message'} from ${message.created_at}`}
                 onClick={() => {
@@ -187,7 +187,7 @@ export function EditableChatMessage({
                 }}
               >
                 Edit
-              </button>
+              </Button>
             )}
           </div>
         </>

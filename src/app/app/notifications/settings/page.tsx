@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { NotificationPreferencesForm } from '@/features/notifications/preferences-form';
 import { defaultNotificationPreferences } from '@/features/notifications/preferences-model';
@@ -21,16 +23,16 @@ export default async function NotificationSettingsPage() {
         title="Notification preferences"
         description="Choose when email updates reach you."
         actions={
-          <Link className="button button-secondary" href="/app/notifications">
+          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/notifications">
             Back to notifications
           </Link>
         }
       />
       <section className="settings-card">
         {error ? (
-          <div className="alert alert-error" role="alert">
+          <Alert tone="error" role="alert">
             Preferences couldn’t load. <Link href="/app/notifications/settings">Try again</Link>
-          </div>
+          </Alert>
         ) : (
           <NotificationPreferencesForm
             initial={

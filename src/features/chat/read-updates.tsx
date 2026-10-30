@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
 import { useRouteRefresh } from '@/lib/realtime/use-route-refresh';
 import { createClient } from '@/lib/supabase/client';
 
@@ -64,13 +65,9 @@ export function ChatReadUpdates({
   return failed ? (
     <p className="chat-read-error" role="status">
       Unread updates could not be cleared.{' '}
-      <button
-        type="button"
-        className="button button-quiet"
-        onClick={() => setAttempt((value) => value + 1)}
-      >
+      <Button type="button" variant="quiet" onClick={() => setAttempt((value) => value + 1)}>
         Retry
-      </button>
+      </Button>
     </p>
   ) : null;
 }

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 import { requestPasswordReset } from '../actions';
@@ -13,27 +15,20 @@ export default async function ForgotPasswordPage({ searchParams }: Props) {
       <p className="auth-intro">We’ll send a secure reset link to your work email.</p>
       <form action={requestPasswordReset} className="stack">
         {message.error && (
-          <div className="alert alert-error" role="alert">
+          <Alert tone="error" role="alert">
             {message.error}
-          </div>
+          </Alert>
         )}
         {message.success && (
-          <div className="alert alert-success" role="status">
+          <Alert tone="success" role="status">
             {message.success}
-          </div>
+          </Alert>
         )}
         <div className="field">
           <label htmlFor="email">Work email</label>
-          <input
-            className="input"
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
+          <Input id="email" name="email" type="email" autoComplete="email" required />
         </div>
-        <SubmitButton className="button button-primary" pendingLabel="Sending link…">
+        <SubmitButton variant="primary" pendingLabel="Sending link…">
           Send reset link
         </SubmitButton>
         <Link href="/login">Return to sign in</Link>

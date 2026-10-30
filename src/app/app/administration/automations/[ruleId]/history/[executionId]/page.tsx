@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
 import { executionError, executionRecord } from '@/features/automation/execution-records';
 import { AutomationHeader } from '@/features/automation/page-parts';
 import {
@@ -29,7 +31,7 @@ export default async function ExecutionPage({
         description={`Executed version ${execution.ruleVersion} · ${executionLabel(execution.status, execution.error?.code ?? null)}`}
       />
       <Link
-        className="button button-quiet page-back-link"
+        className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
         href={`${automationPath}/${ruleId}/history`}
       >
         Back to history
@@ -51,7 +53,11 @@ export default async function ExecutionPage({
           The conditions and actions below belong to version {execution.ruleVersion}, even if the
           automation has since changed.
         </p>
-        {execution.error && <p className="alert alert-info">{execution.error.message}</p>}
+        {execution.error && (
+          <Alert as="p" tone="info">
+            {execution.error.message}
+          </Alert>
+        )}
       </section>
       <section className="settings-card stack">
         <h2>Conditions</h2>

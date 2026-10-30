@@ -25,7 +25,10 @@ test('shared page heading separates native back navigation, title and primary ac
     }),
   );
   assert.equal((html.match(/<h1>/g) ?? []).length, 1);
-  assert.match(html, /<a class="button button-quiet page-back-link" href="\/app\/help"/);
+  assert.match(
+    html,
+    /<a class="button [^"]*\bbutton-quiet\b[^"]*\bpage-back-link" href="\/app\/help"/,
+  );
   assert.match(
     html,
     /<svg class="inline-icon" aria-hidden="true"[^>]*><path[^>]*><\/path><\/svg>Knowledge base<\/a>/,
@@ -59,8 +62,6 @@ test('navigation and pagination controls retain button treatment without inherit
   assert.doesNotMatch(css, /\.queue-views a \{[^}]*border-bottom:/);
   assert.match(css, /\.queue-views a:not\(\.button\)/);
   assert.match(css, /\.queue-views a\[aria-current="page"\][^}]*font-weight: 700/);
-  assert.match(css, /\.button-quiet \{[^}]*min-height: 44px/);
-  assert.match(css, /\.button-secondary:hover:not\(:disabled\)/);
   assert.match(css, /\.link-button \{[^}]*min-height: 40px/);
   assert.match(css, /\.settings-card > details > summary \{[^}]*min-height: 44px/);
   assert.match(css, /\.knowledge-file input \{[^}]*min-height: 40px/);

@@ -1,5 +1,8 @@
 import { redirect } from 'next/navigation';
 
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { SignupProgress } from '@/components/ui/signup-progress';
 import { TimezoneSelect } from '@/features/timezones/select';
 import { createClient } from '@/lib/supabase/server';
@@ -34,14 +37,13 @@ export default async function UnassignedPage({ searchParams }: Props) {
       </p>
       <form action={bootstrapOrganization} className="stack">
         {message.error && (
-          <div className="alert alert-error" role="alert">
+          <Alert tone="error" role="alert">
             {message.error}
-          </div>
+          </Alert>
         )}
         <div className="field">
           <label htmlFor="organizationName">Organization name</label>
-          <input
-            className="input"
+          <Input
             id="organizationName"
             name="organizationName"
             autoComplete="organization"
@@ -72,8 +74,7 @@ export default async function UnassignedPage({ searchParams }: Props) {
         </div>
         <div className="field">
           <label htmlFor="administratorName">Administrator name</label>
-          <input
-            className="input"
+          <Input
             id="administratorName"
             name="administratorName"
             autoComplete="name"
@@ -94,9 +95,9 @@ export default async function UnassignedPage({ searchParams }: Props) {
             <li>Starter ticket categories</li>
           </ul>
         </div>
-        <button className="button button-primary" type="submit">
+        <Button variant="primary" type="submit">
           Create organization
-        </button>
+        </Button>
       </form>
       <form action={signOut} className="auth-secondary-action">
         <button className="link-button" type="submit">

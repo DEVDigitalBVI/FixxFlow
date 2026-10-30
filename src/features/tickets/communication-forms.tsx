@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useId, useState, type ReactNode } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import { LookupSelect } from '@/features/lookups/lookup-select';
@@ -59,8 +62,8 @@ export function CommunicationForm({
       <input type="hidden" name="operation" value={operation} />
       <input type="hidden" name="revision" value={liveRevision ? revision : version} />
       {saved && createOnce ? (
-        <button
-          className="button button-secondary"
+        <Button
+          variant="secondary"
           type="button"
           onClick={() => {
             setTarget(crypto.randomUUID());
@@ -69,12 +72,12 @@ export function CommunicationForm({
           }}
         >
           {operation === 'save_group' ? 'Create another group' : 'Prepare another update'}
-        </button>
+        </Button>
       ) : (
         <>
           {children}
           <SubmitButton
-            className={`button ${operation === 'publish' ? 'button-primary' : 'button-secondary'}`}
+            variant={operation === 'publish' ? 'primary' : 'secondary'}
             pendingLabel={operation === 'publish' ? 'Approving and queuing…' : 'Saving…'}
           >
             {label}
@@ -84,22 +87,22 @@ export function CommunicationForm({
       {failed && (
         <div className="stack">
           <a
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={`/app/tickets/${ticketId}#communication-plan`}
             target="_blank"
             rel="noopener noreferrer"
           >
             Review latest plan (opens in a new tab)
           </a>
-          <button
-            className="button button-secondary"
+          <Button
+            variant="secondary"
             type="button"
             onClick={() => {
               if (confirmDiscardChanges(true)) window.location.reload();
             }}
           >
             Reload latest plan
-          </button>
+          </Button>
         </div>
       )}
     </ActionForm>
@@ -161,8 +164,7 @@ export function GroupNameForm({
     >
       <label className="field" htmlFor={id}>
         Group name *
-        <input
-          className="input"
+        <Input
           id={id}
           name="name"
           required
@@ -221,8 +223,7 @@ export function DraftEditor({
       </p>
       <label className="field" htmlFor={`${id}-title`}>
         Update title *
-        <input
-          className="input"
+        <Input
           id={`${id}-title`}
           name="title"
           required
@@ -233,8 +234,7 @@ export function DraftEditor({
       </label>
       <label className="field" htmlFor={`${id}-body`}>
         Stakeholder message *
-        <textarea
-          className="input"
+        <Textarea
           id={`${id}-body`}
           name="body"
           required
@@ -249,8 +249,7 @@ export function DraftEditor({
         <p className="muted">Choose 1–10 groups, up to 500 distinct active recipients.</p>
         {groups.map((group) => (
           <label className="communication-choice" key={group.id}>
-            <input
-              type="checkbox"
+            <Checkbox
               name="groupId"
               value={group.id}
               defaultChecked={draft?.group_ids.includes(group.id)}

@@ -87,9 +87,9 @@ test('inventory groups count, filters, complete asset identity and named Open co
   assert.match(html, /aria-labelledby="inventory-heading"/);
   assert.match(
     html,
-    /class="button button-secondary" href="\/app\/assets\/asset-a">Open<span class="sr-only"> Reception laptop/,
+    /class="button [^"]*\bbutton-secondary\b[^"]*" href="\/app\/assets\/asset-a">Open<span class="sr-only"> Reception laptop/,
   );
-  assert.match(html, /table responsive-table table-nowrap/);
+  assert.match(html, /<table[^>]*class="table [^"]*responsive-table table-nowrap\b/);
   assert.doesNotMatch(html, /aria-label="Asset pages"/);
 });
 test('lifecycle presentation always includes the authoritative written label', () => {
@@ -190,7 +190,9 @@ test('asset editor groups all existing fields and preserves drafts and focused e
     assert.ok(html.includes(`name="${name}"`));
   assert.match(html, /value="Reception laptop"/);
   assert.match(html, /value="012345"/);
-  assert.match(html, /tabindex="-1" class="alert alert-error" role="alert"/);
+  const feedback = html.match(/<div[^>]*class="alert [^"]*alert-error[^"]*"[^>]*>/)[0];
+  assert.match(feedback, /tabindex="-1"/);
+  assert.match(feedback, /role="alert"/);
   assert.match(html, /Save asset/);
   assert.doesNotMatch(html, /Retirement preserves/);
   effects.forEach((fn) => fn());

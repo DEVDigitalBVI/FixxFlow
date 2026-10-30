@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { companyCallback, companyProviders } from '@/features/auth/company-sign-in';
 import { CompanySignInButton } from '@/features/auth/company-sign-in-button';
@@ -28,33 +30,25 @@ export default async function LoginPage({ searchParams }: Props) {
       )}
       <form action={signIn} className="stack">
         {message.error && (
-          <div className="alert alert-error" role="alert">
+          <Alert tone="error" role="alert">
             {message.error}
-          </div>
+          </Alert>
         )}
         {message.success && (
-          <div className="alert alert-success" role="status">
+          <Alert tone="success" role="status">
             {message.success}
-          </div>
+          </Alert>
         )}
         <div className="field">
           <label htmlFor="email">Work email</label>
-          <input
-            className="input"
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
+          <Input id="email" name="email" type="email" autoComplete="email" required />
         </div>
         <div className="field">
           <div className="form-row">
             <label htmlFor="password">Password</label>
             <Link href="/forgot-password">Forgot password?</Link>
           </div>
-          <input
-            className="input"
+          <Input
             id="password"
             name="password"
             type="password"
@@ -62,7 +56,7 @@ export default async function LoginPage({ searchParams }: Props) {
             required
           />
         </div>
-        <SubmitButton className="button button-primary" pendingLabel="Signing in…">
+        <SubmitButton variant="primary" pendingLabel="Signing in…">
           Sign in
         </SubmitButton>
       </form>

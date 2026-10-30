@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
+import { buttonVariants } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { attachmentTypes, uploadAndRegister, validAttachment } from '@/lib/uploads';
 
@@ -81,7 +82,7 @@ export function AttachmentUpload({
 
   return (
     <div className="attachment-upload">
-      <label className="button button-secondary">
+      <label className={buttonVariants({ variant: 'secondary' })}>
         <input
           type="file"
           accept={attachmentTypes.join(',')}

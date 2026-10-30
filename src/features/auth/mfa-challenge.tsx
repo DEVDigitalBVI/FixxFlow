@@ -3,6 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, useTransition } from 'react';
 
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { recordCompletedLogin } from '@/features/product-analytics/actions';
 import { formString } from '@/lib/form-data';
 import { createClient } from '@/lib/supabase/client';
@@ -112,15 +115,14 @@ export function MfaChallenge({
   return (
     <form action={verify} className="stack">
       {(error || loadError) && (
-        <div ref={errorRef} tabIndex={-1} id="mfa-error" className="alert alert-error" role="alert">
+        <Alert ref={errorRef} tabIndex={-1} id="mfa-error" tone="error" role="alert">
           {error || loadError}
-        </div>
+        </Alert>
       )}
       {loading && <p role="status">Loading authenticators…</p>}
       <div className="field">
         <label htmlFor="factorId">Authenticator</label>
-        <select
-          className="input"
+        <NativeSelect
           id="factorId"
           name="factorId"
           value={factorId}
@@ -139,15 +141,14 @@ export function MfaChallenge({
               {factor.friendly_name || `Authenticator ${index + 1}`}
             </option>
           ))}
-        </select>
+        </NativeSelect>
         <p id="mfa-factor-hint" className="muted">
           Choose the authenticator you have access to, then enter its code.
         </p>
       </div>
       <div className="field">
         <label htmlFor="code">Verification code</label>
-        <input
-          className="input"
+        <Input
           id="code"
           name="code"
           value={code}
@@ -161,22 +162,17 @@ export function MfaChallenge({
           aria-describedby={error ? 'mfa-error' : undefined}
         />
       </div>
-      <button
-        className="button button-primary"
+      <Button
+        variant="primary"
         type="submit"
         disabled={loading || !!loadError || !factorId || isPending}
         aria-busy={isPending}
       >
         {isPending ? 'Verifying…' : 'Verify and continue'}
-      </button>
-      <button
-        className="button button-secondary"
-        type="button"
-        disabled={loading || isPending}
-        onClick={reload}
-      >
+      </Button>
+      <Button variant="secondary" type="button" disabled={loading || isPending} onClick={reload}>
         Reload authenticators
-      </button>
+      </Button>
     </form>
   );
 }

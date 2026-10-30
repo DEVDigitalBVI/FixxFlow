@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
 
 import type { LookupPage, LookupResource } from './model';
@@ -146,10 +148,9 @@ export function LookupSelect({
           <label className="sr-only" htmlFor={`${id}-search`}>
             Search {label.toLowerCase()}
           </label>
-          <input
+          <Input
             ref={searchInput}
             id={`${id}-search`}
-            className="input"
             type="search"
             value={query}
             maxLength={SEARCH_LIMIT}
@@ -176,10 +177,9 @@ export function LookupSelect({
           </small>
         </>
       )}
-      <select
+      <NativeSelect
         ref={selectInput}
         id={id}
-        className="input"
         name={name}
         value={selected}
         required={required}
@@ -215,7 +215,7 @@ export function LookupSelect({
             {!row.active ? ' (inactive)' : ''}
           </option>
         ))}
-      </select>
+      </NativeSelect>
       {guardSave &&
         (guardSave !== 'selection' || required || Boolean(selected)) &&
         (busy || state.error || unavailable) && (
@@ -227,9 +227,9 @@ export function LookupSelect({
       {compact && state.error && (
         <div className="lookup-compact-error" role="alert">
           <span>Choices could not load.</span>
-          <button
+          <Button
             type="button"
-            className="button button-quiet"
+            variant="quiet"
             onClick={() => {
               immediate.current = true;
               focusPicker();
@@ -238,15 +238,15 @@ export function LookupSelect({
             }}
           >
             Try again
-          </button>
+          </Button>
         </div>
       )}
       {!compact && (state.error || showSearch || cursors.length > 1 || state.data.next) && (
         <div className="lookup-actions">
           {state.error && (
-            <button
+            <Button
               type="button"
-              className="button button-secondary"
+              variant="secondary"
               onClick={() => {
                 immediate.current = true;
                 focusPicker();
@@ -255,25 +255,25 @@ export function LookupSelect({
               }}
             >
               Try again
-            </button>
+            </Button>
           )}
           {query && (
-            <button
+            <Button
               type="button"
-              className="button button-quiet"
+              variant="quiet"
               onClick={() => {
                 search('');
                 searchInput.current?.focus();
               }}
             >
               Clear search
-            </button>
+            </Button>
           )}
           {(cursors.length > 1 || state.data.next) && (
             <>
-              <button
+              <Button
                 type="button"
-                className="button button-quiet"
+                variant="quiet"
                 disabled={busy || cursors.length === 1}
                 onClick={() => {
                   setState((previous) => ({ ...previous, pending: true }));
@@ -281,10 +281,10 @@ export function LookupSelect({
                 }}
               >
                 Previous choices
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="button button-quiet"
+                variant="quiet"
                 disabled={busy || state.error || !state.data.next}
                 onClick={() => {
                   setState((previous) => ({ ...previous, pending: true }));
@@ -292,7 +292,7 @@ export function LookupSelect({
                 }}
               >
                 More choices
-              </button>
+              </Button>
             </>
           )}
         </div>

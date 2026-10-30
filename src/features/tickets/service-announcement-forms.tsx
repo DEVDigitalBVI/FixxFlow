@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useId, useState, type ReactNode } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Input, NativeSelect, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 import { announcementStatuses, type AnnouncementDetails } from './announcement-status';
@@ -97,8 +98,7 @@ export function AnnouncementEditor({
     >
       <label className="field" htmlFor={`${id}-title`}>
         Title (required)
-        <input
-          className="input"
+        <Input
           id={`${id}-title`}
           name="title"
           required
@@ -109,8 +109,7 @@ export function AnnouncementEditor({
       </label>
       <label className="field" htmlFor={`${id}-status`}>
         Status
-        <select
-          className="input"
+        <NativeSelect
           id={`${id}-status`}
           name="publicStatus"
           defaultValue={details?.public_status ?? 'investigating'}
@@ -120,12 +119,11 @@ export function AnnouncementEditor({
               {status.label}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       <label className="field" htmlFor={`${id}-body`}>
         Message (required)
-        <textarea
-          className="input"
+        <Textarea
           id={`${id}-body`}
           name="body"
           required
@@ -140,8 +138,7 @@ export function AnnouncementEditor({
         <div className="stack">
           <label className="field" htmlFor={`${id}-workaround`}>
             What employees should do
-            <textarea
-              className="input"
+            <Textarea
               id={`${id}-workaround`}
               name="workaround"
               maxLength={1000}

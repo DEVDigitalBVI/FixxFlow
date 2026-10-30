@@ -3,6 +3,8 @@
 import { useId, useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Radio } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import type { ActionResult } from '@/lib/action-result';
 
@@ -34,8 +36,7 @@ export function ResolutionRating({
         <div className="rating-options">
           {ratingScores.map((item) => (
             <label key={item.score} className="rating-option">
-              <input
-                type="radio"
+              <Radio
                 name="score"
                 value={item.score}
                 required
@@ -52,10 +53,9 @@ export function ResolutionRating({
         <label htmlFor={`${id}-comment`}>
           Anything else IT should know? <span className="muted">Optional</span>
         </label>
-        <textarea
+        <Textarea
           id={`${id}-comment`}
           name="comment"
-          className="input"
           rows={3}
           maxLength={RATING_COMMENT_LIMIT}
           defaultValue={rating?.comment ?? ''}
@@ -65,7 +65,7 @@ export function ResolutionRating({
           IT staff can see your rating and comment. Up to 1,000 characters.
         </p>
       </div>
-      <SubmitButton className="button button-primary" pendingLabel="Sending rating…">
+      <SubmitButton variant="primary" pendingLabel="Sending rating…">
         {rating ? 'Update rating' : 'Send rating'}
       </SubmitButton>
     </ActionForm>

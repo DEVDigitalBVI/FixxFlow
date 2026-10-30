@@ -3,6 +3,7 @@
 import { createContext, use, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { FormProgressContext } from '@/components/ui/form-progress';
 import type { ActionResult } from '@/lib/action-result';
 import { attachmentTypes, validAttachment } from '@/lib/uploads';
@@ -109,7 +110,9 @@ export function InitialAttachmentsField({ staff = false }: { staff?: boolean }) 
         Up to {MAX_INITIAL_FILES} files, 10 MB each: images, PDF, text, Word or Excel. Files are
         visible to {staff ? 'the requester and IT staff' : 'you and IT support'}.
       </p>
-      <label className="button button-secondary initial-attachments-pick">
+      <label
+        className={buttonVariants({ variant: 'secondary', className: 'initial-attachments-pick' })}
+      >
         <input
           ref={inputRef}
           type="file"
@@ -142,9 +145,9 @@ export function InitialAttachmentsField({ staff = false }: { staff?: boolean }) 
               <span>
                 {file.name} · {Math.ceil(file.size / 1024)} KB
               </span>
-              <button
+              <Button
                 type="button"
-                className="button button-quiet"
+                variant="quiet"
                 onClick={() => {
                   setFiles(files.filter((_, i) => i !== index));
                   setMessage('');
@@ -152,7 +155,7 @@ export function InitialAttachmentsField({ staff = false }: { staff?: boolean }) 
                 }}
               >
                 Remove<span className="sr-only"> {file.name}</span>
-              </button>
+              </Button>
             </li>
           ))}
         </ul>

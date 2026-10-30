@@ -5,6 +5,8 @@ import { useState } from 'react';
 
 import { saveIncident } from '@/app/app/tickets/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 
@@ -45,29 +47,29 @@ export function IncidentEditor({
       <input type="hidden" name="ticketId" value={ticketId} />
       <input type="hidden" name="revision" value={revision} />
       {(conflicted || ticketRevision !== revision) && (
-        <div className="alert" role="status">
+        <Alert role="status">
           <p>This ticket has changed. Your incident draft is preserved.</p>
           <a
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={`/app/tickets/${ticketId}#incident-summary`}
             target="_blank"
             rel="noopener noreferrer"
           >
             Review saved incident (opens in a new tab)
           </a>
-          <button
-            className="button button-secondary"
+          <Button
+            variant="secondary"
             type="button"
             onClick={() => {
               if (confirmDiscardChanges(true)) window.location.reload();
             }}
           >
             Reload latest details
-          </button>
-        </div>
+          </Button>
+        </Alert>
       )}
       <IncidentFields incident={draft} ownerId={ownerId} />
-      <SubmitButton className="button button-primary" pendingLabel="Saving incident…">
+      <SubmitButton variant="primary" pendingLabel="Saving incident…">
         {draft ? 'Save incident details' : 'Declare incident'}
       </SubmitButton>
     </ActionForm>

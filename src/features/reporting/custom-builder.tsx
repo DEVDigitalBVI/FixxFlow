@@ -2,6 +2,10 @@
 
 import { useState } from 'react';
 
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Checkbox, Radio } from '@/components/ui/checkbox';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 
 import {
@@ -90,8 +94,7 @@ function CustomReportBuilderForm({
         <div className="report-type-options">
           {Object.entries(reportTypes).map(([key, item]) => (
             <label key={key} className="choice-card">
-              <input
-                type="radio"
+              <Radio
                 name="reportType"
                 value={key}
                 checked={type === key}
@@ -116,33 +119,21 @@ function CustomReportBuilderForm({
           <div className="report-field-grid">
             <label className="field">
               Start date
-              <input
-                className="input"
-                type="date"
-                name="startDate"
-                defaultValue={definition.startDate}
-                required
-              />
+              <Input type="date" name="startDate" defaultValue={definition.startDate} required />
             </label>
             <label className="field">
               End date
-              <input
-                className="input"
-                type="date"
-                name="endDate"
-                defaultValue={definition.endDate}
-                required
-              />
+              <Input type="date" name="endDate" defaultValue={definition.endDate} required />
             </label>
             <label className="field">
               Group dates by
-              <select className="input" name="interval" defaultValue={definition.interval}>
+              <NativeSelect name="interval" defaultValue={definition.interval}>
                 {Object.entries(intervalLabels).map(([key, label]) => (
                   <option value={key} key={key}>
                     {label}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </label>
           </div>
           <p className="muted">Up to 366 days. Dates follow the workspace timezone.</p>
@@ -152,8 +143,7 @@ function CustomReportBuilderForm({
           <div className="report-measure-options">
             {metricsFor(type).map((key) => (
               <label className="check-field" key={key}>
-                <input
-                  type="checkbox"
+                <Checkbox
                   name="metrics"
                   value={key}
                   checked={metrics.includes(key)}
@@ -165,8 +155,7 @@ function CustomReportBuilderForm({
           </div>
           <label className="field">
             Group results by
-            <select
-              className="input"
+            <NativeSelect
               name="groupBy"
               value={group}
               onChange={(event) => setGroup(event.currentTarget.value as ReportGroup)}
@@ -178,7 +167,7 @@ function CustomReportBuilderForm({
                     {label}
                   </option>
                 ))}
-            </select>
+            </NativeSelect>
           </label>
         </fieldset>
       </div>
@@ -193,8 +182,7 @@ function CustomReportBuilderForm({
             <div className="report-check-grid">
               {Object.entries(ticketStatuses).map(([key, item]) => (
                 <label className="check-field" key={key}>
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     name="statuses"
                     value={key}
                     defaultChecked={definition.filters.statuses.includes(key as never)}
@@ -209,8 +197,7 @@ function CustomReportBuilderForm({
             <div className="report-check-grid">
               {Object.entries(ticketPriorities).map(([key, item]) => (
                 <label className="check-field" key={key}>
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     name="priorities"
                     value={key}
                     defaultChecked={definition.filters.priorities.includes(key as never)}
@@ -228,8 +215,7 @@ function CustomReportBuilderForm({
                 {references[filter.source].length ? (
                   references[filter.source].map((item) => (
                     <label className="check-field" key={item.id}>
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         name={filter.key}
                         value={item.id}
                         defaultChecked={definition.filters[filter.key].includes(item.id)}
@@ -246,9 +232,9 @@ function CustomReportBuilderForm({
         </div>
       </details>
       {!metrics.length && (
-        <p className="alert alert-error" role="alert">
+        <Alert as="p" tone="error" role="alert">
           Choose at least one measure.
-        </p>
+        </Alert>
       )}
       <p className="muted" role="status">
         {changed
@@ -258,10 +244,10 @@ function CustomReportBuilderForm({
             : 'Run report to see results.'}
       </p>
       <div className="custom-report-actions">
-        <button className="button button-primary" type="submit" disabled={!metrics.length}>
+        <Button variant="primary" type="submit" disabled={!metrics.length}>
           Run report
-        </button>
-        <a className="button button-quiet" href="/app/reports/custom">
+        </Button>
+        <a className={buttonVariants({ variant: 'quiet' })} href="/app/reports/custom">
           Reset
         </a>
       </div>

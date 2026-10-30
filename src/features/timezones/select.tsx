@@ -1,3 +1,5 @@
+import { NativeSelect } from '@/components/ui/input';
+
 export function TimezoneSelect({
   value,
   personal = false,
@@ -13,14 +15,14 @@ export function TimezoneSelect({
   return (
     <label className="field">
       {label ?? (personal ? 'Display timezone' : 'Organization timezone')}
-      <select className="input" name="timezone" defaultValue={value} required={!personal}>
+      <NativeSelect name="timezone" defaultValue={value} required={!personal}>
         {personal && <option value="">Follow my device</option>}
         {zones.map((zone) => (
           <option key={zone} value={zone}>
             {zone.replaceAll('_', ' ')}
           </option>
         ))}
-      </select>
+      </NativeSelect>
     </label>
   );
 }

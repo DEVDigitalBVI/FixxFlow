@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { buttonVariants } from '@/components/ui/button';
 import { SignupProgress } from '@/components/ui/signup-progress';
 
 type Props = { searchParams: Promise<{ email?: string }> };
@@ -28,7 +29,7 @@ export default async function CheckEmailPage({ searchParams }: Props) {
           After verification, you’ll name your organization and become its first administrator.
         </span>
       </div>
-      <Link className="button button-secondary" href="/login">
+      <Link className={buttonVariants({ variant: 'secondary' })} href="/login">
         Return to sign in
       </Link>
     </section>

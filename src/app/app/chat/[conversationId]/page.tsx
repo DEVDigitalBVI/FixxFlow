@@ -3,7 +3,10 @@ import { notFound } from 'next/navigation';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
 import { Avatar } from '@/components/ui/avatar';
+import { buttonVariants } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { ChatCenter } from '@/features/chat/chat-center';
 import { ChatInbox } from '@/features/chat/chat-inbox';
@@ -119,7 +122,10 @@ export default async function ConversationPage({
     >
       <section className="chat-active" aria-labelledby="chat-active-title">
         <header className="chat-active-header">
-          <Link className="button button-quiet chat-back" href={chatInboxHref(view)}>
+          <Link
+            className={buttonVariants({ variant: 'quiet', className: 'chat-back' })}
+            href={chatInboxHref(view)}
+          >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
             {worker ? 'Inbox' : 'My chats'}
           </Link>
@@ -153,7 +159,7 @@ export default async function ConversationPage({
             <ActionForm action={assignChat} className="chat-take-form" protectDraft={false}>
               <input type="hidden" name="conversationId" value={conversation.id} />
               <input type="hidden" name="assigneeId" value={viewer.id} />
-              <SubmitButton className="button button-primary" pendingLabel="Assigning…">
+              <SubmitButton variant="primary" pendingLabel="Assigning…">
                 Assign to me
               </SubmitButton>
             </ActionForm>
@@ -185,7 +191,7 @@ export default async function ConversationPage({
               </dl>
               {conversation.ticket_id && (
                 <Link
-                  className="button button-secondary"
+                  className={buttonVariants({ variant: 'secondary' })}
                   href={`/app/tickets/${conversation.ticket_id}`}
                 >
                   View linked ticket
@@ -200,35 +206,27 @@ export default async function ConversationPage({
                   label="Assigned technician"
                   defaultValue={conversation.assigned_technician_id ?? ''}
                 />
-                <SubmitButton className="button button-secondary">Save assignment</SubmitButton>
+                <SubmitButton variant="secondary">Save assignment</SubmitButton>
               </ActionForm>
               {!conversation.ticket_id ? (
                 <>
                   <form action={convertChatToTicket} className="chat-control-form">
                     <input type="hidden" name="conversationId" value={conversation.id} />
-                    <SubmitButton className="button button-primary">
-                      Create ticket from chat
-                    </SubmitButton>
+                    <SubmitButton variant="primary">Create ticket from chat</SubmitButton>
                   </form>
                   {ticketsR.data && ticketsR.data.length > 0 && (
                     <form action={linkChatToTicket} className="chat-control-form">
                       <input type="hidden" name="conversationId" value={conversation.id} />
                       <label htmlFor="chat-ticket">Link to an existing ticket</label>
-                      <select
-                        id="chat-ticket"
-                        className="input"
-                        name="ticketId"
-                        required
-                        defaultValue=""
-                      >
+                      <NativeSelect id="chat-ticket" name="ticketId" required defaultValue="">
                         <option value="">Choose a ticket</option>
                         {ticketsR.data.map((ticket) => (
                           <option key={ticket.id} value={ticket.id}>
                             #{ticket.ticket_number} · {ticket.title}
                           </option>
                         ))}
-                      </select>
-                      <SubmitButton className="button button-secondary">Link ticket</SubmitButton>
+                      </NativeSelect>
+                      <SubmitButton variant="secondary">Link ticket</SubmitButton>
                     </form>
                   )}
                 </>
@@ -238,9 +236,7 @@ export default async function ConversationPage({
               {conversation.status === 'open' && (
                 <form action={closeChat} className="chat-control-form">
                   <input type="hidden" name="conversationId" value={conversation.id} />
-                  <SubmitButton className="button button-secondary">
-                    Close conversation
-                  </SubmitButton>
+                  <SubmitButton variant="secondary">Close conversation</SubmitButton>
                 </form>
               )}
             </div>
@@ -248,30 +244,30 @@ export default async function ConversationPage({
         )}
         <div className="chat-active-body">
           {notice.error && (
-            <div className="alert alert-error" role="alert">
+            <Alert tone="error" role="alert">
               {notice.error}
-            </div>
+            </Alert>
           )}
           {notice.success && (
-            <div className="alert alert-success" role="status">
+            <Alert tone="success" role="status">
               {notice.success}
-            </div>
+            </Alert>
           )}
           {messagesR.error && (
-            <div className="alert alert-error" role="alert">
+            <Alert tone="error" role="alert">
               Messages could not be loaded.{' '}
               <Link href={`/app/chat/${conversation.id}`}>Try again</Link>
-            </div>
+            </Alert>
           )}
           {attachmentsR.error && (
-            <div className="alert alert-error" role="alert">
+            <Alert tone="error" role="alert">
               Files could not be loaded.{' '}
               <Link href={`/app/chat/${conversation.id}`}>Try again</Link>
-            </div>
+            </Alert>
           )}
           {!worker && conversation.ticket_id && (
             <Link
-              className="button button-secondary"
+              className={buttonVariants({ variant: 'secondary' })}
               href={`/app/tickets/${conversation.ticket_id}`}
             >
               View linked ticket

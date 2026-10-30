@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { NotificationLink } from '@/features/notifications/notification-link';
 import { GlobalSearch } from '@/features/search/global-search';
 import { ThemeControl } from '@/features/theme/theme-control';
@@ -33,7 +35,6 @@ export function WorkspaceNav({
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const menuPanelRef = useRef<HTMLDivElement>(null);
   const items = platform
     ? [
         {
@@ -144,56 +145,45 @@ export function WorkspaceNav({
 
   function closeMenu() {
     setIsOpen(false);
-    if (isOpen) menuButtonRef.current?.focus();
   }
 
+  // Radix handles focus containment, Escape, scroll locking and focus return. Keep the page
+  // inert as well, and close the sheet when the viewport grows into the persistent sidebar.
   useEffect(() => {
     if (!isOpen) return;
-    const panel = menuPanelRef.current;
     const main = document.getElementById('main-content');
     const previousInert = main?.inert ?? false;
-    const previousOverflow = document.body.style.overflow;
     if (main) main.inert = true;
-    document.body.style.overflow = 'hidden';
     const desktop = window.matchMedia('(min-width: 768px)');
     const onResize = () => {
       if (desktop.matches) setIsOpen(false);
     };
     desktop.addEventListener('change', onResize);
-    const focusable = panel?.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), select:not([disabled]), summary',
-    );
-    const focusFrame = window.requestAnimationFrame(() => focusable?.[0]?.focus());
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsOpen(false);
-        menuButtonRef.current?.focus();
-        return;
-      }
-      if (event.key !== 'Tab' || !focusable?.length) return;
-      // Cycle explicitly: Safari can omit links from its native Tab order.
-      event.preventDefault();
-      const controls = Array.from(focusable).filter(
-        (control) => control.getClientRects().length > 0,
-      );
-      const current = controls.indexOf(document.activeElement as HTMLElement);
-      const next =
-        current < 0
-          ? event.shiftKey
-            ? controls.length - 1
-            : 0
-          : (current + (event.shiftKey ? -1 : 1) + controls.length) % controls.length;
-      controls[next].focus();
-    };
-    window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.cancelAnimationFrame(focusFrame);
-      window.removeEventListener('keydown', handleKeyDown);
       desktop.removeEventListener('change', onResize);
       if (main) main.inert = previousInert;
-      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
+
+  // Cycle explicitly: Safari can omit links from its native Tab order.
+  function cycleFocus(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== 'Tab') return;
+    const controls = Array.from(
+      event.currentTarget.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), select:not([disabled]), summary',
+      ),
+    ).filter((control) => control.getClientRects().length > 0);
+    if (!controls.length) return;
+    event.preventDefault();
+    const current = controls.indexOf(document.activeElement as HTMLElement);
+    const next =
+      current < 0
+        ? event.shiftKey
+          ? controls.length - 1
+          : 0
+        : (current + (event.shiftKey ? -1 : 1) + controls.length) % controls.length;
+    controls[next].focus();
+  }
 
   function linksFor(hrefs?: readonly string[]) {
     return items
@@ -229,112 +219,124 @@ export function WorkspaceNav({
   const managePaths = ['/app/reports', '/app/people', '/app/administration'];
   const accountPaths = ['/app/profile', '/app/security', '/app/support'];
   const accountActive = accountPaths.some((path) => pathname.startsWith(path));
-  return (
+  const panel = (
     <>
-      <button
-        ref={menuButtonRef}
-        className="mobile-nav-toggle"
-        type="button"
-        aria-controls="workspace-navigation"
-        aria-expanded={isOpen}
-        aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
-        onClick={() => setIsOpen((open) => !open)}
-      >
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
-        <span aria-hidden="true" />
-      </button>
-      {isOpen && (
-        <button
-          className="mobile-nav-backdrop"
-          type="button"
-          aria-label="Close navigation"
-          tabIndex={-1}
-          onClick={closeMenu}
-        />
-      )}
-      <div
-        ref={menuPanelRef}
-        id="workspace-navigation"
-        className={`workspace-nav${isOpen ? ' is-open' : ''}`}
-        role={isOpen ? 'dialog' : undefined}
-        aria-modal={isOpen ? 'true' : undefined}
-        aria-label={isOpen ? 'Workspace navigation' : undefined}
-      >
-        <button className="button button-secondary nav-close" type="button" onClick={closeMenu}>
+      <SheetClose asChild>
+        <Button variant="secondary" className="nav-close" type="button">
           Close navigation
-        </button>
-        <GlobalSearch
-          role={role}
-          inventoryAccess={inventoryAccess}
-          onOpen={closeMenu}
-          platform={platform}
-          workspaceAvailable={workspaceAvailable}
-        />
-        <nav aria-label={role === 'end_user' ? 'Employee navigation' : 'Primary navigation'}>
-          {platform ? (
-            <>
-              <ul className="nav-list nav-group" aria-label="Platform">
-                {linksFor([
-                  '/platform/customers',
-                  '/platform/analytics',
-                  '/platform/library',
-                  '/platform/audit',
-                ])}
+        </Button>
+      </SheetClose>
+      <GlobalSearch
+        role={role}
+        inventoryAccess={inventoryAccess}
+        onOpen={closeMenu}
+        platform={platform}
+        workspaceAvailable={workspaceAvailable}
+      />
+      <nav aria-label={role === 'end_user' ? 'Employee navigation' : 'Primary navigation'}>
+        {platform ? (
+          <>
+            <ul className="nav-list nav-group" aria-label="Platform">
+              {linksFor([
+                '/platform/customers',
+                '/platform/analytics',
+                '/platform/library',
+                '/platform/audit',
+              ])}
+            </ul>
+            {workspaceAvailable && (
+              <ul className="nav-list nav-group" aria-label="Workspace">
+                {linksFor(['/app'])}
               </ul>
-              {workspaceAvailable && (
-                <ul className="nav-list nav-group" aria-label="Workspace">
-                  {linksFor(['/app'])}
-                </ul>
-              )}
-            </>
-          ) : (
-            <>
-              <ul
-                className="nav-list nav-group"
-                aria-label={role === 'end_user' ? 'Support' : 'Work'}
-              >
-                {linksFor(primaryPaths)}
-                <li>
-                  <NotificationLink
-                    organizationId={organizationId}
-                    userId={userId}
-                    className="nav-link"
-                    onNavigate={closeMenu}
-                  />
-                </li>
+            )}
+          </>
+        ) : (
+          <>
+            <ul
+              className="nav-list nav-group"
+              aria-label={role === 'end_user' ? 'Support' : 'Work'}
+            >
+              {linksFor(primaryPaths)}
+              <li>
+                <NotificationLink
+                  organizationId={organizationId}
+                  userId={userId}
+                  className="nav-link"
+                  onNavigate={closeMenu}
+                />
+              </li>
+            </ul>
+            <ul className="nav-list nav-group" aria-label="Resources">
+              {linksFor(resourcePaths)}
+            </ul>
+            {role !== 'end_user' && (
+              <ul className="nav-list nav-group" aria-label="Manage">
+                {linksFor(managePaths)}
               </ul>
-              <ul className="nav-list nav-group" aria-label="Resources">
-                {linksFor(resourcePaths)}
-              </ul>
-              {role !== 'end_user' && (
-                <ul className="nav-list nav-group" aria-label="Manage">
-                  {linksFor(managePaths)}
-                </ul>
-              )}
-            </>
-          )}
-        </nav>
-        {!platform && (
-          <NavigationDisclosure
-            className="staff-more-nav"
-            summaryClassName="nav-link"
-            label="Account"
-            summary={
-              <>
-                <NavigationIcon name="profile" />
-                <span data-active={accountActive || undefined}>Account</span>
-              </>
-            }
-          >
-            <ul className="nav-list">{linksFor(accountPaths)}</ul>
-            {/* Infrequent setting: kept with account controls so short screens fit the nav. */}
-            <ThemeControl />
-          </NavigationDisclosure>
+            )}
+          </>
         )}
-        {platform && <ThemeControl />}
-        {signOutControl && <div className="nav-sign-out">{signOutControl}</div>}
-      </div>
+      </nav>
+      {!platform && (
+        <NavigationDisclosure
+          className="staff-more-nav"
+          summaryClassName="nav-link"
+          label="Account"
+          summary={
+            <>
+              <NavigationIcon name="profile" />
+              <span data-active={accountActive || undefined}>Account</span>
+            </>
+          }
+        >
+          <ul className="nav-list">{linksFor(accountPaths)}</ul>
+          {/* Infrequent setting: kept with account controls so short screens fit the nav. */}
+          <ThemeControl />
+        </NavigationDisclosure>
+      )}
+      {platform && <ThemeControl />}
+      {signOutControl && <div className="nav-sign-out">{signOutControl}</div>}
     </>
+  );
+  return (
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger asChild>
+        <Button
+          ref={menuButtonRef}
+          variant="quiet"
+          size="icon"
+          className="mobile-nav-toggle"
+          type="button"
+          aria-controls="workspace-navigation"
+          aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </Button>
+      </SheetTrigger>
+      {isOpen ? (
+        <SheetContent
+          portal={false}
+          id="workspace-navigation"
+          className="workspace-nav is-open block"
+          overlayClassName="mobile-nav-backdrop"
+          aria-label="Workspace navigation"
+          aria-describedby={undefined}
+          onKeyDown={cycleFocus}
+          onPointerDownOutside={(event) => {
+            // The toggle stays visible above the sheet and closes it itself.
+            if (menuButtonRef.current?.contains(event.target as Node)) event.preventDefault();
+          }}
+        >
+          <SheetTitle className="sr-only">Workspace navigation</SheetTitle>
+          {panel}
+        </SheetContent>
+      ) : (
+        <div id="workspace-navigation" className="workspace-nav">
+          {panel}
+        </div>
+      )}
+    </Sheet>
   );
 }

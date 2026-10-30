@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Button } from '@/components/ui/button';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { Timestamp } from '@/features/timezones/provider';
 
@@ -69,22 +70,22 @@ export function ChecklistHistory({
             return { success: 'Earlier response history loaded.' };
           }}
         >
-          <SubmitButton className="button button-secondary" pendingLabel="Loading history…">
+          <SubmitButton variant="secondary" pendingLabel="Loading history…">
             Load earlier changes
           </SubmitButton>
         </ActionForm>
       )}
       {older && (
-        <button
+        <Button
           type="button"
-          className="button button-secondary"
+          variant="secondary"
           onClick={() => {
             setOlder(null);
             setHasMore(null);
           }}
         >
           Back to latest changes
-        </button>
+        </Button>
       )}
     </div>
   );

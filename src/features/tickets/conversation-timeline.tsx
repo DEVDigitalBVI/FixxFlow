@@ -2,6 +2,8 @@
 
 import { useRef, useState } from 'react';
 
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { RetryButton } from '@/components/ui/retry-button';
 import { Timestamp } from '@/features/timezones/provider';
 import type { TicketMessageKind } from '@/types/database';
@@ -39,9 +41,9 @@ export function ConversationTimeline({
   ).length;
   if (error)
     return (
-      <p className="alert alert-error" role="alert">
+      <Alert as="p" tone="error" role="alert">
         Conversation could not be loaded. <RetryButton />
-      </p>
+      </Alert>
     );
   const visible = staff ? messages : messages.filter((message) => message.kind === 'reply');
   if (!visible.length)
@@ -50,9 +52,9 @@ export function ConversationTimeline({
     <>
       <div role="status">
         {newCount > 0 && (
-          <button
+          <Button
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             onClick={() => {
               setSeen(new Set(messages.map((message) => message.id)));
               const last = list.current?.lastElementChild?.firstElementChild as HTMLElement | null;
@@ -61,7 +63,7 @@ export function ConversationTimeline({
             }}
           >
             {newCount} new message{newCount === 1 ? '' : 's'} · View latest
-          </button>
+          </Button>
         )}
       </div>
       <ol ref={list} className="ticket-conversation" aria-label="Ticket messages">

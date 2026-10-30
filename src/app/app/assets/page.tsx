@@ -1,7 +1,12 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { PageHeader } from '@/components/ui/page-header';
+import { Table, TableRegion } from '@/components/ui/table';
 import { AssetStatusBadge } from '@/features/assets/asset-status-badge';
 import { assetKinds, assetStatuses } from '@/features/assets/model';
 import { AssetLinkForm } from '@/features/assets/ticket-link-form';
@@ -70,9 +75,8 @@ export default async function AssetsPage({
             >
               <label htmlFor="my-equipment-search">Search my equipment</label>
               <div>
-                <input
+                <Input
                   id="my-equipment-search"
-                  className="input"
                   name="q"
                   type="search"
                   defaultValue={q}
@@ -80,11 +84,11 @@ export default async function AssetsPage({
                   aria-describedby="my-equipment-hint"
                   placeholder="Name, tag or serial number"
                 />
-                <button type="submit" className="button button-secondary">
+                <Button type="submit" variant="secondary">
                   Search
-                </button>
+                </Button>
                 {q && (
-                  <Link className="button button-quiet" href="/app/assets">
+                  <Link className={buttonVariants({ variant: 'quiet' })} href="/app/assets">
                     Clear search
                   </Link>
                 )}
@@ -96,12 +100,12 @@ export default async function AssetsPage({
           </div>
         )}
         {error ? (
-          <div className="alert alert-error" role="alert">
+          <Alert tone="error" role="alert">
             Your equipment could not be loaded.{' '}
-            <Link className="button button-secondary" href={href(page)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={href(page)}>
               Try again
             </Link>
-          </div>
+          </Alert>
         ) : data?.length ? (
           <ul className="employee-equipment-list" aria-label="Assigned equipment">
             {data.map((a) => (
@@ -128,7 +132,10 @@ export default async function AssetsPage({
                     </div>
                   )}
                 </dl>
-                <Link className="button button-secondary" href={`/app/assets/${a.id}`}>
+                <Link
+                  className={buttonVariants({ variant: 'secondary' })}
+                  href={`/app/assets/${a.id}`}
+                >
                   View equipment<span className="sr-only">: {a.name}</span>
                 </Link>
               </li>
@@ -154,7 +161,7 @@ export default async function AssetsPage({
                   : 'Your IT team will add equipment here when it is assigned to you.'}
             </p>
             {(q || page > 1) && (
-              <Link className="button button-secondary" href="/app/assets">
+              <Link className={buttonVariants({ variant: 'secondary' })} href="/app/assets">
                 {q ? 'Clear search' : 'Back to my equipment'}
               </Link>
             )}
@@ -163,13 +170,13 @@ export default async function AssetsPage({
         {!error && (page > 1 || page * 25 < (count ?? 0)) && (
           <nav className="notification-pagination" aria-label="Equipment pages">
             {page > 1 && (
-              <Link className="button button-secondary" href={href(page - 1)}>
+              <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
                 Previous
               </Link>
             )}
             <span>Page {page}</span>
             {page * 25 < (count ?? 0) && (
-              <Link className="button button-secondary" href={href(page + 1)}>
+              <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
                 Next
               </Link>
             )}
@@ -190,10 +197,10 @@ export default async function AssetsPage({
         actions={
           staff ? (
             <>
-              <Link className="button button-secondary" href="/app/assets/import">
+              <Link className={buttonVariants({ variant: 'secondary' })} href="/app/assets/import">
                 Import spreadsheet
               </Link>
-              <Link className="button button-primary" href="/app/assets/new">
+              <Link className={buttonVariants({ variant: 'primary' })} href="/app/assets/new">
                 Add asset
               </Link>
             </>
@@ -201,15 +208,18 @@ export default async function AssetsPage({
         }
       />
       {ticketR?.data && (
-        <div className="alert asset-ticket-context">
+        <Alert className="asset-ticket-context">
           <div>
             <strong>Link equipment to Ticket #{ticketR.data.ticket_number}</strong>
             <p>Find the asset below, then choose Link to ticket.</p>
           </div>
-          <Link className="button button-secondary" href={`/app/tickets/${ticket}`}>
+          <Link
+            className={buttonVariants({ variant: 'secondary' })}
+            href={`/app/tickets/${ticket}`}
+          >
             Back to ticket
           </Link>
-        </div>
+        </Alert>
       )}
       <section className="asset-inventory" aria-labelledby="inventory-heading">
         <header className="asset-inventory-heading">
@@ -238,8 +248,7 @@ export default async function AssetsPage({
           >
             <label className="field asset-search-query">
               Search name, tag, serial number or model
-              <input
-                className="input"
+              <Input
                 name="q"
                 type="search"
                 defaultValue={q}
@@ -250,21 +259,21 @@ export default async function AssetsPage({
             </label>
             <label className="field asset-search-lifecycle">
               Asset status
-              <select className="input" name="status" defaultValue={status}>
+              <NativeSelect name="status" defaultValue={status}>
                 <option value="">All states</option>
                 {Object.entries(assetStatuses).map(([id, label]) => (
                   <option key={id} value={id}>
                     {label}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </label>
             {ticket && <input type="hidden" name="ticket" value={ticket} />}
-            <button className="button button-secondary" type="submit">
+            <Button variant="secondary" type="submit">
               Search assets
-            </button>
+            </Button>
             {filtered && (
-              <Link className="button button-quiet" href={clearHref}>
+              <Link className={buttonVariants({ variant: 'quiet' })} href={clearHref}>
                 Clear filters
               </Link>
             )}
@@ -275,16 +284,16 @@ export default async function AssetsPage({
         </div>
         {error ? (
           <div className="asset-inventory-feedback">
-            <div className="alert alert-error" role="alert">
+            <Alert tone="error" role="alert">
               Assets could not load.{' '}
-              <Link className="button button-secondary" href={href(page)}>
+              <Link className={buttonVariants({ variant: 'secondary' })} href={href(page)}>
                 Try again
               </Link>
-            </div>
+            </Alert>
           </div>
         ) : data?.length ? (
-          <div className="table-region" role="region" aria-label="Asset inventory" tabIndex={0}>
-            <table className="table responsive-table table-nowrap asset-inventory-table">
+          <TableRegion role="region" aria-label="Asset inventory" tabIndex={0}>
+            <Table className="responsive-table table-nowrap asset-inventory-table">
               <thead>
                 <tr>
                   <th scope="col">Asset</th>
@@ -319,7 +328,10 @@ export default async function AssetsPage({
                     </td>
                     <td data-label="Actions">
                       <div className="asset-row-actions">
-                        <Link className="button button-secondary" href={`/app/assets/${a.id}`}>
+                        <Link
+                          className={buttonVariants({ variant: 'secondary' })}
+                          href={`/app/assets/${a.id}`}
+                        >
                           Open<span className="sr-only"> {a.name}</span>
                         </Link>
                         {ticketR?.data && (
@@ -330,10 +342,10 @@ export default async function AssetsPage({
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+            </Table>
+          </TableRegion>
         ) : (
-          <div className="empty-state asset-empty">
+          <EmptyState className="asset-empty">
             <h3>
               {filtered
                 ? 'No matching assets'
@@ -353,19 +365,19 @@ export default async function AssetsPage({
                     : 'Your IT team will add equipment here when it is assigned to you.'}
             </p>
             {filtered ? (
-              <Link className="button button-secondary" href={clearHref}>
+              <Link className={buttonVariants({ variant: 'secondary' })} href={clearHref}>
                 Clear filters
               </Link>
             ) : page > 1 ? (
-              <Link className="button button-secondary" href={href(1)}>
+              <Link className={buttonVariants({ variant: 'secondary' })} href={href(1)}>
                 Back to inventory
               </Link>
             ) : staff ? (
-              <Link className="button button-primary" href="/app/assets/new">
+              <Link className={buttonVariants({ variant: 'primary' })} href="/app/assets/new">
                 Add your first asset
               </Link>
             ) : null}
-          </div>
+          </EmptyState>
         )}
         {!error && (
           <footer className="asset-inventory-footer">
@@ -377,13 +389,13 @@ export default async function AssetsPage({
             {(page > 1 || page * 25 < (count ?? 0)) && (
               <nav className="asset-pagination" aria-label="Asset pages">
                 {page > 1 && (
-                  <Link className="button button-secondary" href={href(page - 1)}>
+                  <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
                     Previous
                   </Link>
                 )}
                 <span>Page {page}</span>
                 {page * 25 < (count ?? 0) && (
-                  <Link className="button button-secondary" href={href(page + 1)}>
+                  <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
                     Next
                   </Link>
                 )}

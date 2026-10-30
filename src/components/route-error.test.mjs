@@ -4,9 +4,13 @@ import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
+import { kitHostMocks } from '../../tests/helpers/kit-host-mocks.mjs';
 import { load } from '../../tests/helpers/load-module.mjs';
 
-const mocks = { 'next/link': { default: (props) => React.createElement('a', props) } };
+const mocks = {
+  ...kitHostMocks(),
+  'next/link': { default: (props) => React.createElement('a', props) },
+};
 const { RouteError } = load('src/components/route-error.tsx', mocks);
 function findButton(node) {
   if (!React.isValidElement(node)) return;

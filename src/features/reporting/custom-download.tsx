@@ -2,6 +2,10 @@
 
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/input';
+
 import { definitionToQuery, type CustomReportDefinition } from './custom-model';
 import { fetchReportDownloadUrl } from './download';
 import { exportFormats, isExportFormat } from './export-model';
@@ -78,8 +82,7 @@ export function CustomReportDownload({
         {name && <input type="hidden" name="name" value={name} />}
         <label className="field" htmlFor="custom-report-format">
           File format
-          <select
-            className="input"
+          <NativeSelect
             id="custom-report-format"
             name="format"
             defaultValue="xlsx"
@@ -90,19 +93,19 @@ export function CustomReportDownload({
                 {item.label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
-        <button className="button button-primary" disabled={pending}>
+        <Button variant="primary" disabled={pending}>
           {pending ? 'Preparing report…' : 'Download report'}
-        </button>
+        </Button>
       </form>
       <p className="muted" role="status" aria-live="polite">
         {status}
       </p>
       {error && (
-        <div className="alert alert-error" role="alert" tabIndex={-1} ref={feedback}>
+        <Alert tone="error" role="alert" tabIndex={-1} ref={feedback}>
           {error}
-        </div>
+        </Alert>
       )}
     </div>
   );

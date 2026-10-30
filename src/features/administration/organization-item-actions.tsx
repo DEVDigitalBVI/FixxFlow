@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 type Props = {
@@ -26,7 +28,8 @@ export function OrganizationItemActions({
           <input type="hidden" name="id" value={id} />
           <input type="hidden" name="isActive" value={String(active)} />
           <SubmitButton
-            className="button button-small button-secondary"
+            variant="secondary"
+            size="small"
             aria-label={`${active ? 'Deactivate' : 'Activate'} ${kind} ${name}`}
           >
             {active ? 'Deactivate' : 'Activate'}
@@ -54,8 +57,7 @@ export function OrganizationItemActions({
             deactivate the {kind} to keep its history.
           </p>
           <label className="organization-delete-confirm">
-            <input
-              type="checkbox"
+            <Checkbox
               name="confirmDelete"
               value={id}
               required
@@ -63,11 +65,11 @@ export function OrganizationItemActions({
             />
             I confirm permanent deletion of {name}.
           </label>
-          <SubmitButton className="button button-small button-danger" pendingLabel="Deleting…">
+          <SubmitButton variant="danger" size="small" pendingLabel="Deleting…">
             Delete {kind}
           </SubmitButton>
           <Link
-            className="button button-quiet"
+            className={buttonVariants({ variant: 'quiet' })}
             href={`/app/organization#${kind === 'department' ? 'departments' : 'locations'}`}
           >
             Cancel

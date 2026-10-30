@@ -1,11 +1,14 @@
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { Table, TableRegion } from '@/components/ui/table';
 import type { InventoryItem } from '@/types/inventory-database';
 
 export function InventoryTable({ items }: { items: InventoryItem[] }) {
   return (
-    <div className="table-region" role="region" aria-label="Department inventory" tabIndex={0}>
-      <table className="table responsive-table table-nowrap">
+    <TableRegion role="region" aria-label="Department inventory" tabIndex={0}>
+      <Table className="responsive-table table-nowrap">
         <thead>
           <tr>
             {[
@@ -41,19 +44,24 @@ export function InventoryTable({ items }: { items: InventoryItem[] }) {
                 {item.stock - item.reserved}
                 {item.reorder_threshold != null &&
                   item.stock - item.reserved <= item.reorder_threshold && (
-                    <span className="ticket-badge tone-amber">Low stock</span>
+                    <Badge tone="warning" className="ticket-badge">
+                      Low stock
+                    </Badge>
                   )}
               </td>
               <td data-label="Action">
-                <Link className="button button-secondary" href={`/app/inventory/${item.id}`}>
+                <Link
+                  className={buttonVariants({ variant: 'secondary' })}
+                  href={`/app/inventory/${item.id}`}
+                >
                   View item<span className="sr-only"> {item.name}</span>
                 </Link>
               </td>
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+      </Table>
+    </TableRegion>
   );
 }
 
@@ -68,9 +76,9 @@ export function InventoryStockSummary({ item }: { item: InventoryItem }) {
             {item.department_name} · Stored at {item.location_name}
           </p>
         </div>
-        <span className="ticket-badge tone-slate">
+        <Badge tone="neutral" className="ticket-badge">
           {item.kind === 'equipment' ? 'Individual equipment' : 'Consumable quantities'}
-        </span>
+        </Badge>
       </div>
       <dl className="inventory-stock-summary">
         <div>
@@ -86,7 +94,9 @@ export function InventoryStockSummary({ item }: { item: InventoryItem }) {
             Available to request{' '}
             {item.reorder_threshold != null &&
               item.stock - item.reserved <= item.reorder_threshold && (
-                <span className="ticket-badge tone-amber">Low stock</span>
+                <Badge tone="warning" className="ticket-badge">
+                  Low stock
+                </Badge>
               )}
           </dt>
           <dd>{item.stock - item.reserved}</dd>

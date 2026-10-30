@@ -2,6 +2,9 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { Avatar } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { MemberDetailsEditor } from '@/features/administration/member-details-editor';
 import { rolePresentation } from '@/features/identity/role';
@@ -62,18 +65,18 @@ export function PersonCard({
         </div>
         <div className="person-card-meta">
           <span className="person-role">{rolePresentation[role].label}</span>
-          <span className={`badge badge-${status}`}>
+          <Badge tone={status === 'active' ? 'success' : 'muted'}>
             <span className="status-dot" aria-hidden="true" />
             {status === 'active' ? 'Active' : 'Inactive'}
-          </span>
+          </Badge>
         </div>
       </div>
-      <Link className="button button-quiet" href={`/app/people/${id}/equipment`}>
+      <Link className={buttonVariants({ variant: 'quiet' })} href={`/app/people/${id}/equipment`}>
         Equipment<span className="sr-only"> for {name}</span>
       </Link>
       {canManage && (
         <details className="person-manage">
-          <summary className="button button-secondary">
+          <summary className={buttonVariants({ variant: 'secondary' })}>
             Manage<span className="sr-only"> {name}</span>
             <span aria-hidden="true">⌄</span>
           </summary>
@@ -103,15 +106,15 @@ export function PersonCard({
                 <input type="hidden" name="userId" value={id} />
                 <div className="field">
                   <label htmlFor={`role-${id}`}>Role for {name}</label>
-                  <select id={`role-${id}`} className="input" name="role" defaultValue={role}>
+                  <NativeSelect id={`role-${id}`} name="role" defaultValue={role}>
                     {Object.entries(rolePresentation).map(([value, item]) => (
                       <option key={value} value={value}>
                         {item.label}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
-                <SubmitButton className="button button-secondary">
+                <SubmitButton variant="secondary">
                   Save role<span className="sr-only"> for {name}</span>
                 </SubmitButton>
               </form>
@@ -136,9 +139,7 @@ export function PersonCard({
                           ? `Deactivate ${name}’s workspace access? Their existing records will be retained.`
                           : `Restore ${name}’s workspace access? Their current role will be retained.`}
                       </p>
-                      <SubmitButton
-                        className={`button ${status === 'active' ? 'button-danger' : 'button-secondary'}`}
-                      >
+                      <SubmitButton variant={status === 'active' ? 'danger' : 'secondary'}>
                         {status === 'active' ? 'Confirm deactivation' : 'Restore access'}
                       </SubmitButton>
                     </form>

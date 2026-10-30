@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useId, useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import { LookupSelect } from '@/features/lookups/lookup-select';
@@ -39,19 +42,11 @@ export function TemplateCommand({
       {operation === 'publish' && (
         <label className="field" htmlFor={id}>
           Version notes *
-          <textarea
-            className="input"
-            id={id}
-            name="changeNote"
-            required
-            minLength={3}
-            maxLength={1000}
-            rows={3}
-          />
+          <Textarea id={id} name="changeNote" required minLength={3} maxLength={1000} rows={3} />
         </label>
       )}
       <label className="communication-choice">
-        <input key={revision} type="checkbox" name="confirm" value="yes" required />
+        <Checkbox key={revision} name="confirm" value="yes" required />
         <span>
           {operation === 'publish'
             ? 'I reviewed the saved draft above. Publish this version for staff to use.'
@@ -61,7 +56,7 @@ export function TemplateCommand({
         </span>
       </label>
       <SubmitButton
-        className={`button ${operation === 'publish' ? 'button-primary' : 'button-secondary'}`}
+        variant={operation === 'publish' ? 'primary' : 'secondary'}
         pendingLabel="Saving…"
       >
         {operation === 'publish'
@@ -171,39 +166,39 @@ export function ApplyTemplateForm({
         Existing work is kept, and no updates are sent automatically.
       </p>
       <label className="communication-choice" htmlFor={id}>
-        <input id={id} type="checkbox" name="confirm" value="yes" required />
+        <Checkbox id={id} name="confirm" value="yes" required />
         <span>
           Apply this published version to this ticket. Add its steps and approval requests, preserve
           existing work and settings, and start new deadlines from now. Add recipients to new
           stakeholder groups before sending updates.
         </span>
       </label>
-      <SubmitButton className="button button-primary" pendingLabel="Applying procedure…">
+      <SubmitButton variant="primary" pendingLabel="Applying procedure…">
         Apply published procedure
       </SubmitButton>
       {failed && (
         <div className="stack">
           <a
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={`/app/workflows/${templateId}?ticket=${ticketId}`}
             target="_blank"
             rel="noopener noreferrer"
           >
             Review latest published procedure (opens in a new tab)
           </a>
-          <button
-            className="button button-secondary"
+          <Button
+            variant="secondary"
             type="button"
             onClick={() => {
               if (confirmDiscardChanges(true)) window.location.reload();
             }}
           >
             Reload current procedure
-          </button>
+          </Button>
         </div>
       )}
       <a
-        className="button button-secondary"
+        className={buttonVariants({ variant: 'secondary' })}
         href={`/app/tickets/${ticketId}`}
         target="_blank"
         rel="noopener noreferrer"

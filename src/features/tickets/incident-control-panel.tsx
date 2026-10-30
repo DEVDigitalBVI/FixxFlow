@@ -1,5 +1,8 @@
 import { randomUUID } from 'node:crypto';
 
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { RetryButton } from '@/components/ui/retry-button';
 import { profileLabels } from '@/features/lookups/labels';
 import { Timestamp } from '@/features/timezones/provider';
@@ -133,7 +136,9 @@ export async function IncidentControlPanel({
           <div className="stack">
             <div className="section-heading-row">
               <h4>{approval.title}</h4>
-              <span className={`ticket-badge tone-${state.tone}`}>{state.label}</span>
+              <Badge tone={state.tone} className="ticket-badge">
+                {state.label}
+              </Badge>
             </div>
             <p className="ticket-description">{approval.description}</p>
             <p className="muted">
@@ -168,10 +173,10 @@ export async function IncidentControlPanel({
               </details>
             )}
             {stale && (
-              <p className="alert" role="status">
+              <Alert as="p" role="status">
                 The step details changed. The coordinator or an administrator must request a fresh
                 approval before it can be marked complete.
-              </p>
+              </Alert>
             )}
             {approval.decision_note && (
               <p className="ticket-description">Decision reason: {approval.decision_note}</p>
@@ -297,7 +302,7 @@ export async function IncidentControlPanel({
                 label="Take over coordination"
               >
                 <label className="communication-choice">
-                  <input type="checkbox" name="confirm" value="yes" required />
+                  <Checkbox name="confirm" value="yes" required />
                   <span>
                     I will become the coordinator. The previous owner becomes the backup if still
                     active. Ticket assignment and communication ownership remain separate.

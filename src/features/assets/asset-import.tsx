@@ -4,6 +4,11 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 import { importAssets } from '@/app/app/assets/import/actions';
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input, NativeSelect } from '@/components/ui/input';
+import { Table, TableRegion } from '@/components/ui/table';
 
 import {
   FILE_LIMIT,
@@ -138,8 +143,7 @@ export function AssetImport() {
           </p>
         </div>
         <label>
-          <input
-            type="checkbox"
+          <Checkbox
             checked={updateExisting}
             disabled={busy || !!result.success}
             onChange={(event) => {
@@ -158,7 +162,7 @@ export function AssetImport() {
         )}
         <div className="page-header-actions">
           <a
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             download="fixxflow-assets-template.csv"
             href={`data:text/csv;charset=utf-8,${encodeURIComponent(importColumns.join(',') + '\r\n')}`}
           >
@@ -219,8 +223,7 @@ export function AssetImport() {
         >
           <label className="field">
             Asset spreadsheet
-            <input
-              className="input"
+            <Input
               type="file"
               accept=".csv,.xlsx,.xls"
               required
@@ -237,8 +240,7 @@ export function AssetImport() {
           {sheets.length > 1 && (
             <label className="field">
               Worksheet
-              <select
-                className="input"
+              <NativeSelect
                 value={sheet}
                 disabled={busy || !!result.success}
                 onChange={(event) => {
@@ -250,26 +252,26 @@ export function AssetImport() {
                 {sheets.map((name) => (
                   <option key={name}>{name}</option>
                 ))}
-              </select>
+              </NativeSelect>
             </label>
           )}
           <div>
-            <button
-              className="button button-secondary"
+            <Button
+              variant="secondary"
               type="submit"
               disabled={busy || !file || !!result.success}
               aria-busy={busy}
             >
               {busy ? 'Processing…' : 'Preview and validate'}
-            </button>
+            </Button>
           </div>
         </form>
       </section>
       {(result.error || result.success || rows.length > 0) && (
-        <div
+        <Alert
           ref={feedback}
           tabIndex={-1}
-          className={`alert ${result.error || issues.length ? 'alert-error' : result.success ? 'alert-success' : ''}`}
+          tone={result.error || issues.length ? 'error' : result.success ? 'success' : 'neutral'}
           role={result.error || issues.length ? 'alert' : 'status'}
         >
           {result.error ??
@@ -277,7 +279,7 @@ export function AssetImport() {
             (issues.length
               ? `${issues.length} issue${issues.length === 1 ? '' : 's'} found. Fix your spreadsheet, choose the updated file, and preview again. Nothing has been imported.`
               : `Ready to save: ${rows.length - updates} to create, ${updates} to update.`)}
-        </div>
+        </Alert>
       )}
       {issues.length > 0 && (
         <section className="settings-card" aria-labelledby="import-issues-heading">
@@ -297,13 +299,8 @@ export function AssetImport() {
             <h2 id="import-preview-heading">2. Review assets</h2>
             <p className="muted">Review each row. The entire batch saves together.</p>
           </div>
-          <div
-            className="table-region"
-            role="region"
-            aria-label="Asset import preview"
-            tabIndex={0}
-          >
-            <table className="table responsive-table asset-import-table">
+          <TableRegion role="region" aria-label="Asset import preview" tabIndex={0}>
+            <Table className="responsive-table asset-import-table">
               <caption>
                 {file?.name} · {sheet}
                 {pages > 1 && (
@@ -348,34 +345,34 @@ export function AssetImport() {
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+            </Table>
+          </TableRegion>
           {pages > 1 && (
             <nav className="page-header-actions" aria-label="Preview pages">
-              <button
+              <Button
                 type="button"
-                className="button button-secondary"
+                variant="secondary"
                 disabled={page === 1 || busy}
                 onClick={() => setPage((p) => p - 1)}
               >
                 Previous
-              </button>
+              </Button>
               <span role="status">
                 Page {page} of {pages}
               </span>
-              <button
+              <Button
                 type="button"
-                className="button button-secondary"
+                variant="secondary"
                 disabled={page === pages || busy}
                 onClick={() => setPage((p) => p + 1)}
               >
                 Next
-              </button>
+              </Button>
             </nav>
           )}
           <div>
-            <button
-              className="button button-primary"
+            <Button
+              variant="primary"
               type="button"
               disabled={!ready || busy}
               aria-busy={busy}
@@ -386,12 +383,12 @@ export function AssetImport() {
                 : updateExisting
                   ? 'Save reviewed changes'
                   : `Import ${rows.length} asset${rows.length === 1 ? '' : 's'}`}
-            </button>
+            </Button>
           </div>
         </section>
       )}
       {result.success && (
-        <Link className="button button-primary" href="/app/assets">
+        <Link className={buttonVariants({ variant: 'primary' })} href="/app/assets">
           View asset inventory
         </Link>
       )}

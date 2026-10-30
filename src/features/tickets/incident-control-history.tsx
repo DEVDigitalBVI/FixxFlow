@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Button } from '@/components/ui/button';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { Timestamp } from '@/features/timezones/provider';
 
@@ -40,15 +41,15 @@ export function IncidentControlHistory({
             return { success: 'Workflow history loaded.' };
           }}
         >
-          <SubmitButton className="button button-secondary" pendingLabel="Loading history…">
+          <SubmitButton variant="secondary" pendingLabel="Loading history…">
             {page ? 'Load earlier history' : 'Load history'}
           </SubmitButton>
         </ActionForm>
       )}
       {page && (
-        <button className="button button-secondary" type="button" onClick={() => setPage(null)}>
+        <Button variant="secondary" type="button" onClick={() => setPage(null)}>
           Back to latest history
-        </button>
+        </Button>
       )}
     </div>
   );

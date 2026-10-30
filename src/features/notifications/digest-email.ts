@@ -5,7 +5,7 @@ import {
 import type { NotificationDigest } from './preferences-model';
 import { renderEmail } from './template';
 
-export function digestContent(item: NotificationDigest, siteUrl: string) {
+export async function digestContent(item: NotificationDigest, siteUrl: string) {
   if (
     !Array.isArray(item.items) ||
     item.total < 1 ||
@@ -31,7 +31,7 @@ export function digestContent(item: NotificationDigest, siteUrl: string) {
   return {
     subject: 'Your daily FixxFlow summary',
     text: `${message}\n\nView updates: ${href}\n\nManage email preferences in Notifications.`,
-    html: renderEmail({
+    html: await renderEmail({
       title: 'Your daily summary',
       message,
       action: 'View updates',
@@ -50,7 +50,7 @@ export async function sendNotificationDigest(
   fetcher: typeof fetch = fetch,
 ): Promise<string> {
   const { base } = parseNotificationEmailConfiguration(config);
-  const content = digestContent(item, base.origin);
+  const content = await digestContent(item, base.origin);
   const response = await fetcher('https://api.resend.com/emails', {
     method: 'POST',
     headers: {

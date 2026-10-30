@@ -3,6 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Radio } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/input';
 import { useUnsavedChanges } from '@/components/ui/unsaved-changes';
 import type { TicketMessageKind } from '@/types/database';
 
@@ -100,8 +104,7 @@ export function MessageComposer({
           <legend>Who is this message for?</legend>
           {Object.keys(messageKinds).map((value) => (
             <label key={value}>
-              <input
-                type="radio"
+              <Radio
                 name="composerMode"
                 value={value}
                 checked={kind === value}
@@ -121,10 +124,10 @@ export function MessageComposer({
         <span>{staff ? mode.audience : 'Visible to you and IT support.'}</span>
       </div>
       <label htmlFor="message-body">{staff ? mode.label : 'Your message'}</label>
-      <textarea
+      <Textarea
         ref={textarea}
         id="message-body"
-        className="input textarea"
+        fieldSize="tall"
         name="body"
         required
         rows={4}
@@ -154,14 +157,14 @@ export function MessageComposer({
         <small id="message-hint">
           Enter adds a new line. {staff && 'Drafts stay separate for each message type.'}
         </small>
-        <button className="button button-primary" type="submit" disabled={pending}>
+        <Button variant="primary" type="submit" disabled={pending}>
           {pending ? 'Sending…' : staff ? mode.action : 'Send message'}
-        </button>
+        </Button>
       </div>
       {result.error && (
-        <p id="message-error" className="alert alert-error" role="alert">
+        <Alert id="message-error" as="p" tone="error" role="alert">
           {result.error}
-        </p>
+        </Alert>
       )}
       <p className="composer-result" role="status">
         {result.success}

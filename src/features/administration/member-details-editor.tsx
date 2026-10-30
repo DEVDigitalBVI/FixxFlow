@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 
 import { updateMemberDetails } from '@/app/app/people/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 type Option = { id: string; name: string; is_active: boolean };
@@ -46,8 +47,7 @@ export function MemberDetailsEditor({
       <input type="hidden" name="updatedAt" value={profile.updated_at} />
       <div className="field">
         <label htmlFor={`job-${profile.user_id}`}>Job title</label>
-        <input
-          className="input"
+        <Input
           id={`job-${profile.user_id}`}
           name="jobTitle"
           defaultValue={profile.job_title ?? ''}
@@ -62,8 +62,7 @@ export function MemberDetailsEditor({
       ).map(([field, label, options, selected]) => (
         <div className="field" key={field}>
           <label htmlFor={`${field}-${profile.user_id}`}>{label}</label>
-          <select
-            className="input"
+          <NativeSelect
             id={`${field}-${profile.user_id}`}
             name={field}
             defaultValue={selected ?? ''}
@@ -77,10 +76,10 @@ export function MemberDetailsEditor({
                   {option.is_active ? '' : ' (inactive)'}
                 </option>
               ))}
-          </select>
+          </NativeSelect>
         </div>
       ))}
-      <SubmitButton className="button button-secondary">Save details</SubmitButton>
+      <SubmitButton variant="secondary">Save details</SubmitButton>
     </ActionForm>
   );
   if (inline) return form;

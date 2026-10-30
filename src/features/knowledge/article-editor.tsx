@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import { saveArticle } from '@/app/app/help/actions';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Input, NativeSelect, Textarea } from '@/components/ui/input';
 import { revealField } from '@/components/ui/reveal-field';
 import { confirmDiscardChanges, useUnsavedChanges } from '@/components/ui/unsaved-changes';
 import { createClient } from '@/lib/supabase/client';
@@ -176,16 +179,15 @@ export function ArticleEditor({
         <input type="hidden" name="revision" value={revision} />
         <input type="hidden" name="new" value={String(isNew)} />
         {error && (
-          <p ref={errorRef} tabIndex={-1} className="alert alert-error" role="alert">
+          <Alert ref={errorRef} tabIndex={-1} as="p" tone="error" role="alert">
             {error}
-          </p>
+          </Alert>
         )}
         <fieldset disabled={busy}>
           <legend>Article details</legend>
           <label>
             Title
-            <input
-              className="input"
+            <Input
               name="title"
               defaultValue={article.title}
               required
@@ -215,11 +217,10 @@ export function ArticleEditor({
                   : block.type === 'link'
                     ? 'Link label'
                     : 'Text'}
-                <textarea
+                <Textarea
                   ref={(node) => {
                     textareas.current[i] = node;
                   }}
-                  className="input"
                   value={block.text}
                   rows={block.type === 'image' || block.type === 'link' ? 2 : 5}
                   maxLength={20000}
@@ -229,8 +230,7 @@ export function ArticleEditor({
               {block.type === 'link' && (
                 <label>
                   Link URL
-                  <input
-                    className="input"
+                  <Input
                     type="url"
                     value={block.url ?? ''}
                     placeholder="https://"
@@ -241,8 +241,7 @@ export function ArticleEditor({
               {block.type === 'image' && (
                 <label>
                   Uploaded image
-                  <select
-                    className="input"
+                  <NativeSelect
                     value={block.assetId ?? ''}
                     onChange={(e) => update(i, { assetId: e.target.value })}
                   >
@@ -254,26 +253,18 @@ export function ArticleEditor({
                           {a.file_name}
                         </option>
                       ))}
-                  </select>
+                  </NativeSelect>
                 </label>
               )}
               <div className="knowledge-actions">
                 {!['image', 'link', 'code'].includes(block.type) && (
                   <>
-                    <button
-                      type="button"
-                      className="button button-secondary"
-                      onClick={() => format(i, '**')}
-                    >
+                    <Button type="button" variant="secondary" onClick={() => format(i, '**')}>
                       Bold
-                    </button>
-                    <button
-                      type="button"
-                      className="button button-secondary"
-                      onClick={() => format(i, '*')}
-                    >
+                    </Button>
+                    <Button type="button" variant="secondary" onClick={() => format(i, '*')}>
                       Italic
-                    </button>
+                    </Button>
                   </>
                 )}
               </div>
@@ -283,8 +274,7 @@ export function ArticleEditor({
                 </summary>
                 <label>
                   Section format
-                  <select
-                    className="input"
+                  <NativeSelect
                     value={block.type}
                     onChange={(e) => update(i, { type: e.target.value as ArticleBlock['type'] })}
                   >
@@ -295,12 +285,12 @@ export function ArticleEditor({
                           {type[0].toUpperCase() + type.slice(1)}
                         </option>
                       ))}
-                  </select>
+                  </NativeSelect>
                 </label>
                 <div className="knowledge-actions">
-                  <button
+                  <Button
                     type="button"
-                    className="button button-secondary"
+                    variant="secondary"
                     disabled={i === 0}
                     aria-label={`Move block ${i + 1} up`}
                     onClick={() => {
@@ -314,10 +304,10 @@ export function ArticleEditor({
                     }}
                   >
                     Move up
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
-                    className="button button-secondary"
+                    variant="secondary"
                     disabled={i === blocks.length - 1}
                     aria-label={`Move block ${i + 1} down`}
                     onClick={() => {
@@ -331,10 +321,10 @@ export function ArticleEditor({
                     }}
                   >
                     Move down
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
-                    className="button button-secondary"
+                    variant="secondary"
                     aria-label={`Remove block ${i + 1}`}
                     onClick={() => {
                       if (block.text && !window.confirm('Remove this section and its content?'))
@@ -345,14 +335,14 @@ export function ArticleEditor({
                     }}
                   >
                     Remove
-                  </button>
+                  </Button>
                 </div>
               </details>
             </fieldset>
           ))}
-          <button
+          <Button
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             disabled={blocks.length >= 100}
             onClick={() => {
               setDirty(true);
@@ -361,39 +351,33 @@ export function ArticleEditor({
             }}
           >
             Add paragraph
-          </button>
+          </Button>
         </fieldset>
         <fieldset disabled={busy}>
           <legend>Publish settings</legend>
           <label>
             Category
-            <select className="input" name="category" defaultValue={article.category}>
+            <NativeSelect name="category" defaultValue={article.category}>
               {knowledgeCategories.map((c) => (
                 <option key={c}>{c}</option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label>
             Short summary (optional)
-            <textarea
-              className="input"
-              name="summary"
-              defaultValue={article.summary}
-              maxLength={500}
-            />
+            <Textarea name="summary" defaultValue={article.summary} maxLength={500} />
           </label>
           <label>
             Publication status
-            <select className="input" name="status" defaultValue={article.status}>
+            <NativeSelect name="status" defaultValue={article.status}>
               <option value="draft">Draft — IT staff only</option>
               <option value="published">Published</option>
               <option value="archived">Archived — IT staff only</option>
-            </select>
+            </NativeSelect>
           </label>
           <label>
             Audience
-            <select
-              className="input"
+            <NativeSelect
               name="audience"
               required
               value={audience}
@@ -405,7 +389,7 @@ export function ArticleEditor({
                   {item.label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <p id="article-audience-hint" className="muted">
             {library
@@ -427,12 +411,12 @@ export function ArticleEditor({
           </fieldset>
         </details>
         <div className="knowledge-actions">
-          <button className="button button-primary" disabled={busy || uploading}>
+          <Button variant="primary" disabled={busy || uploading}>
             {busy ? 'Saving…' : isNew ? 'Create article' : 'Save article'}
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             onClick={() => {
               if (!dirty || confirmDiscardChanges())
                 router.push(
@@ -441,7 +425,7 @@ export function ArticleEditor({
             }}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </form>
       {!library && (

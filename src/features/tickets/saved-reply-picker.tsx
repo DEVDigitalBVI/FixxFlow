@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { useId, useRef, useState } from 'react';
 
+import { buttonVariants } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
 import { renderSavedReply, type SavedReply, type SavedReplyContext } from './saved-replies';
 
 /**
@@ -30,14 +33,13 @@ export function SavedReplyPicker({
   });
   return (
     <details className="saved-reply-picker" ref={details}>
-      <summary className="button button-secondary">Saved replies</summary>
+      <summary className={buttonVariants({ variant: 'secondary' })}>Saved replies</summary>
       <div className="saved-reply-panel">
         {replies.length ? (
           <>
             <label htmlFor={`${id}-search`}>Find a saved reply</label>
-            <input
+            <Input
               id={`${id}-search`}
-              className="input"
               type="search"
               value={query}
               maxLength={120}

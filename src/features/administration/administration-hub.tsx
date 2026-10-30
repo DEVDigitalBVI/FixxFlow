@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 
 import { administrationSections } from './sections';
@@ -160,11 +162,15 @@ export function AdministrationHub({ organizationName }: { organizationName: stri
         className="administration-hub-header"
         title="Settings"
         description="Manage your workspace and how support gets done."
-        actions={<span className="badge administration-workspace-name">{organizationName}</span>}
+        actions={<Badge className="administration-workspace-name">{organizationName}</Badge>}
       />
       <nav className="administration-jump-nav" aria-label="Settings sections">
         {groups.map((group) => (
-          <a key={group.id} className="button button-quiet" href={`#admin-${group.id}`}>
+          <a
+            key={group.id}
+            className={buttonVariants({ variant: 'quiet' })}
+            href={`#admin-${group.id}`}
+          >
             {group.title}
           </a>
         ))}

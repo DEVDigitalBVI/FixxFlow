@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
 import { RetryButton } from '@/components/ui/retry-button';
 import { incidentSeverities } from '@/features/tickets/incidents';
 import { Timestamp } from '@/features/timezones/provider';
@@ -138,9 +139,9 @@ export async function IncidentReport({
                 <Link href={`/app/tickets/${item.id}#incident-summary`}>
                   #{item.number} · {item.title}
                 </Link>
-                <span className={`ticket-badge tone-${incidentSeverities[item.severity].tone}`}>
+                <Badge tone={incidentSeverities[item.severity].tone} className="ticket-badge">
                   {incidentSeverities[item.severity].label}
-                </span>
+                </Badge>
               </div>
               <p className="muted">
                 {item.status.replaceAll('_', ' ')} · Declared <Timestamp value={item.createdAt} />

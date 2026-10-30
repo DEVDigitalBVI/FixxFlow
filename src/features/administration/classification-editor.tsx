@@ -1,5 +1,6 @@
 import { saveClassification } from '@/app/app/administration/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 type Item = {
@@ -35,27 +36,15 @@ export function ClassificationEditor({
       {categoryId && <input type="hidden" name="categoryId" value={categoryId} />}
       <div className="field">
         <label htmlFor={`name-${key}`}>{item ? `Name of ${label}` : `New ${label} name`}</label>
-        <input
-          id={`name-${key}`}
-          name="name"
-          className="input"
-          required
-          maxLength={100}
-          defaultValue={item?.name}
-        />
+        <Input id={`name-${key}`} name="name" required maxLength={100} defaultValue={item?.name} />
       </div>
       {item ? (
         <div className="field">
           <label htmlFor={`active-${key}`}>Availability</label>
-          <select
-            id={`active-${key}`}
-            name="isActive"
-            className="input"
-            defaultValue={String(item.is_active)}
-          >
+          <NativeSelect id={`active-${key}`} name="isActive" defaultValue={String(item.is_active)}>
             <option value="true">Active</option>
             <option value="false">Inactive</option>
-          </select>
+          </NativeSelect>
         </div>
       ) : (
         <input type="hidden" name="isActive" value="true" />
@@ -63,8 +52,7 @@ export function ClassificationEditor({
       {kind === 'ticket_categories' && (
         <div className="field">
           <label htmlFor={`team-${key}`}>Default team for new tickets</label>
-          <select
-            className="input"
+          <NativeSelect
             id={`team-${key}`}
             name="defaultTeamId"
             defaultValue={item?.default_team_id ?? ''}
@@ -79,14 +67,14 @@ export function ClassificationEditor({
                   {team.is_active ? '' : ' (inactive — choose another team)'}
                 </option>
               ))}
-          </select>
+          </NativeSelect>
           <small className="muted" id={`routing-${key}`}>
             Applies to new tickets only. Staff can override routing. Inactive teams receive no
             automatic assignments.
           </small>
         </div>
       )}
-      <SubmitButton className={`button ${item ? 'button-secondary' : 'button-primary'}`}>
+      <SubmitButton variant={item ? 'secondary' : 'primary'}>
         {item ? `Save ${label}` : `Add ${label}`}
       </SubmitButton>
     </ActionForm>

@@ -7,7 +7,14 @@ import {
   saveReportSchedule,
 } from '@/app/app/reports/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Input, NativeSelect, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
+import { Table, TableRegion } from '@/components/ui/table';
 
 import { Bars, Trend } from './components';
 import { CustomReportDownload } from './custom-download';
@@ -108,10 +115,10 @@ export function CustomReportResults({ report }: { report: CustomReport }) {
           )}
         </div>
       ) : (
-        <div className="empty-state">
+        <EmptyState>
           <strong>No matching report data</strong>
           <p>Change the period or remove one or more filters.</p>
-        </div>
+        </EmptyState>
       )}
       {!time && report.reportType !== 'backlog' && (
         <p className="report-footnote">
@@ -123,13 +130,13 @@ export function CustomReportResults({ report }: { report: CustomReport }) {
         <summary>
           View exact report data · {report.rows.length} row{report.rows.length === 1 ? '' : 's'}
         </summary>
-        <div
-          className="table-region report-data-region"
+        <TableRegion
+          className="report-data-region"
           role="region"
           aria-label="Custom report exact data"
           tabIndex={0}
         >
-          <table className="table responsive-table">
+          <Table className="responsive-table">
             <caption>
               {reportTypes[report.reportType].label} grouped by{' '}
               {groupLabels[report.groupBy].toLowerCase()}
@@ -158,8 +165,8 @@ export function CustomReportResults({ report }: { report: CustomReport }) {
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+          </Table>
+        </TableRegion>
       </details>
     </section>
   );
@@ -177,12 +184,12 @@ export function SaveReportPanel({
 }) {
   if (!canEdit)
     return (
-      <div className="alert alert-info">
+      <Alert tone="info">
         <strong>This is a shared report.</strong>
         <p>
           Run or export it here. Only its owner or an administrator can change the saved definition.
         </p>
-      </div>
+      </Alert>
     );
   return (
     <section className="settings-card report-save-panel">
@@ -198,8 +205,7 @@ export function SaveReportPanel({
         {savedReport && <input type="hidden" name="reportId" value={savedReport.id} />}
         <label className="field">
           Report name
-          <input
-            className="input"
+          <Input
             name="name"
             defaultValue={savedReport?.name ?? ''}
             required
@@ -209,8 +215,7 @@ export function SaveReportPanel({
         </label>
         <label className="field">
           Description <span className="muted">Optional</span>
-          <textarea
-            className="input"
+          <Textarea
             name="description"
             rows={2}
             maxLength={500}
@@ -220,17 +225,13 @@ export function SaveReportPanel({
         {role === 'administrator' && (
           <label className="field">
             Visibility
-            <select
-              className="input"
-              name="visibility"
-              defaultValue={savedReport?.visibility ?? 'personal'}
-            >
+            <NativeSelect name="visibility" defaultValue={savedReport?.visibility ?? 'personal'}>
               <option value="personal">Personal · only me</option>
               <option value="shared">Shared · all support staff</option>
-            </select>
+            </NativeSelect>
           </label>
         )}
-        <SubmitButton className="button button-primary">
+        <SubmitButton variant="primary">
           {savedReport ? 'Save changes' : 'Save report'}
         </SubmitButton>
       </ActionForm>
@@ -251,23 +252,21 @@ export function SavedReportList({
           <h2 id="saved-reports-title">Saved reports</h2>
           <p>Open a saved report to see current results.</p>
         </div>
-        <Link className="button button-primary" href="/app/reports/custom">
+        <Link className={buttonVariants({ variant: 'primary' })} href="/app/reports/custom">
           Create custom report
         </Link>
       </header>
       {reports === null ? (
-        <div className="alert alert-warning" role="alert">
+        <Alert tone="warning" role="alert">
           <strong>Saved reports could not load.</strong>
           <p>Your operational report is still available below. Refresh the page to try again.</p>
-        </div>
+        </Alert>
       ) : reports.length ? (
         <div className="saved-report-grid">
           {reports.map((report) => (
             <article className="settings-card saved-report-card" key={report.id}>
               <div>
-                <span className="badge">
-                  {report.visibility === 'shared' ? 'Shared' : 'Personal'}
-                </span>
+                <Badge>{report.visibility === 'shared' ? 'Shared' : 'Personal'}</Badge>
                 <h3>
                   <Link href={`/app/reports/saved/${report.id}`}>{report.name}</Link>
                 </h3>
@@ -282,10 +281,10 @@ export function SavedReportList({
           ))}
         </div>
       ) : (
-        <div className="empty-state">
+        <EmptyState>
           <strong>No saved reports yet</strong>
           <p>Create a report and save it here for reuse.</p>
-        </div>
+        </EmptyState>
       )}
     </section>
   );
@@ -295,12 +294,15 @@ export function SavedReportActions({ report, canEdit }: { report: SavedReport; c
   if (canEdit) edit.set('saved', report.id);
   return (
     <div className="saved-report-actions">
-      <Link className="button button-secondary" href={`/app/reports/custom?${edit}`}>
+      <Link
+        className={buttonVariants({ variant: 'secondary' })}
+        href={`/app/reports/custom?${edit}`}
+      >
         {canEdit ? 'Edit definition' : 'Customize a copy'}
       </Link>
       {canEdit && (
         <details>
-          <summary className="button button-quiet">Delete report…</summary>
+          <summary className={buttonVariants({ variant: 'quiet' })}>Delete report…</summary>
           <ActionForm action={deleteReport} className="stack destructive-report-form">
             <input type="hidden" name="reportId" value={report.id} />
             <p>
@@ -308,10 +310,10 @@ export function SavedReportActions({ report, canEdit }: { report: SavedReport; c
               be removed.
             </p>
             <label className="check-field">
-              <input type="checkbox" name="confirmation" value={report.id} required />I confirm
-              permanent deletion.
+              <Checkbox name="confirmation" value={report.id} required />I confirm permanent
+              deletion.
             </label>
-            <SubmitButton className="button button-danger" pendingLabel="Deleting…">
+            <SubmitButton variant="danger" pendingLabel="Deleting…">
               Delete report
             </SubmitButton>
           </ActionForm>
@@ -350,17 +352,16 @@ export function ReportSchedules({
             <ScheduleTimingFields />
             <label className="field">
               File format
-              <select className="input" name="format" defaultValue="xlsx">
+              <NativeSelect name="format" defaultValue="xlsx">
                 <option value="xlsx">Excel</option>
                 <option value="csv">CSV</option>
                 <option value="pdf">PDF</option>
-              </select>
+              </NativeSelect>
             </label>
           </div>
           <label className="field">
             Recipients
-            <textarea
-              className="input"
+            <Textarea
               name="recipients"
               rows={3}
               defaultValue={email}
@@ -371,7 +372,7 @@ export function ReportSchedules({
           <p className="muted" id="report-recipient-hint">
             Separate up to 20 email addresses with commas, spaces or new lines.
           </p>
-          <SubmitButton className="button button-primary">Create schedule</SubmitButton>
+          <SubmitButton variant="primary">Create schedule</SubmitButton>
         </ActionForm>
         <div>
           {schedules.length ? (
@@ -399,38 +400,33 @@ export function ReportSchedules({
                   <ActionForm action={manageReportSchedule} className="report-schedule-actions">
                     <input type="hidden" name="reportId" value={report.id} />
                     <input type="hidden" name="scheduleId" value={schedule.id} />
-                    <button
-                      className="button button-secondary"
+                    <Button
+                      variant="secondary"
                       name="command"
                       value={schedule.active ? 'pause' : 'activate'}
                     >
                       {schedule.active ? 'Pause' : 'Activate'}
-                    </button>
-                    <button className="button button-quiet" name="command" value="delete">
+                    </Button>
+                    <Button variant="quiet" name="command" value="delete">
                       Delete
-                    </button>
+                    </Button>
                   </ActionForm>
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="empty-state">
+            <EmptyState>
               <strong>No scheduled delivery</strong>
               <p>Create a daily, weekly or monthly email schedule for this report.</p>
-            </div>
+            </EmptyState>
           )}
         </div>
       </div>
       {deliveries.length > 0 && (
         <details className="settings-card report-delivery-history">
           <summary>Delivery history · latest {deliveries.length}</summary>
-          <div
-            className="table-region"
-            role="region"
-            aria-label="Scheduled report delivery history"
-            tabIndex={0}
-          >
-            <table className="table responsive-table">
+          <TableRegion role="region" aria-label="Scheduled report delivery history" tabIndex={0}>
+            <Table className="responsive-table">
               <thead>
                 <tr>
                   <th scope="col">Scheduled</th>
@@ -459,8 +455,8 @@ export function ReportSchedules({
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+            </Table>
+          </TableRegion>
         </details>
       )}
     </section>

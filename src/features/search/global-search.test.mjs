@@ -3,12 +3,12 @@ import test from 'node:test';
 
 import React from 'react';
 
+import { kitHostMocks } from '../../../tests/helpers/kit-host-mocks.mjs';
 import { load } from '../../../tests/helpers/load-module.mjs';
 
 function fixture(role = 'end_user') {
   let cursor = 0,
     tree,
-    portalTarget,
     approved = true;
   const slots = [],
     calls = [],
@@ -35,13 +35,8 @@ function fixture(role = 'end_user') {
     },
   };
   const { GlobalSearch } = load('src/features/search/global-search.tsx', {
+    ...kitHostMocks(),
     react: hooks,
-    'react-dom': {
-      createPortal: (child, target) => {
-        portalTarget = target;
-        return child;
-      },
-    },
     'next/navigation': { useRouter: () => ({ push: (href) => calls.push(href) }) },
     '@/components/ui/unsaved-changes': { confirmDiscardChanges: () => approved },
   });
@@ -64,7 +59,9 @@ function fixture(role = 'end_user') {
   return {
     body,
     calls,
-    target: () => portalTarget,
+    isOpen: () =>
+      walk(tree, (node) => 'open' in node.props && 'onOpenChange' in node.props).props.open,
+    content: () => walk(tree, (node) => node.props?.className === 'global-search-dialog'),
     find: (predicate) => walk(tree, predicate),
     render,
     state: (index, value) => {
@@ -85,10 +82,12 @@ test('search dialog mounts outside hidden mobile navigation and groups results f
     assert.equal(f.find((node) => node.type === 'button').props['aria-label'], 'Search');
     f.find((node) => node.type === 'button').props.onClick();
     f.render();
-    assert.equal(f.target(), f.body);
+    assert.equal(f.isOpen(), true);
+    // Kit dialog content always portals to the document body, outside hidden navigation.
+    assert.ok(f.content());
     assert.equal(
-      f.find((node) => node.type === 'dialog').props['aria-labelledby'],
-      'global-search-title',
+      f.find((node) => node.props.id === 'global-search-title').props.children,
+      'Search your workspace',
     );
     assert.equal(f.find((node) => node.props.role === 'group').props['aria-label'], 'Navigation');
     assert.equal(
@@ -125,7 +124,7 @@ test('keyboard selection moves through results; modified links stay native and c
       preventDefault() {},
     });
     f.render();
-    assert.ok(f.find((node) => node.type === 'dialog'));
+    assert.equal(f.isOpen(), true);
     assert.deepEqual(f.calls, []);
     f.approve(true);
     f.find((node) => node.props.role === 'combobox').props.onKeyDown({
@@ -135,10 +134,7 @@ test('keyboard selection moves through results; modified links stay native and c
     });
     f.render();
     assert.deepEqual(f.calls, ['/app/tickets']);
-    assert.equal(
-      f.find((node) => node.type === 'dialog'),
-      undefined,
-    );
+    assert.equal(f.isOpen(), false);
   } finally {
     f.close();
   }
@@ -167,10 +163,7 @@ test('Escape closes search directly instead of only clearing the native search f
     f.render();
     assert.equal(prevented, true);
     assert.equal(stopped, true);
-    assert.equal(
-      f.find((node) => node.type === 'dialog'),
-      undefined,
-    );
+    assert.equal(f.isOpen(), false);
   } finally {
     f.close();
   }

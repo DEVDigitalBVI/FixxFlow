@@ -6,8 +6,8 @@ import { load } from '../../../tests/helpers/load-module.mjs';
 
 const { renderEmail } = load('src/features/notifications/template.ts');
 
-test('email actions keep escaped labels and destinations with usable inline and Outlook fallbacks', () => {
-  const html = renderEmail({
+test('email actions keep escaped labels and destinations with usable inline and Outlook fallbacks', async () => {
+  const html = await renderEmail({
     title: 'Ticket ready',
     message: 'Your request is ready.',
     action: 'View ticket & reply',

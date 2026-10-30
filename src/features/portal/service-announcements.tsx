@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
 import { RetryButton } from '@/components/ui/retry-button';
 import { announcementStatus } from '@/features/tickets/announcement-status';
 import { Timestamp } from '@/features/timezones/provider';
@@ -47,11 +48,9 @@ export async function ServiceAnnouncements({
           <li id={`notice-${notice.id}`} key={notice.id} className="service-notice">
             <div className="section-heading-row service-notice-heading">
               <h3>{notice.title}</h3>
-              <span
-                className={`ticket-badge tone-${announcementStatus(notice.public_status).tone}`}
-              >
+              <Badge tone={announcementStatus(notice.public_status).tone} className="ticket-badge">
                 {announcementStatus(notice.public_status).label}
-              </span>
+              </Badge>
             </div>
             <p className="service-notice-message">
               {full || notice.body.length <= 240 ? notice.body : `${notice.body.slice(0, 240)}…`}

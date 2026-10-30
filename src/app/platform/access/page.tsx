@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { MfaChallenge } from '@/features/auth/mfa-challenge';
 import { MfaEnrollment } from '@/features/auth/mfa-enrollment';
@@ -21,7 +22,7 @@ export default async function PlatformAccessPage() {
         ) : (
           <>
             <MfaEnrollment />
-            <Link className="button button-primary" href="/platform">
+            <Link className={buttonVariants({ variant: 'primary' })} href="/platform">
               Continue after enabling your authenticator
             </Link>
           </>

@@ -1,5 +1,8 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { PageHeader } from '@/components/ui/page-header';
 import { knowledgeAudiences } from '@/features/knowledge/audience';
@@ -39,15 +42,15 @@ export default async function LibraryPage({
         title="FixxFlow library"
         description="Maintain shared employee guides and IT procedures. Published updates reach every workspace."
         actions={
-          <Link className="button button-primary" href="/platform/library/new">
+          <Link className={buttonVariants({ variant: 'primary' })} href="/platform/library/new">
             New shared article
           </Link>
         }
       />
       {filters.saved && (
-        <p className="alert alert-success" role="status">
+        <Alert as="p" tone="success" role="status">
           Shared article saved.
-        </p>
+        </Alert>
       )}
       <LiveSearchForm
         action="/platform/library"
@@ -61,23 +64,17 @@ export default async function LibraryPage({
       >
         <label>
           Search shared articles
-          <input
-            className="input"
-            type="search"
-            name="q"
-            defaultValue={q}
-            maxLength={SEARCH_LIMIT}
-          />
+          <Input type="search" name="q" defaultValue={q} maxLength={SEARCH_LIMIT} />
         </label>
-        <button className="button button-secondary">Search</button>
-        <Link className="button button-secondary" href="/platform/library">
+        <Button variant="secondary">Search</Button>
+        <Link className={buttonVariants({ variant: 'secondary' })} href="/platform/library">
           Clear filters
         </Link>
       </LiveSearchForm>
       {error ? (
-        <p className="alert alert-error" role="alert">
+        <Alert as="p" tone="error" role="alert">
           Articles could not load. <Link href={href(page)}>Try again</Link>
-        </p>
+        </Alert>
       ) : (
         <>
           <div className="portal-articles">
@@ -101,13 +98,13 @@ export default async function LibraryPage({
           {(page > 1 || (data?.length ?? 0) > 24) && (
             <nav className="notification-pagination" aria-label="Shared article pages">
               {page > 1 && (
-                <Link className="button button-secondary" href={href(page - 1)}>
+                <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
                   Previous
                 </Link>
               )}
               <span>Page {page}</span>
               {(data?.length ?? 0) > 24 && (
-                <Link className="button button-secondary" href={href(page + 1)}>
+                <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
                   Next
                 </Link>
               )}

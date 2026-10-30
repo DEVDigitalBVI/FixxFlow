@@ -2,6 +2,8 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { SUPPORT_HOURS } from '@/features/tickets/expectations';
 import { formatTicketDate } from '@/features/tickets/presentation';
 import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
@@ -82,8 +84,7 @@ export function EmployeeHome({
         <form action="/app/help" method="get" role="search" aria-label="Help articles">
           <label htmlFor="home-help-query">Search help articles</label>
           <div className="portal-home-search-controls">
-            <input
-              className="input"
+            <Input
               id="home-help-query"
               name="q"
               type="search"
@@ -91,9 +92,9 @@ export function EmployeeHome({
               aria-describedby="home-help-hint"
               placeholder="Try Wi-Fi, password, or email"
             />
-            <button className="button button-primary" type="submit">
+            <Button variant="primary" type="submit">
               Search
-            </button>
+            </Button>
           </div>
           <details className="portal-search-tips">
             <summary>Search tips</summary>
@@ -106,7 +107,7 @@ export function EmployeeHome({
           <div>
             <h2 id="recent-heading">Recent requests</h2>
           </div>
-          <Link className="button button-secondary" href="/app/tickets">
+          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/tickets">
             View all requests
           </Link>
         </div>

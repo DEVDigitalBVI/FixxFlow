@@ -2,6 +2,10 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+
 import { knowledgeAudiences } from './audience';
 import type { ArticleChoice } from './choices';
 
@@ -85,16 +89,15 @@ export function RelatedArticlePicker({
           <p>Selected ({selected.length}/8)</p>
           {selected.map((article) => (
             <label key={article.id}>
-              <input type="checkbox" checked onChange={() => toggle(article)} />
+              <Checkbox checked onChange={() => toggle(article)} />
               {article.title}
             </label>
           ))}
         </div>
       )}
       <label htmlFor={`${id}-search`}>Search article titles</label>
-      <input
+      <Input
         id={`${id}-search`}
-        className="input"
         type="search"
         value={query}
         maxLength={200}
@@ -113,13 +116,9 @@ export function RelatedArticlePicker({
         ) : state.error ? (
           <p role="alert">
             Articles couldn’t load.{' '}
-            <button
-              className="button button-quiet"
-              type="button"
-              onClick={() => setRetry((value) => value + 1)}
-            >
+            <Button variant="quiet" type="button" onClick={() => setRetry((value) => value + 1)}>
               Retry
-            </button>
+            </Button>
           </p>
         ) : (
           <>
@@ -127,8 +126,7 @@ export function RelatedArticlePicker({
               .filter((article) => !selected.some((item) => item.id === article.id))
               .map((article) => (
                 <label key={article.id}>
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={false}
                     disabled={selected.length >= 8}
                     onChange={() => toggle(article)}
@@ -142,23 +140,23 @@ export function RelatedArticlePicker({
         )}
       </div>
       <div className="knowledge-actions">
-        <button
+        <Button
           type="button"
-          className="button button-secondary"
+          variant="secondary"
           disabled={page === 1 || state.pending}
           onClick={() => setPage((value) => value - 1)}
         >
           Previous
-        </button>
+        </Button>
         <span>Page {page}</span>
-        <button
+        <Button
           type="button"
-          className="button button-secondary"
+          variant="secondary"
           disabled={!state.more || state.pending || state.error}
           onClick={() => setPage((value) => value + 1)}
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -144,7 +144,11 @@ test('inventory keeps complete long values, semantic headers and mobile labels i
     ],
   });
   const html = await a.render({});
-  assert.match(html, /role="region" aria-label="Asset inventory" tabindex="0"/);
+  // Kit TableRegion: a labelled, keyboard-focusable scroll region.
+  assert.match(
+    html,
+    /<div(?=[^>]*role="region")(?=[^>]*aria-label="Asset inventory")(?=[^>]*tabindex="0")[^>]*class="table-region/,
+  );
   for (const label of ['Asset', 'Serial number', 'Type', 'Asset status', 'Model']) {
     assert.ok(html.includes(`<th scope="col">${label}</th>`));
     assert.ok(html.includes(`data-label="${label}"`));

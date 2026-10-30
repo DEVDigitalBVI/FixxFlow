@@ -1,12 +1,13 @@
+import type { BadgeTone } from '@/components/ui/badge';
 import type { InventoryState } from '@/types/inventory-database';
 
-export const inventoryStates: Record<InventoryState, { label: string; tone: string }> = {
-  pending: { label: 'Pending review', tone: 'slate' },
-  needs_information: { label: 'More information needed', tone: 'amber' },
-  approved: { label: 'Approved · stock reserved', tone: 'blue' },
-  declined: { label: 'Declined', tone: 'red' },
-  cancelled: { label: 'Cancelled · reservation released', tone: 'slate' },
-  issued: { label: 'Issued · fulfilled', tone: 'green' },
+export const inventoryStates: Record<InventoryState, { label: string; tone: BadgeTone }> = {
+  pending: { label: 'Pending review', tone: 'neutral' },
+  needs_information: { label: 'More information needed', tone: 'warning' },
+  approved: { label: 'Approved · stock reserved', tone: 'active' },
+  declined: { label: 'Declined', tone: 'danger' },
+  cancelled: { label: 'Cancelled · reservation released', tone: 'neutral' },
+  issued: { label: 'Issued · fulfilled', tone: 'success' },
 };
 export function quantity(value: FormDataEntryValue | null, correction = false): number | null {
   const raw = String(value ?? '');

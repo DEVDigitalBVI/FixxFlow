@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 
 import { updateTicket } from '@/app/app/tickets/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import { LookupSelect } from '@/features/lookups/lookup-select';
@@ -48,9 +51,9 @@ export function TicketAssignmentEditor({
   return editing ? (
     <TicketDetailsForm ticket={ticket} timeZone={timeZone} />
   ) : (
-    <button type="button" className="button button-secondary" onClick={() => setEditing(true)}>
+    <Button type="button" variant="secondary" onClick={() => setEditing(true)}>
       Choose technician or edit details
-    </button>
+    </Button>
   );
 }
 
@@ -86,48 +89,48 @@ export function TicketDetailsForm({
     >
       <h2>Ticket details</h2>
       {stale && (
-        <div className="alert ticket-edit-conflict" role="status">
+        <Alert className="ticket-edit-conflict" role="status">
           <p>The saved ticket may have changed. Your draft is still here.</p>
           <a
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={`/app/tickets/${draft.id}#ticket-details`}
             target="_blank"
             rel="noopener noreferrer"
           >
             Review saved details (opens in a new tab)
           </a>
-          <button
-            className="button button-secondary"
+          <Button
+            variant="secondary"
             type="button"
             onClick={() => {
               if (confirmDiscardChanges(true)) window.location.reload();
             }}
           >
             Reload latest details
-          </button>
-        </div>
+          </Button>
+        </Alert>
       )}
       <input type="hidden" name="ticketId" value={draft.id} />
       <input type="hidden" name="revision" value={revision} />
       <label>
         Status
-        <select className="input" name="status" defaultValue={draft.status}>
+        <NativeSelect name="status" defaultValue={draft.status}>
           {Object.entries(ticketStatuses).map(([value, item]) => (
             <option key={value} value={value}>
               {item.label}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       <label>
         Priority
-        <select className="input" name="priority" defaultValue={draft.priority}>
+        <NativeSelect name="priority" defaultValue={draft.priority}>
           {Object.entries(ticketPriorities).map(([value, item]) => (
             <option key={value} value={value}>
               {item.label}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       <LookupSelect
         resource="technicians"
@@ -157,7 +160,7 @@ export function TicketDetailsForm({
           <DeadlineField timeZone={timeZone} value={draft.due_at} />
         </div>
       </details>
-      <SubmitButton className="button button-secondary">Save ticket details</SubmitButton>
+      <SubmitButton variant="secondary">Save ticket details</SubmitButton>
     </ActionForm>
   );
 }

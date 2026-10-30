@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
 import { PageHeader } from '@/components/ui/page-header';
 import { OrganizationCreateForm } from '@/features/administration/organization-create-form';
 import { OrganizationItemActions } from '@/features/administration/organization-item-actions';
@@ -49,14 +52,14 @@ export default async function OrganizationPage({ searchParams }: Props) {
         back={{ href: '/app/administration', label: 'Back to settings' }}
       />
       {message.success && (
-        <div className="alert alert-success page-alert" role="status">
+        <Alert tone="success" className="page-alert" role="status">
           {message.success}
-        </div>
+        </Alert>
       )}
       {message.error && (
-        <div className="alert alert-error page-alert" role="alert">
+        <Alert tone="error" className="page-alert" role="alert">
           {message.error}
-        </div>
+        </Alert>
       )}
       <section className="settings-card profile-card">
         <h2>Timezone</h2>
@@ -76,15 +79,18 @@ export default async function OrganizationPage({ searchParams }: Props) {
             <OrganizationCreateForm kind="department" action={addDepartment} />
           </details>
           {departmentsError ? (
-            <p className="alert alert-error" role="alert">
+            <Alert as="p" tone="error" role="alert">
               Departments could not be loaded.{' '}
-              <Link className="button button-secondary" href="/app/organization#departments">
+              <Link
+                className={buttonVariants({ variant: 'secondary' })}
+                href="/app/organization#departments"
+              >
                 Try again
               </Link>
               .
-            </p>
+            </Alert>
           ) : (
-            !departments?.length && <p className="empty-state">No departments yet.</p>
+            !departments?.length && <EmptyState as="p">No departments yet.</EmptyState>
           )}
           <div className="management-list">
             {departments?.map((item) => (
@@ -118,15 +124,18 @@ export default async function OrganizationPage({ searchParams }: Props) {
             />
           </details>
           {locationsError ? (
-            <p className="alert alert-error" role="alert">
+            <Alert as="p" tone="error" role="alert">
               Locations could not be loaded.{' '}
-              <Link className="button button-secondary" href="/app/organization#locations">
+              <Link
+                className={buttonVariants({ variant: 'secondary' })}
+                href="/app/organization#locations"
+              >
                 Try again
               </Link>
               .
-            </p>
+            </Alert>
           ) : (
-            !locations?.length && <p className="empty-state">No locations yet.</p>
+            !locations?.length && <EmptyState as="p">No locations yet.</EmptyState>
           )}
           <div className="management-list">
             {locations?.map((item) => (
