@@ -237,6 +237,7 @@
     min-height: 44px;
     padding: 12px 0;
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.administration-link) {
     display: block;
@@ -269,6 +270,7 @@
   :where(.scope) :global(.settings-editor[open] > summary) {
     color: var(--color-text);
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.settings-editor > summary > *) {
     margin-inline-end: 8px;
@@ -321,6 +323,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-control);
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.automation-list-manage .settings-editor > summary:hover) {
     background: var(--color-surface-subtle);
@@ -444,6 +447,7 @@
     color: var(--color-accent);
     font-size: 13px;
     font-weight: 600;
+    font-family: var(--font-heading);
     text-decoration: none;
   }
   :where(.scope) :global(.administration-action-link:hover span:first-child) {

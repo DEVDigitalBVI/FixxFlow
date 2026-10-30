@@ -143,7 +143,7 @@ export function NotificationPreferencesForm({
         In-app updates stay available. Workspace announcements and account/security emails are sent
         separately.
       </p>
-      <SubmitButton className="button">Save preferences</SubmitButton>
+      <SubmitButton className="button button-primary">Save preferences</SubmitButton>
     </ActionForm>
   );
 }

@@ -43,7 +43,7 @@ export function WorkspaceSecurityForm({
           workspace protection.
         </p>
       )}
-      <SubmitButton className="button" disabled={!canChange}>
+      <SubmitButton className="button button-primary" disabled={!canChange}>
         Save protection
       </SubmitButton>
     </ActionForm>

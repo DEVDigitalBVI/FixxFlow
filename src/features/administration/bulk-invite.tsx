@@ -182,7 +182,11 @@ export function BulkInvite() {
             </table>
           </div>
           <div className="page-header-actions">
-            <button className="button" disabled={busy || pending === 0} onClick={() => void send()}>
+            <button
+              className="button button-primary"
+              disabled={busy || pending === 0}
+              onClick={() => void send()}
+            >
               {busy
                 ? 'Sending invitations…'
                 : `Send ${pending} remaining invitation${pending === 1 ? '' : 's'}`}

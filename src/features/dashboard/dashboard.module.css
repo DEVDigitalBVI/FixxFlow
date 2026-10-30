@@ -24,6 +24,7 @@
   :where(.scope) :global(.tech-metric span) {
     font-size: 13px;
     font-weight: 600;
+    font-family: var(--font-heading);
     color: var(--color-text-muted);
   }
   :where(.scope) :global(.tech-metric strong) {
@@ -177,6 +178,7 @@
     gap: 8px;
     min-height: 40px;
     font-weight: 600;
+    font-family: var(--font-heading);
     text-decoration: none;
   }
   :where(.scope) :global(.overview-queues) {
@@ -205,6 +207,7 @@
   }
   :where(.scope) :global(.overview-queue strong) {
     font-weight: 600;
+    font-family: var(--font-heading);
   }
   :where(.scope) :global(.overview-queue-copy > span) {
     color: var(--color-text-muted);
@@ -261,6 +264,7 @@
     font-size: 20px;
     line-height: 28px;
     font-weight: 600;
+    font-family: var(--font-heading);
     font-variant-numeric: tabular-nums;
   }
   :where(.scope) :global(.overview-queue-count:where(:not(:empty))) {

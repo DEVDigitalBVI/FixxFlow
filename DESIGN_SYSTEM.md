@@ -115,7 +115,7 @@ The approved, versioned asset package lives under `public/brand/fixxflow/`. Refr
 
 ### 3.3 Typography
 
-- Use the self-hosted Inter variable font, with `ui-sans-serif, system-ui, sans-serif` as the fallback stack. Ship normal and italic files locally so typography does not depend on a third-party request.
+- Use self-hosted Google Fonts: **Outfit** for body text and regular/medium labels, **Rethink Sans** for headings, semantic bold text, and 600–800 weight UI text. Use shared `--font-body` and `--font-heading` family tokens with system sans-serif fallbacks. Keep the family beside explicit weight declarations so supporting copy retains Outfit. Ship variable font files and their SIL Open Font Licenses locally; load with `next/font/local` and `display: swap` so browsers never need a Google request. Rethink Sans includes its native italic; Outfit provides upright weights and uses browser oblique for italic body emphasis. Preserve existing sizes, line heights, tabular numerals and responsive behavior.
 - Use the 400, 500, 600, and 700 weight steps in product UI. Avoid synthetic in-between weights; they make hierarchy inconsistent across browsers.
 - Default body: 14px/20px in the agent workspace; 16px/24px in the employee portal and prose-heavy content.
 - Page title: 24–28px, 600–700 weight, tight but readable line height.
@@ -216,6 +216,8 @@ The approved, versioned asset package lives under `public/brand/fixxflow/`. Refr
 ### 5.5 Buttons, menus, and actions
 
 - One primary action per surface or clearly bounded region. Secondary actions use quieter styling; tertiary actions are text or menu items.
+- Reuse the shared `.button` variants: solid yellow primary, neutral outlined secondary, transparent quiet, and explicitly labeled danger. Primary labels use the heading font at 600; quiet controls use the body font at 500. Keep a 44px minimum target in both dimensions, allow long labels to wrap, and preserve a visible focus ring. Pending actions retain readable contrast, a progress label and a decorative progress indicator; reduced motion makes the indicator static.
+- Email CTAs use the same yellow/charcoal hierarchy through the shared email renderer, with inline styles, 12px × 20px padding, a 24px line height, Outlook cell-padding fallback, and full-width actions on compact screens where media queries are supported.
 - Button labels describe outcomes: “Assign ticket,” not “Submit.”
 - Icon-only controls must have at least a 40×40px interactive area even if the glyph is smaller.
 - Menus contain short, related actions and support arrow keys, Enter/Space, Escape, and focus return.
@@ -598,7 +600,7 @@ Show relevant guides directly below a request subject as it is typed, without re
 
 ### Provider sign-in branding
 
-Microsoft and Google sign-in controls may use their official logos, provider button colors and provider fonts, as requested for company sign-in. Keep this exception scoped to those controls; the rest of FixxFlow retains the shared tokens and Inter typography. Host assets locally, preserve the logos' original colors and proportions, use explicit sign-in labels, provide at least 44px targets and the shared keyboard focus indicator, and give providers equal prominence. The permitted light button treatment may remain light within the dark page theme.
+Microsoft and Google sign-in controls may use their official logos, provider button colors and provider fonts, as requested for company sign-in. Keep this exception scoped to those controls; the rest of FixxFlow retains the shared tokens and product typography. Host assets locally, preserve the logos' original colors and proportions, use explicit sign-in labels, provide at least 44px targets and the shared keyboard focus indicator, and give providers equal prominence. The permitted light button treatment may remain light within the dark page theme.
 
 ### Compact queue drawer (October 2026)
 

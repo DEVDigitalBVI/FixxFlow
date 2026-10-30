@@ -64,8 +64,8 @@ test('all email variants share a compact header and left-aligned content', () =>
       name,
     );
     if (html.includes('>open this link</a>')) {
-      assert.match(html, /<table role="presentation" style="margin:0"/, name);
-      assert.match(html, /padding:10px 18px/, name);
+      assert.match(html, /<table role="presentation" class="email-action-table"/, name);
+      assert.match(html, /padding:12px 20px/, name);
     }
     if (html.includes('Security notice'))
       assert.match(html, /<td align="left" bgcolor="#fff0d9" style="text-align:left;/, name);
@@ -197,7 +197,7 @@ test('Resend receives an idempotency key and authenticated link without conversa
   assert.match(body.text, /https:\/\/example.test\/app\/tickets\/ticket-1/);
   assert.match(body.html, /fixxflow-logo-horizontal.png/);
   assert.match(body.html, /View update/);
-  assert.match(body.html, /font-family:Inter,ui-sans-serif,system-ui/);
+  assert.match(body.html, /font-family:Outfit,ui-sans-serif,system-ui/);
 });
 test('HTML notification titles are escaped and plain text remains available', async () => {
   await sendNotificationEmail(
