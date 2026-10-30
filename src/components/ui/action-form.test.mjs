@@ -205,3 +205,39 @@ test('named server errors provide a focus action that reveals the invalid field'
     f.close();
   }
 });
+
+test('upload stages remain announced and duplicate submissions stay blocked until navigation', async () => {
+  let finishUpload,
+    calls = 0;
+  const f = fixture(
+    async () => {
+      calls++;
+      return { redirectTo: '/app/tickets/created' };
+    },
+    {
+      pendingMessage: 'Request created. Uploading file 1 of 2…',
+      beforeRedirect: () =>
+        new Promise((resolve) => {
+          finishUpload = resolve;
+        }),
+    },
+  );
+  try {
+    const submission = f.submit();
+    await new Promise((resolve) => setImmediate(resolve));
+    f.h.render();
+    assert.equal(
+      f.h.find((n) => n.type === 'span' && n.props.role === 'status').props.children,
+      'Request created. Uploading file 1 of 2…',
+    );
+    assert.equal(f.h.find((n) => n.type === 'fieldset').props.disabled, true);
+    await f.submit();
+    assert.equal(calls, 1);
+    assert.deepEqual(f.navigations, []);
+    finishUpload();
+    await submission;
+    assert.deepEqual(f.navigations, ['/app/tickets/created']);
+  } finally {
+    f.close();
+  }
+});

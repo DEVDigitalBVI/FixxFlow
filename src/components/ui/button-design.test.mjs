@@ -58,3 +58,20 @@ test('shared action styles preserve touch targets, wrapping and non-color focus 
     );
   }
 });
+
+test('pending submit buttons display the current upload stage while remaining disabled', () => {
+  const { SubmitButton } = load('src/components/ui/submit-button.tsx', {
+    'react-dom': { useFormStatus: () => ({ pending: false }) },
+    './form-pending': { FormPendingContext: React.createContext(true) },
+    './form-progress': {
+      FormProgressContext: React.createContext('Request created. Uploading file 2 of 3…'),
+    },
+  });
+  const html = render(
+    React.createElement(SubmitButton, { pendingLabel: 'Sending request…' }, 'Submit request'),
+  );
+  assert.match(html, /disabled=""/);
+  assert.match(html, /aria-busy="true"/);
+  assert.match(html, /Request created. Uploading file 2 of 3…/);
+  assert.doesNotMatch(html, /Sending request…/);
+});

@@ -255,7 +255,7 @@ export function TicketWorkflow({
             <span />
           )}
           {step < steps.length - 1 ? (
-            <button type="button" className="button button-primary" onClick={() => go(step + 1)}>
+            <button type="button" className="button button-secondary" onClick={() => go(step + 1)}>
               Next: {steps[step + 1].title}
             </button>
           ) : (
