@@ -21,7 +21,7 @@
     display: flex;
     align-items: start;
     gap: 10px;
-    min-height: 44px;
+    min-height: var(--control-height);
   }
   :where(.scope) input[type='checkbox'] {
     width: 18px;

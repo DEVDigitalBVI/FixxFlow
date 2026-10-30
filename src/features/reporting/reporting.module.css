@@ -12,7 +12,7 @@
   :where(.scope) :global(.report-metrics dd) {
     margin: 8px 0;
     font-size: 28px;
-    font-weight: 700;
+    font-weight: 600;
     font-family: var(--font-heading);
     font-variant-numeric: tabular-nums;
   }
@@ -23,11 +23,6 @@
     line-height: 20px;
     font-weight: 400;
     font-family: var(--font-body);
-  }
-  :where(.scope) :global(.report-shortcuts) {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
   }
   :where(.scope) :global(.report-download) {
     margin-block: 16px 24px;
@@ -44,7 +39,7 @@
   }
   :where(.scope) :global(.report-download > p) {
     margin-block: 8px 0;
-    font-size: 13px;
+    font-size: 14px;
   }
   :where(.scope) :global(.report-download > p:empty) {
     display: none;
@@ -123,7 +118,7 @@
     border-top-style: dashed;
   }
   :where(.scope) :global(.report-chart summary) {
-    min-height: 44px;
+    min-height: var(--control-height);
     padding: 12px 0;
     cursor: pointer;
     font-weight: 600;
@@ -252,7 +247,7 @@
     color: var(--color-text-muted);
   }
   :where(.scope) :global(.report-toolbar > div > .muted) {
-    font-size: 13px;
+    font-size: 14px;
   }
   :where(.scope) :global(.report-toolbar .report-download) {
     margin: 0;
@@ -320,7 +315,7 @@
   }
   :where(.scope) :global(.report-service-levels .report-empty p) {
     margin: 4px 0 0;
-    font-size: 13px;
+    font-size: 14px;
   }
   :where(.scope) :global(.reports-page .report-chart-grid) {
     align-items: stretch;
@@ -330,7 +325,7 @@
     flex-direction: column;
   }
   :where(.scope) :global(.reports-page .report-chart > p) {
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.6;
     margin: 8px 0 0;
   }
@@ -342,7 +337,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-control);
     padding: 10px 12px;
-    font-size: 13px;
+    font-size: 14px;
     background: var(--color-surface);
   }
   :where(.scope) :global(.reports-page .report-chart summary:hover) {
@@ -363,7 +358,7 @@
   }
   :where(.scope) :global(.report-template-card span) {
     color: var(--color-text-muted);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 20px;
   }
   :where(.scope) :global(.report-template-card:hover) {
@@ -509,7 +504,7 @@
   }
   :where(.scope) :global(.report-metrics dt) {
     color: var(--color-text-muted);
-    font-size: 13px;
+    font-size: 14px;
   }
   :where(.scope) :global(.report-metrics dd) {
     margin-bottom: 0;
@@ -517,7 +512,7 @@
   :where(.scope) :global(.report-metrics dd > span) {
     display: block;
     line-height: 1.2;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.02em;
     font-size: 32px;
     font-weight: 600;
     font-family: var(--font-heading);
@@ -584,7 +579,7 @@
   }
   :where(.scope) :global(.incident-report-metrics dt) {
     color: var(--color-text-muted);
-    font-size: 13px;
+    font-size: 14px;
   }
   :where(.scope) :global(.incident-report-metrics dd) {
     margin: 4px 0;
@@ -615,7 +610,7 @@
   }
   :where(.scope) :global(.incident-report summary) {
     cursor: pointer;
-    min-height: 44px;
+    min-height: var(--control-height);
     padding-block: 10px;
   }
   @media (max-width: 767px) {

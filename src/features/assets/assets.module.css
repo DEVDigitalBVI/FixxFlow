@@ -51,7 +51,7 @@
   }
   :where(.scope) :global(.asset-inventory-heading > span),
   :where(.scope) :global(.asset-inventory-footer) {
-    font-size: 13px;
+    font-size: 14px;
   }
   :where(.scope) :global(.asset-inventory-toolbar) {
     padding: 20px 24px;
@@ -164,7 +164,7 @@
   }
   :where(.scope) :global(.asset-record-facts dt) {
     color: var(--color-text-muted);
-    font-size: 13px;
+    font-size: 14px;
     margin-bottom: 4px;
   }
   :where(.scope) :global(.asset-record-facts dd) {
@@ -190,7 +190,7 @@
   }
   :where(.scope) :global(.asset-form-section legend) {
     padding: 0 12px 0 0;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     font-family: var(--font-heading);
   }
@@ -351,7 +351,7 @@
     line-height: 24px;
   }
   :where(.scope) :global(.asset-import summary) {
-    min-height: 44px;
+    min-height: var(--control-height);
     padding-block: 12px;
     cursor: pointer;
   }

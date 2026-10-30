@@ -61,9 +61,12 @@ test('navigation and pagination controls retain button treatment without inherit
   // Real regression: the former .queue-views a selector overrode pagination button borders and padding.
   assert.doesNotMatch(css, /\.queue-views a \{[^}]*border-bottom:/);
   assert.match(css, /\.queue-views a:not\(\.button\)/);
-  assert.match(css, /\.queue-views a\[aria-current="page"\][^}]*font-weight: 700/);
+  assert.match(css, /\.queue-views a\[aria-current="page"\][^}]*font-weight: 600/);
   assert.match(css, /\.link-button \{[^}]*min-height: 40px/);
-  assert.match(css, /\.settings-card > details > summary \{[^}]*min-height: 44px/);
+  assert.match(
+    css,
+    /\.settings-card > details > summary \{[^}]*min-height: var\(--control-height\)/,
+  );
   assert.match(css, /\.knowledge-file input \{[^}]*min-height: 40px/);
   assert.match(css, /@media \(forced-colors: active\)/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);

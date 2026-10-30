@@ -66,4 +66,4 @@ function SheetTitle({ className, ...props }: ComponentProps<typeof SheetPrimitiv
   );
 }
 
-export { Sheet, SheetClose, SheetContent, SheetOverlay, SheetTitle, SheetTrigger };
+export { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger };

@@ -31,4 +31,4 @@ function EmptyState<E extends EmptyElement = 'div'>({
   );
 }
 
-export { EmptyState, emptyStateClassName };
+export { EmptyState };

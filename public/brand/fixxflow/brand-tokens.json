@@ -91,17 +91,17 @@
   "typography": {
     "ui": {
       "fontFamily": {
-        "$value": "Outfit, ui-sans-serif, system-ui, sans-serif",
+        "$value": "Inter, ui-sans-serif, system-ui, sans-serif",
         "$type": "fontFamily"
       },
-      "guidance": "Use Outfit 400 for body and 500 for regular labels. Use Rethink Sans 600 for controls/section headings and 700 for major headings and bold text. Both variable families and OFL licenses are included and self-hosted."
+      "guidance": "Use Inter for all product text: 400 for body, 500 for labels and controls, 600 for headings and emphasis. The variable family and its OFL license are self-hosted."
     },
     "wordmark": {
       "guidance": "The wordmark is artwork. Do not recreate it using live text."
     },
     "heading": {
       "fontFamily": {
-        "$value": "Rethink Sans, ui-sans-serif, system-ui, sans-serif",
+        "$value": "Inter, ui-sans-serif, system-ui, sans-serif",
         "$type": "fontFamily"
       }
     }

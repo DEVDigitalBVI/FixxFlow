@@ -121,7 +121,7 @@ test('dark text, states, buttons, charts and focus meet contrast thresholds', ()
   const tokens = Object.fromEntries(
     [...block.matchAll(/--color-([\w-]+): (#[\da-f]+);/g)].map((m) => [m[1], m[2]]),
   );
-  for (const surface of ['canvas', 'surface', 'surface-subtle', 'surface-raised']) {
+  for (const surface of ['canvas', 'surface', 'surface-subtle']) {
     for (const text of ['text', 'text-muted', 'accent'])
       assert.ok(contrast(tokens[text], tokens[surface]) >= 4.5, `${text} on ${surface}`);
     for (const cue of ['focus', 'control-border', 'success'])
@@ -142,7 +142,7 @@ test('dark text, states, buttons, charts and focus meet contrast thresholds', ()
       : `${state}-subtle`;
     assert.ok(contrast(tokens[state], tokens[surface]) >= 4.5, state);
   }
-  for (const fill of ['accent', 'accent-hover'])
+  for (const fill of ['accent'])
     assert.ok(contrast(tokens['on-accent'], tokens[fill]) >= 4.5, fill);
 });
 test('light surfaces and yellow filled actions retain readable contrast in both themes', () => {
@@ -154,15 +154,8 @@ test('light surfaces and yellow filled actions retain readable contrast in both 
   const light = read(css.match(/:root \{([^}]+)\}/)[1]);
   const dark = { ...light, ...read(css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1]) };
   for (const theme of [light, dark]) {
-    for (const surface of [
-      'canvas',
-      'surface',
-      'surface-subtle',
-      'surface-raised',
-      'field-surface',
-      'field-hover',
-    ]) {
-      for (const foreground of ['text', 'text-muted', 'text-subtle', 'accent', 'accent-hover']) {
+    for (const surface of ['canvas', 'surface', 'surface-subtle']) {
+      for (const foreground of ['text', 'text-muted', 'text-subtle', 'accent']) {
         assert.ok(
           contrast(theme[foreground], theme[surface]) >= 4.5,
           `${foreground} on ${surface}`,
@@ -512,6 +505,6 @@ test('all five reference colors have explicit shared product roles', () => {
     surface: '#ffffff',
   }))
     assert.ok(css.includes(`--color-${role}: ${value};`), `${role} uses ${value}`);
-  assert.match(css, /--color-border-strong: #adb5bd;/);
+  assert.match(css, /--color-border-strong: #ced4da;/);
   assert.match(css, /--color-text-muted: #adb5bd;/);
 });

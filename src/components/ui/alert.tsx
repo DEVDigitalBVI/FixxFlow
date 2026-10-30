@@ -15,13 +15,13 @@ const alertStyles = cva(
       tone: {
         neutral:
           'border-(color:--color-border) bg-(color:--color-surface-subtle) text-(color:--color-text)',
-        info: 'alert-info border-(color:--color-border-strong) bg-(color:--color-surface-subtle) text-(color:--color-text)',
+        info: 'alert-info border-(color:--color-border) bg-(color:--color-surface-subtle) text-(color:--color-text)',
         success:
           'alert-success border-(color:--color-success)/22 bg-(color:--color-success-subtle) text-(color:--color-success)',
         warning:
-          'alert-warning border-(color:--color-warning) bg-(color:--color-warning-subtle) text-(color:--color-warning)',
+          'alert-warning border-(color:--color-warning)/25 bg-(color:--color-warning-subtle) text-(color:--color-warning)',
         error:
-          'alert-error border-(color:--color-danger) bg-(color:--color-danger-surface) text-(color:--color-danger)',
+          'alert-error border-(color:--color-danger)/25 bg-(color:--color-danger-surface) text-(color:--color-danger)',
       },
     },
     defaultVariants: { tone: 'neutral' },
@@ -44,4 +44,4 @@ function Alert<E extends AlertElement = 'div'>({ as, tone, className, ...props }
   );
 }
 
-export { Alert, alertStyles };
+export { Alert };

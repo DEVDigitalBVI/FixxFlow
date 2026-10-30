@@ -1,53 +1,10 @@
 @layer components {
-  :where(.scope) :global(.tech-metrics) {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-  :where(.scope) :global(.tech-metric) {
-    min-height: 132px;
-    display: grid;
-    align-content: space-between;
-    gap: 5px;
-    padding: 18px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    background: var(--color-surface);
-    color: var(--color-text);
-    text-decoration: none;
-  }
-  :where(.scope) :global(.tech-metric:hover) {
-    border-color: var(--color-border-strong);
-    box-shadow: var(--shadow-card);
-  }
-  :where(.scope) :global(.tech-metric span) {
-    font-size: 13px;
-    font-weight: 600;
-    font-family: var(--font-heading);
-    color: var(--color-text-muted);
-  }
-  :where(.scope) :global(.tech-metric strong) {
-    font-size: 32px;
-    line-height: 36px;
-    font-variant-numeric: tabular-nums;
-  }
-  :where(.scope) :global(.tech-metric small) {
-    color: var(--color-text-muted);
-    font-size: 12px;
-  }
-  :where(.scope) :global(.tech-recent) {
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    background: var(--color-surface);
-    overflow: hidden;
-  }
   :where(.scope) :global(.tech-section-heading) {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    padding: 20px 22px;
+    padding: 20px 24px;
     border-bottom: 1px solid var(--color-border);
   }
   :where(.scope) :global(.tech-section-heading h2) {
@@ -57,59 +14,7 @@
   :where(.scope) :global(.tech-section-heading p) {
     margin: 4px 0 0;
     color: var(--color-text-muted);
-    font-size: 13px;
-  }
-  :where(.scope) :global(.tech-recent ul) {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  :where(.scope) :global(.tech-recent li + li) {
-    border-top: 1px solid var(--color-border);
-  }
-  :where(.scope) :global(.tech-recent li a) {
-    display: grid;
-    grid-template-columns: 76px minmax(0, 1fr) 110px 92px;
-    align-items: center;
-    gap: 14px;
-    min-height: 66px;
-    padding: 10px 22px;
-    color: var(--color-text);
-    text-decoration: none;
-  }
-  :where(.scope) :global(.tech-recent li a:hover) {
-    background: var(--color-surface-subtle);
-  }
-  :where(.scope) :global(.tech-recent-title) {
-    min-width: 0;
-    display: grid;
-    gap: 2px;
-  }
-  :where(.scope) :global(.tech-recent-title strong) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  :where(.scope) :global(.tech-recent-title small),
-  :where(.scope) :global(.tech-recent-id) {
-    color: var(--color-text-muted);
-    font-size: 12px;
-  }
-  @media (max-width: 1050px) {
-    :where(.scope) :global(.tech-metrics) {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-  @media (max-width: 767px) {
-    :where(.scope) :global(.tech-metrics) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (max-width: 767px) {
-    :where(.scope) :global(.tech-recent li a) {
-      grid-template-columns: 62px minmax(0, 1fr);
-      gap: 7px 10px;
-    }
+    font-size: 14px;
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.tech-section-heading) {
@@ -117,34 +22,8 @@
     }
   }
   @media (max-width: 440px) {
-    :where(.scope) :global(.tech-metrics) {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  @media (max-width: 440px) {
-    :where(.scope) :global(.tech-metric) {
-      min-height: 116px;
-      padding: 14px;
-    }
-  }
-  @media (max-width: 440px) {
-    :where(.scope) :global(.tech-metric strong) {
-      font-size: 28px;
-    }
-  }
-  @media (max-width: 440px) {
     :where(.scope) :global(.tech-section-heading) {
       display: grid;
-    }
-  }
-  @media (max-width: 767px) {
-    :where(.scope) :global(.tech-recent-title strong) {
-      white-space: normal;
-    }
-  }
-  @media (max-width: 380px) {
-    :where(.scope) :global(.tech-metrics) {
-      grid-template-columns: 1fr;
     }
   }
   :where(.scope) :global(.overview-page > section) {
@@ -211,20 +90,7 @@
   }
   :where(.scope) :global(.overview-queue-copy > span) {
     color: var(--color-text-muted);
-    font-size: 13px;
-  }
-  :where(.scope) :global(.overview-queue-index) {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-control);
-    font-size: 12px;
-    font-variant-numeric: tabular-nums;
-    color: var(--color-accent);
-    background: var(--color-accent-subtle);
+    font-size: 14px;
   }
   :where(.scope) :global(.overview-queue-arrow) {
     margin-left: auto;
@@ -233,10 +99,6 @@
   }
   :where(.scope) :global(.overview-queue:hover) {
     background: var(--color-accent-subtle);
-  }
-  :where(.scope) :global(.overview-help) {
-    padding-top: 24px;
-    border-top: 1px solid var(--color-border);
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.overview-queues) {

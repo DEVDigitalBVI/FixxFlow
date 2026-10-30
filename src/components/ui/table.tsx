@@ -35,4 +35,4 @@ function Table({ className, ...props }: ComponentProps<'table'>) {
   return <table data-slot="table" className={cn(tableClassName, className)} {...props} />;
 }
 
-export { Table, tableClassName, TableRegion };
+export { Table, TableRegion };

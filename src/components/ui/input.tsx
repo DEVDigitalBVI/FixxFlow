@@ -7,12 +7,11 @@ import { cn } from '@/lib/utils';
  * hook class keeps contextual widths and compact toolbar rules in globals.css working.
  */
 const fieldClassName = [
-  'input w-full max-w-full min-w-0 min-h-11 rounded-(--radius-control) border border-solid border-(color:--color-control-border)',
-  'bg-(color:--color-surface) px-3.5 py-2.5 font-(family-name:--font-body) font-normal text-(color:--color-text)',
+  'input w-full max-w-full min-w-0 min-h-10 pointer-coarse:min-h-11 rounded-(--radius-control) border border-solid border-(color:--color-control-border)',
+  'bg-(color:--color-surface) px-3 py-2 font-(family-name:--font-body) font-normal text-(color:--color-text)',
   'shadow-[0_1px_2px_rgb(26_26_26/5%)] transition-[border-color,box-shadow,background-color] duration-150 ease-out motion-reduce:transition-none',
   'placeholder:text-(color:--color-text-subtle) placeholder:opacity-100',
   'file:mr-3 file:cursor-pointer file:border-0 file:bg-transparent file:font-(family-name:--font-heading) file:font-semibold file:text-(color:--color-text)',
-  'hover:not-disabled:not-[[readonly]]:not-focus:border-(color:--color-border-strong)',
   'focus:border-(color:--color-focus) focus:outline-hidden focus:ring-3 focus:ring-(color:--color-focus)/40',
   'disabled:cursor-not-allowed disabled:bg-(color:--color-surface-subtle) disabled:text-(color:--color-text-muted)',
   '[&[readonly]]:bg-(color:--color-surface-subtle) [&[readonly]]:text-(color:--color-text-muted)',
@@ -22,7 +21,7 @@ const fieldClassName = [
 type FieldSize = 'default' | 'compact';
 const sizeClassName: Record<FieldSize, string> = {
   default: '',
-  compact: 'input-compact min-h-10 px-2.5 py-1.5',
+  compact: 'input-compact min-h-9 pointer-coarse:min-h-11 px-2.5 py-1.5',
 };
 
 function Input({

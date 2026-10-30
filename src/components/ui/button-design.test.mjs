@@ -38,8 +38,11 @@ test('kit button preserves touch targets, wrapping, non-color focus cues and sem
   const { buttonVariants } = load('src/components/ui/button.tsx');
   const base = buttonVariants({ variant: 'secondary' });
   for (const rule of [
-    'min-h-11',
-    'min-w-11',
+    'min-h-10',
+    'min-w-10',
+    // Touch screens keep 44px targets.
+    'pointer-coarse:min-h-11',
+    'pointer-coarse:min-w-11',
     'max-w-full',
     'whitespace-normal',
     '[overflow-wrap:anywhere]',
@@ -59,11 +62,12 @@ test('kit button preserves touch targets, wrapping, non-color focus cues and sem
     );
   }
   assert.ok(buttonVariants({ variant: 'quiet', size: 'small' }).includes('button-small'));
-  assert.ok(buttonVariants({ variant: 'quiet', size: 'icon' }).includes('size-11'));
-  // Variant colors replace the base transparent edge instead of competing with it.
-  const primary = buttonVariants({ variant: 'primary' }).split(' ');
-  assert.ok(primary.includes('border-(color:--color-brand-ink)'));
-  assert.ok(!primary.includes('border-transparent'));
+  assert.ok(buttonVariants({ variant: 'quiet', size: 'icon' }).includes('pointer-coarse:size-11'));
+  // Soft treatment: the filled primary action has no outline; secondary uses the faint edge.
+  assert.ok(buttonVariants({ variant: 'primary' }).split(' ').includes('border-transparent'));
+  const secondary = buttonVariants({ variant: 'secondary' }).split(' ');
+  assert.ok(secondary.includes('border-(color:--color-border)'));
+  assert.ok(!secondary.includes('border-transparent'));
   // Feature-specific native buttons keep the shared focus, busy and forced-colors treatment.
   assert.match(
     css,
@@ -81,7 +85,8 @@ test('kit text fields keep 44px targets, visible focus, invalid state and stable
   const classes = fieldClassName.split(' ');
   for (const rule of [
     'input',
-    'min-h-11',
+    'min-h-10',
+    'pointer-coarse:min-h-11',
     'border-(color:--color-control-border)',
     'focus:border-(color:--color-focus)',
     'focus:outline-hidden',

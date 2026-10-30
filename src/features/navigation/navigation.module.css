@@ -82,7 +82,7 @@
   @media (max-width: 767px) {
     :where(.scope) :global(.nav-list) {
       display: grid;
-      gap: 5px;
+      gap: 4px;
     }
   }
   @media (max-width: 767px) {
@@ -117,7 +117,7 @@
     color: var(--color-accent);
     background: var(--color-accent-subtle);
     box-shadow: inset 3px 0 var(--color-accent);
-    font-weight: 700;
+    font-weight: 600;
     font-family: var(--font-heading);
   }
   :where(.scope) :global(.staff-more-nav > summary) {
@@ -126,7 +126,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    min-height: 44px;
+    min-height: var(--control-height);
     padding: 10px 12px;
     color: var(--color-text-muted);
     border-radius: var(--radius-control);

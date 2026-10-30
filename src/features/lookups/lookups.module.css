@@ -11,7 +11,7 @@
     justify-content: space-between;
     gap: 8px;
     color: var(--color-danger);
-    font-size: 13px;
+    font-size: 14px;
   }
   :where(.scope) :global(.lookup-actions) {
     display: flex;

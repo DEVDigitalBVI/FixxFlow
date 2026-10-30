@@ -7,7 +7,7 @@ import { normalizeSearch } from '@/lib/search';
 
 import { confirmDiscardChanges } from './unsaved-changes';
 
-export const SEARCH_DELAY = 300;
+const SEARCH_DELAY = 300;
 
 /** Serialize the visible controls just like GET, starting a fresh result page. */
 export function searchHref(action: string, data: FormData) {
@@ -22,7 +22,7 @@ export function searchHref(action: string, data: FormData) {
 
 /** Restore URL filters without remounting or moving focus. The first option is
  * each search select's default; unchecked checkboxes are absent from GET URLs. */
-export function restoreSearchForm(form: HTMLFormElement, params: URLSearchParams) {
+function restoreSearchForm(form: HTMLFormElement, params: URLSearchParams) {
   for (const control of form.elements) {
     if (control instanceof HTMLInputElement) {
       if (control.name === 'q') control.value = normalizeSearch(params.get('q') ?? '');
