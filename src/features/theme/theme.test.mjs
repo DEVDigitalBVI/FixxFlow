@@ -164,7 +164,7 @@ test('light surfaces and crimson filled actions retain readable contrast in both
       for (const cue of ['focus', 'control-border'])
         assert.ok(contrast(theme[cue], theme[surface]) >= 3, `${cue} on ${surface}`);
     }
-    for (const fill of ['action-fill', 'action-hover'])
+    for (const fill of ['action-fill', 'action-hover', 'brand-panel', 'brand-panel-hover'])
       assert.ok(contrast(theme['on-action'], theme[fill]) >= 4.5, fill);
   }
 });

@@ -831,7 +831,7 @@
     padding: 20px;
     border: 0;
     border-radius: var(--radius-card);
-    background: var(--color-action-fill);
+    background: var(--color-brand-panel);
     color: var(--color-on-action);
   }
   :where(.scope) :global(.portal-home-search .input) {
@@ -971,7 +971,7 @@
     color: var(--color-accent);
   }
   :where(.scope) :global(.portal-home .portal-action-emphasis) {
-    background: var(--color-action-fill);
+    background: var(--color-brand-panel);
     border: 0;
     color: var(--color-on-action);
   }
@@ -980,7 +980,7 @@
     color: var(--color-on-action);
   }
   :where(.scope) :global(.portal-home .portal-action-emphasis:hover) {
-    background: var(--color-action-hover);
+    background: var(--color-brand-panel-hover);
     border-color: transparent;
   }
   :where(.scope) :global(.portal-home .portal-action span:last-child) {

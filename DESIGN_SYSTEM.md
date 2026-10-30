@@ -51,6 +51,8 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-brand-primary: #ef233c;
   --color-brand-secondary: #8d99ae;
   --color-brand-ink: #2b2d42;
+  --color-brand-panel: #9f1934;
+  --color-brand-panel-hover: #8d142d;
   --color-canvas: #edf2f4;
   --color-surface: #ffffff;
   --color-surface-subtle: #f4f6f8;
@@ -637,3 +639,7 @@ Use solid crimson with white headings, descriptions and links for Chat with IT a
 Knowledge topic cards (Accounts, Email, Network, Hardware, Software and Security) share the crimson/white, borderless treatment in both themes. Keep headings and descriptions white, deepen the fill on hover, retain visible keyboard focus and preserve the existing category links and responsive grid.
 
 Keep the self-hosted normal/italic Inter faces and `display: swap`, but disable whole-family preloading: the browser requests the face actually used by the page, instead of downloading unused italic on every initial visit. Verify font requests and paint timing before claiming a real-user performance improvement.
+
+### Quieter crimson panels
+
+Large filled panels use the dedicated brand-panel tokens: muted crimson `#9F1934` in light mode, deeper wine `#7B1C32` in dark mode, with white text. Hover uses `#8D142D` and `#911F3A` respectively. Apply this to the employee-home emphasis panels and help topic cards. Keep the original crimson for compact actions and the existing branding; avoid filling large areas with the fully saturated action color. Preserve white search fields, explicit focus and the existing responsive layout.

@@ -45,6 +45,8 @@
     --color-brand-primary: #ef233c;
     --color-brand-secondary: #8d99ae;
     --color-brand-ink: #2b2d42;
+    --color-brand-panel: #9f1934;
+    --color-brand-panel-hover: #8d142d;
     --color-canvas: #edf2f4;
     --color-surface: #ffffff;
     --color-surface-subtle: #f4f6f8;
@@ -83,6 +85,8 @@
   }
   :root[data-theme='dark'] {
     color-scheme: dark;
+    --color-brand-panel: #7b1c32;
+    --color-brand-panel-hover: #911f3a;
     --color-canvas: #232536;
     --color-surface: #2b2d42;
     --color-surface-subtle: #32354b;
@@ -118,6 +122,8 @@
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
       color-scheme: dark;
+      --color-brand-panel: #7b1c32;
+      --color-brand-panel-hover: #911f3a;
       --color-canvas: #232536;
       --color-surface: #2b2d42;
       --color-surface-subtle: #32354b;
