@@ -1053,6 +1053,7 @@ export type Database = {
       }
       incident_stakeholder_groups: {
         Row: {
+          is_follower_group: boolean
           archived: boolean
           created_at: string
           id: string
@@ -1062,6 +1063,7 @@ export type Database = {
           ticket_id: string
         }
         Insert: {
+          is_follower_group?: boolean
           archived?: boolean
           created_at?: string
           id: string
@@ -1071,6 +1073,7 @@ export type Database = {
           ticket_id: string
         }
         Update: {
+          is_follower_group?: boolean
           archived?: boolean
           created_at?: string
           id?: string
@@ -3916,6 +3919,10 @@ export type Database = {
             }
             Returns: string
           }
+      manage_incident_follower: {
+        Args: { org: string; ticket: string; person: string; expected_revision: number; operation: string }
+        Returns: number
+      }
       manage_incident_communication: {
         Args: {
           expected_revision: number

@@ -624,3 +624,9 @@ Light mode uses a warm ivory canvas (`#FAF9F2`), white reading surfaces, and pal
 ### Orange supporting accent
 
 Orange `#FF9800` is the fifth approved brand color. Use it alongside yellow in the navigation signature, small decorative section markers and highlights on charcoal. Warning labels on light surfaces use the darker `#8A4B00` with a pale orange `#FFF0D9` surface; dark warning labels use exact orange on charcoal. Exact orange is not normal-sized text on white. Keep yellow as the primary action color and gray as the supporting neutral. Existing four-color logo artwork remains valid.
+
+### Incident followers
+
+In a full incident ticket's Review request step, show Incident followers with a searchable workspace-member picker and explicit Add follower and Remove actions. Explain that followers receive approved incident updates, do not receive internal notes, and are not assigned the ticket or granted ticket access. Link directly to Coordinate → Stakeholder updates to prepare, review and send the message; public replies and status changes are not automatically shared with this audience.
+
+Reuse the existing stakeholder audience, approved-message recipient snapshots, notifications and email delivery. Select the Incident followers audience by default only on new drafts; preserve saved draft selections and require saving again to refresh their audience. Removing a follower does not recall approved messages. Keep staff self-follow notifications separate. Reuse LookupSelect, ActionForm, SubmitButton, RetryButton and existing responsive/focus tokens, with written empty, pending and recoverable error states.

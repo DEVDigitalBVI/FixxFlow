@@ -165,10 +165,12 @@ export async function watchTicket(form: FormData): Promise<ActionResult> {
   const { error } = await supabase
     .from('ticket_watchers')
     .insert({ organization_id: viewer.organizationId, ticket_id: ticketId, user_id: viewer.id });
-  if (error && error.code !== '23505') return { error: 'You could not start watching. Try again.' };
+  if (error && error.code !== '23505')
+    return { error: 'We couldn’t turn on ticket updates. Try again.' };
   refresh(ticketId);
   return {
-    success: 'You are watching this ticket. You will be notified of replies and resolution.',
+    success:
+      'You’re following this ticket. You’ll be notified of public replies, resolution and reopening.',
   };
 }
 
@@ -186,11 +188,12 @@ export async function unwatchTicket(form: FormData): Promise<ActionResult> {
     .eq('ticket_id', ticketId)
     .eq('user_id', userId)
     .select('user_id');
-  if (error) return { error: 'The watcher could not be removed. Try again.' };
+  if (error) return { error: 'We couldn’t stop these ticket updates. Try again.' };
   if (!data?.length && userId !== viewer.id)
-    return { error: 'Only administrators can remove another person’s watch.' };
+    return { error: 'Only administrators can stop another person following a ticket.' };
   refresh(ticketId);
   return {
-    success: userId === viewer.id ? 'You stopped watching this ticket.' : 'Watcher removed.',
+    success:
+      userId === viewer.id ? 'You stopped following this ticket.' : 'Removed from ticket updates.',
   };
 }

@@ -1927,6 +1927,58 @@
   :where(.scope) :global(.ticket-tag-add .field) {
     flex: 1 1 240px;
   }
+  /* Following is an optional notification preference, separate from ownership. */
+  :where(.scope) :global(.ticket-following) {
+    min-width: 0;
+    padding-block: 16px;
+    border-block: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.ticket-following-controls) {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  :where(.scope) :global(.ticket-following-copy) {
+    flex: 1 1 280px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-following-copy > h3),
+  :where(.scope) :global(.ticket-following-copy > p),
+  :where(.scope) :global(.ticket-following-error > p) {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.ticket-following-copy > p) {
+    margin-top: 8px;
+    max-width: 65ch;
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.ticket-following-people) {
+    margin-top: 8px;
+  }
+  :where(.scope) :global(.ticket-following-people > summary) {
+    min-height: var(--control-height);
+    align-content: center;
+    cursor: pointer;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.ticket-following-error) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 12px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-following-controls > form) {
+      width: 100%;
+    }
+    :where(.scope) :global(.ticket-following-controls .button) {
+      width: 100%;
+    }
+  }
   :where(.scope) :global(.ticket-link-list) {
     display: grid;
     gap: 8px;

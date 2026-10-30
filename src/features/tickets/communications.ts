@@ -15,6 +15,7 @@ export type CommunicationPlan = {
   updated_at: string;
 };
 export type StakeholderGroup = {
+  is_follower_group?: boolean;
   id: string;
   organization_id: string;
   ticket_id: string;

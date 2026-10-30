@@ -22,6 +22,7 @@ import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
+import { IncidentFollowers } from '@/features/tickets/incident-followers';
 import { SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { SlaPolicy } from '@/features/tickets/sla-policy-table';
 import { popularTags } from '@/features/tickets/tags';
@@ -568,6 +569,7 @@ export async function TicketDetail({
               links={links}
               error={Boolean(linksR.error)}
             />
+            {ticket.ticket_type === 'incident' && <IncidentFollowers ticketId={ticket.id} />}
             <TicketWatchers
               ticketId={ticket.id}
               viewerId={viewer.id}

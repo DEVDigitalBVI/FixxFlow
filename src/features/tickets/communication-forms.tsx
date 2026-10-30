@@ -252,7 +252,9 @@ export function DraftEditor({
             <Checkbox
               name="groupId"
               value={group.id}
-              defaultChecked={draft?.group_ids.includes(group.id)}
+              defaultChecked={
+                draft ? draft.group_ids.includes(group.id) : Boolean(group.is_follower_group)
+              }
             />
             <span>{group.name}</span>
           </label>
