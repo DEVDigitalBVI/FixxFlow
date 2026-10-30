@@ -6,84 +6,92 @@
   },
   "color": {
     "brand": {
-      "yellow": {
-        "$value": "#FFD700",
+      "red": {
+        "$value": "#EF233C",
         "$type": "color"
       },
-      "gray": {
-        "$value": "#ADB5BD",
+      "crimson": {
+        "$value": "#D90429",
+        "$type": "color"
+      },
+      "navy": {
+        "$value": "#2B2D42",
+        "$type": "color"
+      },
+      "slate": {
+        "$value": "#8D99AE",
+        "$type": "color"
+      },
+      "frost": {
+        "$value": "#EDF2F4",
         "$type": "color"
       },
       "link": {
-        "$value": "#212529",
+        "$value": "#D90429",
         "$type": "color"
       },
       "soft": {
-        "$value": "#FFF4B3",
+        "$value": "#FFF0F3",
         "$type": "color"
       },
       "ink": {
-        "$value": "#212529",
-        "$type": "color"
-      },
-      "orange": {
-        "$value": "#FF9800",
+        "$value": "#2B2D42",
         "$type": "color"
       }
     },
     "surface": {
       "canvas": {
-        "$value": "#FAF9F2",
+        "$value": "#EDF2F4",
         "$type": "color"
       },
       "card": {
-        "$value": "#ffffff",
+        "$value": "#FFFFFF",
         "$type": "color"
       },
       "dark": {
-        "$value": "#212529",
+        "$value": "#2B2D42",
         "$type": "color"
       }
     },
     "text": {
       "primary": {
-        "$value": "#212529",
+        "$value": "#2B2D42",
         "$type": "color"
       },
       "secondary": {
-        "$value": "#545b62",
+        "$value": "#596579",
         "$type": "color"
       },
       "inverse": {
-        "$value": "#ffffff",
+        "$value": "#EDF2F4",
         "$type": "color"
       }
     },
     "border": {
       "subtle": {
-        "$value": "#dee2e6",
+        "$value": "#DCE2E9",
         "$type": "color"
       }
     },
     "status": {
       "info": {
-        "$value": "#ffd700",
+        "$value": "#2B2D42",
         "$type": "color"
       },
       "success": {
-        "$value": "#343a40",
+        "$value": "#2B2D42",
         "$type": "color"
       },
       "warning": {
-        "$value": "#8A4B00",
+        "$value": "#2B2D42",
         "$type": "color"
       },
       "critical": {
-        "$value": "#212529",
+        "$value": "#D90429",
         "$type": "color"
       },
       "inactive": {
-        "$value": "#545b62",
+        "$value": "#596579",
         "$type": "color"
       }
     }

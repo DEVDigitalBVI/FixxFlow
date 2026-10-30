@@ -22,7 +22,7 @@ test('email actions keep escaped labels and destinations with usable inline and 
   assert.match(html, /padding:12px 20px;min-height:24px/);
   assert.match(html, /line-height:24px;mso-padding-alt:0/);
   assert.match(html, /mso-padding-alt:12px 20px/);
-  assert.match(html, /border:1px solid #212529;[^>]*background:#ffd700;color:#212529/);
+  assert.match(html, /border:1px solid #d90429;[^>]*background:#d90429;color:#ffffff/);
   assert.match(html, /@media\(max-width:480px\).*?email-action-table\{width:100%/);
   assert.doesNotMatch(html, /<button|role="button"|javascript:/);
 });
@@ -37,7 +37,7 @@ test('every generated authentication CTA uses the shared responsive email treatm
     assert.match(html, /class="email-action"/, file);
     assert.match(html, /padding:12px 20px/, file);
     assert.match(html, /mso-padding-alt:12px 20px/, file);
-    assert.match(html, /\.email-action:focus\{outline:3px solid #212529/, file);
+    assert.match(html, /\.email-action:focus\{outline:3px solid #2b2d42/, file);
   }
   assert.equal(actions, 5);
 });

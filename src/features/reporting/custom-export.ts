@@ -128,10 +128,10 @@ export async function createCustomReportPdf(
     height = 841.89,
     margin = 40,
     content = width - margin * 2,
-    ink = rgb(33 / 255, 37 / 255, 41 / 255),
-    muted = rgb(84 / 255, 91 / 255, 98 / 255),
-    border = rgb(173 / 255, 181 / 255, 189 / 255),
-    surface = rgb(241 / 255, 243 / 255, 245 / 255);
+    ink = rgb(43 / 255, 45 / 255, 66 / 255),
+    muted = rgb(89 / 255, 101 / 255, 121 / 255),
+    border = rgb(141 / 255, 153 / 255, 174 / 255),
+    surface = rgb(237 / 255, 242 / 255, 244 / 255);
   let page = doc.addPage([width, height]),
     y = height - 40;
   const draw = (

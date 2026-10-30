@@ -4,16 +4,16 @@
   "description": "IT Support in Motion",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFFFFF",
-  "theme_color": "#ffd700",
+  "background_color": "#EDF2F4",
+  "theme_color": "#d90429",
   "icons": [
     {
-      "src": "/brand/fixxflow/favicon/android-chrome-192x192.png?v=yellow-charcoal-20261028",
+      "src": "/brand/fixxflow/favicon/android-chrome-192x192.png?v=red-navy-20261030",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/brand/fixxflow/favicon/android-chrome-512x512.png?v=yellow-charcoal-20261028",
+      "src": "/brand/fixxflow/favicon/android-chrome-512x512.png?v=red-navy-20261030",
       "sizes": "512x512",
       "type": "image/png"
     }

@@ -9,16 +9,17 @@ import { emailLogoPath } from './brand';
  * keep table-based layout for Outlook. React escapes every text value and attribute.
  */
 export const emailTokens = {
-  canvas: '#f1f3f5',
+  canvas: '#edf2f4',
   surface: '#ffffff',
-  subtle: '#f1f3f5',
-  text: '#212529',
-  muted: '#545b62',
-  action: '#ffd700',
-  actionHover: '#e6c200',
-  ink: '#212529',
-  warningSurface: '#fff0d9',
-  warningText: '#8a4b00',
+  subtle: '#edf2f4',
+  text: '#2b2d42',
+  muted: '#596579',
+  action: '#d90429',
+  actionHover: '#b80323',
+  onAction: '#ffffff',
+  ink: '#2b2d42',
+  warningSurface: '#edf2f4',
+  warningText: '#2b2d42',
   body: "Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif",
   heading:
     "Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif",
@@ -433,7 +434,7 @@ export function EmailCode({ children }: { children: ReactNode }) {
 }
 
 /**
- * Primary action: a bulletproof table button (solid yellow, charcoal label and edge) plus a short
+ * Primary action: a bulletproof table button (solid crimson, white label and matching edge) plus a short
  * underlined fallback link. Outlook reads the `mso-padding-alt` hints; phones get a full-width CTA.
  */
 export function EmailAction({ href, children }: { href: string; children: ReactNode }) {
@@ -461,10 +462,10 @@ export function EmailAction({ href, children }: { href: string; children: ReactN
                     display: 'inline-block',
                     padding: '12px 20px',
                     minHeight: '24px',
-                    border: `1px solid ${t.ink}`,
+                    border: `1px solid ${t.action}`,
                     borderRadius: '8px',
                     background: t.action,
-                    color: t.ink,
+                    color: t.onAction,
                     textAlign: 'center',
                     textDecoration: 'none',
                     overflowWrap: 'anywhere',

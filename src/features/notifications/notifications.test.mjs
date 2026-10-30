@@ -45,10 +45,10 @@ test('all email variants share a compact header and left-aligned content', async
     );
     assert.match(
       html,
-      /<p style="margin:0 0 8px;color:#545b62;font-size:14px;line-height:22px;font-weight:500">/,
+      /<p style="margin:0 0 8px;color:#596579;font-size:14px;line-height:22px;font-weight:500">/,
       name,
     );
-    assert.match(html, /<p style="margin:0 0 20px;color:#212529">/, name);
+    assert.match(html, /<p style="margin:0 0 20px;color:#2b2d42">/, name);
     assert.match(
       html,
       /<td align="left" style="text-align:left;padding:16px 24px;border-top:/,
@@ -68,7 +68,7 @@ test('all email variants share a compact header and left-aligned content', async
       assert.match(html, /padding:12px 20px/, name);
     }
     if (html.includes('Security notice'))
-      assert.match(html, /<td align="left" bgcolor="#fff0d9" style="text-align:left;/, name);
+      assert.match(html, /<td align="left" bgcolor="#edf2f4" style="text-align:left;/, name);
   }
 });
 
@@ -373,7 +373,7 @@ test('approved incident emails use the shared brand and deliver only the saved m
   assert.doesNotMatch(body.html, /<script>/);
   assert.match(body.html, /\/app\/incident-updates\/bulletin-1/);
   assert.doesNotMatch(body.html, /\/app\/tickets\/ticket-1/);
-  assert.match(body.html, /#ffd700/);
+  assert.match(body.html, /#d90429/);
   assert.match(body.html, /fixxflow-logo-horizontal\.png/);
 });
 
