@@ -424,6 +424,8 @@
   }
   .button {
     min-height: 44px;
+    min-width: 44px;
+    max-width: 100%;
     border: 1px solid transparent;
     border-radius: var(--radius-control);
     padding: 10px 16px;
@@ -435,13 +437,19 @@
     justify-content: center;
     gap: 8px;
     text-decoration: none;
+    font-size: 14px;
+    line-height: 20px;
+    white-space: normal;
+    overflow-wrap: anywhere;
     transition:
+      color 160ms ease-out,
+      box-shadow 160ms ease-out,
       background-color 160ms ease-out,
       border-color 160ms ease-out,
       transform 160ms ease-out;
     text-align: center;
   }
-  .button:active {
+  .button:active:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
     transform: translateY(1px);
   }
   .button-primary {
@@ -450,18 +458,18 @@
     border-color: var(--color-brand-ink);
     box-shadow: 0 1px 2px rgb(26 26 26 / 8%);
   }
-  .button-primary:hover:not(:disabled) {
+  .button-primary:hover:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
     background: var(--color-action-hover);
   }
   .button-secondary {
     color: var(--color-text);
     background: var(--color-surface);
-    border-color: var(--color-border-strong);
+    border-color: var(--color-control-border);
   }
-  .button-secondary:hover:not(:disabled) {
-    border-color: var(--color-border-strong);
-    color: var(--color-accent);
-    background: var(--color-accent-subtle);
+  .button-secondary:hover:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
+    border-color: var(--color-control-border);
+    color: var(--color-text);
+    background: var(--color-field-hover);
   }
   .button-danger {
     color: var(--color-danger);
@@ -472,15 +480,18 @@
     min-height: 44px;
     padding: 10px 12px;
     background: transparent;
-    border-color: var(--color-border);
+    border-color: transparent;
     color: var(--color-text-muted);
+    font-weight: 500;
+    font-family: var(--font-body);
   }
-  .button-quiet:hover:not(:disabled) {
+  .button-quiet:hover:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
     background: var(--color-surface-subtle);
     color: var(--color-text);
     border-color: var(--color-border-strong);
   }
-  .button-danger:hover:not(:disabled) {
+  .button-danger:hover:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
+    background: var(--color-field-hover);
     border-color: var(--color-danger);
   }
   .button-small {
@@ -488,9 +499,10 @@
     padding: 10px 12px;
     font-size: 13px;
   }
-  .button:disabled {
+  .button:disabled,
+  .button[aria-disabled='true'] {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.65;
     transform: none;
   }
   .form-row {
@@ -567,7 +579,7 @@
     margin-top: auto;
     min-width: 0;
     display: grid;
-    grid-template-columns: 40px minmax(0, 1fr) 36px;
+    grid-template-columns: 40px minmax(0, 1fr) 44px;
     align-items: center;
     gap: 10px;
     border-top: 1px solid var(--color-border);
@@ -591,8 +603,8 @@
     font-size: 12px;
   }
   .sign-out-button {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border: 0;
     border-radius: 8px;
     display: grid;
@@ -2514,16 +2526,6 @@
   .overview-page > .page-header p {
     color: var(--color-brand-text-muted);
   }
-  .overview-page > .page-header .button-primary {
-    background: var(--color-inverse);
-    color: var(--color-brand-ink);
-  }
-  .overview-page > .page-header .button-primary:hover {
-    background: var(--color-inverse-hover);
-  }
-  .overview-page > .page-header .button-primary:focus-visible {
-    outline-color: var(--color-brand-secondary);
-  }
   @media (max-width: 767px) {
     .overview-page > .page-header {
       padding: 24px;
@@ -4058,5 +4060,76 @@
     height: 16px;
     flex: 0 0 auto;
     vertical-align: -0.15em;
+  }
+}
+
+/* Shared action feedback applies to feature-specific buttons as well as CTAs. */
+@layer pages {
+  :where(button, .button, summary.button, .link-button) {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+  :where(button:not(.button)) {
+    transition:
+      background-color 160ms ease-out,
+      border-color 160ms ease-out;
+  }
+  :where(button):is(:disabled, [aria-disabled='true']) {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+  :is(button, .button)[aria-busy='true'] {
+    cursor: progress;
+    opacity: 1;
+  }
+  .button[aria-busy='true']::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: button-progress 800ms linear infinite;
+  }
+  .button > svg {
+    flex-shrink: 0;
+  }
+  :is(button, .button):focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+  :is(button, .button):is(:disabled, [aria-disabled='true']) {
+    transform: none;
+  }
+  .overview-page > .page-header .button-primary:focus-visible {
+    outline-color: var(--color-brand-secondary);
+  }
+  @keyframes button-progress {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .button:active:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
+      transform: none;
+    }
+    .button[aria-busy='true']::before {
+      animation: none;
+    }
+  }
+  @media (forced-colors: active) {
+    :is(button, .button) {
+      border: 1px solid ButtonText;
+    }
+    :is(button, .button):focus-visible {
+      outline-color: Highlight;
+    }
+    :is(button, .button):is(:disabled, [aria-disabled='true']) {
+      color: GrayText;
+      border-color: GrayText;
+      opacity: 1;
+    }
   }
 }

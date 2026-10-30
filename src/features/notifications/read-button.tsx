@@ -12,7 +12,7 @@ export function ReadButton({ id, all = false }: { id?: string; all?: boolean }) 
   return (
     <form action={action}>
       <input type="hidden" name={all ? 'all' : 'notificationId'} value={all ? 'true' : id} />
-      <button className="button button-quiet" disabled={pending}>
+      <button className="button button-quiet" disabled={pending} aria-busy={pending}>
         {pending ? 'Updating…' : all ? 'Mark all as read' : 'Mark as read'}
       </button>
       {state.error && (

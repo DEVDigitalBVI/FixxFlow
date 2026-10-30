@@ -216,6 +216,8 @@ The approved, versioned asset package lives under `public/brand/fixxflow/`. Refr
 ### 5.5 Buttons, menus, and actions
 
 - One primary action per surface or clearly bounded region. Secondary actions use quieter styling; tertiary actions are text or menu items.
+- Reuse the shared `.button` variants: solid yellow primary, neutral outlined secondary, transparent quiet, and explicitly labeled danger. Primary labels use the heading font at 600; quiet controls use the body font at 500. Keep a 44px minimum target in both dimensions, allow long labels to wrap, and preserve a visible focus ring. Pending actions retain readable contrast, a progress label and a decorative progress indicator; reduced motion makes the indicator static.
+- Email CTAs use the same yellow/charcoal hierarchy through the shared email renderer, with inline styles, 12px × 20px padding, a 24px line height, Outlook cell-padding fallback, and full-width actions on compact screens where media queries are supported.
 - Button labels describe outcomes: “Assign ticket,” not “Submit.”
 - Icon-only controls must have at least a 40×40px interactive area even if the glyph is smaller.
 - Menus contain short, related actions and support arrow keys, Enter/Space, Escape, and focus return.
