@@ -538,10 +538,12 @@ export async function TicketDetail({
             Back to tickets
           </Link>
         )}
-        <a className={buttonVariants({ variant: 'secondary' })} href="#ticket-assignment">
-          Assignment &amp; details
-        </a>
-        <span>#{ticket.ticket_number}</span>
+        <div className="ticket-topbar-actions">
+          <a className={buttonVariants({ variant: 'secondary' })} href="#ticket-assignment">
+            Assignment &amp; details
+          </a>
+          <span>#{ticket.ticket_number}</span>
+        </div>
       </div>
       {identity}
       <TicketWorkflow

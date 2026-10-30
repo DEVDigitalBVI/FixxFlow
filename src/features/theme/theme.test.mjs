@@ -511,3 +511,46 @@ test('all five reference colors have explicit shared product roles', () => {
   assert.match(css, /--color-border-strong: #8d99ae;/);
   assert.match(css, /--color-text-muted: #b4becd;/);
 });
+
+test('browser favicon exports keep the approved mark visible with transparent surroundings', async () => {
+  for (const file of [
+    'favicon-16x16.png',
+    'favicon-32x32.png',
+    'apple-touch-icon.png',
+    'android-chrome-192x192.png',
+    'android-chrome-512x512.png',
+  ]) {
+    const { data, info } = await sharp(`public/brand/fixxflow/favicon/${file}`)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const alpha = Array.from(data.filter((_, i) => i % 4 === 3));
+    for (const pixel of [
+      0,
+      info.width - 1,
+      (info.height - 1) * info.width,
+      info.width * info.height - 1,
+    ])
+      assert.equal(alpha[pixel], 0, `${file}: no background tile`);
+    assert.ok(
+      alpha.filter((a) => a === 0).length / alpha.length > 0.25,
+      `${file}: transparent surroundings`,
+    );
+    assert.ok(
+      alpha.some((a) => a === 255),
+      `${file}: visible logo`,
+    );
+  }
+  const ico = fs.readFileSync('src/app/favicon.ico');
+  for (let i = 0; i < ico.readUInt16LE(4); i++) {
+    const entry = 6 + i * 16,
+      size = ico[entry],
+      length = ico.readUInt32LE(entry + 8),
+      offset = ico.readUInt32LE(entry + 12);
+    assert.deepEqual(
+      ico.subarray(offset, offset + length),
+      fs.readFileSync(`public/brand/fixxflow/favicon/favicon-${size}x${size}.png`),
+      'ICO uses transparent PNG entries',
+    );
+  }
+});

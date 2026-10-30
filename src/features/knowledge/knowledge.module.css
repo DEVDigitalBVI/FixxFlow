@@ -112,18 +112,22 @@
     margin-bottom: 24px;
   }
   :where(.scope) :global(.knowledge-categories a) {
+    --color-text: var(--color-on-action);
+    --color-text-muted: var(--color-on-action);
+    --color-neutral: var(--color-on-action);
     display: grid;
     gap: 2px;
     margin: 0;
     padding: 10px 16px;
-    color: var(--color-text);
+    color: var(--color-on-action);
     text-decoration: none;
     overflow-wrap: anywhere;
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-  }
-  :where(.scope) :global(.knowledge-categories a:hover) {
-    border-color: var(--color-border-strong);
+    border: 0;
+    border-radius: var(--radius-card);
+    background: var(--color-action-fill);
+    transition:
+      background-color 150ms ease,
+      box-shadow 150ms ease;
   }
   :where(.scope) :global(.knowledge-categories span) {
     color: var(--color-neutral);
@@ -162,8 +166,8 @@
   }
   :where(.scope) :global(.knowledge-categories a:hover),
   :where(.scope) :global(.knowledge-categories a:focus-visible) {
-    border-color: var(--color-border-strong);
-    background: var(--color-accent-subtle);
+    background: var(--color-action-hover);
+    box-shadow: var(--shadow-card);
   }
   :where(.scope) :global(.knowledge-block-options) {
     border-block-start: 1px solid var(--color-border);

@@ -70,9 +70,10 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-danger: #d90429;
   --color-danger-surface: #fff0f3;
   --color-focus: #d90429;
-  --color-control-border: #7a869a;
+  --color-control-border: #818c9e;
   --color-selected-border: #d90429;
   --brand-flow: linear-gradient(100deg, var(--color-brand-primary), var(--color-brand-secondary));
+  --shadow-field: 0 1px 2px rgb(43 45 66 / 5%), 0 3px 8px rgb(43 45 66 / 5%);
   --shadow-card: 0 1px 2px rgb(26 26 26 / 2%), 0 4px 12px rgb(26 26 26 / 2%);
   --shadow-overlay: 0 16px 40px rgb(26 26 26 / 18%);
   /* Control height: 40px with a mouse or trackpad, 44px touch targets on touch screens. */
@@ -417,8 +418,8 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Brand presence (October 2026)
 
 - Keep the operational shell neutral and use a thin red signature at the top of persistent navigation. Selected navigation uses a restrained red tint, accessible navy text, and an inset edge so the active location remains clear without turning the full control into a saturated block. Keep the existing focus outline and forced-colors selected outline.
-- Concentrate expressive brand color in a few deliberate moments: the staff overview introduction, the authentication brand panel, primary actions, selection, and small directional details. Standard page headers, settings rows, knowledge categories, tables, and form surfaces stay neutral. Red highlights belong within brand artwork and signature rules, not a default card fill or workflow color.
-- Administration is a grouped settings index with bordered rows and lightweight destination links. Knowledge browsing uses neutral destination surfaces with navy interaction feedback. States retain explicit text and icons; destructive actions require explicit labels and icons.
+- Concentrate expressive brand color in a few deliberate moments: the staff overview introduction, the authentication brand panel, primary actions, selection, and small directional details. Standard page headers, settings rows, article lists, tables, and form surfaces stay neutral. Knowledge topic cards use the approved crimson treatment. Red highlights belong within brand artwork and signature rules, not a default card fill or workflow color.
+- Administration is a grouped settings index with bordered rows and lightweight destination links. Article lists use neutral destination surfaces; knowledge topic cards use crimson with white text. States retain explicit text and icons; destructive actions require explicit labels and icons.
 - The overview introduction uses a restrained navy brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded navigation uses the responsive mark-and-wordmark lockup in every theme; compact sidebars and mobile headers retain the mark alone. Preserve the approved mark without distortion.
 - Employee pages should feel warmer and simpler through larger type, plain-language tasks, and whitespace rather than additional decorative color. Authentication may carry the strongest brand panel because it has no competing operational data.
 
@@ -617,3 +618,20 @@ The product owner approved replacing the former yellow/orange identity throughou
 In a full incident ticket's Review request step, show Incident followers with a searchable workspace-member picker and explicit Add follower and Remove actions. Explain that followers receive approved incident updates, do not receive internal notes, and are not assigned the ticket or granted ticket access. Link directly to Coordinate → Stakeholder updates to prepare, review and send the message; public replies and status changes are not automatically shared with this audience.
 
 Reuse the existing stakeholder audience, approved-message recipient snapshots, notifications and email delivery. Select the Incident followers audience by default only on new drafts; preserve saved draft selections and require saving again to refresh their audience. Removing a follower does not recall approved messages. Keep staff self-follow notifications separate. Reuse LookupSelect, ActionForm, SubmitButton, RetryButton and existing responsive/focus tokens, with written empty, pending and recoverable error states.
+
+
+### Ticket workflow alignment and field softness
+
+Keep the full ticket title, toolbar, workflow navigation and content on one shared page edge; do not center a narrower wizard beneath a wider ticket heading. Group Assignment & details and the ticket number at the right of the toolbar, wrapping on compact screens. Step headings align with their guidance and card content; decorative accent marks sit in the gutter.
+
+Reuse the shared Input, Textarea and NativeSelect with a lighter 1px control edge (at least 3:1 against adjacent surfaces) and the shared subtle field shadow. Keep invalid and focus treatments strong. Workflow step buttons visibly respond to hover with surface, edge and elevation transitions, retain a distinct current step and keyboard focus, and suppress movement/transitions for reduced motion.
+
+Browser favicons use the existing standalone F-and-wrench artwork with transparent surroundings and no backing tile. Generate PNG/ICO and manifest icon sizes with `node scripts/generate-favicons.mjs`; keep the root ICO byte-identical to the brand copy and version browser icon URLs after export.
+
+Native dropdowns reserve 40px at the inline end for a 16px chevron inset 12px from the edge, including compact selects. Use the shared NavigationIcon chevron geometry as a CSS background to retain the native select DOM and picker; mirror its placement in RTL. Keep native arrows in forced-colors mode and omit decorative arrows on multi-select/listbox controls.
+
+### Employee home emphasis
+
+Use solid crimson with white headings, descriptions and links for Chat with IT and Find an answer in both themes, without an outer border. Keep Submit a request on the regular surface. The help-search field stays white with navy text; its Search action uses white with crimson text for distinction. Preserve visible keyboard focus on the crimson panels, native GET search, clear links, responsive stacking and forced-colors boundaries.
+
+Knowledge topic cards (Accounts, Email, Network, Hardware, Software and Security) share the crimson/white, borderless treatment in both themes. Keep headings and descriptions white, deepen the fill on hover, retain visible keyboard focus and preserve the existing category links and responsive grid.
