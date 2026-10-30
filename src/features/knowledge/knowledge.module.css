@@ -124,7 +124,7 @@
     overflow-wrap: anywhere;
     border: 0;
     border-radius: var(--radius-card);
-    background: var(--color-action-fill);
+    background: var(--color-brand-panel);
     transition:
       background-color 150ms ease,
       box-shadow 150ms ease;
@@ -166,7 +166,7 @@
   }
   :where(.scope) :global(.knowledge-categories a:hover),
   :where(.scope) :global(.knowledge-categories a:focus-visible) {
-    background: var(--color-action-hover);
+    background: var(--color-brand-panel-hover);
     box-shadow: var(--shadow-card);
   }
   :where(.scope) :global(.knowledge-block-options) {
