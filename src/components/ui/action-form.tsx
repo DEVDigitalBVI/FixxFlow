@@ -18,9 +18,11 @@ export function ActionForm({
   protectDraft = true,
   id,
   beforeRedirect,
+  pendingMessage,
 }: {
   /** Runs after a successful save and before navigation; may return a replacement URL. */
   beforeRedirect?: (redirectTo: string) => Promise<string | void>;
+  pendingMessage?: string | null;
   action: (data: FormData) => Promise<ActionResult>;
   children: ReactNode;
   className?: string;
@@ -151,7 +153,9 @@ export function ActionForm({
         </fieldset>
       </FormPendingContext>
       <span className="field-wide muted" role="status">
-        {result.redirectTo ? 'Opening…' : pending ? 'Saving…' : ''}
+        {result.redirectTo || pending
+          ? (pendingMessage ?? (result.redirectTo ? 'Opening…' : 'Saving…'))
+          : ''}
       </span>
     </form>
   );

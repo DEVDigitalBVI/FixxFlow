@@ -80,6 +80,15 @@ test('wizard navigation retains every panel and updates the shareable step witho
         n.props.children.join('') === 'Next: Assign & start',
     )[0].props.onClick();
     tree = render();
+    const navigation = walk(
+      tree,
+      (n) => n.type === 'div' && n.props.className === 'ticket-wizard-navigation',
+    )[0];
+    assert.ok(
+      walk(navigation, (n) => n.type === 'button').every(
+        (n) => n.props.className === 'button button-secondary',
+      ),
+    );
     assert.equal(value, '#ticket-assignment');
     assert.equal(
       walk(tree, (n) => n.type === 'section' && !n.props.hidden)[0].props.id,

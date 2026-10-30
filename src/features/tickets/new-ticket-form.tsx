@@ -3,6 +3,7 @@
 import { createContext, use, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { FormProgressContext } from '@/components/ui/form-progress';
 import type { ActionResult } from '@/lib/action-result';
 import { attachmentTypes, validAttachment } from '@/lib/uploads';
 
@@ -49,29 +50,35 @@ export function NewTicketForm({
   children: ReactNode;
 }) {
   const [files, setFiles] = useState<File[]>([]);
+  const [progress, setProgress] = useState<string | null>(null);
   return (
     <PickedFiles value={{ files, setFiles }}>
-      <ActionForm
-        action={action}
-        className={className}
-        beforeRedirect={async (redirectTo) => {
-          const ticketId = createdTicketId(redirectTo);
-          if (!ticketId || !files.length) return;
-          const failed: string[] = [];
-          for (const file of files) {
-            const result = await uploadTicketAttachment({
-              organizationId,
-              ticketId,
-              userId,
-              file,
-            }).catch(() => 'upload-failed' as const);
-            if (result !== 'saved') failed.push(file.name);
-          }
-          return withUploadNote(redirectTo, failed);
-        }}
-      >
-        {children}
-      </ActionForm>
+      <FormProgressContext value={progress}>
+        <ActionForm
+          action={action}
+          className={className}
+          pendingMessage={progress}
+          beforeRedirect={async (redirectTo) => {
+            const ticketId = createdTicketId(redirectTo);
+            if (!ticketId || !files.length) return;
+            const failed: string[] = [];
+            for (const [index, file] of files.entries()) {
+              setProgress(`Request created. Uploading file ${index + 1} of ${files.length}…`);
+              const result = await uploadTicketAttachment({
+                organizationId,
+                ticketId,
+                userId,
+                file,
+              }).catch(() => 'upload-failed' as const);
+              if (result !== 'saved') failed.push(file.name);
+            }
+            setProgress('Opening request…');
+            return withUploadNote(redirectTo, failed);
+          }}
+        >
+          {children}
+        </ActionForm>
+      </FormProgressContext>
     </PickedFiles>
   );
 }
