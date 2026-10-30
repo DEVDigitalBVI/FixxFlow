@@ -64,9 +64,10 @@
     --color-danger: #d90429;
     --color-danger-surface: #fff0f3;
     --color-focus: #d90429;
-    --color-control-border: #7a869a;
+    --color-control-border: #818c9e;
     --color-selected-border: #d90429;
     --brand-flow: linear-gradient(100deg, var(--color-brand-primary), var(--color-brand-secondary));
+    --shadow-field: 0 1px 2px rgb(43 45 66 / 5%), 0 3px 8px rgb(43 45 66 / 5%);
     --shadow-card: 0 1px 2px rgb(26 26 26 / 2%), 0 4px 12px rgb(26 26 26 / 2%);
     --shadow-overlay: 0 16px 40px rgb(26 26 26 / 18%);
     /* Control height: 40px with a mouse or trackpad, 44px touch targets on touch screens. */
@@ -110,6 +111,7 @@
     --color-purple-subtle: #373b53;
     --color-neutral: #edf2f4;
     --color-neutral-subtle: #464b63;
+    --shadow-field: 0 1px 2px rgb(0 0 0 / 10%), 0 3px 8px rgb(0 0 0 / 12%);
     --shadow-card: 0 1px 2px rgb(0 0 0 / 12%), 0 4px 12px rgb(0 0 0 / 8%);
     --shadow-overlay: 0 16px 40px rgb(0 0 0 / 48%);
   }
@@ -144,6 +146,7 @@
       --color-purple-subtle: #373b53;
       --color-neutral: #edf2f4;
       --color-neutral-subtle: #464b63;
+      --shadow-field: 0 1px 2px rgb(0 0 0 / 10%), 0 3px 8px rgb(0 0 0 / 12%);
       --shadow-card: 0 1px 2px rgb(0 0 0 / 12%), 0 4px 12px rgb(0 0 0 / 8%);
       --shadow-overlay: 0 16px 40px rgb(0 0 0 / 48%);
     }
@@ -386,7 +389,7 @@
     border: 1px solid var(--color-control-border);
     border-radius: var(--radius-control);
     background: var(--color-surface);
-    box-shadow: 0 1px 2px rgb(26 26 26 / 5%);
+    box-shadow: var(--shadow-field);
   }
   .input-prefix:focus-within {
     border-color: var(--color-focus);
@@ -1482,6 +1485,23 @@
   } /* Safari's native select needs an explicit height to match text inputs. */
   select.input {
     height: var(--control-height);
+  }
+  select.native-select-control {
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 16px;
+    padding-inline-end: 40px;
+  }
+  select.native-select-control:dir(rtl) {
+    background-position: left 12px center;
+  }
+  @media (forced-colors: active) {
+    select.native-select-control {
+      appearance: auto;
+      background-image: none !important;
+      padding-inline-end: 12px;
+    }
   }
   select.input-compact {
     height: 40px;
@@ -3593,7 +3613,7 @@
     margin: 2px 0 0;
     border: 1px solid var(--color-control-border);
     background: var(--color-surface) center / 12px 12px no-repeat;
-    box-shadow: 0 1px 2px rgb(26 26 26 / 5%);
+    box-shadow: var(--shadow-field);
     cursor: pointer;
     transition:
       background-color 150ms ease-out,

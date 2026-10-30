@@ -18,7 +18,9 @@ export function productStyles() {
       const root = postcss.parse(fs.readFileSync(file, 'utf8'));
       root.walkRules((rule) => {
         rule.selector = rule.selectors
-          .map((selector) => selector.replace(/^:where\(\.scope\)\s+:global\(([\s\S]*)\)$/, '$1'))
+          .map((selector) =>
+            selector.replace(/^:where\(\.scope\)\s+:global\(([\s\S]*)\)(.*)$/, '$1$2'),
+          )
           .join(', ');
       });
       return root.toString();

@@ -33,3 +33,6 @@ next-env.d.ts
 
 # Local palette review screenshots and email preview
 /artifacts/palette-preview/
+
+# Local UI follow-up screenshots and browser evidence
+/artifacts/ui-followup/

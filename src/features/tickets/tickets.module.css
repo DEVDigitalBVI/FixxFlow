@@ -27,8 +27,18 @@
   :where(.scope) :global(.ticket-topbar) {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 24px;
     color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.ticket-topbar-actions) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-inline-start: auto;
   }
   :where(.scope) :global(.ticket-topbar a) {
     text-decoration: none;
@@ -1615,8 +1625,8 @@
   :where(.scope) :global(.ticket-wizard) {
     display: grid;
     gap: 20px;
-    max-width: 1040px;
-    margin-inline: auto;
+    width: 100%;
+    min-width: 0;
   }
   :where(.scope) :global(.ticket-wizard-steps) {
     list-style: none;
@@ -1634,16 +1644,49 @@
     gap: 8px;
     text-align: left;
     padding: 12px;
-    border: 0;
+    border: 1px solid transparent;
     border-radius: 8px;
     background: var(--color-surface-subtle);
     color: var(--color-text-muted);
     font: inherit;
     cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      border-color 150ms ease,
+      box-shadow 150ms ease,
+      transform 150ms ease;
+  }
+  @media (hover: hover) {
+    :where(.scope) :global(.ticket-wizard-steps button:hover) {
+      background: var(--color-accent-subtle);
+      color: var(--color-accent);
+      border-color: var(--color-control-border);
+      box-shadow: var(--shadow-card);
+      transform: translateY(-1px);
+    }
+  }
+  :where(.scope) :global(.ticket-wizard-steps button:focus-visible) {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  :where(.scope) :global(.ticket-wizard-steps button:active) {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :where(.scope) :global(.ticket-wizard-steps button) {
+      transition: none;
+    }
+    :where(.scope) :global(.ticket-wizard-steps button:hover),
+    :where(.scope) :global(.ticket-wizard-steps button:active) {
+      transform: none;
+    }
   }
   :where(.scope) :global(.ticket-wizard-steps button[aria-current='step']) {
     background: var(--color-accent-subtle);
     color: var(--color-text);
+    border-color: var(--color-selected-border);
     font-weight: 600;
     font-family: var(--font-heading);
   }
@@ -1673,9 +1716,19 @@
   }
   :where(.scope) :global(.ticket-step-heading h2) {
     margin: 0 0 8px;
-    padding-inline-start: 12px;
-    border-inline-start: 3px solid var(--color-action-fill);
+    position: relative;
+    padding: 0;
     font-size: 20px;
+  }
+  :where(.scope) :global(.ticket-step-heading h2)::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: -12px;
+    inset-block-start: 0.15em;
+    width: 3px;
+    height: 1em;
+    border-radius: 2px;
+    background: var(--color-action-fill);
   }
   :where(.scope) :global(.ticket-step-heading p) {
     margin: 0;
@@ -1771,7 +1824,9 @@
     }
   }
   :where(.scope)
-    :global(.ticket-wizard-steps button.ticket-step-secondary:not([aria-current='step'])) {
+    :global(
+      .ticket-wizard-steps button.ticket-step-secondary:not([aria-current='step']):not(:hover)
+    ) {
     background: transparent;
   }
   :where(.scope) :global(.checklist-step-details > summary) {

@@ -1,5 +1,8 @@
 /** Shared navigation glyphs: 24-unit grid, rounded 1.65px strokes, no font or runtime dependency. */
+export const chevronDownPath = 'm6 9 6 6 6-6';
+
 const glyphs = {
+  chevronDown: <path d={chevronDownPath} />,
   chevronLeft: <path d="m14 7-5 5 5 5" />,
   minus: <path d="M5 12h14" />,
   organization: <path d="M4 21V5l8-3v19M12 8h8v13M2 21h20M7 7h2m-2 4h2m-2 4h2m6-3h2m-2 4h2" />,

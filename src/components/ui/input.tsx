@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react';
 
+import { chevronDownPath } from '@/components/navigation/navigation-icon';
 import { cn } from '@/lib/utils';
 
 /*
@@ -9,7 +10,7 @@ import { cn } from '@/lib/utils';
 const fieldClassName = [
   'input w-full max-w-full min-w-0 min-h-10 pointer-coarse:min-h-11 rounded-(--radius-control) border border-solid border-(color:--color-control-border)',
   'bg-(color:--color-surface) px-3 py-2 font-(family-name:--font-body) font-normal text-(color:--color-text)',
-  'shadow-[0_1px_2px_rgb(26_26_26/5%)] transition-[border-color,box-shadow,background-color] duration-150 ease-out motion-reduce:transition-none',
+  'shadow-(--shadow-field) transition-[border-color,box-shadow,background-color] duration-150 ease-out motion-reduce:transition-none',
   'placeholder:text-(color:--color-text-subtle) placeholder:opacity-100',
   'file:mr-3 file:cursor-pointer file:border-0 file:bg-transparent file:font-(family-name:--font-heading) file:font-semibold file:text-(color:--color-text)',
   'focus:border-(color:--color-focus) focus:outline-hidden focus:ring-3 focus:ring-(color:--color-focus)/40',
@@ -57,17 +58,36 @@ function Textarea({
   );
 }
 
+// Shared icon-family geometry; a CSS image preserves the native select DOM and picker behavior.
+// The slate stroke matches the light field edge and exceeds 3:1 on both light and dark surfaces.
+const selectChevron = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#818c9e" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="${chevronDownPath}"/></svg>`)}")`;
+
 /** Native select keeps platform pickers and keyboard behavior; only the closed control is themed. */
 function NativeSelect({
   className,
   fieldSize = 'default',
+  multiple,
+  size,
+  style,
   ...props
 }: ComponentProps<'select'> & { fieldSize?: FieldSize }) {
   return (
     <select
       data-slot="native-select"
-      className={cn(fieldClassName, sizeClassName[fieldSize], 'cursor-pointer', className)}
+      className={cn(
+        fieldClassName,
+        sizeClassName[fieldSize],
+        'cursor-pointer',
+        !multiple && !(size && size > 1) && 'native-select-control',
+        className,
+      )}
       {...props}
+      multiple={multiple}
+      size={size}
+      style={{
+        backgroundImage: !multiple && !(size && size > 1) ? selectChevron : undefined,
+        ...style,
+      }}
     />
   );
 }

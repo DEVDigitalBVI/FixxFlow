@@ -26,6 +26,8 @@ const inter = localFont({
     },
   ],
   display: 'swap',
+  // Keep text visible and load only the font faces used by the page (no unused italic preload).
+  preload: false,
   fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
   variable: '--font-inter',
 });
@@ -39,14 +41,14 @@ export const metadata: Metadata = {
   manifest: '/brand/fixxflow/site.webmanifest',
   icons: {
     icon: [
-      { url: '/brand/fixxflow/favicon/favicon.ico?v=red-navy-20261030' },
+      { url: '/brand/fixxflow/favicon/favicon.ico?v=red-navy-clear-20261030' },
       {
-        url: '/brand/fixxflow/favicon/favicon-32x32.png?v=red-navy-20261030',
+        url: '/brand/fixxflow/favicon/favicon-32x32.png?v=red-navy-clear-20261030',
         sizes: '32x32',
         type: 'image/png',
       },
     ],
-    apple: '/brand/fixxflow/favicon/apple-touch-icon.png?v=red-navy-20261030',
+    apple: '/brand/fixxflow/favicon/apple-touch-icon.png?v=red-navy-clear-20261030',
   },
 };
 

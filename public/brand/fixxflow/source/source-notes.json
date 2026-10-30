@@ -17,7 +17,7 @@
     "red": "#EF233C",
     "crimson": "#D90429"
   },
-  "method": "Exact palette-slot substitution in the existing raster artwork. Original dimensions, pixel positions, alpha masks, F, wrench, wordmark and spacing preserved. Generated logo variation was not adopted, in accordance with the product owner’s consistency instruction.",
+  "method": "Exact palette-slot substitution in the existing raster artwork. Original dimensions, pixel positions, alpha masks, F, wrench, wordmark and spacing preserved. Generated logo variation was not adopted, in accordance with the product owner\u2019s consistency instruction.",
   "prompts": {
     "paletteReference": "Built-in imagegen reference: preserve exact F and wrench; replace yellow with red, charcoal with navy, white with frost and gray with slate. Reference only; existing geometry is authoritative."
   },
@@ -41,5 +41,6 @@
     "dark-mode": "f6967b085fe96fae7777c29fa9ce931728b194ca6ba8df1009e3f4a5be3b6698",
     "dark-mode-transparent": "f6967b085fe96fae7777c29fa9ce931728b194ca6ba8df1009e3f4a5be3b6698",
     "horizontal-full": "826aeea7203f8ae7bd73c58db17608e56a112ad35c8c0b7197e03c08c43a9f38"
-  }
+  },
+  "faviconArtwork": "Browser favicon, Apple touch and manifest icons are exported from the transparent approved F-and-wrench master, with transparent padding and no background tile. Root ICO embeds the exact 16px and 32px PNGs."
 }

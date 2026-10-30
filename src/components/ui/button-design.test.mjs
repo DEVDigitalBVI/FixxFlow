@@ -117,3 +117,30 @@ test('pending submit buttons display the current upload stage while remaining di
   assert.match(html, /Request created. Uploading file 2 of 3…/);
   assert.doesNotMatch(html, /Sending request…/);
 });
+
+test('shared dropdown arrow keeps native form behavior and omits decoration for listboxes', () => {
+  const { NativeSelect } = load('src/components/ui/input.tsx');
+  const single = render(
+    React.createElement(
+      NativeSelect,
+      { name: 'status', defaultValue: 'open', required: true, 'aria-label': 'Status' },
+      React.createElement('option', { value: 'open' }, 'Open'),
+    ),
+  );
+  assert.match(single, /^<select/);
+  assert.match(single, /native-select-control/);
+  assert.match(single, /background-image:url/);
+  assert.match(single, /name="status"/);
+  assert.match(single, /required=""/);
+  assert.match(single, /aria-label="Status"/);
+  for (const props of [{ multiple: true }, { size: 4 }]) {
+    const listbox = render(
+      React.createElement(
+        NativeSelect,
+        { ...props, 'aria-label': 'Options' },
+        React.createElement('option', null, 'First'),
+      ),
+    );
+    assert.doesNotMatch(listbox, /native-select-control|background-image/);
+  }
+});
