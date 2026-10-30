@@ -275,7 +275,7 @@ test('overview charcoal header maintains readable text and visible keyboard focu
     return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
   };
   const ink = luminance('brand-ink');
-  for (const name of ['surface', 'border-strong', 'brand-secondary'])
+  for (const name of ['surface', 'border-strong', 'brand-text-muted'])
     assert.ok((luminance(name) + 0.05) / (ink + 0.05) >= 4.5, `${name} on charcoal`);
   assert.match(
     css,

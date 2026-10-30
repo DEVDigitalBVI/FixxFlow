@@ -47,7 +47,7 @@ function contrast(a, b) {
     y = luminance(b);
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
-test('status colors meet WCAG AA in explicit and automatic themes, within the shared yellow and neutral palette', () => {
+test('status colors meet WCAG AA in explicit and automatic themes, within the shared red and navy palette', () => {
   const base = tokens(css.match(/:root \{([\s\S]*?)\n\s*\}/)[1]);
   const explicit = tokens(css.match(/:root\[data-theme='dark'\] \{([\s\S]*?)\n\s*\}/)[1]);
   const automatic = tokens(css.match(/:root:not\(\[data-theme\]\) \{([\s\S]*?)\n\s*\}/)[1]);

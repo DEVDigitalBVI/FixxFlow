@@ -100,18 +100,18 @@ function contrast(a, b) {
     y = luminance(b);
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
-test('explicit and system dark themes share the approved yellow-and-charcoal palette', () => {
+test('explicit and system dark themes share the approved red-and-navy palette', () => {
   const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const explicit = css.match(/:root\[data-theme="dark"\] \{([^}]+)\}/)[1];
   const system = css.match(/:root:not\(\[data-theme\]\) \{([^}]+)\}/)[1];
   assert.equal(explicit.trim(), system.trim());
   for (const [token, value] of Object.entries({
-    canvas: '#212529',
-    surface: '#2b3035',
-    accent: '#ffd700',
-    text: '#ffffff',
-    'text-muted': '#adb5bd',
-    focus: '#ffd700',
+    canvas: '#232536',
+    surface: '#2b2d42',
+    accent: '#edf2f4',
+    text: '#edf2f4',
+    'text-muted': '#b4becd',
+    focus: '#edf2f4',
   }))
     assert.ok(explicit.includes(`--color-${token}: ${value};`), token);
 });
@@ -145,7 +145,7 @@ test('dark text, states, buttons, charts and focus meet contrast thresholds', ()
   for (const fill of ['accent'])
     assert.ok(contrast(tokens['on-accent'], tokens[fill]) >= 4.5, fill);
 });
-test('light surfaces and yellow filled actions retain readable contrast in both themes', () => {
+test('light surfaces and crimson filled actions retain readable contrast in both themes', () => {
   const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   const read = (block) =>
     Object.fromEntries(
@@ -311,12 +311,12 @@ test('brand logo variants use approved artwork at its original proportions', () 
     if (variant !== 'full') assert.equal(imageProps.at(-1).preload, true);
     assert.doesNotMatch(html, /raster-master/);
   }
-  // Fingerprints of the product-owner-authorized yellow-and-charcoal brand artwork.
+  // Fingerprints of the product-owner-authorized red-and-navy brand artwork.
   const approved = {
-    primary: '7c2b002b68a9dfbc4f253cf54e493f15e292cf7eaa46385fd70ad1fb3a1d3ecf',
-    'dark-mode': '93ce120db191847b89308d5c0a627f0182d8515e7a819a37a38bb776a85259dc',
-    'dark-mode-transparent': '93ce120db191847b89308d5c0a627f0182d8515e7a819a37a38bb776a85259dc',
-    'horizontal-full': '817a2551ea75272feb956a815a1dc401a0eea603cefd952c39a140c8b528024a',
+    primary: 'c39d37245361ab09b943a576667d38bb2d8375a7e72bc1fc4a9b3db39db9f465',
+    'dark-mode': 'f6967b085fe96fae7777c29fa9ce931728b194ca6ba8df1009e3f4a5be3b6698',
+    'dark-mode-transparent': 'f6967b085fe96fae7777c29fa9ce931728b194ca6ba8df1009e3f4a5be3b6698',
+    'horizontal-full': '826aeea7203f8ae7bd73c58db17608e56a112ad35c8c0b7197e03c08c43a9f38',
   };
   for (const [name, fingerprint] of Object.entries(approved)) {
     assert.equal(
@@ -441,7 +441,7 @@ test('brand surfaces retain readable navigation, category copy and overview text
           .padStart(2, '0'),
       )
       .join('');
-  for (const foreground of ['inverse', 'brand-text-muted', 'brand-secondary']) {
+  for (const foreground of ['inverse', 'brand-text-muted']) {
     assert.ok(contrast(base[foreground], end) >= 4.5, `${foreground} on overview wash`);
   }
 });
@@ -457,17 +457,17 @@ test('rebranded artwork versions are allowed by image optimization and favicon c
     fs.readFileSync('public/brand/fixxflow/favicon/favicon.ico'),
   );
   const manifest = JSON.parse(fs.readFileSync('public/brand/fixxflow/site.webmanifest', 'utf8'));
-  assert.equal(manifest.theme_color, '#ffd700');
+  assert.equal(manifest.theme_color, '#d90429');
 });
 
 test('brand wordmark keeps readable theme accents', () => {
   const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
-  assert.match(css, /--color-brand-primary: #ffd700;/);
+  assert.match(css, /--color-brand-primary: #ef233c;/);
   assert.match(
     css,
     /\.brand-logo-navigation-wordmark span:last-child \{ color: var\(--color-accent\); \}/,
   );
-  assert.doesNotMatch(css, /#(?:fff0f1|fff1f1|ffadb5|ffc2c8|42272e|ff9a9a|44262f)\b/i);
+  assert.doesNotMatch(css, /#(?:ffd700|ff9800|e6c200|fff4b3)\b/i);
 });
 
 test('every shipped brand bitmap uses only approved brand colors', async () => {
@@ -476,7 +476,7 @@ test('every shipped brand bitmap uses only approved brand colors', async () => {
       const file = `${dir}/${entry.name}`;
       return entry.isDirectory() ? visit(file) : file.endsWith('.png') ? [file] : [];
     });
-  const palette = new Set(['255,215,0', '33,37,41', '255,255,255', '173,181,189']);
+  const palette = new Set(['239,35,60', '217,4,41', '43,45,66', '237,242,244', '141,153,174']);
   for (const file of visit('public/brand/fixxflow')) {
     const { data } = await sharp(file).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     for (let i = 0; i < data.length; i += 4) {
@@ -487,7 +487,8 @@ test('every shipped brand bitmap uses only approved brand colors', async () => {
 });
 
 test('product styles and email templates cannot reintroduce the retired brand palette', () => {
-  const oldPalette = /#(?:bd212c|a71d27|fba917|282d33|fbfffe|6e676f)\b/i;
+  const oldPalette =
+    /#(?:bd212c|a71d27|fba917|282d33|fbfffe|6e676f|ffd700|ff9800|e6c200|fff4b3)\b/i;
   assert.doesNotMatch(productStyles(), oldPalette);
   assert.doesNotMatch(productStyles(), /rgb\(189 33 44\b/);
   for (const name of fs.readdirSync('supabase/templates')) {
@@ -499,12 +500,14 @@ test('product styles and email templates cannot reintroduce the retired brand pa
 test('all five reference colors have explicit shared product roles', () => {
   const css = productStyles();
   for (const [role, value] of Object.entries({
-    'brand-primary': '#ffd700',
-    'brand-secondary': '#ff9800',
-    'brand-ink': '#212529',
+    'brand-primary': '#ef233c',
+    'brand-secondary': '#8d99ae',
+    'brand-ink': '#2b2d42',
     surface: '#ffffff',
+    'action-fill': '#d90429',
+    canvas: '#edf2f4',
   }))
     assert.ok(css.includes(`--color-${role}: ${value};`), `${role} uses ${value}`);
-  assert.match(css, /--color-border-strong: #ced4da;/);
-  assert.match(css, /--color-text-muted: #adb5bd;/);
+  assert.match(css, /--color-border-strong: #8d99ae;/);
+  assert.match(css, /--color-text-muted: #b4becd;/);
 });

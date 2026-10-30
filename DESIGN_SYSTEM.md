@@ -34,44 +34,44 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --color-on-accent: #ffffff;
-  --color-action-fill: #ffd700;
-  --color-action-hover: #e6c200;
-  --color-on-action: #212529;
-  --color-inverse: #ffffff;
-  --color-brand-text-muted: #dee2e6;
-  --color-highlight: #655600;
-  --color-highlight-surface: #fff8cc;
-  --color-purple: #545b62;
-  --color-purple-subtle: #e9ecef;
-  --color-neutral: #545b62;
-  --color-neutral-subtle: #e9ecef;
+  --color-action-fill: #d90429;
+  --color-action-hover: #b80323;
+  --color-on-action: #ffffff;
+  --color-inverse: #edf2f4;
+  --color-brand-text-muted: #edf2f4;
+  --color-highlight: #a90323;
+  --color-highlight-surface: #fff0f3;
+  --color-purple: #596579;
+  --color-purple-subtle: #e3e9ee;
+  --color-neutral: #596579;
+  --color-neutral-subtle: #e3e9ee;
   --color-note-border: var(--color-brand-primary);
   --color-note-surface: var(--color-surface-subtle);
 
-  --color-brand-primary: #ffd700;
-  --color-brand-secondary: #ff9800;
-  --color-brand-ink: #212529;
-  --color-canvas: #faf9f2;
+  --color-brand-primary: #ef233c;
+  --color-brand-secondary: #8d99ae;
+  --color-brand-ink: #2b2d42;
+  --color-canvas: #edf2f4;
   --color-surface: #ffffff;
-  --color-surface-subtle: #f8f9fa;
-  --color-border: #e9ecef;
-  --color-border-strong: #ced4da;
-  --color-text: #212529;
-  --color-text-muted: #545b62;
-  --color-text-subtle: #545b62;
-  --color-accent: #212529;
-  --color-accent-subtle: #fff4b3;
-  --color-active: #343a40;
-  --color-active-surface: #e9ecef;
-  --color-success: #343a40;
-  --color-success-subtle: #f1f3f5;
-  --color-warning: #8a4b00;
-  --color-warning-subtle: #fff0d9;
-  --color-danger: #212529;
-  --color-danger-surface: #f1f3f5;
-  --color-focus: #212529;
-  --color-control-border: #80878f;
-  --color-selected-border: #e6c200;
+  --color-surface-subtle: #f4f6f8;
+  --color-border: #dce2e9;
+  --color-border-strong: #8d99ae;
+  --color-text: #2b2d42;
+  --color-text-muted: #596579;
+  --color-text-subtle: #596579;
+  --color-accent: #d90429;
+  --color-accent-subtle: #fff0f3;
+  --color-active: #2b2d42;
+  --color-active-surface: #e3e9ee;
+  --color-success: #2b2d42;
+  --color-success-subtle: #e3e9ee;
+  --color-warning: #2b2d42;
+  --color-warning-subtle: #e3e9ee;
+  --color-danger: #d90429;
+  --color-danger-surface: #fff0f3;
+  --color-focus: #d90429;
+  --color-control-border: #7a869a;
+  --color-selected-border: #d90429;
   --brand-flow: linear-gradient(100deg, var(--color-brand-primary), var(--color-brand-secondary));
   --shadow-card: 0 1px 2px rgb(26 26 26 / 2%), 0 4px 12px rgb(26 26 26 / 2%);
   --shadow-overlay: 0 16px 40px rgb(26 26 26 / 18%);
@@ -83,28 +83,19 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
 }
 ```
 
-The core palette is yellow `#FFD700`, orange `#FF9800`, charcoal `#212529`, white `#FFFFFF`, and gray `#ADB5BD`. Yellow anchors artwork and primary actions; charcoal labels provide readable contrast on yellow. Gray is a supporting surface/detail color, never normal text on white. Derived neutral shades and restrained yellow tints supply surfaces, boundaries and readable secondary text.
+The approved palette is navy `#2B2D42`, slate `#8D99AE`, frost `#EDF2F4`, bright red `#EF233C` and crimson `#D90429`. Navy and frost anchor the surfaces and typography; slate supports boundaries and artwork. Bright red anchors the logo and decorative emphasis. Filled actions use crimson with white labels (5.25:1); bright red with white normal text does not meet AA. Derived navy/slate shades and restrained red tints supply supporting surfaces and readable secondary text. White remains a reading surface and inverse button label.
 
-Functional links and focus outlines use charcoal on light surfaces and yellow on dark surfaces. Filled actions use flat yellow with charcoal labels and a darker yellow hover, without an outline; secondary actions use a white surface with the faint border token. Field edges use `--color-control-border`, which keeps 3:1 contrast on every surface. Decorative lines use the soft `--color-border`. Status, priority, success and errors use the same palette with explicit labels and existing distinct icons; color never carries state alone. Charts retain distinct line styles and exact-data tables. Validate normal text at WCAG AA (4.5:1) and essential controls/focus at 3:1.
+Functional links and focus use crimson on light surfaces and frost on dark surfaces. Filled actions use crimson with white labels and a deeper crimson hover. Secondary actions use the surface and border tokens. Essential field edges retain 3:1 contrast; normal text retains 4.5:1. Preserve written status labels, icons, chart line styles and exact-data tables. Never rely on color alone. Legacy purple tokens remain neutral chart aliases.
 
-Role-named semantic tokens remain shared across every feature. Legacy purple token names remain compatibility aliases for neutral chart series, not permission to introduce purple. Danger text uses charcoal in light mode and yellow in dark mode on neutral surfaces.
-
-| Role | Light text / surface | Dark text / surface |
-|---|---|---|
-| Active work / Incident | `#343a40` / `#e9ecef` | `#ffffff` / `#343a40` |
-| Waiting / High | `#8a4b00` / `#fff0d9` | `#ff9800` / `#343a40` |
-| Resolved | `#343a40` / `#f1f3f5` | `#ffffff` / `#343a40` |
-| Urgent / breach | `#212529` / `#f1f3f5` | `#ffd700` / `#343a40` |
-
-Dark mode separates page canvas (`#212529`) from cards (`#2b3035`); automatic dark mode uses the same values as the explicit theme. Badge text meets 4.5:1 in both themes. Icons use currentColor, remain hidden from assistive technology, and never replace the written state. Forced-colors mode keeps system-colored text, outlines and icons.
+Dark mode uses a deeper navy canvas `#232536`, navy cards `#2B2D42` and elevated navy `#32354B`. Secondary text uses a lighter slate `#B4BECD`; exact slate remains available for controls and branding. Error labels use crimson on light surfaces and a readable red tint `#FFADB8` on dark surfaces. Automatic and explicit dark mode share identical values. Forced-colors mode retains system text, borders and focus.
 
 ### 3.2 Brand identity and logo flow
 
-- The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its yellow ribbon motion and deep charcoal folds express speed, continuity, and dependable technical support.
+- The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its red ribbon motion and navy folds express speed, continuity, and dependable technical support.
 - The product name is always written **FixxFlow** with two lowercase x characters and capital F characters. The primary tagline is **IT SUPPORT IN MOTION**.
 - Application navigation uses a responsive lockup built from the approved standalone mark and a live product wordmark. Keep its size and spacing identical in light and dark themes; change only the token-driven text contrast. Do not place the navigation logo on a contrasting plaque.
-- Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Favicons and app-launcher icons use the same yellow-and-charcoal mark.
-- Use `logo/fixxflow-logo-horizontal-full.png` for spacious light-surface placements, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode-transparent.png` for the dark stacked lockup. Compact and operational navigation use `icon/fixxflow-icon-primary.png` inside the responsive navigation lockup. Use the approved yellow-and-charcoal artwork; do not stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
+- Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Favicons and app-launcher icons use the same red-and-navy mark.
+- Use `logo/fixxflow-logo-horizontal-full.png` for spacious light-surface placements, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode-transparent.png` for the dark stacked lockup. Compact and operational navigation use `icon/fixxflow-icon-primary.png` inside the responsive navigation lockup. Use the approved red-and-navy artwork; do not stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
 - Keep clear space around the logo. At small sizes, drop the tagline before reducing legibility; use the icon rather than forcing the wordmark into a square.
 - The logo gradient belongs to brand artwork and occasional brand-forward moments. Functional controls should normally use solid semantic token colors, not gradients.
 - Prefer motion cues that echo the mark's forward sweep: short horizontal reveals, progress movement, and directional transitions. Keep them subtle, 120–200ms, and fully compatible with reduced-motion settings.
@@ -130,7 +121,7 @@ The approved, versioned asset package lives under `public/brand/fixxflow/`. Refr
 - Default page padding: 24px desktop, 20px tablet, 16px mobile.
 - Card padding: 16–24px; do not nest multiple bordered cards without a clear hierarchy.
 - Radius: 8px controls, 10–12px cards, 14–16px major panels. Pills are reserved for compact status, filters, and avatars.
-- Use quiet 1px borders and surface shifts before shadows. Decorative borders use `#dee2e6` / `#adb5bd` in light mode and `#3e454c` / `#868e96` in dark mode. Keep card shadows faint; avoid dark outlines and saturated yellow borders around ordinary content. Text fields use the UI kit's bordered field: surface background, 8px corners and a full 1px control-border outline that retains 3:1 contrast, with a faint elevation shadow. Focus changes the edge to the focus color (charcoal, yellow in dark mode) and adds a soft 3px ring; errors use a 2px danger edge. Forced-colors mode restores full system-color borders. Keep focus, selection, and semantic state cues distinct. Shadows should indicate elevation, not decorate every object.
+- Use quiet 1px borders and surface shifts before shadows. Decorative borders use `#dce2e9` / `#8d99ae` in light mode and `#464b63` / `#8d99ae` in dark mode. Keep card shadows faint; avoid dark outlines and saturated red borders around ordinary content. Text fields use the UI kit's bordered field: surface background, 8px corners and a full 1px control-border outline that retains 3:1 contrast, with a faint elevation shadow. Focus changes the edge to the focus color (crimson, frost in dark mode) and adds a soft 3px ring; errors use a 2px danger edge. Forced-colors mode restores full system-color borders. Keep focus, selection, and semantic state cues distinct. Shadows should indicate elevation, not decorate every object.
 - Icons should be from one consistent outline icon family. Default size 16–20px. Every unfamiliar icon-only action requires an accessible name and tooltip.
 
 ### 3.5 Motion
@@ -215,8 +206,8 @@ The approved, versioned asset package lives under `public/brand/fixxflow/`. Refr
 ### 5.5 Buttons, menus, and actions
 
 - One primary action per surface or clearly bounded region. Secondary actions use quieter styling; tertiary actions are text or menu items.
-- Reuse the shared `.button` variants: solid yellow primary, neutral outlined secondary, transparent quiet, and explicitly labeled danger. Primary labels use the heading font at 600; quiet controls use the body font at 500. Keep a 44px minimum target in both dimensions, allow long labels to wrap, and preserve a visible focus ring. Pending actions retain readable contrast, a progress label and a decorative progress indicator; reduced motion makes the indicator static.
-- Email CTAs use the same yellow/charcoal hierarchy through the shared email renderer, with inline styles, 12px × 20px padding, a 24px line height, Outlook cell-padding fallback, and full-width actions on compact screens where media queries are supported.
+- Reuse the shared `.button` variants: solid crimson primary, neutral outlined secondary, transparent quiet, and explicitly labeled danger. Primary labels use the heading font at 600; quiet controls use the body font at 500. Keep a 44px minimum target in both dimensions, allow long labels to wrap, and preserve a visible focus ring. Pending actions retain readable contrast, a progress label and a decorative progress indicator; reduced motion makes the indicator static.
+- Email CTAs use the same crimson/white action hierarchy through the shared email renderer, with inline styles, 12px × 20px padding, a 24px line height, Outlook cell-padding fallback, and full-width actions on compact screens where media queries are supported.
 - Button labels describe outcomes: “Assign ticket,” not “Submit.”
 - Icon-only controls must have at least a 40×40px interactive area even if the glyph is smaller.
 - Menus contain short, related actions and support arrow keys, Enter/Space, Escape, and focus return.
@@ -276,7 +267,7 @@ Recommended initial priorities: Low, Normal, High, Urgent. Always display the wr
 - Chat unread counts represent the viewer's existing unread notifications, including media uploads. A visible thread at its latest entries acknowledges only notifications covered by the loaded snapshot. Keep newer and background-tab updates unread. The navigation badge and notifications page subscribe to live changes, retaining focus and polling recovery.
 - Clearly distinguish employee, agent, system event, and internal note using labels, alignment/surface treatment, and icons—not color alone.
 - Keep the chat inbox to one heading and its view filters. Use compact timestamps with the exact date and timezone available to assistive technology and on hover. Keep history and file browsing together in a quiet toolbar, with attachments shown once in the timeline. The composer has one heading row, message field, audience/keyboard hint, and attachment/send actions. Keep message width readable. Show sender and timestamp at logical group boundaries rather than repeating noisy metadata on every bubble.
-- Internal notes use a cool neutral surface with a solid accent edge and the shared yellow primary action. Keep note visibility explicit in text, independently of the shared yellow brand accent. Apply this treatment to ticket composers, timelines, live chat and linked history. Internal notes must be unmistakable before composition and after posting. The composer mode label and submit action must state “Internal note” when active.
+- Internal notes use a cool neutral surface with a solid accent edge and the shared crimson primary action. Keep note visibility explicit in text, independently of the shared red brand accent. Apply this treatment to ticket composers, timelines, live chat and linked history. Internal notes must be unmistakable before composition and after posting. The composer mode label and submit action must state “Internal note” when active.
 - The composer supports keyboard entry, attachments, drafts, sending progress, retry after failure, and multiline content. `Enter` versus `Shift+Enter` behavior must be visible or configurable; never surprise users with an accidental send.
 - New messages should not force-scroll a user who is reading history. Show a “new messages” affordance instead. Maintain focus and announce incoming messages politely.
 - System events such as assignment or status changes should be compact timeline items, not chat bubbles.
@@ -371,7 +362,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ## 13. Shared visual refinement (September 2026)
 
-- A short yellow-to-gray rule anchors workspace page headers, the sidebar identity, and the employee home introduction. This is decorative brand artwork, never a status indicator or a gradient control.
+- A short red-to-slate rule anchors workspace page headers, the sidebar identity, and the employee home introduction. This is decorative brand artwork, never a status indicator or a gradient control.
 - Use `--brand-flow` for that rule and existing surface tokens for softly shaded metric panels. Keep functional actions solid and data cards stationary.
 - Avatar initials use solid `--color-accent` for readable white text. Input boundaries use `--color-control-border`. Text fields use the subtle surface, 12px card radius, regular-weight input text, and no shadow. Focus uses one solid 2px `--color-focus` outline aligned to the border (−1px offset), avoiding a doubled ring; other controls retain their offset focus outlines.
 - Action-card arrows sit in a small outlined circle. Only a pressed arrow moves, by 2px; reduced motion removes that movement.
@@ -379,7 +370,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Operational overview hierarchy
 
-- Lead the staff overview with a compact charcoal introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with charcoal text; the focus outline uses palette yellow for contrast against charcoal.
+- Lead the staff overview with a compact navy introduction using existing brand and surface tokens. Its primary queue action uses a solid light surface with navy text; the focus outline uses slate for contrast against navy.
 - Place work queue shortcuts first, then today’s metrics, then workload and trends. Link to Reports once, from the workload and trends section. On wide screens, group comparable metrics in one divided panel; on compact screens, use two columns and a single column below 360px.
 - Queue shortcuts use native links, a title, brief supporting text, and a decorative arrow. Numbered markers indicate reading order, never ticket counts. Keep secondary support actions neutral so they do not compete with the queue.
 - Shared cards favor borders over shadows. Preserve clear input boundaries, visible focus, and the employee portal’s larger controls.
@@ -408,7 +399,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Appearance themes
 
 - Offer a soft, rounded Appearance group with native icon buttons for System (monitor), Light (sun), and Dark (moon). Each button has an accessible name, tooltip, pressed state, and a selected dot in addition to color. Keep 44px targets and visible keyboard focus. Place these choices centered below Notifications in workspace navigation, in Profile / Account settings, and on authentication screens. Default to the system preference and persist explicit choices on this browser. Apply the theme before first paint, respond to system and cross-tab changes, and remain usable when browser storage is blocked.
-- Keep semantic tokens as the single color system. Dark mode uses charcoal canvas, derived charcoal surfaces, yellow actions/links/focus, white primary text and gray secondary text. Light mode uses white surfaces, a soft neutral canvas, charcoal text/links/focus and yellow actions with charcoal labels. `--color-inverse` stays white for fixed charcoal brand panels. Chart series retain distinct line styles and data tables.
+- Keep semantic tokens as the single color system. Dark mode uses navy canvas and surfaces, crimson actions with white labels, frost links/focus, frost primary text and light slate secondary text. Light mode uses white surfaces, frost canvas, navy text and crimson links/focus/actions. `--color-inverse` stays frost for fixed navy brand panels. Chart series retain distinct line styles and data tables.
 - Use native dark form controls via `color-scheme`. Keep focus outlines and control boundaries visible. Theme changes are immediate and introduce no animation.
 - Full shared logos use the approved primary (light mode) and dark-mode (dark mode) PNGs at their original 1353:1334 proportions; compact sidebar logos use the approved 1139:1151 color icon, with no light backing, cropping, or recoloring. All shared logo variants, including the full inverse artwork, must have genuine alpha transparency around the mark and lettering. Never bake a background into application logo assets. Keep launcher icons separate from transparent application logos.
 
@@ -425,10 +416,10 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Brand presence (October 2026)
 
-- Keep the operational shell neutral and use a thin yellow signature at the top of persistent navigation. Selected navigation uses a warm yellow surface, accessible charcoal text, and an inset edge so the active location remains clear without turning the full control into a saturated block. Keep the existing focus outline and forced-colors selected outline.
-- Concentrate expressive brand color in a few deliberate moments: the staff overview introduction, the authentication brand panel, primary actions, selection, and small directional details. Standard page headers, settings rows, knowledge categories, tables, and form surfaces stay neutral. Yellow highlights belong within brand artwork and signature rules, not a default card fill or workflow color.
-- Administration is a grouped settings index with bordered rows and lightweight destination links. Knowledge browsing uses neutral destination surfaces with charcoal interaction feedback. States retain explicit text and icons; destructive actions require explicit labels and icons.
-- The overview introduction uses a restrained charcoal-to-black brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded navigation uses the responsive mark-and-wordmark lockup in every theme; compact sidebars and mobile headers retain the mark alone. Preserve the approved mark without distortion.
+- Keep the operational shell neutral and use a thin red signature at the top of persistent navigation. Selected navigation uses a restrained red tint, accessible navy text, and an inset edge so the active location remains clear without turning the full control into a saturated block. Keep the existing focus outline and forced-colors selected outline.
+- Concentrate expressive brand color in a few deliberate moments: the staff overview introduction, the authentication brand panel, primary actions, selection, and small directional details. Standard page headers, settings rows, knowledge categories, tables, and form surfaces stay neutral. Red highlights belong within brand artwork and signature rules, not a default card fill or workflow color.
+- Administration is a grouped settings index with bordered rows and lightweight destination links. Knowledge browsing uses neutral destination surfaces with navy interaction feedback. States retain explicit text and icons; destructive actions require explicit labels and icons.
+- The overview introduction uses a restrained navy brand wash. Keep its text, action, and keyboard focus readable across the entire panel. Expanded navigation uses the responsive mark-and-wordmark lockup in every theme; compact sidebars and mobile headers retain the mark alone. Preserve the approved mark without distortion.
 - Employee pages should feel warmer and simpler through larger type, plain-language tasks, and whitespace rather than additional decorative color. Authentication may carry the strongest brand panel because it has no competing operational data.
 
 ### Employee home hierarchy
@@ -454,10 +445,10 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Quiet form hierarchy
 
 - Apply Apple's [HIG layout](https://developer.apple.com/design/human-interface-guidelines/layout) and [text-field](https://developer.apple.com/design/human-interface-guidelines/text-fields) principles through spacing, clear hierarchy, persistent labels, and predictable feedback. This is a web interface with its own identity.
-- Across employee, staff, settings, queues and chat, shared inputs are the UI kit `Input`, `Textarea` and `NativeSelect`: bordered surface fields with medium-weight labels and readable subdued placeholders. Bounded tinted search areas may keep the field-surface fill. Read-only and disabled fields use the subtle surface. Filled primary actions use a contrasting charcoal edge; ordinary card and secondary-action hover borders remain neutral. Selection and focus retain explicit accent cues.
+- Across employee, staff, settings, queues and chat, shared inputs are the UI kit `Input`, `Textarea` and `NativeSelect`: bordered surface fields with medium-weight labels and readable subdued placeholders. Bounded tinted search areas may keep the field-surface fill. Read-only and disabled fields use the subtle surface. Filled primary actions use a matching crimson edge; ordinary card and secondary-action hover borders remain neutral. Selection and focus retain explicit accent cues.
 - Ticket creation uses one calm surface without an enclosing border; optional sections retain quiet separators and native disclosures. Supporting text is quieter than entered content. Preserve 44px targets, compact-screen wrapping, native textarea resizing, keyboard focus and error recovery.
 
-- Email templates share the white/gray/charcoal/yellow palette and quiet hierarchy: borderless white content surface, yellow actions with charcoal labels, gray supporting copy, and soft filled verification codes. Preserve table-based email compatibility, written security notices, fallback links, and authentication template tokens. Generate Supabase templates from the shared renderer.
+- Email templates share the white/frost/navy/crimson palette and quiet hierarchy: borderless white content surface, crimson actions with white labels, gray supporting copy, and soft filled verification codes. Preserve table-based email compatibility, written security notices, fallback links, and authentication template tokens. Generate Supabase templates from the shared renderer.
 
 ### Incident tickets — Step 1
 
@@ -511,7 +502,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Ticket workflow guidance
 
-- Each staff workflow step groups its heading, short purpose/action sentence and native “Show guidance” disclosure in one subtle neutral surface with a small yellow heading accent. Expanded guidance uses short ordered instructions with action names emphasized; the disclosure label becomes “Hide guidance” when open. Keep audience, optional work and explicit save actions clear. Explain once beside Back/Next that navigation only changes the view; Back/Next never save or change status. Reuse existing typography and surface tokens without separate instruction cards. Keep the redundant progress announcement available to assistive technology without repeating it visually.
+- Each staff workflow step groups its heading, short purpose/action sentence and native “Show guidance” disclosure in one subtle neutral surface with a small red heading accent. Expanded guidance uses short ordered instructions with action names emphasized; the disclosure label becomes “Hide guidance” when open. Keep audience, optional work and explicit save actions clear. Explain once beside Back/Next that navigation only changes the view; Back/Next never save or change status. Reuse existing typography and surface tokens without separate instruction cards. Keep the redundant progress announcement available to assistive technology without repeating it visually.
 
 ### Pagination visibility
 
@@ -529,7 +520,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 
 ### Palette fidelity
 
-Do not use pink or rose tints for brand, selection, chat bubbles, or errors. Light selections use warm yellow surfaces; dark selections use elevated charcoal. Dark-mode links and focus use palette yellow for contrast. The navigation wordmark uses charcoal in light mode and yellow in dark mode for readability. Error labels use the semantic danger color in both themes on neutral surfaces, with explicit error text and icons.
+Use only the approved navy, slate, frost and two reds, plus derived accessible shades and white reading surfaces. Light selections use a restrained red tint; dark selections use elevated navy. Navigation wordmarks use navy/crimson on light surfaces and frost on dark surfaces. Preserve semantic error labels and icons so brand red does not make every action appear destructive.
 
 ### Activity history readability
 
@@ -577,7 +568,7 @@ Declare cascade layers in the order theme, tokens, base, utilities, components, 
 
 ### Email readability
 
-All operational and account emails share a compact horizontal brand header, left-aligned title and message, and content-sized spacing. Identify the workspace in operational emails when available; keep account security messages account-scoped. Show public service status separately from the message. Use a compact solid-yellow action with a charcoal label and a short underlined alternative link, with full destinations in the plain-text version. Keep one support link in the footer. Preserve explicit security guidance, semantic headings, escaped dynamic text, one-use authentication placeholders and readable phone layouts. Email uses inline equivalents of the existing light-theme tokens and system font fallbacks for mail-client compatibility. Emails are composed from the React Email kit in `src/emails` (`EmailLayout`, `EmailEyebrow`, `EmailTitle`, `EmailText`, `EmailDetails`, `EmailCallout`, `EmailCode`, `EmailAction`, `EmailNote`) and rendered to static HTML by `renderEmail`; `emailTokens` holds the inline token values. React escapes every value; only the author-written Supabase Go-template branches use `EmailTemplateText`. Regenerate Supabase templates with `node scripts/generate-email-templates.mjs` after changing the kit.
+All operational and account emails share a compact horizontal brand header, left-aligned title and message, and content-sized spacing. Identify the workspace in operational emails when available; keep account security messages account-scoped. Show public service status separately from the message. Use a compact solid-crimson action with a white label and a short underlined alternative link, with full destinations in the plain-text version. Keep one support link in the footer. Preserve explicit security guidance, semantic headings, escaped dynamic text, one-use authentication placeholders and readable phone layouts. Email uses inline equivalents of the existing light-theme tokens and system font fallbacks for mail-client compatibility. Emails are composed from the React Email kit in `src/emails` (`EmailLayout`, `EmailEyebrow`, `EmailTitle`, `EmailText`, `EmailDetails`, `EmailCallout`, `EmailCode`, `EmailAction`, `EmailNote`) and rendered to static HTML by `renderEmail`; `emailTokens` holds the inline token values. React escapes every value; only the author-written Supabase Go-template branches use `EmailTemplateText`. Regenerate Supabase templates with `node scripts/generate-email-templates.mjs` after changing the kit.
 
 ### Chat coverage and idle closure
 
@@ -617,13 +608,9 @@ Microsoft and Google sign-in controls may use their official logos, provider but
 - Employee request details keep First reply and Resolution targets visible; the support-hours explanation sits in a closed How these times work disclosure. The attach action sits directly below the reply composer; the Attachments section lists files and offers upload only when the request is resolved or closed.
 - Employee home explains the two routes: Chat with IT for quick questions during support hours, Submit a request for problems, equipment and follow-up work. Search tips sit in a closed disclosure.
 
-### Warm light theme
+### Red and navy palette transition (October 2026)
 
-Light mode uses a warm ivory canvas (`#FAF9F2`), white reading surfaces, and pale yellow (`#FFF4B3`) for selected navigation, the primary employee support card and contextual accents. A yellow-to-orange sidebar signature reinforces the brand. Help search uses a quieter yellow wash; gray borders and charcoal text keep information legible. Retain existing responsive layouts, keyboard focus, forced-colors and reduced-motion behavior. Dark mode retains its charcoal surfaces. These are derived shades of the approved five-color palette, not additional brand colors.
-
-### Orange supporting accent
-
-Orange `#FF9800` is the fifth approved brand color. Use it alongside yellow in the navigation signature, small decorative section markers and highlights on charcoal. Warning labels on light surfaces use the darker `#8A4B00` with a pale orange `#FFF0D9` surface; dark warning labels use exact orange on charcoal. Exact orange is not normal-sized text on white. Keep yellow as the primary action color and gray as the supporting neutral. Existing four-color logo artwork remains valid.
+The product owner approved replacing the former yellow/orange identity throughout the application, email kit, authentication templates, logos, favicons, app icons, web manifest, handoff package and report exports. Keep original artwork geometry and transparency. Provider sign-in assets retain their official colors. Reuse all existing layout, focus, forced-colors and reduced-motion behavior; this changes the shared palette, not product workflows or typography.
 
 ### Incident followers
 
