@@ -16,7 +16,7 @@ export function CleanupForm() {
         Run the same cleanup now. Only expired analytics records are removed; customer tickets,
         messages and equipment are unchanged.
       </p>
-      <SubmitButton className="button button-secondary" pendingLabel="Running cleanup…">
+      <SubmitButton variant="secondary" pendingLabel="Running cleanup…">
         Run cleanup now
       </SubmitButton>
     </ActionForm>

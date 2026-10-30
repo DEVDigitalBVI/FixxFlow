@@ -1,5 +1,9 @@
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { Timestamp } from '@/features/timezones/provider';
 import { pageNumber } from '@/lib/pagination';
@@ -62,8 +66,7 @@ export async function AuditLog({
       >
         <div className="field">
           <label htmlFor="audit-search">Find a person or item</label>
-          <input
-            className="input"
+          <Input
             id="audit-search"
             name="q"
             type="search"
@@ -75,29 +78,32 @@ export async function AuditLog({
         </div>
         <div className="field">
           <label htmlFor="audit-entity">Area</label>
-          <select className="input" id="audit-entity" name="entity" defaultValue={entity}>
+          <NativeSelect id="audit-entity" name="entity" defaultValue={entity}>
             <option value="">All areas</option>
             {Object.entries(auditEntities).map(([key, label]) => (
               <option key={key} value={key}>
                 {label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
         <div className="field">
           <label htmlFor="audit-action">Action</label>
-          <select className="input" id="audit-action" name="action" defaultValue={action}>
+          <NativeSelect id="audit-action" name="action" defaultValue={action}>
             <option value="">All actions</option>
             <option value="created">Created</option>
             <option value="updated">Updated</option>
             <option value="deleted">Deleted</option>
-          </select>
+          </NativeSelect>
         </div>
-        <button className="button button-primary" type="submit">
+        <Button variant="primary" type="submit">
           Apply filters
-        </button>
+        </Button>
         {(search || entity || action) && (
-          <Link className="button button-quiet" href="/app/administration/audit-log">
+          <Link
+            className={buttonVariants({ variant: 'quiet' })}
+            href="/app/administration/audit-log"
+          >
             Clear filters
           </Link>
         )}
@@ -112,7 +118,7 @@ export async function AuditLog({
               <time dateTime={event.created_at}>
                 <Timestamp value={event.created_at} />
               </time>
-              <span className="badge">{auditEntities[event.entity_type] ?? 'Activity'}</span>
+              <Badge>{auditEntities[event.entity_type] ?? 'Activity'}</Badge>
             </div>
             <p>
               <strong>{event.actor_name}</strong> {event.action}{' '}
@@ -143,7 +149,7 @@ export async function AuditLog({
         ))}
       </ol>
       {!data.length && (
-        <div className="empty-state">
+        <EmptyState>
           <strong>
             {search || entity || action ? 'No matching activity' : 'No recorded activity yet'}
           </strong>
@@ -152,18 +158,18 @@ export async function AuditLog({
               ? 'Try different filters or clear your search.'
               : 'Future ticket and administration changes will appear here automatically.'}
           </p>
-        </div>
+        </EmptyState>
       )}
       {(page > 1 || data.length > 50) && (
         <nav className="queue-views" aria-label="Audit log pages">
           {page > 1 && (
-            <Link className="button button-secondary" href={href(page - 1)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
               Previous
             </Link>
           )}
           <span>Page {page}</span>
           {data.length > 50 && (
-            <Link className="button button-secondary" href={href(page + 1)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
               Next
             </Link>
           )}

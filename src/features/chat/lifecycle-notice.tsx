@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
 import { Timestamp } from '@/features/timezones/provider';
 
 export function ChatLifecycleNotice({
@@ -20,14 +22,14 @@ export function ChatLifecycleNotice({
       <section className="settings-card chat-closure-summary" aria-labelledby="chat-summary-title">
         <h2 id="chat-summary-title">Chat summary</h2>
         <p>{summary}</p>
-        <Link className="button button-secondary" href="/app/chat?start=1">
+        <Link className={buttonVariants({ variant: 'secondary' })} href="/app/chat?start=1">
           Start a new chat
         </Link>
       </section>
     );
   if (open && warningAt)
     return (
-      <p className="alert alert-warning" role="status">
+      <Alert as="p" tone="warning" role="status">
         IT has replied.{' '}
         {warningDueAt ? (
           <>
@@ -37,7 +39,7 @@ export function ChatLifecycleNotice({
           'Reply to keep this chat open.'
         )}{' '}
         Support hours are 7 AM–10 PM, every day in the workspace timezone.
-      </p>
+      </Alert>
     );
   return null;
 }

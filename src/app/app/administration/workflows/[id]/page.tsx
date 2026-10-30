@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { RetryButton } from '@/components/ui/retry-button';
 import { isUuid } from '@/features/tickets/communications';
@@ -66,7 +67,10 @@ export default async function Page({
         back={{ href: '/app/administration/workflows', label: 'Back to templates' }}
         actions={
           template.latest_version > 0 && !template.archived ? (
-            <Link className="button button-secondary" href={`/app/workflows/${id}`}>
+            <Link
+              className={buttonVariants({ variant: 'secondary' })}
+              href={`/app/workflows/${id}`}
+            >
               View published procedure
             </Link>
           ) : undefined
@@ -122,7 +126,7 @@ export default async function Page({
               <nav className="section-heading-row" aria-label="Published version pages">
                 {before && (
                   <Link
-                    className="button button-secondary"
+                    className={buttonVariants({ variant: 'secondary' })}
                     href={`/app/administration/workflows/${id}`}
                   >
                     Latest versions
@@ -130,7 +134,7 @@ export default async function Page({
                 )}
                 {(versions.data?.length ?? 0) > 20 && (
                   <Link
-                    className="button button-secondary"
+                    className={buttonVariants({ variant: 'secondary' })}
                     href={`/app/administration/workflows/${id}?before=${rows.at(-1)!.version}`}
                   >
                     Earlier versions

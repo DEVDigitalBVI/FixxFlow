@@ -1,5 +1,6 @@
 import { editOrganizationItem } from '@/app/app/organization/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 type Item = {
@@ -39,8 +40,7 @@ export function OrganizationItemEditor({
         <input type="hidden" name="updatedAt" value={item.updated_at} />
         <div className="field">
           <label htmlFor={`name-${item.id}`}>Name</label>
-          <input
-            className="input"
+          <Input
             id={`name-${item.id}`}
             name="name"
             defaultValue={item.name}
@@ -51,8 +51,7 @@ export function OrganizationItemEditor({
         {fields.map(([name, label, value, max]) => (
           <div className="field" key={name}>
             <label htmlFor={`${name}-${item.id}`}>{label}</label>
-            <input
-              className="input"
+            <Input
               id={`${name}-${item.id}`}
               name={name}
               defaultValue={value ?? ''}
@@ -61,7 +60,7 @@ export function OrganizationItemEditor({
             />
           </div>
         ))}
-        <SubmitButton className="button button-secondary">Save changes</SubmitButton>
+        <SubmitButton variant="secondary">Save changes</SubmitButton>
       </ActionForm>
     </details>
   );

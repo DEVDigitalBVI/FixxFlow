@@ -6,6 +6,7 @@ import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { WorkspaceNav } from '@/components/navigation/workspace-nav';
 import { WorkspaceShell } from '@/components/navigation/workspace-shell';
 import { Avatar } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { platformIdentity } from '@/lib/auth/platform';
 import { createClient } from '@/lib/supabase/server';
 
@@ -30,9 +31,9 @@ export default async function PlatformLayout({ children }: { children: ReactNode
           workspaceAvailable={!!memberships?.length}
           signOutControl={
             <form action={signOut}>
-              <button className="button button-secondary" type="submit">
+              <Button variant="secondary" type="submit">
                 Sign out
-              </button>
+              </Button>
             </form>
           }
         />

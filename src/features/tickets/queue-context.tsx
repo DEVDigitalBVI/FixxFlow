@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, type ReactNode } from 'react';
 
+import { Button, buttonVariants } from '@/components/ui/button';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 
 import { ticketDetailHref } from './queue-navigation';
@@ -78,7 +79,12 @@ export function TicketQueueContext({
     sync();
     compact.addEventListener('change', sync);
     const key = (event: KeyboardEvent) => {
-      if (event.defaultPrevented || document.querySelector('dialog[open]')) return;
+      // A modal kit dialog (such as search) above the drawer handles its own Escape.
+      if (
+        event.defaultPrevented ||
+        document.querySelector('dialog[open], [data-slot="dialog-content"][data-state="open"]')
+      )
+        return;
       if (event.key === 'Escape') {
         event.preventDefault();
         drawer.current?.querySelector<HTMLButtonElement>('[data-close-ticket]')?.click();
@@ -163,10 +169,13 @@ export function TicketQueueContext({
             <h2 id="ticket-panel-heading" ref={heading} tabIndex={-1}>
               Ticket details
             </h2>
-            <button type="button" className="button button-quiet" data-close-ticket onClick={close}>
+            <Button type="button" variant="quiet" data-close-ticket onClick={close}>
               Close details
-            </button>
-            <a className="button button-secondary" href={ticketDetailHref(selected!, returnTo)}>
+            </Button>
+            <a
+              className={buttonVariants({ variant: 'secondary' })}
+              href={ticketDetailHref(selected!, returnTo)}
+            >
               Open full ticket
             </a>
           </header>

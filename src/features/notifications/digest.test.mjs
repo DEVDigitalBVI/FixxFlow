@@ -19,12 +19,12 @@ const config = {
   from: 'FixxFlow <no-reply@example.invalid>',
   siteUrl: 'https://fixxflow.com',
 };
-test('daily summary uses the shared compact email shell, escapes titles and caps visible items', () => {
-  const content = digestContent(item, config.siteUrl);
+test('daily summary uses the shared compact email shell, escapes titles and caps visible items', async () => {
+  const content = await digestContent(item, config.siteUrl);
   assert.match(content.html, /&lt;script&gt;/);
   assert.ok(!content.html.includes('<script>'));
   assert.match(content.text, /1 update is/);
-  const large = digestContent(
+  const large = await digestContent(
     {
       ...item,
       total: 12,
@@ -34,7 +34,7 @@ test('daily summary uses the shared compact email shell, escapes titles and caps
   );
   assert.match(large.text, /And 2 more/);
   assert.ok(!large.text.includes('Notice 11'));
-  assert.throws(() => digestContent({ ...item, total: 0, items: [] }, config.siteUrl));
+  await assert.rejects(() => digestContent({ ...item, total: 0, items: [] }, config.siteUrl));
 });
 test('digest retries retain one provider idempotency key; failed or missing provider IDs never count as delivered', async () => {
   const calls = [];

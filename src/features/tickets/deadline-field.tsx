@@ -2,6 +2,8 @@
 
 import { useId, useState } from 'react';
 
+import { Input, NativeSelect } from '@/components/ui/input';
+
 import { deadlineCandidates, deadlineInputValue } from './deadlines';
 
 export function DeadlineField({
@@ -35,8 +37,7 @@ export function DeadlineField({
     <div className="field">
       <input type="hidden" name={`${name}Timezone`} value={zone} />
       <label htmlFor={id}>{label}</label>
-      <input
-        className="input"
+      <Input
         id={id}
         name={`${name}At`}
         type="datetime-local"
@@ -57,8 +58,7 @@ export function DeadlineField({
       {candidates.length > 1 && (
         <label>
           This time occurs twice
-          <select
-            className="input"
+          <NativeSelect
             name={`${name}Occurrence`}
             required
             value={occurrence}
@@ -67,7 +67,7 @@ export function DeadlineField({
             <option value="">Choose an occurrence</option>
             <option value="earlier">First occurrence ({candidates[0]})</option>
             <option value="later">Second occurrence ({candidates.at(-1)})</option>
-          </select>
+          </NativeSelect>
         </label>
       )}
     </div>

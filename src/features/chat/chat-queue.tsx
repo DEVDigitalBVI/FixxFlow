@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { Avatar } from '@/components/ui/avatar';
+import { buttonVariants } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
 import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
 
 import { ChatTime } from './chat-time';
@@ -80,16 +82,16 @@ export function ChatQueue({
       </header>
       {filters && <div className="chat-inbox-toolbar">{filters}</div>}
       {failed ? (
-        <div className="empty-state" role="alert">
+        <EmptyState role="alert">
           <strong>Chats couldn’t be loaded</strong>
           <p>Please try again. Your conversations haven’t been changed.</p>
           <Link
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={selectedId ? chatConversationHref(selectedId, view) : chatInboxHref(view)}
           >
             Try again
           </Link>
-        </div>
+        </EmptyState>
       ) : chats.length ? (
         <ul className="chat-conversation-list">
           {chats.map((chat) => {
@@ -138,14 +140,14 @@ export function ChatQueue({
           })}
         </ul>
       ) : (
-        <div className="empty-state chat-inbox-empty">
+        <EmptyState className="chat-inbox-empty">
           <span className="chat-intake-icon">
             <NavigationIcon name="chat" />
           </span>
           <strong>{context.empty}</strong>
           <p>{context.hint}</p>
           <Link
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={
               view === 'mine'
                 ? '/app/chat?view=unassigned'
@@ -160,7 +162,7 @@ export function ChatQueue({
                 ? 'View open chats'
                 : 'Start a chat'}
           </Link>
-        </div>
+        </EmptyState>
       )}
     </>
   );

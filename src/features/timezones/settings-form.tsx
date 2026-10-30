@@ -29,7 +29,7 @@ export function TimezoneSettingsForm({
       <input type="hidden" name="scope" value={scope} />
       <input type="hidden" name="expectedTimezone" value={expected} />
       {children}
-      <SubmitButton className="button button-primary">Save timezone</SubmitButton>
+      <SubmitButton variant="primary">Save timezone</SubmitButton>
     </ActionForm>
   );
 }

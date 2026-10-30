@@ -1,5 +1,8 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input, NativeSelect } from '@/components/ui/input';
 import {
   automationOperationsHistory,
   type OperationsFilters,
@@ -45,9 +48,8 @@ export default async function OperationsHistoryPage({
         <div className="automation-operations-grid">
           <div className="field">
             <label htmlFor="operations-query">Automation name</label>
-            <input
+            <Input
               id="operations-query"
-              className="input"
               type="search"
               name="q"
               maxLength={120}
@@ -56,7 +58,7 @@ export default async function OperationsHistoryPage({
           </div>
           <div className="field">
             <label htmlFor="operations-result">Result</label>
-            <select id="operations-result" name="result" className="input" defaultValue={f.result}>
+            <NativeSelect id="operations-result" name="result" defaultValue={f.result}>
               {Object.entries({
                 all: 'All results',
                 failures: 'All failures',
@@ -72,29 +74,23 @@ export default async function OperationsHistoryPage({
                   {label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
           <div className="field">
             <label htmlFor="operations-trigger">Trigger</label>
-            <select
-              id="operations-trigger"
-              className="input"
-              name="trigger"
-              defaultValue={f.trigger}
-            >
+            <NativeSelect id="operations-trigger" name="trigger" defaultValue={f.trigger}>
               <option value="">All triggers</option>
               {triggerOptions.map((item) => (
                 <option value={item.key} key={item.key}>
                   {item.label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
           <div className="field">
             <label htmlFor="operations-ticket">Ticket number</label>
-            <input
+            <Input
               id="operations-ticket"
-              className="input"
               name="ticket"
               type="number"
               min={1}
@@ -103,9 +99,8 @@ export default async function OperationsHistoryPage({
           </div>
           <div className="field">
             <label htmlFor="operations-from">From date (UTC)</label>
-            <input
+            <Input
               id="operations-from"
-              className="input"
               name="from"
               type="date"
               defaultValue={f.from}
@@ -114,9 +109,8 @@ export default async function OperationsHistoryPage({
           </div>
           <div className="field">
             <label htmlFor="operations-to">Through date (UTC)</label>
-            <input
+            <Input
               id="operations-to"
-              className="input"
               name="to"
               type="date"
               defaultValue={f.to}
@@ -129,15 +123,15 @@ export default async function OperationsHistoryPage({
           that executed.
         </p>
         {data.error && (
-          <p className="alert alert-error" role="alert">
+          <Alert as="p" tone="error" role="alert">
             {data.error}
-          </p>
+          </Alert>
         )}
         <div className="automation-inline">
-          <button className="button button-secondary" type="submit">
+          <Button variant="secondary" type="submit">
             Filter history
-          </button>
-          <Link className="button button-quiet" href={base}>
+          </Button>
+          <Link className={buttonVariants({ variant: 'quiet' })} href={base}>
             Clear filters
           </Link>
         </div>
@@ -157,12 +151,15 @@ export default async function OperationsHistoryPage({
       {(f.beforeId || (data.hasNext && last)) && (
         <nav className="queue-views" aria-label="Execution history pages">
           {f.beforeId && (
-            <Link className="button button-secondary" href={`${base}?${filterParams}`}>
+            <Link
+              className={buttonVariants({ variant: 'secondary' })}
+              href={`${base}?${filterParams}`}
+            >
               Newest results
             </Link>
           )}
           {data.hasNext && last && (
-            <Link className="button button-secondary" href={`${base}?${next}`}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={`${base}?${next}`}>
               Older results
             </Link>
           )}

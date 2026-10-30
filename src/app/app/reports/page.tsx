@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import {
   ReportCharts,
@@ -59,14 +60,14 @@ export default async function ReportsPage({
         eyebrow={viewer.organizationName}
         description="Understand your workload, service levels and support trends."
         actions={
-          <Link className="button button-secondary" href="/app/tickets">
+          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/tickets">
             Open ticket queue
           </Link>
         }
       />
       <nav className="report-jump-nav" aria-label="Report sections">
         {[...(report ? reportSections : []), ...supportingSections].map(([id, label]) => (
-          <a key={id} className="button button-quiet" href={`#${id}`}>
+          <a key={id} className={buttonVariants({ variant: 'quiet' })} href={`#${id}`}>
             {label}
           </a>
         ))}

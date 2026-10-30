@@ -8,6 +8,7 @@ import { load } from '../../../tests/helpers/load-module.mjs';
 import { productStyles } from '../../../tests/helpers/styles.mjs';
 
 const { TicketStatusBadge } = load('src/features/tickets/ticket-status-badge.tsx');
+const { badgeStyles } = load('src/components/ui/badge.tsx');
 const { ticketStatuses, ticketPriorities } = load('src/features/tickets/presentation.ts');
 test('every ticket status and priority exposes its written label plus a decorative shared outline icon', () => {
   for (const [prop, mapping] of [
@@ -17,7 +18,7 @@ test('every ticket status and priority exposes its written label plus a decorati
     for (const [value, item] of Object.entries(mapping)) {
       const html = renderToStaticMarkup(React.createElement(TicketStatusBadge, { [prop]: value }));
       assert.ok(html.includes(item.label));
-      assert.ok(html.includes(`tone-${item.tone}`));
+      assert.ok(html.includes(badgeStyles({ tone: item.tone })), item.tone);
       assert.match(html, /<svg class="badge-icon" aria-hidden="true" focusable="false"/);
       assert.match(html, /stroke="currentColor"/);
       assert.doesNotMatch(html, /role="img"|tabindex/);

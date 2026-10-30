@@ -1,4 +1,27 @@
-@layer tokens, base, components, pages;
+/*
+ * UI kit (shadcn/ui on Tailwind CSS v4). Tailwind's preflight reset is omitted; the base layer
+ * below remains the reset. Kit utilities sit before the components layer so contextual product
+ * rules (compact-screen widths, toolbar alignment) still adjust kit controls without !important.
+ */
+@layer theme, tokens, base, utilities, components, pages;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* Kit components read FixxFlow semantic tokens directly; no parallel palette is available. */
+@theme {
+  --color-*: initial;
+}
+@custom-variant dark {
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme]), :root:not([data-theme]) *) {
+      @slot;
+    }
+  }
+}
+
 @layer tokens {
   :root {
     color-scheme: light;
@@ -344,15 +367,14 @@
     align-items: center;
     min-height: 44px;
     overflow: hidden;
-    border: 1px solid transparent;
-    border-bottom-color: var(--color-control-border);
+    border: 1px solid var(--color-control-border);
     border-radius: var(--radius-control);
-    background: var(--color-field-surface);
+    background: var(--color-surface);
+    box-shadow: 0 1px 2px rgb(26 26 26 / 5%);
   }
   .input-prefix:focus-within {
-    border-color: transparent;
-    outline: 2px solid var(--color-focus);
-    outline-offset: -1px;
+    border-color: var(--color-focus);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus) 40%, transparent);
   }
   .input-prefix span {
     align-self: stretch;
@@ -383,128 +405,7 @@
     font-weight: 500;
     font-family: var(--font-body);
   }
-  .input {
-    width: 100%;
-    min-height: 44px;
-    border: 1px solid transparent;
-    border-bottom-color: var(--color-control-border);
-    border-radius: var(--radius-control);
-    background: var(--color-field-surface);
-    color: var(--color-text);
-    padding: 10px 14px;
-    font-weight: 400;
-    font-family: var(--font-body);
-    box-shadow: none;
-    max-width: 100%;
-  }
-  .input::placeholder,
-  .input-prefix input::placeholder {
-    color: var(--color-text-subtle);
-    opacity: 1;
-  }
-  .input:hover:not(:disabled):not([readonly]):not(:focus) {
-    background: var(--color-field-hover);
-  }
-  .input:focus {
-    border-color: transparent;
-    background: var(--color-field-surface);
-    outline: 2px solid var(--color-focus);
-    outline-offset: -1px;
-  }
-  .input:disabled {
-    cursor: not-allowed;
-    color: var(--color-text-muted);
-  }
-  .input[readonly] {
-    color: var(--color-text-muted);
-  }
-  .input-compact {
-    min-height: 40px;
-    padding: 7px 10px;
-  }
-  .button {
-    min-height: 44px;
-    min-width: 44px;
-    max-width: 100%;
-    border: 1px solid transparent;
-    border-radius: var(--radius-control);
-    padding: 10px 16px;
-    font-weight: 600;
-    font-family: var(--font-heading);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-decoration: none;
-    font-size: 14px;
-    line-height: 20px;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    transition:
-      color 160ms ease-out,
-      box-shadow 160ms ease-out,
-      background-color 160ms ease-out,
-      border-color 160ms ease-out,
-      transform 160ms ease-out;
-    text-align: center;
-  }
-  .button:active:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
-    transform: translateY(1px);
-  }
-  .button-primary {
-    color: var(--color-on-action);
-    background: var(--color-action-fill);
-    border-color: var(--color-brand-ink);
-    box-shadow: 0 1px 2px rgb(26 26 26 / 8%);
-  }
-  .button-primary:hover:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
-    background: var(--color-action-hover);
-  }
-  .button-secondary {
-    color: var(--color-text);
-    background: var(--color-surface);
-    border-color: var(--color-control-border);
-  }
-  .button-secondary:hover:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
-    border-color: var(--color-control-border);
-    color: var(--color-text);
-    background: var(--color-field-hover);
-  }
-  .button-danger {
-    color: var(--color-danger);
-    background: var(--color-danger-surface);
-    border-color: var(--color-danger);
-  }
-  .button-quiet {
-    min-height: 44px;
-    padding: 10px 12px;
-    background: transparent;
-    border-color: transparent;
-    color: var(--color-text-muted);
-    font-weight: 500;
-    font-family: var(--font-body);
-  }
-  .button-quiet:hover:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
-    background: var(--color-surface-subtle);
-    color: var(--color-text);
-    border-color: var(--color-border-strong);
-  }
-  .button-danger:hover:not(:disabled):not([aria-disabled='true']):not([aria-busy='true']) {
-    background: var(--color-field-hover);
-    border-color: var(--color-danger);
-  }
-  .button-small {
-    min-height: 44px;
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-  .button:disabled,
-  .button[aria-disabled='true'] {
-    cursor: not-allowed;
-    opacity: 0.65;
-    transform: none;
-  }
+  /* Button and text-field appearance lives in the UI kit (src/components/ui/button.tsx, input.tsx). */
   .form-row {
     display: flex;
     align-items: center;
@@ -516,21 +417,7 @@
     font-size: 13px;
     margin: 0;
   }
-  .alert {
-    border-radius: var(--radius-control);
-    padding: 12px 14px;
-    border: 1px solid;
-  }
-  .alert-error {
-    background: var(--color-danger-surface);
-    border-color: var(--color-danger);
-    color: var(--color-danger);
-  }
-  .alert-success {
-    background: var(--color-success-subtle);
-    border-color: color-mix(in srgb, var(--color-success) 22%, transparent);
-    color: var(--color-success);
-  } /* Workspace shell */
+  /* Alert appearance lives in the UI kit (src/components/ui/alert.tsx). */ /* Workspace shell */
   .app-shell {
     min-height: 100vh;
     display: grid;
@@ -835,70 +722,14 @@
     margin: 0;
     color: var(--color-text-muted);
   }
-  .badge {
-    width: fit-content;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border-radius: 999px;
-    padding: 4px 9px;
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 600;
-    font-family: var(--font-heading);
-  }
-  .badge-active {
-    background: var(--color-success-subtle);
-    color: var(--color-success);
-  }
-  .badge-inactive {
-    background: var(--color-surface-subtle);
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
-  }
+  /* Badge appearance lives in the UI kit (src/components/ui/badge.tsx). */
   .status-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: currentColor;
   }
-  .table-region {
-    overflow-x: auto;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    background: var(--color-surface);
-    box-shadow: var(--shadow-card);
-  }
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 900px;
-  }
-  .table th {
-    background: var(--color-surface-subtle);
-    color: var(--color-text-muted);
-    font-size: 12px;
-    font-weight: 600;
-    font-family: var(--font-heading);
-    text-align: left;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .table td {
-    height: 64px;
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--color-border);
-    vertical-align: middle;
-  }
-  .table tbody tr {
-    transition: background-color 140ms ease-out;
-  }
-  .table tbody tr:hover {
-    background: var(--color-surface-subtle);
-  }
-  .table tr:last-child td {
-    border-bottom: 0;
-  }
+  /* Table appearance lives in the UI kit (src/components/ui/table.tsx). */
   .person-cell {
     display: flex;
     align-items: center;
@@ -918,19 +749,7 @@
     align-items: center;
     gap: 8px;
   }
-  .empty-state {
-    padding: 56px 24px;
-    text-align: center;
-    color: var(--color-text-muted);
-  }
-  .empty-state strong {
-    display: block;
-    color: var(--color-text);
-    font-size: 16px;
-  }
-  .empty-state p {
-    margin-bottom: 0;
-  }
+  /* Empty-state appearance lives in the UI kit (src/components/ui/empty-state.tsx). */
   .empty-icon {
     width: 42px;
     height: 42px;
@@ -1076,46 +895,8 @@
   .page-narrow {
     max-width: 980px;
   }
-  .tone-blue,
-  .tone-active,
-  .tone-info {
-    color: var(--color-active);
-    background: var(--color-active-surface);
-  }
-  .tone-cyan {
-    color: var(--color-highlight);
-    background: var(--color-highlight-surface);
-  }
-  .tone-purple {
-    color: var(--color-purple);
-    background: var(--color-purple-subtle);
-  }
-  .tone-amber,
-  .tone-warning {
-    color: var(--color-warning);
-    background: var(--color-warning-subtle);
-  }
-  .tone-slate,
-  .tone-neutral {
-    color: var(--color-neutral);
-    background: var(--color-neutral-subtle);
-  }
-  .tone-green,
-  .tone-success {
-    color: var(--color-success);
-    background: var(--color-success-subtle);
-  }
-  .tone-red,
-  .tone-danger {
-    color: var(--color-danger);
-    background: var(--color-danger-surface);
-  }
   .field-wide {
     grid-column: 1 / -1;
-  }
-  .textarea {
-    resize: vertical;
-    min-height: 110px;
   }
   .message {
     padding: 14px 16px;
@@ -1251,12 +1032,16 @@
       padding: 11px;
       display: grid;
       align-content: center;
+      /* Bars span the button; the kit button centers its content by default. */
+      justify-content: stretch;
       gap: 5px;
       border: 0;
       border-radius: var(--radius-control);
       color: var(--color-text);
       background: transparent;
       cursor: pointer;
+      /* Stays usable above the modal sheet, which disables pointer events on the page. */
+      pointer-events: auto;
     }
     .mobile-nav-toggle:hover,
     .mobile-nav-toggle[aria-expanded='true'] {
@@ -1735,19 +1520,10 @@
     font-size: 12px;
     letter-spacing: 0.06em;
   }
-  .table caption {
-    padding: 16px;
-    text-align: left;
-    font-weight: 600;
-    font-family: var(--font-heading);
-  }
   .table-policy {
     min-width: 0;
   }
-  .table th,
-  .table td {
-    overflow-wrap: anywhere;
-  } /* Inventory values determine column widths; overflow stays in .table-region.
+  /* Inventory values determine column widths; overflow stays in .table-region.
    Compact responsive cards keep their normal wrapping and stacked labels. */
   @media (min-width: 768px) {
     .table-nowrap {
@@ -2363,9 +2139,6 @@
   .sidebar-brand::after {
     content: none;
   }
-  .table tbody tr:focus-within {
-    background: var(--color-accent-subtle);
-  }
   .input-prefix:not(:focus-within) {
     border-bottom-color: var(--color-control-border);
   }
@@ -2374,13 +2147,6 @@
     background: transparent;
     font-weight: 400;
     font-family: var(--font-body);
-  }
-  .input[aria-invalid='true'] {
-    border-color: var(--color-danger);
-  }
-  .input[aria-invalid='true']:focus {
-    border-color: transparent;
-    outline-color: var(--color-danger);
   }
   ::selection {
     color: var(--color-text);
@@ -2956,11 +2722,9 @@
     font-size: 13px;
     font-variant-numeric: tabular-nums;
   }
-  .empty-state > .button,
   .portal-empty > .button {
     margin-top: 16px;
   }
-  .empty-state p,
   .portal-empty p {
     max-width: 55ch;
     margin-inline: auto;
@@ -3037,11 +2801,6 @@
   .page-loading-placeholder {
     display: grid;
     gap: 16px;
-  }
-  .page-loading-placeholder span {
-    height: 48px;
-    border-radius: var(--radius-control);
-    background: var(--color-surface-subtle);
   }
   @media (min-width: 768px) and (max-width: 1199px) {
     .workspace > .portal-page:not(.portal-form-page):not(.portal-detail):not(.knowledge-detail) {
@@ -3177,20 +2936,7 @@
     font-size: 11px;
     color: var(--color-text-muted);
   }
-  .global-search-dialog {
-    width: min(640px, calc(100vw - 32px));
-    max-height: calc(100dvh - 32px);
-    padding: 24px;
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-panel);
-    background: var(--color-surface);
-    color: var(--color-text);
-    box-shadow: var(--shadow-overlay);
-    overflow: auto;
-  }
-  .global-search-dialog::backdrop {
-    background: rgb(0 0 0 / 45%);
-  }
+  /* Search dialog surface and backdrop come from the UI kit dialog. */
   .search-dialog-heading {
     display: flex;
     align-items: center;

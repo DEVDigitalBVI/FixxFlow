@@ -60,7 +60,10 @@ test('directory presents identity, job, role and written status before collapsed
     'Profile details',
   ])
     assert.ok(html.includes(text));
-  assert.match(html, /<details class="person-manage"><summary class="button button-secondary">/);
+  assert.match(
+    html,
+    /<details class="person-manage"><summary class="button [^"]*\bbutton-secondary\b[^"]*">/,
+  );
   assert.doesNotMatch(html, /<details[^>]* open/);
   assert.match(html, /data-inline-editor="true"/);
   assert.match(html, /<label for="role-user-1">Role for Alex Rivers/);

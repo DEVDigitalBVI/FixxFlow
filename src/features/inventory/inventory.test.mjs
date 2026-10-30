@@ -62,7 +62,7 @@ test('handover requires confirming reserved equipment and recipient before issua
     request,
     units: [{ asset_id: 'asset', asset_context: { tag: 'PC-1', name: 'Laptop', serial: 'SN-1' } }],
   });
-  assert.match(markup, /type="checkbox" required=""/);
+  assert.match(markup, /type="checkbox"[^>]*required=""/);
   assert.match(markup, /required="" name="assets" value="asset"/);
   assert.match(markup, /Confirm PC-1 · Laptop · SN-1/);
   assert.match(markup, /Mark as issued/);
@@ -126,7 +126,11 @@ test('inventory table has headers, a keyboard-focusable scroll region, compact l
   const markup = renderToStaticMarkup(
     React.createElement(InventoryTable, { items: [{ ...item, location_name: 'Central store' }] }),
   );
-  assert.match(markup, /role="region" aria-label="Department inventory" tabindex="0"/);
+  // Kit TableRegion: a labelled, keyboard-focusable scroll region.
+  assert.match(
+    markup,
+    /<div(?=[^>]*role="region")(?=[^>]*aria-label="Department inventory")(?=[^>]*tabindex="0")[^>]*class="table-region/,
+  );
   assert.match(markup, /responsive-table table-nowrap/);
   assert.match(markup, /<th scope="col">Department allocation/);
   assert.match(markup, /data-label="Available">5/);

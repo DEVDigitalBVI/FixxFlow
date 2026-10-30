@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { buttonVariants } from '@/components/ui/button';
 
 export const metadata: Metadata = { title: 'Contact support | FixxFlow' };
 
@@ -10,7 +11,10 @@ export default function SupportPage() {
     <div className="portal-page">
       <header className="portal-page-heading">
         <div>
-          <Link className="button button-quiet page-back-link" href="/app">
+          <Link
+            className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
+            href="/app"
+          >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
             Home
           </Link>
@@ -26,7 +30,7 @@ export default function SupportPage() {
         <p>Include your organization name and a short description of the problem.</p>
         <p>
           <a
-            className="button button-primary"
+            className={buttonVariants({ variant: 'primary' })}
             href="mailto:support@fixxflow.app?subject=FixxFlow%20support"
           >
             Email FixxFlow support
@@ -47,10 +51,10 @@ export default function SupportPage() {
           For equipment, access or other workplace IT issues, contact your IT team or find a guide.
         </p>
         <div className="page-header-actions">
-          <Link className="button button-secondary" href="/app/tickets/new">
+          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/tickets/new">
             Submit an IT request
           </Link>
-          <Link className="button button-secondary" href="/app/help">
+          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/help">
             Browse help articles
           </Link>
         </div>

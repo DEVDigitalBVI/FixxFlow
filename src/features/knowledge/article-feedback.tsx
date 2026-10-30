@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { rateArticle, recordArticleView } from '@/app/app/help/actions';
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Button } from '@/components/ui/button';
 
 export function ArticleFeedback({
   articleId,
@@ -40,24 +41,24 @@ export function ArticleFeedback({
     <section className="settings-card">
       <h2>Was this article helpful?</h2>
       <div className="knowledge-actions">
-        <button
-          className="button button-secondary"
+        <Button
+          variant="secondary"
           aria-pressed={selected === true}
           disabled={busy}
           onClick={() => vote(true)}
         >
           Helpful
           {selected === true && <NavigationIcon name="check" className="inline-icon" size={16} />}
-        </button>
-        <button
-          className="button button-secondary"
+        </Button>
+        <Button
+          variant="secondary"
           aria-pressed={selected === false}
           disabled={busy}
           onClick={() => vote(false)}
         >
           Not helpful
           {selected === false && <NavigationIcon name="check" className="inline-icon" size={16} />}
-        </button>
+        </Button>
       </div>
       <p role="status">{busy ? 'Saving feedback…' : message}</p>
     </section>

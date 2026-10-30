@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Button } from '@/components/ui/button';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { Timestamp } from '@/features/timezones/provider';
 
@@ -86,15 +87,15 @@ export function PublishedUpdates({
             return { success: 'Earlier approved updates loaded.' };
           }}
         >
-          <SubmitButton className="button button-secondary" pendingLabel="Loading updates…">
+          <SubmitButton variant="secondary" pendingLabel="Loading updates…">
             Load earlier updates
           </SubmitButton>
         </ActionForm>
       )}
       {older && (
-        <button type="button" className="button button-secondary" onClick={() => setOlder(null)}>
+        <Button type="button" variant="secondary" onClick={() => setOlder(null)}>
           Back to latest updates
-        </button>
+        </Button>
       )}
     </div>
   );

@@ -5,6 +5,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { componentHarness } from '../../../tests/helpers/component-harness.mjs';
+import { kitHostMocks } from '../../../tests/helpers/kit-host-mocks.mjs';
 import { load as loadModule } from '../../../tests/helpers/load-module.mjs';
 
 function load(file, mocks = {}) {
@@ -335,6 +336,7 @@ test('switching live chat audience keeps independent drafts', () => {
     useTransition: () => [false, (fn) => fn()],
   };
   const { ChatRoom: Room } = load('src/features/chat/chat-room.tsx', {
+    ...kitHostMocks(),
     react: fakeReact,
     '@/lib/supabase/client': { createClient: () => ({}) },
   });

@@ -6,6 +6,10 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { saveAutomationDraft } from '@/app/app/administration/automations/actions';
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input, NativeSelect, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { confirmDiscardChanges, useUnsavedChanges } from '@/components/ui/unsaved-changes';
 
@@ -120,11 +124,11 @@ export function AutomationBuilder({
     issues.filter((issue) => issue.path === path || issue.path.startsWith(`${path}.`));
   const messages = (path: string, id: string) =>
     errors(path).length ? (
-      <p id={id} className="alert alert-error">
+      <Alert id={id} as="p" tone="error">
         {errors(path)
           .map((issue) => presentValidationIssue(definition, issue).message)
           .join(' ')}
-      </p>
+      </Alert>
     ) : null;
   const review = validateDefinition(definition, persistenceRegistry);
   const needsSetup = (path: string) =>
@@ -137,23 +141,23 @@ export function AutomationBuilder({
     <div ref={root} className="stack automation-builder">
       {onChooseTemplate && (
         <div>
-          <button
+          <Button
             type="button"
-            className="button button-quiet"
+            variant="quiet"
             onClick={() => {
               if (!dirty || confirmDiscardChanges()) onChooseTemplate();
             }}
           >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
             {imported ? 'Back to import review' : 'Choose another starting point'}
-          </button>
+          </Button>
         </div>
       )}
       {template && (
-        <aside className="alert alert-info">
+        <Alert as="aside" tone="info">
           <strong>Starting from {template.name}.</strong> {template.guidance} Customize this draft
           before saving. Nothing is enabled.
-        </aside>
+        </Alert>
       )}
       <ActionForm
         protectDraft={false}
@@ -197,12 +201,14 @@ export function AutomationBuilder({
         }}
       >
         {issues.length > 0 && (
-          <section
+          <Alert
             id="automation-validation-summary"
             ref={validationFeedback}
             tabIndex={-1}
             role="alert"
-            className="alert alert-error stack"
+            as="section"
+            tone="error"
+            className="stack"
             aria-labelledby="automation-errors-heading"
           >
             <h2 id="automation-errors-heading">Review your automation</h2>
@@ -222,15 +228,14 @@ export function AutomationBuilder({
                 );
               })}
             </ul>
-          </section>
+          </Alert>
         )}
         <section className="settings-card stack" aria-labelledby="automation-name-heading">
           <h2 id="automation-name-heading">Automation details</h2>
           <div className="field">
             <label htmlFor="automation-name">Name</label>
-            <input
+            <Input
               id="automation-name"
-              className="input"
               value={definition.name}
               maxLength={automationSafetyLimits.structural.name}
               aria-invalid={errors('name').length > 0 || undefined}
@@ -243,9 +248,8 @@ export function AutomationBuilder({
             <label htmlFor="automation-description">
               Description <span className="muted">(optional)</span>
             </label>
-            <textarea
+            <Textarea
               id="automation-description"
-              className="input"
               aria-invalid={errors('description').length > 0 || undefined}
               aria-describedby={
                 errors('description').length ? 'automation-description-error' : undefined
@@ -265,9 +269,8 @@ export function AutomationBuilder({
           <p className="muted">Choose the ticket event that starts this automation.</p>
           <div className="field">
             <label htmlFor="automation-trigger">Ticket event</label>
-            <select
+            <NativeSelect
               id="automation-trigger"
-              className="input"
               value={definition.trigger.type}
               onChange={(event) =>
                 change({
@@ -284,7 +287,7 @@ export function AutomationBuilder({
                   {item.label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
           <TemporalControls
             key={definition.trigger.type}
@@ -319,15 +322,13 @@ export function AutomationBuilder({
                 aria-describedby={errors(path).length ? errorId : undefined}
               >
                 <legend>
-                  Condition {index + 1}{' '}
-                  {needsSetup(path) && <span className="badge">Needs setup</span>}
+                  Condition {index + 1} {needsSetup(path) && <Badge>Needs setup</Badge>}
                 </legend>
                 <div className="automation-condition-grid">
                   <div className="field">
                     <label htmlFor={`condition-${item.id}`}>Field</label>
-                    <select
+                    <NativeSelect
                       id={`condition-${item.id}`}
-                      className="input"
                       value={item.field}
                       onChange={(event) =>
                         editCondition(index, newCondition(item.id, event.target.value))
@@ -338,13 +339,12 @@ export function AutomationBuilder({
                           {field.label}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </div>
                   <div className="field">
                     <label htmlFor={`operator-${item.id}`}>Comparison</label>
-                    <select
+                    <NativeSelect
                       id={`operator-${item.id}`}
-                      className="input"
                       value={item.operator}
                       onChange={(event) =>
                         editCondition(
@@ -362,7 +362,7 @@ export function AutomationBuilder({
                           {operatorLabels[operator]}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </div>
                   {!['is_empty', 'is_not_empty'].includes(item.operator) && (
                     <ValueControl
@@ -383,9 +383,9 @@ export function AutomationBuilder({
                   )}
                 </div>
                 {messages(path, errorId)}
-                <button
+                <Button
                   type="button"
-                  className="button button-quiet"
+                  variant="quiet"
                   aria-label={`Remove condition ${index + 1}`}
                   onClick={() => {
                     focus.current = 'add-condition';
@@ -400,16 +400,16 @@ export function AutomationBuilder({
                   }}
                 >
                   Remove condition
-                </button>
+                </Button>
               </fieldset>
             );
           })}
           {issues.some((issue) => issue.path === 'conditions') &&
             messages('conditions', 'conditions-error')}
-          <button
+          <Button
             id="add-condition"
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             disabled={
               definition.conditions.children.length >= automationSafetyLimits.structural.conditions
             }
@@ -426,7 +426,7 @@ export function AutomationBuilder({
             }}
           >
             + Add condition
-          </button>
+          </Button>
         </section>
         <section className="settings-card stack" aria-labelledby="then-heading">
           <h2 id="then-heading" tabIndex={-1}>
@@ -449,15 +449,13 @@ export function AutomationBuilder({
                 aria-describedby={errors(path).length ? errorId : undefined}
               >
                 <legend>
-                  Action {index + 1}{' '}
-                  {needsSetup(path) && <span className="badge">Needs setup</span>}
+                  Action {index + 1} {needsSetup(path) && <Badge>Needs setup</Badge>}
                 </legend>
                 <div className="automation-action-grid">
                   <div className="field">
                     <label htmlFor={`action-${item.id}`}>Action</label>
-                    <select
+                    <NativeSelect
                       id={`action-${item.id}`}
-                      className="input"
                       value={item.type}
                       onChange={(event) =>
                         editAction(index, newAction(item.id, index, event.target.value))
@@ -475,7 +473,7 @@ export function AutomationBuilder({
                           {action.label}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </div>
                   {Object.entries(spec.configuration)
                     .filter(([key]) => key !== 'template')
@@ -483,9 +481,8 @@ export function AutomationBuilder({
                       key === 'body' ? (
                         <div className="field" key={key}>
                           <label htmlFor={`note-${item.id}`}>Internal note</label>
-                          <textarea
+                          <Textarea
                             id={`note-${item.id}`}
-                            className="input"
                             rows={4}
                             maxLength={automationSafetyLimits.structural.internalNote}
                             aria-invalid={errors(path).length > 0 || undefined}
@@ -540,10 +537,10 @@ export function AutomationBuilder({
                 {messages(path, errorId)}
                 <div className="automation-inline">
                   {([-1, 1] as const).map((direction) => (
-                    <button
+                    <Button
                       key={direction}
                       type="button"
-                      className="button button-secondary"
+                      variant="secondary"
                       disabled={
                         direction === -1 ? index === 0 : index === definition.actions.length - 1
                       }
@@ -560,11 +557,11 @@ export function AutomationBuilder({
                       }}
                     >
                       {direction === -1 ? 'Move Up' : 'Move Down'}
-                    </button>
+                    </Button>
                   ))}
-                  <button
+                  <Button
                     type="button"
-                    className="button button-quiet"
+                    variant="quiet"
                     onClick={() => {
                       focus.current = 'add-action';
                       change({
@@ -578,16 +575,16 @@ export function AutomationBuilder({
                     aria-label={`Remove action ${index + 1}`}
                   >
                     Remove action
-                  </button>
+                  </Button>
                 </div>
               </fieldset>
             );
           })}
           {issues.some((issue) => issue.path === 'actions') && messages('actions', 'actions-error')}
-          <button
+          <Button
             id="add-action"
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             disabled={definition.actions.length >= automationSafetyLimits.structural.actions}
             onClick={() => {
               const item = newAction(crypto.randomUUID(), definition.actions.length);
@@ -596,7 +593,7 @@ export function AutomationBuilder({
             }}
           >
             + Add action
-          </button>
+          </Button>
         </section>
         <section className="settings-card stack" aria-labelledby="automation-review-heading">
           <h2 id="automation-review-heading">Review</h2>
@@ -609,25 +606,21 @@ export function AutomationBuilder({
           </p>
         </section>
         <div className="automation-inline">
-          <SubmitButton className="button button-primary">
+          <SubmitButton variant="primary">
             {identity ? 'Save changes' : 'Save as disabled'}
           </SubmitButton>
-          <button
-            className="button button-secondary"
-            type="button"
-            onClick={() => setTesting(true)}
-          >
+          <Button variant="secondary" type="button" onClick={() => setTesting(true)}>
             Test Automation
-          </button>
-          <button
-            className="button button-quiet"
+          </Button>
+          <Button
+            variant="quiet"
             type="button"
             onClick={() => {
               if (!dirty || confirmDiscardChanges()) router.push(automationPath);
             }}
           >
             Cancel
-          </button>
+          </Button>
           <span className="muted">
             {dirty
               ? 'Unsaved changes'
@@ -639,7 +632,7 @@ export function AutomationBuilder({
       </ActionForm>
       {identity && (
         <a
-          className="button button-quiet"
+          className={buttonVariants({ variant: 'quiet' })}
           href={`${automationPath}/${identity.id}`}
           target="_blank"
           rel="noreferrer"

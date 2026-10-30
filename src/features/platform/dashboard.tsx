@@ -1,7 +1,11 @@
 import Link from 'next/link';
 
+import { Button, buttonVariants } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { PageHeader } from '@/components/ui/page-header';
+import { Table, TableRegion } from '@/components/ui/table';
 import { rolePresentation } from '@/features/identity/role';
 import { Bars } from '@/features/reporting/components';
 import { ReportDownload } from '@/features/reporting/report-download';
@@ -61,7 +65,7 @@ export async function PlatformDashboard({
                 {report.organizationCount} organization{report.organizationCount === 1 ? '' : 's'}{' '}
                 on the platform
               </p>
-              <a href="#new-customer" className="button button-primary">
+              <a href="#new-customer" className={buttonVariants({ variant: 'primary' })}>
                 Add organization
               </a>
             </>
@@ -78,8 +82,7 @@ export async function PlatformDashboard({
           >
             <label className="field">
               Search organizations
-              <input
-                className="input"
+              <Input
                 name="q"
                 type="search"
                 defaultValue={q}
@@ -87,7 +90,7 @@ export async function PlatformDashboard({
                 aria-describedby="organization-search-hint"
               />
             </label>
-            <button className="button button-secondary">Search</button>
+            <Button variant="secondary">Search</Button>
             {q && (
               <Link className="queue-clear" href="/platform/customers">
                 Clear search
@@ -122,20 +125,20 @@ export async function PlatformDashboard({
               ))}
             </div>
           ) : (
-            <div className="empty-state">
+            <EmptyState>
               <strong>No matching organizations</strong>
               <p>Clear the search or create a customer workspace below.</p>
-            </div>
+            </EmptyState>
           )}
           {(page > 1 || page * 25 < report.matchingCount) && (
             <nav className="notification-pagination" aria-label="Organization pages">
               {page > 1 && (
-                <Link className="button button-secondary" href={href(page - 1)}>
+                <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
                   Previous
                 </Link>
               )}
               {page * 25 < report.matchingCount && (
-                <Link className="button button-secondary" href={href(page + 1)}>
+                <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
                   Next
                 </Link>
               )}
@@ -169,26 +172,26 @@ export async function PlatformDashboard({
           <form className="queue-filters">
             <label className="field">
               Period
-              <select className="input" name="days" defaultValue={days}>
+              <NativeSelect name="days" defaultValue={days}>
                 <option value="7">Last 7 days</option>
                 <option value="30">Last 30 days</option>
                 <option value="90">Last 90 days</option>
-              </select>
+              </NativeSelect>
             </label>
-            <button className="button button-secondary">Apply period</button>
+            <Button variant="secondary">Apply period</Button>
           </form>
           <p className="muted">
             UTC days, including today. Counts represent actions, not unique people. Names, customer
             identifiers, message contents and search words are excluded.
           </p>
           {!report.usage.length ? (
-            <div className="empty-state">
+            <EmptyState>
               <strong>No shared usage yet</strong>
               <p>
                 Counts appear after people opt in under Profile and use the product. Customer
                 reporting and audit logs continue independently.
               </p>
-            </div>
+            </EmptyState>
           ) : (
             <>
               <Bars
@@ -197,13 +200,8 @@ export async function PlatformDashboard({
                 description={`Events recorded in the last ${days} days.`}
                 rows={usageTotals(report.usage)}
               />
-              <div
-                className="table-region"
-                role="region"
-                aria-label="Product usage by role"
-                tabIndex={0}
-              >
-                <table className="table responsive-table">
+              <TableRegion role="region" aria-label="Product usage by role" tabIndex={0}>
+                <Table className="responsive-table">
                   <thead>
                     <tr>
                       <th scope="col">Event</th>
@@ -225,8 +223,8 @@ export async function PlatformDashboard({
                       </tr>
                     ))}
                   </tbody>
-                </table>
-              </div>
+                </Table>
+              </TableRegion>
             </>
           )}
           <AnalyticsRetention />
@@ -264,12 +262,12 @@ export async function PlatformDashboard({
               ))}
             </ol>
           ) : (
-            <div className="empty-state">
+            <EmptyState>
               <strong>No owner actions recorded yet</strong>
               <p>
                 Organization setup, renames, exports and analytics cleanup runs will appear here.
               </p>
-            </div>
+            </EmptyState>
           )}
         </>
       )}

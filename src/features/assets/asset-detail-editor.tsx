@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 
+import { Button } from '@/components/ui/button';
 import { AssetForm } from '@/features/assets/asset-form';
 
 export function AssetDetailEditor({
@@ -35,14 +36,9 @@ export function AssetDetailEditor({
           <h2 id="asset-record-heading">Asset overview</h2>
           <p className="muted">Equipment details and ownership at a glance.</p>
         </div>
-        <button
-          ref={editButton}
-          type="button"
-          className="button button-primary"
-          onClick={() => setEditing(true)}
-        >
+        <Button ref={editButton} type="button" variant="primary" onClick={() => setEditing(true)}>
           Edit asset
-        </button>
+        </Button>
       </header>
       {children}
     </section>

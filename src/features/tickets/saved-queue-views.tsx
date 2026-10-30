@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { deleteQueueView, saveQueueView } from '@/app/app/tickets/view-actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 import { SAVED_VIEW_LIMIT, SAVED_VIEW_NAME_LENGTH } from './queue-views';
@@ -40,7 +41,7 @@ export function SavedQueueViews({
                 </Link>
                 <ActionForm action={deleteQueueView}>
                   <input type="hidden" name="id" value={view.id} />
-                  <SubmitButton className="button button-quiet" pendingLabel="Deleting…">
+                  <SubmitButton variant="quiet" pendingLabel="Deleting…">
                     Delete<span className="sr-only"> saved view {view.name}</span>
                   </SubmitButton>
                 </ActionForm>
@@ -58,16 +59,15 @@ export function SavedQueueViews({
             <input type="hidden" name="query" value={currentQuery} />
             <div className="field">
               <label htmlFor="saved-view-name">Save the current filters as</label>
-              <input
+              <Input
                 id="saved-view-name"
-                className="input"
                 name="name"
                 required
                 maxLength={SAVED_VIEW_NAME_LENGTH}
                 autoComplete="off"
               />
             </div>
-            <SubmitButton className="button button-secondary" pendingLabel="Saving…">
+            <SubmitButton variant="secondary" pendingLabel="Saving…">
               Save filters
             </SubmitButton>
           </ActionForm>

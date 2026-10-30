@@ -1,19 +1,22 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
 import { RetryButton } from '@/components/ui/retry-button';
+import { Table, TableRegion } from '@/components/ui/table';
 
 import { duration, topRows, type Report } from './model';
 
 export function ReportUnavailable() {
   return (
-    <div className="alert alert-error" role="alert">
+    <Alert tone="error" role="alert">
       <strong>Reporting is temporarily unavailable.</strong>
       <p>Your tickets are still available. Try loading the report again.</p>
       <RetryButton />
-      <Link className="button button-secondary" href="/app/tickets">
+      <Link className={buttonVariants({ variant: 'secondary' })} href="/app/tickets">
         Open ticket queue
       </Link>
-    </div>
+    </Alert>
   );
 }
 export function TodayMetrics({
@@ -163,13 +166,13 @@ export function Trend({
         <summary>
           View data for {title.toLowerCase()} · {days.length} days
         </summary>
-        <div
-          className="table-region report-data-region"
+        <TableRegion
+          className="report-data-region"
           role="region"
           aria-label={`${title} data`}
           tabIndex={0}
         >
-          <table className="table table-policy">
+          <Table className="table-policy">
             <caption>{title} · daily values</caption>
             <thead>
               <tr>
@@ -194,8 +197,8 @@ export function Trend({
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+          </Table>
+        </TableRegion>
       </details>
     </section>
   );
@@ -261,7 +264,10 @@ export function ServiceLevels({
           <p>Are tickets getting a response and resolution on time?</p>
         </div>
         {canViewTargets && (
-          <Link className="button button-secondary" href="/app/administration/slas">
+          <Link
+            className={buttonVariants({ variant: 'secondary' })}
+            href="/app/administration/slas"
+          >
             View SLA targets
           </Link>
         )}
@@ -320,7 +326,7 @@ export function ServiceLevels({
               : 'No open tickets are past their response or resolution deadline.'}
           </p>
           <Link
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href="/app/tickets?view=all&sla=breached&sort=sla"
           >
             Review breached tickets
@@ -385,7 +391,10 @@ export function ReportCharts({ report }: { report: Report }) {
             <h2 id="report-workload-title">Current workload</h2>
             <p>All unresolved tickets right now, regardless of when they were created.</p>
           </div>
-          <Link className="button button-secondary" href="/app/tickets?view=unassigned">
+          <Link
+            className={buttonVariants({ variant: 'secondary' })}
+            href="/app/tickets?view=unassigned"
+          >
             Review unassigned tickets
           </Link>
         </header>

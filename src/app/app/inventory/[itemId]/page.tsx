@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { AssetStatusBadge } from '@/features/assets/asset-status-badge';
 import { inventoryAccess } from '@/features/inventory/access';
@@ -104,11 +105,11 @@ export default async function InventoryItemPage({
         description={`${item.kind === 'equipment' ? 'Equipment' : 'Consumable'} allocated to ${item.department_name}`}
         actions={
           access.manager ? (
-            <Link className="button button-primary" href="#receive-stock">
+            <Link className={buttonVariants({ variant: 'primary' })} href="#receive-stock">
               Receive stock
             </Link>
           ) : access.departments.includes(item.department_id) ? (
-            <Link className="button button-primary" href="#request-item">
+            <Link className={buttonVariants({ variant: 'primary' })} href="#request-item">
               Request an item
             </Link>
           ) : undefined
@@ -125,11 +126,11 @@ export default async function InventoryItemPage({
       {access.manager && (
         <>
           <details className="settings-card" id="receive-stock">
-            <summary className="button button-secondary">Receive stock</summary>
+            <summary className={buttonVariants({ variant: 'secondary' })}>Receive stock</summary>
             <StockForm item={item} command="receive" token={randomUUID()} />
           </details>
           <details className="settings-card">
-            <summary className="button button-secondary">Correct stock</summary>
+            <summary className={buttonVariants({ variant: 'secondary' })}>Correct stock</summary>
             <p className="muted">
               Corrections need a reason. Stock cannot fall below active reservations.
             </p>
@@ -177,13 +178,19 @@ export default async function InventoryItemPage({
               {(equipmentPage > 1 || equipmentPage * 25 < (units.count ?? 0)) && (
                 <nav className="asset-pagination" aria-label="Equipment pages">
                   {equipmentPage > 1 && (
-                    <Link className="button button-secondary" href={href(page, equipmentPage - 1)}>
+                    <Link
+                      className={buttonVariants({ variant: 'secondary' })}
+                      href={href(page, equipmentPage - 1)}
+                    >
                       Previous equipment
                     </Link>
                   )}
                   <span>Page {equipmentPage}</span>
                   {equipmentPage * 25 < (units.count ?? 0) && (
-                    <Link className="button button-secondary" href={href(page, equipmentPage + 1)}>
+                    <Link
+                      className={buttonVariants({ variant: 'secondary' })}
+                      href={href(page, equipmentPage + 1)}
+                    >
                       More equipment
                     </Link>
                   )}
@@ -224,13 +231,13 @@ export default async function InventoryItemPage({
             {(page > 1 || page * 25 < (movements.count ?? 0)) && (
               <nav className="asset-pagination" aria-label="Stock history pages">
                 {page > 1 && (
-                  <Link className="button button-secondary" href={href(page - 1)}>
+                  <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
                     Previous history
                   </Link>
                 )}
                 <span>Page {page}</span>
                 {page * 25 < (movements.count ?? 0) && (
-                  <Link className="button button-secondary" href={href(page + 1)}>
+                  <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
                     More history
                   </Link>
                 )}

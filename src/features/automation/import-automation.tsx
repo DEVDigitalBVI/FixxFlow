@@ -2,6 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
 import { AutomationBuilder } from './builder';
 import { loadAutomationChoices } from './choice-client';
 import type { AutomationDefinition } from './model';
@@ -57,15 +61,15 @@ export function MappingRow({
         onChoices={onChoices}
       />
       {showError && !value && (
-        <p id={`mapping-error-${reference.key}`} className="alert alert-error">
+        <Alert id={`mapping-error-${reference.key}`} as="p" tone="error">
           Select a destination {reference.kind} before continuing.
-        </p>
+        </Alert>
       )}
       {!value && (
         <div className="automation-inline">
-          <button
+          <Button
             type="button"
-            className="button button-quiet"
+            variant="quiet"
             disabled={status === 'Looking for a match…'}
             onClick={async () => {
               pending.current?.abort();
@@ -96,11 +100,11 @@ export function MappingRow({
             }}
           >
             Find a suggested match
-          </button>
+          </Button>
           {suggestion && (
-            <button
+            <Button
               type="button"
-              className="button button-secondary"
+              variant="secondary"
               onClick={() => {
                 onChoices([suggestion]);
                 onChange(suggestion.id);
@@ -108,7 +112,7 @@ export function MappingRow({
               }}
             >
               Confirm suggested match
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -147,10 +151,10 @@ export function ImportAutomation() {
   if (draft)
     return (
       <>
-        <aside className="alert alert-info">
+        <Alert as="aside" tone="info">
           Imported draft · disabled. Review every condition and action, then test before saving.
           Nothing has been imported into your organization yet.
-        </aside>
+        </Alert>
         <AutomationBuilder
           draft={draft}
           initialLabels={labels}
@@ -172,9 +176,8 @@ export function ImportAutomation() {
         </p>
         <div className="field">
           <label htmlFor="automation-import-file">Automation package</label>
-          <input
+          <Input
             id="automation-import-file"
-            className="input"
             type="file"
             accept=".json,application/json"
             aria-describedby={error && !pkg ? 'import-file-help import-error' : 'import-file-help'}
@@ -223,17 +226,18 @@ export function ImportAutomation() {
         </p>
       </section>
       {error && (
-        <section
+        <Alert
           ref={feedback}
           tabIndex={-1}
           role="alert"
-          className="alert alert-error"
+          as="section"
+          tone="error"
           id="import-error"
         >
           <h2>Review your import</h2>
           <p>{error}</p>
           <p>Nothing was saved. Correct the destination selections or choose another file.</p>
-        </section>
+        </Alert>
       )}
       {pkg && preview && (
         <>
@@ -281,9 +285,9 @@ export function ImportAutomation() {
               </p>
               {pkg.references.length > 10 && (
                 <nav className="automation-inline" aria-label="Reference mapping pages">
-                  <button
+                  <Button
                     type="button"
-                    className="button button-secondary"
+                    variant="secondary"
                     disabled={mappingPage === 0}
                     onClick={() => {
                       setMappingPage(mappingPage - 1);
@@ -291,13 +295,13 @@ export function ImportAutomation() {
                     }}
                   >
                     Previous references
-                  </button>
+                  </Button>
                   <span>
                     Page {mappingPage + 1} of {Math.ceil(pkg.references.length / 10)}
                   </span>
-                  <button
+                  <Button
                     type="button"
-                    className="button button-secondary"
+                    variant="secondary"
                     disabled={(mappingPage + 1) * 10 >= pkg.references.length}
                     onClick={() => {
                       setMappingPage(mappingPage + 1);
@@ -305,15 +309,15 @@ export function ImportAutomation() {
                     }}
                   >
                     Next references
-                  </button>
+                  </Button>
                 </nav>
               )}
             </section>
           )}
           <div className="automation-inline">
-            <button
+            <Button
               type="button"
-              className="button button-primary"
+              variant="primary"
               onClick={() => {
                 try {
                   const result = resolvePortableDraft(pkg, mapping);
@@ -331,7 +335,7 @@ export function ImportAutomation() {
               }}
             >
               Review and test draft
-            </button>
+            </Button>
             <span className="muted">
               Next: the full builder, Test Automation and Save as disabled.
             </span>

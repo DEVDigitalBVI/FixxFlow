@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 
 export function ChatCenter({
@@ -19,7 +20,7 @@ export function ChatCenter({
         title={personal ? 'My chats' : 'Live chat'}
         className="chat-center-heading"
         actions={
-          <Link className="button button-secondary" href="/app/chat?start=1">
+          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/chat?start=1">
             New chat
           </Link>
         }

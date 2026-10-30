@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
+
 import { knowledgeAudiences } from './audience';
 import type { SuggestedArticle } from './suggestions';
 
@@ -81,13 +83,9 @@ export function TicketSuggestions({ showAudience = false }: { showAudience?: boo
           ) : state.error ? (
             <p role="status">
               Guides couldn’t load. You can still submit your request.{' '}
-              <button
-                type="button"
-                className="button button-quiet"
-                onClick={() => setRetry((value) => value + 1)}
-              >
+              <Button type="button" variant="quiet" onClick={() => setRetry((value) => value + 1)}>
                 Retry
-              </button>
+              </Button>
             </p>
           ) : state.rows.length ? (
             <>

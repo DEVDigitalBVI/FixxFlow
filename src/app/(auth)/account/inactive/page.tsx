@@ -1,3 +1,5 @@
+import { Button } from '@/components/ui/button';
+
 import { signOut } from '../../actions';
 
 export default function InactivePage() {
@@ -9,9 +11,9 @@ export default function InactivePage() {
         mistake.
       </p>
       <form action={signOut}>
-        <button className="button button-secondary" type="submit">
+        <Button variant="secondary" type="submit">
           Sign out
-        </button>
+        </Button>
       </form>
     </section>
   );

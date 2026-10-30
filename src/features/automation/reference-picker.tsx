@@ -2,6 +2,9 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
+import { Input, NativeSelect } from '@/components/ui/input';
+
 import { loadAutomationChoices } from './choice-client';
 import type { Choice } from './ui-model';
 
@@ -83,9 +86,9 @@ export function ReferencePicker({
       <label className="sr-only" htmlFor={`${id}-search`}>
         Search {label.toLowerCase()}
       </label>
-      <input
+      <Input
         id={`${id}-search`}
-        className="input input-compact"
+        fieldSize="compact"
         type="search"
         value={query}
         placeholder={`Search ${label.toLowerCase()}`}
@@ -94,9 +97,8 @@ export function ReferencePicker({
           setPage(1);
         }}
       />
-      <select
+      <NativeSelect
         id={id}
-        className="input"
         multiple={multiple}
         size={multiple ? 4 : undefined}
         value={multiple ? [...(value as readonly string[])] : (value as string)}
@@ -125,7 +127,7 @@ export function ReferencePicker({
             {!row.active ? ' (inactive)' : ''}
           </option>
         ))}
-      </select>
+      </NativeSelect>
       {multiple && (
         <small className="muted">
           Select one or more. Use Control or Command to add a selection.
@@ -143,23 +145,23 @@ export function ReferencePicker({
       </span>
       <div className="automation-inline">
         {state.error && (
-          <button
+          <Button
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             onClick={() => setRefresh((value) => value + 1)}
           >
             Try again
-          </button>
+          </Button>
         )}
         {page > 1 && (
-          <button type="button" className="button button-quiet" onClick={() => setPage(page - 1)}>
+          <Button type="button" variant="quiet" onClick={() => setPage(page - 1)}>
             Previous choices
-          </button>
+          </Button>
         )}
         {state.hasNext && (
-          <button type="button" className="button button-quiet" onClick={() => setPage(page + 1)}>
+          <Button type="button" variant="quiet" onClick={() => setPage(page + 1)}>
             More choices
-          </button>
+          </Button>
         )}
       </div>
     </div>

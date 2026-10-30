@@ -114,7 +114,11 @@ test('daily report details start collapsed and preserve every date and zero in a
   );
   assert.match(html, /<details><summary>View data for reopened tickets · 30 days<\/summary>/);
   assert.doesNotMatch(html, /<details[^>]*\bopen(?:\s|=|>)/);
-  assert.match(html, /role="region" aria-label="Reopened tickets data" tabindex="0"/);
+  // Kit TableRegion: a labelled, keyboard-focusable scroll region.
+  assert.match(
+    html,
+    /<div(?=[^>]*role="region")(?=[^>]*aria-label="Reopened tickets data")(?=[^>]*tabindex="0")[^>]*class="table-region/,
+  );
   assert.match(html, /<th scope="col">Date<\/th><th scope="col">Reopened<\/th>/);
   assert.equal((html.match(/<th scope="row">/g) ?? []).length, 30);
   assert.equal((html.match(/<td>0<\/td>/g) ?? []).length, 30);
@@ -211,7 +215,7 @@ test('service levels distinguish historical compliance from current breached wor
   assert.match(html, /open ticket past an SLA deadline/);
   assert.match(
     html,
-    /class="button button-secondary" href="\/app\/tickets\?view=all&amp;sla=breached&amp;sort=sla"/,
+    /class="button [^"]*\bbutton-secondary\b[^"]*" href="\/app\/tickets\?view=all&amp;sla=breached&amp;sort=sla"/,
   );
   assert.match(html, /href="\/app\/administration\/slas">View SLA targets/);
 });
@@ -301,9 +305,9 @@ test('reports page links each section from one labelled jump list', async () => 
   }).default;
   const html = renderToStaticMarkup(await page({ searchParams: Promise.resolve({}) }));
   assert.match(html, /<nav class="report-jump-nav" aria-label="Report sections">/);
-  const targets = [...html.matchAll(/class="button button-quiet" href="#([^"]+)"/g)].map(
-    (m) => m[1],
-  );
+  const targets = [
+    ...html.matchAll(/class="button [^"]*\bbutton-quiet\b[^"]*" href="#([^"]+)"/g),
+  ].map((m) => m[1]);
   assert.equal(targets.length, 8);
   // Links into the main report land on headings rendered by this page.
   for (const id of targets.slice(0, 5)) assert.match(html, new RegExp(`id="${id}"`));

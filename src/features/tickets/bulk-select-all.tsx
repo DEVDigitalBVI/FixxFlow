@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+import { Checkbox } from '@/components/ui/checkbox';
+
 export function BulkSelectAll({ formId }: { formId: string }) {
   const selectAll = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -20,9 +22,8 @@ export function BulkSelectAll({ formId }: { formId: string }) {
     return () => form?.removeEventListener('change', refresh);
   }, [formId]);
   return (
-    <input
+    <Checkbox
       ref={selectAll}
-      type="checkbox"
       aria-label="Select all displayed tickets"
       onChange={(event) => {
         const checked = event.currentTarget.checked;

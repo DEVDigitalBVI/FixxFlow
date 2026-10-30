@@ -53,12 +53,12 @@ function add(filename, provided) {
 const entry = add(
   path.join(root, 'tests/fixtures/lookup-preview-entry.tsx'),
   `
-import React,{useState} from 'react';import {createRoot} from 'react-dom/client';
+import {Input,NativeSelect,Textarea} from '@/components/ui/input';import React,{useState} from 'react';import {createRoot} from 'react-dom/client';
 import {LookupSelect} from '@/features/lookups/lookup-select';
 import {ActionForm} from '@/components/ui/action-form';
 import {SubmitButton} from '@/components/ui/submit-button';
 function Preview(){const [fail,setFail]=useState(false);const [saved,setSaved]=useState(false);
-return <main id="main-content" className="page page-narrow"><h1>Lookup and recovery checks</h1><p>Isolated fixture · no database or real saves</p><label><input type="checkbox" checked={fail} onChange={event=>{setFail(event.target.checked);window.fixtureFailure=event.target.checked;}}/> Simulate lookup failure</label><ActionForm className="settings-card" action={async data=>{if(data.has('lookupLoadError'))return {error:'Choices could not load. Retry before saving.'};if(!saved){setSaved(true);return {error:'Simulated save failure. Your entries are preserved.'};}return {success:'Saved fixture.'};}}><label className="field">Draft title<input className="input" name="title" defaultValue="Keep this draft"/></label><div className="form-grid"><LookupSelect resource="people" name="requesterId" label="Requester" defaultValue="person-1205"/><LookupSelect resource="locations" name="locationId" label="Location"/></div><SubmitButton className="button button-primary">Save fixture</SubmitButton></ActionForm></main>}
+return <main id="main-content" className="page page-narrow"><h1>Lookup and recovery checks</h1><p>Isolated fixture · no database or real saves</p><label><input type="checkbox" checked={fail} onChange={event=>{setFail(event.target.checked);window.fixtureFailure=event.target.checked;}}/> Simulate lookup failure</label><ActionForm className="settings-card" action={async data=>{if(data.has('lookupLoadError'))return {error:'Choices could not load. Retry before saving.'};if(!saved){setSaved(true);return {error:'Simulated save failure. Your entries are preserved.'};}return {success:'Saved fixture.'};}}><label className="field">Draft title<Input name="title" defaultValue="Keep this draft"/></label><div className="form-grid"><LookupSelect resource="people" name="requesterId" label="Requester" defaultValue="person-1205"/><LookupSelect resource="locations" name="locationId" label="Location"/></div><SubmitButton variant="primary">Save fixture</SubmitButton></ActionForm></main>}
 const originalFetch=window.fetch;window.fetch=(url,options)=>window.fixtureFailure?Promise.resolve(new Response('{}',{status:503})):originalFetch(url,options);
 createRoot(document.getElementById('root')!).render(<Preview/>);`,
 );

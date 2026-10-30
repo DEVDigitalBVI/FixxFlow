@@ -2,6 +2,9 @@
 
 import { useLayoutEffect, useRef, useState } from 'react';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+
 import { AutomationBuilder } from './builder';
 import { automationSummary } from './summary';
 import { automationTemplates, templateDraft } from './templates';
@@ -44,7 +47,7 @@ export function CreateAutomation() {
               key={item.id}
               aria-labelledby={`template-title-${item.id}`}
             >
-              <span className="badge badge-inactive">{item.category}</span>
+              <Badge tone="muted">{item.category}</Badge>
               <h3 id={`template-title-${item.id}`}>{item.name}</h3>
               <p>{item.description}</p>
               <details>
@@ -55,15 +58,15 @@ export function CreateAutomation() {
                 <p>{automationSummary(item.definition)}</p>
                 <p className="muted">{item.guidance}</p>
               </details>
-              <button
+              <Button
                 id={`template-${item.id}`}
                 type="button"
-                className="button button-secondary"
+                variant="secondary"
                 aria-label={`Use ${item.name} template`}
                 onClick={() => setSelection(item.id)}
               >
                 Use template
-              </button>
+              </Button>
             </article>
           ))}
         </div>
@@ -77,14 +80,14 @@ export function CreateAutomation() {
           </p>
         </div>
         <div>
-          <button
+          <Button
             id="template-scratch"
-            className="button button-secondary"
+            variant="secondary"
             type="button"
             onClick={() => setSelection('scratch')}
           >
             Start from scratch
-          </button>
+          </Button>
         </div>
       </section>
     </div>

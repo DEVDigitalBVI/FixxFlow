@@ -5,6 +5,8 @@ import { useEffect, useRef, useState, useTransition, type ReactNode } from 'reac
 
 import type { ActionResult } from '@/lib/action-result';
 
+import { Alert } from './alert';
+import { Button } from './button';
 import { FormPendingContext } from './form-pending';
 import { revealField } from './reveal-field';
 import { useUnsavedChanges } from './unsaved-changes';
@@ -117,15 +119,15 @@ export function ActionForm({
       }}
     >
       {result.error && (
-        <div ref={feedback} className="alert alert-error field-wide" role="alert" tabIndex={-1}>
+        <Alert ref={feedback} tone="error" className="field-wide" role="alert" tabIndex={-1}>
           {result.error}
           {result.fieldErrors && (
             <ul>
               {Object.entries(result.fieldErrors).map(([name, message]) => (
                 <li key={name}>
-                  <button
+                  <Button
                     type="button"
-                    className="button button-quiet"
+                    variant="quiet"
                     onClick={() => {
                       const field = errorField(name);
                       if (field) {
@@ -135,17 +137,17 @@ export function ActionForm({
                     }}
                   >
                     {message}
-                  </button>
+                  </Button>
                 </li>
               ))}
             </ul>
           )}
-        </div>
+        </Alert>
       )}
       {result.success && (
-        <div className="alert alert-success field-wide" role="status">
+        <Alert tone="success" className="field-wide" role="status">
           {result.success}
-        </div>
+        </Alert>
       )}
       <FormPendingContext value={pending || Boolean(result.redirectTo)}>
         <fieldset className="action-form-fields" disabled={pending || Boolean(result.redirectTo)}>

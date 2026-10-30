@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
 import { ArticleContent } from '@/features/knowledge/article-content';
 import { ArticleFeedback } from '@/features/knowledge/article-feedback';
 import { knowledgeAudiences } from '@/features/knowledge/audience';
@@ -94,7 +96,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ articl
       )}
       <header className="portal-page-heading">
         <div>
-          <Link className="button button-quiet page-back-link" href="/app/help">
+          <Link
+            className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
+            href="/app/help"
+          >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
             Knowledge base
           </Link>
@@ -106,17 +111,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ articl
           <p>{article.summary}</p>
         </div>
         {staff && (
-          <Link className="button button-secondary" href={`/app/help/${article.id}/edit`}>
+          <Link
+            className={buttonVariants({ variant: 'secondary' })}
+            href={`/app/help/${article.id}/edit`}
+          >
             Edit article
           </Link>
         )}
       </header>
       {(article.status !== 'published' || article.audience === 'it_only') && (
-        <p className="alert alert-warning">
+        <Alert as="p" tone="warning">
           {article.status !== 'published'
             ? `This ${article.status} article is visible to IT staff only.`
             : 'IT only — employees cannot access this article or its attachments.'}
-        </p>
+        </Alert>
       )}
       <article className="portal-detail-card">
         <ArticleContent content={article.content} images={images} showContents />
@@ -163,7 +171,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ articl
           Tell IT what happened and which steps you tried. Include this article’s title in your
           request.
         </p>
-        <Link className="button button-primary" href="/app/tickets/new">
+        <Link className={buttonVariants({ variant: 'primary' })} href="/app/tickets/new">
           Submit a request
         </Link>
       </section>

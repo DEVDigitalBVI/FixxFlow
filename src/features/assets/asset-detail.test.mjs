@@ -4,6 +4,7 @@ import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup as render } from 'react-dom/server';
 
+import { kitHostMocks } from '../../../tests/helpers/kit-host-mocks.mjs';
 import { load } from '../../../tests/helpers/load-module.mjs';
 
 const asset = {
@@ -66,6 +67,7 @@ test('opening an asset starts in overview; Edit opens the form and cancel restor
   ];
   const Form = () => null;
   const { AssetDetailEditor } = load('src/features/assets/asset-detail-editor.tsx', {
+    ...kitHostMocks(),
     react: {
       ...React,
       useState: () => [
@@ -115,6 +117,7 @@ function editor({ dirty = false, pending = false, confirm = true } = {}) {
     },
   };
   const { AssetForm } = load('src/features/assets/asset-form.tsx', {
+    ...kitHostMocks(),
     react: {
       ...React,
       useState: (value) => [dirty ? { ...value, name: 'Changed draft' } : value, () => {}],

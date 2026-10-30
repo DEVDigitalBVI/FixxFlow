@@ -19,7 +19,7 @@ test('download controls have visible format labels, native fallback and polite s
     assert.ok(html.includes(choice));
   assert.match(html, /type="submit">Download report/);
   assert.match(html, /role="status" aria-live="polite"/);
-  assert.doesNotMatch(html, /disabled/);
+  assert.doesNotMatch(html, /\sdisabled=""/);
 });
 
 test('client sends authenticated uncached requests and reads the download filename and bytes', async (t) => {

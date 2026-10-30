@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
+import { Table, TableRegion } from '@/components/ui/table';
 import { ClassificationEditor } from '@/features/administration/classification-editor';
 import {
   administrationSections,
@@ -76,8 +79,7 @@ export default async function AdministrationSection({
           {visible.map((row) => (
             <details className="settings-editor" key={row.id}>
               <summary>
-                <strong>{row.name}</strong>{' '}
-                <span className="badge">{row.is_active ? 'Active' : 'Inactive'}</span>
+                <strong>{row.name}</strong> <Badge>{row.is_active ? 'Active' : 'Inactive'}</Badge>
                 <span className="muted">
                   Edit{section === 'categories' ? ' and manage subcategories' : ''}
                 </span>
@@ -124,13 +126,8 @@ export default async function AdministrationSection({
           pauses only resolution; the requester’s reply resumes it. On-hold time counts during
           support hours. Priority targets are unchanged.
         </p>
-        <div
-          className="table-region"
-          role="region"
-          aria-label="Priority and SLA targets"
-          tabIndex={0}
-        >
-          <table className="table table-policy responsive-table">
+        <TableRegion role="region" aria-label="Priority and SLA targets" tabIndex={0}>
+          <Table className="table-policy responsive-table">
             <caption>Current response and resolution targets in support hours</caption>
             <thead>
               <tr>
@@ -150,8 +147,8 @@ export default async function AdministrationSection({
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+          </Table>
+        </TableRegion>
       </>
     );
   } else if (section === 'notifications') {
@@ -175,7 +172,7 @@ export default async function AdministrationSection({
           Repeated notifications are grouped to reduce noise. Individual notification preferences
           are planned.
         </p>
-        <Link className="button button-secondary" href="/app/notifications">
+        <Link className={buttonVariants({ variant: 'secondary' })} href="/app/notifications">
           Open your notifications
         </Link>
       </>
@@ -192,10 +189,10 @@ export default async function AdministrationSection({
           required to access the workspace. Organization-wide enrollment enforcement and
           configurable security policies are planned.
         </p>
-        <Link className="button button-secondary" href="/app/security">
+        <Link className={buttonVariants({ variant: 'secondary' })} href="/app/security">
           Manage your two-factor authentication
         </Link>
-        <Link className="button button-quiet" href="/app/people">
+        <Link className={buttonVariants({ variant: 'quiet' })} href="/app/people">
           Review member access
         </Link>
       </>
@@ -234,7 +231,7 @@ function Pagination({
     <nav className="queue-views" aria-label="Administration pages">
       {page > 1 && (
         <Link
-          className="button button-secondary"
+          className={buttonVariants({ variant: 'secondary' })}
           href={`/app/administration/${section}?page=${page - 1}`}
         >
           Previous
@@ -243,7 +240,7 @@ function Pagination({
       <span>Page {page}</span>
       {hasNext && (
         <Link
-          className="button button-secondary"
+          className={buttonVariants({ variant: 'secondary' })}
           href={`/app/administration/${section}?page=${page + 1}`}
         >
           Next

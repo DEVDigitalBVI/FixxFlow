@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { buttonVariants } from '@/components/ui/button';
 import { RetryButton } from '@/components/ui/retry-button';
 import { profileLabels } from '@/features/lookups/labels';
 import { ChecklistPanel } from '@/features/tickets/checklist-panel';
@@ -57,7 +58,10 @@ export async function TicketProcedures({
             Apply a published maintenance or general procedure to add repeatable response work.
             Incident procedures require an incident declaration.
           </p>
-          <Link className="button button-secondary" href={`/app/workflows?ticket=${ticketId}`}>
+          <Link
+            className={buttonVariants({ variant: 'secondary' })}
+            href={`/app/workflows?ticket=${ticketId}`}
+          >
             Apply procedure
           </Link>
         </details>
@@ -95,7 +99,10 @@ export async function TicketProcedures({
           {workflow.kind === 'incident' ? 'Applied procedures' : workflowKinds[workflow.kind]}
         </h2>
         {runs.length < 5 && (
-          <Link className="button button-secondary" href={`/app/workflows?ticket=${ticketId}`}>
+          <Link
+            className={buttonVariants({ variant: 'secondary' })}
+            href={`/app/workflows?ticket=${ticketId}`}
+          >
             Apply procedure
           </Link>
         )}

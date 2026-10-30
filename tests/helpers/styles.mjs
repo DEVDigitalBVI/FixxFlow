@@ -25,3 +25,12 @@ export function productStyles() {
     })
     .join('\n');
 }
+
+/** Product styles with the UI kit's Tailwind utilities compiled, as the Next.js build serves them. */
+export async function compiledProductStyles() {
+  const { default: tailwind } = await import('@tailwindcss/postcss');
+  const result = await postcss([tailwind({ base: process.cwd() })]).process(productStyles(), {
+    from: 'src/app/globals.css',
+  });
+  return result.css;
+}

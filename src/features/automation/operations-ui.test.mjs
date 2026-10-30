@@ -134,7 +134,10 @@ test('Operations pages expose native filters, no-failures state and bounded curs
   assert.match(html, /until=/);
   assert.match(html, /since=/);
   assert.match(html, /<label for="operations-result">Result<\/label>/);
-  assert.match(html, /<select id="operations-result"/);
+  assert.match(
+    html,
+    /<select data-slot="native-select" class="input [^"]*" id="operations-result"/,
+  );
   assert.match(html, /<option value="guardrail" selected="">Safety limit reached<\/option>/);
   assert.match(html, /result=guardrail/);
 });

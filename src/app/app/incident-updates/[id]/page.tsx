@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { RetryButton } from '@/components/ui/retry-button';
 import { isUuid } from '@/features/tickets/communications';
@@ -46,12 +47,12 @@ export default async function IncidentUpdatePage({ params }: { params: Promise<{
         </p>
       </article>
       <div className="section-heading-row">
-        <Link className="button button-secondary" href="/app/notifications">
+        <Link className={buttonVariants({ variant: 'secondary' })} href="/app/notifications">
           Back to notifications
         </Link>
         {viewer.role !== 'end_user' && (
           <Link
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={`/app/tickets/${data.ticket_id}#communication-plan`}
           >
             Open coordination

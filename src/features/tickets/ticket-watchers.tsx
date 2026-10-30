@@ -27,7 +27,7 @@ export function TicketWatchers({
           <ActionForm action={watching ? unwatchTicket : watchTicket}>
             <input type="hidden" name="ticketId" value={ticketId} />
             <SubmitButton
-              className={`button ${watching ? 'button-secondary' : 'button-primary'}`}
+              variant={watching ? 'secondary' : 'primary'}
               aria-pressed={watching}
               pendingLabel={watching ? 'Stopping…' : 'Watching…'}
             >
@@ -54,7 +54,7 @@ export function TicketWatchers({
                 <ActionForm action={unwatchTicket}>
                   <input type="hidden" name="ticketId" value={ticketId} />
                   <input type="hidden" name="userId" value={watcher.userId} />
-                  <SubmitButton className="button button-quiet" pendingLabel="Removing…">
+                  <SubmitButton variant="quiet" pendingLabel="Removing…">
                     Remove<span className="sr-only"> {watcher.name} as a watcher</span>
                   </SubmitButton>
                 </ActionForm>

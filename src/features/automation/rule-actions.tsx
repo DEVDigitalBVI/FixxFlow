@@ -2,6 +2,10 @@ import Link from 'next/link';
 
 import { manageAutomation } from '@/app/app/administration/automations/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 import { ExportAutomationButton } from './export-button';
@@ -39,7 +43,10 @@ export function RuleActions({
     <div className="automation-inline">
       <ExportAutomationButton id={id} name={name} />
       {!archived && !enabled && !definition && (
-        <Link className="button button-quiet" href={`${automationPath}/${id}#rule-controls`}>
+        <Link
+          className={buttonVariants({ variant: 'quiet' })}
+          href={`${automationPath}/${id}#rule-controls`}
+        >
           Review and enable<span className="sr-only"> {name}</span>
         </Link>
       )}
@@ -63,20 +70,20 @@ export function RuleActions({
                 </p>
                 <p className="automation-summary">{automationSummary(definition, labels)}</p>
                 {!processingActive && (
-                  <p className="alert alert-info">
+                  <Alert as="p" tone="info">
                     This rule will be enabled, but Automation processing is currently disabled. It
                     will not execute until processing is activated.
-                  </p>
+                  </Alert>
                 )}
               </>
             )}
             {!enabled && (
               <label className="check-field">
-                <input type="checkbox" name="confirmation" value={id} required />
+                <Checkbox name="confirmation" value={id} required />
                 Enable “{name}”
               </label>
             )}
-            <SubmitButton className="button button-secondary">
+            <SubmitButton variant="secondary">
               {enabled ? 'Disable rule' : 'Enable rule'}
             </SubmitButton>
           </ActionForm>
@@ -91,16 +98,15 @@ export function RuleActions({
             {hidden('duplicate')}
             <div className="field">
               <label htmlFor={`copy-${id}`}>Name for the disabled copy</label>
-              <input
+              <Input
                 id={`copy-${id}`}
-                className="input"
                 name="name"
                 defaultValue={`${name.slice(0, 113)} (copy)`}
                 required
                 maxLength={120}
               />
             </div>
-            <SubmitButton className="button button-secondary">Create disabled copy</SubmitButton>
+            <SubmitButton variant="secondary">Create disabled copy</SubmitButton>
           </ActionForm>
         </details>
       )}
@@ -116,8 +122,7 @@ export function RuleActions({
               processing. Historical versions and execution history are retained.
             </p>
             <label className="check-field">
-              <input
-                type="checkbox"
+              <Checkbox
                 name="confirmation"
                 value={id}
                 required
@@ -125,7 +130,7 @@ export function RuleActions({
               />
               I confirm archiving {name}.
             </label>
-            <SubmitButton className="button button-danger" pendingLabel="Archiving…">
+            <SubmitButton variant="danger" pendingLabel="Archiving…">
               Archive automation
             </SubmitButton>
             <p className="muted">Close this section to cancel.</p>

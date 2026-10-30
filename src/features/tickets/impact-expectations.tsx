@@ -1,3 +1,5 @@
+import { Table } from '@/components/ui/table';
+
 import { impactExpectations, SUPPORT_HOURS } from './expectations';
 
 /** Response-time guidance beside the employee impact choice. Static and JS-free. */
@@ -6,7 +8,7 @@ export function ImpactExpectations() {
   return (
     <details className="impact-expectations">
       <summary>How quickly will IT respond?</summary>
-      <table className="table table-policy">
+      <Table className="table-policy">
         <caption>
           Target times for each impact. Targets count support hours, {SUPPORT_HOURS}.
         </caption>
@@ -26,7 +28,7 @@ export function ImpactExpectations() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
       <p className="muted">
         These are targets, not guarantees. If a service is down for many people, check announcements
         first — IT may already be working on it.

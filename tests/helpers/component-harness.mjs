@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { hostify, kitHostMocks } from './kit-host-mocks.mjs';
 import { load } from './load-module.mjs';
 
 /** Deterministic component interaction harness. Exercises real handlers/state
@@ -53,7 +54,7 @@ export function componentHarness(file, name, props, mocks = {}) {
     useId: () => `fixture-${slot(() => null)}`,
     useTransition: () => [false, (fn) => fn()],
   };
-  const component = load(file, { ...mocks, react: hooks })[name];
+  const component = load(file, { ...kitHostMocks(), ...mocks, react: hooks })[name];
   const walk = (node, visit) => {
     if (Array.isArray(node)) node.forEach((item) => walk(item, visit));
     else if (node && typeof node === 'object' && node.props) {
@@ -85,7 +86,7 @@ export function componentHarness(file, name, props, mocks = {}) {
       cursor = 0;
       effects = [];
       elements.clear();
-      tree = component(props);
+      tree = hostify(component(props));
       walk(tree, (node) => {
         const target = {
           focus: () => focuses.push(node.props.id ?? node.props['aria-label'] ?? 'feedback'),

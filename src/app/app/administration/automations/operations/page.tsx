@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   automationOperations,
   automationOperationsHistory,
@@ -24,11 +25,14 @@ export default async function OperationsPage() {
       />
       <div className="automation-inline">
         <form action={operationsPath}>
-          <button className="button button-secondary" type="submit">
+          <Button variant="secondary" type="submit">
             Refresh status
-          </button>
+          </Button>
         </form>
-        <Link className="button button-secondary" href={`${operationsPath}/history`}>
+        <Link
+          className={buttonVariants({ variant: 'secondary' })}
+          href={`${operationsPath}/history`}
+        >
           Execution history
         </Link>
       </div>
@@ -41,7 +45,7 @@ export default async function OperationsPage() {
           <p>No execution failures in the last 24 hours.</p>
         )}
         <Link
-          className="button button-secondary"
+          className={buttonVariants({ variant: 'secondary' })}
           href={`${operationsPath}/history?result=failures`}
         >
           View failure history

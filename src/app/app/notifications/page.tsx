@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { LiveNotifications } from '@/features/notifications/live-notifications';
 import { notificationHref, notificationLabels } from '@/features/notifications/presentation';
@@ -53,7 +55,10 @@ export default async function NotificationsPage({
         description="Ticket and chat updates that need your attention."
         actions={
           <>
-            <Link className="button button-secondary" href="/app/notifications/settings">
+            <Link
+              className={buttonVariants({ variant: 'secondary' })}
+              href="/app/notifications/settings"
+            >
               Email preferences
             </Link>
             {!error && !unreadTotal.error && (unreadTotal.count ?? 0) > 0 && <ReadButton all />}
@@ -69,12 +74,12 @@ export default async function NotificationsPage({
         </Link>
       </nav>
       {error ? (
-        <div className="alert alert-error" role="alert">
+        <Alert tone="error" role="alert">
           Notifications could not be loaded.{' '}
-          <Link className="button button-secondary" href={pageHref(page)}>
+          <Link className={buttonVariants({ variant: 'secondary' })} href={pageHref(page)}>
             Try again
           </Link>
-        </div>
+        </Alert>
       ) : !data?.length ? (
         <section className="settings-card">
           <h2>{unread ? 'You’re all caught up' : 'No notifications yet'}</h2>
@@ -84,7 +89,7 @@ export default async function NotificationsPage({
               : 'Relevant ticket and chat updates will appear here.'}
           </p>
           {page > 1 && (
-            <Link className="button button-secondary" href={pageHref(1)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={pageHref(1)}>
               Return to latest updates
             </Link>
           )}
@@ -120,13 +125,13 @@ export default async function NotificationsPage({
       {!error && (page > 1 || page * 30 < (count ?? 0)) && (
         <nav className="notification-pagination" aria-label="Notification pages">
           {page > 1 && (
-            <Link className="button button-secondary" href={pageHref(page - 1)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={pageHref(page - 1)}>
               Newer
             </Link>
           )}
           <span>Page {page}</span>
           {page * 30 < (count ?? 0) && (
-            <Link className="button button-secondary" href={pageHref(page + 1)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={pageHref(page + 1)}>
               Older
             </Link>
           )}

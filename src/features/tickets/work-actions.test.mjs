@@ -133,10 +133,7 @@ test('Resolve provides an explicit save for every status and submits the selecte
     const { ticketStatuses } = load('src/features/tickets/presentation.ts');
     assert.equal(h.all((n) => n.props.children === 'Mark resolved').length, 0);
     assert.equal(h.all((n) => n.props.name === 'status').length, 1);
-    assert.equal(
-      h.find((n) => n.props.children === 'Save status').props.className,
-      'button button-primary',
-    );
+    assert.equal(h.find((n) => n.props.children === 'Save status').props.variant, 'primary');
     for (const status of Object.keys(ticketStatuses)) {
       h.find((n) => n.type === 'select').props.onChange({ target: { value: status } });
       h.render();

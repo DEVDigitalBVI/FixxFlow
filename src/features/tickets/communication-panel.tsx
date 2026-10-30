@@ -2,6 +2,8 @@ import { randomUUID } from 'node:crypto';
 
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { RetryButton } from '@/components/ui/retry-button';
 import { profileLabels } from '@/features/lookups/labels';
 import { Timestamp } from '@/features/timezones/provider';
@@ -124,7 +126,11 @@ export async function CommunicationPanel({
     <section id="communication-plan" className="stack" aria-labelledby="communication-plan-heading">
       <div className="section-heading-row">
         <h3 id="communication-plan-heading">Stakeholder updates</h3>
-        {due && <span className="ticket-badge tone-warning">Update due</span>}
+        {due && (
+          <Badge tone="warning" className="ticket-badge">
+            Update due
+          </Badge>
+        )}
       </div>
       <p className="muted">
         Prepare an update, review its audience, then ask the coordinator or an administrator to
@@ -185,7 +191,7 @@ export async function CommunicationPanel({
                         label="Approve and send update"
                       >
                         <label className="communication-choice">
-                          <input type="checkbox" name="confirm" value="yes" required />
+                          <Checkbox name="confirm" value="yes" required />
                           <span>
                             I approve this saved message and its {draft.recipient_ids.length} saved
                             recipients. Send notifications and email updates.

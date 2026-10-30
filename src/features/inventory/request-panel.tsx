@@ -2,6 +2,8 @@ import { randomUUID } from 'node:crypto';
 
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
@@ -44,7 +46,9 @@ export async function InventoryRequestPanel({ ticketId }: { ticketId: string }) 
     <section className="settings-card stack" aria-labelledby="inventory-fulfillment">
       <h2 id="inventory-fulfillment">Inventory request</h2>
       <p>
-        <span className={`ticket-badge tone-${status.tone}`}>{status.label}</span>
+        <Badge tone={status.tone} className="ticket-badge">
+          {status.label}
+        </Badge>
       </p>
       <p>
         <strong>{contextLabel(request.context, 'item')}</strong> · Quantity {request.quantity} ·{' '}
@@ -69,7 +73,10 @@ export async function InventoryRequestPanel({ ticketId }: { ticketId: string }) 
         </p>
       )}
       {access.manager && (
-        <Link className="button button-secondary" href={`/app/inventory/${request.item_id}`}>
+        <Link
+          className={buttonVariants({ variant: 'secondary' })}
+          href={`/app/inventory/${request.item_id}`}
+        >
           View inventory and usage history
         </Link>
       )}
@@ -77,7 +84,9 @@ export async function InventoryRequestPanel({ ticketId }: { ticketId: string }) 
         <>
           {request.state !== 'approved' && (
             <details>
-              <summary className="button button-secondary">Approve and reserve items</summary>
+              <summary className={buttonVariants({ variant: 'secondary' })}>
+                Approve and reserve items
+              </summary>
               <ReviewForm
                 request={request}
                 equipment={contextLabel(request.context, 'kind') === 'equipment'}
@@ -93,7 +102,9 @@ export async function InventoryRequestPanel({ ticketId }: { ticketId: string }) 
               <IssueForm request={request} units={units.data ?? []} token={randomUUID()} />
             ))}
           <details>
-            <summary className="button button-secondary">Ask for more information</summary>
+            <summary className={buttonVariants({ variant: 'secondary' })}>
+              Ask for more information
+            </summary>
             <ReviewForm
               request={request}
               equipment={false}
@@ -102,7 +113,7 @@ export async function InventoryRequestPanel({ ticketId }: { ticketId: string }) 
             />
           </details>
           <details>
-            <summary className="button button-secondary">Decline request</summary>
+            <summary className={buttonVariants({ variant: 'secondary' })}>Decline request</summary>
             <ReviewForm
               request={request}
               equipment={false}
@@ -117,7 +128,9 @@ export async function InventoryRequestPanel({ ticketId }: { ticketId: string }) 
           (request.requester_id === viewer.id &&
             access.departments.includes(request.department_id))) && (
           <details>
-            <summary className="button button-secondary">Cancel inventory request</summary>
+            <summary className={buttonVariants({ variant: 'secondary' })}>
+              Cancel inventory request
+            </summary>
             <ReviewForm request={request} equipment={false} command="cancel" token={randomUUID()} />
           </details>
         )}

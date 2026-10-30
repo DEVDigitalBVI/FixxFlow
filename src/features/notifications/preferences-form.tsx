@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { saveNotificationPreferences } from '@/app/app/notifications/settings/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { TimezoneSelect } from '@/features/timezones/select';
 
@@ -35,8 +37,7 @@ export function NotificationPreferencesForm({
       <input type="hidden" name="revision" value={revision} />
       <label className="field">
         Email updates
-        <select
-          className="input"
+        <NativeSelect
           name="email_mode"
           value={settings.email_mode}
           onChange={(e) =>
@@ -49,13 +50,12 @@ export function NotificationPreferencesForm({
           <option value="immediate">As they happen</option>
           <option value="daily">Daily summary</option>
           <option value="off">Off</option>
-        </select>
+        </NativeSelect>
       </label>
       <TimezoneSelect value={initial.timezone} label="Notification timezone" />
       <label className="field" hidden={!daily}>
         Daily summary time
-        <select
-          className="input"
+        <NativeSelect
           name="digest_hour"
           disabled={!daily}
           value={settings.digest_hour}
@@ -64,7 +64,7 @@ export function NotificationPreferencesForm({
           {Array.from({ length: 24 }, (_, hour) => (
             <option key={hour} value={hour}>{`${String(hour).padStart(2, '0')}:00`}</option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       {!daily && <input type="hidden" name="digest_hour" value={settings.digest_hour} />}
       {daily && (
@@ -76,8 +76,7 @@ export function NotificationPreferencesForm({
       <fieldset className="stack" hidden={!enabled} disabled={!enabled}>
         <legend>Quiet hours</legend>
         <label className="checkbox-row">
-          <input
-            type="checkbox"
+          <Checkbox
             name="quiet_enabled"
             checked={settings.quiet_enabled}
             onChange={(e) => setSettings({ ...settings, quiet_enabled: e.target.checked })}
@@ -87,8 +86,7 @@ export function NotificationPreferencesForm({
         <div className="form-grid" hidden={!quiet}>
           <label className="field">
             From
-            <input
-              className="input"
+            <Input
               type="time"
               name="quiet_start"
               disabled={!quiet}
@@ -99,8 +97,7 @@ export function NotificationPreferencesForm({
           </label>
           <label className="field">
             Until
-            <input
-              className="input"
+            <Input
               type="time"
               name="quiet_end"
               disabled={!quiet}
@@ -121,8 +118,7 @@ export function NotificationPreferencesForm({
         </>
       )}
       <label className="checkbox-row" hidden={!urgent}>
-        <input
-          type="checkbox"
+        <Checkbox
           name="urgent_immediate"
           disabled={!urgent}
           checked={settings.urgent_immediate}
@@ -143,7 +139,7 @@ export function NotificationPreferencesForm({
         In-app updates stay available. Workspace announcements and account/security emails are sent
         separately.
       </p>
-      <SubmitButton className="button button-primary">Save preferences</SubmitButton>
+      <SubmitButton variant="primary">Save preferences</SubmitButton>
     </ActionForm>
   );
 }

@@ -19,6 +19,9 @@ import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
 import '@/features/tickets/presentation';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { SlaPolicy } from '@/features/tickets/sla-policy-table';
 import { popularTags } from '@/features/tickets/tags';
@@ -136,7 +139,11 @@ export async function TicketDetail({
         <ConversationRefresh />
         <div className="portal-page-heading">
           <div>
-            <Link className="button button-quiet page-back-link" href={back} scroll={false}>
+            <Link
+              className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
+              href={back}
+              scroll={false}
+            >
               <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
               My requests
             </Link>
@@ -166,14 +173,14 @@ export async function TicketDetail({
           />
         )}
         {message.error && (
-          <div className="alert alert-error page-alert" role="alert">
+          <Alert tone="error" className="page-alert" role="alert">
             {message.error}
-          </div>
+          </Alert>
         )}
         {message.success && (
-          <div className="alert alert-success page-alert" role="status">
+          <Alert tone="success" className="page-alert" role="status">
             {message.success} Request #{employeeTicket.ticket_number} is saved here.
-          </div>
+          </Alert>
         )}
         <InventoryRequestPanel ticketId={ticket.id} />
         <section className="portal-detail-card">
@@ -188,7 +195,7 @@ export async function TicketDetail({
           <div className="section-heading-row">
             <h2>Conversation</h2>
             <Link
-              className="button button-quiet"
+              className={buttonVariants({ variant: 'quiet' })}
               aria-label="View conversation history in a new tab"
               href={`/app/tickets/${ticket.id}/history`}
               target="_blank"
@@ -237,7 +244,7 @@ export async function TicketDetail({
           <div className="section-heading-row">
             <h2>Attachments</h2>
             <Link
-              className="button button-quiet"
+              className={buttonVariants({ variant: 'quiet' })}
               href={`/app/tickets/${ticket.id}/history?view=files`}
             >
               View all files
@@ -410,7 +417,9 @@ export async function TicketDetail({
         <div>
           <div className="ticket-heading-badges">
             {ticket.ticket_type === 'incident' && (
-              <span className="ticket-badge tone-info">Incident</span>
+              <Badge tone="info" className="ticket-badge">
+                Incident
+              </Badge>
             )}
             <TicketStatusBadge status={ticket.status} />
             <TicketStatusBadge priority={ticket.priority} />
@@ -441,14 +450,14 @@ export async function TicketDetail({
         </div>
       </header>
       {message.error && (
-        <div className="alert alert-error page-alert" role="alert">
+        <Alert tone="error" className="page-alert" role="alert">
           {message.error}
-        </div>
+        </Alert>
       )}
       {message.success && (
-        <div className="alert alert-success page-alert" role="status">
+        <Alert tone="success" className="page-alert" role="status">
           {message.success}
-        </div>
+        </Alert>
       )}
     </>
   );
@@ -457,7 +466,7 @@ export async function TicketDetail({
       <div className="section-heading-row">
         <h3>Conversation</h3>
         <Link
-          className="button button-quiet"
+          className={buttonVariants({ variant: 'quiet' })}
           aria-label="View conversation history in a new tab"
           href={`/app/tickets/${ticket.id}/history`}
           target="_blank"
@@ -519,12 +528,16 @@ export async function TicketDetail({
     <div className="page">
       <div className="ticket-topbar">
         {!embedded && (
-          <Link className="button button-quiet page-back-link" href={back} scroll={false}>
+          <Link
+            className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
+            href={back}
+            scroll={false}
+          >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
             Back to tickets
           </Link>
         )}
-        <a className="button button-secondary" href="#ticket-assignment">
+        <a className={buttonVariants({ variant: 'secondary' })} href="#ticket-assignment">
           Assignment &amp; details
         </a>
         <span>#{ticket.ticket_number}</span>
@@ -571,7 +584,7 @@ export async function TicketDetail({
               <div className="section-heading-row">
                 <h3>Attachments</h3>
                 <Link
-                  className="button button-quiet"
+                  className={buttonVariants({ variant: 'quiet' })}
                   href={`/app/tickets/${ticket.id}/history?view=files`}
                 >
                   View all files
@@ -692,7 +705,7 @@ export async function TicketDetail({
           <section className="settings-card activity">
             <h3>Recent activity</h3>
             <Link
-              className="button button-secondary"
+              className={buttonVariants({ variant: 'secondary' })}
               href={`/app/tickets/${ticket.id}/history?view=activity`}
             >
               Browse all activity

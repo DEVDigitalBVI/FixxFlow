@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
 import { getAutomation } from '@/features/automation/admin-service';
 import { AutomationBuilder } from '@/features/automation/builder';
 import { AutomationHeader } from '@/features/automation/page-parts';
@@ -39,7 +41,10 @@ export default async function EditAutomationPage({
         description={`Version ${rule.version} · ${archivedAt ? 'Archived' : rule.enabled ? 'Enabled' : 'Disabled'}`}
       />
       <div id="rule-controls" className="automation-inline">
-        <Link className="button button-secondary" href={`${automationPath}/${rule.id}/history`}>
+        <Link
+          className={buttonVariants({ variant: 'secondary' })}
+          href={`${automationPath}/${rule.id}/history`}
+        >
           View History
         </Link>
         <RuleActions
@@ -54,12 +59,12 @@ export default async function EditAutomationPage({
         />
       </div>
       {['disabled', 'imported'].includes(query?.saved ?? '') && !rule.enabled && !archivedAt && (
-        <p className="alert alert-success" role="status">
+        <Alert as="p" tone="success" role="status">
           {query.saved === 'imported'
             ? 'Automation imported as disabled. Review and test it before enabling.'
             : 'Automation saved. It will not run until enabled.'}{' '}
           Global processing must also be active.
-        </p>
+        </Alert>
       )}
       {archivedAt ? (
         <section className="settings-card">

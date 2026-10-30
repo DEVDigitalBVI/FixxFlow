@@ -98,23 +98,6 @@
     align-items: center;
     gap: 12px;
   }
-  :where(.scope) :global(.asset-status-available) {
-    color: var(--color-success);
-    background: var(--color-success-subtle);
-  }
-  :where(.scope) :global(.asset-status-in_use) {
-    color: var(--color-active);
-    background: var(--color-active-surface);
-  }
-  :where(.scope) :global(.asset-status-repair) {
-    color: var(--color-warning);
-    background: var(--color-warning-subtle);
-  }
-  :where(.scope) :global(.asset-status-retired) {
-    color: var(--color-text-muted);
-    background: var(--color-surface-subtle);
-    border: 1px solid var(--color-border);
-  }
   :where(.scope) :global(.asset-inventory-footer) {
     border-top: 1px solid var(--color-border);
   }

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { setLibraryVisibility } from '@/app/app/help/actions';
+import { Button } from '@/components/ui/button';
 
 export function LibraryVisibilityButton({
   articleId,
@@ -39,15 +40,15 @@ export function LibraryVisibilityButton({
       <span role="status">
         {hidden ? 'Hidden in this workspace' : 'Available in this workspace'}
       </span>
-      <button
+      <Button
         type="button"
-        className="button button-secondary"
+        variant="secondary"
         aria-label={`${hidden ? 'Show' : 'Hide'} ${title} ${hidden ? 'in' : 'from'} this workspace`}
         disabled={pending}
         onClick={() => void toggle()}
       >
         {pending ? 'Saving…' : hidden ? 'Show in workspace' : 'Hide from workspace'}
-      </button>
+      </Button>
       {error && <p role="alert">{error}</p>}
     </div>
   );

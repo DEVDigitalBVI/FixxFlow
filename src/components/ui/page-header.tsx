@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 
+import { buttonVariants } from './button';
+
 /** Shared workspace heading. Navigation stays a native link; actions retain their own semantics. */
 export function PageHeader({
   title,
@@ -22,7 +24,10 @@ export function PageHeader({
   return (
     <>
       {back && (
-        <Link className="button button-quiet page-back-link" href={back.href}>
+        <Link
+          className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
+          href={back.href}
+        >
           <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
           {back.label}
         </Link>

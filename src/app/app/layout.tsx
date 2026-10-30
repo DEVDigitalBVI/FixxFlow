@@ -5,6 +5,7 @@ import { BrandLogo } from '@/components/brand/brand-logo';
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { WorkspaceNav } from '@/components/navigation/workspace-nav';
 import { WorkspaceShell } from '@/components/navigation/workspace-shell';
+import { Button } from '@/components/ui/button';
 import { rolePresentation } from '@/features/identity/role';
 import { ViewerAvatar } from '@/features/identity/viewer-avatar';
 import { inventoryAccess } from '@/features/inventory/access';
@@ -27,9 +28,9 @@ export default async function WorkspaceLayout({ children }: Readonly<{ children:
             userId={viewer.id}
             signOutControl={
               <form action={signOut}>
-                <button className="button button-secondary" type="submit">
+                <Button variant="secondary" type="submit">
                   Sign out
-                </button>
+                </Button>
               </form>
             }
           />

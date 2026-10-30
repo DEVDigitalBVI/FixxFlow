@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { Input, NativeSelect } from '@/components/ui/input';
+
 import { isTemporalTrigger } from './domains/tickets/temporal';
 import type { AutomationTrigger } from './model';
 
@@ -24,9 +26,8 @@ export function TemporalControls({
         {trigger.type.startsWith('ticket.sla_') && (
           <div className="field">
             <label htmlFor="automation-sla-objective">SLA requirement</label>
-            <select
+            <NativeSelect
               id="automation-sla-objective"
-              className="input"
               aria-invalid={invalid || undefined}
               aria-describedby={invalid ? 'automation-trigger-error' : undefined}
               value={String(config.objective)}
@@ -39,16 +40,15 @@ export function TemporalControls({
             >
               <option value="resolution">Resolution</option>
               <option value="response">First response</option>
-            </select>
+            </NativeSelect>
           </div>
         )}
         {trigger.type !== 'ticket.sla_breached' && (
           <>
             <div className="field">
               <label htmlFor="automation-duration">Duration</label>
-              <input
+              <Input
                 id="automation-duration"
-                className="input"
                 type="number"
                 min={1 / unit}
                 max={525600 / unit}
@@ -72,16 +72,15 @@ export function TemporalControls({
             </div>
             <div className="field">
               <label htmlFor="automation-duration-unit">Unit</label>
-              <select
+              <NativeSelect
                 id="automation-duration-unit"
-                className="input"
                 value={unit}
                 onChange={(event) => setUnit(Number(event.target.value))}
               >
                 <option value={1}>Minutes</option>
                 <option value={60}>Hours</option>
                 <option value={1440}>Days</option>
-              </select>
+              </NativeSelect>
             </div>
           </>
         )}

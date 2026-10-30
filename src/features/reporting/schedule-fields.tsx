@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { Input, NativeSelect } from '@/components/ui/input';
+
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 export function ScheduleTimingFields() {
   const [frequency, setFrequency] = useState('weekly');
@@ -9,8 +11,7 @@ export function ScheduleTimingFields() {
     <>
       <label className="field">
         Frequency
-        <select
-          className="input"
+        <NativeSelect
           name="frequency"
           value={frequency}
           onChange={(event) => setFrequency(event.target.value)}
@@ -18,22 +19,21 @@ export function ScheduleTimingFields() {
           <option value="daily">Daily</option>
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
-        </select>
+        </NativeSelect>
       </label>
       <label className="field" hidden={frequency !== 'weekly'}>
         Day of week
-        <select className="input" name="weekday" defaultValue="1" disabled={frequency !== 'weekly'}>
+        <NativeSelect name="weekday" defaultValue="1" disabled={frequency !== 'weekly'}>
           {weekdays.map((day, index) => (
             <option key={day} value={index}>
               {day}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       <label className="field" hidden={frequency !== 'monthly'}>
         Day of month
-        <input
-          className="input"
+        <Input
           type="number"
           name="monthday"
           min={1}
@@ -44,13 +44,13 @@ export function ScheduleTimingFields() {
       </label>
       <label className="field">
         Hour
-        <select className="input" name="runHour" defaultValue="8">
+        <NativeSelect name="runHour" defaultValue="8">
           {Array.from({ length: 24 }, (_, hour) => (
             <option key={hour} value={hour}>
               {String(hour).padStart(2, '0')}:00
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
     </>
   );

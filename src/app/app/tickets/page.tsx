@@ -2,8 +2,15 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { PageHeader } from '@/components/ui/page-header';
+import { Table, TableRegion } from '@/components/ui/table';
 import { LookupSelect } from '@/features/lookups/lookup-select';
 import { UsageEvent } from '@/features/product-analytics/usage-event';
 import { BulkActions } from '@/features/tickets/bulk-actions';
@@ -77,13 +84,13 @@ export default async function TicketsPage({
     page > 1 || hasMore ? (
       <nav className="notification-pagination" aria-label="Ticket pages">
         {page > 1 && (
-          <Link className="button button-secondary" href={pageHref(page - 1)}>
+          <Link className={buttonVariants({ variant: 'secondary' })} href={pageHref(page - 1)}>
             Previous
           </Link>
         )}
         <span>Page {page}</span>
         {hasMore && (
-          <Link className="button button-secondary" href={pageHref(page + 1)}>
+          <Link className={buttonVariants({ variant: 'secondary' })} href={pageHref(page + 1)}>
             Next
           </Link>
         )}
@@ -112,7 +119,7 @@ export default async function TicketsPage({
             title="My requests"
             description="Track your requests and replies from IT."
             actions={
-              <Link className="button button-primary" href="/app/tickets/new">
+              <Link className={buttonVariants({ variant: 'primary' })} href="/app/tickets/new">
                 New request
               </Link>
             }
@@ -121,14 +128,14 @@ export default async function TicketsPage({
             <div className="employee-requests-toolbar">
               <nav className="portal-request-types" aria-label="Request types">
                 <Link
-                  className="button button-quiet"
+                  className={buttonVariants({ variant: 'quiet' })}
                   aria-current={!filters.kind ? 'page' : undefined}
                   href={search ? `/app/tickets?q=${encodeURIComponent(search)}` : '/app/tickets'}
                 >
                   All requests
                 </Link>
                 <Link
-                  className="button button-quiet"
+                  className={buttonVariants({ variant: 'quiet' })}
                   aria-current={filters.kind === 'inventory' ? 'page' : undefined}
                   href={
                     search
@@ -151,9 +158,8 @@ export default async function TicketsPage({
                 )}
                 <label htmlFor="ticket-search">Search requests</label>
                 <div>
-                  <input
+                  <Input
                     id="ticket-search"
-                    className="input"
                     name="q"
                     defaultValue={search}
                     type="search"
@@ -161,12 +167,12 @@ export default async function TicketsPage({
                     aria-describedby="ticket-search-hint"
                     placeholder="Search by subject or request number"
                   />
-                  <button type="submit" className="button button-secondary">
+                  <Button type="submit" variant="secondary">
                     Search
-                  </button>
+                  </Button>
                   {search && (
                     <Link
-                      className="button button-quiet"
+                      className={buttonVariants({ variant: 'quiet' })}
                       href={
                         filters.kind === 'inventory'
                           ? '/app/tickets?kind=inventory'
@@ -188,9 +194,9 @@ export default async function TicketsPage({
             </div>
             {error ? (
               <div className="employee-requests-feedback">
-                <div className="alert alert-error" role="alert">
+                <Alert tone="error" role="alert">
                   Requests could not be loaded. Try Search again or refresh the page.
-                </div>
+                </Alert>
               </div>
             ) : tickets?.length ? (
               <ul className="portal-ticket-list">
@@ -200,7 +206,9 @@ export default async function TicketsPage({
                       <span className="portal-ticket-main">
                         <strong>{ticket.title}</strong>
                         {ticket.ticket_type === 'incident' && (
-                          <span className="ticket-badge tone-info">Incident</span>
+                          <Badge tone="info" className="ticket-badge">
+                            Incident
+                          </Badge>
                         )}
                         {ticket.request_kind === 'inventory' && <small>Equipment request</small>}
                         <small>
@@ -311,20 +319,20 @@ export default async function TicketsPage({
           eyebrow={viewer.organizationName}
           description={currentView.description}
           actions={
-            <Link className="button button-primary" href="/app/tickets/new">
+            <Link className={buttonVariants({ variant: 'primary' })} href="/app/tickets/new">
               New ticket
             </Link>
           }
         />
         {filters.error && (
-          <div className="alert alert-error page-alert" role="alert">
+          <Alert tone="error" className="page-alert" role="alert">
             {filters.error}
-          </div>
+          </Alert>
         )}
         {filters.success && (
-          <div className="alert alert-success page-alert" role="status">
+          <Alert tone="success" className="page-alert" role="status">
             {filters.success}
-          </div>
+          </Alert>
         )}
         <section className="ticket-queue-panel" aria-labelledby="ticket-queue-heading">
           <header className="ticket-queue-heading">
@@ -363,8 +371,7 @@ export default async function TicketsPage({
               <input type="hidden" name="view" value={view} />
               <label className="ticket-queue-search">
                 Search tickets
-                <input
-                  className="input"
+                <Input
                   name="q"
                   defaultValue={search}
                   type="search"
@@ -373,11 +380,14 @@ export default async function TicketsPage({
                   placeholder="Search by subject, person or #ticket number…"
                 />
               </label>
-              <button className="button button-secondary" type="submit">
+              <Button variant="secondary" type="submit">
                 Search
-              </button>
+              </Button>
               {(appliedFilters.length > 0 || sort !== 'updated') && (
-                <Link href={clearHref} className="button button-quiet queue-clear">
+                <Link
+                  href={clearHref}
+                  className={buttonVariants({ variant: 'quiet', className: 'queue-clear' })}
+                >
                   Clear filters
                 </Link>
               )}
@@ -391,50 +401,50 @@ export default async function TicketsPage({
                 <div className="queue-filter-fields">
                   <label>
                     Request type
-                    <select className="input" name="kind" defaultValue={filters.kind ?? ''}>
+                    <NativeSelect name="kind" defaultValue={filters.kind ?? ''}>
                       <option value="">All requests</option>
                       <option value="inventory">Equipment requests</option>
-                    </select>
+                    </NativeSelect>
                   </label>
                   <label>
                     Status
-                    <select className="input" name="status" defaultValue={filters.status ?? ''}>
+                    <NativeSelect name="status" defaultValue={filters.status ?? ''}>
                       <option value="">Any status</option>
                       {Object.entries(ticketStatuses).map(([value, p]) => (
                         <option key={value} value={value}>
                           {p.label}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </label>
                   <label>
                     Ticket type
-                    <select className="input" name="type" defaultValue={filters.type ?? ''}>
+                    <NativeSelect name="type" defaultValue={filters.type ?? ''}>
                       <option value="">All ticket types</option>
                       <option value="support">Non-incident tickets</option>
                       <option value="incident">Incidents</option>
-                    </select>
+                    </NativeSelect>
                   </label>
                   <label>
                     Priority
-                    <select className="input" name="priority" defaultValue={filters.priority ?? ''}>
+                    <NativeSelect name="priority" defaultValue={filters.priority ?? ''}>
                       <option value="">Any priority</option>
                       {Object.entries(ticketPriorities).map(([value, p]) => (
                         <option key={value} value={value}>
                           {p.label}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </label>
                   <label>
                     Sort by
-                    <select className="input" name="sort" defaultValue={sort}>
+                    <NativeSelect name="sort" defaultValue={sort}>
                       {Object.entries(sortOptions).map(([value, label]) => (
                         <option key={value} value={value}>
                           {label}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </label>
                   <LookupSelect
                     key={filters.team ?? ''}
@@ -449,7 +459,7 @@ export default async function TicketsPage({
                   />
                   <label>
                     Tag
-                    <select className="input" name="tag" defaultValue={tag ?? ''}>
+                    <NativeSelect name="tag" defaultValue={tag ?? ''}>
                       <option value="">Any tag</option>
                       {tag && !tagOptions.includes(tag) && <option value={tag}>{tag}</option>}
                       {tagOptions.map((option) => (
@@ -457,20 +467,14 @@ export default async function TicketsPage({
                           {option}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </label>
                   <label className="queue-check">
-                    <input
-                      type="checkbox"
-                      name="overdue"
-                      value="1"
-                      defaultChecked={filters.overdue === '1'}
-                    />{' '}
+                    <Checkbox name="overdue" value="1" defaultChecked={filters.overdue === '1'} />{' '}
                     Manual date overdue
                   </label>
                   <label className="queue-check">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       name="sla"
                       value="breached"
                       defaultChecked={filters.sla === 'breached'}
@@ -478,9 +482,9 @@ export default async function TicketsPage({
                     SLA breached
                   </label>
                 </div>
-                <button className="button button-secondary ticket-queue-apply" type="submit">
+                <Button variant="secondary" className="ticket-queue-apply" type="submit">
                   Apply filters
-                </button>
+                </Button>
               </details>
             </LiveSearchForm>
             <p id="ticket-search-hint" className="sr-only">
@@ -508,12 +512,12 @@ export default async function TicketsPage({
           </div>
           {error ? (
             <div className="ticket-queue-feedback">
-              <div className="alert alert-error" role="alert">
+              <Alert tone="error" role="alert">
                 Tickets could not be loaded.
-                <Link className="button button-secondary" href={pageHref(page)}>
+                <Link className={buttonVariants({ variant: 'secondary' })} href={pageHref(page)}>
                   Try again
                 </Link>
-              </div>
+              </Alert>
             </div>
           ) : (
             <SlaClock initialNow={renderedAt}>
@@ -539,61 +543,64 @@ export default async function TicketsPage({
                     <strong>Bulk actions</strong>
                     <label>
                       Status
-                      <select className="input" name="status" defaultValue="">
+                      <NativeSelect name="status" defaultValue="">
                         <option value="">Choose status</option>
                         {Object.entries(ticketStatuses).map(([value, p]) => (
                           <option key={value} value={value}>
                             {p.label}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                     </label>
-                    <button
-                      className="button button-secondary button-small"
+                    <Button
+                      variant="secondary"
+                      size="small"
                       type="submit"
                       name="intent"
                       value="status"
                     >
                       Change status
-                    </button>
+                    </Button>
                     <label>
                       Priority
-                      <select className="input" name="priority" defaultValue="">
+                      <NativeSelect name="priority" defaultValue="">
                         <option value="">Choose priority</option>
                         {Object.entries(ticketPriorities).map(([value, p]) => (
                           <option key={value} value={value}>
                             {p.label}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                     </label>
-                    <button
-                      className="button button-secondary button-small"
+                    <Button
+                      variant="secondary"
+                      size="small"
                       type="submit"
                       name="intent"
                       value="priority"
                     >
                       Change priority
-                    </button>
+                    </Button>
                     <LookupSelect
                       resource="technicians"
                       name="assignee"
                       label="Technician"
                       emptyLabel="Unassigned"
                     />
-                    <button
-                      className="button button-secondary button-small"
+                    <Button
+                      variant="secondary"
+                      size="small"
                       type="submit"
                       name="intent"
                       value="assignee"
                     >
                       Assign
-                    </button>
+                    </Button>
                   </div>
                 </BulkActions>
                 {tickets?.length ? (
-                  <div className="table-region" role="region" aria-label="Tickets" tabIndex={0}>
-                    <table className="table ticket-table responsive-table">
+                  <TableRegion role="region" aria-label="Tickets" tabIndex={0}>
+                    <Table className="ticket-table responsive-table">
                       <thead>
                         <tr>
                           <th scope="col">
@@ -611,9 +618,8 @@ export default async function TicketsPage({
                         {tickets.map((ticket) => (
                           <tr key={ticket.id}>
                             <td data-label="Select">
-                              <input
+                              <Checkbox
                                 className="queue-row-check"
-                                type="checkbox"
                                 name="ticketIds"
                                 value={ticket.id}
                                 aria-label={`Select ticket ${ticket.ticket_number}`}
@@ -629,7 +635,9 @@ export default async function TicketsPage({
                                 <span className="ticket-subject-line">
                                   <strong>{ticket.title}</strong>
                                   {ticket.ticket_type === 'incident' && (
-                                    <span className="ticket-badge tone-info">Incident</span>
+                                    <Badge tone="info" className="ticket-badge">
+                                      Incident
+                                    </Badge>
                                   )}
                                   {ticket.request_kind === 'inventory' && (
                                     <small>Inventory request</small>
@@ -672,10 +680,10 @@ export default async function TicketsPage({
                           </tr>
                         ))}
                       </tbody>
-                    </table>
-                  </div>
+                    </Table>
+                  </TableRegion>
                 ) : (
-                  <div className="empty-state ticket-queue-empty">
+                  <EmptyState className="ticket-queue-empty">
                     <span className="empty-icon" aria-hidden="true">
                       <NavigationIcon name="check" className="inline-icon" size={16} />
                     </span>
@@ -705,7 +713,7 @@ export default async function TicketsPage({
                               ? '/app/tickets/new'
                               : '/app/tickets?view=all'
                       }
-                      className="button button-secondary"
+                      className={buttonVariants({ variant: 'secondary' })}
                     >
                       {appliedFilters.length
                         ? 'Clear filters'
@@ -715,7 +723,7 @@ export default async function TicketsPage({
                             ? 'Create a ticket'
                             : 'Show all tickets'}
                     </Link>
-                  </div>
+                  </EmptyState>
                 )}
                 <footer className="ticket-queue-footer">
                   <span className="muted">

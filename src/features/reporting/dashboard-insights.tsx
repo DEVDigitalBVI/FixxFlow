@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { unstable_rethrow } from 'next/navigation';
 
+import { buttonVariants } from '@/components/ui/button';
 import { RetryButton } from '@/components/ui/retry-button';
+import { Table, TableRegion } from '@/components/ui/table';
 import { reportServerError } from '@/lib/server-errors';
 import { createClient } from '@/lib/supabase/server';
 
@@ -46,13 +48,8 @@ export function WorkloadCard({ rows }: { rows: WorkloadRow[] | null }) {
       ) : rows.every((row) => row.open_count === 0) ? (
         <p>No open tickets right now.</p>
       ) : (
-        <div
-          className="table-region"
-          role="region"
-          aria-label="Current technician workload"
-          tabIndex={0}
-        >
-          <table className="table table-policy">
+        <TableRegion role="region" aria-label="Current technician workload" tabIndex={0}>
+          <Table className="table-policy">
             <thead>
               <tr>
                 <th scope="col">Owner</th>
@@ -74,8 +71,8 @@ export function WorkloadCard({ rows }: { rows: WorkloadRow[] | null }) {
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+          </Table>
+        </TableRegion>
       )}
     </section>
   );
@@ -95,7 +92,7 @@ export function DashboardInsights({
           <h2 id="dashboard-insights-title">Workload &amp; response</h2>
           <p>Current assignments and the last 14 days · {report?.timezone ?? 'Workspace time'}</p>
         </div>
-        <Link className="button button-secondary" href="/app/reports">
+        <Link className={buttonVariants({ variant: 'secondary' })} href="/app/reports">
           View reports
         </Link>
       </header>

@@ -4,6 +4,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { PageHeader } from '@/components/ui/page-header';
 import { SubmissionKey } from '@/components/ui/submission-key';
@@ -145,10 +149,10 @@ export default async function PeoplePage({ searchParams }: Props) {
         actions={
           canManage ? (
             <>
-              <Link className="button button-secondary" href="/app/people/import">
+              <Link className={buttonVariants({ variant: 'secondary' })} href="/app/people/import">
                 Invite from CSV
               </Link>
-              <Link className="button button-primary" href={inviteHref}>
+              <Link className={buttonVariants({ variant: 'primary' })} href={inviteHref}>
                 Invite member
               </Link>
             </>
@@ -156,14 +160,14 @@ export default async function PeoplePage({ searchParams }: Props) {
         }
       />
       {message.error && (
-        <div className="alert alert-error" role="alert">
+        <Alert tone="error" role="alert">
           {message.error}
-        </div>
+        </Alert>
       )}
       {message.success && (
-        <div className="alert alert-success" role="status">
+        <Alert tone="success" role="status">
           {message.success}
-        </div>
+        </Alert>
       )}
       {canManage && message.invite === '1' && (
         <section
@@ -182,9 +186,8 @@ export default async function PeoplePage({ searchParams }: Props) {
             <SubmissionKey value={randomUUID()} />
             <div className="field">
               <label htmlFor="invite-name">Full name</label>
-              <input
+              <Input
                 id="invite-name"
-                className="input"
                 name="displayName"
                 autoComplete="name"
                 autoFocus
@@ -194,9 +197,8 @@ export default async function PeoplePage({ searchParams }: Props) {
             </div>
             <div className="field">
               <label htmlFor="invite-email">Work email</label>
-              <input
+              <Input
                 id="invite-email"
-                className="input"
                 name="email"
                 type="email"
                 autoComplete="email"
@@ -206,9 +208,8 @@ export default async function PeoplePage({ searchParams }: Props) {
             </div>
             <div className="field">
               <label htmlFor="invite-role">Workspace role</label>
-              <select
+              <NativeSelect
                 id="invite-role"
-                className="input"
                 name="role"
                 defaultValue={technicians ? 'technician' : 'end_user'}
               >
@@ -217,13 +218,13 @@ export default async function PeoplePage({ searchParams }: Props) {
                     {item.label}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             <div className="people-invite-actions">
-              <SubmitButton className="button button-primary" pendingLabel="Sending invitation…">
+              <SubmitButton variant="primary" pendingLabel="Sending invitation…">
                 Send invitation
               </SubmitButton>
-              <Link className="button button-quiet" href={directoryHref}>
+              <Link className={buttonVariants({ variant: 'quiet' })} href={directoryHref}>
                 Cancel
               </Link>
             </div>
@@ -270,9 +271,8 @@ export default async function PeoplePage({ searchParams }: Props) {
             {technicians && <input type="hidden" name="view" value="technicians" />}
             <div className="field">
               <label htmlFor="people-search">Search name, email or job title</label>
-              <input
+              <Input
                 type="search"
-                className="input"
                 id="people-search"
                 name="q"
                 defaultValue={search}
@@ -281,12 +281,12 @@ export default async function PeoplePage({ searchParams }: Props) {
                 aria-describedby="people-search-hint"
               />
             </div>
-            <button type="submit" className="button button-secondary">
+            <Button type="submit" variant="secondary">
               Search
-            </button>
+            </Button>
             {search && (
               <Link
-                className="button button-quiet"
+                className={buttonVariants({ variant: 'quiet' })}
                 href={technicians ? '/app/people?view=technicians' : '/app/people'}
               >
                 Clear search
@@ -342,7 +342,7 @@ export default async function PeoplePage({ searchParams }: Props) {
             })}
           </ul>
         ) : (
-          <div className="empty-state people-empty">
+          <EmptyState className="people-empty">
             <h3>
               {search
                 ? 'No people match your search'
@@ -360,7 +360,7 @@ export default async function PeoplePage({ searchParams }: Props) {
                   : 'Workspace members and their access will appear here.'}
             </p>
             <Link
-              className="button button-secondary"
+              className={buttonVariants({ variant: 'secondary' })}
               href={
                 search
                   ? technicians
@@ -377,7 +377,7 @@ export default async function PeoplePage({ searchParams }: Props) {
                   ? 'Invite your first member'
                   : 'View all people'}
             </Link>
-          </div>
+          </EmptyState>
         )}
         <footer className="people-directory-footer">
           <span className="muted">
@@ -388,13 +388,19 @@ export default async function PeoplePage({ searchParams }: Props) {
           {(page > 1 || page * 25 < (count ?? 0)) && (
             <nav className="people-pagination" aria-label="People pages">
               {page > 1 && (
-                <Link className="button button-secondary" href={pageHref(page - 1)}>
+                <Link
+                  className={buttonVariants({ variant: 'secondary' })}
+                  href={pageHref(page - 1)}
+                >
                   Previous
                 </Link>
               )}
               <span>Page {page}</span>
               {page * 25 < (count ?? 0) && (
-                <Link className="button button-secondary" href={pageHref(page + 1)}>
+                <Link
+                  className={buttonVariants({ variant: 'secondary' })}
+                  href={pageHref(page + 1)}
+                >
                   Next
                 </Link>
               )}

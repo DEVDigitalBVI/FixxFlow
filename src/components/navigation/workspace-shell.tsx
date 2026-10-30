@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Button } from '@/components/ui/button';
 
 /** Keeps server-rendered identity and account controls outside the client data boundary. */
 export function WorkspaceShell({
@@ -40,7 +41,9 @@ export function WorkspaceShell({
           <div className="sidebar-identity">
             <div className="sidebar-brand">{brand}</div>
           </div>
-          <button
+          <Button
+            variant="quiet"
+            size="icon"
             className="sidebar-collapse"
             type="button"
             aria-label={
@@ -58,7 +61,7 @@ export function WorkspaceShell({
             }
           >
             <NavigationIcon name="chevronLeft" />
-          </button>
+          </Button>
         </div>
         {navigation}
         {account}

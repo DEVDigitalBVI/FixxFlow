@@ -3,6 +3,8 @@
 import { useActionState, useEffect, useRef, useState, type ChangeEvent } from 'react';
 
 import { saveCustomer } from '@/app/platform/actions';
+import { Alert } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { TimezoneSelect } from '@/features/timezones/select';
 import type { SaveState } from '@/lib/action-result';
@@ -29,19 +31,18 @@ export function CustomerForm({ customer }: { customer?: { id: string; name: stri
   return (
     <form action={action} className="stack">
       {state.error && (
-        <p ref={errorRef} tabIndex={-1} role="alert" className="alert alert-error">
+        <Alert ref={errorRef} tabIndex={-1} role="alert" as="p" tone="error">
           {state.error}
-        </p>
+        </Alert>
       )}
       {state.success && (
-        <p role="status" className="alert alert-success">
+        <Alert role="status" as="p" tone="success">
           {state.success}
-        </p>
+        </Alert>
       )}
       <label className="field">
         Organization name *
-        <input
-          className="input"
+        <Input
           name="name"
           required
           minLength={2}
@@ -54,8 +55,7 @@ export function CustomerForm({ customer }: { customer?: { id: string; name: stri
         <>
           <label className="field">
             Workspace address *
-            <input
-              className="input"
+            <Input
               name="slug"
               onChange={change}
               value={draft.slug}
@@ -71,19 +71,11 @@ export function CustomerForm({ customer }: { customer?: { id: string; name: stri
           </p>
           <label className="field">
             Administrator name *
-            <input
-              className="input"
-              name="admin"
-              onChange={change}
-              value={draft.admin}
-              required
-              maxLength={120}
-            />
+            <Input name="admin" onChange={change} value={draft.admin} required maxLength={120} />
           </label>
           <label className="field">
             Administrator email *
-            <input
-              className="input"
+            <Input
               type="email"
               name="email"
               onChange={change}
@@ -100,7 +92,7 @@ export function CustomerForm({ customer }: { customer?: { id: string; name: stri
           </p>
         </>
       )}
-      <SubmitButton className="button button-primary">
+      <SubmitButton variant="primary">
         {customer ? 'Save name' : 'Create organization'}
       </SubmitButton>
     </form>

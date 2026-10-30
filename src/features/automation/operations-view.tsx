@@ -1,6 +1,10 @@
 import Link from 'next/link';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { Table, TableRegion } from '@/components/ui/table';
 import { Timestamp } from '@/features/timezones/provider';
 
 import {
@@ -20,7 +24,7 @@ const seconds = (value: number | null) =>
   value === null ? 'Not observed' : `${Math.max(0, Math.ceil(value))} seconds`;
 export function HealthBadge({ state }: { state: HealthState }) {
   return (
-    <span className="badge">
+    <Badge>
       <NavigationIcon
         name={
           state === 'healthy'
@@ -33,7 +37,7 @@ export function HealthBadge({ state }: { state: HealthState }) {
         size={16}
       />
       {healthLabels[state]}
-    </span>
+    </Badge>
   );
 }
 function Metric({ label, value }: { label: string; value: import('react').ReactNode }) {
@@ -130,24 +134,27 @@ export function OperationsOverviewView({ data }: { data: OperationsOverview }) {
         {!data.executions.total && (
           <p>No executions in this window. Dry runs do not create execution history.</p>
         )}
-        <Link className="button button-secondary" href={`${operationsPath}/history`}>
+        <Link
+          className={buttonVariants({ variant: 'secondary' })}
+          href={`${operationsPath}/history`}
+        >
           View global execution history
         </Link>
       </section>
       <section className="settings-card stack">
         <h2>Delivery queue</h2>
         {!!data.queue.capacityDeferred && (
-          <p className="alert alert-info">
+          <Alert as="p" tone="info">
             Automation processing is delayed because queued work exceeds current safe processing
             capacity. No work has been lost.
-          </p>
+          </Alert>
         )}
         <HealthBadge state={queueHealth(data.processingActive, data.queue, data.now)} />
         {data.queue.truncated && (
-          <p className="alert alert-info">
+          <Alert as="p" tone="info">
             Showing the first 1,000 outstanding records. Counts are lower bounds; work beyond this
             sample is unknown.
-          </p>
+          </Alert>
         )}
         <dl className="automation-operations-metrics">
           <Metric label="Ready / expired lease" value={data.queue.ready} />
@@ -279,13 +286,8 @@ export function OperationsOverviewView({ data }: { data: OperationsOverview }) {
 }
 export function OperationsHistoryTable({ rows }: { rows: OperationsHistoryRow[] }) {
   return (
-    <div
-      className="table-region"
-      role="region"
-      aria-label="Organization automation executions"
-      tabIndex={0}
-    >
-      <table className="table responsive-table">
+    <TableRegion role="region" aria-label="Organization automation executions" tabIndex={0}>
+      <Table className="responsive-table">
         <caption className="sr-only">Immutable automation versions and execution outcomes</caption>
         <thead>
           <tr>
@@ -326,7 +328,7 @@ export function OperationsHistoryTable({ rows }: { rows: OperationsHistoryRow[] 
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+      </Table>
+    </TableRegion>
   );
 }

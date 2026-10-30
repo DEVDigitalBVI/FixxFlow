@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useContext, type MouseEvent } from 'react';
 
+import { buttonVariants } from '@/components/ui/button';
 import { FormPendingContext } from '@/components/ui/form-pending';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 
@@ -27,7 +28,7 @@ export function TicketDraftCancel({ href }: { href: string }) {
   }
   return (
     <Link
-      className="button button-secondary"
+      className={buttonVariants({ variant: 'secondary' })}
       href={href}
       onClick={cancel}
       aria-disabled={pending || undefined}

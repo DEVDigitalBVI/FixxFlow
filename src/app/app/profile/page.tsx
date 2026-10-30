@@ -1,4 +1,8 @@
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { PageHeader } from '@/components/ui/page-header';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { AvatarUpload } from '@/features/identity/avatar-upload';
@@ -37,17 +41,17 @@ export default async function ProfilePage({ searchParams }: Props) {
         title="Your profile"
         eyebrow="Account"
         description="Manage your details and preferences."
-        actions={<OwnerConsoleLink className="button button-secondary" />}
+        actions={<OwnerConsoleLink className={buttonVariants({ variant: 'secondary' })} />}
       />
       {message.error && (
-        <div className="alert alert-error page-alert" role="alert">
+        <Alert tone="error" className="page-alert" role="alert">
           {message.error}
-        </div>
+        </Alert>
       )}
       {message.success && (
-        <div className="alert alert-success page-alert" role="status">
+        <Alert tone="success" className="page-alert" role="status">
           {message.success}
-        </div>
+        </Alert>
       )}
 
       <section className="settings-card profile-card" aria-labelledby="profile-details-heading">
@@ -75,8 +79,7 @@ export default async function ProfilePage({ searchParams }: Props) {
             <div className="form-grid">
               <div className="field">
                 <label htmlFor="displayName">Display name</label>
-                <input
-                  className="input"
+                <Input
                   id="displayName"
                   name="displayName"
                   defaultValue={profile?.display_name ?? viewer.displayName}
@@ -86,27 +89,16 @@ export default async function ProfilePage({ searchParams }: Props) {
               </div>
               <div className="field">
                 <label htmlFor="email">Email</label>
-                <input
-                  className="input"
-                  id="email"
-                  value={profile?.email ?? viewer.email}
-                  disabled
-                />
+                <Input id="email" value={profile?.email ?? viewer.email} disabled />
                 <small className="muted">Managed by your sign-in settings.</small>
               </div>
               <div className="field">
                 <label htmlFor="jobTitle">Job title</label>
-                <input
-                  className="input"
-                  id="jobTitle"
-                  name="jobTitle"
-                  defaultValue={profile?.job_title ?? ''}
-                />
+                <Input id="jobTitle" name="jobTitle" defaultValue={profile?.job_title ?? ''} />
               </div>
               <div className="field">
                 <label htmlFor="phone">Phone</label>
-                <input
-                  className="input"
+                <Input
                   id="phone"
                   name="phone"
                   type="tel"
@@ -135,7 +127,7 @@ export default async function ProfilePage({ searchParams }: Props) {
             </div>
           </details>
           <div className="profile-form-actions">
-            <SubmitButton className="button button-primary" type="submit">
+            <SubmitButton variant="primary" type="submit">
               Save profile
             </SubmitButton>
           </div>
@@ -185,14 +177,14 @@ export default async function ProfilePage({ searchParams }: Props) {
         </div>
         <form action={updateUsagePreference}>
           <label className="usage-choice">
-            <input type="checkbox" name="shareUsage" defaultChecked={viewer.usageSharing} /> Share
-            product usage counts
+            <Checkbox name="shareUsage" defaultChecked={viewer.usageSharing} /> Share product usage
+            counts
           </label>
           <p className="form-note">
             Off by default. You can stop future collection at any time; previously combined counts
             cannot be traced back to you for removal.
           </p>
-          <SubmitButton className="button button-secondary" pendingLabel="Saving preference…">
+          <SubmitButton variant="secondary" pendingLabel="Saving preference…">
             Save usage preference
           </SubmitButton>
         </form>

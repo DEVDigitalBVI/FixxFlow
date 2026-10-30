@@ -7,6 +7,10 @@ import {
   runAutomationTest,
 } from '@/app/app/administration/automations/actions';
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/input';
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 import { Timestamp } from '@/features/timezones/provider';
 
@@ -95,10 +99,10 @@ export function DryRunPanel({
       <h2 id="test-heading" ref={title} tabIndex={-1}>
         Test Automation
       </h2>
-      <p className="alert alert-info">
+      <Alert as="p" tone="info">
         <strong>No changes are made by a test.</strong> Check an unsaved draft against a ticket
         before saving or enabling it.
-      </p>
+      </Alert>
       <form
         className="stack"
         onSubmit={async (event) => {
@@ -149,9 +153,8 @@ export function DryRunPanel({
           />
           <div className="field">
             <label htmlFor="test-context">Test context</label>
-            <select
+            <NativeSelect
               id="test-context"
-              className="input"
               value={kind}
               onChange={(event) => {
                 setKind(event.target.value as DryRunSource['kind']);
@@ -165,14 +168,14 @@ export function DryRunPanel({
               </option>
               <option value="retained_event">Retained ticket event</option>
               <option value="simulated_transition">Simulated status or priority change</option>
-            </select>
+            </NativeSelect>
           </div>
           {kind === 'current_ticket' && (
-            <p className="alert alert-info">
+            <Alert as="p" tone="info">
               {isTemporalTrigger(definition.trigger.type)
                 ? 'Hypothetical threshold evaluation using database time and the current authoritative start or deadline. No threshold event is created.'
                 : 'Uses current values as a hypothetical new ticket. This does not describe what happened when the ticket was originally created.'}
-            </p>
+            </Alert>
           )}
           {kind === 'retained_event' && (
             <div className="stack">
@@ -181,9 +184,8 @@ export function DryRunPanel({
               </p>
               <div className="field">
                 <label htmlFor="test-event">Recorded event</label>
-                <select
+                <NativeSelect
                   id="test-event"
-                  className="input"
                   value={eventId}
                   onChange={(event) => setEventId(event.target.value)}
                   required
@@ -195,7 +197,7 @@ export function DryRunPanel({
                       revision {item.entity_version}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
               {(!events.length || eventsPending) && (
                 <p role="status">
@@ -209,21 +211,21 @@ export function DryRunPanel({
               )}
               <div className="automation-inline">
                 {eventsError && (
-                  <button
+                  <Button
                     type="button"
-                    className="button button-secondary"
+                    variant="secondary"
                     onClick={() => {
                       setEventsPending(true);
                       setRefresh((value) => value + 1);
                     }}
                   >
                     Retry events
-                  </button>
+                  </Button>
                 )}
                 {page > 1 && (
-                  <button
+                  <Button
                     type="button"
-                    className="button button-quiet"
+                    variant="quiet"
                     onClick={() => {
                       setEventsPending(true);
                       setPage(page - 1);
@@ -231,12 +233,12 @@ export function DryRunPanel({
                     }}
                   >
                     Previous events
-                  </button>
+                  </Button>
                 )}
                 {hasNext && (
-                  <button
+                  <Button
                     type="button"
-                    className="button button-quiet"
+                    variant="quiet"
                     onClick={() => {
                       setEventsPending(true);
                       setPage(page + 1);
@@ -244,7 +246,7 @@ export function DryRunPanel({
                     }}
                   >
                     More events
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>
@@ -252,21 +254,20 @@ export function DryRunPanel({
           {kind === 'simulated_transition' && (
             <div className="stack">
               {isTemporalTrigger(definition.trigger.type) && (
-                <p className="alert alert-info">
+                <Alert as="p" tone="info">
                   A simulated status or priority change cannot establish a time episode. Choose
                   current ticket context or a retained threshold event.
-                </p>
+                </Alert>
               )}
-              <p className="alert alert-info">
+              <Alert as="p" tone="info">
                 <strong>Simulated.</strong> Current values are the starting point. Choose at least
                 one hypothetical new value; no transition will occur.
-              </p>
+              </Alert>
               <div className="automation-action-grid">
                 <div className="field">
                   <label htmlFor="simulate-status">Simulated status</label>
-                  <select
+                  <NativeSelect
                     id="simulate-status"
-                    className="input"
                     value={status}
                     onChange={(event) => setStatus(event.target.value)}
                   >
@@ -276,13 +277,12 @@ export function DryRunPanel({
                         {item.label}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
                 <div className="field">
                   <label htmlFor="simulate-priority">Simulated priority</label>
-                  <select
+                  <NativeSelect
                     id="simulate-priority"
-                    className="input"
                     value={priority}
                     onChange={(event) => setPriority(event.target.value)}
                   >
@@ -292,14 +292,14 @@ export function DryRunPanel({
                         {item.label}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
               </div>
             </div>
           )}
-          <button className="button button-secondary" type="submit" disabled={busy || !ticketId}>
+          <Button variant="secondary" type="submit" disabled={busy || !ticketId}>
             {busy ? 'Testing…' : 'Test Automation'}
-          </button>
+          </Button>
         </fieldset>
       </form>
       {(result || testError) && (
@@ -310,27 +310,27 @@ export function DryRunPanel({
           aria-label="Automation test result"
         >
           <h3>Test result</h3>
-          <p className="alert alert-info">
+          <Alert as="p" tone="info">
             <strong>No changes were made.</strong>
-          </p>
+          </Alert>
           {changed && (
-            <p className="alert alert-info">
+            <Alert as="p" tone="info">
               The draft or test context changed after this test. Test again for an up-to-date
               result.
-            </p>
+            </Alert>
           )}
           {testError && (
-            <p className="alert alert-error" role="alert">
+            <Alert as="p" tone="error" role="alert">
               {testError}
-            </p>
+            </Alert>
           )}
           {result && !result.ok && (
-            <p className="alert alert-error">
+            <Alert as="p" tone="error">
               {result.error.message}{' '}
               {result.error.issues
                 ?.map((issue) => presentValidationIssue(definition, issue).message)
                 .join(' ')}
-            </p>
+            </Alert>
           )}
           {result?.ok && <DryRunResultView result={result.value} labels={displayLabels} />}
         </div>
@@ -352,21 +352,21 @@ export function DryRunResultView({
         {result.context.evaluatedRevision} · current revision {result.context.currentRevision}
       </p>
       {result.context.source === 'simulated_transition' && (
-        <p className="alert alert-info">
+        <Alert as="p" tone="info">
           <strong>Simulated values.</strong> This transition did not occur.
-        </p>
+        </Alert>
       )}
       {result.context.source === 'retained_event' && (
-        <p className="badge">Retained historical event</p>
+        <Badge as="p">Retained historical event</Badge>
       )}
       {result.context.source === 'current_ticket' && !result.temporal && (
         <p className="muted">Hypothetical creation using current ticket values.</p>
       )}
       {result.context.differsFromCurrent && (
-        <p className="alert alert-info">
+        <Alert as="p" tone="info">
           The ticket has changed since this recorded event. Historical matching does not authorize
           changes to the current ticket.
-        </p>
+        </Alert>
       )}
       <h4>Trigger</h4>
       <p>
@@ -382,11 +382,11 @@ export function DryRunResultView({
       {result.temporal && (
         <section className="stack" aria-label="Temporal test context">
           <h4>Time context</h4>
-          <p className="badge">
+          <Badge as="p">
             {result.context.source === 'retained_event'
               ? 'Retained threshold event'
               : 'Hypothetical temporal evaluation'}
-          </p>
+          </Badge>
           <p>
             {result.temporal.met ? (
               <>
@@ -506,9 +506,9 @@ export function DryRunResultView({
         </section>
       )}
       {!result.currentReferencesValid && (
-        <p className="alert alert-info">
+        <Alert as="p" tone="info">
           One or more referenced people, teams or categories are unavailable. Review the selections.
-        </p>
+        </Alert>
       )}
       <p>
         <strong>

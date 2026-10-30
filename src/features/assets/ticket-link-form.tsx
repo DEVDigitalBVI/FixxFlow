@@ -22,7 +22,8 @@ export function AssetLinkForm({
       <input type="hidden" name="assetId" value={asset.id} />
       <input type="hidden" name="mode" value={link ? 'link' : 'unlink'} />
       <SubmitButton
-        className="button button-secondary button-small"
+        variant="secondary"
+        size="small"
         pendingLabel="Saving…"
         aria-label={`${link ? 'Link' : 'Unlink'} asset ${asset.tag}`}
       >

@@ -1,3 +1,5 @@
+import { Alert } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 import { updatePassword } from '../../actions';
@@ -11,14 +13,13 @@ export default async function UpdatePasswordPage({ searchParams }: Props) {
       <p className="auth-intro">Use at least 8 characters and avoid passwords used elsewhere.</p>
       <form action={updatePassword} className="stack">
         {message.error && (
-          <div className="alert alert-error" role="alert">
+          <Alert tone="error" role="alert">
             {message.error}
-          </div>
+          </Alert>
         )}
         <div className="field">
           <label htmlFor="password">New password</label>
-          <input
-            className="input"
+          <Input
             id="password"
             name="password"
             type="password"
@@ -29,8 +30,7 @@ export default async function UpdatePasswordPage({ searchParams }: Props) {
         </div>
         <div className="field">
           <label htmlFor="passwordConfirmation">Confirm new password</label>
-          <input
-            className="input"
+          <Input
             id="passwordConfirmation"
             name="passwordConfirmation"
             type="password"
@@ -39,7 +39,7 @@ export default async function UpdatePasswordPage({ searchParams }: Props) {
             required
           />
         </div>
-        <SubmitButton className="button button-primary" pendingLabel="Updating password…">
+        <SubmitButton variant="primary" pendingLabel="Updating password…">
           Update password
         </SubmitButton>
       </form>

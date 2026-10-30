@@ -3,6 +3,10 @@
 import { useRef, useState } from 'react';
 
 import { sendInvitationBatch } from '@/app/app/people/import/actions';
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Table } from '@/components/ui/table';
 import { useUnsavedChanges } from '@/components/ui/unsaved-changes';
 
 import type { BulkInviteRow } from './bulk-invite-model';
@@ -94,17 +98,16 @@ export function BulkInvite() {
     <div className="stack">
       <div ref={feedback} tabIndex={-1}>
         {error && (
-          <p className="alert alert-error" role="alert">
+          <Alert as="p" tone="error" role="alert">
             {error}
-          </p>
+          </Alert>
         )}
       </div>
       {!rows.length && (
         <section className="settings-card stack">
           <label className="field">
             CSV file
-            <input
-              className="input"
+            <Input
               type="file"
               accept=".csv,text/csv"
               disabled={busy || reading}
@@ -116,7 +119,7 @@ export function BulkInvite() {
             people.
           </p>
           <a
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             download="fixxflow-invitations.csv"
             href="data:text/csv;charset=utf-8,Email%2CName%2CRole%0Ajordan%40example.com%2CJordan%20Smith%2CEmployee%0A"
           >
@@ -135,7 +138,7 @@ export function BulkInvite() {
               : ''}
           </p>
           <div className="table-scroll">
-            <table className="table responsive-table table-policy">
+            <Table className="responsive-table table-policy">
               <caption>Review invitations before sending</caption>
               <thead>
                 <tr>
@@ -159,8 +162,8 @@ export function BulkInvite() {
                             ? 'Skipped'
                             : 'Needs retry')}
                       {row.status === 'failed' && !busy && (
-                        <button
-                          className="button button-secondary"
+                        <Button
+                          variant="secondary"
                           type="button"
                           onClick={() =>
                             setRows((previous) =>
@@ -173,43 +176,39 @@ export function BulkInvite() {
                           }
                         >
                           Skip {row.displayName}
-                        </button>
+                        </Button>
                       )}
                     </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </Table>
           </div>
           <div className="page-header-actions">
-            <button
-              className="button button-primary"
-              disabled={busy || pending === 0}
-              onClick={() => void send()}
-            >
+            <Button variant="primary" disabled={busy || pending === 0} onClick={() => void send()}>
               {busy
                 ? 'Sending invitations…'
                 : `Send ${pending} remaining invitation${pending === 1 ? '' : 's'}`}
-            </button>
+            </Button>
             {busy ? (
-              <button
-                className="button button-secondary"
+              <Button
+                variant="secondary"
                 onClick={() => {
                   stop.current = true;
                 }}
               >
                 Stop after this group
-              </button>
+              </Button>
             ) : (
-              <button
-                className="button button-secondary"
+              <Button
+                variant="secondary"
                 onClick={() => {
                   setRows([]);
                   setError('');
                 }}
               >
                 Choose another CSV
-              </button>
+              </Button>
             )}
           </div>
           <p className="muted">

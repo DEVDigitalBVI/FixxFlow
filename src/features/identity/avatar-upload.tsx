@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
+import { buttonVariants } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { uploadAndRegister } from '@/lib/uploads';
 
@@ -81,7 +82,7 @@ export function AvatarUpload({
         }}
         disabled={pending}
       />
-      <label className="button button-secondary" htmlFor="avatar-file">
+      <label className={buttonVariants({ variant: 'secondary' })} htmlFor="avatar-file">
         {pending ? 'Uploading…' : 'Choose photo'}
       </label>
       {message && <span role="status">{message}</span>}

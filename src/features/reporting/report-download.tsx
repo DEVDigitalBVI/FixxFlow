@@ -2,6 +2,10 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/input';
+
 import { fetchReportDownloadUrl } from './download';
 import { exportFormats, isExportFormat } from './export-model';
 
@@ -84,8 +88,7 @@ export function ReportDownload({
         ))}
         <div className="field">
           <label htmlFor={formatId}>File format</label>
-          <select
-            className="input"
+          <NativeSelect
             id={formatId}
             name="format"
             defaultValue="xlsx"
@@ -97,11 +100,11 @@ export function ReportDownload({
                 {label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
-        <button className="button button-primary" type="submit" disabled={pending}>
+        <Button variant="primary" type="submit" disabled={pending}>
           {pending ? pendingLabel : label}
-        </button>
+        </Button>
       </form>
       <p className="muted" id={hintId}>
         {hint}
@@ -110,12 +113,12 @@ export function ReportDownload({
         {status}
       </p>
       {error && (
-        <div className="alert alert-error" role="alert" tabIndex={-1} ref={feedback}>
+        <Alert tone="error" role="alert" tabIndex={-1} ref={feedback}>
           <p>{error}</p>
-          <a className="button button-secondary" href={reload.href}>
+          <a className={buttonVariants({ variant: 'secondary' })} href={reload.href}>
             {reload.label}
           </a>
-        </div>
+        </Alert>
       )}
     </div>
   );

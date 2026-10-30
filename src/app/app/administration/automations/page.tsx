@@ -1,6 +1,10 @@
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
+import { Table, TableRegion } from '@/components/ui/table';
 import { AutomationListEmptyState } from '@/features/automation/list-empty-state';
 import { AutomationHeader, AutomationPages } from '@/features/automation/page-parts';
 import { RuleActions } from '@/features/automation/rule-actions';
@@ -47,13 +51,19 @@ export default async function AutomationsPage({
         back="/app/administration"
         actions={
           <>
-            <Link href={`${automationPath}/import`} className="button button-secondary">
+            <Link
+              href={`${automationPath}/import`}
+              className={buttonVariants({ variant: 'secondary' })}
+            >
               Import Automation
             </Link>
-            <Link href={`${automationPath}/operations`} className="button button-secondary">
+            <Link
+              href={`${automationPath}/operations`}
+              className={buttonVariants({ variant: 'secondary' })}
+            >
               Operations
             </Link>
-            <Link href={`${automationPath}/new`} className="button button-primary">
+            <Link href={`${automationPath}/new`} className={buttonVariants({ variant: 'primary' })}>
               <span aria-hidden="true">＋</span>Create Automation
             </Link>
           </>
@@ -70,10 +80,13 @@ export default async function AutomationsPage({
             </p>
           </div>
           <div className="automation-inline">
-            <span className={`badge ${data.processingActive ? 'badge-active' : 'badge-inactive'}`}>
+            <Badge tone={data.processingActive ? 'success' : 'muted'}>
               {data.processingActive ? 'Processing active' : 'Processing off'}
-            </span>
-            <Link className="button button-secondary" href={`${automationPath}/operations/history`}>
+            </Badge>
+            <Link
+              className={buttonVariants({ variant: 'secondary' })}
+              href={`${automationPath}/operations/history`}
+            >
               Execution history
             </Link>
           </div>
@@ -87,45 +100,39 @@ export default async function AutomationsPage({
           >
             <div className="field">
               <label htmlFor="automation-search">Search by name</label>
-              <input
+              <Input
                 id="automation-search"
                 name="q"
                 type="search"
-                className="input"
                 placeholder="Find an automation…"
                 defaultValue={query}
               />
             </div>
             <div className="field">
               <label htmlFor="automation-state">Status</label>
-              <select id="automation-state" name="state" className="input" defaultValue={state}>
+              <NativeSelect id="automation-state" name="state" defaultValue={state}>
                 <option value="all">All current rules</option>
                 <option value="enabled">Enabled</option>
                 <option value="disabled">Disabled</option>
                 <option value="archived">Archived</option>
-              </select>
+              </NativeSelect>
             </div>
             <div className="field">
               <label htmlFor="automation-filter-trigger">Trigger</label>
-              <select
-                id="automation-filter-trigger"
-                name="trigger"
-                className="input"
-                defaultValue={trigger}
-              >
+              <NativeSelect id="automation-filter-trigger" name="trigger" defaultValue={trigger}>
                 <option value="">All triggers</option>
                 {triggerOptions.map((item) => (
                   <option value={item.key} key={item.key}>
                     {item.label}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
-            <button className="button button-secondary" type="submit">
+            <Button variant="secondary" type="submit">
               Search
-            </button>
+            </Button>
             {filtered && (
-              <Link className="button button-quiet" href={automationPath}>
+              <Link className={buttonVariants({ variant: 'quiet' })} href={automationPath}>
                 Clear filters
               </Link>
             )}
@@ -138,13 +145,13 @@ export default async function AutomationsPage({
             description={emptyDescription}
           />
         ) : (
-          <div
-            className="table-region automation-list-region"
+          <TableRegion
+            className="automation-list-region"
             role="region"
             aria-label="Automation rules"
             tabIndex={0}
           >
-            <table className="table responsive-table automation-list-table">
+            <Table className="responsive-table automation-list-table">
               <caption className="sr-only">Automation rules and recent activity</caption>
               <thead>
                 <tr>
@@ -165,11 +172,9 @@ export default async function AutomationsPage({
                       </div>
                     </th>
                     <td data-label="Status">
-                      <span
-                        className={`badge ${!row.archived_at && row.enabled ? 'badge-active' : 'badge-inactive'}`}
-                      >
+                      <Badge tone={!row.archived_at && row.enabled ? 'success' : 'muted'}>
                         {row.archived_at ? 'Archived' : row.enabled ? 'Enabled' : 'Disabled'}
-                      </span>
+                      </Badge>
                     </td>
                     <td data-label="Activity">
                       <div className="automation-list-activity">
@@ -201,14 +206,14 @@ export default async function AutomationsPage({
                     <td data-label="Actions" className="automation-list-actions">
                       <div className="automation-inline">
                         <Link
-                          className="button button-secondary"
+                          className={buttonVariants({ variant: 'secondary' })}
                           href={`${automationPath}/${row.id}`}
                         >
                           {row.archived_at ? 'View' : 'Edit'}
                           <span className="sr-only"> {row.name}</span>
                         </Link>
                         <Link
-                          className="button button-secondary"
+                          className={buttonVariants({ variant: 'secondary' })}
                           href={`${automationPath}/${row.id}/history`}
                         >
                           History<span className="sr-only"> for {row.name}</span>
@@ -216,7 +221,7 @@ export default async function AutomationsPage({
                       </div>
                       {!row.archived_at && (
                         <details className="automation-list-manage">
-                          <summary className="button button-quiet">
+                          <summary className={buttonVariants({ variant: 'quiet' })}>
                             Manage<span className="sr-only"> {row.name}</span>
                             <span aria-hidden="true">⌄</span>
                           </summary>
@@ -233,8 +238,8 @@ export default async function AutomationsPage({
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+            </Table>
+          </TableRegion>
         )}
         {(data.rows.length > 0 || page > 1) && (
           <footer className="automation-collection-footer">

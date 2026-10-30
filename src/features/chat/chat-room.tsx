@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { Button, buttonVariants } from '@/components/ui/button';
+import { NativeSelect, Textarea } from '@/components/ui/input';
 import { useUnsavedChanges } from '@/components/ui/unsaved-changes';
 import { HISTORY_PAGE_SIZE } from '@/features/conversations/history';
 import {
@@ -593,9 +595,8 @@ export function ChatRoom({
                 <label className="sr-only" htmlFor="chat-kind">
                   Send as
                 </label>
-                <select
+                <NativeSelect
                   id="chat-kind"
-                  className="input"
                   value={kind}
                   disabled={sending}
                   onChange={(event) => {
@@ -605,14 +606,14 @@ export function ChatRoom({
                 >
                   <option value="message">Reply to employee</option>
                   <option value="internal_note">Internal note · IT only</option>
-                </select>
+                </NativeSelect>
               </>
             )}
           </div>
-          <textarea
+          <Textarea
             ref={draftField}
             id="chat-draft"
-            className="input textarea"
+            fieldSize="tall"
             value={draft}
             aria-describedby="chat-audience"
             onChange={(event) => announceTyping(event.target.value)}
@@ -651,7 +652,7 @@ export function ChatRoom({
               />
             )}
             <label
-              className="button button-secondary chat-file-button"
+              className={buttonVariants({ variant: 'secondary', className: 'chat-file-button' })}
               data-disabled={noteMode || undefined}
             >
               <input
@@ -679,13 +680,13 @@ export function ChatRoom({
                 visual or spoken content in your message.
               </p>
             </details>
-            <button className="button button-primary" disabled={sending || !draft.trim()}>
+            <Button variant="primary" disabled={sending || !draft.trim()}>
               {sending
                 ? 'Sending…'
                 : kind === 'internal_note' && isWorker
                   ? 'Add internal note'
                   : 'Send'}
-            </button>
+            </Button>
           </div>
         </form>
       ) : (
@@ -699,13 +700,14 @@ export function ChatRoom({
         </p>
       )}
       {failedUpload && !uploading && open && !noteMode && (
-        <button
-          className="button button-secondary chat-upload-retry"
+        <Button
+          variant="secondary"
+          className="chat-upload-retry"
           type="button"
           onClick={() => void upload(failedUpload)}
         >
           Retry upload: {failedUpload.name}
-        </button>
+        </Button>
       )}
       {readThrough && (
         <ChatReadUpdates

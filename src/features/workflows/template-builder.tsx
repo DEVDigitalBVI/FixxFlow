@@ -3,6 +3,9 @@
 import { useEffect, useId, useRef, useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input, NativeSelect, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { confirmDiscardChanges, useUnsavedChanges } from '@/components/ui/unsaved-changes';
 
@@ -102,9 +105,8 @@ export function TemplateBuilder({
         </div>
         <label className="field" htmlFor={`${id}-name`}>
           Procedure name *
-          <input
+          <Input
             placeholder="e.g. Restore office Wi-Fi"
-            className="input"
             id={`${id}-name`}
             required
             minLength={3}
@@ -115,8 +117,7 @@ export function TemplateBuilder({
         </label>
         <label className="field" htmlFor={`${id}-kind`}>
           Use this procedure for *
-          <select
-            className="input"
+          <NativeSelect
             id={`${id}-kind`}
             aria-describedby={`${id}-kind-help`}
             value={draft.kind}
@@ -129,15 +130,14 @@ export function TemplateBuilder({
                 {label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
         <p className="muted" id={`${id}-kind-help`}>
           {workflowKindDescriptions[draft.kind]}
         </p>
         <label className="field" htmlFor={`${id}-description`}>
           When should staff use this? (optional)
-          <textarea
-            className="input"
+          <Textarea
             id={`${id}-description`}
             placeholder="e.g. Use when several people in an office cannot connect to Wi-Fi."
             rows={3}
@@ -164,9 +164,8 @@ export function TemplateBuilder({
             <legend>Step {index + 1}</legend>
             <label className="field" htmlFor={`${id}-${step.id}-title`}>
               What needs to be done? *
-              <input
+              <Input
                 placeholder="e.g. Confirm which areas are affected"
-                className="input"
                 id={`${id}-${step.id}-title`}
                 required
                 minLength={3}
@@ -177,9 +176,8 @@ export function TemplateBuilder({
             </label>
             <label className="field" htmlFor={`${id}-${step.id}-instructions`}>
               How to do it (optional)
-              <textarea
+              <Textarea
                 placeholder="Add checks, useful details and what a successful result looks like."
-                className="input"
                 id={`${id}-${step.id}-instructions`}
                 maxLength={4000}
                 rows={3}
@@ -203,8 +201,7 @@ export function TemplateBuilder({
                 </p>
                 <label className="field" htmlFor={`${id}-${step.id}-assignee`}>
                   Who carries out this step?
-                  <select
-                    className="input"
+                  <NativeSelect
                     id={`${id}-${step.id}-assignee`}
                     value={step.assignee}
                     onChange={(e) =>
@@ -213,12 +210,11 @@ export function TemplateBuilder({
                   >
                     <option value="owner">Coordinator</option>
                     <option value="backup">Backup coordinator</option>
-                  </select>
+                  </NativeSelect>
                 </label>
                 <label className="field" htmlFor={`${id}-${step.id}-due`}>
                   Complete within (minutes, optional)
-                  <input
-                    className="input"
+                  <Input
                     id={`${id}-${step.id}-due`}
                     aria-describedby={`${id}-${step.id}-timing`}
                     type="number"
@@ -234,8 +230,7 @@ export function TemplateBuilder({
                   blank for no deadline.
                 </p>
                 <label className="communication-choice">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={step.approval_required}
                     onChange={(e) =>
                       changeStep(step.id, {
@@ -249,8 +244,7 @@ export function TemplateBuilder({
                 {step.approval_required && (
                   <label className="field" htmlFor={`${id}-${step.id}-approval`}>
                     Approval due within (minutes of adding the procedure) *
-                    <input
-                      className="input"
+                    <Input
                       id={`${id}-${step.id}-approval`}
                       type="number"
                       required
@@ -270,26 +264,26 @@ export function TemplateBuilder({
               </div>
             </details>
             <div className="workflow-builder-actions">
-              <button
-                className="button button-quiet"
+              <Button
+                variant="quiet"
                 type="button"
                 disabled={index === 0}
                 onClick={() => move(index, -1)}
                 aria-label={`Move step ${index + 1} up`}
               >
                 Move up
-              </button>
-              <button
-                className="button button-quiet"
+              </Button>
+              <Button
+                variant="quiet"
                 type="button"
                 disabled={index === draft.steps.length - 1}
                 onClick={() => move(index, 1)}
                 aria-label={`Move step ${index + 1} down`}
               >
                 Move down
-              </button>
-              <button
-                className="button button-quiet"
+              </Button>
+              <Button
+                variant="quiet"
                 type="button"
                 disabled={draft.steps.length === 1}
                 onClick={() => {
@@ -302,12 +296,12 @@ export function TemplateBuilder({
                 aria-label={`Remove step ${index + 1}`}
               >
                 Remove step
-              </button>
+              </Button>
             </div>
           </fieldset>
         ))}
-        <button
-          className="button button-secondary"
+        <Button
+          variant="secondary"
           type="button"
           disabled={draft.steps.length >= 20}
           onClick={() => {
@@ -318,7 +312,7 @@ export function TemplateBuilder({
           }}
         >
           Add response step
-        </button>
+        </Button>
       </section>
       <section className="stack workflow-builder-section" aria-labelledby={`${id}-optional`}>
         <div>
@@ -334,9 +328,8 @@ export function TemplateBuilder({
             </p>
             <label className="field" htmlFor={`${id}-groups`}>
               Audience group names (optional)
-              <textarea
+              <Textarea
                 placeholder="e.g. Office managers"
-                className="input"
                 id={`${id}-groups`}
                 rows={3}
                 maxLength={1020}
@@ -350,9 +343,8 @@ export function TemplateBuilder({
             </p>
             <label className="field" htmlFor={`${id}-guidance`}>
               What should staff communicate? (optional)
-              <textarea
+              <Textarea
                 placeholder="e.g. Share the affected areas, expected recovery time and next update time."
-                className="input"
                 id={`${id}-guidance`}
                 rows={4}
                 maxLength={4000}
@@ -367,8 +359,7 @@ export function TemplateBuilder({
             </label>
             <label className="field" htmlFor={`${id}-reminder`}>
               Remind staff to send the first update after (minutes, optional)
-              <input
-                className="input"
+              <Input
                 id={`${id}-reminder`}
                 type="number"
                 min={1}
@@ -395,8 +386,7 @@ export function TemplateBuilder({
               Staff choose a backup when applying a procedure with alerts enabled.
             </p>
             <label className="communication-choice">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={draft.escalation.enabled}
                 onChange={(e) =>
                   setDraft({
@@ -409,8 +399,7 @@ export function TemplateBuilder({
             </label>
             <label className="field" htmlFor={`${id}-ack`}>
               Time allowed to acknowledge assigned work (minutes) *
-              <input
-                className="input"
+              <Input
                 id={`${id}-ack`}
                 type="number"
                 min={1}
@@ -430,8 +419,7 @@ export function TemplateBuilder({
             </label>
             <label className="field" htmlFor={`${id}-grace`}>
               Wait after a missed deadline before alerting (minutes) *
-              <input
-                className="input"
+              <Input
                 id={`${id}-grace`}
                 type="number"
                 min={0}
@@ -459,29 +447,29 @@ export function TemplateBuilder({
           Saving keeps this as a draft. Next, review the saved procedure and publish it so staff can
           use it on tickets.
         </p>
-        <SubmitButton className="button button-primary" pendingLabel="Saving draft…">
+        <SubmitButton variant="primary" pendingLabel="Saving draft…">
           Save procedure draft
         </SubmitButton>
       </div>
       {failed && (
         <div className="stack">
           <a
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={`/app/administration/workflows/${templateId}`}
             target="_blank"
             rel="noopener noreferrer"
           >
             Review saved template (opens in a new tab)
           </a>
-          <button
+          <Button
             type="button"
-            className="button button-secondary"
+            variant="secondary"
             onClick={() => {
               if (confirmDiscardChanges(true)) window.location.reload();
             }}
           >
             Reload saved draft
-          </button>
+          </Button>
         </div>
       )}
     </ActionForm>

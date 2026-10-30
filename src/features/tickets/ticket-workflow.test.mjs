@@ -4,6 +4,7 @@ import test from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
+import { kitHostMocks } from '../../../tests/helpers/kit-host-mocks.mjs';
 import { load } from '../../../tests/helpers/load-module.mjs';
 
 const props = {
@@ -56,7 +57,10 @@ test('wizard navigation retains every panel and updates the shareable step witho
       return (refs[index] ??= { current: initial });
     },
   };
-  const { TicketWorkflow } = load('src/features/tickets/ticket-workflow.tsx', { react: hooks });
+  const { TicketWorkflow } = load('src/features/tickets/ticket-workflow.tsx', {
+    ...kitHostMocks(),
+    react: hooks,
+  });
   const walk = (node, p) => {
     if (Array.isArray(node)) return node.flatMap((n) => walk(n, p));
     if (!React.isValidElement(node)) return [];
@@ -85,9 +89,7 @@ test('wizard navigation retains every panel and updates the shareable step witho
       (n) => n.type === 'div' && n.props.className === 'ticket-wizard-navigation',
     )[0];
     assert.ok(
-      walk(navigation, (n) => n.type === 'button').every(
-        (n) => n.props.className === 'button button-secondary',
-      ),
+      walk(navigation, (n) => n.type === 'button').every((n) => n.props.variant === 'secondary'),
     );
     assert.equal(value, '#ticket-assignment');
     assert.equal(

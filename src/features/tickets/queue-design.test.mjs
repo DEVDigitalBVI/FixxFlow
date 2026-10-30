@@ -9,7 +9,11 @@ test('queue presents scoped page counts and all accessible row actions without i
   assert.match(html, /aria-labelledby="ticket-queue-heading"/);
   assert.match(html, /6 on this page/);
   assert.match(html, /Showing 1–6/);
-  assert.match(html, /aria-label="Tickets" tabindex="0"/);
+  // Kit TableRegion: a labelled, keyboard-focusable scroll region.
+  assert.match(
+    html,
+    /<div(?=[^>]*role="region")(?=[^>]*aria-label="Tickets")(?=[^>]*tabindex="0")[^>]*class="table-region/,
+  );
   assert.equal((html.match(/name="ticketIds"/g) || []).length, 6);
   assert.match(html, /Select ticket 1842/);
   assert.match(html, /<strong>VPN disconnects during video calls<\/strong>/);

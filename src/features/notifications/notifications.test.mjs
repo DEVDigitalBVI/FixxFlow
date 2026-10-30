@@ -19,7 +19,7 @@ const config = {
 };
 const { renderEmail } = load('src/features/notifications/template.ts');
 
-test('all email variants share a compact header and left-aligned content', () => {
+test('all email variants share a compact header and left-aligned content', async () => {
   const emails = fs
     .readdirSync('supabase/templates')
     .filter((name) => name.endsWith('.html'))
@@ -27,7 +27,7 @@ test('all email variants share a compact header and left-aligned content', () =>
   for (const purpose of ['notification', 'workspace', 'account-access', 'security-alert']) {
     emails.push([
       purpose,
-      renderEmail({
+      await renderEmail({
         title: 'Workspace update',
         message: 'Your update is ready.',
         purpose,
@@ -48,7 +48,7 @@ test('all email variants share a compact header and left-aligned content', () =>
       /<p style="margin:0 0 8px;color:#545b62;font-size:14px;line-height:22px;font-weight:500">/,
       name,
     );
-    assert.match(html, /<p style="margin:0 0 20px;color:#212529;">/, name);
+    assert.match(html, /<p style="margin:0 0 20px;color:#212529">/, name);
     assert.match(
       html,
       /<td align="left" style="text-align:left;padding:16px 24px;border-top:/,
@@ -99,8 +99,8 @@ test('invitation leads with inviter and workspace, then the action, then one rol
   );
 });
 
-test('security guidance is distinguished by a written heading and preserves escaped content', () => {
-  const html = renderEmail({
+test('security guidance is distinguished by a written heading and preserves escaped content', async () => {
+  const html = await renderEmail({
     title: 'Password changed',
     message: 'Your password changed.',
     purpose: 'security-alert',
@@ -110,7 +110,7 @@ test('security guidance is distinguished by a written heading and preserves esca
   assert.match(html, /<h2[^>]*>Security notice<\/h2>/);
   assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt; &amp; reset/);
   assert.doesNotMatch(html, /<script>/);
-  const notification = renderEmail({
+  const notification = await renderEmail({
     title: 'New reply',
     message: 'Open your workspace.',
     note: 'Sign in to view.',
@@ -153,7 +153,7 @@ test('auth templates retain Supabase tokens and accessible email branding', () =
     .readdirSync('supabase/templates')
     .filter((name) => name.endsWith('.html'))) {
     const html = fs.readFileSync(`supabase/templates/${file}`, 'utf8');
-    assert.match(html, /<html lang="en">/);
+    assert.match(html, /<html [^>]*lang="en"/);
     assert.match(html, /alt="FixxFlow/);
     assert.match(html, /role="presentation"/);
     assert.match(html, /mailto:support@fixxflow.app/);
@@ -368,7 +368,7 @@ test('approved incident emails use the shared brand and deliver only the saved m
   );
   assert.match(body.text, /Service is returning\.\n<script>Unsafe<\/script>/);
   assert.match(body.text, /Next update expected:.*UTC/);
-  assert.match(body.html, /Service is returning\.<br>&lt;script&gt;Unsafe&lt;\/script&gt;/);
+  assert.match(body.html, /Service is returning\.<br\/?>&lt;script&gt;Unsafe&lt;\/script&gt;/);
   assert.match(body.html, /&lt;script&gt;Unsafe&lt;\/script&gt;/);
   assert.doesNotMatch(body.html, /<script>/);
   assert.match(body.html, /\/app\/incident-updates\/bulletin-1/);
@@ -607,8 +607,8 @@ test('announcement status and workspace are separate from escaped multiline cont
       assert.match(email.html, /Example &amp; Co/);
       assert.match(email.html, /IT service update/);
       assert.match(email.html, /<strong>Status:<\/strong> Investigating<\/p>/);
-      assert.match(email.html, /IT is working on it\.<br>Use chat &lt;safely&gt;\./);
-      assert.doesNotMatch(email.html, /Status: Investigating<br>/);
+      assert.match(email.html, /IT is working on it\.<br\/?>Use chat &lt;safely&gt;\./);
+      assert.doesNotMatch(email.html, /Status: Investigating<br\/?>/);
       assert.match(email.text, /Status: Investigating\n\nIT is working on it/);
       assert.match(email.text, /https:\/\/example.test\/app\/service-status#notice-notice-public/);
       return Response.json({ id: 'public-email' });

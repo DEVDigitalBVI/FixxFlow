@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { createClient } from '@/lib/supabase/client';
 
 type Factor = { id: string; friendly_name?: string };
@@ -134,16 +136,16 @@ export function MfaEnrollment({
     return (
       <div role="alert">
         <p>Account protection could not load.</p>
-        <button
+        <Button
           type="button"
-          className="button button-secondary"
+          variant="secondary"
           onClick={() => {
             setLoadState('loading');
             void refresh();
           }}
         >
           Try again
-        </button>
+        </Button>
       </div>
     );
   return (
@@ -157,14 +159,9 @@ export function MfaEnrollment({
               : 'Two-step verification is not set up'}
           </p>
         </div>
-        <button
-          className="button button-secondary"
-          type="button"
-          disabled={pending}
-          onClick={() => run(begin)}
-        >
+        <Button variant="secondary" type="button" disabled={pending} onClick={() => run(begin)}>
           Add authenticator
-        </button>
+        </Button>
       </div>
       {enrollment && (
         <form
@@ -185,9 +182,8 @@ export function MfaEnrollment({
             <p>Scan this QR code, then enter the six-digit code from your authenticator.</p>
             <code>{enrollment.secret}</code>
             <label htmlFor="enrollment-code">Verification code</label>
-            <input
+            <Input
               id="enrollment-code"
-              className="input"
               autoComplete="one-time-code"
               value={code}
               onChange={(event) => setCode(event.target.value.replace(/\D/g, '').slice(0, 6))}
@@ -199,13 +195,13 @@ export function MfaEnrollment({
               aria-describedby={error ? 'enrollment-feedback' : undefined}
               disabled={pending}
             />
-            <button
-              className="button button-primary"
+            <Button
+              variant="primary"
               type="submit"
               disabled={pending || !/^\d{6}$/.test(code.trim())}
             >
               {pending ? 'Verifying…' : 'Verify and enable'}
-            </button>
+            </Button>
           </div>
         </form>
       )}
@@ -218,14 +214,15 @@ export function MfaEnrollment({
       {factors.map((factor) => (
         <div className="security-status" key={factor.id}>
           <span>{factor.friendly_name ?? 'Authenticator'}</span>
-          <button
-            className="button button-danger button-small"
+          <Button
+            variant="danger"
+            size="small"
             type="button"
             disabled={pending || (required && factors.length <= 1)}
             onClick={() => run(() => remove(factor.id))}
           >
             Remove
-          </button>
+          </Button>
         </div>
       ))}
       {message && (

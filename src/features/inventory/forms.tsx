@@ -4,6 +4,9 @@ import { useEffect, useId, useRef, useState } from 'react';
 
 import { inventoryMutation } from '@/app/app/inventory/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { LookupSelect } from '@/features/lookups/lookup-select';
 import { formString } from '@/lib/form-data';
@@ -101,8 +104,7 @@ export function StockForm({
         </p>
         <label>
           {command === 'receive' ? 'Quantity received' : 'Quantity change (negative to remove)'}
-          <input
-            className="input"
+          <Input
             name="quantity"
             type="number"
             step="1"
@@ -127,12 +129,7 @@ export function StockForm({
           {command === 'correct'
             ? 'Correction reason (required)'
             : 'Receipt reference or note (optional)'}
-          <textarea
-            className="input"
-            name="note"
-            required={command === 'correct'}
-            maxLength={2000}
-          />
+          <Textarea name="note" required={command === 'correct'} maxLength={2000} />
         </label>
         <p className="muted">
           {equipment
@@ -165,8 +162,8 @@ export function StockForm({
           )}
           {review.note && <p className="ticket-description">{review.note}</p>}
           <p className="muted">This adds stock. It does not issue items to an employee.</p>
-          <button
-            className="button button-secondary"
+          <Button
+            variant="secondary"
             type="button"
             onClick={() => {
               returnFocus.current = true;
@@ -174,15 +171,15 @@ export function StockForm({
             }}
           >
             Edit receipt
-          </button>
+          </Button>
         </section>
       )}
       {command === 'receive' && !review ? (
-        <button className="button button-primary" type="button" onClick={reviewReceipt}>
+        <Button variant="primary" type="button" onClick={reviewReceipt}>
           Review receipt
-        </button>
+        </Button>
       ) : (
-        <SubmitButton className="button button-primary">
+        <SubmitButton variant="primary">
           {command === 'receive' ? 'Record received stock' : 'Record correction'}
         </SubmitButton>
       )}
@@ -198,8 +195,7 @@ export function RequestForm({ item, token }: { item: InventoryItem; token: strin
       </p>
       <label>
         Quantity
-        <input
-          className="input"
+        <Input
           name="quantity"
           type="number"
           min="1"
@@ -216,8 +212,7 @@ export function RequestForm({ item, token }: { item: InventoryItem; token: strin
       />
       <label>
         Delivery location or recipient details
-        <input
-          className="input"
+        <Input
           name="destination"
           required
           maxLength={240}
@@ -236,9 +231,9 @@ export function RequestForm({ item, token }: { item: InventoryItem; token: strin
       )}
       <label>
         Reason (optional)
-        <textarea className="input" name="reason" maxLength={20000} />
+        <Textarea name="reason" maxLength={20000} />
       </label>
-      <SubmitButton className="button button-primary">Submit inventory request</SubmitButton>
+      <SubmitButton variant="primary">Submit inventory request</SubmitButton>
     </ActionForm>
   );
 }
@@ -275,17 +270,10 @@ export function ReviewForm({
             : command === 'decline'
               ? 'Decline reason'
               : 'Cancellation note (optional)'}
-          <textarea
-            className="input"
-            name="note"
-            required={command !== 'cancel'}
-            maxLength={2000}
-          />
+          <Textarea name="note" required={command !== 'cancel'} maxLength={2000} />
         </label>
       )}
-      <SubmitButton
-        className={`button ${command === 'decline' ? 'button-danger' : 'button-secondary'}`}
-      >
+      <SubmitButton variant={command === 'decline' ? 'danger' : 'secondary'}>
         {
           {
             approve: 'Approve and reserve',
@@ -319,20 +307,19 @@ export function IssueForm({
       <input type="hidden" name="destination" value={request.destination} />
       {units.map((unit) => (
         <label key={unit.asset_id}>
-          <input type="checkbox" name="assets" value={unit.asset_id} required /> Confirm{' '}
+          <Checkbox name="assets" value={unit.asset_id} required /> Confirm{' '}
           {contextLabel(unit.asset_context, 'tag')} · {contextLabel(unit.asset_context, 'name')} ·{' '}
           {contextLabel(unit.asset_context, 'serial') || 'No serial recorded'}
         </label>
       ))}
       <label>
-        <input type="checkbox" required /> I confirm the recipient or destination and actual
-        handover.
+        <Checkbox required /> I confirm the recipient or destination and actual handover.
       </label>
       <label>
         Handover note (optional)
-        <textarea className="input" name="note" maxLength={2000} />
+        <Textarea name="note" maxLength={2000} />
       </label>
-      <SubmitButton className="button button-primary">Mark as issued</SubmitButton>
+      <SubmitButton variant="primary">Mark as issued</SubmitButton>
     </ActionForm>
   );
 }
@@ -380,7 +367,7 @@ export function PermissionsForm({
         </div>
       </dl>
       <details className="inventory-access-editor">
-        <summary className="button button-secondary">
+        <summary className={buttonVariants({ variant: 'secondary' })}>
           Edit inventory access<span className="sr-only"> for {name}</span>
           <span aria-hidden="true">⌄</span>
         </summary>
@@ -391,7 +378,7 @@ export function PermissionsForm({
               Stock management<span className="sr-only"> for {name}</span>
             </legend>
             <label className="inventory-permission-option">
-              <input type="checkbox" name="manager" defaultChecked={manager} />
+              <Checkbox name="manager" defaultChecked={manager} />
               <span>
                 <strong>Manage inventory and fulfill requests</strong>
                 <span>
@@ -415,8 +402,7 @@ export function PermissionsForm({
               <div className="inventory-department-options">
                 {activeDepartments.map((d) => (
                   <label className="inventory-permission-option" key={d.id}>
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       name="departments"
                       value={d.id}
                       defaultChecked={grants.includes(d.id)}
@@ -433,7 +419,7 @@ export function PermissionsForm({
           </fieldset>
           <div className="inventory-permissions-footer">
             <p className="muted">Changes apply when you save.</p>
-            <SubmitButton className="button button-primary" pendingLabel="Saving permissions…">
+            <SubmitButton variant="primary" pendingLabel="Saving permissions…">
               Save inventory permissions<span className="sr-only"> for {name}</span>
             </SubmitButton>
           </div>

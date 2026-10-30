@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { Alert } from '@/components/ui/alert';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { PageHeader } from '@/components/ui/page-header';
 import { knowledgeAudiences } from '@/features/knowledge/audience';
 import { LibraryVisibilityButton } from '@/features/knowledge/library-visibility-button';
@@ -35,14 +38,14 @@ export default async function WorkspaceLibraryPage({
       <form className="queue-filters" action="/app/administration/library">
         <label>
           Search shared guides
-          <input className="input" type="search" name="q" defaultValue={q} maxLength={200} />
+          <Input type="search" name="q" defaultValue={q} maxLength={200} />
         </label>
-        <button className="button button-secondary">Search</button>
+        <Button variant="secondary">Search</Button>
       </form>
       {result.error ? (
-        <p className="alert alert-error" role="alert">
+        <Alert as="p" tone="error" role="alert">
           Library guides could not load. Use Search to retry.
-        </p>
+        </Alert>
       ) : rows.length ? (
         <>
           <ul className="knowledge-library-management">
@@ -63,13 +66,13 @@ export default async function WorkspaceLibraryPage({
           </ul>
           <nav className="knowledge-actions" aria-label="Library pages">
             {page > 1 && (
-              <Link className="button button-secondary" href={href(page - 1)}>
+              <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
                 Previous
               </Link>
             )}
             <span>Page {page}</span>
             {(result.data?.length ?? 0) > 24 && (
-              <Link className="button button-secondary" href={href(page + 1)}>
+              <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
                 Next
               </Link>
             )}

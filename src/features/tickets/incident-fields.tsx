@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 
+import { NativeSelect, Textarea } from '@/components/ui/input';
 import { LookupSelect } from '@/features/lookups/lookup-select';
 import { useTimezone } from '@/features/timezones/provider';
 
@@ -28,9 +29,8 @@ export function IncidentFields({
       </p>
       <label className="field" htmlFor={`${id}-severity`}>
         Severity *
-        <select
+        <NativeSelect
           id={`${id}-severity`}
-          className="input"
           name="incidentSeverity"
           required
           defaultValue={incident?.severity ?? ''}
@@ -42,7 +42,7 @@ export function IncidentFields({
               {item.label} · {item.description}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       <LookupSelect
         searchable="when-paginated"
@@ -54,9 +54,9 @@ export function IncidentFields({
       />
       <label className="field" htmlFor={`${id}-impact`}>
         Business impact *
-        <textarea
+        <Textarea
           id={`${id}-impact`}
-          className="input textarea"
+          fieldSize="tall"
           name="businessImpact"
           required
           minLength={3}
@@ -68,9 +68,8 @@ export function IncidentFields({
       </label>
       <label className="field" htmlFor={`${id}-services`}>
         Affected services
-        <textarea
+        <Textarea
           id={`${id}-services`}
-          className="input"
           name="affectedServices"
           maxLength={3630}
           rows={2}
@@ -80,9 +79,8 @@ export function IncidentFields({
       </label>
       <label className="field" htmlFor={`${id}-locations`}>
         Affected locations
-        <textarea
+        <Textarea
           id={`${id}-locations`}
-          className="input"
           name="affectedLocations"
           maxLength={3630}
           rows={2}
@@ -123,8 +121,7 @@ export function IncidentCreateFields({ ownerId }: { ownerId: string }) {
     <div className="stack">
       <label className="field" htmlFor={id}>
         Ticket type
-        <select
-          className="input"
+        <NativeSelect
           id={id}
           name="ticketType"
           value={type}
@@ -135,7 +132,7 @@ export function IncidentCreateFields({ ownerId }: { ownerId: string }) {
         >
           <option value="support">Support request</option>
           <option value="incident">Incident · broader disruption</option>
-        </select>
+        </NativeSelect>
       </label>
       {usedIncident && (
         <div hidden={type !== 'incident'}>

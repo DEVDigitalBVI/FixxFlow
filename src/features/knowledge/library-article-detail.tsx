@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
+import { buttonVariants } from '@/components/ui/button';
 import type { Viewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
 import type { LibraryArticle } from '@/types/database';
@@ -49,7 +50,10 @@ export async function LibraryArticleDetail({
     <div className="portal-page knowledge-detail">
       <header className="portal-page-heading">
         <div>
-          <Link className="button button-quiet page-back-link" href="/app/help">
+          <Link
+            className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
+            href="/app/help"
+          >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
             Knowledge base
           </Link>
@@ -120,7 +124,7 @@ export async function LibraryArticleDetail({
           Tell IT what happened and which steps you tried. Include this article’s title in your
           request.
         </p>
-        <Link className="button button-primary" href="/app/tickets/new">
+        <Link className={buttonVariants({ variant: 'primary' })} href="/app/tickets/new">
           Submit a request
         </Link>
       </section>

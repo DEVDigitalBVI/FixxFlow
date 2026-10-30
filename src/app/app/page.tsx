@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { cache, Suspense } from 'react';
 
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { QueueShortcuts, WorkQueues } from '@/features/dashboard/work-queues';
 import { EmployeeHome } from '@/features/portal/employee-home';
@@ -50,7 +51,7 @@ export default async function OverviewPage() {
         eyebrow={viewer.organizationName}
         description="Work that needs attention, then today’s activity."
         actions={
-          <Link className="button button-primary" href="/app/tickets">
+          <Link className={buttonVariants({ variant: 'primary' })} href="/app/tickets">
             Open ticket queue
           </Link>
         }

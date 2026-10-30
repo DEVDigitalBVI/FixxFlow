@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useId, useState, type ReactNode } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input, NativeSelect, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { confirmDiscardChanges } from '@/components/ui/unsaved-changes';
 import { LookupSelect } from '@/features/lookups/lookup-select';
@@ -54,8 +57,8 @@ export function IncidentControlForm({
       <input type="hidden" name="revision" value={version} />
       <input type="hidden" name="operation" value={operation} />
       {saved && createOnce ? (
-        <button
-          className="button button-secondary"
+        <Button
+          variant="secondary"
           type="button"
           onClick={() => {
             setTarget(crypto.randomUUID());
@@ -64,12 +67,12 @@ export function IncidentControlForm({
           }}
         >
           Request another approval
-        </button>
+        </Button>
       ) : (
         <>
           {children}
           <SubmitButton
-            className={`button ${operation === 'approve' ? 'button-primary' : 'button-secondary'}`}
+            variant={operation === 'approve' ? 'primary' : 'secondary'}
             pendingLabel="Saving…"
           >
             {label}
@@ -79,22 +82,22 @@ export function IncidentControlForm({
       {failed && (
         <div className="stack">
           <a
-            className="button button-secondary"
+            className={buttonVariants({ variant: 'secondary' })}
             href={`/app/tickets/${ticketId}#incident-approvals`}
             target="_blank"
             rel="noopener noreferrer"
           >
             Review latest controls (opens in a new tab)
           </a>
-          <button
-            className="button button-secondary"
+          <Button
+            variant="secondary"
             type="button"
             onClick={() => {
               if (confirmDiscardChanges(true)) window.location.reload();
             }}
           >
             Reload latest ticket
-          </button>
+          </Button>
         </div>
       )}
     </ActionForm>
@@ -124,18 +127,12 @@ export function EscalationEditor({
         defaultValue={policy?.backup_owner_id ?? ''}
       />
       <label className="communication-choice">
-        <input
-          type="checkbox"
-          name="enabled"
-          value="yes"
-          defaultChecked={policy?.enabled ?? false}
-        />
+        <Checkbox name="enabled" value="yes" defaultChecked={policy?.enabled ?? false} />
         <span>Enable response and communication escalation</span>
       </label>
       <label className="field" htmlFor={`${id}-ack`}>
         Acknowledgement time (minutes) *
-        <input
-          className="input"
+        <Input
           id={`${id}-ack`}
           type="number"
           name="acknowledgementMinutes"
@@ -147,8 +144,7 @@ export function EscalationEditor({
       </label>
       <label className="field" htmlFor={`${id}-grace`}>
         Overdue grace (minutes) *
-        <input
-          className="input"
+        <Input
           id={`${id}-grace`}
           type="number"
           name="overdueMinutes"
@@ -195,19 +191,11 @@ export function ApprovalRequestEditor({
       </p>
       <label className="field" htmlFor={`${id}-title`}>
         Decision title *
-        <input
-          className="input"
-          id={`${id}-title`}
-          name="title"
-          required
-          minLength={3}
-          maxLength={180}
-        />
+        <Input id={`${id}-title`} name="title" required minLength={3} maxLength={180} />
       </label>
       <label className="field" htmlFor={`${id}-description`}>
         Decision details *
-        <textarea
-          className="input"
+        <Textarea
           id={`${id}-description`}
           name="description"
           required
@@ -218,14 +206,14 @@ export function ApprovalRequestEditor({
       </label>
       <label className="field" htmlFor={`${id}-step`}>
         Applies to
-        <select className="input" id={`${id}-step`} name="stepId">
+        <NativeSelect id={`${id}-step`} name="stepId">
           <option value="">Standalone decision</option>
           {steps.map((step) => (
             <option key={step.id} value={step.id}>
               {step.title}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       <LookupSelect
         resource="technicians"
@@ -276,18 +264,10 @@ export function ApprovalDecisionForm({
     >
       <label className="field" htmlFor={id}>
         Reason *
-        <textarea
-          className="input"
-          id={id}
-          name="note"
-          required
-          minLength={3}
-          maxLength={2000}
-          rows={3}
-        />
+        <Textarea id={id} name="note" required minLength={3} maxLength={2000} rows={3} />
       </label>
       <label className="communication-choice">
-        <input type="checkbox" name="confirm" value="yes" required />
+        <Checkbox name="confirm" value="yes" required />
         <span>
           {operation === 'cancel_approval'
             ? 'Cancel this request. A linked step will no longer require this approval.'

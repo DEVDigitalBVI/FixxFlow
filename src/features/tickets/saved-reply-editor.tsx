@@ -1,5 +1,7 @@
 import { deleteSavedReply, saveSavedReply } from '@/app/app/administration/saved-replies/actions';
 import { ActionForm } from '@/components/ui/action-form';
+import { buttonVariants } from '@/components/ui/button';
+import { Input, Textarea } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 import {
@@ -23,10 +25,9 @@ export function SavedReplyEditor({ reply }: { reply?: Reply }) {
         )}
         <div className="field">
           <label htmlFor={`saved-reply-title-${key}`}>Title</label>
-          <input
+          <Input
             id={`saved-reply-title-${key}`}
             name="title"
-            className="input"
             required
             minLength={2}
             maxLength={SAVED_REPLY_TITLE_LIMIT}
@@ -39,10 +40,10 @@ export function SavedReplyEditor({ reply }: { reply?: Reply }) {
         </div>
         <div className="field">
           <label htmlFor={`saved-reply-body-${key}`}>Reply text</label>
-          <textarea
+          <Textarea
             id={`saved-reply-body-${key}`}
             name="body"
-            className="input textarea"
+            fieldSize="tall"
             required
             rows={6}
             maxLength={SAVED_REPLY_BODY_LIMIT}
@@ -67,20 +68,20 @@ export function SavedReplyEditor({ reply }: { reply?: Reply }) {
             ))}
           </dl>
         </details>
-        <SubmitButton className="button button-primary">
+        <SubmitButton variant="primary">
           {reply ? 'Save changes' : 'Create saved reply'}
         </SubmitButton>
       </ActionForm>
       {reply && (
         <details className="saved-reply-delete">
-          <summary className="button button-quiet">Delete saved reply</summary>
+          <summary className={buttonVariants({ variant: 'quiet' })}>Delete saved reply</summary>
           <ActionForm action={deleteSavedReply} className="stack">
             <input type="hidden" name="id" value={reply.id} />
             <p>
               Delete “{reply.title}”? Staff will no longer be able to insert it. Messages already
               sent are not affected.
             </p>
-            <SubmitButton className="button button-danger" pendingLabel="Deleting…">
+            <SubmitButton variant="danger" pendingLabel="Deleting…">
               Delete “{reply.title}”
             </SubmitButton>
           </ActionForm>

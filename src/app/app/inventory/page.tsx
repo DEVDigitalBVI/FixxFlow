@@ -3,6 +3,10 @@ import { randomUUID } from 'node:crypto';
 import Link from 'next/link';
 
 import { ActionForm } from '@/components/ui/action-form';
+import { Alert } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { PageHeader } from '@/components/ui/page-header';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { inventoryAccess } from '@/features/inventory/access';
@@ -76,16 +80,22 @@ export default async function InventoryPage({
         actions={
           <>
             {access.manager && (
-              <Link className="button button-secondary" href="/app/tickets?kind=inventory">
+              <Link
+                className={buttonVariants({ variant: 'secondary' })}
+                href="/app/tickets?kind=inventory"
+              >
                 Fulfill requests
               </Link>
             )}
             {access.manager ? (
-              <Link className="button button-primary" href="#receive-stock">
+              <Link className={buttonVariants({ variant: 'primary' })} href="#receive-stock">
                 Receive stock
               </Link>
             ) : access.departments.length > 0 ? (
-              <Link className="button button-primary" href="#requestable-inventory">
+              <Link
+                className={buttonVariants({ variant: 'primary' })}
+                href="#requestable-inventory"
+              >
                 Choose an item
               </Link>
             ) : null}
@@ -94,22 +104,22 @@ export default async function InventoryPage({
       />
       {access.manager && (
         <nav className="page-header-actions" aria-label="Inventory tasks">
-          <a className="button button-secondary" href="#requestable-inventory">
+          <a className={buttonVariants({ variant: 'secondary' })} href="#requestable-inventory">
             Browse stock
           </a>
-          <a className="button button-secondary" href="#receive-stock">
+          <a className={buttonVariants({ variant: 'secondary' })} href="#receive-stock">
             Receive stock
           </a>
-          <a className="button button-secondary" href="#inventory-requests">
+          <a className={buttonVariants({ variant: 'secondary' })} href="#inventory-requests">
             Request history
           </a>
         </nav>
       )}
       {!access.manager && !access.departments.length && (
-        <p className="alert">
+        <Alert as="p">
           You do not have inventory request permission. An administrator can grant access for your
           department in People. Your support access is unchanged.
-        </p>
+        </Alert>
       )}
       {(access.manager || access.departments.length > 0) && (
         <section
@@ -130,7 +140,7 @@ export default async function InventoryPage({
             <form method="get" className="asset-search">
               <label className="field asset-search-query">
                 Department
-                <select className="input" name="department" defaultValue={department}>
+                <NativeSelect name="department" defaultValue={department}>
                   <option value="">
                     {access.manager ? 'All departments' : 'My authorized departments'}
                   </option>
@@ -139,11 +149,11 @@ export default async function InventoryPage({
                       {d.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </label>
-              <button className="button button-secondary">Filter inventory</button>
+              <Button variant="secondary">Filter inventory</Button>
               {department && (
-                <Link className="button button-quiet" href="/app/inventory">
+                <Link className={buttonVariants({ variant: 'quiet' })} href="/app/inventory">
                   Clear filter
                 </Link>
               )}
@@ -168,13 +178,13 @@ export default async function InventoryPage({
             {(page > 1 || page * 25 < (items.count ?? 0)) && (
               <nav className="asset-pagination" aria-label="Inventory pages">
                 {page > 1 && (
-                  <Link className="button button-secondary" href={href(page - 1)}>
+                  <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
                     Previous
                   </Link>
                 )}
                 <span>Page {page}</span>
                 {page * 25 < (items.count ?? 0) && (
-                  <Link className="button button-secondary" href={href(page + 1)}>
+                  <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
                     Next
                   </Link>
                 )}
@@ -198,20 +208,22 @@ export default async function InventoryPage({
             </div>
           </div>
           <details>
-            <summary className="button button-secondary">Set up a new stock item</summary>
+            <summary className={buttonVariants({ variant: 'secondary' })}>
+              Set up a new stock item
+            </summary>
             <ActionForm action={inventoryMutation} className="stack inventory-editor">
               <h3>Set up stock that has arrived</h3>
               <CommandFields command="create" token={randomUUID()} />
               <label>
                 Item name
-                <input className="input" name="name" required minLength={2} maxLength={160} />
+                <Input name="name" required minLength={2} maxLength={160} />
               </label>
               <label>
                 Tracking type
-                <select className="input" name="kind">
+                <NativeSelect name="kind">
                   <option value="equipment">Equipment · individual assets</option>
                   <option value="consumable">Consumable · quantities</option>
-                </select>
+                </NativeSelect>
               </label>
               <LookupSelect
                 resource="departments"
@@ -229,9 +241,7 @@ export default async function InventoryPage({
                 Next, record the stock physically received. Department allocation is separate from
                 storage and employee assignment.
               </p>
-              <SubmitButton className="button button-primary">
-                Continue to receive stock
-              </SubmitButton>
+              <SubmitButton variant="primary">Continue to receive stock</SubmitButton>
             </ActionForm>
           </details>
         </section>
@@ -267,9 +277,9 @@ export default async function InventoryPage({
                     {r.destination}
                   </p>
                 </div>
-                <span className={`ticket-badge tone-${inventoryStates[r.state].tone}`}>
+                <Badge tone={inventoryStates[r.state].tone} className="ticket-badge">
                   {inventoryStates[r.state].label}
-                </span>
+                </Badge>
               </li>
             ))}
           </ul>
@@ -279,13 +289,19 @@ export default async function InventoryPage({
         {(history > 1 || history * 25 < (requests.count ?? 0)) && (
           <nav className="asset-pagination" aria-label="Inventory request history pages">
             {history > 1 && (
-              <Link className="button button-secondary" href={href(page, history - 1)}>
+              <Link
+                className={buttonVariants({ variant: 'secondary' })}
+                href={href(page, history - 1)}
+              >
                 Previous requests
               </Link>
             )}
             <span>Page {history}</span>
             {history * 25 < (requests.count ?? 0) && (
-              <Link className="button button-secondary" href={href(page, history + 1)}>
+              <Link
+                className={buttonVariants({ variant: 'secondary' })}
+                href={href(page, history + 1)}
+              >
                 More requests
               </Link>
             )}

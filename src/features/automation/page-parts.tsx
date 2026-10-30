@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 
 import { automationPath } from './ui-model';
@@ -44,13 +45,13 @@ export function AutomationPages({
   return (
     <nav className="queue-views" aria-label="Automation pages">
       {page > 1 && (
-        <Link className="button button-secondary" href={href(page - 1)}>
+        <Link className={buttonVariants({ variant: 'secondary' })} href={href(page - 1)}>
           Previous
         </Link>
       )}
       <span>Page {page}</span>
       {hasNext && (
-        <Link className="button button-secondary" href={href(page + 1)}>
+        <Link className={buttonVariants({ variant: 'secondary' })} href={href(page + 1)}>
           Next
         </Link>
       )}

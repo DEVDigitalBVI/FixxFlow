@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { EditableChatMessage } from '@/features/chat/editable-message';
 import { ChatMediaAttachment } from '@/features/chat/media-attachment';
@@ -272,12 +273,12 @@ export async function HistoryBrowser({
       {(filters.before || older) && (
         <nav className="notification-pagination" aria-label="History pages">
           {filters.before && (
-            <Link className="button button-secondary" href={href(view)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={href(view)}>
               Latest entries
             </Link>
           )}
           {older && (
-            <Link className="button button-secondary" href={href(view, older)}>
+            <Link className={buttonVariants({ variant: 'secondary' })} href={href(view, older)}>
               Earlier {view}
             </Link>
           )}
