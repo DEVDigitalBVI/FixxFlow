@@ -81,13 +81,13 @@ function NativeSelect({
         !multiple && !(size && size > 1) && 'native-select-control',
         className,
       )}
+      {...props}
       multiple={multiple}
       size={size}
       style={{
         backgroundImage: !multiple && !(size && size > 1) ? selectChevron : undefined,
         ...style,
       }}
-      {...props}
     />
   );
 }
