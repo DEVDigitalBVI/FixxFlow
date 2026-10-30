@@ -10,13 +10,6 @@ export type { EmailPurpose };
 export const invitationConfirmationHref =
   '{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=invite';
 
-export function escapeEmailHtml(value: string): string {
-  return value.replace(
-    /[&<>"']/g,
-    (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!,
-  );
-}
-
 export async function renderEmail({
   title,
   message,

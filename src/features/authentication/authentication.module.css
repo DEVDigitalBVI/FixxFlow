@@ -52,17 +52,17 @@
     position: relative;
   }
   :where(.scope) :global(.auth-brand-copy h2) {
-    margin: 0 0 18px;
+    margin: 0 0 20px;
     max-width: 500px;
     font-size: clamp(38px, 5vw, 56px);
     line-height: 1.02;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.02em;
   }
   :where(.scope) :global(.auth-brand-copy p) {
     margin: 0;
     max-width: 470px;
     color: var(--color-brand-text-muted);
-    font-size: 17px;
+    font-size: 18px;
     line-height: 27px;
   }
   :where(.scope) :global(.auth-main) {
@@ -82,9 +82,9 @@
   }
   :where(.scope) :global(.auth-card h1) {
     margin: 0 0 8px;
-    font-size: 30px;
+    font-size: 28px;
     line-height: 36px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
   }
   :where(.scope) :global(.auth-card-wide) {
     width: min(100%, 520px);
@@ -100,39 +100,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: start;
-    gap: 14px;
-  }
-  :where(.scope) :global(.onboarding-progress) {
-    display: flex;
-    align-items: center;
-    margin-bottom: 25px;
-  }
-  :where(.scope) :global(.onboarding-progress span) {
-    width: 28px;
-    height: 28px;
-    border: 1px solid var(--color-border-strong);
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    color: var(--color-text-muted);
-    font-size: 12px;
-    font-weight: 700;
-    font-family: var(--font-heading);
-  }
-  :where(.scope) :global(.onboarding-progress span.is-current) {
-    color: var(--color-on-action);
-    border-color: var(--color-accent);
-    background: var(--color-action-fill);
-  }
-  :where(.scope) :global(.onboarding-progress span.is-complete) {
-    color: var(--color-success);
-    border-color: color-mix(in srgb, var(--color-success) 24%, transparent);
-    background: var(--color-success-subtle);
-  }
-  :where(.scope) :global(.onboarding-progress i) {
-    height: 1px;
-    flex: 1;
-    background: var(--color-border);
+    gap: 16px;
   }
   :where(.scope) :global(.onboarding-summary) {
     margin: 0;
@@ -166,15 +134,13 @@
     }
   }
   @media (max-width: 767px) {
-  }
-  @media (max-width: 767px) {
     :where(.scope) :global(.auth-mobile-brand .brand-logo) {
       width: 100%;
     }
   }
   @media (max-width: 440px) {
     :where(.scope) :global(.auth-card h1) {
-      font-size: 27px;
+      font-size: 28px;
     }
   }
   @media (max-width: 440px) {
@@ -195,7 +161,7 @@
   }
   @media (min-width: 768px) and (max-height: 680px) {
     :where(.scope) :global(.auth-brand-copy p) {
-      font-size: 15px;
+      font-size: 14px;
       line-height: 23px;
     }
   }
@@ -271,12 +237,12 @@
   :where(.scope) :global(.auth-card h1) {
     font-size: 28px;
     line-height: 36px;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.02em;
   }
   :where(.scope) :global(.auth-intro) {
-    margin: 0 0 30px;
+    margin: 0 0 32px;
     color: var(--color-text-muted);
-    font-size: 15px;
+    font-size: 14px;
     max-width: 55ch;
     line-height: 1.5;
   }
@@ -305,7 +271,7 @@
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    min-height: 44px;
+    min-height: var(--control-height);
     padding: 10px 12px;
     gap: 10px;
     background: #fff;

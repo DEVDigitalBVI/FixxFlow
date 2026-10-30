@@ -28,7 +28,7 @@ const purposeLabels: Record<EmailPurpose, string> = {
 const invitationLead = `{{ if .Data.invited_by }}<strong>{{ .Data.invited_by }}</strong> invited you{{ else }}Your team invited you{{ end }} to join {{ if .Data.workspace_name }}<strong>{{ .Data.workspace_name }}</strong> on FixxFlow{{ else }}its FixxFlow workspace{{ end }}, where your team handles IT support.`;
 const invitationRole = `{{ if eq .Data.invitation_role "administrator" }}As an administrator, you can manage tickets, invite teammates and manage workspace access.{{ else if eq .Data.invitation_role "technician" }}As a technician, you can work the ticket queue, collaborate using internal notes and keep employees updated.{{ else }}You can submit IT requests, follow their progress and reply to your support team.{{ end }}`;
 
-export type FixxFlowEmailProps = {
+type FixxFlowEmailProps = {
   title: string;
   message: string;
   origin: string;

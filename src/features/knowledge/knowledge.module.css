@@ -80,11 +80,10 @@
     font-family: var(--font-heading);
   }
   :where(.scope) :global(.knowledge-actions [aria-pressed='true']) {
-    border-color: var(--color-accent);
+    border-color: var(--color-selected-border);
     background: var(--color-accent-subtle);
   }
-  :where(.scope) :global(.knowledge-detail > .settings-card),
-  :where(.scope) :global(.knowledge-detail > .knowledge-feedback) {
+  :where(.scope) :global(.knowledge-detail > .settings-card) {
     margin-bottom: 16px;
   }
   :where(.scope) :global(.knowledge-content) {
@@ -116,7 +115,7 @@
     display: grid;
     gap: 2px;
     margin: 0;
-    padding: 10px 14px;
+    padding: 10px 16px;
     color: var(--color-text);
     text-decoration: none;
     overflow-wrap: anywhere;
@@ -128,7 +127,7 @@
   }
   :where(.scope) :global(.knowledge-categories span) {
     color: var(--color-neutral);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.4;
   }
   :where(.scope) :global(.knowledge-contents) {
@@ -172,7 +171,7 @@
   }
   :where(.scope) :global(.knowledge-block-options > summary) {
     cursor: pointer;
-    min-height: 44px;
+    min-height: var(--control-height);
     padding-block: 12px;
     font-weight: 500;
     font-family: var(--font-body);

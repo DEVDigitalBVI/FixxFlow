@@ -7,47 +7,30 @@ import fontkit from '@pdf-lib/fontkit';
 import { productStyles } from '../../../tests/helpers/styles.mjs';
 
 const directory = 'public/brand/fixxflow/fonts';
-test('self-hosted typefaces contain real variable weights and readable Latin UI glyphs', () => {
-  for (const [file, family, min, max] of [
-    ['Outfit-Variable.ttf', 'Outfit', 100, 900],
-    ['RethinkSans-Variable.ttf', 'Rethink Sans', 400, 800],
-    ['RethinkSans-Italic-Variable.ttf', 'Rethink Sans', 400, 800],
-  ]) {
+test('self-hosted Inter contains real variable weights, readable Latin UI glyphs and its license', () => {
+  for (const file of ['InterVariable.woff2', 'InterVariable-Italic.woff2']) {
     const font = fontkit.create(fs.readFileSync(`${directory}/${file}`));
-    assert.ok(font.familyName.startsWith(family), file);
-    assert.equal(font.variationAxes.wght.min, min, file);
-    assert.equal(font.variationAxes.wght.max, max, file);
+    assert.ok(font.familyName.startsWith('Inter'), file);
+    assert.equal(font.variationAxes.wght.min, 100, file);
+    assert.equal(font.variationAxes.wght.max, 900, file);
     for (const character of 'Ticket #1842 Résumé · € 09') {
       assert.ok(font.hasGlyphForCodePoint(character.codePointAt(0)), `${file}: ${character}`);
     }
   }
-  for (const family of ['Outfit', 'RethinkSans']) {
-    assert.match(
-      fs.readFileSync(`${directory}/${family}-OFL.txt`, 'utf8'),
-      /SIL OPEN FONT LICENSE/,
-    );
-  }
+  assert.match(fs.readFileSync(`${directory}/LICENSE.txt`, 'utf8'), /SIL Open Font License/i);
 });
 
-test('body and bold typography stay separate across shared and feature styles', () => {
+test('headings and body share Inter, headings are semibold and fonts load locally', () => {
   const css = productStyles();
+  assert.match(css, /--font-body: var\(--font-inter\)/);
+  assert.match(css, /--font-heading: var\(--font-inter\)/);
   assert.match(css, /body\s*\{[^}]*font-family: var\(--font-body\)/);
-  assert.match(
-    css,
-    /h1,\s*h2,\s*h3,\s*h4,\s*h5,\s*h6,\s*strong,\s*b\s*\{\s*font-family: var\(--font-heading\)/,
-  );
-  for (const match of css.matchAll(/([^{}]+)\{([^{}]*font-weight:\s*(\d+);[^{}]*)\}/g)) {
-    const [, selector, declarations, weight] = match;
-    if (/company-provider|@font-face/.test(selector)) continue;
-    assert.ok(
-      declarations.includes(
-        `font-family: var(--font-${Number(weight) >= 600 ? 'heading' : 'body'})`,
-      ),
-      selector.trim(),
-    );
-  }
-  assert.doesNotMatch(css, /--font-inter/);
+  assert.match(css, /h1,\s*h2,\s*h3,\s*h4,\s*h5,\s*h6\s*\{\s*font-weight: 600;/);
+  // One weight scale: regular, medium and semibold.
+  for (const [, weight] of css.matchAll(/font-weight:\s*(\d+);/g))
+    assert.ok(['400', '500', '600'].includes(weight), `unexpected font-weight ${weight}`);
   const layout = fs.readFileSync('src/app/layout.tsx', 'utf8');
   assert.match(layout, /next\/font\/local/);
+  assert.match(layout, /InterVariable\.woff2/);
   assert.doesNotMatch(layout, /next\/font\/google|fonts\.googleapis/);
 });

@@ -19,14 +19,15 @@ export const emailTokens = {
   ink: '#212529',
   warningSurface: '#fff0d9',
   warningText: '#8a4b00',
-  body: "Outfit,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif",
-  heading: "'Rethink Sans',Arial,sans-serif",
+  body: "Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif",
+  heading:
+    "Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif",
 } as const;
 
 const t = emailTokens;
 
 function fontStyles(origin: string) {
-  return `@font-face{font-family:Outfit;src:url('${origin}/brand/fixxflow/fonts/Outfit-Variable.ttf') format('truetype');font-weight:100 900;font-display:swap}@font-face{font-family:'Rethink Sans';src:url('${origin}/brand/fixxflow/fonts/RethinkSans-Variable.ttf') format('truetype');font-weight:400 800;font-display:swap}h1,h2,strong,b{font-family:'Rethink Sans',Arial,sans-serif}.email-action:hover{background:${t.actionHover}!important}.email-action:focus{outline:3px solid ${t.ink};outline-offset:3px}@media(max-width:480px){.email-action-table{width:100%!important}.email-action{display:block!important;text-align:center!important}}@media(forced-colors:active){.email-action{border-color:ButtonText!important;background:ButtonFace!important;color:ButtonText!important}}`;
+  return `@font-face{font-family:Inter;src:url('${origin}/brand/fixxflow/fonts/InterVariable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}h1,h2,strong,b{font-family:Inter,Arial,sans-serif}.email-action:hover{background:${t.actionHover}!important}.email-action:focus{outline:3px solid ${t.ink};outline-offset:3px}@media(max-width:480px){.email-action-table{width:100%!important}.email-action{display:block!important;text-align:center!important}}@media(forced-colors:active){.email-action{border-color:ButtonText!important;background:ButtonFace!important;color:ButtonText!important}}`;
 }
 
 /** Outlook ignores CSS backgrounds on cells; the legacy attribute is absent from React's types. */
@@ -244,7 +245,7 @@ export function EmailTitle({ children }: { children: ReactNode }) {
         margin: '0 0 16px',
         fontSize: '24px',
         lineHeight: '32px',
-        fontWeight: 700,
+        fontWeight: 600,
         fontFamily: t.heading,
         letterSpacing: '-0.3px',
         color: t.text,
@@ -377,7 +378,7 @@ export function EmailCallout({
                 color: warning ? t.warningText : t.text,
                 fontSize: warning ? '14px' : '16px',
                 lineHeight: warning ? '22px' : '24px',
-                fontWeight: warning ? 700 : 600,
+                fontWeight: 600,
                 fontFamily: t.heading,
               }}
             >
@@ -420,7 +421,7 @@ export function EmailCode({ children }: { children: ReactNode }) {
         borderRadius: '8px',
         fontSize: '28px',
         lineHeight: '36px',
-        fontWeight: 700,
+        fontWeight: 600,
         fontFamily: t.heading,
         letterSpacing: '6px',
         textAlign: 'left',

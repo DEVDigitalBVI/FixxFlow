@@ -31,12 +31,13 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
 ```css
 :root {
   color-scheme: light;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --color-on-accent: #ffffff;
   --color-action-fill: #ffd700;
   --color-action-hover: #e6c200;
   --color-on-action: #212529;
   --color-inverse: #ffffff;
-  --color-inverse-hover: #f1f3f5;
   --color-brand-text-muted: #dee2e6;
   --color-highlight: #655600;
   --color-highlight-surface: #fff8cc;
@@ -46,7 +47,6 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-neutral-subtle: #e9ecef;
   --color-note-border: var(--color-brand-primary);
   --color-note-surface: var(--color-surface-subtle);
-  --color-auth-tint: #fff4b3;
 
   --color-brand-primary: #ffd700;
   --color-brand-secondary: #ff9800;
@@ -54,14 +54,12 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-canvas: #faf9f2;
   --color-surface: #ffffff;
   --color-surface-subtle: #f8f9fa;
-  --color-surface-raised: #ffffff;
-  --color-border: #dee2e6;
-  --color-border-strong: #adb5bd;
+  --color-border: #e9ecef;
+  --color-border-strong: #ced4da;
   --color-text: #212529;
   --color-text-muted: #545b62;
   --color-text-subtle: #545b62;
   --color-accent: #212529;
-  --color-accent-hover: #343a40;
   --color-accent-subtle: #fff4b3;
   --color-active: #343a40;
   --color-active-surface: #e9ecef;
@@ -72,12 +70,13 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-danger: #212529;
   --color-danger-surface: #f1f3f5;
   --color-focus: #212529;
-  --color-control-border: #6c757d;
-  --color-field-surface: #f1f3f5;
-  --color-field-hover: #e9ecef;
+  --color-control-border: #80878f;
+  --color-selected-border: #e6c200;
   --brand-flow: linear-gradient(100deg, var(--color-brand-primary), var(--color-brand-secondary));
   --shadow-card: 0 1px 2px rgb(26 26 26 / 2%), 0 4px 12px rgb(26 26 26 / 2%);
   --shadow-overlay: 0 16px 40px rgb(26 26 26 / 18%);
+  /* Control height: 40px with a mouse or trackpad, 44px touch targets on touch screens. */
+  --control-height: 40px;
   --radius-control: 8px;
   --radius-card: 12px;
   --radius-panel: 16px;
@@ -86,7 +85,7 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
 
 The core palette is yellow `#FFD700`, orange `#FF9800`, charcoal `#212529`, white `#FFFFFF`, and gray `#ADB5BD`. Yellow anchors artwork and primary actions; charcoal labels provide readable contrast on yellow. Gray is a supporting surface/detail color, never normal text on white. Derived neutral shades and restrained yellow tints supply surfaces, boundaries and readable secondary text.
 
-Functional links and focus outlines use charcoal on light surfaces and yellow on dark surfaces. Filled actions use yellow with charcoal labels and a darker yellow hover. Retain a visible charcoal boundary around yellow controls on light surfaces. Status, priority, success and errors use the same palette with explicit labels and existing distinct icons; color never carries state alone. Charts retain distinct line styles and exact-data tables. Validate normal text at WCAG AA (4.5:1) and essential controls/focus at 3:1.
+Functional links and focus outlines use charcoal on light surfaces and yellow on dark surfaces. Filled actions use flat yellow with charcoal labels and a darker yellow hover, without an outline; secondary actions use a white surface with the faint border token. Field edges use `--color-control-border`, which keeps 3:1 contrast on every surface. Decorative lines use the soft `--color-border`. Status, priority, success and errors use the same palette with explicit labels and existing distinct icons; color never carries state alone. Charts retain distinct line styles and exact-data tables. Validate normal text at WCAG AA (4.5:1) and essential controls/focus at 3:1.
 
 Role-named semantic tokens remain shared across every feature. Legacy purple token names remain compatibility aliases for neutral chart series, not permission to introduce purple. Danger text uses charcoal in light mode and yellow in dark mode on neutral surfaces.
 
@@ -115,7 +114,7 @@ The approved, versioned asset package lives under `public/brand/fixxflow/`. Refr
 
 ### 3.3 Typography
 
-- Use self-hosted Google Fonts: **Outfit** for body text and regular/medium labels, **Rethink Sans** for headings, semantic bold text, and 600–800 weight UI text. Use shared `--font-body` and `--font-heading` family tokens with system sans-serif fallbacks. Keep the family beside explicit weight declarations so supporting copy retains Outfit. Ship variable font files and their SIL Open Font Licenses locally; load with `next/font/local` and `display: swap` so browsers never need a Google request. Rethink Sans includes its native italic; Outfit provides upright weights and uses browser oblique for italic body emphasis. Preserve existing sizes, line heights, tabular numerals and responsive behavior.
+- Use **Inter** for all product text, headings included, self-hosted from `public/brand/fixxflow/fonts` (variable upright and italic files with the SIL Open Font License) and loaded with `next/font/local` and `display: swap`, so browsers never request Google. `--font-body` and `--font-heading` both resolve to Inter. Type scale: 12, 14, 16, 18, 20, 24, 28 and 32px (fluid `clamp()` sizes only for sign-in hero copy). Weights: 400 body, 500 labels and controls, 600 headings and emphasis; no 700 or 800. Headings share one treatment (600, slightly tightened tracking). Spacing uses the 4px scale; layout gaps and padding use 16, 20, 24 and 32px.
 - Use the 400, 500, 600, and 700 weight steps in product UI. Avoid synthetic in-between weights; they make hierarchy inconsistent across browsers.
 - Default body: 14px/20px in the agent workspace; 16px/24px in the employee portal and prose-heavy content.
 - Page title: 24–28px, 600–700 weight, tight but readable line height.

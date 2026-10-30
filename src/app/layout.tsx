@@ -11,30 +11,23 @@ import './globals.css';
 
 import productStyles from './product.module.css';
 
-const outfit = localFont({
-  src: '../../public/brand/fixxflow/fonts/Outfit-Variable.ttf',
-  weight: '100 900',
-  display: 'swap',
-  fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
-  variable: '--font-outfit',
-});
-
-const rethinkSans = localFont({
+// Inter for headings and body text, self-hosted so browsers never request Google Fonts.
+const inter = localFont({
   src: [
     {
-      path: '../../public/brand/fixxflow/fonts/RethinkSans-Variable.ttf',
+      path: '../../public/brand/fixxflow/fonts/InterVariable.woff2',
       style: 'normal',
-      weight: '400 800',
+      weight: '100 900',
     },
     {
-      path: '../../public/brand/fixxflow/fonts/RethinkSans-Italic-Variable.ttf',
+      path: '../../public/brand/fixxflow/fonts/InterVariable-Italic.woff2',
       style: 'italic',
-      weight: '400 800',
+      weight: '100 900',
     },
   ],
   display: 'swap',
   fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
-  variable: '--font-rethink-sans',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -59,11 +52,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${outfit.variable} ${rethinkSans.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

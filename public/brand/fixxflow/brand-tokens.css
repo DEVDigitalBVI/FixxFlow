@@ -18,7 +18,7 @@
   --fixxflow-warning: #8a4b00;
   --fixxflow-critical: #212529;
   --fixxflow-inactive: #545b62;
-  --fixxflow-font-heading: "Rethink Sans", ui-sans-serif, system-ui, sans-serif;
-  --fixxflow-font-ui: Outfit, ui-sans-serif, system-ui, -apple-system,
+  --fixxflow-font-heading: Inter, ui-sans-serif, system-ui, sans-serif;
+  --fixxflow-font-ui: Inter, ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
 }

@@ -2,7 +2,7 @@
   :where(.scope) :global(.automation-page) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
+    gap: 20px;
     min-width: 0;
   }
   :where(.scope) :global(.automation-page > *) {
@@ -36,7 +36,7 @@
   }
   :where(.scope) :global(.automation-row legend) {
     padding-right: 12px;
-    font-weight: 700;
+    font-weight: 600;
     font-family: var(--font-heading);
   }
   :where(.scope) :global(.automation-condition-grid) {
@@ -77,7 +77,7 @@
     padding-block: 36px;
   }
   :where(.scope) :global(.automation-page .check-field) {
-    min-height: 44px;
+    min-height: var(--control-height);
     align-items: center;
   }
   @media (max-width: 767px) {
@@ -229,7 +229,7 @@
   :where(.scope) :global(.automation-list-welcome-copy h3) {
     font-size: 24px;
     line-height: 1.25;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     margin: 0 0 12px;
     max-width: 20ch;
   }
@@ -500,7 +500,7 @@
     line-height: 1.6;
   }
   :where(.scope) :global(.automation-template-grid article > p.muted) {
-    font-size: 13px;
+    font-size: 14px;
   }
   :where(.scope) :global(.automation-template-grid article > button) {
     margin-top: auto;
@@ -529,7 +529,7 @@
     padding-block: 20px;
   }
   :where(.scope) :global(.automation-builder .automation-row legend) {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--color-text-muted);
   }
   :where(.scope) :global(.automation-operations-grid .settings-card) {

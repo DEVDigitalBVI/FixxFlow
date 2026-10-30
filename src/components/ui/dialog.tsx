@@ -11,8 +11,6 @@ import { cn } from '@/lib/utils';
  * Content renders in a portal so it is never trapped inside hidden or inert navigation.
  */
 const Dialog = DialogPrimitive.Root;
-const DialogTrigger = DialogPrimitive.Trigger;
-const DialogClose = DialogPrimitive.Close;
 
 function DialogContent({
   className,
@@ -49,4 +47,4 @@ function DialogTitle({ className, ...props }: ComponentProps<typeof DialogPrimit
   );
 }
 
-export { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger };
+export { Dialog, DialogContent, DialogTitle };
