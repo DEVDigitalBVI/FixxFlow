@@ -26,6 +26,8 @@ const inter = localFont({
     },
   ],
   display: 'swap',
+  // Keep text visible and load only the font faces used by the page (no unused italic preload).
+  preload: false,
   fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
   variable: '--font-inter',
 });

@@ -635,3 +635,5 @@ Native dropdowns reserve 40px at the inline end for a 16px chevron inset 12px fr
 Use solid crimson with white headings, descriptions and links for Chat with IT and Find an answer in both themes, without an outer border. Keep Submit a request on the regular surface. The help-search field stays white with navy text; its Search action uses white with crimson text for distinction. Preserve visible keyboard focus on the crimson panels, native GET search, clear links, responsive stacking and forced-colors boundaries.
 
 Knowledge topic cards (Accounts, Email, Network, Hardware, Software and Security) share the crimson/white, borderless treatment in both themes. Keep headings and descriptions white, deepen the fill on hover, retain visible keyboard focus and preserve the existing category links and responsive grid.
+
+Keep the self-hosted normal/italic Inter faces and `display: swap`, but disable whole-family preloading: the browser requests the face actually used by the page, instead of downloading unused italic on every initial visit. Verify font requests and paint timing before claiming a real-user performance improvement.
