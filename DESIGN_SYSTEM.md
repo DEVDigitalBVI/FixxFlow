@@ -51,8 +51,8 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-brand-primary: #ef233c;
   --color-brand-secondary: #8d99ae;
   --color-brand-ink: #2b2d42;
-  --color-brand-panel: #9f1934;
-  --color-brand-panel-hover: #8d142d;
+  --color-brand-panel: #35383d;
+  --color-brand-panel-hover: #292c30;
   --color-canvas: #edf2f4;
   --color-surface: #ffffff;
   --color-surface-subtle: #f4f6f8;
@@ -634,15 +634,15 @@ Native dropdowns reserve 40px at the inline end for a 16px chevron inset 12px fr
 
 ### Employee home emphasis
 
-Use solid crimson with white headings, descriptions and links for Chat with IT and Find an answer in both themes, without an outer border. Keep Submit a request on the regular surface. The help-search field stays white with navy text; its Search action uses white with crimson text for distinction. Preserve visible keyboard focus on the crimson panels, native GET search, clear links, responsive stacking and forced-colors boundaries.
+Use dark grey with white headings, descriptions and links for Chat with IT and Find an answer in both themes, without an outer border. Keep Submit a request on the regular surface. The help-search field stays white with navy text; its Search action uses white with crimson text for distinction. Preserve visible keyboard focus on the dark grey panels, native GET search, clear links, responsive stacking and forced-colors boundaries.
 
-Knowledge topic cards (Accounts, Email, Network, Hardware, Software and Security) share the crimson/white, borderless treatment in both themes. Keep headings and descriptions white, deepen the fill on hover, retain visible keyboard focus and preserve the existing category links and responsive grid.
+Knowledge topic cards (Accounts, Email, Network, Hardware, Software and Security) share the dark-grey/white, borderless treatment in both themes. Keep headings and descriptions white, deepen the fill on hover, retain visible keyboard focus and preserve the existing category links and responsive grid.
 
 Keep the self-hosted normal/italic Inter faces and `display: swap`, but disable whole-family preloading: the browser requests the face actually used by the page, instead of downloading unused italic on every initial visit. Verify font requests and paint timing before claiming a real-user performance improvement.
 
-### Quieter crimson panels
+### Dark grey panels
 
-Large filled panels use the dedicated brand-panel tokens: muted crimson `#9F1934` in light mode, deeper wine `#7B1C32` in dark mode, with white text. Hover uses `#8D142D` and `#911F3A` respectively. Apply this to the employee-home emphasis panels and help topic cards. Keep the original crimson for compact actions and the existing branding; avoid filling large areas with the fully saturated action color. Preserve white search fields, explicit focus and the existing responsive layout.
+Large filled panels use the dedicated brand-panel tokens: dark grey `#35383D` in light mode and `#3C4046` in dark mode, with white text. Hover uses `#292C30` and `#484D54` respectively. Apply this to the employee-home emphasis panels and help topic cards. Keep the original crimson for compact actions and the existing branding; avoid filling large areas with the fully saturated action color. Preserve white search fields, explicit focus and the existing responsive layout.
 
 ### Dashboard insight alignment
 
