@@ -261,34 +261,22 @@
     flex: 0 0 44px;
     object-fit: contain;
   }
-  .brand-logo-navigation-copy {
-    min-width: 0;
-    display: grid;
-    gap: 1px;
+  .brand-logo-navigation-icon {
+    display: none;
   }
-  .brand-logo-navigation-wordmark {
-    display: flex;
-    align-items: baseline;
-    color: var(--color-text);
-    font-size: 20px;
-    line-height: 23px;
-    font-weight: 600;
-    font-family: var(--font-heading);
-    letter-spacing: -0.02em;
-    white-space: nowrap;
+  .brand-logo-navigation-artwork {
+    display: block;
+    width: 176px;
+    max-width: 100%;
+    height: auto;
   }
-  .brand-logo-navigation-wordmark span:last-child {
-    color: var(--color-accent);
+  :root[data-theme='dark'] .brand-logo-navigation-artwork {
+    filter: brightness(0) invert(1);
   }
-  .brand-logo-navigation-tagline {
-    color: var(--color-text-muted);
-    font-size: 6px;
-    line-height: 10px;
-    font-weight: 600;
-    font-family: var(--font-heading);
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    white-space: nowrap;
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .brand-logo-navigation-artwork {
+      filter: brightness(0) invert(1);
+    }
   }
   :focus-visible {
     outline: 3px solid var(--color-focus);
@@ -830,8 +818,11 @@
       justify-content: center;
       padding: 0;
     }
-    .sidebar .brand-logo-navigation-copy {
+    .sidebar .brand-logo-navigation-artwork {
       display: none;
+    }
+    .sidebar .brand-logo-navigation-icon {
+      display: block;
     }
     .nav-link span,
     .account-copy {
@@ -2972,8 +2963,11 @@
     }
 
     /* Explicit expansion also works at tablet widths, where the rail is the default. */
-    .app-shell[data-sidebar='expanded'] .brand-logo-navigation-copy {
-      display: grid;
+    .app-shell[data-sidebar='expanded'] .brand-logo-navigation-artwork {
+      display: block;
+    }
+    .app-shell[data-sidebar='expanded'] .brand-logo-navigation-icon {
+      display: none;
     }
     .app-shell[data-sidebar='expanded'] .nav-link {
       justify-content: flex-start;
@@ -3019,9 +3013,12 @@
     .app-shell[data-sidebar='collapsed'] .sidebar-brand {
       justify-content: center;
     }
-    .app-shell[data-sidebar='collapsed'] .brand-logo-navigation-copy,
+    .app-shell[data-sidebar='collapsed'] .brand-logo-navigation-artwork,
     .app-shell[data-sidebar='collapsed'] .account-copy {
       display: none;
+    }
+    .app-shell[data-sidebar='collapsed'] .brand-logo-navigation-icon {
+      display: block;
     }
     .app-shell[data-sidebar='collapsed'] .sidebar-collapse svg {
       transform: rotate(180deg);

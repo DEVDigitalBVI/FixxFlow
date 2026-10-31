@@ -27,13 +27,15 @@ export function BrandLogo({
           preload={priority}
           sizes="44px"
         />
-        <span className="brand-logo-navigation-copy" aria-hidden="true">
-          <span className="brand-logo-navigation-wordmark">
-            <span>Fixx</span>
-            <span>Flow</span>
-          </span>
-          <span className="brand-logo-navigation-tagline">IT support in motion</span>
-        </span>
+        <Image
+          className="brand-logo-navigation-artwork"
+          src="/brand/fixxflow/logo/fixxflow-logo-horizontal-full.png?v=red-navy-20261030"
+          width={2172}
+          height={724}
+          alt=""
+          preload={priority}
+          sizes="176px"
+        />
       </Link>
     );
   return (

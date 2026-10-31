@@ -317,7 +317,7 @@
     margin: 4px 0 0;
     font-size: 14px;
   }
-  :where(.scope) :global(.reports-page .report-chart-grid) {
+  :where(.scope) :global(:is(.overview-page, .reports-page) .report-chart-grid) {
     align-items: stretch;
   }
   :where(.scope) :global(.reports-page .report-chart) {

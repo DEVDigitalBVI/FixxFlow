@@ -302,10 +302,10 @@ test('brand logo variants use approved artwork at its original proportions', () 
     } else {
       assert.match(html, /brand-logo-navigation-icon/);
       assert.match(html, /fixxflow-icon-primary\.png/);
-      assert.match(html, />Fixx</);
-      assert.match(html, />Flow</);
-      assert.match(html, /IT support in motion/);
-      assert.doesNotMatch(html, /fixxflow-logo-horizontal-full\.png/);
+      assert.match(html, /brand-logo-navigation-artwork/);
+      assert.match(html, /fixxflow-logo-horizontal-full\.png/);
+      assert.match(html, /width="2172" height="724"/);
+      assert.doesNotMatch(html, /brand-logo-navigation-wordmark|>Fixx<|>Flow</);
     }
     assert.match(html, /aria-label="FixxFlow home"/);
     if (variant !== 'full') assert.equal(imageProps.at(-1).preload, true);
@@ -460,12 +460,12 @@ test('rebranded artwork versions are allowed by image optimization and favicon c
   assert.equal(manifest.theme_color, '#d90429');
 });
 
-test('brand wordmark keeps readable theme accents', () => {
+test('original navigation artwork retains compact and readable dark theme treatments', () => {
   const css = productStyles().replace(/\s+/g, ' ').replace(/'/g, '"');
   assert.match(css, /--color-brand-primary: #ef233c;/);
   assert.match(
     css,
-    /\.brand-logo-navigation-wordmark span:last-child \{ color: var\(--color-accent\); \}/,
+    /:root\[data-theme="dark"\] \.brand-logo-navigation-artwork \{ filter: brightness\(0\) invert\(1\); \}/,
   );
   assert.doesNotMatch(css, /#(?:ffd700|ff9800|e6c200|fff4b3)\b/i);
 });
