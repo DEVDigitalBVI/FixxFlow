@@ -96,7 +96,7 @@ Dark mode uses a deeper navy canvas `#232536`, navy cards `#2B2D42` and elevated
 
 - The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its red ribbon motion and navy folds express speed, continuity, and dependable technical support.
 - The product name is always written **FixxFlow** with two lowercase x characters and capital F characters. The primary tagline is **IT SUPPORT IN MOTION**.
-- Application navigation uses the approved horizontal artwork, preserving the original drawn wordmark and tagline rather than recreating them in Inter. Keep its size and spacing identical in light and dark themes; use a white silhouette of the same artwork on dark surfaces. Do not place the navigation logo on a contrasting plaque.
+- Application navigation uses the approved horizontal artwork, preserving the original drawn wordmark and tagline rather than recreating them in Inter. Keep its size and spacing identical in light and dark themes; use the horizontal dark variant with frost lettering, preserving the red mark, wrench and original letterforms on dark surfaces. Do not place the navigation logo on a contrasting plaque.
 - Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Favicons and app-launcher icons use the same red-and-navy mark.
 - Use `logo/fixxflow-logo-horizontal-full.png` for spacious light-surface placements, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode-transparent.png` for the dark stacked lockup. Compact navigation uses `icon/fixxflow-icon-primary.png`; expanded navigation uses the original horizontal artwork. Use the approved red-and-navy artwork; do not stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
 - Keep clear space around the logo. At small sizes, drop the tagline before reducing legibility; use the icon rather than forcing the wordmark into a square.
@@ -643,3 +643,7 @@ Keep the self-hosted normal/italic Inter faces and `display: swap`, but disable 
 ### Quieter crimson panels
 
 Large filled panels use the dedicated brand-panel tokens: muted crimson `#9F1934` in light mode, deeper wine `#7B1C32` in dark mode, with white text. Hover uses `#8D142D` and `#911F3A` respectively. Apply this to the employee-home emphasis panels and help topic cards. Keep the original crimson for compact actions and the existing branding; avoid filling large areas with the fully saturated action color. Preserve white search fields, explicit focus and the existing responsive layout.
+
+### Dashboard insight alignment
+
+Pair workload and response cards with stretched outer heights on desktop. Keep heading/helper spacing consistent and reserve two lines for descriptions only while the cards sit side by side. Anchor response-data disclosures at the bottom. At compact widths, stack naturally, retaining all workload rows, empty/error states and accessible exact data.

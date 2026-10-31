@@ -270,14 +270,6 @@
     max-width: 100%;
     height: auto;
   }
-  :root[data-theme='dark'] .brand-logo-navigation-artwork {
-    filter: brightness(0) invert(1);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) .brand-logo-navigation-artwork {
-      filter: brightness(0) invert(1);
-    }
-  }
   :focus-visible {
     outline: 3px solid var(--color-focus);
     outline-offset: 2px;

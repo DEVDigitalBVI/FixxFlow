@@ -27,15 +27,26 @@ export function BrandLogo({
           preload={priority}
           sizes="44px"
         />
-        <Image
-          className="brand-logo-navigation-artwork"
-          src="/brand/fixxflow/logo/fixxflow-logo-horizontal-full.png?v=red-navy-20261030"
-          width={2172}
-          height={724}
-          alt=""
-          preload={priority}
-          sizes="176px"
-        />
+        <span className="brand-logo-navigation-artwork" aria-hidden="true">
+          <Image
+            className="brand-logo-image brand-logo-image-light"
+            src="/brand/fixxflow/logo/fixxflow-logo-horizontal-full.png?v=red-navy-20261030"
+            width={2172}
+            height={724}
+            alt=""
+            fetchPriority={priority ? 'high' : undefined}
+            sizes="176px"
+          />
+          <Image
+            className="brand-logo-image brand-logo-image-dark"
+            src="/brand/fixxflow/logo/fixxflow-logo-horizontal-dark.png?v=red-navy-20261030"
+            width={2172}
+            height={724}
+            alt=""
+            fetchPriority={priority ? 'high' : undefined}
+            sizes="176px"
+          />
+        </span>
       </Link>
     );
   return (
