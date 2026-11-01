@@ -464,6 +464,10 @@ type RuntimeTables = {
   };
 
 type RuntimeFunctions = {
+  delete_workspace_people: {
+    Args: { org: string; targets: string[]; confirmed: boolean };
+    Returns: number;
+  };
   account_authentication_policy: {
     Args: Record<string, never>;
     Returns: import('@/features/auth/workspace-policy').AccountAuthenticationPolicy[];

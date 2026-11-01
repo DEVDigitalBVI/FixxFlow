@@ -196,6 +196,7 @@ test('read authorization, query scope, paging and failures remain server enforce
     ),
   );
   assert.ok(directory.calls.some((c) => c[0] === 'range' && c[1] === 25 && c[2] === 49));
+  assert.ok(directory.calls.some((c) => c[0] === 'is' && c[1] === 'deleted_at' && c[2] === null));
   assert.match(html, /page=3&amp;q=Alex&amp;view=technicians/);
   await assert.rejects(
     page('administrator', 0, { message: 'offline' }).render(),

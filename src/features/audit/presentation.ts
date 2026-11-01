@@ -26,6 +26,7 @@ export const auditEntities: Record<string, string> = {
   report_schedules: 'Report schedules',
 };
 export const auditFields: Record<string, string> = {
+  workspace_access: 'Workspace access',
   require_mfa: 'Require two-step verification',
   inventory_action: 'Inventory action',
   inventory_details: 'Inventory details',

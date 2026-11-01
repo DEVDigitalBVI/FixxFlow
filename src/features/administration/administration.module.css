@@ -202,6 +202,103 @@
     padding: 0;
     margin: 0;
   }
+  :where(.scope) :global(.people-selection) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.people-select-all),
+  :where(.scope) :global(.person-select),
+  :where(.scope) :global(.people-delete-acknowledgement) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--control-height);
+    cursor: pointer;
+  }
+  :where(.scope) :global(.person-select) {
+    flex-shrink: 0;
+    min-width: var(--control-height);
+    justify-content: center;
+  }
+  :where(.scope) :global(.people-selection > [role='status']) {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+  :where(.scope) :global(.people-delete) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.people-delete > summary) {
+    list-style: none;
+  }
+  :where(.scope) :global(.people-delete > summary::-webkit-details-marker) {
+    display: none;
+  }
+  :where(.scope) :global(.person-card > .people-delete) {
+    display: inline-block;
+    margin-inline-start: 8px;
+  }
+  :where(.scope) :global(.person-card > .people-delete[open]) {
+    display: block;
+    margin-inline-start: 0;
+  }
+  :where(.scope) :global(.people-selection > .people-delete[open]) {
+    flex-basis: 100%;
+  }
+  :where(.scope) :global(.people-delete-confirmation) {
+    padding: 16px;
+    margin-top: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.people-delete-confirmation h4),
+  :where(.scope) :global(.people-delete-confirmation p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.people-delete-names) {
+    margin: 0;
+    padding-inline-start: 20px;
+    max-height: 200px;
+    overflow: auto;
+  }
+  :where(.scope) :global(.people-delete-names:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
+  }
+  :where(.scope) :global(.people-delete-acknowledgement) {
+    align-items: flex-start;
+  }
+  :where(.scope) :global(.people-delete-acknowledgement input) {
+    margin-top: 4px;
+  }
+  :where(.scope) :global(.people-delete-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  @media (max-width: 1199px) {
+    :where(.scope) :global(.person-card:has(.person-select) .person-card-meta) {
+      padding-inline-start: calc(var(--control-height) + 72px);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.people-selection) {
+      padding-inline: 16px;
+    }
+    :where(.scope) :global(.person-card-identity) {
+      gap: 8px;
+    }
+    :where(.scope) :global(.person-card:has(.person-select) .person-card-meta) {
+      padding-inline-start: calc(var(--control-height) + 56px);
+    }
+  }
   :where(.scope) :global(.person-access-change .settings-editor) {
     padding: 0;
     border: 0;

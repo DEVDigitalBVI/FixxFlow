@@ -33,6 +33,8 @@ export function PersonCard({
   updateRole,
   updateStatus,
   inventoryPermissions,
+  selection,
+  deleteControl,
 }: {
   id: string;
   name: string;
@@ -46,6 +48,8 @@ export function PersonCard({
   departments: Option[];
   locations: Option[];
   inventoryPermissions?: ReactNode;
+  selection?: ReactNode;
+  deleteControl?: ReactNode;
   updateRole: (form: FormData) => Promise<void>;
   updateStatus: (form: FormData) => Promise<void>;
 }) {
@@ -53,6 +57,7 @@ export function PersonCard({
     <li className="person-card">
       <div className="person-card-overview">
         <div className="person-card-identity">
+          {selection}
           <Avatar name={name} src={avatarUrl} />
           <div>
             <h3>
@@ -74,6 +79,7 @@ export function PersonCard({
       <Link className={buttonVariants({ variant: 'quiet' })} href={`/app/people/${id}/equipment`}>
         Equipment<span className="sr-only"> for {name}</span>
       </Link>
+      {deleteControl}
       {canManage && (
         <details className="person-manage">
           <summary className={buttonVariants({ variant: 'secondary' })}>
