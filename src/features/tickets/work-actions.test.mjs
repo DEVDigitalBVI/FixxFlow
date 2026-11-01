@@ -159,3 +159,14 @@ test('Resolve provides an explicit save for every status and submits the selecte
     h.close();
   }
 });
+
+test('status guidance remains outside the forms and linked to the status select', () => {
+  const { TicketWorkActions } = load('src/features/tickets/work-actions.tsx', mocks);
+  const html = renderToStaticMarkup(
+    React.createElement(TicketWorkActions, { ticket: initial, assignee: 'Unassigned' }),
+  );
+  assert.ok(html.indexOf('ticket-work-guidance') > html.lastIndexOf('</form>'));
+  const hintId = html.match(/aria-describedby="([^"]+)"/)[1];
+  assert.ok(html.includes('id="' + hintId + '"'));
+  assert.match(html, /button-secondary[^>]*" href="#ticket-conversation"/);
+});

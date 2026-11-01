@@ -1553,7 +1553,20 @@
     overflow-wrap: anywhere;
   }
   :where(.scope) :global(.ticket-work) {
+    display: grid;
+    gap: var(--space-group);
     margin-bottom: var(--space-group);
+  }
+  :where(.scope) :global(.ticket-work > p.muted),
+  :where(.scope) :global(.ticket-work .section-heading-row),
+  :where(.scope) :global(.ticket-work-guidance p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.ticket-work-guidance) {
+    flex-basis: 100%;
+    display: grid;
+    gap: var(--space-inline);
+    min-width: 0;
   }
   :where(.scope) :global(.ticket-work h2) {
     margin: 0;
@@ -1616,6 +1629,10 @@
     }
   }
   @media (max-width: 767px) {
+    :where(.scope) :global(.ticket-work-guidance),
+    :where(.scope) :global(.ticket-status-action) {
+      flex-basis: auto;
+    }
     :where(.scope) :global(.ticket-work-controls > form),
     :where(.scope) :global(.ticket-work-controls button),
     :where(.scope) :global(.ticket-status-action) {

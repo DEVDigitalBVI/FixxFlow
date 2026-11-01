@@ -67,7 +67,7 @@ export function TicketWorkActions({
           </p>
         </div>
         {stage === 'all' && (
-          <a className={buttonVariants({ variant: 'quiet' })} href="#ticket-conversation">
+          <a className={buttonVariants({ variant: 'secondary' })} href="#ticket-conversation">
             Reply or add a note
           </a>
         )}
@@ -100,7 +100,10 @@ export function TicketWorkActions({
           {stage !== 'resolution' && !done && !ticket.assigned_technician_id && (
             <ActionForm action={action} protectDraft={false}>
               {fields('take')}
-              <SubmitButton variant="primary" pendingLabel="Assigning…">
+              <SubmitButton
+                variant={stage === 'assignment' ? 'primary' : 'secondary'}
+                pendingLabel="Assigning…"
+              >
                 Assign to me
               </SubmitButton>
             </ActionForm>
@@ -111,7 +114,10 @@ export function TicketWorkActions({
             ticket.status !== 'in_progress' && (
               <ActionForm action={action} protectDraft={false}>
                 {fields('start')}
-                <SubmitButton variant="primary" pendingLabel="Starting…">
+                <SubmitButton
+                  variant={stage === 'assignment' ? 'primary' : 'secondary'}
+                  pendingLabel="Starting…"
+                >
                   Start work
                 </SubmitButton>
               </ActionForm>
@@ -141,6 +147,10 @@ export function TicketWorkActions({
               <SubmitButton variant="primary" pendingLabel="Saving status…">
                 Save status
               </SubmitButton>
+            </ActionForm>
+          )}
+          {stage !== 'assignment' && (
+            <div className="ticket-work-guidance">
               <p id={statusHint} className="muted ticket-status-hint">
                 {dirty
                   ? `Unsaved status: ${ticketStatuses[statusDraft].label}. Select Save status to apply it.`
@@ -152,7 +162,7 @@ export function TicketWorkActions({
                   resolution SLA; their next reply resumes work automatically.
                 </p>
               )}
-            </ActionForm>
+            </div>
           )}
         </div>
       )}
