@@ -1560,7 +1560,10 @@
     margin-bottom: 0;
   }
   .person-card {
-    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--space-group);
+    align-items: center;
     padding: var(--space-group) var(--space-section);
     border-bottom: 1px solid var(--color-border);
     min-width: 0;
@@ -1575,8 +1578,22 @@
     gap: var(--space-section);
     min-width: 0;
   }
-  .person-card:has(.person-manage) .person-card-overview {
-    padding-right: 124px;
+  .person-card-overview {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .person-card:not(:has(.person-manage)) .person-card-overview {
+    grid-column: 1 / -1;
+  }
+  .person-manage {
+    display: contents;
+  }
+  .person-manage::details-content {
+    grid-column: 1 / -1;
+  }
+  .person-manage:not([open])::details-content,
+  .person-manage:not([open]) > .person-manage-content {
+    display: none;
   }
   .person-card-identity {
     display: flex;
@@ -1622,9 +1639,9 @@
     white-space: nowrap;
   }
   .person-manage > summary {
-    position: absolute;
-    right: 24px;
-    top: var(--space-group);
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
     list-style: none;
   }
   .person-manage > summary::-webkit-details-marker {
@@ -1636,6 +1653,7 @@
     border-color: var(--color-selected-border);
   }
   .person-manage-content {
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 32px;
@@ -1653,6 +1671,7 @@
     border-top: 1px solid var(--color-border);
   }
   .person-readonly-actions {
+    grid-column: 1 / -1;
     display: flex;
     margin-top: var(--space-group);
   }
@@ -1695,11 +1714,12 @@
     .person-card {
       padding: var(--space-group);
     }
-    .person-card:has(.person-manage) .person-card-overview {
-      padding-right: 0;
+    .person-card {
+      grid-template-columns: minmax(0, 1fr);
     }
     .person-manage > summary {
-      position: static;
+      grid-column: 1;
+      grid-row: auto;
       margin-top: 16px;
       width: 100%;
     }
