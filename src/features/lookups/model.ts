@@ -8,6 +8,7 @@ export const lookupResources = [
   'teams',
   'departments',
   'locations',
+  'location_parents',
   'categories',
   'subcategories',
 ] as const;

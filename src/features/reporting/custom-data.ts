@@ -91,10 +91,10 @@ export async function getReportReferences(organizationId: string): Promise<Repor
         .eq('organization_id', organizationId)
         .order('name'),
       database
-        .from('locations')
-        .select('id,name')
+        .from('location_paths')
+        .select('id,name:path')
         .eq('organization_id', organizationId)
-        .order('name'),
+        .order('path'),
     ]);
   const failure = [
     categories,

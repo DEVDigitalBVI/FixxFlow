@@ -24,6 +24,8 @@ export async function lookupChoices(params: URLSearchParams): Promise<LookupPage
     throw new LookupInputError();
   if (viewer.role === 'end_user' && ['people', 'technicians', 'teams'].includes(resource))
     throw new LookupInputError();
+  if (resource === 'location_parents' && viewer.role !== 'administrator')
+    throw new LookupInputError();
   if (cursor) {
     try {
       if (cursor.length > 4096) throw new Error();
@@ -32,7 +34,7 @@ export async function lookupChoices(params: URLSearchParams): Promise<LookupPage
         !Array.isArray(value) ||
         value.length !== 2 ||
         typeof value[0] !== 'string' ||
-        value[0].length > 600 ||
+        value[0].length > 1024 ||
         typeof value[1] !== 'string' ||
         !uuid.test(value[1])
       )

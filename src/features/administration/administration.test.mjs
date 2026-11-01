@@ -87,9 +87,42 @@ function load(file, role, rows = [], error = null) {
 }
 const hub = 'src/app/app/administration/page.tsx';
 const detail = 'src/app/app/administration/[section]/page.tsx';
+const organization = 'src/app/app/organization/page.tsx';
 const props = (section, page = '1') => ({
   params: Promise.resolve({ section }),
   searchParams: Promise.resolve({ page }),
+});
+test('organization explains independent departments and locations and links to profile assignments', async () => {
+  const html = renderToStaticMarkup(
+    await load(organization, 'administrator').render({ searchParams: Promise.resolve({}) }),
+  );
+  assert.match(html, /These are separate lists, not a hierarchy/);
+  assert.match(html, /department can work across several locations/);
+  assert.match(html, /href="\/app\/people"/);
+  assert.match(html, /People → Manage → Profile details/);
+  assert.match(html, /do not assign an IT technician/);
+  assert.match(html, /requester’s department/);
+  assert.match(html, /locations to people, tickets and equipment/);
+  assert.match(html, /aria-labelledby="organization-timezone-title"/);
+  assert.match(html, /Organization timezone<select/);
+  assert.match(html, /No departments yet/);
+  assert.match(html, /No locations yet/);
+});
+test('organization retains independent load failures and administrator-only access', async () => {
+  const html = renderToStaticMarkup(
+    await load(organization, 'administrator', [], { message: 'failed' }).render({
+      searchParams: Promise.resolve({}),
+    }),
+  );
+  assert.match(html, /Departments could not be loaded/);
+  assert.match(html, /Locations could not be loaded/);
+  assert.match(html, /href="\/app\/organization#departments"/);
+  assert.match(html, /href="\/app\/organization#locations"/);
+  for (const role of ['end_user', 'technician'])
+    await assert.rejects(
+      () => load(organization, role).render({ searchParams: Promise.resolve({}) }),
+      /NOT_FOUND/,
+    );
 });
 test('administration groups related settings and keeps future features out of active navigation', async () => {
   const html = renderToStaticMarkup(await load(hub, 'administrator').render());

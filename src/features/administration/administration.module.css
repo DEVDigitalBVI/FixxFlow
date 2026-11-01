@@ -1,4 +1,64 @@
 @layer components {
+  :where(.scope) :global(.organization-page) {
+    display: grid;
+    gap: 24px;
+  }
+  :where(.scope) :global(.organization-page > .page-header),
+  :where(.scope) :global(.organization-page > .page-alert) {
+    margin-bottom: 0;
+  }
+  :where(.scope) :global(.organization-guidance h2) {
+    margin: 0;
+    font-size: 18px;
+    line-height: 26px;
+  }
+  :where(.scope) :global(.organization-guidance p) {
+    max-width: 75ch;
+    margin: 8px 0 0;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.organization-timezone > .stack) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    max-width: 640px;
+    gap: 16px;
+  }
+  :where(.scope) :global(.organization-timezone .field) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.organization-location-item) {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  :where(.scope) :global(.organization-location-item > div:first-child),
+  :where(.scope) :global(.organization-location-item > .organization-item-actions) {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+  :where(.scope) :global(.organization-location-item strong) {
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.organization-location-item > .settings-editor[open]) {
+    order: 0;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.organization-location-item) {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: stretch;
+    }
+    :where(.scope) :global(.organization-location-item > div:first-child),
+    :where(.scope) :global(.organization-location-item > .organization-item-actions),
+    :where(.scope) :global(.organization-location-item > .settings-editor[open]) {
+      flex-basis: auto;
+    }
+    :where(.scope) :global(.organization-page) {
+      gap: 20px;
+    }
+    :where(.scope) :global(.organization-timezone > .stack) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
   :where(.scope) :global(.admin-status-available .badge) {
     color: var(--color-success);
     background: var(--color-success-subtle);

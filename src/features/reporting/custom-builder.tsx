@@ -38,7 +38,7 @@ const entityFilters: {
   { key: 'teamIds', label: 'Teams', source: 'teams' },
   { key: 'technicianIds', label: 'Technicians', source: 'technicians' },
   { key: 'departmentIds', label: 'Requester departments', source: 'departments' },
-  { key: 'locationIds', label: 'Ticket locations', source: 'locations' },
+  { key: 'locationIds', label: 'Ticket locations (includes sublocations)', source: 'locations' },
 ];
 type CustomReportBuilderProps = {
   definition: CustomReportDefinition;

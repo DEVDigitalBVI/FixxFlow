@@ -317,8 +317,26 @@
     margin: 4px 0 0;
     font-size: 14px;
   }
-  :where(.scope) :global(.reports-page .report-chart-grid) {
+  :where(.scope) :global(:is(.overview-page, .reports-page) .report-chart-grid) {
     align-items: stretch;
+  }
+  :where(.scope) :global(.overview-page .report-chart) {
+    display: flex;
+    flex-direction: column;
+  }
+  :where(.scope) :global(.overview-page .report-chart > p) {
+    margin: 8px 0 16px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  :where(.scope) :global(.overview-page .report-chart details) {
+    margin-top: auto;
+    padding-top: 16px;
+  }
+  @media (min-width: 1000px) {
+    :where(.scope) :global(.overview-page .report-chart > p) {
+      min-block-size: 3.2em;
+    }
   }
   :where(.scope) :global(.reports-page .report-chart) {
     display: flex;

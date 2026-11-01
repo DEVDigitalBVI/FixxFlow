@@ -51,8 +51,8 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-brand-primary: #ef233c;
   --color-brand-secondary: #8d99ae;
   --color-brand-ink: #2b2d42;
-  --color-brand-panel: #9f1934;
-  --color-brand-panel-hover: #8d142d;
+  --color-brand-panel: #35383d;
+  --color-brand-panel-hover: #292c30;
   --color-canvas: #edf2f4;
   --color-surface: #ffffff;
   --color-surface-subtle: #f4f6f8;
@@ -96,9 +96,9 @@ Dark mode uses a deeper navy canvas `#232536`, navy cards `#2B2D42` and elevated
 
 - The approved mark is a layered ribbon-style capital **F** with an integrated circular wrench. Its red ribbon motion and navy folds express speed, continuity, and dependable technical support.
 - The product name is always written **FixxFlow** with two lowercase x characters and capital F characters. The primary tagline is **IT SUPPORT IN MOTION**.
-- Application navigation uses a responsive lockup built from the approved standalone mark and a live product wordmark. Keep its size and spacing identical in light and dark themes; change only the token-driven text contrast. Do not place the navigation logo on a contrasting plaque.
+- Application navigation uses the approved horizontal artwork, preserving the original drawn wordmark and tagline rather than recreating them in Inter. Keep its size and spacing identical in light and dark themes; use the horizontal dark variant with frost lettering, preserving the red mark, wrench and original letterforms on dark surfaces. Do not place the navigation logo on a contrasting plaque.
 - Use the approved standalone color mark for compact sidebar and mobile navigation. Reserve the stacked full logo for square brand moments, onboarding, exports, and layouts with enough height. Favicons and app-launcher icons use the same red-and-navy mark.
-- Use `logo/fixxflow-logo-horizontal-full.png` for spacious light-surface placements, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode-transparent.png` for the dark stacked lockup. Compact and operational navigation use `icon/fixxflow-icon-primary.png` inside the responsive navigation lockup. Use the approved red-and-navy artwork; do not stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
+- Use `logo/fixxflow-logo-horizontal-full.png` for spacious light-surface placements, `logo/fixxflow-logo-primary.png` for the light stacked lockup, and `logo/fixxflow-logo-dark-mode-transparent.png` for the dark stacked lockup. Compact navigation uses `icon/fixxflow-icon-primary.png`; expanded navigation uses the original horizontal artwork. Use the approved red-and-navy artwork; do not stretch, rotate, outline, separate, crop, or rearrange the F and wrench.
 - Keep clear space around the logo. At small sizes, drop the tagline before reducing legibility; use the icon rather than forcing the wordmark into a square.
 - The logo gradient belongs to brand artwork and occasional brand-forward moments. Functional controls should normally use solid semantic token colors, not gradients.
 - Prefer motion cues that echo the mark's forward sweep: short horizontal reveals, progress movement, and directional transitions. Keep them subtle, 120–200ms, and fully compatible with reduced-motion settings.
@@ -634,12 +634,22 @@ Native dropdowns reserve 40px at the inline end for a 16px chevron inset 12px fr
 
 ### Employee home emphasis
 
-Use solid crimson with white headings, descriptions and links for Chat with IT and Find an answer in both themes, without an outer border. Keep Submit a request on the regular surface. The help-search field stays white with navy text; its Search action uses white with crimson text for distinction. Preserve visible keyboard focus on the crimson panels, native GET search, clear links, responsive stacking and forced-colors boundaries.
+Use dark grey with white headings, descriptions and links for Chat with IT and Find an answer in both themes, without an outer border. Keep Submit a request on the regular surface. The help-search field stays white with navy text; its Search action uses white with crimson text for distinction. Preserve visible keyboard focus on the dark grey panels, native GET search, clear links, responsive stacking and forced-colors boundaries.
 
-Knowledge topic cards (Accounts, Email, Network, Hardware, Software and Security) share the crimson/white, borderless treatment in both themes. Keep headings and descriptions white, deepen the fill on hover, retain visible keyboard focus and preserve the existing category links and responsive grid.
+Knowledge topic cards (Accounts, Email, Network, Hardware, Software and Security) share the dark-grey/white, borderless treatment in both themes. Keep headings and descriptions white, deepen the fill on hover, retain visible keyboard focus and preserve the existing category links and responsive grid.
 
 Keep the self-hosted normal/italic Inter faces and `display: swap`, but disable whole-family preloading: the browser requests the face actually used by the page, instead of downloading unused italic on every initial visit. Verify font requests and paint timing before claiming a real-user performance improvement.
 
-### Quieter crimson panels
+### Dark grey panels
 
-Large filled panels use the dedicated brand-panel tokens: muted crimson `#9F1934` in light mode, deeper wine `#7B1C32` in dark mode, with white text. Hover uses `#8D142D` and `#911F3A` respectively. Apply this to the employee-home emphasis panels and help topic cards. Keep the original crimson for compact actions and the existing branding; avoid filling large areas with the fully saturated action color. Preserve white search fields, explicit focus and the existing responsive layout.
+Large filled panels use the dedicated brand-panel tokens: dark grey `#35383D` in light mode and `#3C4046` in dark mode, with white text. Hover uses `#292C30` and `#484D54` respectively. Apply this to the employee-home emphasis panels and help topic cards. Keep the original crimson for compact actions and the existing branding; avoid filling large areas with the fully saturated action color. Preserve white search fields, explicit focus and the existing responsive layout.
+
+### Dashboard insight alignment
+
+Pair workload and response cards with stretched outer heights on desktop. Keep heading/helper spacing consistent and reserve two lines for descriptions only while the cards sit side by side. Anchor response-data disclosures at the bottom. At compact widths, stack naturally, retaining all workload rows, empty/error states and accessible exact data.
+
+### Location hierarchy
+
+Locations support optional Parent location with up to eight levels, using business-neutral names such as site, floor, room or storage area. Existing locations remain top-level. Reuse LookupSelect for searchable parent selection, full-path labels and failure recovery, excluding the current location and its descendants. Add sublocation preselects the parent. Keep native disclosures, unique field labels, responsive stacking and written active states. Departments remain independent.
+
+Display full paths in people, ticket and asset selectors, imports and reports. A parent report filter includes its descendants; grouping retains the most specific location and full path. Reject cross-workspace parents, cycles, duplicate names under the same parent, and depth overflow in the database. Deactivate active children before their parent; block deleting a location with children or linked records. Renames and moves preserve record IDs and refresh descendant paths.

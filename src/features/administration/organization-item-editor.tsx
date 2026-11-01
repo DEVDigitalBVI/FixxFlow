@@ -2,6 +2,7 @@ import { editOrganizationItem } from '@/app/app/organization/actions';
 import { ActionForm } from '@/components/ui/action-form';
 import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
+import { LookupSelect } from '@/features/lookups/lookup-select';
 
 type Item = {
   id: string;
@@ -12,6 +13,8 @@ type Item = {
   region?: string | null;
   country_code?: string | null;
   timezone?: string;
+  parent_id?: string | null;
+  path?: string;
 };
 export function OrganizationItemEditor({
   kind,
@@ -32,12 +35,23 @@ export function OrganizationItemEditor({
   return (
     <details className="settings-editor">
       <summary>
-        Edit<span className="sr-only"> {item.name}</span>
+        Edit<span className="sr-only"> {item.path ?? item.name}</span>
       </summary>
       <ActionForm action={editOrganizationItem} className="stack">
         <input type="hidden" name="kind" value={kind} />
         <input type="hidden" name="id" value={item.id} />
         <input type="hidden" name="updatedAt" value={item.updated_at} />
+        {kind === 'locations' && (
+          <LookupSelect
+            resource="location_parents"
+            name="parentId"
+            label="Parent location"
+            parentId={item.id}
+            defaultValue={item.parent_id ?? ''}
+            emptyLabel="None — top-level location"
+            guardSave="selection"
+          />
+        )}
         <div className="field">
           <label htmlFor={`name-${item.id}`}>Name</label>
           <Input

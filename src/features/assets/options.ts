@@ -16,7 +16,11 @@ export async function assetOptions(
           .eq('user_id', userId)
       : { data: [], error: null },
     locationId
-      ? db.from('locations').select('id,name').eq('organization_id', org).eq('id', locationId)
+      ? db
+          .from('location_paths')
+          .select('id,name:path')
+          .eq('organization_id', org)
+          .eq('id', locationId)
       : { data: [], error: null },
   ]);
   if (p.error || l.error) throw Error('Asset details unavailable');

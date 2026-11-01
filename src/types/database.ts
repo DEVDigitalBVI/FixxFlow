@@ -810,6 +810,10 @@ export type Database = Omit<GeneratedDatabase, 'public'> & {
     Tables: Omit<Tables, keyof RuntimeTables> & RuntimeTables;
 
     Views: Schema['Views'] & {
+      location_paths: {
+        Row: Tables['locations']['Row'] & { path: string; path_ids: string[]; depth: number };
+        Relationships: [];
+      };
       readable_knowledge_articles: { Row: ReadableArticle; Relationships: [] };
     };
     Functions: Omit<Functions, keyof RuntimeFunctions> & RuntimeFunctions;

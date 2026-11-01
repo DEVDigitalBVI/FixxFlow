@@ -1925,11 +1925,13 @@ export type Database = {
           is_active: boolean
           name: string
           organization_id: string
+          parent_id: string | null
           postal_code: string | null
           region: string | null
           timezone: string
           updated_at: string
         }
+        ComputedFields: never
         Insert: {
           address_line_1?: string | null
           address_line_2?: string | null
@@ -1940,6 +1942,7 @@ export type Database = {
           is_active?: boolean
           name: string
           organization_id: string
+          parent_id?: string | null
           postal_code?: string | null
           region?: string | null
           timezone?: string
@@ -1955,6 +1958,7 @@ export type Database = {
           is_active?: boolean
           name?: string
           organization_id?: string
+          parent_id?: string | null
           postal_code?: string | null
           region?: string | null
           timezone?: string
@@ -1967,6 +1971,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "locations_parent_fkey"
+            columns: ["organization_id", "parent_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["organization_id", "id"]
           },
         ]
       }
@@ -3420,7 +3431,30 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+
+      location_paths: {
+        Row: {
+          address_line_1: string | null
+          address_line_2: string | null
+          city: string | null
+          country_code: string | null
+          created_at: string | null
+          depth: number | null
+          id: string | null
+          is_active: boolean | null
+          name: string | null
+          organization_id: string | null
+          parent_id: string | null
+          path: string | null
+          path_ids: string[] | null
+          postal_code: string | null
+          region: string | null
+          timezone: string | null
+          updated_at: string | null
+        }
+        ComputedFields: never
+        Relationships: []
+      }
     }
     Functions: {
       accept_inbound_email: {

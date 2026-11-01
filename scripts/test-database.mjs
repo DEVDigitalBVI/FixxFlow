@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 const command = process.platform === 'win32' ? 'supabase.cmd' : 'supabase';
 const dockerCommand = process.platform === 'win32' ? 'docker.exe' : 'docker';
@@ -52,3 +53,14 @@ for (const file of regressions) {
   console.log(`Running transactional database regression: ${file}`);
   runSqlFile(`supabase/tests/${file}`);
 }
+
+const concurrency = spawnSync(
+  process.execPath,
+  [
+    fileURLToPath(new URL('../tests/helpers/location-hierarchy-concurrency.mjs', import.meta.url)),
+    `supabase_db_${projectId}`,
+  ],
+  { env: environment, stdio: 'inherit' },
+);
+if (concurrency.error) throw concurrency.error;
+if (concurrency.status !== 0) process.exit(concurrency.status ?? 1);

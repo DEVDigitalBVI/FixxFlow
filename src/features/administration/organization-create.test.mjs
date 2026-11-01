@@ -70,3 +70,22 @@ test('non-administrators cannot create organization records', async () => {
   assert.match((await f.addDepartment(form({ name: 'Engineering' }))).error, /Only administrators/);
   assert.deepEqual(f.inserted, []);
 });
+test('location creation retains its parent, validates IDs, and recovers from an unavailable parent', async () => {
+  const parentId = '30000000-0000-0000-0000-000000000961';
+  const f = actions();
+  assert.equal(
+    (await f.addLocation(form({ name: 'Room 101', parentId }))).success,
+    'Location added.',
+  );
+  assert.equal(f.inserted[0].row.parent_id, parentId);
+  const invalid = actions();
+  assert.ok(
+    (await invalid.addLocation(form({ name: 'Room 101', parentId: 'invalid' }))).fieldErrors
+      .parentId,
+  );
+  assert.equal(invalid.inserted.length, 0);
+  const unavailable = await actions('administrator', { code: '23503' }).addLocation(
+    form({ name: 'Room 101', parentId }),
+  );
+  assert.ok(unavailable.fieldErrors.parentId);
+});
