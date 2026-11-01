@@ -28,10 +28,16 @@ const screens = [
   ['staff-profile', '/app/profile'],
   ['staff-notifications', '/app/notifications'],
   ['staff-administration', '/?surface=administration'],
+  ['staff-organization', '/?surface=organization'],
+  ['staff-people', '/?surface=people-deletion'],
+  ['staff-people-bulk', '/?surface=people-deletion&selection=all&disclosure=delete'],
+  ['technician-people', '/?surface=people-deletion&role=technician'],
+  ['route-error', '/?surface=route-error'],
   ['staff-chat', '/?surface=chat-fixes'],
   ['staff-asset-editor', '/?surface=asset-editor'],
   ['staff-article-editor', '/?surface=article-editor'],
   ['staff-report-builder', '/?surface=report-builder'],
+  ['staff-ticket-workflow', '/?surface=ticket-workflow'],
   ['technician-queue', '/?role=technician'],
   ['platform-shell', '/?role=platform'],
   ['employee-home', '/?role=employee'],
@@ -81,7 +87,10 @@ function captureWithWebKit(port, dir) {
           ].join('\t'),
         );
       }
-  execFileSync(binary, { input: jobs.join('\n') + '\n', stdio: ['pipe', 'inherit', 'inherit'] });
+  execFileSync(binary, process.env.LAYOUT_AUDIT === '1' ? ['--audit'] : [], {
+    input: jobs.join('\n') + '\n',
+    stdio: ['pipe', 'inherit', 'inherit'],
+  });
 }
 
 async function capture(dir) {
@@ -105,7 +114,9 @@ async function capture(dir) {
     } finally {
       server.kill();
     }
-    console.log(`Captured ${fs.readdirSync(dir).length} screenshots with system WebKit in ${dir}`);
+    console.log(
+      `Captured ${fs.readdirSync(dir).filter((name) => name.endsWith('.png')).length} screenshots with system WebKit in ${dir}`,
+    );
     return;
   }
   const browser = await playwright.chromium.launch({ headless: true });

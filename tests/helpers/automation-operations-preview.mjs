@@ -1,7 +1,6 @@
 /** Isolated static rendering of real Operations components with synthetic data.
  * No Supabase client, credentials, worker, network data source or activation.
  * Run from repository root; localhost:4181. */
-import fs from 'node:fs';
 import http from 'node:http';
 
 import React from 'react';
@@ -9,6 +8,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 import { overview, recentHeartbeat, rows } from '../fixtures/automation-operations.mjs';
 import { load } from './load-module.mjs';
+import { compiledProductStyles } from './styles.mjs';
 
 const filterModel = load('src/features/automation/operations-service.ts', {
   'server-only': {},
@@ -78,7 +78,13 @@ http
   .createServer((req, res) => {
     if (req.url === '/style.css') {
       res.setHeader('Content-Type', 'text/css');
-      res.end(fs.readFileSync('src/app/globals.css'));
+      compiledProductStyles().then(
+        (css) => res.end(css),
+        (error) => {
+          res.statusCode = 500;
+          res.end(String(error));
+        },
+      );
       return;
     }
     res.setHeader('Content-Type', 'text/html; charset=utf-8');

@@ -120,6 +120,8 @@ The approved, versioned asset package lives under `public/brand/fixxflow/`. Refr
 ### 3.4 Spacing, shape, and elevation
 
 - Base spacing unit: 4px. Preferred steps: 4, 8, 12, 16, 20, 24, 32, 40, 48.
+- Use the shared spacing roles derived from the existing UI kit `--spacing` unit: `--space-inline` (8px) within small control groups, `--space-group` (16px) between related fields/content, and `--space-section` (24px) between page sections. Feature CSS reads these same roles; retain the finer 4/12px steps for compact metadata and existing larger steps for distinct major regions.
+- `.stack` owns its vertical gap. Direct headings, paragraphs, lists, page headers and back links have no extra block margins inside it. Page stacks use the section gap; form stacks use the group gap. Align grid content to the start so taller adjacent panels do not spread fields apart. Page and card edges use 24px desktop and 16px compact insets, with the documented 20px tablet page inset.
 - Dense rows: 40–44px minimum height. Standard controls: 40px. Prominent portal controls: 44–48px.
 - Default page padding: 24px desktop, 20px tablet, 16px mobile.
 - Card padding: 16–24px; do not nest multiple bordered cards without a clear hierarchy.
@@ -572,6 +574,8 @@ Declare cascade layers in the order theme, tokens, base, utilities, components, 
 ### Email readability
 
 All operational and account emails share a compact horizontal brand header, left-aligned title and message, and content-sized spacing. Identify the workspace in operational emails when available; keep account security messages account-scoped. Show public service status separately from the message. Use a compact solid-crimson action with a white label and a short underlined alternative link, with full destinations in the plain-text version. Keep one support link in the footer. Preserve explicit security guidance, semantic headings, escaped dynamic text, one-use authentication placeholders and readable phone layouts. Email uses inline equivalents of the existing light-theme tokens and system font fallbacks for mail-client compatibility. Emails are composed from the React Email kit in `src/emails` (`EmailLayout`, `EmailEyebrow`, `EmailTitle`, `EmailText`, `EmailDetails`, `EmailCallout`, `EmailCode`, `EmailAction`, `EmailNote`) and rendered to static HTML by `renderEmail`; `emailTokens` holds the inline token values. React escapes every value; only the author-written Supabase Go-template branches use `EmailTemplateText`. Regenerate Supabase templates with `node scripts/generate-email-templates.mjs` after changing the kit.
+
+Email spacing uses inline equivalents of the same rhythm: 8px between labels and headings, 16px between related text, and 24px between content sections. Header, body and footer share one horizontal edge (24px desktop, 16px compact). Each block owns one adjoining gap; notes after text/codes do not add another top margin. Keep explicit email text line heights, top-aligned detail rows, narrow-screen wrapping, and the existing Outlook button-cell padding. Regenerate all account templates from the shared email components after any spacing change.
 
 ### Chat coverage and idle closure
 

@@ -1,7 +1,7 @@
 @layer components {
   :where(.scope) :global(.organization-page) {
     display: grid;
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.organization-page > .page-header),
   :where(.scope) :global(.organization-page > .page-alert) {
@@ -21,7 +21,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
     max-width: 640px;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.organization-timezone .field) {
     min-width: 0;
@@ -29,7 +29,7 @@
   :where(.scope) :global(.organization-location-item) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
+    gap: var(--space-group);
     padding-block: 16px;
     min-width: 0;
   }
@@ -37,7 +37,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-inline);
     margin-top: 4px;
   }
   :where(.scope) :global(.organization-location-meta .badge) {
@@ -47,7 +47,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    gap: 8px;
+    gap: var(--space-inline);
     min-width: 0;
   }
   :where(.scope) :global(.organization-location-item strong) {
@@ -115,7 +115,7 @@
       flex-basis: 100%;
     }
     :where(.scope) :global(.organization-page) {
-      gap: 20px;
+      gap: var(--space-section);
     }
     :where(.scope) :global(.organization-timezone > .stack) {
       grid-template-columns: minmax(0, 1fr);
@@ -128,7 +128,7 @@
   :where(.scope) :global(.people-page) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.people-directory) {
     min-width: 0;
@@ -142,8 +142,8 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 20px 24px;
+    gap: var(--space-group);
+    padding: var(--space-group) var(--space-section);
   }
   :where(.scope) :global(.people-directory-heading h2) {
     font-size: 18px;
@@ -175,10 +175,10 @@
   :where(.scope) :global(.people-directory > .people-views) {
     margin: 0;
     padding: 0 24px 20px;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.people-directory-toolbar) {
-    padding: 20px 24px;
+    padding: var(--space-group) var(--space-section);
     background: var(--color-surface-subtle);
     border-block: 1px solid var(--color-border);
   }
@@ -216,7 +216,7 @@
   :where(.scope) :global(.people-delete-acknowledgement) {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-inline);
     min-height: var(--control-height);
     cursor: pointer;
   }
@@ -250,7 +250,7 @@
     flex-basis: 100%;
   }
   :where(.scope) :global(.people-delete-confirmation) {
-    padding: 16px;
+    padding: var(--space-group);
     margin-top: 12px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
@@ -281,7 +281,7 @@
   :where(.scope) :global(.people-delete-actions) {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   @media (max-width: 1199px) {
     :where(.scope) :global(.person-card:has(.person-select) .person-card-meta) {
@@ -293,7 +293,7 @@
       padding-inline: 16px;
     }
     :where(.scope) :global(.person-card-identity) {
-      gap: 8px;
+      gap: var(--space-inline);
     }
     :where(.scope) :global(.person-card:has(.person-select) .person-card-meta) {
       padding-inline-start: calc(var(--control-height) + 56px);
@@ -312,11 +312,11 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.people-invitation) {
     display: grid;
-    gap: 20px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.people-invitation h2) {
     margin: 8px 0;
@@ -328,7 +328,7 @@
   :where(.scope) :global(.people-invite-form) {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    gap: var(--space-group);
     align-items: end;
   }
   :where(.scope) :global(.people-invite-actions) {
@@ -363,7 +363,7 @@
     :where(.scope) :global(.people-directory > .people-directory-heading) {
       flex-wrap: nowrap;
       align-items: flex-start;
-      padding: 16px;
+      padding: var(--space-group);
     }
     :where(.scope) :global(.people-directory > .people-directory-heading > div) {
       min-width: 0;
@@ -372,7 +372,7 @@
       padding-bottom: 16px;
     }
     :where(.scope) :global(.people-directory > .people-directory-toolbar) {
-      padding: 16px;
+      padding: var(--space-group);
     }
   }
   @media (max-width: 767px) {
@@ -436,7 +436,7 @@
   :where(.scope) :global(.automation-list-welcome-copy > .administration-card-icon) {
     width: 44px;
     height: 44px;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-group);
   }
   :where(.scope) :global(.automation-list-manage .settings-editor) {
     padding: 0;
@@ -476,7 +476,7 @@
   :where(.scope) :global(.administration-jump-nav) {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-inline);
     margin-bottom: 32px;
   }
   :where(.scope) :global(.administration-hub-group) {
@@ -507,7 +507,7 @@
     display: grid;
     grid-template-columns: 44px minmax(220px, 1fr) minmax(220px, 0.9fr);
     align-items: center;
-    gap: 16px;
+    gap: var(--space-group);
     padding: 16px 24px;
   }
   :where(.scope) :global(.administration-setting-row + .administration-setting-row) {
@@ -534,7 +534,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.administration-setting-title h3) {
     margin: 0;
@@ -567,7 +567,7 @@
     min-height: 40px;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-inline);
     color: var(--color-accent);
     font-size: 14px;
     font-weight: 600;
@@ -601,13 +601,13 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.administration-jump-nav) {
-      gap: 8px;
-      margin-bottom: 24px;
+      gap: var(--space-inline);
+      margin-bottom: var(--space-section);
     }
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.administration-hub-group) {
-      margin-top: 24px;
+      margin-top: var(--space-section);
     }
   }
 }

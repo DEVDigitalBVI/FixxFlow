@@ -14,13 +14,13 @@
     padding: 10px max(24px, calc((100vw - 1120px) / 2));
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: var(--space-section);
     background: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
   }
   :where(.scope) :global(.portal-header nav) {
     display: flex;
-    gap: 24px;
+    gap: var(--space-section);
     margin-left: auto;
   }
   :where(.scope) :global(.portal-header nav a) {
@@ -79,7 +79,7 @@
   :where(.scope) :global(.portal-actions) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.portal-action) {
     position: relative;
@@ -154,7 +154,7 @@
   :where(.scope) :global(.portal-recent li a) {
     display: flex;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--space-group);
     padding: 16px 0;
     color: var(--color-text);
     text-decoration: none;
@@ -168,7 +168,7 @@
   }
   :where(.scope) :global(.portal-recent-empty) {
     margin-top: 16px;
-    padding: 24px;
+    padding: var(--space-section);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     background: var(--color-surface);
@@ -185,7 +185,7 @@
     display: flex;
     align-items: end;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--space-group);
     margin-bottom: 28px;
   }
   :where(.scope) :global(.portal-page-heading h1) {
@@ -200,13 +200,13 @@
   }
   :where(.scope) :global(.portal-search) {
     display: grid;
-    gap: 8px;
-    margin-bottom: 24px;
+    gap: var(--space-inline);
+    margin-bottom: var(--space-section);
   }
   :where(.scope) :global(.portal-request-types) {
     display: flex;
     gap: 4px;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-group);
     padding-bottom: 8px;
     border-bottom: 1px solid var(--color-border);
   }
@@ -221,7 +221,7 @@
   }
   :where(.scope) :global(.portal-search > div) {
     display: flex;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.portal-ticket-list) {
     margin-top: 0;
@@ -232,7 +232,7 @@
     padding: 16px 4px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: var(--space-group);
     color: var(--color-text);
     text-decoration: none;
   }
@@ -269,13 +269,13 @@
   }
   :where(.scope) :global(.portal-request-form) {
     display: grid;
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.portal-detail) {
     max-width: 760px;
   }
   :where(.scope) :global(.portal-detail-card) {
-    padding: 24px;
+    padding: var(--space-section);
     margin-bottom: 16px;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -292,7 +292,7 @@
     font-size: 14px;
   }
   :where(.scope) :global(.portal-reference) {
-    margin-top: 20px !important;
+    margin-top: var(--space-group) !important;
     font-size: 14px;
   }
   :where(.scope) :global(.portal-articles) {
@@ -319,7 +319,7 @@
       margin: 0;
       display: flex;
       justify-content: space-between;
-      gap: 8px;
+      gap: var(--space-inline);
       overflow-x: auto;
     }
   }
@@ -449,7 +449,7 @@
       min-height: calc(66px + env(safe-area-inset-top));
       padding: calc(9px + env(safe-area-inset-top)) 16px 9px;
       flex-wrap: nowrap;
-      gap: 8px;
+      gap: var(--space-inline);
     }
   }
   @media (max-width: 767px) {
@@ -505,7 +505,7 @@
   }
   :where(.scope) :global(.portal-page-heading) {
     flex-wrap: wrap;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.portal-home::before) {
     content: none;
@@ -551,14 +551,14 @@
   @media (max-width: 767px) {
     :where(.scope) :global(.portal-header .theme-control) {
       display: grid;
-      margin-top: 20px;
+      margin-top: var(--space-group);
     }
   }
   :where(.scope) :global(.portal-section-heading) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 16px;
+    gap: var(--space-group);
     flex-wrap: wrap;
   }
   :where(.scope) :global(.portal-page-heading .page-back-link) {
@@ -568,7 +568,7 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    padding: 24px;
+    padding: var(--space-section);
   }
   :where(.scope) :global(.portal-articles .portal-detail-card p:first-child) {
     margin-top: 0;
@@ -644,7 +644,7 @@
     background: var(--color-surface);
   }
   :where(.scope) :global(.employee-requests-toolbar) {
-    padding: 16px;
+    padding: var(--space-group);
   }
   :where(.scope) :global(.employee-requests-toolbar .portal-request-types) {
     margin: 0 0 16px;
@@ -683,7 +683,7 @@
     max-width: 65ch;
   }
   :where(.scope) :global(.employee-requests-panel .portal-ticket-list a) {
-    padding: 16px;
+    padding: var(--space-group);
   }
   :where(.scope) :global(.employee-requests-panel .portal-ticket-main strong) {
     overflow-wrap: anywhere;
@@ -708,11 +708,11 @@
   }
   :where(.scope) :global(.employee-requests-panel .notification-pagination) {
     margin: 0;
-    padding: 16px;
+    padding: var(--space-group);
     border-top: 1px solid var(--color-border);
   }
   :where(.scope) :global(.employee-equipment-search) {
-    margin-bottom: 20px;
+    margin-bottom: var(--space-group);
   }
   :where(.scope) :global(.employee-equipment-search .portal-search) {
     margin-bottom: 0;
@@ -723,7 +723,7 @@
   :where(.scope) :global(.employee-equipment-list) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: var(--space-group);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -786,7 +786,7 @@
   }
   :where(.scope) :global(.portal-home .portal-home-intro) {
     padding-left: 0;
-    margin-bottom: 24px;
+    margin-bottom: var(--space-section);
   }
   :where(.scope) :global(.portal-home .portal-home-intro::before) {
     content: none;
@@ -803,12 +803,12 @@
     margin-bottom: 8px;
   }
   :where(.scope) :global(.portal-home .portal-actions) {
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.portal-home .portal-action) {
     min-height: 112px;
     padding: 20px 56px 20px 20px;
-    gap: 8px;
+    gap: var(--space-inline);
     box-shadow: none;
   }
   :where(.scope) :global(.portal-home .portal-action strong) {
@@ -827,7 +827,7 @@
     --color-text-muted: var(--color-on-action);
     --color-accent: var(--color-on-action);
     --color-focus: var(--color-on-action);
-    margin-top: 24px;
+    margin-top: var(--space-section);
     padding: 20px;
     border: 0;
     border-radius: var(--radius-card);
@@ -874,7 +874,7 @@
   }
   :where(.scope) :global(.portal-home-search form) {
     display: grid;
-    gap: 8px;
+    gap: var(--space-inline);
     margin-top: 12px;
   }
   :where(.scope) :global(.portal-home-search label) {
@@ -884,7 +884,7 @@
   }
   :where(.scope) :global(.portal-home-search-controls) {
     display: flex;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.portal-home-search form p) {
     margin: 0;
@@ -939,7 +939,7 @@
   @media (max-width: 767px) {
     :where(.scope) :global(.portal-home .portal-actions) {
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: var(--space-inline);
     }
   }
   @media (max-width: 767px) {
@@ -950,7 +950,7 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.portal-home-search) {
-      padding: 16px;
+      padding: var(--space-group);
     }
   }
   @media (max-width: 767px) {
@@ -962,7 +962,7 @@
     :where(.scope) :global(.portal-home .portal-recent li a) {
       flex-wrap: wrap;
       gap: 12px;
-      padding: 16px;
+      padding: var(--space-group);
     }
   }
   :where(.scope) :global(.portal-home .portal-kicker) {
@@ -1092,7 +1092,7 @@
   @media (max-width: 767px) {
     :where(.scope) :global(.service-notices) {
       padding: 16px 16px;
-      margin-bottom: 20px;
+      margin-bottom: var(--space-group);
     }
   }
   :where(.scope) :global(.service-notice-heading) {
@@ -1166,13 +1166,13 @@
   :where(.scope) :global(.rating-options) {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.rating-option) {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-inline);
     min-height: 48px;
     padding: 10px 12px;
     border: 1px solid var(--color-border-strong);
