@@ -2,6 +2,10 @@
 -- membership/profile IDs referenced by tickets, chats, equipment and audit history.
 SET LOCAL lock_timeout = '5s';
 
+-- Register pg_trgm's session settings before replacing search_workspace below.
+-- A fresh hosted CLI connection may not have loaded the extension library yet.
+SELECT extensions.word_similarity('migration', 'migration');
+
 ALTER TABLE public.organization_memberships ADD COLUMN deleted_at timestamptz;
 ALTER TABLE public.organization_memberships ADD CONSTRAINT deleted_memberships_stay_inactive
   CHECK (deleted_at IS NULL OR status = 'inactive');
