@@ -44,11 +44,11 @@ export default async function OrganizationPage({ searchParams }: Props) {
       .order('name'),
   ]);
   return (
-    <div className="page">
+    <div className="page organization-page">
       <PageHeader
         title="Organization"
         eyebrow="Settings"
-        description="Configure the departments and service locations used throughout FixxFlow."
+        description="Manage the business departments and physical locations used in people, requests and reports."
         back={{ href: '/app/administration', label: 'Back to settings' }}
       />
       {message.success && (
@@ -61,8 +61,24 @@ export default async function OrganizationPage({ searchParams }: Props) {
           {message.error}
         </Alert>
       )}
-      <section className="settings-card profile-card">
-        <h2>Timezone</h2>
+      <section className="organization-guidance" aria-labelledby="organization-guidance-title">
+        <h2 id="organization-guidance-title">How departments and locations work</h2>
+        <p>
+          These are separate lists, not a hierarchy. A department can work across several locations,
+          and a location can contain several departments. For example, Finance staff might work at
+          both Head office and a branch office.
+        </p>
+        <p>
+          Create the entries below, then assign each person a department and location in{' '}
+          <Link href="/app/people">People → Manage → Profile details</Link>. These choices describe
+          the person; they do not assign an IT technician to their requests.
+        </p>
+      </section>
+      <section
+        className="settings-card organization-timezone"
+        aria-labelledby="organization-timezone-title"
+      >
+        <h2 id="organization-timezone-title">Timezone</h2>
         <p className="muted">
           Reports and shared calendar days use this timezone. Existing deadlines keep their saved
           instant.
@@ -74,6 +90,10 @@ export default async function OrganizationPage({ searchParams }: Props) {
       <div className="settings-grid">
         <section id="departments" className="settings-card">
           <h2>Departments</h2>
+          <p className="muted">
+            Group people by business function, such as Finance, HR or Operations. Reports can use
+            the requester’s department to show where support demand comes from.
+          </p>
           <details className="progressive-section">
             <summary>Add department</summary>
             <OrganizationCreateForm kind="department" action={addDepartment} />
@@ -115,6 +135,10 @@ export default async function OrganizationPage({ searchParams }: Props) {
         </section>
         <section id="locations" className="settings-card">
           <h2>Locations</h2>
+          <p className="muted">
+            List the places you support, such as Head office, a branch or a warehouse. Assign
+            locations to people, tickets and equipment to show where support is needed.
+          </p>
           <details className="progressive-section">
             <summary>Add location</summary>
             <OrganizationCreateForm

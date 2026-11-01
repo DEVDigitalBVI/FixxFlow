@@ -1,4 +1,42 @@
 @layer components {
+  :where(.scope) :global(.organization-page) {
+    display: grid;
+    gap: 24px;
+  }
+  :where(.scope) :global(.organization-page > .page-header),
+  :where(.scope) :global(.organization-page > .page-alert) {
+    margin-bottom: 0;
+  }
+  :where(.scope) :global(.organization-guidance h2) {
+    margin: 0;
+    font-size: 18px;
+    line-height: 26px;
+  }
+  :where(.scope) :global(.organization-guidance p) {
+    max-width: 75ch;
+    margin: 8px 0 0;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.organization-timezone > .stack) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    max-width: 640px;
+    gap: 16px;
+  }
+  :where(.scope) :global(.organization-timezone .field) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.organization-page .settings-grid) {
+    align-items: stretch;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.organization-page) {
+      gap: 20px;
+    }
+    :where(.scope) :global(.organization-timezone > .stack) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
   :where(.scope) :global(.admin-status-available .badge) {
     color: var(--color-success);
     background: var(--color-success-subtle);
