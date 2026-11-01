@@ -27,30 +27,92 @@
     min-width: 0;
   }
   :where(.scope) :global(.organization-location-item) {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding-block: 16px;
     min-width: 0;
   }
-  :where(.scope) :global(.organization-location-item > div:first-child),
-  :where(.scope) :global(.organization-location-item > .organization-item-actions) {
-    flex-basis: 100%;
+  :where(.scope) :global(.organization-location-meta) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  :where(.scope) :global(.organization-location-meta .badge) {
+    display: inline-flex;
+  }
+  :where(.scope) :global(.organization-location-controls) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
     min-width: 0;
   }
   :where(.scope) :global(.organization-location-item strong) {
     overflow-wrap: anywhere;
   }
-  :where(.scope) :global(.organization-location-item > .settings-editor[open]) {
-    order: 0;
+  :where(.scope) :global(.organization-location-controls .organization-item-actions) {
+    display: contents;
+  }
+  :where(.scope)
+    :global(.organization-location-controls > .settings-editor:not(.organization-sublocation)) {
+    margin-inline-start: auto;
+  }
+  :where(.scope) :global(.organization-location-controls > .settings-editor) {
+    padding: 0;
+    border: 0;
+  }
+  :where(.scope) :global(.organization-location-controls > .settings-editor > summary),
+  :where(.scope) :global(.organization-location-controls .organization-delete > summary) {
+    box-sizing: border-box;
+    width: fit-content;
+    max-width: 100%;
+    min-height: var(--control-height);
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 22px;
+  }
+  :where(.scope) :global(.organization-location-controls summary::marker) {
+    font-size: 10px;
+  }
+  :where(.scope) :global(.organization-location-controls .organization-item-actions > small) {
+    flex-basis: 100%;
+    max-width: none;
+    margin: 0;
+    text-align: end;
+    font-size: 12px;
+    line-height: 16px;
+  }
+  :where(.scope) :global(.organization-location-controls .button) {
+    width: auto;
+    box-shadow: none;
+  }
+  :where(.scope) :global(.organization-location-controls label > span[aria-hidden='true']) {
+    display: inline;
+  }
+  :where(.scope) :global(.organization-location-controls > .settings-editor[open]),
+  :where(.scope) :global(.organization-location-controls .organization-delete[open]) {
+    flex-basis: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+  :where(.scope)
+    :global(.organization-location-controls .organization-delete summary:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
   }
   @media (max-width: 767px) {
-    :where(.scope) :global(.organization-location-item) {
-      flex-direction: column;
-      flex-wrap: nowrap;
-      align-items: stretch;
+    :where(.scope)
+      :global(.organization-location-controls > .settings-editor:not(.organization-sublocation)) {
+      margin-inline-start: 0;
     }
-    :where(.scope) :global(.organization-location-item > div:first-child),
-    :where(.scope) :global(.organization-location-item > .organization-item-actions),
-    :where(.scope) :global(.organization-location-item > .settings-editor[open]) {
-      flex-basis: auto;
+    :where(.scope) :global(.organization-location-controls .organization-item-actions > small) {
+      text-align: start;
+    }
+    :where(.scope) :global(.organization-location-controls .organization-sublocation) {
+      flex-basis: 100%;
     }
     :where(.scope) :global(.organization-page) {
       gap: 20px;

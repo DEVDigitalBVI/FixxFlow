@@ -21,9 +21,14 @@ export function OrganizationItemActions({
   toggleAction,
   deleteAction,
 }: Props) {
+  const deactivationHint = active && (
+    <small className="muted" id={`deactivate-description-${id}`}>
+      Hidden from new selections. Existing records stay linked.
+    </small>
+  );
   return (
     <div className="organization-item-actions">
-      <div>
+      <div className="organization-item-toggle">
         <form action={toggleAction}>
           <input type="hidden" name="id" value={id} />
           <input type="hidden" name="isActive" value={String(active)} />
@@ -31,15 +36,12 @@ export function OrganizationItemActions({
             variant="secondary"
             size="small"
             aria-label={`${active ? 'Deactivate' : 'Activate'} ${kind} ${name}`}
+            aria-describedby={active ? `deactivate-description-${id}` : undefined}
           >
             {active ? 'Deactivate' : 'Activate'}
           </SubmitButton>
         </form>
-        {active && (
-          <small className="muted">
-            Hides this entry from new selections; existing records stay linked.
-          </small>
-        )}
+        {kind === 'department' && deactivationHint}
       </div>
       <details className="organization-delete">
         <summary>
@@ -76,6 +78,7 @@ export function OrganizationItemActions({
           </Link>
         </form>
       </details>
+      {kind === 'location' && deactivationHint}
     </div>
   );
 }
