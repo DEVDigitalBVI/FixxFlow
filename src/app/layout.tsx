@@ -9,7 +9,7 @@ import { ThemeController } from '@/features/theme/theme-control';
 
 import './globals.css';
 
-import productStyles from './product.module.css';
+import sharedStyles from './shared.module.css';
 
 // Inter for headings and body text, self-hosted so browsers never request Google Fonts.
 const inter = localFont({
@@ -58,7 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={productStyles.scope}>
+      <body className={sharedStyles.scope}>
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>

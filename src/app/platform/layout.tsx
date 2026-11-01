@@ -10,6 +10,8 @@ import { SessionGuard } from '@/features/auth/session-guard';
 import { platformIdentity } from '@/lib/auth/platform';
 import { createClient } from '@/lib/supabase/server';
 
+import productStyles from '../product.module.css';
+
 export default async function PlatformLayout({ children }: { children: ReactNode }) {
   const owner = await platformIdentity();
   const db = await createClient();
@@ -20,49 +22,51 @@ export default async function PlatformLayout({ children }: { children: ReactNode
     .eq('status', 'active')
     .limit(1);
   return (
-    <SessionGuard userId={owner.id}>
-      <WorkspaceShell
-        brand={
-          <BrandLogo className="sidebar-logo" variant="navigation" href="/platform" priority />
-        }
-        navigation={
-          <WorkspaceNav
-            role="administrator"
-            organizationId=""
-            userId={owner.id}
-            platform
-            workspaceAvailable={!!memberships?.length}
-            signOutControl={
+    <div className={productStyles.scope}>
+      <SessionGuard userId={owner.id}>
+        <WorkspaceShell
+          brand={
+            <BrandLogo className="sidebar-logo" variant="navigation" href="/platform" priority />
+          }
+          navigation={
+            <WorkspaceNav
+              role="administrator"
+              organizationId=""
+              userId={owner.id}
+              platform
+              workspaceAvailable={!!memberships?.length}
+              signOutControl={
+                <form action="/auth/sign-out" method="post">
+                  <Button variant="secondary" type="submit">
+                    Sign out
+                  </Button>
+                </form>
+              }
+            />
+          }
+          account={
+            <div className="sidebar-account">
+              <Avatar name="Platform owner" />
+              <div className="account-copy">
+                <strong>Platform owner</strong>
+                <span>{owner.email}</span>
+              </div>
               <form action="/auth/sign-out" method="post">
-                <Button variant="secondary" type="submit">
-                  Sign out
-                </Button>
+                <button
+                  className="sign-out-button"
+                  type="submit"
+                  aria-label="Sign out"
+                  title="Sign out"
+                >
+                  <NavigationIcon name="signOut" />
+                </button>
               </form>
-            }
-          />
-        }
-        account={
-          <div className="sidebar-account">
-            <Avatar name="Platform owner" />
-            <div className="account-copy">
-              <strong>Platform owner</strong>
-              <span>{owner.email}</span>
             </div>
-            <form action="/auth/sign-out" method="post">
-              <button
-                className="sign-out-button"
-                type="submit"
-                aria-label="Sign out"
-                title="Sign out"
-              >
-                <NavigationIcon name="signOut" />
-              </button>
-            </form>
-          </div>
-        }
-      >
-        {children}
-      </WorkspaceShell>
-    </SessionGuard>
+          }
+        >
+          {children}
+        </WorkspaceShell>
+      </SessionGuard>
+    </div>
   );
 }
