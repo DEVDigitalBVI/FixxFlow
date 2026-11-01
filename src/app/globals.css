@@ -41,6 +41,20 @@
     --color-highlight-surface: #fff0f3;
     --color-purple: #596579;
     --color-purple-subtle: #e3e9ee;
+    --color-ticket-blue: #1d4ed8;
+    --color-ticket-blue-surface: #dbeafe;
+    --color-ticket-purple: #6d28d9;
+    --color-ticket-purple-surface: #ede9fe;
+    --color-ticket-amber: #92400e;
+    --color-ticket-amber-surface: #fef3c7;
+    --color-ticket-orange: #9a3412;
+    --color-ticket-orange-surface: #ffedd5;
+    --color-ticket-green: #166534;
+    --color-ticket-green-surface: #dcfce7;
+    --color-ticket-red: #b91c1c;
+    --color-ticket-red-surface: #fee2e2;
+    --color-ticket-slate: #475569;
+    --color-ticket-slate-surface: #e2e8f0;
     --color-neutral: #596579;
     --color-neutral-subtle: #e3e9ee;
     --color-note-border: var(--color-brand-primary);
@@ -117,6 +131,20 @@
     --color-highlight-surface: #373b53;
     --color-purple: #b4becd;
     --color-purple-subtle: #373b53;
+    --color-ticket-blue: #bfdbfe;
+    --color-ticket-blue-surface: #1e3a5f;
+    --color-ticket-purple: #ddd6fe;
+    --color-ticket-purple-surface: #3b2764;
+    --color-ticket-amber: #fde68a;
+    --color-ticket-amber-surface: #503711;
+    --color-ticket-orange: #fed7aa;
+    --color-ticket-orange-surface: #542b18;
+    --color-ticket-green: #bbf7d0;
+    --color-ticket-green-surface: #17432f;
+    --color-ticket-red: #fecaca;
+    --color-ticket-red-surface: #5b252d;
+    --color-ticket-slate: #cbd5e1;
+    --color-ticket-slate-surface: #334155;
     --color-neutral: #edf2f4;
     --color-neutral-subtle: #464b63;
     --shadow-field: 0 1px 2px rgb(0 0 0 / 10%), 0 3px 8px rgb(0 0 0 / 12%);
@@ -154,6 +182,20 @@
       --color-highlight-surface: #373b53;
       --color-purple: #b4becd;
       --color-purple-subtle: #373b53;
+      --color-ticket-blue: #bfdbfe;
+      --color-ticket-blue-surface: #1e3a5f;
+      --color-ticket-purple: #ddd6fe;
+      --color-ticket-purple-surface: #3b2764;
+      --color-ticket-amber: #fde68a;
+      --color-ticket-amber-surface: #503711;
+      --color-ticket-orange: #fed7aa;
+      --color-ticket-orange-surface: #542b18;
+      --color-ticket-green: #bbf7d0;
+      --color-ticket-green-surface: #17432f;
+      --color-ticket-red: #fecaca;
+      --color-ticket-red-surface: #5b252d;
+      --color-ticket-slate: #cbd5e1;
+      --color-ticket-slate-surface: #334155;
       --color-neutral: #edf2f4;
       --color-neutral-subtle: #464b63;
       --shadow-field: 0 1px 2px rgb(0 0 0 / 10%), 0 3px 8px rgb(0 0 0 / 12%);
@@ -3674,12 +3716,45 @@
     width: fit-content;
     min-height: 40px;
   }
+  .ticket-badge[data-ticket-color='blue'] {
+    color: var(--color-ticket-blue);
+    background-color: var(--color-ticket-blue-surface);
+  }
+  .ticket-badge[data-ticket-color='purple'] {
+    color: var(--color-ticket-purple);
+    background-color: var(--color-ticket-purple-surface);
+  }
+  .ticket-badge[data-ticket-color='amber'] {
+    color: var(--color-ticket-amber);
+    background-color: var(--color-ticket-amber-surface);
+  }
+  .ticket-badge[data-ticket-color='orange'] {
+    color: var(--color-ticket-orange);
+    background-color: var(--color-ticket-orange-surface);
+  }
+  .ticket-badge[data-ticket-color='green'] {
+    color: var(--color-ticket-green);
+    background-color: var(--color-ticket-green-surface);
+  }
+  .ticket-badge[data-ticket-color='red'] {
+    color: var(--color-ticket-red);
+    background-color: var(--color-ticket-red-surface);
+  }
+  .ticket-badge[data-ticket-color='slate'] {
+    color: var(--color-ticket-slate);
+    background-color: var(--color-ticket-slate-surface);
+  }
   .badge-icon {
     flex: 0 0 auto;
     width: 14px;
     height: 14px;
   }
   @media (forced-colors: active) {
+    .ticket-badge[data-ticket-color] {
+      color: CanvasText;
+      background-color: Canvas;
+      border-color: CanvasText;
+    }
     .badge-icon {
       forced-color-adjust: auto;
     }

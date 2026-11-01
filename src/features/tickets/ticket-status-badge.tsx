@@ -10,7 +10,7 @@ type Props =
 export function TicketStatusBadge(props: Props) {
   const item = props.status ? ticketStatuses[props.status] : ticketPriorities[props.priority];
   return (
-    <Badge tone={item.tone} className="ticket-badge">
+    <Badge tone={item.tone} className="ticket-badge" data-ticket-color={item.color}>
       <NavigationIcon name={item.icon} className="badge-icon" size={14} />
       {item.label}
     </Badge>

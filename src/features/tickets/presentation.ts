@@ -6,21 +6,22 @@ type BadgePresentation = {
   label: string;
   tone: 'neutral' | 'active' | 'warning' | 'success' | 'danger';
   icon: NavigationIconName;
+  color: 'blue' | 'purple' | 'amber' | 'orange' | 'green' | 'red' | 'slate';
 };
 export const ticketStatuses: Record<TicketStatus, BadgePresentation> = {
-  new: { label: 'New', tone: 'neutral', icon: 'inbox' },
-  open: { label: 'Open', tone: 'active', icon: 'open' },
-  in_progress: { label: 'In progress', tone: 'active', icon: 'progress' },
-  waiting_on_user: { label: 'Waiting on user', tone: 'warning', icon: 'clock' },
-  on_hold: { label: 'On hold', tone: 'neutral', icon: 'pause' },
-  resolved: { label: 'Resolved', tone: 'success', icon: 'check' },
-  closed: { label: 'Closed', tone: 'neutral', icon: 'lock' },
+  new: { label: 'New', tone: 'neutral', icon: 'inbox', color: 'blue' },
+  open: { label: 'Open', tone: 'active', icon: 'open', color: 'blue' },
+  in_progress: { label: 'In progress', tone: 'active', icon: 'progress', color: 'purple' },
+  waiting_on_user: { label: 'Waiting on user', tone: 'warning', icon: 'clock', color: 'amber' },
+  on_hold: { label: 'On hold', tone: 'neutral', icon: 'pause', color: 'orange' },
+  resolved: { label: 'Resolved', tone: 'success', icon: 'check', color: 'green' },
+  closed: { label: 'Closed', tone: 'neutral', icon: 'lock', color: 'slate' },
 };
 export const ticketPriorities: Record<TicketPriority, BadgePresentation> = {
-  low: { label: 'Low', tone: 'neutral', icon: 'priorityLow' },
-  normal: { label: 'Normal', tone: 'neutral', icon: 'priorityNormal' },
-  high: { label: 'High', tone: 'warning', icon: 'priorityHigh' },
-  critical: { label: 'Urgent', tone: 'danger', icon: 'alert' },
+  low: { label: 'Low', tone: 'neutral', icon: 'priorityLow', color: 'slate' },
+  normal: { label: 'Normal', tone: 'neutral', icon: 'priorityNormal', color: 'blue' },
+  high: { label: 'High', tone: 'warning', icon: 'priorityHigh', color: 'amber' },
+  critical: { label: 'Urgent', tone: 'danger', icon: 'alert', color: 'red' },
 };
 
 export const formatTicketDate = (value: string | null, timeZone = 'UTC') =>
