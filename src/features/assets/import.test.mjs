@@ -293,7 +293,7 @@ test('save rechecks references and creates one tenant-scoped insert with only al
   const a = actions('administrator', {
     profiles: [{ user_id: user, email: 'a@example.com' }],
     organization_memberships: [{ user_id: user }],
-    locations: [{ id: place, name: 'Office' }],
+    location_paths: [{ id: place, name: 'Office' }],
   });
   const result = await a.importAssets(
     [
@@ -318,7 +318,7 @@ test('save rechecks references and creates one tenant-scoped insert with only al
   assert.equal(first.location_id, place);
   assert.equal(first.id, undefined);
   assert.equal(first.assigned_email, undefined);
-  for (const table of ['assets', 'profiles', 'locations', 'organization_memberships'])
+  for (const table of ['assets', 'profiles', 'location_paths', 'organization_memberships'])
     assert.ok(
       a.calls.some(
         (c) =>

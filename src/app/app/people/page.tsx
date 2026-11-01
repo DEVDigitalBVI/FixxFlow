@@ -65,10 +65,10 @@ export default async function PeoplePage({ searchParams }: Props) {
         : Promise.resolve({ data: [], error: null }),
       viewer.role === 'administrator'
         ? supabase
-            .from('locations')
-            .select('id, name, is_active')
+            .from('location_paths')
+            .select('id, name:path, is_active')
             .eq('organization_id', viewer.organizationId)
-            .order('name')
+            .order('path')
         : Promise.resolve({ data: [], error: null }),
     ]);
   if (membersError) throw new Error('Unable to load members.');

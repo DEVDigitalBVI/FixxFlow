@@ -26,10 +26,32 @@
   :where(.scope) :global(.organization-timezone .field) {
     min-width: 0;
   }
-  :where(.scope) :global(.organization-page .settings-grid) {
-    align-items: stretch;
+  :where(.scope) :global(.organization-location-item) {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  :where(.scope) :global(.organization-location-item > div:first-child),
+  :where(.scope) :global(.organization-location-item > .organization-item-actions) {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+  :where(.scope) :global(.organization-location-item strong) {
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.organization-location-item > .settings-editor[open]) {
+    order: 0;
   }
   @media (max-width: 767px) {
+    :where(.scope) :global(.organization-location-item) {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: stretch;
+    }
+    :where(.scope) :global(.organization-location-item > div:first-child),
+    :where(.scope) :global(.organization-location-item > .organization-item-actions),
+    :where(.scope) :global(.organization-location-item > .settings-editor[open]) {
+      flex-basis: auto;
+    }
     :where(.scope) :global(.organization-page) {
       gap: 20px;
     }

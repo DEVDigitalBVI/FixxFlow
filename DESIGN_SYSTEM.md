@@ -647,3 +647,9 @@ Large filled panels use the dedicated brand-panel tokens: dark grey `#35383D` in
 ### Dashboard insight alignment
 
 Pair workload and response cards with stretched outer heights on desktop. Keep heading/helper spacing consistent and reserve two lines for descriptions only while the cards sit side by side. Anchor response-data disclosures at the bottom. At compact widths, stack naturally, retaining all workload rows, empty/error states and accessible exact data.
+
+### Location hierarchy
+
+Locations support optional Parent location with up to eight levels, using business-neutral names such as site, floor, room or storage area. Existing locations remain top-level. Reuse LookupSelect for searchable parent selection, full-path labels and failure recovery, excluding the current location and its descendants. Add sublocation preselects the parent. Keep native disclosures, unique field labels, responsive stacking and written active states. Departments remain independent.
+
+Display full paths in people, ticket and asset selectors, imports and reports. A parent report filter includes its descendants; grouping retains the most specific location and full path. Reject cross-workspace parents, cycles, duplicate names under the same parent, and depth overflow in the database. Deactivate active children before their parent; block deleting a location with children or linked records. Renames and moves preserve record IDs and refresh descendant paths.

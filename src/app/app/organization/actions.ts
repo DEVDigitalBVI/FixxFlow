@@ -27,12 +27,21 @@ export async function editOrganizationItem(form: FormData): Promise<ActionResult
     region?: string | null;
     country_code?: string | null;
     timezone?: string;
+    parent_id?: string | null;
   } = { name };
   if (kind === 'departments') {
     changes.description = optional('description');
     if ((changes.description?.length ?? 0) > 2000)
       return { error: 'Keep the description within 2,000 characters.' };
   } else {
+    if (form.has('parentId')) {
+      changes.parent_id = optional('parentId');
+      if (changes.parent_id && !isUuid(changes.parent_id))
+        return {
+          error: 'Choose a valid parent location.',
+          fieldErrors: { parentId: 'Choose a parent location from the list.' },
+        };
+    }
     changes.city = optional('city');
     changes.region = optional('region');
     changes.country_code = optional('countryCode')?.toUpperCase() ?? null;
@@ -52,6 +61,7 @@ export async function editOrganizationItem(form: FormData): Promise<ActionResult
           region: changes.region,
           country_code: changes.country_code,
           timezone: changes.timezone,
+          ...(form.has('parentId') ? { parent_id: changes.parent_id } : {}),
         });
   const { data, error } = await query
     .eq('organization_id', viewer.organizationId)
@@ -60,13 +70,26 @@ export async function editOrganizationItem(form: FormData): Promise<ActionResult
     .select('id')
     .maybeSingle();
   if (error?.code === '23505')
-    return { error: 'That name already exists. Choose a different name.' };
+    return {
+      error:
+        kind === 'locations'
+          ? 'That name already exists under this parent. Choose a different name.'
+          : 'That name already exists. Choose a different name.',
+    };
+  if (kind === 'locations' && (error?.code === '23514' || error?.code === '23503'))
+    return {
+      error:
+        'Choose an available parent outside this location’s own sublocations. Active locations need active parents, with at most eight levels.',
+      fieldErrors: { parentId: 'This parent cannot be used. Review the hierarchy and try again.' },
+    };
   if (error) return { error: 'Changes could not be saved. Your entries are preserved; try again.' };
   if (!data)
     return { error: 'This record changed or was removed. Reload the page before saving again.' };
   revalidatePath('/app/organization');
   revalidatePath('/app/people');
   revalidatePath('/app/tickets', 'layout');
+  revalidatePath('/app/assets', 'layout');
+  revalidatePath('/app/reports', 'layout');
   return { success: 'Changes saved.' };
 }
 
@@ -121,12 +144,15 @@ export async function addLocation(formData: FormData): Promise<ActionResult> {
   const region = formString(formData, 'region', '').trim() || null;
   const countryCode = formString(formData, 'countryCode', '').trim().toUpperCase() || null;
   const timezone = formString(formData, 'timezone', viewer.organizationTimezone).trim();
+  const parentId = formString(formData, 'parentId', '').trim() || null;
   const fieldErrors: Record<string, string> = {};
   if (!name || name.length > 100) fieldErrors.name = 'Enter a name between 1 and 100 characters.';
   if (countryCode && !/^[A-Z]{2}$/.test(countryCode))
     fieldErrors.countryCode = 'Use a two-letter country code.';
   if (!validTimezone(timezone))
     fieldErrors.timezone = 'Enter a named timezone, such as America/Tortola.';
+  if (parentId && !isUuid(parentId))
+    fieldErrors.parentId = 'Choose a parent location from the list.';
   if (Object.keys(fieldErrors).length)
     return { error: 'Review the location details.', fieldErrors };
   const supabase = await createClient();
@@ -137,11 +163,19 @@ export async function addLocation(formData: FormData): Promise<ActionResult> {
     region,
     country_code: countryCode,
     timezone,
+    parent_id: parentId,
   });
   if (error?.code === '23505')
     return {
-      error: 'That location name already exists.',
-      fieldErrors: { name: 'Choose a different name.' },
+      error: 'That location name already exists under this parent.',
+      fieldErrors: { name: 'Choose a different name for this parent location.' },
+    };
+  if (error?.code === '23503' || error?.code === '23514')
+    return {
+      error: 'Choose an active parent location with fewer than eight levels.',
+      fieldErrors: {
+        parentId: 'This parent is no longer available or has reached the nesting limit.',
+      },
     };
   if (error)
     return { error: 'The location could not be added. Your entries are preserved; try again.' };
@@ -173,6 +207,10 @@ export async function toggleLocation(formData: FormData) {
     .update({ is_active: !isActive })
     .eq('organization_id', viewer.organizationId)
     .eq('id', id);
+  if (error?.code === '23514')
+    fail(
+      'Deactivate or move active sublocations first. To reactivate a sublocation, activate its parents first.',
+    );
   if (error) fail('The location status could not be changed.');
   revalidatePath('/app/organization');
 }
@@ -197,7 +235,7 @@ async function deleteOrganizationItem(table: 'departments' | 'locations', formDa
     fail(
       table === 'departments'
         ? 'This department is linked to people. Deactivate it to keep those links, or reassign the people before deleting it.'
-        : 'This location is linked to people, tickets, or assets. Deactivate it to preserve those records. Only unused locations can be deleted.',
+        : 'This location has sublocations or is linked to people, tickets, or assets. Deactivate it to preserve linked records. Before deleting, move or remove its sublocations and reassign linked records.',
     );
   if (error) fail(`The ${label} could not be deleted. Please try again.`);
   if (!data)

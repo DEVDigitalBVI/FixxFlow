@@ -1,21 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import { ActionForm } from '@/components/ui/action-form';
 import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
+import { LookupSelect } from '@/features/lookups/lookup-select';
 import type { ActionResult } from '@/lib/action-result';
 
 export function OrganizationCreateForm({
   kind,
   action,
   timezone = 'UTC',
+  parentId = '',
 }: {
   kind: 'department' | 'location';
   action: (data: FormData) => Promise<ActionResult>;
   timezone?: string;
+  parentId?: string;
 }) {
+  const formId = useId();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const fields =
     kind === 'department'
@@ -41,8 +45,18 @@ export function OrganizationCreateForm({
       }}
     >
       <p className="form-note">Fields marked * are required.</p>
+      {kind === 'location' && (
+        <LookupSelect
+          resource="location_parents"
+          name="parentId"
+          label="Parent location"
+          defaultValue={parentId}
+          emptyLabel="None — top-level location"
+          guardSave="selection"
+        />
+      )}
       {fields.map((field) => {
-        const id = `${kind}-${field.name}`,
+        const id = `${kind}-${formId}-${field.name}`,
           errorId = `${id}-error`;
         return (
           <div className="field" key={field.name}>

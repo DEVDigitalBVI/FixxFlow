@@ -60,11 +60,11 @@ export async function importAssets(
       ),
       lookup(names, (group) =>
         db
-          .from('locations')
-          .select('id,name')
+          .from('location_paths')
+          .select('id,name:path')
           .eq('organization_id', org)
           .eq('is_active', true)
-          .in('name', group),
+          .in('path', group),
       ),
       (async () => {
         const found = await lookup(emails, (group) =>
@@ -113,7 +113,7 @@ export async function importAssets(
     if (row.location && places.length !== 1)
       issues.push({
         row: row.row,
-        message: 'Location must match exactly one active location name in this organization.',
+        message: 'Location must match exactly one active location path in this organization.',
       });
     const form = new FormData();
     for (const [key, value] of Object.entries(row)) form.set(key, String(value));

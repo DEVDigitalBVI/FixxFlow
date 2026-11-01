@@ -47,6 +47,7 @@ export const auditFields: Record<string, string> = {
   category_id: 'Category',
   subcategory_id: 'Subcategory',
   location_id: 'Location',
+  parent_id: 'Parent location',
   department_id: 'Department',
   due_at: 'Due date',
   role: 'Role',

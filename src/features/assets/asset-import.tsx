@@ -200,9 +200,9 @@ export function AssetImport() {
             <div>
               <dt>assigned_email, location</dt>
               <dd>
-                Optional. Use an active employee’s exact email and an active location’s exact name.
-                Leave blank for unassigned equipment or no location. Retired assets must be
-                unassigned.
+                Optional. Use an active employee’s exact email and an active location’s full path
+                (for example, Head office / Room 101). Leave blank for unassigned equipment or no
+                location. Retired assets must be unassigned.
               </dd>
             </div>
             <div>
