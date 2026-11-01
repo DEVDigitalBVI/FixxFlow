@@ -1624,7 +1624,7 @@
   .person-manage > summary {
     position: absolute;
     right: 24px;
-    top: 24px;
+    top: var(--space-group);
     list-style: none;
   }
   .person-manage > summary::-webkit-details-marker {
@@ -1642,6 +1642,19 @@
     margin-top: var(--space-section);
     padding-top: 24px;
     border-top: 1px solid var(--color-border);
+  }
+  .person-equipment-action,
+  .person-delete-action {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  .person-delete-action {
+    padding-top: var(--space-group);
+    border-top: 1px solid var(--color-border);
+  }
+  .person-readonly-actions {
+    display: flex;
+    margin-top: var(--space-group);
   }
   .person-manage-content h4 {
     font-size: 14px;

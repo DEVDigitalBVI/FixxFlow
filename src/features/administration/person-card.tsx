@@ -76,84 +76,103 @@ export function PersonCard({
           </Badge>
         </div>
       </div>
-      <Link className={buttonVariants({ variant: 'quiet' })} href={`/app/people/${id}/equipment`}>
-        Equipment<span className="sr-only"> for {name}</span>
-      </Link>
-      {deleteControl}
-      {canManage && (
+      {!canManage && !deleteControl && (
+        <div className="person-readonly-actions">
+          <Link
+            className={buttonVariants({ variant: 'quiet' })}
+            href={`/app/people/${id}/equipment`}
+          >
+            Equipment<span className="sr-only"> for {name}</span>
+          </Link>
+        </div>
+      )}
+      {(canManage || deleteControl) && (
         <details className="person-manage">
           <summary className={buttonVariants({ variant: 'secondary' })}>
             Manage<span className="sr-only"> {name}</span>
             <span aria-hidden="true">⌄</span>
           </summary>
           <div className="person-manage-content">
-            <section className="stack" aria-labelledby={`person-details-${id}`}>
-              <h4 id={`person-details-${id}`}>Profile details</h4>
-              <p className="muted">Keep their role in the organization up to date.</p>
-              {profile ? (
-                <MemberDetailsEditor
-                  inline
-                  profile={profile}
-                  name={name}
-                  departments={departments}
-                  locations={locations}
-                />
-              ) : (
-                <p className="muted">
-                  Profile details will be available when this member finishes setting up their
-                  account.
-                </p>
-              )}
-            </section>
-            <section className="stack" aria-labelledby={`person-access-${id}`}>
-              <h4 id={`person-access-${id}`}>Workspace access</h4>
-              <p className="muted">{rolePresentation[role].description}</p>
-              <form action={updateRole} className="stack">
-                <input type="hidden" name="userId" value={id} />
-                <div className="field">
-                  <label htmlFor={`role-${id}`}>Role for {name}</label>
-                  <NativeSelect id={`role-${id}`} name="role" defaultValue={role}>
-                    {Object.entries(rolePresentation).map(([value, item]) => (
-                      <option key={value} value={value}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                </div>
-                <SubmitButton variant="secondary">
-                  Save role<span className="sr-only"> for {name}</span>
-                </SubmitButton>
-              </form>
-              <div className="person-access-change">
-                {isSelf && status === 'active' ? (
-                  <p className="muted">You can’t deactivate your own account.</p>
-                ) : (
-                  <details className="settings-editor">
-                    <summary>
-                      {status === 'active' ? 'Deactivate access' : 'Restore access'}
-                      <span className="sr-only"> for {name}</span>
-                    </summary>
-                    <form action={updateStatus} className="stack">
-                      <input type="hidden" name="userId" value={id} />
-                      <input
-                        type="hidden"
-                        name="status"
-                        value={status === 'active' ? 'inactive' : 'active'}
-                      />
-                      <p>
-                        {status === 'active'
-                          ? `Deactivate ${name}’s workspace access? Their existing records will be retained.`
-                          : `Restore ${name}’s workspace access? Their current role will be retained.`}
-                      </p>
-                      <SubmitButton variant={status === 'active' ? 'danger' : 'secondary'}>
-                        {status === 'active' ? 'Confirm deactivation' : 'Restore access'}
-                      </SubmitButton>
-                    </form>
-                  </details>
-                )}
-              </div>
-            </section>
-            {inventoryPermissions}
+            <div className="person-equipment-action">
+              <Link
+                className={buttonVariants({ variant: 'secondary' })}
+                href={`/app/people/${id}/equipment`}
+              >
+                Equipment<span className="sr-only"> for {name}</span>
+              </Link>
+            </div>
+            {canManage && (
+              <>
+                <section className="stack" aria-labelledby={`person-details-${id}`}>
+                  <h4 id={`person-details-${id}`}>Profile details</h4>
+                  <p className="muted">Keep their role in the organization up to date.</p>
+                  {profile ? (
+                    <MemberDetailsEditor
+                      inline
+                      profile={profile}
+                      name={name}
+                      departments={departments}
+                      locations={locations}
+                    />
+                  ) : (
+                    <p className="muted">
+                      Profile details will be available when this member finishes setting up their
+                      account.
+                    </p>
+                  )}
+                </section>
+                <section className="stack" aria-labelledby={`person-access-${id}`}>
+                  <h4 id={`person-access-${id}`}>Workspace access</h4>
+                  <p className="muted">{rolePresentation[role].description}</p>
+                  <form action={updateRole} className="stack">
+                    <input type="hidden" name="userId" value={id} />
+                    <div className="field">
+                      <label htmlFor={`role-${id}`}>Role for {name}</label>
+                      <NativeSelect id={`role-${id}`} name="role" defaultValue={role}>
+                        {Object.entries(rolePresentation).map(([value, item]) => (
+                          <option key={value} value={value}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </NativeSelect>
+                    </div>
+                    <SubmitButton variant="secondary">
+                      Save role<span className="sr-only"> for {name}</span>
+                    </SubmitButton>
+                  </form>
+                  <div className="person-access-change">
+                    {isSelf && status === 'active' ? (
+                      <p className="muted">You can’t deactivate your own account.</p>
+                    ) : (
+                      <details className="settings-editor">
+                        <summary>
+                          {status === 'active' ? 'Deactivate access' : 'Restore access'}
+                          <span className="sr-only"> for {name}</span>
+                        </summary>
+                        <form action={updateStatus} className="stack">
+                          <input type="hidden" name="userId" value={id} />
+                          <input
+                            type="hidden"
+                            name="status"
+                            value={status === 'active' ? 'inactive' : 'active'}
+                          />
+                          <p>
+                            {status === 'active'
+                              ? `Deactivate ${name}’s workspace access? Their existing records will be retained.`
+                              : `Restore ${name}’s workspace access? Their current role will be retained.`}
+                          </p>
+                          <SubmitButton variant={status === 'active' ? 'danger' : 'secondary'}>
+                            {status === 'active' ? 'Confirm deactivation' : 'Restore access'}
+                          </SubmitButton>
+                        </form>
+                      </details>
+                    )}
+                  </div>
+                </section>
+                {inventoryPermissions}
+              </>
+            )}
+            {deleteControl && <div className="person-delete-action">{deleteControl}</div>}
           </div>
         </details>
       )}

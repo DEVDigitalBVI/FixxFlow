@@ -238,14 +238,6 @@
   :where(.scope) :global(.people-delete > summary::-webkit-details-marker) {
     display: none;
   }
-  :where(.scope) :global(.person-card > .people-delete) {
-    display: inline-block;
-    margin-inline-start: 8px;
-  }
-  :where(.scope) :global(.person-card > .people-delete[open]) {
-    display: block;
-    margin-inline-start: 0;
-  }
   :where(.scope) :global(.people-selection > .people-delete[open]) {
     flex-basis: 100%;
   }
