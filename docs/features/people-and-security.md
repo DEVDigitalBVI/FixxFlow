@@ -59,7 +59,7 @@ The employee rating and satisfaction components retain the shared portal/reporti
 
 ## Session revocation and idle sign-out
 
-The session changes in `20261101225447_active_sessions_and_logout.sql` and `20261101230421_idle_session_timeout.sql` are pending deployment. Roll out the app heartbeat and both migrations together: enabling the timeout against an older frontend would expire sessions even while people work. Existing sessions receive a one-time 30-minute grace period at migration; later sessions start from Auth session creation time. The single-workspace membership model is unchanged.
+The session changes in `20261101231552_active_sessions_and_logout.sql` and `20261101231559_idle_session_timeout.sql` were applied to production on November 1, 2026 UTC alongside Vercel deployment `dpl_4NVzmMN2d7vbeY31d6198hGhoA4Z` (source commit `0f1e4ba`). Future rollouts must keep the app heartbeat and these migrations together: enabling the timeout against an older frontend would expire sessions even while people work. Existing sessions receive a one-time 30-minute grace period at migration; later sessions start from Auth session creation time. The single-workspace membership model is unchanged.
 
 `private.has_active_session()` requires a current Auth session owned by the signed JWT subject, an unexpired Auth limit, no application revocation receipt, and activity within 30 minutes. Central assurance/platform helpers and restrictive table/Storage/Realtime policies enforce it. The session ID is read from the verified JWT, never supplied as an application parameter. No JWT or tenant identifier is stored in localStorage.
 
@@ -70,3 +70,5 @@ Logout is a same-origin native POST. It first records database revocation, signs
 If both revocation services fail, local credentials are cleared and login reports that server revocation could not be confirmed. Previously issued signed download links retain their own expiration. Service-role maintenance retains its separate authorization contract.
 
 Validation includes database revocation/expiry, device separation, direct RLS denial, non-renewing polls, heartbeat throttling, clock skew, cross-tab renewal, failure recovery, same-origin mutation checks and warning controls. The test-only `pg_temp.set_test_session` fixture issues actual disposable Auth sessions for legacy RLS tests; it is never part of application migrations.
+
+Production verification confirmed all 73 restrictive session policies, authenticated-only invoker RPC access, live-session heartbeats, expired/revoked session denial and expired-session RLS denial. Verification writes were rolled back. Security advisors reported no new findings; the existing four public SECURITY DEFINER warnings and 25 private default-deny table notices remain unchanged.
