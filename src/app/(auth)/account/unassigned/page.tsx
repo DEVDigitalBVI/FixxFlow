@@ -7,7 +7,6 @@ import { SignupProgress } from '@/components/ui/signup-progress';
 import { TimezoneSelect } from '@/features/timezones/select';
 import { createClient } from '@/lib/supabase/server';
 
-import { signOut } from '../../actions';
 import { bootstrapOrganization } from '../actions';
 
 type Props = { searchParams: Promise<{ error?: string }> };
@@ -99,7 +98,7 @@ export default async function UnassignedPage({ searchParams }: Props) {
           Create organization
         </Button>
       </form>
-      <form action={signOut} className="auth-secondary-action">
+      <form action="/auth/sign-out" method="post" className="auth-secondary-action">
         <button className="link-button" type="submit">
           Sign out and finish later
         </button>

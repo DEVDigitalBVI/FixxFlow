@@ -21,7 +21,7 @@ test('knowledge audience policies cover articles, search, related links, feedbac
   };
   const identity = async (id, aal = 'aal1') => {
     await db.exec('reset role');
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: id, role: 'authenticated', aal }),
     ]);
     await db.exec('set role authenticated');
@@ -188,7 +188,7 @@ test('knowledge audience policies cover articles, search, related links, feedbac
     await identity(employee, 'aal2');
     assert.equal((await db.query('select id from public.knowledge_articles')).rows.length, 1);
     await db.exec('reset role');
-    await db.query("select set_config('request.jwt.claims','{}',false)");
+    await db.query("select pg_temp.set_test_session('{}',false)");
     await db.exec(await readFile('supabase/tests/knowledge-regression.sql', 'utf8'));
   } finally {
     await db.close();

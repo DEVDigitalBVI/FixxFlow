@@ -76,6 +76,9 @@ export function EmployeeHome({
           </Link>
         ))}
       </div>
+      <p className="portal-help-footer">
+        New to FixxFlow? <Link href="/app/faq">Getting started and FAQs</Link>
+      </p>
       <section className="portal-home-search" aria-labelledby="home-search-heading">
         <div className="portal-section-heading">
           <h2 id="home-search-heading">Find an answer</h2>

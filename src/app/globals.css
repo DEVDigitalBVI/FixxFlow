@@ -3422,7 +3422,15 @@
   }
   /* Grid pages already supply the section gap; do not add the header margin again. */
   .workspace[data-page-flow='standard']
-    :is(.stack, .assets-page, .automation-page, .organization-page, .people-page, .profile-page)
+    :is(
+      .stack,
+      .assets-page,
+      .automation-page,
+      .organization-page,
+      .people-page,
+      .profile-page,
+      .fixxflow-help-page
+    )
     > .page-header {
     margin-block: 0;
   }

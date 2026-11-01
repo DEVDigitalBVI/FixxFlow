@@ -66,7 +66,7 @@ test('search returns both workspace and library rows through the shared view', a
        values($1,'Network','Library parity canary','',$2::jsonb,'published','employees')`,
       [randomUUID(), body],
     );
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: member, role: 'authenticated', aal: 'aal1' }),
     ]);
     await db.exec('set role authenticated');

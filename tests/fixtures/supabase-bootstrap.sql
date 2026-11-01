@@ -12,7 +12,7 @@ alter default privileges in schema public grant all on sequences to anon,authent
 alter default privileges in schema public grant execute on functions to anon,authenticated,service_role;
 create table auth.users(id uuid primary key, email text, email_confirmed_at timestamptz, invited_at timestamptz, raw_user_meta_data jsonb default '{}');
 create table auth.mfa_factors(id uuid primary key, user_id uuid references auth.users, factor_type text, status text, created_at timestamptz, updated_at timestamptz);
-create table auth.sessions(id uuid primary key, user_id uuid references auth.users, not_after timestamptz);
+create table auth.sessions(id uuid primary key, user_id uuid references auth.users, not_after timestamptz, created_at timestamptz not null default now());
 create function auth.jwt() returns jsonb language sql stable as $$ select coalesce(nullif(current_setting('request.jwt.claims',true),''),'{}')::jsonb $$;
 create function auth.uid() returns uuid language sql stable as $$ select (auth.jwt()->>'sub')::uuid $$;
 create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);

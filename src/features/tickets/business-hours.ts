@@ -1,3 +1,5 @@
+import { defaultSlaSchedule, type SlaSchedule } from './organization-sla';
+
 /** Fixed support coverage, evaluated in the ticket's workspace timezone. */
 export const SUPPORT_HOURS = '7 AM–10 PM, every day';
 const formatters = new Map<string, Intl.DateTimeFormat>();
@@ -41,12 +43,26 @@ function localHourUtc(day: number, hour: number, zone: string) {
   }
   return guess;
 }
-export function withinSupportHours(at: number, zone: string) {
-  const { hour } = parts(at, zone);
-  return hour >= 7 && hour < 22;
+export function withinSupportHours(
+  at: number,
+  zone: string,
+  schedule: SlaSchedule = defaultSlaSchedule,
+) {
+  const { year, month, day, hour, minute } = parts(at, zone);
+  const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay() || 7;
+  return (
+    schedule.days.includes(weekday) &&
+    hour * 60 + minute >= schedule.opens &&
+    hour * 60 + minute < schedule.closes
+  );
 }
-export function businessMillisecondsBetween(start: number, end: number, zone: string): number {
-  if (end < start) return -businessMillisecondsBetween(end, start, zone);
+export function businessMillisecondsBetween(
+  start: number,
+  end: number,
+  zone: string,
+  schedule: SlaSchedule = defaultSlaSchedule,
+): number {
+  if (end < start) return -businessMillisecondsBetween(end, start, zone, schedule);
   const first = parts(start, zone),
     last = parts(end, zone);
   const finalDay = Date.UTC(last.year, last.month - 1, last.day);
@@ -56,9 +72,11 @@ export function businessMillisecondsBetween(start: number, end: number, zone: st
     day <= finalDay;
     day += 86400000
   ) {
+    if (!schedule.days.includes(new Date(day).getUTCDay() || 7)) continue;
     total += Math.max(
       0,
-      Math.min(end, localHourUtc(day, 22, zone)) - Math.max(start, localHourUtc(day, 7, zone)),
+      Math.min(end, localHourUtc(day, schedule.closes / 60, zone)) -
+        Math.max(start, localHourUtc(day, schedule.opens / 60, zone)),
     );
   }
   return total;

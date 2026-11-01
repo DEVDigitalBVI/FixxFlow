@@ -8,6 +8,7 @@ import type { LibraryArticle } from '@/types/database';
 
 import { ArticleFeedback } from './article-feedback';
 import { knowledgeAudiences } from './audience';
+import { helpArticleHref } from './help-collections';
 import { LibraryArticleContent } from './library-article-content';
 
 export async function LibraryArticleDetail({
@@ -19,9 +20,13 @@ export async function LibraryArticleDetail({
 }) {
   const db = await createClient();
   const staff = viewer.role !== 'end_user';
+  const product = article.help_collection === 'fixxflow';
   const [related, feedback, views, helpful, unhelpful] = await Promise.all([
     article.related_article_ids.length
-      ? db.from('library_articles').select('id,title').in('id', article.related_article_ids)
+      ? db
+          .from('library_articles')
+          .select('id,title,help_collection')
+          .in('id', article.related_article_ids)
       : { data: [], error: null },
     db
       .from('library_article_feedback')
@@ -52,13 +57,14 @@ export async function LibraryArticleDetail({
         <div>
           <Link
             className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
-            href="/app/help"
+            href={product ? '/app/faq' : '/app/help'}
           >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
-            Knowledge base
+            {product ? 'FixxFlow Help & FAQ' : 'Knowledge base'}
           </Link>
           <p className="muted">
-            FixxFlow library · {article.category} · {knowledgeAudiences[article.audience].label}
+            {product ? 'FixxFlow Help & FAQ' : 'FixxFlow library'} · {article.category} ·{' '}
+            {knowledgeAudiences[article.audience].label}
           </p>
           <h1>{article.title}</h1>
           <p>{article.summary}</p>
@@ -77,7 +83,7 @@ export async function LibraryArticleDetail({
             <ul>
               {related.data?.map((a) => (
                 <li key={a.id}>
-                  <Link href={`/app/help/${a.id}`}>{a.title}</Link>
+                  <Link href={helpArticleHref(a)}>{a.title}</Link>
                 </li>
               ))}
             </ul>

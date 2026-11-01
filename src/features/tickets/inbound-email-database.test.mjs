@@ -90,7 +90,10 @@ test('inbound email accepts only authenticated members and never touches another
     ).rows[0];
     assert.equal(ticket.title, 'Printer broken');
     assert.equal(ticket.requester_id, u.employee);
-    assert.match(ticket.description, /^It jams on page two\.\n\n\[This email had 2 attachments/);
+    assert.match(
+      ticket.description,
+      /^It jams on page two\.\n\n\[Email files are processed separately/,
+    );
     assert.deepEqual(
       await accept({ id: messageId, from: email(u.employee) }),
       { status: 'ticket_created', ticket_id: created.ticket_id, duplicate: true },
@@ -167,7 +170,7 @@ test('inbound email accepts only authenticated members and never touches another
       'a ticket number from another workspace never reaches that workspace',
     );
 
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: u.admin, role: 'authenticated', aal: 'aal1' }),
     ]);
     await db.exec('set role authenticated');
@@ -184,7 +187,7 @@ test('inbound email accepts only authenticated members and never touches another
     );
     assert.ok(log.every((row) => row.status !== 'rejected_recipient'));
     await db.exec('reset role');
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: u.employee, role: 'authenticated', aal: 'aal1' }),
     ]);
     await db.exec('set role authenticated');

@@ -4,7 +4,8 @@ import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { Timestamp } from '@/features/timezones/provider';
 import type { TicketStatus } from '@/types/database';
 
-import { requestExpectations, SUPPORT_HOURS, type Expectation } from './expectations';
+import { requestExpectations, type Expectation } from './expectations';
+import { scheduleDescription } from './organization-sla';
 import type { SlaTicket } from './sla';
 import { useSlaNow } from './sla-indicator';
 
@@ -51,8 +52,9 @@ export function RequestExpectations({ ticket }: { ticket: SlaTicket & { status: 
         <details className="request-expectations-policy">
           <summary>How these times work</summary>
           <p className="muted">
-            Targets count support hours, {SUPPORT_HOURS} ({ticket.sla_timezone}). IT may adjust the
-            urgency after review, which updates these times.
+            Targets count support hours, {scheduleDescription(ticket.sla_schedule)} (
+            {ticket.sla_timezone}). IT may adjust the urgency after review, which updates these
+            times.
           </p>
         </details>
       )}

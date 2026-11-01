@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { Alert } from '@/components/ui/alert';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input, NativeSelect } from '@/components/ui/input';
 import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { PageHeader } from '@/components/ui/page-header';
 import { knowledgeAudiences } from '@/features/knowledge/audience';
@@ -14,28 +14,35 @@ import { createClient } from '@/lib/supabase/server';
 export default async function LibraryPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; page?: string; saved?: string }>;
+  searchParams: Promise<{ q?: string; page?: string; saved?: string; collection?: string }>;
 }) {
   await requirePlatformOwner();
   const filters = await searchParams;
   const q = normalizeSearch(filters.q),
     page = pageNumber(filters.page, 10000);
   const db = await createClient();
-  const query = q
+  const collection =
+    filters.collection === 'knowledge' || filters.collection === 'fixxflow'
+      ? filters.collection
+      : '';
+  let query = q
     ? db
         .rpc('search_knowledge_articles', {
           target_organization_id: '00000000-0000-0000-0000-000000000000',
           search_text: q,
         })
-        .select('id,title,summary,status,audience,category,updated_at')
+        .select('id,title,summary,status,audience,category,updated_at,help_collection,help_format')
         .is('organization_id', null)
-    : db.from('library_articles').select('id,title,summary,status,audience,category,updated_at');
+    : db
+        .from('library_articles')
+        .select('id,title,summary,status,audience,category,updated_at,help_collection,help_format');
+  if (collection) query = query.eq('help_collection', collection);
   const { data, error } = await query
     .order('updated_at', { ascending: false })
     .order('id')
     .range((page - 1) * 24, page * 24);
   const href = (next: number) =>
-    `/platform/library?${new URLSearchParams({ q, page: String(next) })}`;
+    `/platform/library?${new URLSearchParams({ q, collection, page: String(next) })}`;
   return (
     <div className="page">
       <PageHeader
@@ -66,6 +73,14 @@ export default async function LibraryPage({
           Search shared articles
           <Input type="search" name="q" defaultValue={q} maxLength={SEARCH_LIMIT} />
         </label>
+        <label>
+          Help collection
+          <NativeSelect name="collection" defaultValue={collection}>
+            <option value="">All shared content</option>
+            <option value="knowledge">Knowledge base</option>
+            <option value="fixxflow">FixxFlow Help &amp; FAQ</option>
+          </NativeSelect>
+        </label>
         <Button variant="secondary">Search</Button>
         <Link className={buttonVariants({ variant: 'secondary' })} href="/platform/library">
           Clear filters
@@ -81,6 +96,7 @@ export default async function LibraryPage({
             {data?.slice(0, 24).map((a) => (
               <article className="portal-detail-card" key={a.id}>
                 <p className="muted">
+                  {a.help_collection === 'fixxflow' ? 'FixxFlow Help & FAQ' : 'Knowledge base'} ·{' '}
                   {a.category} · {knowledgeAudiences[a.audience].label} · {a.status}
                 </p>
                 <h2>

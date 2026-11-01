@@ -24,5 +24,9 @@ export async function updateSession(request: NextRequest) {
   // Do not replace this with getSession(); getClaims verifies the auth token.
   await supabase.auth.getClaims();
 
+  if (/^\/(?:app|platform|account|auth)(?:\/|$)/.test(request.nextUrl.pathname)) {
+    response.headers.set('Cache-Control', 'private, no-store, max-age=0');
+    response.headers.set('Pragma', 'no-cache');
+  }
   return response;
 }

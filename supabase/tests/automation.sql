@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id) values(session,actor);
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 -- Plain PostgreSQL acceptance tests. Run after all migrations as postgres.
 -- Every fixture rolls back; no execution, ticket mutations or delivery occurs.
 begin;
@@ -34,10 +53,10 @@ select set_config('test.org_a','20000000-0000-0000-0000-000000000801',true),set_
 
 -- B creates its own rule with unenrolled aal1, matching existing MFA behavior.
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000802","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000802","role":"authenticated","aal":"aal1"}',true);
 select set_config('test.rule_b',(public.create_automation_rule(current_setting('test.org_b')::uuid,current_setting('test.definition')::jsonb)).id::text,true);
 select pg_temp.check_automation((select count(*)=1 from public.automation_rules),'B reads its own rule');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000801","role":"authenticated","aal":"aal2"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000801","role":"authenticated","aal":"aal2"}',true);
 select pg_temp.check_automation((select count(*)=0 from public.automation_rules),'A cannot read B rules');
 select pg_temp.check_automation((select count(*)=0 from public.automation_rule_versions),'A cannot read B versions');
 select set_config('test.rule_a',(public.create_automation_rule(current_setting('test.org_a')::uuid,current_setting('test.definition')::jsonb)).id::text,true);
@@ -64,7 +83,7 @@ do $$ declare source_org text; victim_org text; victim_rule text; actor text; i 
   victim_org:=current_setting(case when i=1 then 'test.org_b' else 'test.org_a' end);
   victim_rule:=current_setting(case when i=1 then 'test.rule_b' else 'test.rule_a' end);
   actor:=case when i=1 then '10000000-0000-0000-0000-000000000801' else '10000000-0000-0000-0000-000000000802' end;
-  perform set_config('request.jwt.claims',jsonb_build_object('sub',actor,'role','authenticated','aal','aal2')::text,true);
+  perform pg_temp.set_test_session(jsonb_build_object('sub',actor,'role','authenticated','aal','aal2')::text,true);
   perform pg_temp.check_automation(not exists(select 1 from public.automation_rules where organization_id=victim_org::uuid),'cross tenant rule reads denied');
   perform pg_temp.check_automation(not exists(select 1 from public.automation_rule_versions where organization_id=victim_org::uuid),'cross tenant version reads denied');
   perform pg_temp.check_automation(not exists(select 1 from public.audit_events where organization_id=victim_org::uuid),'cross tenant audit reads denied');
@@ -86,7 +105,7 @@ end $$;
 do $$ declare actor text; claims jsonb; statement text; begin
  foreach actor in array array['10000000-0000-0000-0000-000000000803','10000000-0000-0000-0000-000000000804','10000000-0000-0000-0000-000000000805','10000000-0000-0000-0000-000000000806','10000000-0000-0000-0000-000000000801'] loop
   claims:=jsonb_build_object('sub',actor,'role','authenticated','session_id','90000000-0000-0000-0000-000000000805','aal',case when actor like '%801' then 'aal1' else 'aal2' end);
-  perform set_config('request.jwt.claims',claims::text,true);
+  perform pg_temp.set_test_session(claims::text,true);
   if actor like '%805' then perform pg_temp.check_automation(public.platform_access()='ready','fully verified platform owner fixture'); end if;
   perform pg_temp.check_automation(not exists(select 1 from public.automation_rules),'unauthorized rules hidden');
   perform pg_temp.check_automation(not exists(select 1 from public.automation_rule_versions),'unauthorized versions hidden');
@@ -102,9 +121,9 @@ do $$ declare actor text; claims jsonb; statement text; begin
   ] loop perform pg_temp.expect_automation_error(statement,'42501'); end loop;
  end loop;
 end $$;
-select set_config('request.jwt.claims','{}',true);
+select pg_temp.set_test_session('{}',true);
 select pg_temp.expect_automation_error('select public.create_automation_rule(current_setting(''test.org_a'')::uuid,current_setting(''test.definition'')::jsonb)','42501');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000801","role":"authenticated","aal":"aal2"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000801","role":"authenticated","aal":"aal2"}',true);
 
 -- Revisions and optimistic edits. A stale request may never succeed, even if
 -- its payload is now a no-op. Lifecycle changes consume the same version token.

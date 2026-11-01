@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id) values(session,actor);
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap WITH SCHEMA extensions;
 SELECT extensions.no_plan();
@@ -21,7 +40,7 @@ INSERT INTO public.profiles(organization_id,user_id,display_name,email) VALUES
 SELECT extensions.ok(NOT has_function_privilege('anon','public.delete_workspace_people(uuid,uuid[],boolean)','execute'),'anonymous callers cannot invoke deletion');
 SELECT extensions.ok(NOT has_column_privilege('authenticated','public.organization_memberships','deleted_at','update'),'browser roles cannot forge or clear deletion timestamps');
 SET LOCAL ROLE authenticated;
-SELECT set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000852","role":"authenticated","aal":"aal1"}',true);
+SELECT pg_temp.set_test_session('{"sub":"10000000-0000-4000-8000-000000000852","role":"authenticated","aal":"aal1"}',true);
 SELECT extensions.throws_ok($$SELECT public.delete_workspace_people('20000000-0000-4000-8000-000000000851',ARRAY['10000000-0000-4000-8000-000000000853','10000000-0000-4000-8000-000000000851']::uuid[],true)$$,'42501',NULL,'a mixed employee and administrator selection is rejected atomically');
 SELECT extensions.is((SELECT status::text FROM public.organization_memberships WHERE user_id='10000000-0000-4000-8000-000000000853'),'active','rejected batch preserves the employee access');
 SELECT extensions.throws_ok($$SELECT public.delete_workspace_people('20000000-0000-4000-8000-000000000851',ARRAY['10000000-0000-4000-8000-000000000853','10000000-0000-4000-8000-000000000854']::uuid[],true)$$,'P0002',NULL,'cross-workspace IDs reject the entire batch');
@@ -31,7 +50,7 @@ SELECT extensions.is(public.delete_workspace_people('20000000-0000-4000-8000-000
 SELECT extensions.is(public.delete_workspace_people('20000000-0000-4000-8000-000000000851',ARRAY['10000000-0000-4000-8000-000000000853']::uuid[],true),0,'retrying a completed deletion is harmless');
 SELECT extensions.is((SELECT count(*)::int FROM public.search_members('20000000-0000-4000-8000-000000000851','Deletion employee')),0,'deleted people disappear from directory search');
 SELECT extensions.is((SELECT count(*)::int FROM public.profiles WHERE user_id='10000000-0000-4000-8000-000000000853'),1,'historical profiles remain');
-SELECT set_config('request.jwt.claims','{"sub":"10000000-0000-4000-8000-000000000853","role":"authenticated","aal":"aal1"}',true);
+SELECT pg_temp.set_test_session('{"sub":"10000000-0000-4000-8000-000000000853","role":"authenticated","aal":"aal1"}',true);
 SELECT extensions.ok(NOT private.is_active_organization_member('20000000-0000-4000-8000-000000000851'),'existing tokens no longer grant workspace access');
 SELECT extensions.throws_ok($$SELECT public.delete_workspace_people('20000000-0000-4000-8000-000000000851',ARRAY['10000000-0000-4000-8000-000000000852']::uuid[],true)$$,'42501',NULL,'deleted accounts cannot delete anyone');
 RESET ROLE;

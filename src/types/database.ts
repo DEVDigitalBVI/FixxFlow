@@ -44,9 +44,10 @@ export type Notification = Omit<Tables['notifications']['Row'], 'kind'> & {
   asset_id?: string | null;
   inventory_item_id?: string | null;
 };
-export type KnowledgeArticle = Tables['knowledge_articles']['Row'] & {
-  audience: import('@/features/knowledge/audience').KnowledgeAudience;
-};
+export type KnowledgeArticle = Tables['knowledge_articles']['Row'] &
+  import('@/features/knowledge/help-collections').HelpMetadata & {
+    audience: import('@/features/knowledge/audience').KnowledgeAudience;
+  };
 export type LibraryArticle = Omit<KnowledgeArticle, 'organization_id'> & { organization_id: null };
 export type ReadableArticle = KnowledgeArticle | LibraryArticle;
 export type KnowledgeAsset = Tables['knowledge_attachments']['Row'];
@@ -90,19 +91,32 @@ type NullableArgs<Name extends keyof Functions, Keys extends keyof Functions[Nam
 
 type LibraryTable = {
   Row: LibraryArticle;
-  Insert: Pick<KnowledgeArticle, 'id' | 'title' | 'category'> &
+  Insert: import('@/features/knowledge/help-collections').HelpMetadata &
+    Pick<KnowledgeArticle, 'id' | 'title' | 'category'> &
     Partial<
       Pick<KnowledgeArticle, 'summary' | 'content' | 'status' | 'audience' | 'related_article_ids'>
     >;
-  Update: Partial<
-    Pick<
-      KnowledgeArticle,
-      'title' | 'category' | 'summary' | 'content' | 'status' | 'audience' | 'related_article_ids'
-    >
-  >;
+  Update: import('@/features/knowledge/help-collections').HelpMetadata &
+    Partial<
+      Pick<
+        KnowledgeArticle,
+        'title' | 'category' | 'summary' | 'content' | 'status' | 'audience' | 'related_article_ids'
+      >
+    >;
   Relationships: [];
 };
 type RuntimeTables = {
+  ticket_attachments: Omit<Tables['ticket_attachments'], 'Row'> & {
+    Row: Tables['ticket_attachments']['Row'] & { is_internal: boolean };
+  };
+  inbound_emails: Omit<Tables['inbound_emails'], 'Row'> & {
+    Row: Tables['inbound_emails']['Row'] & {
+      message_id: string | null;
+      attachment_status: string;
+      imported_attachments: number;
+      skipped_attachments: number;
+    };
+  };
   ticket_resolution_ratings: {
     Row: {
       id: string;
@@ -438,6 +452,8 @@ type RuntimeTables = {
     // BEFORE INSERT triggers assign the number and SLA deadlines.
     tickets: Omit<Tables['tickets'], 'Row' | 'Insert'> & {
       Row: Tables['tickets']['Row'] & {
+        sla_targets: Json | null;
+        sla_schedule: Json | null;
         ticket_type: 'support' | 'incident';
         incident_revision: number;
         request_kind: 'support' | 'inventory';
@@ -464,6 +480,47 @@ type RuntimeTables = {
   };
 
 type RuntimeFunctions = {
+  touch_app_session: { Args: never; Returns: Json };
+  revoke_app_session: { Args: never; Returns: boolean };
+  app_session_state: { Args: never; Returns: Json };
+  accept_inbound_email: {
+    Args: {
+      provider_id: string;
+      org_slug: string;
+      sender_email: string;
+      subject: string;
+      body: string;
+      authenticated: boolean;
+      attachment_count?: number;
+      message_id?: string | null;
+      reply_message_ids?: string[];
+      attachment_ids?: string[];
+      inline_attachment_ids?: string[];
+    };
+    Returns: Json;
+  };
+  claim_inbound_attachments: { Args: { batch_size?: number }; Returns: Json };
+  record_inbound_attachment: {
+    Args: {
+      job_id: string;
+      token: string;
+      provider_attachment_id: string;
+      imported: boolean;
+      file_name?: string;
+      content_type?: string;
+      size_bytes?: number;
+    };
+    Returns: boolean;
+  };
+  finish_inbound_attachments: {
+    Args: { job_id: string; token: string; success: boolean };
+    Returns: boolean;
+  };
+  organization_sla_policy: { Args: { org: string }; Returns: Json };
+  save_organization_sla_policy: {
+    Args: { org: string; expected_version: number; targets: Json; schedule: Json };
+    Returns: number;
+  };
   delete_workspace_people: {
     Args: { org: string; targets: string[]; confirmed: boolean };
     Returns: number;
@@ -588,6 +645,7 @@ type RuntimeFunctions = {
     };
     search_tickets: Omit<Functions['search_tickets'], 'Returns'> & {
       Returns: (Functions['search_tickets']['Returns'][number] & {
+        sla_schedule: Json | null;
         ticket_type: 'support' | 'incident';
         request_kind: 'support' | 'inventory';
       })[];

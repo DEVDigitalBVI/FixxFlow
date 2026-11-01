@@ -20,7 +20,7 @@ test('shared library enforces audience, lifecycle, active membership, owner MFA 
   };
   const identity = async (id, aal = 'aal1', session_id) => {
     await db.exec('reset role');
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: id, aal, role: 'authenticated', session_id }),
     ]);
     await db.exec('set role authenticated');
@@ -55,7 +55,7 @@ test('shared library enforces audience, lifecycle, active membership, owner MFA 
     );
     assert.equal(
       (await db.query('select count(*)::int n from public.library_articles')).rows[0].n,
-      70,
+      82,
     );
     assert.equal(
       (
@@ -98,14 +98,14 @@ test('shared library enforces audience, lifecycle, active membership, owner MFA 
       if (name === 'employee')
         assert.equal(
           (await db.query('select count(*)::int n from public.library_articles')).rows[0].n,
-          43,
-          'new workspace receives 42 employee guides automatically',
+          49,
+          'new workspace receives 42 employee guides and six employee FAQs automatically',
         );
       if (name === 'tech')
         assert.equal(
           (await db.query('select count(*)::int n from public.library_articles')).rows[0].n,
-          72,
-          'staff also receive 28 IT-only guides',
+          84,
+          'staff also receive 28 IT-only guides and six staff FAQs',
         );
       await assert.rejects(
         db.query(

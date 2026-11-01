@@ -18,7 +18,7 @@ test('every organization-owned table denies foreign reads and writes', async () 
     foreign = randomUUID();
   const identity = async (role, id = admin) => {
     await db.exec('reset role');
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: id, role, aal: 'aal1' }),
     ]);
     await db.exec(`set role ${role}`);

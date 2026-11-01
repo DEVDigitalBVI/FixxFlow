@@ -3,6 +3,8 @@ import 'server-only';
 import { randomUUID } from 'node:crypto';
 
 export type FailureOperation =
+  | 'auth.signout'
+  | 'auth.session'
   | 'workspace.search'
   | 'knowledge.choices'
   | 'knowledge.suggestions'

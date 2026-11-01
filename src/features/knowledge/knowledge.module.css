@@ -246,3 +246,73 @@
     line-height: 1.5;
   }
 }
+
+@layer components {
+  :where(.scope) :global(.fixxflow-help-page) {
+    display: grid;
+    gap: var(--space-section);
+    align-content: start;
+  }
+  :where(.scope) :global(.fixxflow-help-page > p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.fixxflow-faq-list) {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    overflow: clip;
+  }
+  :where(.scope) :global(.fixxflow-faq-item + .fixxflow-faq-item) {
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.fixxflow-faq-item > summary) {
+    padding: var(--space-group) var(--space-section);
+    min-height: var(--control-height);
+    cursor: pointer;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.fixxflow-faq-item > summary:hover) {
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.fixxflow-faq-item > summary:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -4px;
+  }
+  :where(.scope) :global(.fixxflow-faq-answer) {
+    display: grid;
+    gap: var(--space-group);
+    padding: 0 var(--space-section) var(--space-section);
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.fixxflow-faq-answer p) {
+    margin: 0;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.fixxflow-faq-item > summary) {
+      padding-inline: var(--space-group);
+    }
+    :where(.scope) :global(.fixxflow-faq-answer) {
+      padding-inline: var(--space-group);
+    }
+  }
+}
+
+@layer components {
+  :where(.scope) :global(.fixxflow-help-navigation) {
+    display: grid;
+    gap: var(--space-group);
+  }
+  :where(.scope) :global(.fixxflow-help-navigation > :is(.queue-views, p)),
+  :where(.scope) :global(.fixxflow-help-page > .live-search-status) {
+    margin: 0;
+  }
+  :where(.scope) :global(.fixxflow-help-page .portal-articles .portal-detail-card) {
+    display: grid;
+    gap: var(--space-inline);
+    align-content: start;
+  }
+  :where(.scope) :global(.fixxflow-help-page .portal-detail-card > :is(h3, p)) {
+    margin: 0;
+  }
+}

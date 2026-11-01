@@ -1,8 +1,8 @@
 import type { TicketStatus } from '@/types/database';
 
 import { ticketImpacts } from './impact';
+import { defaultSlaTargets, policyTargets, type SlaTargets } from './organization-sla';
 import { ticketSla, type SlaTicket } from './sla';
-import { fixedSlaTargets } from './sla-policy';
 
 export const SUPPORT_HOURS = '7 AM–10 PM every day';
 
@@ -14,9 +14,9 @@ export function supportDuration(minutes: number) {
 }
 
 /** What each impact choice on the request form means for reply and resolution time. */
-export function impactExpectations() {
+export function impactExpectations(targets: SlaTargets = defaultSlaTargets) {
   return Object.entries(ticketImpacts).map(([value, impact]) => {
-    const target = fixedSlaTargets.find((item) => item.priority === impact.priority)!;
+    const target = policyTargets(targets).find((item) => item.priority === impact.priority)!;
     return {
       value,
       label: impact.label,

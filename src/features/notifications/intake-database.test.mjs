@@ -42,7 +42,7 @@ test('ticket intake alerts all company admins and ownership emails survive readi
         "insert into public.organization_memberships(organization_id,user_id,role,status,deactivated_at) values($1,$2,$3,$4,case when $4::public.membership_status='inactive' then now() else null end)",
         [company, id, role, status],
       );
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: employee }),
     ]);
     const ticket = randomUUID();
@@ -76,7 +76,7 @@ test('ticket intake alerts all company admins and ownership emails survive readi
       'intake mail is immediately eligible',
     );
     // Self-assignment is still a responsibility change and must send email.
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: technician }),
     ]);
     await db.query('update public.tickets set assigned_technician_id=$1 where id=$2', [

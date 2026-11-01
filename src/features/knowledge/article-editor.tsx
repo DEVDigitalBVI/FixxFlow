@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input, NativeSelect, Textarea } from '@/components/ui/input';
 import { revealField } from '@/components/ui/reveal-field';
 import { confirmDiscardChanges, useUnsavedChanges } from '@/components/ui/unsaved-changes';
+import { helpTopics } from '@/features/knowledge/help-collections';
 import { createClient } from '@/lib/supabase/client';
 import { uploadAndRegister } from '@/lib/uploads';
 import type { KnowledgeArticle, KnowledgeAsset } from '@/types/database';
@@ -46,6 +47,7 @@ export function ArticleEditor({
 }) {
   const router = useRouter();
   const [revision] = useState(article.revision);
+  const [collection, setCollection] = useState(article.help_collection ?? 'knowledge');
   const [audience, setAudience] = useState<KnowledgeAudience>(article.audience);
   const [blocks, setBlocks] = useState<ArticleBlock[]>(parseArticleContent(article.content) ?? []);
   const [assets, setAssets] = useState(initialAssets);
@@ -355,6 +357,48 @@ export function ArticleEditor({
         </fieldset>
         <fieldset disabled={busy}>
           <legend>Publish settings</legend>
+          {library && (
+            <>
+              <label>
+                Help collection
+                <NativeSelect
+                  name="helpCollection"
+                  value={collection}
+                  onChange={(event) => {
+                    setDirty(true);
+                    setCollection(event.target.value as 'knowledge' | 'fixxflow');
+                  }}
+                >
+                  <option value="knowledge">Knowledge base · IT troubleshooting</option>
+                  <option value="fixxflow">FixxFlow Help &amp; FAQ</option>
+                </NativeSelect>
+              </label>
+              {collection === 'fixxflow' && (
+                <>
+                  <label>
+                    FixxFlow topic
+                    <NativeSelect
+                      name="helpTopic"
+                      defaultValue={article.help_topic ?? 'getting-started'}
+                    >
+                      {Object.entries(helpTopics).map(([value, label]) => (
+                        <option value={value} key={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  </label>
+                  <label>
+                    Content format
+                    <NativeSelect name="helpFormat" defaultValue={article.help_format ?? 'guide'}>
+                      <option value="guide">Full guide</option>
+                      <option value="faq">FAQ · quick answer</option>
+                    </NativeSelect>
+                  </label>
+                </>
+              )}
+            </>
+          )}
           <label>
             Category
             <NativeSelect name="category" defaultValue={article.category}>

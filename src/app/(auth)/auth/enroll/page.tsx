@@ -5,8 +5,6 @@ import { RequiredEnrollment } from '@/features/auth/required-enrollment';
 import { readAccountPolicy } from '@/features/auth/workspace-policy';
 import { createClient } from '@/lib/supabase/server';
 
-import { signOut } from '../../actions';
-
 export default async function EnrollPage() {
   const db = await createClient();
   const claims = await db.auth.getClaims();
@@ -28,7 +26,7 @@ export default async function EnrollPage() {
         Your workspace requires two-step verification before you can continue.
       </p>
       <RequiredEnrollment />
-      <form action={signOut}>
+      <form action="/auth/sign-out" method="post">
         <Button variant="secondary">Sign out</Button>
       </form>
     </section>

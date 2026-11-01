@@ -35,7 +35,7 @@ test('workspace deletion enforces authorization atomically and preserves histori
     `);
     async function asActor(n, fn, aal = 'aal1') {
       await db.exec(
-        `begin; set local role authenticated; select set_config('request.jwt.claims','{"sub":"${user(n)}","role":"authenticated","aal":"${aal}"}',true);`,
+        `begin; set local role authenticated; select pg_temp.set_test_session('{"sub":"${user(n)}","role":"authenticated","aal":"${aal}"}',true);`,
       );
       try {
         await fn();
@@ -190,7 +190,7 @@ test('workspace deletion enforces authorization atomically and preserves histori
             2,
           );
           await db.exec(
-            `set local role authenticated; select set_config('request.jwt.claims','{"sub":"${user(5)}","role":"authenticated","aal":"aal1"}',true);`,
+            `set local role authenticated; select pg_temp.set_test_session('{"sub":"${user(5)}","role":"authenticated","aal":"aal1"}',true);`,
           );
           assert.equal(
             (await query(`select private.is_active_organization_member('${org}') as allowed`))[0]
@@ -299,7 +299,7 @@ test('workspace deletion enforces authorization atomically and preserves histori
         `insert into auth.mfa_factors(id,user_id,factor_type,status) values('40000000-0000-4000-8000-000000000803','${user(3)}','totp','verified');`,
       );
       await db.exec(
-        `select set_config('request.jwt.claims','{"sub":"${user(1)}","role":"authenticated","aal":"aal2"}',false);`,
+        `select pg_temp.set_test_session('{"sub":"${user(1)}","role":"authenticated","aal":"aal2"}',false);`,
       );
       await db.exec(
         `insert into public.workspace_security_policies(organization_id,require_mfa,updated_by) values('${org}',true,'${user(1)}');`,
@@ -310,7 +310,7 @@ test('workspace deletion enforces authorization atomically and preserves histori
     await t.test(
       'native database regression suite passes against the migrated schema',
       async () => {
-        await db.exec(`reset role; select set_config('request.jwt.claims','{}',false);`);
+        await db.exec(`reset role; select pg_temp.set_test_session('{}',false);`);
         const results = await db.exec(
           await readFile('supabase/tests/database/people_deletion.test.sql', 'utf8'),
         );
