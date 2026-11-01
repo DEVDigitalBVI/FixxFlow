@@ -401,10 +401,12 @@
   }
   :where(.scope) :global(.chat-message-own) {
     align-self: flex-end;
-    background: var(--color-accent-subtle);
-    border-color: var(--color-border-strong);
+    background: var(--color-chat-own-surface);
+    color: var(--color-chat-own-text);
+    border-color: var(--color-chat-own-border);
   }
   :where(.scope) :global(.chat-message-note) {
+    color: var(--color-text);
     background: var(--color-note-surface);
     border-color: var(--color-border);
     border-inline-start: 4px solid var(--color-note-border);
@@ -862,6 +864,7 @@
     border-radius: 0;
   }
   :where(.scope) :global(.chat-room-toolbar) {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -913,7 +916,7 @@
   :where(.scope) :global(.chat-center .chat-composer select) {
     min-height: 40px;
   }
-  :where(.scope) :global(.chat-center .chat-composer .textarea) {
+  :where(.scope) :global(.chat-center .chat-composer [data-slot='textarea']) {
     min-height: 64px;
     max-height: 180px;
   }
@@ -1099,8 +1102,9 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.chat-center-selected .chat-active) {
-      height: calc(100dvh - 164px);
-      min-height: 420px;
+      /* Let the page grow when notices, large text or the keyboard need room. */
+      height: auto;
+      min-height: 0;
     }
   }
   @media (max-width: 767px) {
@@ -1139,9 +1143,17 @@
     }
   }
   @media (max-width: 767px) {
+    :where(.scope) :global(.chat-active-body) {
+      overflow: visible;
+    }
+    :where(.scope) :global(.chat-center .chat-room) {
+      flex: none;
+    }
     :where(.scope) :global(.chat-center .chat-thread) {
+      flex: none;
+      height: clamp(240px, 45dvh, 480px);
+      min-height: 240px;
       padding: var(--space-group);
-      min-height: 96px;
     }
   }
   @media (max-width: 767px) {
@@ -1166,7 +1178,7 @@
     }
   }
   @media (max-width: 767px) {
-    :where(.scope) :global(.chat-center-personal .chat-composer .textarea) {
+    :where(.scope) :global(.chat-center-personal .chat-composer [data-slot='textarea']) {
       font-size: 16px;
     }
   }
@@ -1238,6 +1250,9 @@
   :where(.scope) :global(.chat-media-caption > a) {
     color: var(--color-accent);
     overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.chat-message-own .chat-media-caption > a) {
+    color: var(--color-chat-own-text);
   }
   :where(.scope) :global(.chat-media-caption > span) {
     color: var(--color-text-muted);
@@ -1364,6 +1379,7 @@
 
 @layer components {
   :where(.scope) :global(.chat-support-hours) {
+    flex-shrink: 0;
     padding: 12px 16px;
     background: var(--color-surface-subtle);
     border-radius: var(--radius-control);

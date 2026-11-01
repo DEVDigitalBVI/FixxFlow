@@ -390,6 +390,13 @@ test('failed media uploads retry the retained file and uncertain writes are neve
 test('compact composer keeps staff audiences explicit and preserves each draft when switching', () => {
   const f = fixture({ worker: true });
   try {
+    assert.equal(f.h.find((n) => n.type === 'select').props.value, 'message');
+    assert.equal(
+      f.h.find((n) => n.type === 'label' && n.props.htmlFor === 'chat-draft').props.children,
+      'Reply to employee',
+    );
+    f.h.find((n) => n.type === 'select').props.onChange({ target: { value: 'internal_note' } });
+    f.h.render();
     f.draft('Private troubleshooting');
     assert.equal(
       f.h.find((n) => n.type === 'label' && n.props.htmlFor === 'chat-draft').props.children,
@@ -427,6 +434,9 @@ test('internal notes cannot carry attachments because chat files are shared with
   const f = fixture({ worker: true });
   try {
     const input = () => f.h.find((n) => n.type === 'input' && n.props.type === 'file');
+    assert.equal(input().props.disabled, false);
+    f.h.find((n) => n.type === 'select').props.onChange({ target: { value: 'internal_note' } });
+    f.h.render();
     assert.equal(input().props.disabled, true);
     assert.equal(input().props['aria-describedby'], 'chat-audience');
     assert.match(
@@ -464,6 +474,21 @@ test('files stay reachable from the compact toolbar without duplicating the atta
     assert.ok(f.h.find((n) => n.props.href === '/app/chat/chat/history'));
     assert.equal(f.h.all((n) => n.props.className === 'chat-attachments').length, 0);
     assert.equal(f.h.all((n) => n.type === 'form').length, 0);
+  } finally {
+    f.h.close();
+  }
+});
+
+test('a new staff chat defaults to an employee-visible reply without a mode change', async () => {
+  const f = fixture({ worker: true });
+  try {
+    f.draft('Thanks for reporting this. I can help.');
+    await f.submit();
+    await tick();
+    f.h.render();
+    assert.equal(f.inserts.length, 1);
+    assert.equal(f.inserts[0].kind, 'message');
+    assert.equal(f.h.find((n) => n.type === 'select').props.value, 'message');
   } finally {
     f.h.close();
   }
