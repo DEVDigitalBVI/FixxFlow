@@ -108,3 +108,22 @@ test('invalid, busy, completed and uncertain invitation attempts never send unex
     false,
   );
 });
+
+test('email allowance and request throttling explain the limit without promising a two-minute reset', async () => {
+  for (const error of [
+    { code: 'over_email_send_rate_limit', status: 429 },
+    { code: 'over_request_rate_limit', status: 429 },
+  ]) {
+    const invitation = setup({ sendError: error });
+    const result = await invitation.submit();
+    assert.equal(result.rateLimited, true);
+    assert.doesNotMatch(result.error, /two minutes/);
+    assert.match(result.error, /preserved/i);
+    if (error.code === 'over_email_send_rate_limit')
+      assert.match(result.error, /hourly allowance.*Rate Limits/);
+    assert.equal(
+      invitation.calls.some(([name]) => name === 'complete_member_invitation'),
+      false,
+    );
+  }
+});

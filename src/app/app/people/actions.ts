@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import type { InvitationResult } from '@/features/administration/bulk-invite-model';
 import { PEOPLE_DELETE_LIMIT } from '@/features/administration/people-deletion-model';
 import type { ActionResult } from '@/lib/action-result';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -122,7 +123,7 @@ function peopleError(message: string): never {
   redirect(`/app/people?${new URLSearchParams({ error: message })}`);
 }
 
-export async function inviteMember(formData: FormData): Promise<ActionResult> {
+export async function inviteMember(formData: FormData): Promise<InvitationResult> {
   const viewer = await requireViewer();
   if (viewer.role !== 'administrator') return { error: 'Only administrators can invite members.' };
 
@@ -182,6 +183,18 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
         workspace_name: viewer.organizationName,
       },
     });
+    if (error?.code === 'over_email_send_rate_limit')
+      return {
+        rateLimited: true,
+        error:
+          'The authentication email sending limit has been reached. Wait for the hourly allowance to reset, or have the project owner increase it in Supabase → Authentication → Rate Limits. Completed invitations are preserved; send only the remaining rows when capacity is available.',
+      };
+    if (error?.status === 429)
+      return {
+        rateLimited: true,
+        error:
+          'The authentication service is temporarily limiting invitation requests. Pause before retrying. Completed invitations and remaining rows are preserved.',
+      };
     if (error || !data.user)
       return {
         error:

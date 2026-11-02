@@ -46,46 +46,52 @@
     padding-block-end: 0;
     border-block-end: 0;
   }
-  :where(.scope) :global(.organization-location-item) {
+  :where(.scope) :global(.organization-entry) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-group);
     padding-block: 16px;
     min-width: 0;
   }
-  :where(.scope) :global(.organization-location-meta) {
+  :where(.scope) :global(.organization-entry-description) {
+    margin: 8px 0 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.organization-entry-meta) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-inline);
     margin-top: 4px;
   }
-  :where(.scope) :global(.organization-location-meta .badge) {
+  :where(.scope) :global(.organization-entry-meta .badge) {
     display: inline-flex;
   }
-  :where(.scope) :global(.organization-location-controls) {
+  :where(.scope) :global(.organization-entry-controls) {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     gap: var(--space-inline);
     min-width: 0;
   }
-  :where(.scope) :global(.organization-location-item strong) {
+  :where(.scope) :global(.organization-entry strong) {
     overflow-wrap: anywhere;
   }
-  :where(.scope) :global(.organization-location-controls .organization-item-actions) {
-    display: contents;
-  }
-  :where(.scope)
-    :global(.organization-location-controls > .settings-editor:not(.organization-sublocation)) {
+  :where(.scope) :global(.organization-entry-controls > .organization-item-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-inline);
     margin-inline-start: auto;
+    width: auto;
+    max-width: 100%;
   }
-  :where(.scope) :global(.organization-location-controls > .settings-editor) {
+  :where(.scope) :global(.organization-entry-controls .settings-editor) {
     padding: 0;
     border: 0;
   }
-  :where(.scope) :global(.organization-location-controls > .settings-editor > summary),
-  :where(.scope) :global(.organization-location-controls .organization-delete > summary) {
+  :where(.scope) :global(.organization-entry-controls .settings-editor > summary),
+  :where(.scope) :global(.organization-entry-controls .organization-delete > summary) {
     box-sizing: border-box;
     width: fit-content;
     max-width: 100%;
@@ -94,10 +100,10 @@
     font-size: 14px;
     line-height: 22px;
   }
-  :where(.scope) :global(.organization-location-controls summary::marker) {
+  :where(.scope) :global(.organization-entry-controls summary::marker) {
     font-size: 10px;
   }
-  :where(.scope) :global(.organization-location-controls .organization-item-actions > small) {
+  :where(.scope) :global(.organization-entry-controls > small) {
     flex-basis: 100%;
     max-width: none;
     margin: 0;
@@ -105,21 +111,22 @@
     font-size: 12px;
     line-height: 16px;
   }
-  :where(.scope) :global(.organization-location-controls .button) {
+  :where(.scope) :global(.organization-entry-controls .button) {
     width: auto;
     box-shadow: none;
   }
-  :where(.scope) :global(.organization-location-controls label > span[aria-hidden='true']) {
+  :where(.scope) :global(.organization-entry-controls label > span[aria-hidden='true']) {
     display: inline;
   }
-  :where(.scope) :global(.organization-location-controls > .settings-editor[open]),
-  :where(.scope) :global(.organization-location-controls .organization-delete[open]) {
+  :where(.scope)
+    :global(.organization-entry-controls > .organization-item-actions:has(> details[open])),
+  :where(.scope) :global(.organization-entry-controls .settings-editor[open]),
+  :where(.scope) :global(.organization-entry-controls .organization-delete[open]) {
     flex-basis: 100%;
     min-width: 0;
     max-width: 100%;
   }
-  :where(.scope)
-    :global(.organization-location-controls .organization-delete summary:focus-visible) {
+  :where(.scope) :global(.organization-entry-controls .organization-delete summary:focus-visible) {
     outline: 2px solid var(--color-focus);
     outline-offset: 4px;
   }
@@ -128,14 +135,13 @@
       margin-inline-start: 0;
       padding-inline-start: var(--space-inline);
     }
-    :where(.scope)
-      :global(.organization-location-controls > .settings-editor:not(.organization-sublocation)) {
+    :where(.scope) :global(.organization-entry-controls > .organization-item-actions) {
       margin-inline-start: 0;
     }
-    :where(.scope) :global(.organization-location-controls .organization-item-actions > small) {
+    :where(.scope) :global(.organization-entry-controls > small) {
       text-align: start;
     }
-    :where(.scope) :global(.organization-location-controls .organization-sublocation) {
+    :where(.scope) :global(.organization-entry-controls .organization-sublocation) {
       flex-basis: 100%;
     }
     :where(.scope) :global(.organization-page) {

@@ -57,6 +57,7 @@ export async function sendInvitationBatch(
     form.set('submissionKey', row.token);
     const result = await inviteMember(form);
     results.push({ token: row.token, ...result });
+    if (result.rateLimited) return { rows: results, error: result.error };
   }
   return { rows: results };
 }

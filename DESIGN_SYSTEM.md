@@ -663,6 +663,8 @@ Group sublocations within their parent location section using nested, labeled li
 
 Across the app, successful saves and updates inside disclosures return the edited form to its closed state and restore focus to its summary. Keep enclosing sections open. Failed or unconfirmed saves retain the expanded form, draft and recoverable feedback. Standalone forms retain their existing success navigation. Closed Edit controls keep their intrinsic width when adjacent descriptions wrap.
 
+Departments and locations share OrganizationItemRow: full-width identity, written status and description above a compact action row. Keep Edit, Activate/Deactivate and Delete together as one group, with the deactivation hint below the controls. Wrap the whole group below Add sublocation when space is limited; expanded editors and confirmations use the available row width. Apply this structure to every entry, including newly created entries and nested locations.
+
 Display full paths in people, ticket and asset selectors, imports and reports. A parent report filter includes its descendants; grouping retains the most specific location and full path. Reject cross-workspace parents, cycles, duplicate names under the same parent, and depth overflow in the database. Deactivate active children before their parent; block deleting a location with children or linked records. Renames and moves preserve record IDs and refresh descendant paths.
 
 ### People deletion
