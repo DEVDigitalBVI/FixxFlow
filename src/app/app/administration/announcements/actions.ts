@@ -90,6 +90,6 @@ export async function queueEmailAnnouncement(form: FormData): Promise<ActionResu
   revalidatePath(`${emailAnnouncementsPath}/${target}`);
   return {
     success: `Announcement queued for ${data} members. Delivery runs in the background.`,
-    redirectTo: `${emailAnnouncementsPath}/${target}`,
+    redirectTo: `${emailAnnouncementsPath}/${target}?sending=1`,
   };
 }

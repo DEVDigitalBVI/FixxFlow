@@ -31,6 +31,7 @@ export type FailureOperation =
   | 'email-announcement.queue'
   | 'email-announcement.send'
   | 'email-announcement.dispatch'
+  | 'email-announcement.status'
   | 'report.workload.load'
   | 'report.export'
   | 'report.saved.load'

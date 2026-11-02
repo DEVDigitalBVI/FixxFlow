@@ -16,6 +16,9 @@ export type EmailCounts = {
   failed: number;
   skipped: number;
 };
+export function announcementSent(counts: EmailCounts) {
+  return counts.pending === 0 && counts.failed === 0 && counts.sent > 0;
+}
 export type EmailAnnouncement = {
   id: string;
   subject: string;

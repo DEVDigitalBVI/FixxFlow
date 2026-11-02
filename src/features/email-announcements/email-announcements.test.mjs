@@ -111,6 +111,7 @@ test('sending requires review confirmation, administrator access and configured 
     form({ announcementId, confirm: 'yes', recipients: 'attacker@example.invalid' }),
   );
   assert.match(result.success, /queued for 1/);
+  assert.equal(result.redirectTo, `/app/administration/announcements/${announcementId}?sending=1`);
   assert.deepEqual(api.calls[0], [
     'queue_email_announcement',
     { org: 'trusted-org', target: announcementId },
@@ -166,6 +167,7 @@ function page(role = 'administrator', data = review) {
   const mocks = {
     'next/link': { default: ({ children, ...props }) => React.createElement('a', props, children) },
     'next/navigation': {
+      useRouter: () => ({ replace() {} }),
       notFound: () => {
         throw Error('NOT_FOUND');
       },
@@ -308,6 +310,7 @@ test('email worker is cron-only and acknowledges both sent mail and retryable fa
 
 test('announcement composer starts blank, includes all member roles and guards administrator access', async () => {
   for (const role of ['administrator', 'end_user']) {
+    let receiptResult = { data: null, error: null };
     const Page = load('src/app/app/administration/announcements/page.tsx', {
       'next/link': {
         default: ({ children, ...props }) => React.createElement('a', props, children),
@@ -349,6 +352,7 @@ test('announcement composer starts blank, includes all member roles and guards a
         createClient: async () => ({
           rpc: async (name, args) => {
             assert.equal(args.org, 'trusted-org');
+            if (args.target) return receiptResult;
             return {
               data:
                 name === 'email_announcement_choices'
@@ -385,5 +389,24 @@ test('announcement composer starts blank, includes all member roles and guards a
     assert.match(html, /<label for="email-announcement-body">Message/);
     assert.match(html, /Pending invitations and inactive/);
     assert.doesNotMatch(html, /Send announcement to/);
+    for (const counts of [
+      { total: 1, pending: 1, sent: 0, failed: 0, skipped: 0 },
+      { total: 2, pending: 0, sent: 1, failed: 1, skipped: 0 },
+      { total: 1, pending: 0, sent: 1, failed: 0, skipped: 0 },
+    ]) {
+      receiptResult = {
+        data: { ...review, campaign: { ...campaign, queued_at: '2026-11-02T12:00:00Z' }, counts },
+        error: null,
+      };
+      const returned = renderToStaticMarkup(
+        await Page({ searchParams: Promise.resolve({ sent: announcementId }) }),
+      );
+      assert.equal(
+        returned.includes('Announcement sent to'),
+        counts.pending === 0 && counts.failed === 0,
+      );
+      assert.match(returned, /name="subject" value=""/);
+      assert.match(returned, /<textarea[^>]*name="body"[^>]*><\/textarea>/);
+    }
   }
 });

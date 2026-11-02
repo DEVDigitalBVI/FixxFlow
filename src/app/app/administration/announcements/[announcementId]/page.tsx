@@ -6,16 +6,14 @@ import { Alert } from '@/components/ui/alert';
 import { buttonVariants } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { PageHeader } from '@/components/ui/page-header';
-import { RetryButton } from '@/components/ui/retry-button';
 import { SubmitButton } from '@/components/ui/submit-button';
+import { AnnouncementDeliveryProgress } from '@/features/email-announcements/delivery-progress';
 import {
-  campaignStatus,
   deliveryLabels,
   emailAnnouncementsPath,
   type EmailAnnouncementReview,
 } from '@/features/email-announcements/model';
 import { getNotificationEmailConfiguration } from '@/features/notifications/configuration';
-import { Timestamp } from '@/features/timezones/provider';
 import { requireWorkspaceAccess } from '@/lib/auth/viewer';
 import { isUuid } from '@/lib/ids';
 import { pageNumber } from '@/lib/pagination';
@@ -29,13 +27,14 @@ export default async function EmailAnnouncementReviewPage({
   searchParams,
 }: {
   params: Promise<{ announcementId: string }>;
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; sending?: string }>;
 }) {
   const viewer = await requireWorkspaceAccess();
   if (viewer.role !== 'administrator') notFound();
   const { announcementId } = await params;
   if (!isUuid(announcementId)) notFound();
-  const page = pageNumber((await searchParams).page, 10000);
+  const filters = await searchParams;
+  const page = pageNumber(filters.page, 10000);
   const db = await createClient();
   const { data, error } = await db.rpc('read_email_announcements', {
     org: viewer.organizationId,
@@ -71,28 +70,12 @@ export default async function EmailAnnouncementReviewPage({
         </p>
       </section>
       {queued ? (
-        <section className="settings-card stack" aria-labelledby="email-progress-heading">
-          <h2 id="email-progress-heading">{campaignStatus(campaign.queued_at, counts)}</h2>
-          <p>
-            Queued <Timestamp value={campaign.queued_at!} />
-          </p>
-          <p>
-            {counts.sent} sent · {counts.pending} pending · {counts.failed} failed ·{' '}
-            {counts.skipped} skipped
-          </p>
-          <p className="muted">
-            Sending runs in the background. Temporary failures retry automatically. Sent means the
-            email provider accepted the message. Members who lose access or change email address
-            before processing are skipped.
-          </p>
-          {counts.failed > 0 && (
-            <Alert tone="warning" role="status">
-              Some emails could not be sent after retrying. Contact FixxFlow support before
-              preparing another email for those members.
-            </Alert>
-          )}
-          <RetryButton label="Refresh progress" />
-        </section>
+        <AnnouncementDeliveryProgress
+          announcementId={announcementId}
+          queuedAt={campaign.queued_at!}
+          initialCounts={counts}
+          returnWhenSent={filters.sending === '1'}
+        />
       ) : (
         <Alert tone="info" role="status">
           Draft only — no emails have been sent. Recipients were selected when you prepared this
