@@ -8,7 +8,7 @@ import { migratedPostgres } from '../../../tests/helpers/postgres.mjs';
 const one = async (db, sql, args = []) => (await db.query(sql, args)).rows[0];
 async function login(db, user = ids.admin, aal = 'aal1') {
   await identity(db, 'authenticated', user);
-  await db.query("select set_config('request.jwt.claims',$1,true)", [
+  await db.query('select pg_temp.set_test_session($1,true)', [
     JSON.stringify({ sub: user, role: 'authenticated', aal }),
   ]);
 }

@@ -125,9 +125,7 @@ export function ChatRoom({
   const followLatest = useRef(true);
   const [readingHistory, setReadingHistory] = useState(false);
   const [drafts, setDrafts] = useState({ message: '', internal_note: '' });
-  const [kind, setKind] = useState<'message' | 'internal_note'>(
-    isWorker ? 'internal_note' : 'message',
-  );
+  const [kind, setKind] = useState<'message' | 'internal_note'>('message');
   const draft = drafts[kind];
   // Chat files are always visible to the employee, so notes cannot carry them.
   const noteMode = isWorker && kind === 'internal_note';
@@ -588,7 +586,11 @@ export function ChatRoom({
         >
           <div className="chat-composer-heading">
             <label htmlFor="chat-draft">
-              {kind === 'internal_note' && isWorker ? 'Internal note · IT only' : 'Message'}
+              {kind === 'internal_note' && isWorker
+                ? 'Internal note · IT only'
+                : isWorker
+                  ? 'Reply to employee'
+                  : 'Message'}
             </label>
             {isWorker && (
               <>
@@ -613,7 +615,7 @@ export function ChatRoom({
           <Textarea
             ref={draftField}
             id="chat-draft"
-            fieldSize="tall"
+            className="min-h-16"
             value={draft}
             aria-describedby="chat-audience"
             onChange={(event) => announceTyping(event.target.value)}

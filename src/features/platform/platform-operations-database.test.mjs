@@ -13,7 +13,7 @@ test('owners export organization summaries and run audited analytics cleanup', a
     session = randomUUID();
   const as = async (id, aal = 'aal2') => {
     await db.exec('reset role');
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: id, role: 'authenticated', aal, session_id: session }),
     ]);
     await db.exec('set role authenticated');

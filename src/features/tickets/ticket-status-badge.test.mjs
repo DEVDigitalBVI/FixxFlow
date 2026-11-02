@@ -18,6 +18,7 @@ test('every ticket status and priority exposes its written label plus a decorati
     for (const [value, item] of Object.entries(mapping)) {
       const html = renderToStaticMarkup(React.createElement(TicketStatusBadge, { [prop]: value }));
       assert.ok(html.includes(item.label));
+      assert.ok(html.includes(`data-ticket-color="${item.color}"`));
       assert.ok(html.includes(badgeStyles({ tone: item.tone })), item.tone);
       assert.match(html, /<svg class="badge-icon" aria-hidden="true" focusable="false"/);
       assert.match(html, /stroke="currentColor"/);
@@ -66,4 +67,27 @@ test('status colors meet WCAG AA in explicit and automatic themes, within the sh
   }
   assert.notEqual(explicit['--color-surface'], explicit['--color-canvas']);
   assert.doesNotMatch(css, /--color-(?:info|cyan|brand-purple|danger-subtle)(?:\s*:|\))/);
+});
+
+test('ticket badge colors remain distinct and meet AA in light and both dark modes', () => {
+  const base = tokens(css.match(/:root \{([\s\S]*?)\n\s*\}/)[1]);
+  const explicit = tokens(css.match(/:root\[data-theme='dark'\] \{([\s\S]*?)\n\s*\}/)[1]);
+  const automatic = tokens(css.match(/:root:not\(\[data-theme\]\) \{([\s\S]*?)\n\s*\}/)[1]);
+  const colors = new Set(
+    [...Object.values(ticketStatuses), ...Object.values(ticketPriorities)].map(
+      (item) => item.color,
+    ),
+  );
+  assert.equal(colors.size, 7);
+  for (const overrides of [{}, explicit, automatic]) {
+    const vars = { ...base, ...overrides };
+    const backgrounds = new Set();
+    for (const color of colors) {
+      const fg = vars[`--color-ticket-${color}`],
+        bg = vars[`--color-ticket-${color}-surface`];
+      assert.ok(contrast(fg, bg) >= 4.5, `${color} must meet AA`);
+      backgrounds.add(bg);
+    }
+    assert.equal(backgrounds.size, colors.size);
+  }
 });

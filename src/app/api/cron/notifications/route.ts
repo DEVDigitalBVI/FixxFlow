@@ -72,6 +72,26 @@ export async function GET(request: Request) {
               : undefined,
         });
     }
+    if (ticketIds.length && inbound) {
+      try {
+        const threads = await database
+          .from('inbound_emails')
+          .select('ticket_id,message_id')
+          .in('ticket_id', ticketIds)
+          .in('status', ['ticket_created', 'reply_added'])
+          .not('message_id', 'is', null)
+          .order('created_at', { ascending: false })
+          .limit(100);
+        if (threads.error) throw threads.error;
+        for (const thread of threads.data ?? []) {
+          if (!thread.ticket_id || !thread.message_id) continue;
+          const route = routes.get(thread.ticket_id);
+          if (route && !route.inReplyTo) route.inReplyTo = thread.message_id;
+        }
+      } catch (error) {
+        reportServerError('notification.send', error, correlationId);
+      }
+    }
     let sent = 0;
     for (const item of batch.data ?? []) {
       let providerId: string | undefined;

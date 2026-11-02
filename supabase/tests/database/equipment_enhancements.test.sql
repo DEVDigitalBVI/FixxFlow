@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 begin;
 create extension if not exists pgtap with schema extensions;
 select extensions.plan(14);
@@ -15,14 +34,14 @@ insert into public.inventory_items(id,organization_id,name,kind,department_id,lo
  ('70000000-0000-0000-0000-000000000841','20000000-0000-0000-0000-000000000841','Toner','consumable','30000000-0000-0000-0000-000000000841','40000000-0000-0000-0000-000000000841','Office','Store',2);
 insert into public.inventory_managers(organization_id,user_id) values ('20000000-0000-0000-0000-000000000841','10000000-0000-0000-0000-000000000842');
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000841","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000841","role":"authenticated","aal":"aal1"}',true);
 select extensions.lives_ok($$select public.import_asset_updates('20000000-0000-0000-0000-000000000841','[{"tag":"EQUIP-841","name":"Updated laptop","kind":"computer","status":"available","assigned_user_id":"10000000-0000-0000-0000-000000000841","end_of_life_on":"2030-01-01"}]','{"EQUIP-841":"1"}')$$,'staff updates by tag with preview revision');
 select extensions.is((select id::text from public.assets where tag='EQUIP-841'),'60000000-0000-0000-0000-000000000841','asset identity is retained');
 select extensions.is((select end_of_life_on::text from public.assets where tag='EQUIP-841'),'2030-01-01','end-of-life date is saved');
 select extensions.is((select count(*)::int from public.asset_assignments where asset_id='60000000-0000-0000-0000-000000000841'),2,'reassignment preserves history');
 select extensions.throws_ok($$select public.import_asset_updates('20000000-0000-0000-0000-000000000841','[{"tag":"EQUIP-841","name":"Stale laptop","kind":"computer","status":"available"}]','{"EQUIP-841":"1"}')$$,'40001',null,'stale preview rejected');
 select extensions.throws_ok($$select public.set_inventory_reorder_threshold('20000000-0000-0000-0000-000000000841','70000000-0000-0000-0000-000000000841',2,null)$$,'42501',null,'administrator without inventory capability cannot set threshold');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000842","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000842","role":"authenticated","aal":"aal1"}',true);
 select extensions.is((select count(*)::int from public.asset_assignments),0,'employee cannot read staff assignment history');
 select extensions.throws_ok($$select public.import_asset_updates('20000000-0000-0000-0000-000000000841','[{"tag":"EQUIP-841","name":"Unauthorized","kind":"computer","status":"available"}]','{}')$$,'42501',null,'employee cannot import assets');
 select extensions.lives_ok($$select public.set_inventory_reorder_threshold('20000000-0000-0000-0000-000000000841','70000000-0000-0000-0000-000000000841',2,null)$$,'employee-role inventory manager can configure alerts');

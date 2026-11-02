@@ -1,4 +1,5 @@
-// Mirrors private.ticket_sla_deadline; the regression test checks the SQL policy.
+// Defaults for workspaces without custom SLA standards and pre-policy ticket history.
+// The regression test keeps these aligned with the database defaults.
 export const fixedSlaTargets = [
   { priority: 'critical', response: 15, resolution: 240 },
   { priority: 'high', response: 60, resolution: 480 },

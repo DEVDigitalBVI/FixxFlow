@@ -8,7 +8,7 @@
   }
   :where(.scope) :global(.asset-facts) {
     display: grid;
-    gap: 8px;
+    gap: var(--space-inline);
     overflow-wrap: anywhere;
   }
   :where(.scope) :global(.asset-facts dt) {
@@ -22,7 +22,10 @@
   :where(.scope) :global(.assets-page) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
+    gap: var(--space-section);
+  }
+  :where(.scope) :global(.assets-page > :is(.page-header, h1, h2, h3, p)) {
+    margin-block: 0;
   }
   :where(.scope) :global(.asset-inventory) {
     min-width: 0;
@@ -37,8 +40,8 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 16px;
-    padding: 20px 24px;
+    gap: var(--space-group);
+    padding: var(--space-group) var(--space-section);
   }
   :where(.scope) :global(.asset-inventory-heading h2) {
     margin: 0 0 4px;
@@ -54,7 +57,7 @@
     font-size: 14px;
   }
   :where(.scope) :global(.asset-inventory-toolbar) {
-    padding: 20px 24px;
+    padding: var(--space-group) var(--space-section);
     background: var(--color-surface-subtle);
     border-block: 1px solid var(--color-border);
   }
@@ -96,13 +99,13 @@
   :where(.scope) :global(.asset-pagination) {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.asset-inventory-footer) {
     border-top: 1px solid var(--color-border);
   }
   :where(.scope) :global(.asset-inventory-feedback) {
-    padding: 24px;
+    padding: var(--space-section);
   }
   :where(.scope) :global(.asset-empty h3) {
     font-size: 20px;
@@ -112,7 +115,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--space-group);
     flex-wrap: wrap;
   }
   :where(.scope) :global(.asset-ticket-context p) {
@@ -120,13 +123,13 @@
   }
   :where(.scope) :global(.asset-editor) {
     display: grid;
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.asset-record-header) {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: var(--space-group);
     padding-bottom: 24px;
     border-bottom: 1px solid var(--color-border);
   }
@@ -142,7 +145,7 @@
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
   }
   :where(.scope) :global(.asset-overview-grid > section) {
-    padding: 24px;
+    padding: var(--space-section);
     min-width: 0;
     border-left: 1px solid var(--color-border);
   }
@@ -159,7 +162,7 @@
   }
   :where(.scope) :global(.asset-record-facts) {
     display: grid;
-    gap: 20px;
+    gap: var(--space-group);
     margin: 0;
   }
   :where(.scope) :global(.asset-record-facts dt) {
@@ -210,7 +213,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--space-group);
     padding-block: 16px;
     border-top: 1px solid var(--color-border);
   }
@@ -258,7 +261,7 @@
     :where(.scope) :global(.asset-inventory-heading),
     :where(.scope) :global(.asset-inventory-toolbar),
     :where(.scope) :global(.asset-inventory-footer) {
-      padding: 20px 16px;
+      padding: var(--space-group);
     }
   }
   @media (max-width: 767px) {
@@ -318,7 +321,7 @@
   }
   :where(.scope) :global(.asset-import-guide) {
     display: grid;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.asset-import-guide dt) {
     font-weight: 600;

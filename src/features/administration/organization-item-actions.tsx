@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { buttonVariants } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { DisclosureActionForm } from '@/components/ui/disclosure-action-form';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 type Props = {
@@ -21,25 +22,27 @@ export function OrganizationItemActions({
   toggleAction,
   deleteAction,
 }: Props) {
+  const deactivationHint = active && (
+    <small className="muted" id={`deactivate-description-${id}`}>
+      Hidden from new selections. Existing records stay linked.
+    </small>
+  );
   return (
     <div className="organization-item-actions">
-      <div>
-        <form action={toggleAction}>
+      <div className="organization-item-toggle">
+        <DisclosureActionForm action={toggleAction}>
           <input type="hidden" name="id" value={id} />
           <input type="hidden" name="isActive" value={String(active)} />
           <SubmitButton
             variant="secondary"
             size="small"
             aria-label={`${active ? 'Deactivate' : 'Activate'} ${kind} ${name}`}
+            aria-describedby={active ? `deactivate-description-${id}` : undefined}
           >
             {active ? 'Deactivate' : 'Activate'}
           </SubmitButton>
-        </form>
-        {active && (
-          <small className="muted">
-            Hides this entry from new selections; existing records stay linked.
-          </small>
-        )}
+        </DisclosureActionForm>
+        {kind === 'department' && deactivationHint}
       </div>
       <details className="organization-delete">
         <summary>
@@ -50,7 +53,7 @@ export function OrganizationItemActions({
           </span>
           …
         </summary>
-        <form action={deleteAction} className="stack">
+        <DisclosureActionForm action={deleteAction} className="stack">
           <input type="hidden" name="id" value={id} />
           <p id={`delete-description-${id}`}>
             Permanently delete “{name}”? This cannot be undone. Linked records will block deletion;
@@ -74,8 +77,9 @@ export function OrganizationItemActions({
           >
             Cancel
           </Link>
-        </form>
+        </DisclosureActionForm>
       </details>
+      {kind === 'location' && deactivationHint}
     </div>
   );
 }

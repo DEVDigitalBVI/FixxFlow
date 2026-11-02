@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 begin;
 create extension if not exists pgtap with schema extensions;
 select extensions.plan(12);
@@ -13,7 +32,7 @@ insert into public.organization_memberships(organization_id,user_id,role) values
  ('20000000-0000-0000-0000-000000000851','10000000-0000-0000-0000-000000000852','end_user'),
  ('20000000-0000-0000-0000-000000000852','10000000-0000-0000-0000-000000000853','administrator');
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000851","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000851","role":"authenticated","aal":"aal1"}',true);
 insert into public.tickets(organization_id,requester_id,title,description,status,assigned_technician_id) values
  ('20000000-0000-0000-0000-000000000851','10000000-0000-0000-0000-000000000852','Reporting fixture','Request','waiting_on_user','10000000-0000-0000-0000-000000000851'),
  ('20000000-0000-0000-0000-000000000851','10000000-0000-0000-0000-000000000852','Unassigned reporting fixture','Request','open',null);
@@ -27,7 +46,7 @@ select extensions.lives_ok($$insert into public.report_schedules(id,organization
 select extensions.is((select extract(hour from next_run_at at time zone 'America/Tortola')::int from public.report_schedules where id='70000000-0000-0000-0000-000000000851'),8,'daily delivery preserves the workspace hour');
 select extensions.throws_ok($$update public.report_schedules set weekday=1 where id='70000000-0000-0000-0000-000000000851'$$,'23514',null,'daily delivery has no weekday restriction');
 select extensions.throws_ok($$update public.report_schedules set frequency='hourly' where id='70000000-0000-0000-0000-000000000851'$$,'22023',null,'unsupported frequency is rejected');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000852","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000852","role":"authenticated","aal":"aal1"}',true);
 select extensions.is((select count(*)::int from public.technician_workload('20000000-0000-0000-0000-000000000851')),0,'employee cannot read reporting workload');
 select extensions.throws_ok($$insert into public.report_schedules(organization_id,report_id,created_by,frequency,run_hour,timezone,recipient_emails) values('20000000-0000-0000-0000-000000000851','60000000-0000-0000-0000-000000000851','10000000-0000-0000-0000-000000000852','daily',8,'America/Tortola',array['employee@example.invalid'])$$,'42501',null,'employee cannot create a daily schedule');
 reset role;

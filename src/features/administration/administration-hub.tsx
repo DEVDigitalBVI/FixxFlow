@@ -109,10 +109,10 @@ const groups: readonly {
     cards: [
       {
         title: 'Priorities & SLAs',
-        description: 'Review response and resolution targets for each ticket priority.',
+        description: 'Set working days, support hours, and targets for each ticket priority.',
         icon: 'clock',
         destinations: ['slas'],
-        note: 'Fixed targets',
+        note: 'Organization standards',
       },
       {
         title: 'Notifications',
@@ -136,7 +136,7 @@ const actionLabels: Partial<Record<Section, string>> = {
   assets: 'Manage assets',
   automations: 'Manage automations',
   knowledge: 'Manage articles',
-  slas: 'View SLA targets',
+  slas: 'Manage SLA standards',
   notifications: 'View notification setup',
   security: 'Security settings',
   'audit-log': 'Audit log',

@@ -18,34 +18,32 @@ export function RouteError({ retry, title, message, layout = 'page', back }: Pro
     <>
       <h1>{title}</h1>
       <p role="alert">{message}</p>
-      {back ? (
-        <div className={layout === 'main' ? 'page-header-actions' : 'knowledge-actions'}>
-          <Button type="button" variant="primary" onClick={retry}>
-            Try again
-          </Button>
-          <Link className={buttonVariants({ variant: 'secondary' })} href={back.href}>
-            {back.label}
-          </Link>
-        </div>
-      ) : (
+      <div className="route-error-actions">
         <Button type="button" variant="primary" onClick={retry}>
           Try again
         </Button>
-      )}
+        {back && (
+          <Link className={buttonVariants({ variant: 'secondary' })} href={back.href}>
+            {back.label}
+          </Link>
+        )}
+      </div>
     </>
   );
-  if (layout === 'card') return <section className="settings-card">{contents}</section>;
+  const panel = (
+    <section
+      className={layout === 'page' ? 'route-error-panel' : 'settings-card route-error-panel'}
+    >
+      {contents}
+    </section>
+  );
+  if (layout === 'card') return panel;
   if (layout === 'main')
     return (
-      <main id="main-content" className="page page-narrow">
-        <section className="settings-card">{contents}</section>
+      <main id="main-content" className="page page-narrow route-error-page">
+        {panel}
       </main>
     );
-  if (layout === 'narrow')
-    return (
-      <div className="page page-narrow">
-        <section className="settings-card">{contents}</section>
-      </div>
-    );
-  return <div className="page">{contents}</div>;
+  if (layout === 'narrow') return <div className="page page-narrow route-error-page">{panel}</div>;
+  return <div className="page route-error-page">{panel}</div>;
 }

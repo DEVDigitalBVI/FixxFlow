@@ -28,7 +28,7 @@ const org = id(2),
 async function identity(db, actor = admin, role = 'authenticated', aal = 'aal1') {
   assert.ok(['authenticated', 'service_role', 'anon'].includes(role));
   await db.exec(`set local role ${role}`);
-  await db.query("select set_config('request.jwt.claims',$1,true)", [
+  await db.query('select pg_temp.set_test_session($1,true)', [
     JSON.stringify({ sub: actor, role, aal }),
   ]);
 }

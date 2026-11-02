@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 -- Run against a migrated database. All fixtures and assertions roll back.
 begin;
 create function pg_temp.check_asset_search(ok boolean, message text) returns void language plpgsql as $$
@@ -26,7 +45,7 @@ insert into public.assets(organization_id,tag,name,kind)
 select pg_temp.check_asset_search(not has_function_privilege('anon','public.search_assets(uuid,text)','EXECUTE'),'anonymous callers cannot invoke search');
 select pg_temp.check_asset_search((select not prosecdef from pg_proc where oid='public.search_assets(uuid,text)'::regprocedure),'search uses caller permissions');
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000081","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000081","aal":"aal1"}',true);
 select pg_temp.check_asset_search((select count(*)=2 from public.search_assets('20000000-0000-0000-0000-000000000081','12345')),'serial prefixes and middle fragments match');
 select pg_temp.check_asset_search((select count(*)=2 from public.search_assets('20000000-0000-0000-0000-000000000081','67890')),'serial suffixes match');
 select pg_temp.check_asset_search((select count(*)=1 from public.search_assets('20000000-0000-0000-0000-000000000081','cept')),'partial names match');
@@ -47,7 +66,7 @@ select pg_temp.check_asset_search((select count(*)=30 from public.search_assets(
 select pg_temp.check_asset_search((select count(*)=5 from (select id from public.search_assets('20000000-0000-0000-0000-000000000081','Paged') order by updated_at desc,id limit 25 offset 25) results),'database pagination returns the final page');
 select pg_temp.check_asset_search((select count(*)=0 from public.search_assets('20000000-0000-0000-0000-000000000082','12345')),'organization argument cannot bypass RLS');
 
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000082","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000082","aal":"aal1"}',true);
 select pg_temp.check_asset_search((select count(*)=1 from public.search_assets('20000000-0000-0000-0000-000000000081','12345')),'employee sees only their assigned matching asset');
 select pg_temp.check_asset_search((select count(*)=0 from public.search_assets('20000000-0000-0000-0000-000000000081','Dell')),'employee cannot infer unassigned assets');
 reset role;
@@ -55,7 +74,7 @@ insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at
  values(gen_random_uuid(),'10000000-0000-0000-0000-000000000082','totp','verified',now(),now());
 set local role authenticated;
 select pg_temp.check_asset_search((select count(*)=0 from public.search_assets('20000000-0000-0000-0000-000000000081','12345')),'required MFA is enforced');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000082","aal":"aal2"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000082","aal":"aal2"}',true);
 select pg_temp.check_asset_search((select count(*)=1 from public.search_assets('20000000-0000-0000-0000-000000000081','12345')),'verified MFA restores authorized matches');
 reset role;
 rollback;

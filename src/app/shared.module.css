@@ -1,0 +1,4 @@
+.scope {
+  composes: scope from '../features/authentication/authentication.module.css';
+  composes: scope from '../features/navigation/navigation.module.css';
+}

@@ -12,6 +12,12 @@ import { LiveSearchForm } from '@/components/ui/live-search-form';
 import { PageHeader } from '@/components/ui/page-header';
 import { SubmissionKey } from '@/components/ui/submission-key';
 import { SubmitButton } from '@/components/ui/submit-button';
+import {
+  DeletePeopleControl,
+  PeopleSelection,
+  PersonSelection,
+} from '@/features/administration/people-deletion-controls';
+import { canDeletePerson } from '@/features/administration/people-deletion-model';
 import { PersonCard } from '@/features/administration/person-card';
 import { rolePresentation } from '@/features/identity/role';
 import { PermissionsForm } from '@/features/inventory/forms';
@@ -50,6 +56,7 @@ export default async function PeoplePage({ searchParams }: Props) {
   let membersQuery = source
     .select('user_id, role, status', { count: 'exact' })
     .eq('organization_id', viewer.organizationId)
+    .is('deleted_at', null)
     .order('created_at')
     .order('user_id');
   if (message.view === 'technicians') membersQuery = membersQuery.eq('role', 'technician');
@@ -135,6 +142,13 @@ export default async function PeoplePage({ searchParams }: Props) {
   const inviteHref = `/app/people?${new URLSearchParams([...context, ['invite', '1']])}#invite-member`;
   const viewHref = (value: string) =>
     `/app/people?${new URLSearchParams({ ...(search ? { q: search } : {}), ...(value ? { view: value } : {}) })}`;
+  const eligiblePeople = (memberships ?? [])
+    .filter((member) => canDeletePerson(viewer.role, member.role, member.user_id === viewer.id))
+    .map((member) => ({
+      id: member.user_id,
+      name: profilesByUser.get(member.user_id)?.display_name ?? 'Profile incomplete',
+      email: profilesByUser.get(member.user_id)?.email ?? '',
+    }));
   return (
     <div className="page people-page">
       <PageHeader
@@ -298,49 +312,70 @@ export default async function PeoplePage({ searchParams }: Props) {
           </span>
         </div>
         {memberships?.length ? (
-          <ul className="people-list">
-            {memberships.map((member) => {
-              const profile = profilesByUser.get(member.user_id),
-                name = profile?.display_name ?? 'Profile incomplete';
-              return (
-                <PersonCard
-                  inventoryPermissions={
-                    canManage ? (
-                      <PermissionsForm
-                        id={member.user_id}
-                        name={name}
-                        departments={departments.data ?? []}
-                        grants={(inventoryRequesters.data ?? [])
-                          .filter((r) => r.user_id === member.user_id)
-                          .map((r) => r.department_id)}
-                        manager={(inventoryManagers.data ?? []).some(
-                          (m) => m.user_id === member.user_id,
-                        )}
-                        token={randomUUID()}
-                      />
-                    ) : undefined
-                  }
-                  key={member.user_id}
-                  id={member.user_id}
-                  name={name}
-                  email={
-                    profile?.email ??
-                    (member.user_id === viewer.id ? 'Your account' : 'Invitation pending')
-                  }
-                  avatarUrl={profile?.avatar_path ? avatarsByPath.get(profile.avatar_path) : null}
-                  role={member.role}
-                  status={member.status}
-                  isSelf={member.user_id === viewer.id}
-                  canManage={canManage}
-                  profile={profile}
-                  departments={departments.data ?? []}
-                  locations={locations.data ?? []}
-                  updateRole={updateMemberRole}
-                  updateStatus={updateMemberStatus}
-                />
-              );
-            })}
-          </ul>
+          <PeopleSelection
+            key={directoryHref}
+            people={eligiblePeople}
+            search={search}
+            view={technicians ? 'technicians' : ''}
+          >
+            <ul className="people-list">
+              {memberships.map((member) => {
+                const profile = profilesByUser.get(member.user_id),
+                  name = profile?.display_name ?? 'Profile incomplete';
+                return (
+                  <PersonCard
+                    selection={
+                      eligiblePeople.some((person) => person.id === member.user_id) ? (
+                        <PersonSelection id={member.user_id} name={name} />
+                      ) : undefined
+                    }
+                    deleteControl={
+                      eligiblePeople.some((person) => person.id === member.user_id) ? (
+                        <DeletePeopleControl
+                          people={[{ id: member.user_id, name, email: profile?.email ?? '' }]}
+                          search={search}
+                          view={technicians ? 'technicians' : ''}
+                        />
+                      ) : undefined
+                    }
+                    inventoryPermissions={
+                      canManage ? (
+                        <PermissionsForm
+                          id={member.user_id}
+                          name={name}
+                          departments={departments.data ?? []}
+                          grants={(inventoryRequesters.data ?? [])
+                            .filter((r) => r.user_id === member.user_id)
+                            .map((r) => r.department_id)}
+                          manager={(inventoryManagers.data ?? []).some(
+                            (m) => m.user_id === member.user_id,
+                          )}
+                          token={randomUUID()}
+                        />
+                      ) : undefined
+                    }
+                    key={member.user_id}
+                    id={member.user_id}
+                    name={name}
+                    email={
+                      profile?.email ??
+                      (member.user_id === viewer.id ? 'Your account' : 'Invitation pending')
+                    }
+                    avatarUrl={profile?.avatar_path ? avatarsByPath.get(profile.avatar_path) : null}
+                    role={member.role}
+                    status={member.status}
+                    isSelf={member.user_id === viewer.id}
+                    canManage={canManage}
+                    profile={profile}
+                    departments={departments.data ?? []}
+                    locations={locations.data ?? []}
+                    updateRole={updateMemberRole}
+                    updateStatus={updateMemberStatus}
+                  />
+                );
+              })}
+            </ul>
+          </PeopleSelection>
         ) : (
           <EmptyState className="people-empty">
             <h3>

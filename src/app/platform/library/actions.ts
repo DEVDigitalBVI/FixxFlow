@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 
 import { isKnowledgeAudience } from '@/features/knowledge/audience';
 import { knowledgeCategories, parseArticleContent, validId } from '@/features/knowledge/content';
+import { isHelpTopic } from '@/features/knowledge/help-collections';
 import { requirePlatformOwner } from '@/lib/auth/platform';
 import { formString } from '@/lib/form-data';
 import { createClient } from '@/lib/supabase/server';
@@ -16,6 +17,16 @@ export async function saveLibraryArticle(form: FormData): Promise<{ error?: stri
   const category = formString(form, 'category', '');
   const status = formString(form, 'status', 'draft');
   const audience = form.get('audience');
+  const collection = form.get('helpCollection');
+  const topic = form.get('helpTopic');
+  const format = form.get('helpFormat');
+  if (
+    collection !== null &&
+    ((collection !== 'knowledge' && collection !== 'fixxflow') ||
+      (collection === 'fixxflow' &&
+        (!isHelpTopic(topic) || !['guide', 'faq'].includes(String(format)))))
+  )
+    return { error: 'Choose a valid help collection, topic, and content format.' };
   let content;
   try {
     content = parseArticleContent(JSON.parse(formString(form, 'content', '[]')));
@@ -50,6 +61,16 @@ export async function saveLibraryArticle(form: FormData): Promise<{ error?: stri
     audience,
     content,
     related_article_ids: related,
+    ...(collection !== null
+      ? {
+          help_collection: collection as 'knowledge' | 'fixxflow',
+          help_topic:
+            collection === 'fixxflow'
+              ? (topic as keyof typeof import('@/features/knowledge/help-collections').helpTopics)
+              : null,
+          help_format: collection === 'fixxflow' ? (format as 'guide' | 'faq') : ('guide' as const),
+        }
+      : {}),
   };
   try {
     const db = await createClient();
@@ -77,5 +98,6 @@ export async function saveLibraryArticle(form: FormData): Promise<{ error?: stri
   }
   revalidatePath('/platform/library', 'layout');
   revalidatePath('/app/help', 'layout');
+  revalidatePath('/app/faq', 'layout');
   return { id };
 }

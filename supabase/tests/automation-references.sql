@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 begin;
 create function pg_temp.check_reference(ok boolean, message text) returns void language plpgsql as $$
 begin if ok is distinct from true then raise exception 'Automation reference assertion failed: %',message; end if; end $$;
@@ -17,7 +36,7 @@ insert into public.departments(id,organization_id,name) select ('60000000-0000-0
 insert into public.locations(id,organization_id,name) select ('70000000-0000-0000-0000-00000000090'||n)::uuid,('20000000-0000-0000-0000-00000000090'||n)::uuid,'Reference location' from generate_series(1,2) n;
 select set_config('test.reference_definition','{"schemaVersion":1,"name":"Reference rule","description":null,"trigger":{"type":"ticket.created","configuration":{}},"conditions":{"kind":"group","id":"root","operator":"and","children":[]},"actions":[{"id":"a","type":"set_priority","position":0,"configuration":{"priority":"high"}}]}',true);
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000901","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000901","role":"authenticated","aal":"aal1"}',true);
 do $$ declare org uuid:='20000000-0000-0000-0000-000000000901'; base jsonb:=current_setting('test.reference_definition')::jsonb; def jsonb; reference record; op text; target text; suffix text; version_count bigint; begin
  for reference in select * from (values
   ('assigned_technician_id','10000000'),('requester_id','10000000'),('team_id','30000000'),('category_id','40000000'),('subcategory_id','50000000'),('requester_department_id','60000000'),('location_id','70000000')

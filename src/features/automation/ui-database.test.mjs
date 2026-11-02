@@ -165,7 +165,7 @@ test('Stage 7 bounded admin read models on clean migrations', async (t) => {
         );
         await identity(db);
         await assert.rejects(read(db, 'list'), (e) => e.code === '42501');
-        await db.query("select set_config('request.jwt.claims',$1,true)", [
+        await db.query('select pg_temp.set_test_session($1,true)', [
           JSON.stringify({ sub: ids.admin, role: 'authenticated', aal: 'aal2' }),
         ]);
         assert.equal((await read(db, 'list')).rows.length, 2);

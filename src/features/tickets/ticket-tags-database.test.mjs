@@ -10,7 +10,7 @@ test('ticket tags are staff-only (even for the requester), normalized, capped, a
   const u = { tech: randomUUID(), requester: randomUUID(), foreign: randomUUID() };
   const as = async (user) => {
     await db.exec('reset role');
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
+    await db.query('select pg_temp.set_test_session($1,false)', [
       JSON.stringify({ sub: user, role: 'authenticated', aal: 'aal1' }),
     ]);
     await db.exec('set role authenticated');

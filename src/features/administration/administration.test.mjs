@@ -238,7 +238,7 @@ test('Administration landing navigation uses named links and clear section landm
     'Manage assets',
     'Teams',
     'Categories',
-    'View SLA targets',
+    'Manage SLA standards',
     'View notification setup',
     'Security settings',
     'Audit log',
@@ -246,5 +246,5 @@ test('Administration landing navigation uses named links and clear section landm
   ])
     assert.ok(html.includes(action), action);
   assert.doesNotMatch(html, /cannot be edited yet/);
-  assert.match(html, /Fixed targets/);
+  assert.match(html, /Organization standards/);
 });

@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 begin;
 create extension if not exists pgtap with schema extensions;
 select extensions.plan(13);
@@ -17,7 +36,7 @@ insert into public.profiles(organization_id,user_id,display_name) values
 insert into public.library_articles(id,title,summary,category,status,audience,content) values
  ('60000000-0000-0000-0000-000000000781','Printer','Recovery guide','Hardware','published','employees','[{"type":"paragraph","text":"Steps"}]');
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000781","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000781","role":"authenticated","aal":"aal1"}',true);
 insert into public.tickets(id,organization_id,requester_id,title,description) values
  ('70000000-0000-0000-0000-000000000781','20000000-0000-0000-0000-000000000781','10000000-0000-0000-0000-000000000782','Printer recovery','Paper jam');
 insert into public.ticket_messages(organization_id,ticket_id,author_id,kind,body) values
@@ -32,11 +51,11 @@ select extensions.is((select count(*)::integer from public.search_workspace('200
 select extensions.ok(exists(select 1 from public.search_workspace('20000000-0000-0000-0000-000000000781','unicornsecret781') where kind='ticket'),'staff can search readable internal notes');
 select public.set_library_article_hidden('20000000-0000-0000-0000-000000000781','60000000-0000-0000-0000-000000000781',true);
 select extensions.is((select count(*)::integer from public.search_workspace('20000000-0000-0000-0000-000000000781','pritner') where id='60000000-0000-0000-0000-000000000781'),0,'hidden guides excluded from typo matches');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000782","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000782","role":"authenticated","aal":"aal1"}',true);
 select extensions.is((select count(*)::integer from public.search_workspace('20000000-0000-0000-0000-000000000781','printerperson') where kind='person'),0,'employee cannot search people');
 select extensions.is((select count(*)::integer from public.search_workspace('20000000-0000-0000-0000-000000000781','unicornsecret781')),0,'private note cannot influence employee results');
 select extensions.ok(exists(select 1 from public.search_workspace('20000000-0000-0000-0000-000000000781','pritner') where id='70000000-0000-0000-0000-000000000781'),'employee can find own ticket by typo');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000783","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000783","role":"authenticated","aal":"aal1"}',true);
 select extensions.is((select count(*)::integer from public.search_workspace('20000000-0000-0000-0000-000000000782','pritner') where id='70000000-0000-0000-0000-000000000781'),0,'foreign employee ticket remains isolated');
 reset role;
 select * from extensions.finish();

@@ -40,7 +40,7 @@ async function chat(db, { reply = true, kind = 'message' } = {}) {
 }
 async function role(db, id) {
   await db.exec('reset role');
-  await db.query("select set_config('request.jwt.claims',$1,false)", [
+  await db.query('select pg_temp.set_test_session($1,false)', [
     JSON.stringify({ sub: id, role: 'authenticated', aal: 'aal1' }),
   ]);
   await db.exec('set role authenticated');

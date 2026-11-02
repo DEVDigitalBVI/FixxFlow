@@ -1,6 +1,10 @@
 import { getInboundEmailConfiguration } from '@/features/notifications/configuration';
+import { boundedResponse } from '@/features/tickets/inbound-attachments';
 import {
   emailAddress,
+  emailAttachmentIds,
+  emailInlineAttachmentIds,
+  emailThreadHeaders,
   messageBody,
   verifyWebhookSignature,
   workspaceSlug,
@@ -55,12 +59,20 @@ export async function POST(request: Request) {
     // The webhook carries metadata only; fetch the body and the receiving server's
     // SPF/DKIM/DMARC results, which the sender cannot forge.
     const response = await fetch(
-      `https://api.resend.com/emails/receiving/${encodeURIComponent(emailId)}`,
-      { headers: { Authorization: `Bearer ${config.apiKey}`, Accept: 'application/json' } },
+      `https://api.resend.com/emails/receiving/${encodeURIComponent(emailId)}?html_format=cid`,
+      {
+        headers: { Authorization: `Bearer ${config.apiKey}`, Accept: 'application/json' },
+        redirect: 'error',
+        signal: AbortSignal.timeout(10000),
+      },
     );
     if (!response.ok) throw new Error(`Receiving API responded ${response.status}`);
-    const email = (await response.json()) as {
+    const email = JSON.parse(
+      new TextDecoder().decode(await boundedResponse(response, 2_000_000)),
+    ) as {
       from?: unknown;
+      message_id?: unknown;
+      headers?: unknown;
       subject?: unknown;
       text?: string | null;
       html?: string | null;
@@ -69,12 +81,19 @@ export async function POST(request: Request) {
     };
     const result = await createAdminClient().rpc('accept_inbound_email', {
       provider_id: emailId,
+      ...emailThreadHeaders(email),
+      attachment_ids: emailAttachmentIds(email.attachments),
+      inline_attachment_ids: emailInlineAttachmentIds(email.attachments, email.html).filter((id) =>
+        emailAttachmentIds(email.attachments).includes(id),
+      ),
       org_slug: slug,
       sender_email: emailAddress(email.from) ?? '',
       subject: typeof email.subject === 'string' ? email.subject.slice(0, 998) : '',
       body: messageBody(email.text, email.html),
       authenticated: email.authentication?.dmarc === 'pass',
-      attachment_count: Array.isArray(email.attachments) ? email.attachments.length : 0,
+      attachment_count: Array.isArray(email.attachments)
+        ? Math.min(email.attachments.length, 500)
+        : 0,
     });
     if (result.error) throw result.error;
     return Response.json({

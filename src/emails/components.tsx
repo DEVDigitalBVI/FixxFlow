@@ -28,7 +28,7 @@ export const emailTokens = {
 const t = emailTokens;
 
 function fontStyles(origin: string) {
-  return `@font-face{font-family:Inter;src:url('${origin}/brand/fixxflow/fonts/InterVariable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}h1,h2,strong,b{font-family:Inter,Arial,sans-serif}.email-action:hover{background:${t.actionHover}!important}.email-action:focus{outline:3px solid ${t.ink};outline-offset:3px}@media(max-width:480px){.email-action-table{width:100%!important}.email-action{display:block!important;text-align:center!important}}@media(forced-colors:active){.email-action{border-color:ButtonText!important;background:ButtonFace!important;color:ButtonText!important}}`;
+  return `@font-face{font-family:Inter;src:url('${origin}/brand/fixxflow/fonts/InterVariable.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}h1,h2,strong,b{font-family:Inter,Arial,sans-serif}.email-action:hover{background:${t.actionHover}!important}.email-action:focus{outline:3px solid ${t.ink};outline-offset:3px}@media(max-width:480px){.email-outer{padding:16px 8px!important}.email-header{padding:16px 16px 0!important}.email-content{padding:24px 16px 16px!important}.email-footer{padding:16px!important}.email-action-table{width:100%!important}.email-action{display:block!important;text-align:center!important}}@media(forced-colors:active){.email-action{border-color:ButtonText!important;background:ButtonFace!important;color:ButtonText!important}}`;
 }
 
 /** Outlook ignores CSS backgrounds on cells; the legacy attribute is absent from React's types. */
@@ -81,7 +81,7 @@ export function EmailLayout({
         <table {...presentation} style={{ background: t.canvas }}>
           <tbody>
             <tr>
-              <td align="center" style={{ padding: '24px 12px' }}>
+              <td className="email-outer" align="center" style={{ padding: '24px 12px' }}>
                 <Container
                   style={{
                     maxWidth: '560px',
@@ -96,11 +96,15 @@ export function EmailLayout({
                     <tbody>
                       <tr>
                         <td
+                          className="email-content"
                           align="left"
                           style={{
-                            padding: '20px 24px 24px',
+                            padding: '24px',
                             textAlign: 'left',
                             overflowWrap: 'anywhere',
+                            fontFamily: t.body,
+                            fontSize: '16px',
+                            lineHeight: '24px',
                           }}
                         >
                           {children}
@@ -149,7 +153,11 @@ function EmailHeader({ origin, workspaceName }: { origin: string; workspaceName?
     <table {...presentation}>
       <tbody>
         <tr>
-          <td align="left" style={{ padding: '24px 24px 0', background: t.surface }}>
+          <td
+            className="email-header"
+            align="left"
+            style={{ padding: '24px 24px 0', background: t.surface }}
+          >
             <a href={origin} style={{ textDecoration: 'none' }}>
               {/* Low fetch priority stops React adding a preload tag, which mail clients ignore. */}
               {/* eslint-disable-next-line @next/next/no-img-element -- emails cannot use next/image */}
@@ -197,6 +205,7 @@ function EmailFooter() {
       <tbody>
         <tr>
           <td
+            className="email-footer"
             align="left"
             style={{
               textAlign: 'left',
@@ -268,7 +277,9 @@ export function EmailText({
   style?: CSSProperties;
 }) {
   return (
-    <p style={{ margin: '0 0 20px', color: t.text, ...style }}>
+    <p
+      style={{ margin: '0 0 16px', color: t.text, fontSize: '16px', lineHeight: '24px', ...style }}
+    >
       {lines !== undefined
         ? lines
             .split(/\r?\n/)
@@ -307,7 +318,13 @@ export function EmailDetails({
       width="100%"
       cellPadding={0}
       cellSpacing={0}
-      style={{ margin: '0 0 24px', textAlign: 'left', fontSize: '14px', lineHeight: '22px' }}
+      style={{
+        margin: '0 0 24px',
+        tableLayout: 'fixed',
+        textAlign: 'left',
+        fontSize: '14px',
+        lineHeight: '22px',
+      }}
     >
       <caption
         style={{
@@ -327,15 +344,23 @@ export function EmailDetails({
               scope="row"
               style={{
                 width: '35%',
-                padding: '6px 12px 6px 0',
+                padding: '8px 12px 8px 0',
                 color: t.muted,
                 fontWeight: 500,
                 verticalAlign: 'top',
+                overflowWrap: 'anywhere',
               }}
             >
               {row.label}
             </th>
-            <td style={{ padding: '6px 0', color: t.text, overflowWrap: 'anywhere' }}>
+            <td
+              style={{
+                padding: '8px 0',
+                color: t.text,
+                verticalAlign: 'top',
+                overflowWrap: 'anywhere',
+              }}
+            >
               {row.value}
             </td>
           </tr>
@@ -495,12 +520,19 @@ export function EmailAction({ href, children }: { href: string; children: ReactN
   );
 }
 
-export function EmailNote({ children }: { children: ReactNode }) {
+export function EmailNote({
+  children,
+  afterAction = false,
+}: {
+  children: ReactNode;
+  afterAction?: boolean;
+}) {
   return (
     <p
       style={{
         textAlign: 'left',
-        margin: '24px 0 0',
+        // Text/code blocks already own their trailing gap; action footers do not.
+        margin: afterAction ? '24px 0 0' : 0,
         color: t.muted,
         fontSize: '14px',
         lineHeight: '22px',

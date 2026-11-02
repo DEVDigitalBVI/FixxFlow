@@ -9,6 +9,10 @@ FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 3. Install the locked packages with `npm ci`.
 4. Start the app with `npm run dev`.
 
+## People deletion
+
+People deletion requires migration `20261101151101_workspace_people_deletion.sql` before deploying the updated application. It removes workspace access and directory entries, preserving login identities and linked history. Administrators can delete other members; technicians can delete employees only. Individual and page-level bulk deletion require confirmation, block self-deletion, and audit each removed person. The migration adds a deletion timestamp; deleted memberships must stay inactive and cannot be restored through the ordinary Activate action.
+
 ## Project structure
 
 - `src/app` — Next.js routes, layouts, and route handlers

@@ -32,6 +32,7 @@ function fixture(action, extra = {}) {
   const form = {
     data: new Original(),
     resets: 0,
+    closest: () => null,
     reset() {
       this.resets++;
     },
@@ -239,5 +240,68 @@ test('upload stages remain announced and duplicate submissions stay blocked unti
     assert.deepEqual(f.navigations, ['/app/tickets/created']);
   } finally {
     f.close();
+  }
+});
+
+test('successful saves collapse only the containing disclosure and restore summary focus', async () => {
+  for (const result of [{ success: 'Updated.' }, { redirectTo: '/app/organization?saved=1' }]) {
+    const f = fixture(async () => result);
+    let focused = false;
+    const outer = { open: true };
+    const editor = {
+      open: true,
+      querySelector(selector) {
+        assert.equal(selector, ':scope > summary');
+        return {
+          focus() {
+            focused = true;
+          },
+        };
+      },
+    };
+    f.form.closest = (selector) => {
+      assert.equal(selector, 'details');
+      return editor;
+    };
+    try {
+      f.submit();
+      await new Promise((resolve) => setImmediate(resolve));
+      assert.equal(editor.open, false);
+      assert.equal(focused, true);
+      assert.equal(outer.open, true);
+    } finally {
+      f.close();
+    }
+  }
+});
+
+test('failed or unconfirmed saves keep disclosures open and preserve drafts', async () => {
+  for (const result of [
+    { error: 'Review the name.' },
+    {},
+    new Error('offline'),
+    { success: 'Partial', error: 'Incomplete' },
+  ]) {
+    const f = fixture(async () => {
+      if (result instanceof Error) throw result;
+      return result;
+    });
+    const editor = {
+      open: true,
+      querySelector() {
+        assert.fail('Failure must not move focus to summary');
+      },
+    };
+    f.form.closest = () => editor;
+    try {
+      f.change('name', 'Unsaved office');
+      f.submit();
+      await new Promise((resolve) => setImmediate(resolve));
+      assert.equal(editor.open, true);
+      assert.equal(f.form.data.get('name'), 'Unsaved office');
+      assert.equal(f.released(), 0);
+    } finally {
+      f.close();
+    }
   }
 });

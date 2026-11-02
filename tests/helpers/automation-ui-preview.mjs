@@ -9,6 +9,8 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
+import { compiledProductStyles } from './styles.mjs';
+
 const root = process.cwd(),
   modules = new Map(),
   ids = new Map();
@@ -90,7 +92,13 @@ const server = http.createServer((request, response) => {
     response.end(bundle);
   } else if (request.url === '/style.css') {
     response.setHeader('Content-Type', 'text/css');
-    response.end(fs.readFileSync('src/app/globals.css'));
+    compiledProductStyles().then(
+      (css) => response.end(css),
+      (error) => {
+        response.statusCode = 500;
+        response.end(String(error));
+      },
+    );
   } else {
     response.setHeader('Content-Type', 'text/html');
     response.end(

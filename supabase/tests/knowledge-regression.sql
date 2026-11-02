@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 begin;
 create function pg_temp.check_knowledge(ok boolean,message text) returns void language plpgsql as $$ begin if ok is distinct from true then raise exception 'Knowledge assertion failed: %',message; end if; end $$;
 insert into auth.users(id,email) values
@@ -13,14 +32,14 @@ insert into public.organization_memberships(organization_id,user_id,role) values
  ('20000000-0000-0000-0000-000000000092','10000000-0000-0000-0000-000000000093','end_user');
 select pg_temp.check_knowledge((select count(*)=0 from public.knowledge_articles where organization_id='20000000-0000-0000-0000-000000000091'),'new organizations start without sample articles');
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000091","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000091","aal":"aal1"}',true);
 insert into public.knowledge_articles(id,organization_id,category,title,content) values
  ('30000000-0000-0000-0000-000000000091','20000000-0000-0000-0000-000000000091','Network','VPN troubleshooting','[{"type":"heading","text":"VPN error 809"},{"type":"paragraph","text":"Check firewall settings"}]');
 select pg_temp.check_knowledge((select author_id=auth.uid() and revision=1 from public.knowledge_articles where id='30000000-0000-0000-0000-000000000091'),'server-derived author and revision');
 insert into public.knowledge_attachments(id,organization_id,article_id,storage_path,file_name,content_type,size_bytes) values
  ('40000000-0000-0000-0000-000000000091','20000000-0000-0000-0000-000000000091','30000000-0000-0000-0000-000000000091','20000000-0000-0000-0000-000000000091/30000000-0000-0000-0000-000000000091/image.png','image.png','image/png',100);
 insert into storage.objects(bucket_id,name) values ('knowledge-assets','20000000-0000-0000-0000-000000000091/30000000-0000-0000-0000-000000000091/image.png');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000092","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000092","aal":"aal1"}',true);
 select pg_temp.check_knowledge((select count(*)=0 from public.search_knowledge_articles('20000000-0000-0000-0000-000000000091','VPN error 809')),'draft excluded from employee search');
 select pg_temp.check_knowledge((select count(*)=0 from public.knowledge_attachments),'draft attachments hidden');
 select pg_temp.check_knowledge((select count(*)=0 from storage.objects where bucket_id='knowledge-assets'),'draft files hidden');
@@ -32,12 +51,12 @@ do $$ begin
  perform public.record_article_view('20000000-0000-0000-0000-000000000091','30000000-0000-0000-0000-000000000091');
  raise exception 'Draft view allowed'; exception when insufficient_privilege then null; end;
 end $$;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000091","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000091","aal":"aal1"}',true);
 update public.knowledge_articles set status='published',audience='employees' where id='30000000-0000-0000-0000-000000000091' and revision=1;
 select pg_temp.check_knowledge((select revision=2 from public.knowledge_articles where id='30000000-0000-0000-0000-000000000091'),'revision incremented');
 with changed as(update public.knowledge_articles set title='Stale edit' where id='30000000-0000-0000-0000-000000000091' and revision=1 returning id)
 select pg_temp.check_knowledge((select count(*)=0 from changed),'stale edit rejected');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000092","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000092","aal":"aal1"}',true);
 select pg_temp.check_knowledge((select count(*)=1 from public.search_knowledge_articles('20000000-0000-0000-0000-000000000091','VPN error 809')),'published content searchable');
 select pg_temp.check_knowledge((select count(*)=1 from storage.objects where bucket_id='knowledge-assets'),'published asset readable');
 select public.record_article_view('20000000-0000-0000-0000-000000000091','30000000-0000-0000-0000-000000000091');
@@ -47,14 +66,14 @@ select public.rate_article('20000000-0000-0000-0000-000000000091','30000000-0000
 select pg_temp.check_knowledge((select count(*)=1 and bool_and(not helpful) from public.knowledge_article_feedback),'vote changed without duplication');
 select pg_temp.check_knowledge((select count(*)=0 from public.knowledge_article_views),'employee cannot enumerate readership');
 select pg_temp.check_knowledge(not has_column_privilege('authenticated','public.knowledge_article_views','user_id','INSERT') and not has_column_privilege('authenticated','public.knowledge_article_views','viewed_on','INSERT'),'reader identity and date cannot be forged');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000093","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000093","aal":"aal1"}',true);
 select pg_temp.check_knowledge((select count(*)=0 from public.search_knowledge_articles('20000000-0000-0000-0000-000000000091','VPN')),'cross-organization search blocked');
 select pg_temp.check_knowledge((select count(*)=0 from storage.objects where bucket_id='knowledge-assets'),'cross-organization storage blocked');
 reset role;
 select pg_temp.check_knowledge((select count(*)=1 from public.knowledge_article_views where organization_id='20000000-0000-0000-0000-000000000091'),'daily reader view deduplicated');
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'10000000-0000-0000-0000-000000000092','totp','verified',now(),now());
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000092","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000092","aal":"aal1"}',true);
 select pg_temp.check_knowledge((select count(*)=0 from public.knowledge_articles),'MFA blocks article access');
 reset role;
 rollback;

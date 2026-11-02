@@ -206,7 +206,7 @@ test('automation persistence on a clean PostgreSQL migration replay', async (t) 
             [team, org, 'Destination team', foreignTeam, other, 'Foreign team'],
           );
           await db.exec('set local role authenticated');
-          await db.query("select set_config('request.jwt.claims',$1,true)", [
+          await db.query('select pg_temp.set_test_session($1,true)', [
             JSON.stringify({ sub: admin, role: 'authenticated', aal: 'aal2' }),
           ]);
           const pkg = exportPortablePackage(

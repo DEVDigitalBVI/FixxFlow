@@ -109,6 +109,29 @@ test('read-only directory exposes no role/status forms or management controls', 
   assert.match(html, /Active/);
   assert.doesNotMatch(html, /<form|<details|Manage|Profile editor/);
 });
+test('equipment and deletion stay inside Manage with a separated destructive action', () => {
+  const deletion = React.createElement(
+    'details',
+    { className: 'people-delete' },
+    React.createElement('summary', null, 'Delete person'),
+  );
+  for (const canManage of [true, false]) {
+    const html = render(
+      React.createElement(PersonCard, { ...person, canManage, deleteControl: deletion }),
+    );
+    const manage = html.indexOf('<details class="person-manage">');
+    assert.ok(manage >= 0);
+    assert.ok(html.indexOf('person-equipment-action') > manage);
+    assert.ok(html.indexOf('person-delete-action') > html.indexOf('person-equipment-action'));
+    assert.match(html, /person-delete-action"><details class="people-delete">/);
+    assert.doesNotMatch(html, /<details[^>]* open/);
+    if (!canManage) assert.doesNotMatch(html, /<form|Profile editor|Workspace access|Save role/);
+  }
+  const readOnly = render(React.createElement(PersonCard, { ...person, canManage: false }));
+  assert.match(readOnly, /person-readonly-actions/);
+  assert.match(readOnly, /href="\/app\/people\/user-1\/equipment"/);
+});
+
 test('incomplete profiles and long user text remain safe readable content', () => {
   const html = render(
     React.createElement(PersonCard, {
@@ -196,6 +219,7 @@ test('read authorization, query scope, paging and failures remain server enforce
     ),
   );
   assert.ok(directory.calls.some((c) => c[0] === 'range' && c[1] === 25 && c[2] === 49));
+  assert.ok(directory.calls.some((c) => c[0] === 'is' && c[1] === 'deleted_at' && c[2] === null));
   assert.match(html, /page=3&amp;q=Alex&amp;view=technicians/);
   await assert.rejects(
     page('administrator', 0, { message: 'offline' }).render(),

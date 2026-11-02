@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/ui/page-header';
 import { OrganizationCreateForm } from '@/features/administration/organization-create-form';
 import { OrganizationItemActions } from '@/features/administration/organization-item-actions';
 import { OrganizationItemEditor } from '@/features/administration/organization-item-editor';
+import { OrganizationLocationList } from '@/features/administration/organization-location-item';
 import { TimezoneSelect } from '@/features/timezones/select';
 import { TimezoneSettingsForm } from '@/features/timezones/settings-form';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -168,42 +169,12 @@ export default async function OrganizationPage({ searchParams }: Props) {
           ) : (
             !locations?.length && <EmptyState as="p">No locations yet.</EmptyState>
           )}
-          <div className="management-list">
-            {locations?.map((item) => (
-              <div className="management-item organization-location-item" key={item.id}>
-                <div>
-                  <strong>{item.path}</strong>
-                  <span>{item.is_active ? 'Active' : 'Inactive'}</span>
-                  <span>
-                    {[item.city, item.region, item.country_code].filter(Boolean).join(', ') ||
-                      item.timezone}
-                  </span>
-                </div>
-                {item.is_active && item.depth < 8 && (
-                  <details className="settings-editor organization-sublocation">
-                    <summary>
-                      Add sublocation<span className="sr-only"> to {item.path}</span>
-                    </summary>
-                    <OrganizationCreateForm
-                      kind="location"
-                      action={addLocation}
-                      timezone={item.timezone}
-                      parentId={item.id}
-                    />
-                  </details>
-                )}
-                <OrganizationItemEditor kind="locations" item={item} />
-                <OrganizationItemActions
-                  id={item.id}
-                  name={item.path}
-                  active={item.is_active}
-                  kind="location"
-                  toggleAction={toggleLocation}
-                  deleteAction={deleteLocation}
-                />
-              </div>
-            ))}
-          </div>
+          <OrganizationLocationList
+            items={locations ?? []}
+            addAction={addLocation}
+            toggleAction={toggleLocation}
+            deleteAction={deleteLocation}
+          />
         </section>
       </div>
     </div>

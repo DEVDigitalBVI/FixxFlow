@@ -136,7 +136,7 @@ test('Stage 10 durable health and bounded tenant operational reads', async (t) =
         );
         await identity(db);
         await denied(db, 'select public.read_automation_operations($1)', [ids.org]);
-        await db.query("select set_config('request.jwt.claims',$1,true)", [
+        await db.query('select pg_temp.set_test_session($1,true)', [
           JSON.stringify({ sub: ids.admin, role: 'authenticated', aal: 'aal2' }),
         ]);
         assert.equal((await overview(db)).processingActive, false);
@@ -342,7 +342,7 @@ test('Stage 10 durable health and bounded tenant operational reads', async (t) =
           "update private.automation_processing_state set activated_at=clock_timestamp()-interval '1 hour';update public.automation_rules set enabled_at=clock_timestamp()-interval '1 hour';alter table public.automation_rule_versions disable trigger automation_versions_immutable;update public.automation_rule_versions set created_at=clock_timestamp()-interval '1 hour';alter table public.automation_rule_versions enable trigger automation_versions_immutable;alter table public.tickets disable trigger tickets_sla_prepare",
         );
         // Clock-only maintenance has no human subject; retain human attribution above.
-        await db.exec("select set_config('request.jwt.claims','{}',true)");
+        await db.exec("select pg_temp.set_test_session('{}',true)");
         for (const [i, minutes] of [4.5, 3, -1].entries())
           await db.query(
             "update public.tickets set resolution_sla_due_at=clock_timestamp()+$2*interval '1 minute' where id=$1",
@@ -420,7 +420,7 @@ test('Stage 10 durable health and bounded tenant operational reads', async (t) =
       'queue summary has a hard candidate cap and labels incomplete data',
       async () => {
         await owner(db);
-        await db.query("select set_config('request.jwt.claims',$1,true)", [
+        await db.query('select pg_temp.set_test_session($1,true)', [
           JSON.stringify({ sub: ids.admin, role: 'authenticated', aal: 'aal1' }),
         ]);
         await db.query(

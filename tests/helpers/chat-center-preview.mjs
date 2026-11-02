@@ -120,6 +120,7 @@ function mocks(personal, media = false) {
       },
     );
   return {
+    '../product.module.css': { default: { scope: 'product-scope' } },
     'next/image': {
       default: (props) => {
         const attributes = { ...props };

@@ -13,7 +13,7 @@
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "node --test \"src/**/*.test.mjs\"",
-    "test:build": "node scripts/verify-proxy-build.mjs",
+    "test:build": "node scripts/verify-proxy-build.mjs && node scripts/verify-paint-build.mjs",
     "test:database": "node scripts/test-database.mjs",
     "test:smoke": "node scripts/smoke-deployment.mjs",
     "release:manifest": "node scripts/release-manifest.mjs",

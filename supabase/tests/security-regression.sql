@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 -- Plain SQL; fixtures and assertions roll back. Run against a migrated test database.
 begin;
 create function pg_temp.check_security(ok boolean, message text) returns void language plpgsql as $$
@@ -25,7 +44,7 @@ insert into storage.objects (bucket_id,name) values ('profile-photos',
  '20000000-0000-0000-0000-000000000051/10000000-0000-0000-0000-000000000051/audit.png');
 
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000051","aal":"aal1","role":"authenticated"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000051","aal":"aal1","role":"authenticated"}',true);
 select pg_temp.check_security(not private.has_required_assurance(),'enrolled aal1 denied');
 select pg_temp.check_security((select count(*)=0 from storage.objects where name like '20000000-0000-0000-0000-000000000051/%'),'enrolled aal1 cannot read Storage');
 select pg_temp.check_security((select count(*)=0 from public.tickets),'enrolled aal1 cannot read tickets');
@@ -41,7 +60,7 @@ do $$ begin
   exception when insufficient_privilege then null; end;
 end $$;
 
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000051","aal":"aal2","role":"authenticated"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000051","aal":"aal2","role":"authenticated"}',true);
 select pg_temp.check_security(private.has_required_assurance(),'enrolled aal2 allowed');
 select pg_temp.check_security((select count(*)=1 from storage.objects where name like '20000000-0000-0000-0000-000000000051/%'),'enrolled aal2 retains Storage access');
 select pg_temp.check_security((select count(*)=1 from public.tickets where id='30000000-0000-0000-0000-000000000051'),'aal2 legitimate read');
@@ -59,7 +78,7 @@ insert into public.ticket_messages (organization_id,ticket_id,author_id,body) va
  ('20000000-0000-0000-0000-000000000051','30000000-0000-0000-0000-000000000051','10000000-0000-0000-0000-000000000051','Public reply');
 select pg_temp.check_security((select first_response_at=now() from public.tickets where id='30000000-0000-0000-0000-000000000051'),'server-observed first response');
 
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000052","aal":"aal1","role":"authenticated"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000052","aal":"aal1","role":"authenticated"}',true);
 select pg_temp.check_security(private.has_required_assurance(),'unenrolled aal1 allowed');
 select pg_temp.check_security((select count(*)=1 from public.ticket_messages where ticket_id='30000000-0000-0000-0000-000000000051'),'employee sees public reply only');
 do $$ begin

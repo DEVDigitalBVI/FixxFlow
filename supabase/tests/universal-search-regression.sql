@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 -- Synthetic fixtures only; all records, sessions and MFA factors roll back.
 begin;
 create function pg_temp.check_universal_search(ok boolean, message text) returns void language plpgsql as $$
@@ -12,7 +31,7 @@ insert into private.platform_owners(user_id) select owner from search_fixture;
 insert into auth.sessions(id,user_id,created_at,updated_at) select session,owner,now(),now() from search_fixture;
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) select gen_random_uuid(),owner,'totp','verified',now(),now() from search_fixture;
 
-select set_config('request.jwt.claims',jsonb_build_object('sub',staff,'aal','aal2')::text,true) from search_fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',staff,'aal','aal2')::text,true) from search_fixture;
 set local role authenticated;
 insert into public.tickets(id,organization_id,requester_id,assigned_technician_id,title,description) select ticket,org,employee,staff,'Workstation network','Connection timeout 1234567890' from search_fixture;
 insert into public.ticket_messages(organization_id,ticket_id,author_id,kind,body) select org,ticket,staff,'reply'::public.ticket_message_kind,'Restart adapter' from search_fixture union all select org,ticket,staff,'internal_note','confidentialneedle' from search_fixture;
@@ -35,7 +54,7 @@ do $$begin
  begin perform public.platform_overview('universal');raise exception 'Tenant admin searched platform';exception when insufficient_privilege then null;end;
 end$$;
 
-select set_config('request.jwt.claims',jsonb_build_object('sub',employee,'aal','aal2')::text,true) from search_fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',employee,'aal','aal2')::text,true) from search_fixture;
 select pg_temp.check_universal_search((select count(*)=1 from public.search_tickets((select org from search_fixture),'workstat adapt')),'employee sees own public matches');
 select pg_temp.check_universal_search((select count(*)=0 from public.search_tickets((select org from search_fixture),'confid')),'partial internal-note search cannot leak to employees');
 select pg_temp.check_universal_search((select count(*)=1 from public.search_knowledge_articles((select org from search_fixture),'trouble adapt')),'employee sees published partial knowledge matches');
@@ -44,12 +63,12 @@ select pg_temp.check_universal_search((select count(*)=0 from public.search_know
 select pg_temp.check_universal_search((select count(*)=0 from public.search_knowledge_articles((select org from search_fixture),'classif') a where a.organization_id is null and a.audience<>'employees'),'employees never see IT-only library matches');
 select pg_temp.check_universal_search((select count(*)=0 from public.search_audit_events((select org from search_fixture),'fragm')),'employee cannot search staff audit records');
 
-select set_config('request.jwt.claims',jsonb_build_object('sub',outsider,'aal','aal2')::text,true) from search_fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',outsider,'aal','aal2')::text,true) from search_fixture;
 select pg_temp.check_universal_search((select count(*)=0 from public.search_tickets((select org from search_fixture),'workstat')),'partial ticket search cannot cross organizations');
 select pg_temp.check_universal_search((select count(*)=0 from public.search_knowledge_articles((select org from search_fixture),'trouble')),'partial knowledge search cannot cross organizations');
 select pg_temp.check_universal_search((select count(*)=0 from public.search_audit_events((select org from search_fixture),'fragm')),'partial audit search cannot cross organizations');
 
-select set_config('request.jwt.claims',jsonb_build_object('sub',owner,'aal','aal2','session_id',session)::text,true) from search_fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',owner,'aal','aal2','session_id',session)::text,true) from search_fixture;
 do $$declare report jsonb;begin
  report:=public.platform_overview('ERSAL needle',1,30);
  perform pg_temp.check_universal_search((report->>'matchingCount')::integer=1 and jsonb_array_length(report->'organizations')=1,'platform matches partial terms across name and slug with consistent counts');
@@ -58,7 +77,7 @@ do $$declare report jsonb;begin
  report:=public.platform_overview('universal _',1,30);
  perform pg_temp.check_universal_search((report->>'matchingCount')::integer=0,'platform underscore is literal');
 end$$;
-select set_config('request.jwt.claims',jsonb_build_object('sub',owner,'aal','aal1','session_id',session)::text,true) from search_fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',owner,'aal','aal1','session_id',session)::text,true) from search_fixture;
 do $$begin
  begin perform public.platform_overview('universal');raise exception 'Owner searched without required MFA';exception when insufficient_privilege then null;end;
 end$$;

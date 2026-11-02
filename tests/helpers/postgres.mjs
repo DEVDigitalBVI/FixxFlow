@@ -12,6 +12,7 @@ export async function migratedPostgres({ beforeMigration, throughMigration } = {
   const db = new PGlite({ extensions: { pg_trgm, pgtap } });
   try {
     await db.exec(await readFile('tests/fixtures/supabase-bootstrap.sql', 'utf8'));
+    await db.exec(await readFile('tests/fixtures/auth-session.sql', 'utf8'));
     const migrations = (await readdir('supabase/migrations'))
       .filter((name) => name.endsWith('.sql'))
       .sort();

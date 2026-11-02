@@ -31,7 +31,9 @@ export default async function EmailToTicketPage() {
     supabase.from('organizations').select('slug').eq('id', viewer.organizationId).single(),
     supabase
       .from('inbound_emails')
-      .select('id, sender, subject, status, ticket_id, created_at')
+      .select(
+        'id, sender, subject, status, ticket_id, created_at, attachment_status, imported_attachments, skipped_attachments',
+      )
       .eq('organization_id', viewer.organizationId)
       .order('created_at', { ascending: false })
       .order('id', { ascending: false })
@@ -75,8 +77,15 @@ export default async function EmailToTicketPage() {
             Notification emails include the ticket number, such as [#1042], in the subject. Replying
             adds a public reply from the requester, or an internal note from IT staff.
           </li>
-          <li>Replying to a closed ticket creates a new follow-up ticket.</li>
-          <li>Attachments are not imported; senders are asked to upload files in FixxFlow.</li>
+          <li>
+            Email thread headers keep follow-up messages on the original ticket. A subject-only
+            reply to a closed ticket creates a follow-up request.
+          </li>
+          <li>
+            Attached PNG, JPEG, WebP, PDF, TXT and LOG files are processed in the background (10 MB
+            per file, 20 MB per email, up to 20 files). Inline signature images and unsupported
+            files are skipped. Staff email attachments remain internal.
+          </li>
         </ul>
       </section>
       <section className="settings-card stack" aria-labelledby="inbound-log-heading">
@@ -104,6 +113,12 @@ export default async function EmailToTicketPage() {
                     <td>{row.subject || '(No subject)'}</td>
                     <td>
                       {outcomes[row.status] ?? row.status}
+                      {row.attachment_status !== 'none' && (
+                        <p className="muted">
+                          Files: {row.attachment_status} · {row.imported_attachments} imported ·{' '}
+                          {row.skipped_attachments} skipped
+                        </p>
+                      )}
                       {row.ticket_id && (
                         <>
                           {' · '}

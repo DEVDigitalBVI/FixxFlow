@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 begin;
 create extension if not exists pgtap with schema extensions;
 select extensions.plan(16);
@@ -43,9 +62,9 @@ select extensions.ok((select closure_summary like '%Restart the printer%' and cl
 select extensions.is((select count(*)::integer from public.notifications where conversation_id='40000000-0000-0000-0000-000000000991' and kind='chat_auto_closed'),1,'one closure notification');
 select extensions.ok(exists(select 1 from public.audit_events where entity_id='40000000-0000-0000-0000-000000000991' and entity_type='chat_conversations' and changes::text like '%closed%'),'closure is audited');
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000992","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000992","role":"authenticated","aal":"aal1"}',true);
 select extensions.is((select count(*)::integer from public.chat_conversations where id='40000000-0000-0000-0000-000000000991' and closure_summary is not null),1,'requester can read own summary');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000993","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000993","role":"authenticated","aal":"aal1"}',true);
 select extensions.is((select count(*)::integer from public.chat_conversations where id='40000000-0000-0000-0000-000000000991'),0,'another employee cannot read the chat');
 reset role;
 select * from extensions.finish();

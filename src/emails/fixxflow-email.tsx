@@ -74,7 +74,12 @@ export function FixxFlowEmail({
       {invitation ? (
         <EmailTemplateText
           html={invitationLead}
-          style={{ margin: '0 0 20px', color: emailTokens.text }}
+          style={{
+            margin: '0 0 16px',
+            color: emailTokens.text,
+            fontSize: '16px',
+            lineHeight: '24px',
+          }}
         />
       ) : preserveLines ? (
         <EmailText lines={message} />
@@ -107,13 +112,17 @@ export function FixxFlowEmail({
       )}
       {note &&
         (purpose === 'security-alert' ? (
-          <EmailCallout heading="Security notice" tone="warning" style={{ marginTop: '24px' }}>
+          <EmailCallout
+            heading="Security notice"
+            tone="warning"
+            style={{ margin: action && href ? '24px 0 0' : 0 }}
+          >
             <p style={{ margin: 0, color: emailTokens.text, fontSize: '14px', lineHeight: '22px' }}>
               {note}
             </p>
           </EmailCallout>
         ) : (
-          <EmailNote>{note}</EmailNote>
+          <EmailNote afterAction={Boolean(action && href) || invitation}>{note}</EmailNote>
         ))}
     </EmailLayout>
   );
