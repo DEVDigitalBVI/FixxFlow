@@ -6,6 +6,45 @@ import { componentHarness } from '../../../tests/helpers/component-harness.mjs';
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const choice = (id, label = id) => ({ id, label, active: true, parent_id: null });
 
+test('choosing a loaded option avoids refetching while parent changes still reload', async () => {
+  const old = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (url) => {
+    calls.push(new URL(url, 'https://fixture.test').searchParams);
+    return Response.json({ rows: [choice('first'), choice('second')], selected: null, next: null });
+  };
+  const props = {
+    resource: 'subcategories',
+    name: 'subcategoryId',
+    label: 'Subcategory',
+    parentId: 'parent-a',
+  };
+  const ui = componentHarness('src/features/lookups/lookup-select.tsx', 'LookupSelect', props);
+  try {
+    await pause(20);
+    ui.render();
+    assert.equal(calls.length, 1);
+    for (const value of ['first', 'second', '']) {
+      ui.find((n) => n.type === 'select').props.onChange({ target: { value } });
+      ui.render();
+      await pause(20);
+      ui.render();
+      assert.equal(ui.find((n) => n.type === 'select').props.value, value);
+      assert.equal(ui.all((n) => n.props.name === 'lookupLoadError').length, 0);
+      assert.equal(calls.length, 1);
+    }
+    props.parentId = 'parent-b';
+    ui.render();
+    await pause(20);
+    ui.render();
+    assert.equal(calls.length, 2);
+    assert.equal(calls[1].get('parent'), 'parent-b');
+  } finally {
+    ui.close();
+    globalThis.fetch = old;
+  }
+});
+
 test('lookup retains selected values across pages/search, cancels stale requests, and recovers from failure', async () => {
   const old = globalThis.fetch;
   const calls = [];

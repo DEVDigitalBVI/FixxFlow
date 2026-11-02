@@ -45,6 +45,7 @@ export function LookupSelect({
   const searchInput = useRef<HTMLInputElement>(null);
   const selectInput = useRef<HTMLSelectElement>(null);
   const immediate = useRef(false);
+  const loaded = useRef<{ key: string; ids: Set<string> } | null>(null);
   const [local, setLocal] = useState(defaultValue);
   const selected = value ?? local;
   const [query, setQuery] = useState('');
@@ -61,12 +62,19 @@ export function LookupSelect({
   const selectedId =
     selected && !specialOptions.some((option) => option.id === selected) ? selected : '';
   useEffect(() => {
+    const key = JSON.stringify([resource, query, cursor, parentId ?? '', activeOnly, retry]);
     const controller = new AbortController();
     let cancelled = false;
     const delay = immediate.current ? 0 : query ? 300 : 0;
     immediate.current = false;
     const timer = setTimeout(async () => {
       if (composing) return;
+      // Choosing an option already in this response needs no second page/selected
+      // request. Searches, parent changes, paging and explicit retries still reload.
+      if (loaded.current?.key === key && (!selectedId || loaded.current.ids.has(selectedId))) {
+        setState((previous) => ({ ...previous, pending: false, error: false }));
+        return;
+      }
       setState((previous) => ({ ...previous, pending: true, error: false }));
       const params = new URLSearchParams({
         resource,
@@ -92,6 +100,13 @@ export function LookupSelect({
         )
           throw new Error('Invalid lookup');
         if (!cancelled) {
+          loaded.current = {
+            key,
+            ids: new Set([
+              ...data.rows.map((row) => row.id),
+              ...(data.selected ? [data.selected.id] : []),
+            ]),
+          };
           if (!query) setPaginated(Boolean(cursor || data.next));
           setState({ data, pending: false, error: false });
         }

@@ -1,6 +1,6 @@
 import { unstable_rethrow } from 'next/navigation';
 
-import { requireViewer } from '@/lib/auth/viewer';
+import { requireWorkspaceAccess } from '@/lib/auth/viewer';
 import { normalizeSearch } from '@/lib/search';
 import { reportServerError } from '@/lib/server-errors';
 import { createClient } from '@/lib/supabase/server';
@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/server';
 const headers = { 'Cache-Control': 'private, no-store' };
 export async function GET(request: Request) {
   try {
-    const viewer = await requireViewer();
+    const viewer = await requireWorkspaceAccess();
     const params = new URL(request.url).searchParams;
     const query = normalizeSearch(params.get('q') ?? '');
     const category = normalizeSearch(params.get('category') ?? '');

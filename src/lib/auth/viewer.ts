@@ -23,7 +23,9 @@ export type Viewer = {
   timeZone: string;
 };
 
-export const requireViewer = cache(async (): Promise<Viewer> => {
+// Keep authorization separate from presentation data. Small endpoints such as
+// lookups need the same access checks, without loading names, photos or preferences.
+const loadWorkspaceAccess = cache(async () => {
   const supabase = await createClient();
   const { data: claims, error } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub;
@@ -54,6 +56,24 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
     redirect('/account/unassigned');
   }
   if (membership.status !== 'active') redirect('/account/inactive');
+
+  return { supabase, claims: claims.claims, membership, userId };
+});
+
+export type WorkspaceAccess = Pick<Viewer, 'id' | 'organizationId' | 'role' | 'status'>;
+
+export const requireWorkspaceAccess = cache(async (): Promise<WorkspaceAccess> => {
+  const { membership, userId } = await loadWorkspaceAccess();
+  return {
+    id: userId,
+    organizationId: membership.organization_id,
+    role: membership.role,
+    status: membership.status,
+  };
+});
+
+export const requireViewer = cache(async (): Promise<Viewer> => {
+  const { supabase, claims, membership, userId } = await loadWorkspaceAccess();
 
   const [
     { data: organization, error: organizationError },
@@ -89,12 +109,11 @@ export const requireViewer = cache(async (): Promise<Viewer> => {
     timezonePreference: profile?.timezone ?? null,
     timeZone: resolveTimezone(profile?.timezone, deviceTimezone, organization?.timezone),
     id: userId,
-    email: typeof claims.claims.email === 'string' ? claims.claims.email : '',
+    email: typeof claims.email === 'string' ? claims.email : '',
     organizationId: membership.organization_id,
     organizationName: organization?.name ?? 'Organization',
     displayName:
-      profile?.display_name ??
-      (typeof claims.claims.email === 'string' ? claims.claims.email : 'User'),
+      profile?.display_name ?? (typeof claims.email === 'string' ? claims.email : 'User'),
     avatarPath: profile?.avatar_path ?? null,
     role: membership.role,
     status: membership.status,

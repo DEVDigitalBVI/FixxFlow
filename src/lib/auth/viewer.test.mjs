@@ -79,11 +79,52 @@ function setup({
   );
   return {
     load: compiled.exports.requireViewer,
+    access: compiled.exports.requireWorkspaceAccess,
     photo: compiled.exports.requireViewerAvatarUrl,
     calls,
   };
 }
 const active = { data: { organization_id: 'org', role: 'technician', status: 'active' } };
+
+test('lookup authorization loads no presentation data and still waits for assurance', async () => {
+  const assurance = deferred();
+  const { access, calls } = setup({ assurance: assurance.promise, membership: active });
+  let finished = false;
+  const pending = access().then((viewer) => {
+    finished = true;
+    return viewer;
+  });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(calls, ['organization_memberships']);
+  assert.equal(finished, false);
+  assurance.resolve();
+  assert.deepEqual(await pending, {
+    id: 'user',
+    organizationId: 'org',
+    role: 'technician',
+    status: 'active',
+  });
+  assert.deepEqual(calls, ['organization_memberships']);
+});
+
+test('lightweight access preserves failed claims, MFA, membership and onboarding failures', async () => {
+  for (const [options, message] of [
+    [{ claimsError: Error('invalid'), membership: active }, '/login'],
+    [{ assurance: Promise.reject(Error('/auth/mfa')), membership: active }, '/auth/mfa'],
+    [{ membership: { data: { ...active.data, status: 'inactive' } } }, '/account/inactive'],
+    [{ membership: { data: null } }, '/account/unassigned'],
+    [
+      { membership: { data: null, error: { code: '08006' } } },
+      'Workspace access could not be verified. Please try again.',
+    ],
+  ]) {
+    const { access, calls } = setup({ assurance: Promise.resolve(), ...options });
+    await assert.rejects(access, (error) => error.message === message);
+    assert.equal(calls.includes('organizations'), false);
+    assert.equal(calls.includes('profiles'), false);
+    assert.equal(calls.includes('product_usage_preferences'), false);
+  }
+});
 
 test('membership lookup starts while assurance is pending, but viewer waits for both', async () => {
   const assurance = deferred();

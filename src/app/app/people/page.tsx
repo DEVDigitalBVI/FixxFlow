@@ -80,12 +80,42 @@ export default async function PeoplePage({ searchParams }: Props) {
         : Promise.resolve({ data: [], error: null }),
     ]);
   if (membersError) throw new Error('Unable to load members.');
-  const { data: accountStates, error: accountStatesError } = memberships?.length
-    ? await supabase.rpc('member_account_statuses', {
-        org: viewer.organizationId,
-        members: memberships.map((member) => member.user_id),
-      })
-    : { data: [], error: null };
+  const memberIds = (memberships ?? []).map((member) => member.user_id);
+  // All four reads depend on the visible IDs, not on one another. Keep the
+  // directory bounded to this page while avoiding three serial network waits.
+  const [
+    { data: accountStates, error: accountStatesError },
+    { data: profiles, error: profilesError },
+    inventoryManagers,
+    inventoryRequesters,
+  ] = await Promise.all([
+    memberIds.length
+      ? supabase.rpc('member_account_statuses', { org: viewer.organizationId, members: memberIds })
+      : { data: [], error: null },
+    memberIds.length
+      ? supabase
+          .from('profiles')
+          .select(
+            'user_id, display_name, email, job_title, avatar_path, department_id, location_id, updated_at',
+          )
+          .eq('organization_id', viewer.organizationId)
+          .in('user_id', memberIds)
+      : { data: [], error: null },
+    viewer.role === 'administrator' && memberIds.length
+      ? supabase
+          .from('inventory_managers')
+          .select('user_id')
+          .eq('organization_id', viewer.organizationId)
+          .in('user_id', memberIds)
+      : { data: [], error: null },
+    viewer.role === 'administrator' && memberIds.length
+      ? supabase
+          .from('inventory_requesters')
+          .select('user_id,department_id')
+          .eq('organization_id', viewer.organizationId)
+          .in('user_id', memberIds)
+      : { data: [], error: null },
+  ]);
   if (accountStatesError) throw new Error('Account statuses could not load. Please try again.');
   const statusesByUser = new Map(
     (accountStates ?? []).map((member) => [member.user_id, member.account_status]),
@@ -94,44 +124,8 @@ export default async function PeoplePage({ searchParams }: Props) {
     memberships?.some((member) => !isMemberAccountStatus(statusesByUser.get(member.user_id) ?? ''))
   )
     throw new Error('Account statuses could not load. Please try again.');
-  const { data: profiles, error: profilesError } = memberships?.length
-    ? await supabase
-        .from('profiles')
-        .select(
-          'user_id, display_name, email, job_title, avatar_path, department_id, location_id, updated_at',
-        )
-        .eq('organization_id', viewer.organizationId)
-        .in(
-          'user_id',
-          memberships.map((member) => member.user_id),
-        )
-    : { data: [], error: null };
   if (profilesError || departments.error || locations.error)
     throw new Error('Unable to load member details. Please try again.');
-  const [inventoryManagers, inventoryRequesters] =
-    viewer.role === 'administrator' && memberships?.length
-      ? await Promise.all([
-          supabase
-            .from('inventory_managers')
-            .select('user_id')
-            .eq('organization_id', viewer.organizationId)
-            .in(
-              'user_id',
-              memberships.map((m) => m.user_id),
-            ),
-          supabase
-            .from('inventory_requesters')
-            .select('user_id,department_id')
-            .eq('organization_id', viewer.organizationId)
-            .in(
-              'user_id',
-              memberships.map((m) => m.user_id),
-            ),
-        ])
-      : [
-          { data: [], error: null },
-          { data: [], error: null },
-        ];
   if (inventoryManagers.error || inventoryRequesters.error)
     throw new Error('Inventory permissions could not load. Try again.');
   const pageHref = (target: number) =>
