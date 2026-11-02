@@ -1,0 +1,26 @@
+{
+  "target": "https://fixxflow.com",
+  "checkedAt": "2026-11-02T16:45:39.702Z",
+  "checks": [
+    {
+      "path": "/api/health/live",
+      "status": 200,
+      "durationMs": 338
+    },
+    {
+      "path": "/api/health/ready",
+      "status": 200,
+      "durationMs": 508
+    },
+    {
+      "path": "/",
+      "status": 307,
+      "durationMs": 235
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "durationMs": 226
+    }
+  ]
+}
