@@ -9,7 +9,7 @@ begin
    select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
    if session is null then
     session:=gen_random_uuid();
-    insert into auth.sessions(id,user_id) values(session,actor);
+    insert into auth.sessions(id,user_id,created_at) values(session,actor,now());
    end if;
    payload:=payload||jsonb_build_object('session_id',session);
   end if;

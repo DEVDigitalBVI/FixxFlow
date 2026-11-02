@@ -118,3 +118,30 @@ test('idle deadlines apply at database boundaries and only live-session heartbea
     await db.close();
   }
 });
+
+test('test-session issuer initializes creation time when Auth supplies no timestamp default', async () => {
+  const db = await migratedPostgres();
+  try {
+    await db.exec(await readFile('tests/fixtures/domain-events.sql', 'utf8'));
+    await db.exec('alter table auth.sessions alter column created_at drop default');
+    await db.exec('alter table auth.sessions alter column created_at drop not null');
+    await db.exec('set role authenticated');
+    await db.query('select pg_temp.set_test_session($1,false)', [
+      JSON.stringify({ sub: user, role: 'authenticated', aal: 'aal1' }),
+    ]);
+    assert.equal(await active(db), true, 'issued test session passes the real idle-session guard');
+    assert.equal(
+      (await db.query('select count(*)::integer count from public.organizations')).rows[0].count,
+      1,
+      'authenticated tenant access remains restricted to the member workspace',
+    );
+    await db.exec('reset role');
+    assert.equal(
+      (await db.query('select count(*)::integer count from auth.sessions where created_at is null'))
+        .rows[0].count,
+      0,
+    );
+  } finally {
+    await db.close();
+  }
+});
