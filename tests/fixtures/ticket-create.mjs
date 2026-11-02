@@ -4,6 +4,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 import { load } from '../helpers/load-module.mjs';
 
+const { defaultSlaTargets, defaultSlaSchedule } = load('src/features/tickets/organization-sla.ts');
+
 export const ticketCreateData = {
   profiles: [
     { user_id: 'worker', display_name: 'Jamie Chen' },
@@ -49,7 +51,15 @@ export async function renderTicketCreate({ role = 'technician', errors = [], par
         organizationId: 'synthetic',
       }),
     },
-    '@/lib/supabase/server': { createClient: async () => ({ from: (table) => builder(table) }) },
+    '@/lib/supabase/server': {
+      createClient: async () => ({
+        from: (table) => builder(table),
+        rpc: async () => ({
+          data: { version: 0, targets: defaultSlaTargets, schedule: defaultSlaSchedule },
+          error: null,
+        }),
+      }),
+    },
     '../actions': {
       createTicket: async () => ({ error: 'Synthetic failure: your draft is preserved.' }),
     },

@@ -40,7 +40,7 @@ test('all email variants share a compact header and left-aligned content', async
   for (const [name, html] of emails) {
     assert.match(
       html,
-      /<td align="left" style="padding:20px 24px 24px;text-align:left;overflow-wrap:anywhere">/,
+      /<td class="email-content" align="left" style="padding:24px;text-align:left;overflow-wrap:anywhere;[^>]*font-size:16px;line-height:24px">/,
       name,
     );
     assert.match(
@@ -48,10 +48,14 @@ test('all email variants share a compact header and left-aligned content', async
       /<p style="margin:0 0 8px;color:#596579;font-size:14px;line-height:22px;font-weight:500">/,
       name,
     );
-    assert.match(html, /<p style="margin:0 0 20px;color:#2b2d42">/, name);
     assert.match(
       html,
-      /<td align="left" style="text-align:left;padding:16px 24px;border-top:/,
+      /<p style="margin:0 0 16px;color:#2b2d42;font-size:16px;line-height:24px">/,
+      name,
+    );
+    assert.match(
+      html,
+      /<td class="email-footer" align="left" style="text-align:left;padding:16px 24px;border-top:/,
       name,
     );
     assert.match(html, /width="100%"[^>]*style="max-width:560px/, name);

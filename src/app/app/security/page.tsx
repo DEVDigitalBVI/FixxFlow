@@ -13,6 +13,7 @@ export default async function SecurityPage() {
       <PageHeader
         title="Security"
         eyebrow="Account"
+        back={{ href: '/app/profile', label: 'Back to profile' }}
         description="Protect your FixxFlow account with an additional verification factor."
       />
       <section className="settings-card">

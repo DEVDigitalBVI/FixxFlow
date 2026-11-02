@@ -1,7 +1,5 @@
 import { Button } from '@/components/ui/button';
 
-import { signOut } from '../../actions';
-
 export default function InactivePage() {
   return (
     <section className="auth-card">
@@ -10,7 +8,7 @@ export default function InactivePage() {
         Your organization access is inactive. Contact an administrator if you believe this is a
         mistake.
       </p>
-      <form action={signOut}>
+      <form action="/auth/sign-out" method="post">
         <Button variant="secondary" type="submit">
           Sign out
         </Button>

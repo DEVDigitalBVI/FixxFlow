@@ -6,6 +6,8 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
+import { compiledProductStyles } from './styles.mjs';
+
 const root = process.cwd(),
   modules = new Map(),
   ids = new Map();
@@ -86,7 +88,13 @@ const server = http.createServer((request, response) => {
     response.end(bundle);
   } else if (url.pathname === '/style.css') {
     response.setHeader('Content-Type', 'text/css');
-    response.end(fs.readFileSync('src/app/globals.css'));
+    compiledProductStyles().then(
+      (css) => response.end(css),
+      (error) => {
+        response.statusCode = 500;
+        response.end(String(error));
+      },
+    );
   } else if (url.pathname === '/app/lookups') {
     const rows = Array.from({ length: 1205 }, (_, i) => ({
       id: 'person-' + (i + 1),

@@ -100,7 +100,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: start;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.onboarding-summary) {
     margin: 0;
@@ -177,7 +177,7 @@
   }
   :where(.scope) :global(.auth-appearance) {
     width: min(100%, 420px);
-    margin-top: 24px;
+    margin-top: var(--space-section);
   }
   :where(.scope) :global(.auth-appearance .theme-control) {
     display: flex;
@@ -199,7 +199,7 @@
   :where(.scope) :global(.signup-steps) {
     list-style: none;
     display: flex;
-    gap: 16px;
+    gap: var(--space-group);
     padding: 0;
     margin: 12px 0 24px;
   }
@@ -207,7 +207,7 @@
     display: flex;
     align-items: center;
     flex: 1;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.signup-steps li:not(:last-child)::after) {
     content: '';
@@ -259,7 +259,7 @@
 @layer components {
   :where(.scope) :global(.auth-company-sign-in) {
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-group);
   }
   :where(.scope) :global(.auth-company-sign-in form) {
     margin: 0;

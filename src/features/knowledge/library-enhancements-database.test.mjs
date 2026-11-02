@@ -14,7 +14,7 @@ const admin = '10000000-0000-0000-0000-000000000401',
 const one = async (db, sql, args = []) => (await db.query(sql, args)).rows[0];
 async function identity(db, id, aal = 'aal1', sessionId) {
   await db.exec('reset role');
-  await db.query("select set_config('request.jwt.claims',$1,false)", [
+  await db.query('select pg_temp.set_test_session($1,false)', [
     JSON.stringify({ sub: id, role: 'authenticated', aal, session_id: sessionId }),
   ]);
   await db.exec('set role authenticated');

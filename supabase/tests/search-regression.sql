@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id) values(session,actor);
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 begin;
 create function pg_temp.check_search(ok boolean, message text) returns void language plpgsql as $$
 begin if ok is distinct from true then raise exception 'Search assertion failed: %',message; end if; end $$;
@@ -25,7 +44,7 @@ insert into public.ticket_messages(organization_id,ticket_id,author_id,kind,body
  ('20000000-0000-0000-0000-000000000071','30000000-0000-0000-0000-000000000072','10000000-0000-0000-0000-000000000071','internal_note','confidentialneedle');
 update public.tickets set category_id=(select id from public.ticket_categories where organization_id='20000000-0000-0000-0000-000000000071' and name='Network') where id='30000000-0000-0000-0000-000000000071';
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000071","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000071","aal":"aal1"}',true);
 select pg_temp.check_search((select count(*)=2 from public.search_tickets('20000000-0000-0000-0000-000000000071','VPN error 809')),'description and message matches; resolved included; no duplicates');
 select pg_temp.check_search((select count(*)=2 from public.search_tickets('20000000-0000-0000-0000-000000000071','809')),'bare numeric error code searchable');
 select pg_temp.check_search((select count(*)=1 from public.search_tickets('20000000-0000-0000-0000-000000000071','confidentialneedle')),'staff can find internal notes');
@@ -36,7 +55,7 @@ select pg_temp.check_search((select count(*)=1 from public.search_tickets('20000
 select pg_temp.check_search((select count(*)=0 from public.search_tickets('20000000-0000-0000-0000-000000000072','VPN')),'organization argument cannot bypass RLS');
 select pg_temp.check_search((select count(*)=0 from public.search_tickets('20000000-0000-0000-0000-000000000071','%_(),')),'punctuation safe');
 select pg_temp.check_search((select count(*)=0 from public.search_tickets('20000000-0000-0000-0000-000000000071',repeat('9',200))),'oversized number safe');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000072","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000072","aal":"aal1"}',true);
 select pg_temp.check_search((select count(*)=0 from public.search_tickets('20000000-0000-0000-0000-000000000071','confidentialneedle')),'employee cannot infer internal note through search');
 select pg_temp.check_search((select count(*)=2 from public.search_tickets('20000000-0000-0000-0000-000000000071','VPN error 809')),'employee public content searchable');
 reset role;

@@ -2,12 +2,12 @@
   :where(.scope) :global(.knowledge-editor) {
     max-width: 900px;
     display: grid;
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.knowledge-editor form),
   :where(.scope) :global(.knowledge-editor fieldset) {
     display: grid;
-    gap: 16px;
+    gap: var(--space-group);
     min-width: 0;
   }
   :where(.scope) :global(.knowledge-editor fieldset) {
@@ -24,16 +24,16 @@
   :where(.scope) :global(.knowledge-editor label),
   :where(.scope) :global(.knowledge-file) {
     display: grid;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.knowledge-actions) {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.knowledge-related-options) {
     display: grid;
-    gap: 8px;
+    gap: var(--space-inline);
     max-height: 240px;
     overflow-y: auto;
   }
@@ -59,7 +59,7 @@
     white-space: pre-wrap;
     overflow-wrap: anywhere;
     background: var(--color-surface-subtle);
-    padding: 16px;
+    padding: var(--space-group);
     border-radius: 8px;
   }
   :where(.scope) :global(.knowledge-content blockquote) {
@@ -71,7 +71,7 @@
   :where(.scope) :global(.knowledge-metrics) {
     display: flex;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.knowledge-metrics dd) {
     margin: 8px 0 0;
@@ -109,7 +109,7 @@
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: var(--space-section);
   }
   :where(.scope) :global(.knowledge-categories a) {
     --color-text: var(--color-on-action);
@@ -138,7 +138,7 @@
     background: var(--color-surface-subtle);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
-    padding: 16px;
+    padding: var(--space-group);
   }
   :where(.scope) :global(.knowledge-contents ul) {
     padding-left: 20px;
@@ -195,7 +195,7 @@
   }
   :where(.scope) :global(.knowledge-related-selected) {
     display: grid;
-    gap: 8px;
+    gap: var(--space-inline);
     padding: 12px;
     background: var(--color-surface-subtle);
     border-radius: var(--radius-control);
@@ -203,7 +203,7 @@
   :where(.scope) :global(.knowledge-related-picker label) {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: var(--space-inline);
     overflow-wrap: anywhere;
   }
 }
@@ -230,7 +230,7 @@
 
 @layer components {
   :where(.scope) :global(.knowledge-step-screenshot) {
-    padding: 16px;
+    padding: var(--space-group);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     background: var(--color-surface-subtle);
@@ -244,5 +244,75 @@
     margin-top: 12px;
     font-size: 14px;
     line-height: 1.5;
+  }
+}
+
+@layer components {
+  :where(.scope) :global(.fixxflow-help-page) {
+    display: grid;
+    gap: var(--space-section);
+    align-content: start;
+  }
+  :where(.scope) :global(.fixxflow-help-page > p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.fixxflow-faq-list) {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    overflow: clip;
+  }
+  :where(.scope) :global(.fixxflow-faq-item + .fixxflow-faq-item) {
+    border-top: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.fixxflow-faq-item > summary) {
+    padding: var(--space-group) var(--space-section);
+    min-height: var(--control-height);
+    cursor: pointer;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.fixxflow-faq-item > summary:hover) {
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.fixxflow-faq-item > summary:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -4px;
+  }
+  :where(.scope) :global(.fixxflow-faq-answer) {
+    display: grid;
+    gap: var(--space-group);
+    padding: 0 var(--space-section) var(--space-section);
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.fixxflow-faq-answer p) {
+    margin: 0;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.fixxflow-faq-item > summary) {
+      padding-inline: var(--space-group);
+    }
+    :where(.scope) :global(.fixxflow-faq-answer) {
+      padding-inline: var(--space-group);
+    }
+  }
+}
+
+@layer components {
+  :where(.scope) :global(.fixxflow-help-navigation) {
+    display: grid;
+    gap: var(--space-group);
+  }
+  :where(.scope) :global(.fixxflow-help-navigation > :is(.queue-views, p)),
+  :where(.scope) :global(.fixxflow-help-page > .live-search-status) {
+    margin: 0;
+  }
+  :where(.scope) :global(.fixxflow-help-page .portal-articles .portal-detail-card) {
+    display: grid;
+    gap: var(--space-inline);
+    align-content: start;
+  }
+  :where(.scope) :global(.fixxflow-help-page .portal-detail-card > :is(h3, p)) {
+    margin: 0;
   }
 }

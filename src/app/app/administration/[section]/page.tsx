@@ -4,16 +4,12 @@ import { notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
-import { Table, TableRegion } from '@/components/ui/table';
 import { ClassificationEditor } from '@/features/administration/classification-editor';
-import {
-  administrationSections,
-  fixedSlaTargets,
-  formatMinutes,
-} from '@/features/administration/sections';
+import { administrationSections } from '@/features/administration/sections';
+import { SlaPolicyEditor } from '@/features/administration/sla-policy-editor';
 import { AuditLog, type AuditFilters } from '@/features/audit/audit-log';
 import { getNotificationEmailConfiguration } from '@/features/notifications/configuration';
-import { ticketPriorities } from '@/features/tickets/presentation';
+import { parseSlaPolicy } from '@/features/tickets/organization-sla';
 import { requireViewer } from '@/lib/auth/viewer';
 import { pageNumber } from '@/lib/pagination';
 import { createClient } from '@/lib/supabase/server';
@@ -118,38 +114,12 @@ export default async function AdministrationSection({
   } else if (section === 'audit-log') {
     content = <AuditLog organizationId={viewer.organizationId} filters={filters} />;
   } else if (section === 'slas' || section === 'priorities') {
+    const { data, error } = await supabase.rpc('organization_sla_policy', {
+      org: viewer.organizationId,
+    });
+    if (error) throw new Error('Unable to load SLA settings. Please try again.');
     content = (
-      <>
-        <p>
-          Targets count support time from 7 AM to 10 PM, seven days a week, in the workspace
-          timezone ({viewer.organizationTimezone}). Both clocks stop overnight. Waiting on user
-          pauses only resolution; the requester’s reply resumes it. On-hold time counts during
-          support hours. Priority targets are unchanged.
-        </p>
-        <TableRegion role="region" aria-label="Priority and SLA targets" tabIndex={0}>
-          <Table className="table-policy responsive-table">
-            <caption>Current response and resolution targets in support hours</caption>
-            <thead>
-              <tr>
-                <th scope="col">Priority</th>
-                <th scope="col">First response</th>
-                <th scope="col">Resolution</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fixedSlaTargets.map((target) => (
-                <tr key={target.priority}>
-                  <th scope="row" data-label="Priority">
-                    {ticketPriorities[target.priority].label}
-                  </th>
-                  <td data-label="First response">{formatMinutes(target.response)}</td>
-                  <td data-label="Resolution">{formatMinutes(target.resolution)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </TableRegion>
-      </>
+      <SlaPolicyEditor policy={parseSlaPolicy(data)} timeZone={viewer.organizationTimezone} />
     );
   } else if (section === 'notifications') {
     const emailConfigured = Boolean(getNotificationEmailConfiguration(process.env));

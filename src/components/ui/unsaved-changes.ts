@@ -6,9 +6,14 @@ const guards = new Set<() => boolean>();
 let approvedUntil = 0;
 const warning = 'Discard unsaved changes? Your unfinished work on this page will not be saved.';
 
-function hasUnsavedChanges() {
+export function hasUnsavedChanges() {
   for (const guard of guards) if (guard()) return true;
   return false;
+}
+
+/** Session expiry must not leave private data on screen behind an unload prompt. */
+export function allowSessionExit() {
+  approvedUntil = Number.POSITIVE_INFINITY;
 }
 
 export function confirmDiscardChanges(force = false) {

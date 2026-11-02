@@ -113,3 +113,14 @@ test('paused SLA indicators expose written reasons to assistive technology in co
     assert.doesNotMatch(html, /Invalid Date/);
   }
 });
+
+test('custom SLA weekdays and minute boundaries drive countdowns and paused states', () => {
+  const schedule = { days: [1, 2, 3, 4, 5], opens: 570, closes: 1050 };
+  const friday = Date.parse('2026-10-30T16:30Z'),
+    monday = Date.parse('2026-11-02T10:30Z');
+  assert.equal(businessMillisecondsBetween(friday, monday, 'UTC', schedule), 2 * 3600000);
+  assert.equal(businessMillisecondsBetween(monday, friday, 'UTC', schedule), -2 * 3600000);
+  assert.equal(withinSupportHours(Date.parse('2026-10-31T12:00Z'), 'UTC', schedule), false);
+  assert.equal(withinSupportHours(Date.parse('2026-11-02T09:29Z'), 'UTC', schedule), false);
+  assert.equal(withinSupportHours(Date.parse('2026-11-02T09:30Z'), 'UTC', schedule), true);
+});

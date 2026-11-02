@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { Alert } from '@/components/ui/alert';
@@ -33,8 +33,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ articl
       </div>
     );
   if (!article) notFound();
+  if (article.help_collection === 'fixxflow') redirect(`/app/faq/${article.id}`);
   if (article.organization_id === null)
-    return <LibraryArticleDetail article={article} viewer={viewer} />;
+    return <LibraryArticleDetail article={{ ...article, organization_id: null }} viewer={viewer} />;
   const [assetResult, relatedResult, feedback, views, helpful, unhelpful] = await Promise.all([
     database
       .from('knowledge_attachments')

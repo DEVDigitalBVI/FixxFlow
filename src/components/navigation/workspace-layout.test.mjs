@@ -9,6 +9,7 @@ import { load } from '../../../tests/helpers/load-module.mjs';
 test('employees and administrators use the same shell, brand and account controls', async () => {
   for (const role of ['end_user', 'administrator']) {
     const { default: Layout } = load('src/app/app/layout.tsx', {
+      '../product.module.css': { default: { scope: 'product-scope' } },
       '@/lib/auth/viewer': {
         requireViewer: async () => ({
           role,

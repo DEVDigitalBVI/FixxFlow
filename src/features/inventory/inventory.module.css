@@ -36,8 +36,8 @@
   }
   :where(.scope) :global(.inventory-permissions-form) {
     display: grid;
-    gap: 24px;
-    margin-top: 24px;
+    gap: var(--space-section);
+    margin-top: var(--space-section);
   }
   :where(.scope) :global(.inventory-permission-group) {
     border: 0;
@@ -105,10 +105,10 @@
   :where(.scope) :global(.inventory-department-options) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.inventory-permissions-empty) {
-    padding: 16px;
+    padding: var(--space-group);
     background: var(--color-surface-subtle);
     border-radius: var(--radius-control);
     color: var(--color-text-muted);
@@ -150,7 +150,7 @@
   :where(.scope) :global(.inventory-facts) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.inventory-facts dt) {
     color: var(--color-text-muted);
@@ -177,7 +177,7 @@
     margin-top: 4px;
   }
   :where(.scope) :global(.inventory-editor) {
-    margin-top: 20px;
+    margin-top: var(--space-group);
     max-width: 680px;
   }
   :where(.scope) :global(.inventory-request-list) {
@@ -197,8 +197,8 @@
   :where(.scope) :global(.inventory-stock-summary > div) {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 20px 24px;
+    gap: var(--space-inline);
+    padding: var(--space-group) var(--space-section);
   }
   :where(.scope) :global(.inventory-stock-summary > div + div) {
     border-left: 1px solid var(--color-border);
@@ -225,8 +225,8 @@
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding: 16px;
+      gap: var(--space-group);
+      padding: var(--space-group);
     }
   }
   @media (max-width: 767px) {

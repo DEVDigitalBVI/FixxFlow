@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id) values(session,actor);
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 -- Synthetic fixture accounts, sessions, MFA records and business data are all rolled back.
 begin;
 create temporary table fixture as select gen_random_uuid() staff,gen_random_uuid() employee,gen_random_uuid() outsider,gen_random_uuid() owner,gen_random_uuid() prospective,gen_random_uuid() org,gen_random_uuid() other_org,gen_random_uuid() asset,gen_random_uuid() other_asset,gen_random_uuid() session;
@@ -10,7 +29,7 @@ insert into public.organization_memberships(organization_id,user_id,role) select
 insert into public.profiles(organization_id,user_id,display_name) select org,staff,'Test IT' from fixture union all select org,employee,'Test employee' from fixture union all select other_org,outsider,'Other IT' from fixture;
 insert into private.platform_owners(user_id) select owner from fixture;
 insert into auth.sessions(id,user_id,created_at,updated_at) select session,owner,now(),now() from fixture;
-select set_config('request.jwt.claims',jsonb_build_object('sub',staff,'aal','aal2','session_id',gen_random_uuid())::text,true) from fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',staff,'aal','aal2','session_id',gen_random_uuid())::text,true) from fixture;
 set local role authenticated;
 insert into public.assets(id,organization_id,tag,name,kind,status,assigned_user_id) select asset,org,' test-pc ','Test laptop','computer','in_use',employee from fixture;
 do $$begin if not exists(select 1 from public.assets where tag='TEST-PC' and revision=1) then raise exception 'Tag normalization failed';end if;end$$;
@@ -23,7 +42,7 @@ do $$begin
 end$$;
 reset role;
 insert into public.assets(id,organization_id,tag,name,kind) select other_asset,other_org,'OTHER','Other equipment','computer' from fixture;
-select set_config('request.jwt.claims',jsonb_build_object('sub',employee,'aal','aal2','session_id',gen_random_uuid())::text,true) from fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',employee,'aal','aal2','session_id',gen_random_uuid())::text,true) from fixture;
 set local role authenticated;
 do $$declare n integer; ticket uuid; before_count bigint;after_count bigint;begin
  if (select count(*) from public.assets)<>1 then raise exception 'Employee inventory visibility failed';end if;
@@ -46,7 +65,7 @@ do $$begin
  if not exists(select 1 from public.audit_events where organization_id=(select org from fixture) and entity_type='assets' and action='updated')then raise exception 'Asset audit missing';end if;
 end$$;
 -- Owner verification, no tenant membership required.
-select set_config('request.jwt.claims',jsonb_build_object('sub',owner,'aal','aal1','session_id',session)::text,true) from fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',owner,'aal','aal1','session_id',session)::text,true) from fixture;
 set local role authenticated;
 do $$begin if public.platform_access()<>'enroll' then raise exception 'Owner enrollment not required';end if;begin perform public.platform_overview();raise exception 'Unverified owner read data';exception when insufficient_privilege then null;end;end$$;
 reset role;
@@ -54,7 +73,7 @@ insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at
 set local role authenticated;
 do $$begin if public.platform_access()<>'verify' then raise exception 'Owner challenge not required';end if;end$$;
 reset role;
-select set_config('request.jwt.claims',jsonb_build_object('sub',owner,'aal','aal2','session_id',session)::text,true) from fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',owner,'aal','aal2','session_id',session)::text,true) from fixture;
 set local role authenticated;
 do $$declare report jsonb; customer uuid;begin
  if public.platform_access()<>'ready' then raise exception 'Verified owner denied';end if;

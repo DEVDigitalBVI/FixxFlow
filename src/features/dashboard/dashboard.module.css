@@ -3,8 +3,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 16px;
-    padding: 20px 24px;
+    gap: var(--space-group);
+    padding: var(--space-group) var(--space-section);
     border-bottom: 1px solid var(--color-border);
   }
   :where(.scope) :global(.tech-section-heading h2) {
@@ -54,7 +54,7 @@
   :where(.scope) :global(.overview-section-heading > a) {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-inline);
     min-height: 40px;
     font-weight: 600;
     font-family: var(--font-heading);
@@ -70,8 +70,8 @@
   :where(.scope) :global(.overview-queue) {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 24px;
+    gap: var(--space-group);
+    padding: var(--space-section);
     color: var(--color-text);
     text-decoration: none;
     border-radius: 0;
@@ -107,7 +107,7 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.overview-queue) {
-      padding: 16px;
+      padding: var(--space-group);
       gap: 12px;
     }
   }
@@ -118,7 +118,7 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.overview-page > section) {
-      margin-bottom: 24px;
+      margin-bottom: var(--space-section);
     }
   }
   :where(.scope) :global(.overview-queue-count) {

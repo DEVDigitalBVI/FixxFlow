@@ -22,7 +22,7 @@ async function identity(db, actor = ids.admin, role = 'authenticated', aal = 'aa
   // Role values below are test constants, never application inputs.
   assert.ok(['authenticated', 'service_role', 'anon'].includes(role));
   await db.exec(`set local role ${role}`);
-  await db.query("select set_config('request.jwt.claims',$1,true)", [
+  await db.query('select pg_temp.set_test_session($1,true)', [
     JSON.stringify({ sub: actor, role, aal }),
   ]);
 }

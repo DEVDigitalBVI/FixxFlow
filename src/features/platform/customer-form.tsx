@@ -1,13 +1,12 @@
 'use client';
 
-import { useActionState, useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent } from 'react';
 
 import { saveCustomer } from '@/app/platform/actions';
-import { Alert } from '@/components/ui/alert';
+import { ActionForm } from '@/components/ui/action-form';
 import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { TimezoneSelect } from '@/features/timezones/select';
-import type { SaveState } from '@/lib/action-result';
 
 export function CustomerForm({ customer }: { customer?: { id: string; name: string } }) {
   const [draft, setDraft] = useState({
@@ -16,30 +15,12 @@ export function CustomerForm({ customer }: { customer?: { id: string; name: stri
     admin: '',
     email: '',
   });
-  const [state, action] = useActionState(
-    saveCustomer.bind(null, customer?.id ?? null),
-    {} as SaveState,
-  );
-  const errorRef = useRef<HTMLParagraphElement>(null);
-  useEffect(() => {
-    if (state.error) errorRef.current?.focus();
-  }, [state]);
   const change = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const field = event.target;
     setDraft((d) => ({ ...d, [field.name]: field.value }));
   };
   return (
-    <form action={action} className="stack">
-      {state.error && (
-        <Alert ref={errorRef} tabIndex={-1} role="alert" as="p" tone="error">
-          {state.error}
-        </Alert>
-      )}
-      {state.success && (
-        <Alert role="status" as="p" tone="success">
-          {state.success}
-        </Alert>
-      )}
+    <ActionForm action={saveCustomer.bind(null, customer?.id ?? null, {})} className="stack">
       <label className="field">
         Organization name *
         <Input
@@ -95,6 +76,6 @@ export function CustomerForm({ customer }: { customer?: { id: string; name: stri
       <SubmitButton variant="primary">
         {customer ? 'Save name' : 'Create organization'}
       </SubmitButton>
-    </form>
+    </ActionForm>
   );
 }

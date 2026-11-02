@@ -83,13 +83,17 @@ test('the inbound webhook verifies, filters and hands authenticated mail to the 
   assert.equal(response.status, 200);
   assert.deepEqual(accepted.calls[0], [
     'fetch',
-    'https://api.resend.com/emails/receiving/em_123',
+    'https://api.resend.com/emails/receiving/em_123?html_format=cid',
     'Bearer re_test',
   ]);
   assert.deepEqual(accepted.calls[1], [
     'accept_inbound_email',
     {
       provider_id: 'em_123',
+      message_id: null,
+      reply_message_ids: [],
+      attachment_ids: ['a'],
+      inline_attachment_ids: [],
       org_slug: 'northwind',
       sender_email: 'jordan@example.com',
       subject: 'Re: Printer [#1042]',

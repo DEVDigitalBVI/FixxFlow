@@ -1,12 +1,13 @@
 import { Table } from '@/components/ui/table';
 
+import { policyTargets, scheduleDescription } from './organization-sla';
 import { ticketPriorities } from './presentation';
-import { fixedSlaTargets, formatMinutes } from './sla-policy';
+import { formatMinutes } from './sla-policy';
 
-export function SlaPolicy() {
+export function SlaPolicy({ targets, schedule }: { targets?: unknown; schedule?: unknown }) {
   return (
     <Table className="table-policy">
-      <caption>Support-time targets from ticket creation · 7 AM–10 PM every day</caption>
+      <caption>Support-time targets from ticket creation · {scheduleDescription(schedule)}</caption>
       <thead>
         <tr>
           <th scope="col">Priority</th>
@@ -15,7 +16,7 @@ export function SlaPolicy() {
         </tr>
       </thead>
       <tbody>
-        {fixedSlaTargets.map((target) => (
+        {policyTargets(targets).map((target) => (
           <tr key={target.priority}>
             <th scope="row">{ticketPriorities[target.priority].label}</th>
             <td>{formatMinutes(target.response)}</td>

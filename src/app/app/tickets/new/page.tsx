@@ -14,6 +14,7 @@ import { ticketImpacts } from '@/features/tickets/impact';
 import { ImpactExpectations } from '@/features/tickets/impact-expectations';
 import { IncidentCreateFields } from '@/features/tickets/incident-fields';
 import { InitialAttachmentsField, NewTicketForm } from '@/features/tickets/new-ticket-form';
+import { parseSlaPolicy } from '@/features/tickets/organization-sla';
 import { ticketPriorities } from '@/features/tickets/presentation';
 import { TicketDraftCancel } from '@/features/tickets/ticket-draft-cancel';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -36,6 +37,11 @@ export default async function NewTicketPage({ searchParams }: Props) {
           .eq('id', message.asset)
           .maybeSingle()
       : null;
+  const policyResult =
+    viewer.role === 'end_user'
+      ? await supabase.rpc('organization_sla_policy', { org: viewer.organizationId })
+      : null;
+  const policy = policyResult && !policyResult.error ? parseSlaPolicy(policyResult.data) : null;
   const staff = viewer.role !== 'end_user';
   const contextFields = (
     <div className="ticket-create-fields">
@@ -187,7 +193,14 @@ export default async function NewTicketPage({ searchParams }: Props) {
                   This sets the initial urgency and service targets. IT can adjust them after
                   review.
                 </small>
-                <ImpactExpectations />
+                {policy ? (
+                  <ImpactExpectations targets={policy.targets} schedule={policy.schedule} />
+                ) : (
+                  <p className="muted">
+                    Support targets could not be loaded. You can still submit your request; its
+                    assigned targets will appear afterward.
+                  </p>
+                )}
               </div>
             )}
             {staff && (

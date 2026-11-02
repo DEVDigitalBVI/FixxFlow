@@ -1,6 +1,25 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id) values(session,actor);
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 -- All test records and generated audit entries roll back. No emails are sent.
 begin;
-select set_config('request.jwt.claims',jsonb_build_object('sub',user_id,'role','authenticated')::text,true),
+select pg_temp.set_test_session(jsonb_build_object('sub',user_id,'role','authenticated')::text,true),
  set_config('app.test_org',organization_id::text,true),set_config('app.test_actor',user_id::text,true)
 from public.organization_memberships where role='administrator' and status='active' limit 1;
 do $$
@@ -25,26 +44,26 @@ begin
 end $$;
 -- Exercise the same service-role registration used after an email invitation.
 set local role service_role;
-select set_config('request.jwt.claims','{"role":"service_role"}',true);
+select pg_temp.set_test_session('{"role":"service_role"}',true);
 select public.register_invited_member(current_setting('app.test_org')::uuid,current_setting('app.test_member')::uuid,'end_user','Audit invited member','audit@example.invalid',current_setting('app.test_actor')::uuid);
 reset role;
 do $$ begin
  if not exists(select 1 from public.audit_events where entity_id=current_setting('app.test_member')::uuid and entity_type='organization_memberships' and actor_id=current_setting('app.test_actor')::uuid and entity_label='Audit invited member') then raise exception 'Invitation actor missing'; end if;
 end $$;
 set local role authenticated;
-select set_config('request.jwt.claims',jsonb_build_object('sub',current_setting('app.test_member'),'role','authenticated')::text,true);
+select pg_temp.set_test_session(jsonb_build_object('sub',current_setting('app.test_member'),'role','authenticated')::text,true);
 do $$ begin
  if exists(select 1 from public.audit_events) then raise exception 'Employee can read audit records'; end if;
  begin perform public.register_invited_member(current_setting('app.test_org')::uuid,current_setting('app.test_member')::uuid,'administrator','Forbidden','forbidden@example.invalid',current_setting('app.test_actor')::uuid); raise exception 'Client can invoke service-only registration'; exception when insufficient_privilege then null; end;
 end $$;
-select set_config('request.jwt.claims',jsonb_build_object('sub',current_setting('app.test_actor'),'role','authenticated')::text,true);
+select pg_temp.set_test_session(jsonb_build_object('sub',current_setting('app.test_actor'),'role','authenticated')::text,true);
 do $$ begin
  if not exists(select 1 from public.audit_events where organization_id=current_setting('app.test_org')::uuid) then raise exception 'Administrator cannot read audit records'; end if;
  begin update public.audit_events set actor_name='Forged'; raise exception 'Audit modification allowed'; exception when insufficient_privilege then null; end;
  begin delete from public.audit_events; raise exception 'Audit deletion allowed'; exception when insufficient_privilege then null; end;
  begin insert into public.audit_events(organization_id,actor_name,entity_type,entity_id,entity_label,action) values(current_setting('app.test_org')::uuid,'Forged','tickets',gen_random_uuid(),'Forged','created'); raise exception 'Audit fabrication allowed'; exception when insufficient_privilege then null; end;
 end $$;
-select set_config('request.jwt.claims',jsonb_build_object('sub',gen_random_uuid(),'role','authenticated')::text,true);
+select pg_temp.set_test_session(jsonb_build_object('sub',gen_random_uuid(),'role','authenticated')::text,true);
 do $$ begin if exists(select 1 from public.audit_events) then raise exception 'Outsider can read audit records'; end if; end $$;
 reset role;
 rollback;

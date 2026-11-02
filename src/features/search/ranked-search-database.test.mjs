@@ -23,7 +23,7 @@ test('ranked global search combines entities, tolerates word typos and preserves
       );
     }
     await owner(db);
-    await db.exec("select set_config('request.jwt.claims','{}',true)");
+    await db.exec("select pg_temp.set_test_session('{}',true)");
     const guide = randomUUID(),
       internal = randomUUID(),
       draft = randomUUID();

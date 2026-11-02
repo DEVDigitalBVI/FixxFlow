@@ -2078,6 +2078,7 @@ export type Database = {
           activated_at: string
           created_at: string
           deactivated_at: string | null
+          deleted_at: string | null
           organization_id: string
           role: Database["public"]["Enums"]["app_role"]
           status: Database["public"]["Enums"]["membership_status"]
@@ -2088,6 +2089,7 @@ export type Database = {
           activated_at?: string
           created_at?: string
           deactivated_at?: string | null
+          deleted_at?: string | null
           organization_id: string
           role?: Database["public"]["Enums"]["app_role"]
           status?: Database["public"]["Enums"]["membership_status"]
@@ -2098,6 +2100,7 @@ export type Database = {
           activated_at?: string
           created_at?: string
           deactivated_at?: string | null
+          deleted_at?: string | null
           organization_id?: string
           role?: Database["public"]["Enums"]["app_role"]
           status?: Database["public"]["Enums"]["membership_status"]
@@ -4235,6 +4238,7 @@ export type Database = {
           activated_at: string
           created_at: string
           deactivated_at: string | null
+          deleted_at: string | null
           organization_id: string
           role: Database["public"]["Enums"]["app_role"]
           status: Database["public"]["Enums"]["membership_status"]

@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id) values(session,actor);
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 begin;
 create extension if not exists pgtap with schema extensions;
 select extensions.no_plan();
@@ -17,7 +36,7 @@ insert into public.locations(id,organization_id,name) values
  ('30000000-0000-0000-0000-000000000962','20000000-0000-0000-0000-000000000961','Branch'),
  ('30000000-0000-0000-0000-000000000963','20000000-0000-0000-0000-000000000962','Other workspace');
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000961","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000961","role":"authenticated","aal":"aal1"}',true);
 select extensions.is((select path from public.location_paths where id='30000000-0000-0000-0000-000000000961'),'Head office','existing top-level names stay unchanged');
 insert into public.locations(id,organization_id,parent_id,name) values
  ('40000000-0000-0000-0000-000000000961','20000000-0000-0000-0000-000000000961','30000000-0000-0000-0000-000000000961','Room 101'),
@@ -55,7 +74,7 @@ select extensions.is((select max(depth) from public.location_paths),8,'eight lev
 select extensions.throws_ok($$insert into public.locations(organization_id,parent_id,name) select organization_id,id,'Level 9' from public.location_paths where depth=8$$,'23514',null,'depth limit is enforced');
 select extensions.throws_ok($$update public.locations set parent_id=(select id from public.location_paths where depth=8) where id='30000000-0000-0000-0000-000000000962'$$,'23514',null,'moves cannot push existing descendants beyond the depth limit');
 select extensions.ok(not has_table_privilege('authenticated','public.location_paths','insert'),'computed paths are read-only');
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000962","role":"authenticated","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000962","role":"authenticated","aal":"aal1"}',true);
 select extensions.is((select count(*)::int from public.lookup_choices('20000000-0000-0000-0000-000000000961','location_parents')),0,'employees cannot browse the admin parent picker');
 select extensions.throws_ok($$insert into public.locations(organization_id,name) values('20000000-0000-0000-0000-000000000961','Unauthorized')$$,'42501',null,'employees cannot create locations');
 select extensions.is((select label from public.lookup_choices('20000000-0000-0000-0000-000000000961','locations',selected=>'40000000-0000-0000-0000-000000000962')),'Branch / Room 101','employees retain normal path-labelled location choices');

@@ -1,3 +1,22 @@
+-- Test-only token issuer. Never deploy or use in application code.
+create or replace function pg_temp.set_test_session(claims text, local_setting boolean) returns text
+language plpgsql security definer set search_path='' as $$
+declare payload jsonb:=claims::jsonb; actor uuid; session uuid;
+begin
+ if payload->>'sub' is not null and not(payload ? 'session_id') then
+  actor:=(payload->>'sub')::uuid;
+  if exists(select 1 from auth.users where id=actor) then
+   select id into session from auth.sessions where user_id=actor and (not_after is null or not_after>now()) limit 1;
+   if session is null then
+    session:=gen_random_uuid();
+    insert into auth.sessions(id,user_id) values(session,actor);
+   end if;
+   payload:=payload||jsonb_build_object('session_id',session);
+  end if;
+ end if;
+ return set_config('request.jwt.claims',payload::text,local_setting);
+end $$;
+
 begin;
 create function pg_temp.check_notification(ok boolean, message text) returns void language plpgsql as $$
 begin if ok is distinct from true then raise exception 'Notification assertion failed: %',message; end if; end $$;
@@ -23,7 +42,7 @@ update public.tickets set status='resolved' where id='30000000-0000-0000-0000-00
 update public.tickets set status='closed' where id='30000000-0000-0000-0000-000000000061';
 select pg_temp.check_notification((select count(*)=2 from public.notifications where kind='ticket_resolved'),'resolve then close does not double notify');
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000062","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000062","aal":"aal1"}',true);
 select pg_temp.check_notification((select count(*)=3 from public.notifications),'employee sees only own alerts');
 select pg_temp.check_notification(not has_function_privilege('authenticated','public.claim_notification_emails(integer)','EXECUTE'),'email queue service only');
 select pg_temp.check_notification(not has_column_privilege('authenticated','public.notifications','title','UPDATE'),'notification content immutable');
@@ -39,7 +58,7 @@ select public.finish_notification_email(notification_id,lease_token,'mock-provid
 select pg_temp.check_notification((select count(*)=3 from private.notification_email_outbox where status='sent'),'delivery acknowledgement');
 select public.reopen_ticket('30000000-0000-0000-0000-000000000061',(select revision from public.tickets where id='30000000-0000-0000-0000-000000000061'),'The issue returned.',gen_random_uuid());
 select pg_temp.check_notification((select count(*)=1 from public.notifications where kind='ticket_reopened'),'reopen suppresses actor notification');
-select set_config('request.jwt.claims','{}',true);
+select pg_temp.set_test_session('{}',true);
 update public.tickets set assigned_technician_id=null where id='30000000-0000-0000-0000-000000000061';
 select pg_temp.check_notification((select count(*)=1 from public.notifications where kind='ticket_reassigned'),'former assignee notified');
 insert into public.ticket_messages(organization_id,ticket_id,author_id,body) values
@@ -63,7 +82,7 @@ select public.enqueue_sla_notifications();
 select pg_temp.check_notification((select count(*)=1 from public.notifications where kind='sla_approaching'),'SLA warning emitted once per objective deadline');
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values (gen_random_uuid(),'10000000-0000-0000-0000-000000000062','totp','verified',now(),now());
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"10000000-0000-0000-0000-000000000062","aal":"aal1"}',true);
+select pg_temp.set_test_session('{"sub":"10000000-0000-0000-0000-000000000062","aal":"aal1"}',true);
 select pg_temp.check_notification((select count(*)=0 from public.notifications),'enrolled low-assurance user cannot read notifications');
 reset role;
 rollback;

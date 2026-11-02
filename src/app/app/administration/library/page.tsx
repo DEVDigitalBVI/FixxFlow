@@ -31,8 +31,8 @@ export default async function WorkspaceLibraryPage({
   return (
     <div className="page stack">
       <PageHeader
-        title="FixxFlow library"
-        description="Choose which shared guides apply to your workspace. Hidden guides stay available here so you can restore them."
+        title="Shared help content"
+        description="Choose which troubleshooting guides and FixxFlow Help & FAQ content apply to your workspace. Hidden content stays available here so you can restore it."
         back={{ href: '/app/administration', label: 'Settings' }}
       />
       <form className="queue-filters" action="/app/administration/library">

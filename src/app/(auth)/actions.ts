@@ -91,7 +91,6 @@ export async function updatePassword(formData: FormData) {
 }
 
 export async function signOut() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
-  redirect('/login');
+  // Legacy callers use the native logout confirmation instead of a soft redirect.
+  redirect('/auth/sign-out');
 }

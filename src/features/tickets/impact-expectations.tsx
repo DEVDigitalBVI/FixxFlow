@@ -1,16 +1,24 @@
 import { Table } from '@/components/ui/table';
 
-import { impactExpectations, SUPPORT_HOURS } from './expectations';
+import { impactExpectations } from './expectations';
+import { defaultSlaTargets, scheduleDescription, type SlaTargets } from './organization-sla';
 
 /** Response-time guidance beside the employee impact choice. Static and JS-free. */
-export function ImpactExpectations() {
-  const rows = impactExpectations();
+export function ImpactExpectations({
+  targets = defaultSlaTargets,
+  schedule,
+}: {
+  targets?: SlaTargets;
+  schedule?: unknown;
+}) {
+  const rows = impactExpectations(targets);
   return (
     <details className="impact-expectations">
       <summary>How quickly will IT respond?</summary>
       <Table className="table-policy">
         <caption>
-          Target times for each impact. Targets count support hours, {SUPPORT_HOURS}.
+          Target times for each impact. Targets count support hours, {scheduleDescription(schedule)}
+          .
         </caption>
         <thead>
           <tr>

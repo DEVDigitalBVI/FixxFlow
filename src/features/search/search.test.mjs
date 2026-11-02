@@ -22,7 +22,8 @@ test('navigation results match literal terms and respect role and inventory acce
     searchDestinations('technician', true).some((row) => row.href === '/app/administration'),
     false,
   );
-  assert.equal(matchDestinations(employee, 'HELP ART').length, 1);
+  assert.ok(matchDestinations(employee, 'HELP ART').some((row) => row.href === '/app/help'));
+  assert.equal(matchDestinations(employee, 'faq')[0]?.href, '/app/faq');
   assert.equal(
     matchDestinations(searchDestinations('administrator', true), 'admin')[0]?.label,
     'Settings',

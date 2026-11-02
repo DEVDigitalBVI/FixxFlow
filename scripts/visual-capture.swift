@@ -5,6 +5,18 @@
 import AppKit
 import WebKit
 
+let auditLayout = CommandLine.arguments.contains("--audit")
+let layoutAuditScript = """
+const visible = element => { const box = element.getBoundingClientRect(); return box.width > 0 && box.height > 0; };
+const stacks = [...document.querySelectorAll('.stack,.page,.portal-page')].filter(element => visible(element) && getComputedStyle(element).display === 'grid').map(element => {
+  const style = getComputedStyle(element);
+  return {className:element.className, gap:style.rowGap, children:[...element.children].filter(child => visible(child) && (/^(H[1-4]|P)$/.test(child.tagName) || child.matches('.page-header,.page-back-link'))).map(child => {
+    const css=getComputedStyle(child); return {tag:child.tagName,text:child.textContent.trim().slice(0,60),marginTop:css.marginTop,marginBottom:css.marginBottom};
+  })};
+});
+return JSON.stringify({viewport:innerWidth,documentWidth:document.documentElement.scrollWidth,horizontalOverflow:document.documentElement.scrollWidth>innerWidth+1,stacks});
+"""
+
 let freezeClock = """
 (() => {
   const fixed = Date.parse('2026-10-20T14:00:00Z');
@@ -57,6 +69,13 @@ final class Capturer: NSObject, WKNavigationDelegate {
         arguments: [:], in: nil, in: .page
       ) { result in
         let job = self.current!
+        if auditLayout {
+          webView.callAsyncJavaScript(layoutAuditScript, arguments: [:], in: nil, in: .page) { audit in
+            if let json = try? audit.get() as? String {
+              try? json.write(toFile: job.output + ".json", atomically: true, encoding: .utf8)
+            }
+          }
+        }
         let height = max(job.height, CGFloat((try? result.get() as? Double) ?? Double(job.height)))
         webView.setFrameSize(NSSize(width: job.width, height: height))
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { self.snapshot(height: height) }

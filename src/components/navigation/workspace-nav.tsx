@@ -88,6 +88,12 @@ export function WorkspaceNav({
           visible: true,
         },
         {
+          href: '/app/faq',
+          label: 'FixxFlow Help & FAQ',
+          icon: <NavigationIcon name="knowledge" />,
+          visible: true,
+        },
+        {
           href: '/app/help',
           label: role === 'end_user' ? 'Help articles' : 'Knowledge base',
           icon: <NavigationIcon name="knowledge" />,
@@ -215,7 +221,7 @@ export function WorkspaceNav({
       });
   }
   const primaryPaths = ['/app', '/app/tickets', '/app/chat'];
-  const resourcePaths = ['/app/help', '/app/inventory', '/app/assets'];
+  const resourcePaths = ['/app/help', '/app/faq', '/app/inventory', '/app/assets'];
   const managePaths = ['/app/reports', '/app/people', '/app/administration'];
   const accountPaths = ['/app/profile', '/app/security', '/app/support'];
   const accountActive = accountPaths.some((path) => pathname.startsWith(path));

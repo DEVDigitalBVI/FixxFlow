@@ -2,7 +2,7 @@
   :where(.scope) :global(.report-metrics) {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    gap: var(--space-group);
     margin: 16px 0 24px;
   }
   :where(.scope) :global(.report-metrics dt) {
@@ -57,7 +57,7 @@
   :where(.scope) :global(.report-chart-grid) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
+    gap: var(--space-section);
     align-items: start;
   }
   :where(.scope) :global(.report-chart) {
@@ -95,14 +95,14 @@
   :where(.scope) :global(.report-axis-labels) {
     display: flex;
     justify-content: space-between;
-    gap: 8px;
+    gap: var(--space-inline);
     font-size: 12px;
     color: var(--color-text-muted);
   }
   :where(.scope) :global(.report-legend) {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: var(--space-group);
     padding: 0;
     list-style: none;
   }
@@ -147,12 +147,12 @@
     padding: 0;
     list-style: none;
     display: grid;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.report-bars li > div) {
     display: flex;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.report-bars li > div span) {
     overflow-wrap: anywhere;
@@ -194,7 +194,7 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.report-metrics .settings-card) {
-      padding: 16px;
+      padding: var(--space-group);
     }
   }
   @media (max-width: 767px) {
@@ -214,8 +214,8 @@
   :where(.scope) :global(.report-jump-nav) {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 24px;
+    gap: var(--space-inline);
+    margin-bottom: var(--space-section);
   }
   :where(.scope) :global(.reports-page :is(section, h2)[id]) {
     scroll-margin-top: 24px;
@@ -236,7 +236,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.report-toolbar h2) {
     margin: 0;
@@ -305,7 +305,7 @@
     margin-bottom: 0;
   }
   :where(.scope) :global(.report-service-levels .report-empty) {
-    padding: 16px;
+    padding: var(--space-group);
     background: var(--color-surface-subtle);
     border-radius: var(--radius-control);
   }
@@ -425,7 +425,7 @@
   :where(.scope) :global(.report-schedule-layout) {
     display: grid;
     grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
-    gap: 24px;
+    gap: var(--space-section);
     align-items: start;
   }
   :where(.scope) :global(.report-schedule-form) {
@@ -445,7 +445,7 @@
   :where(.scope) :global(.report-schedule-list li) {
     display: flex;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.report-schedule-list p) {
     margin: 4px 0 0;
@@ -455,16 +455,16 @@
     display: flex;
     flex-shrink: 0;
     align-items: start;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.report-delivery-history) {
-    margin-top: 20px;
+    margin-top: var(--space-group);
   }
   @media (max-width: 999px) {
     :where(.scope) :global(.report-toolbar) {
       align-items: stretch;
       flex-direction: column;
-      gap: 16px;
+      gap: var(--space-group);
     }
   }
   @media (max-width: 999px) {
@@ -475,7 +475,7 @@
   @media (max-width: 767px) {
     :where(.scope) :global(.report-sla-grid) {
       grid-template-columns: minmax(0, 1fr);
-      gap: 24px;
+      gap: var(--space-section);
     }
   }
   @media (max-width: 767px) {
@@ -554,7 +554,7 @@
       border: 0;
       border-radius: 0;
       background: transparent;
-      padding: 24px;
+      padding: var(--space-section);
     }
   }
   @media (min-width: 1200px) {
@@ -569,7 +569,7 @@
   }
   :where(.scope) :global(.report-choice-list) {
     display: grid;
-    gap: 8px;
+    gap: var(--space-inline);
     max-height: 240px;
     overflow-y: auto;
     padding: 4px;
@@ -579,7 +579,7 @@
   }
   :where(.scope) :global(.incident-report) {
     display: grid;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.incident-report h2),
   :where(.scope) :global(.incident-report p) {
@@ -592,7 +592,7 @@
   :where(.scope) :global(.incident-report-breakdowns) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
-    gap: 16px;
+    gap: var(--space-group);
     margin: 0;
   }
   :where(.scope) :global(.incident-report-metrics dt) {
@@ -671,7 +671,7 @@
   :where(.scope) :global(.report-satisfaction-grid) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.report-satisfaction-comments) {
     display: grid;

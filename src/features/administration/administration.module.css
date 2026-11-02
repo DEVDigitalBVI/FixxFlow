@@ -1,7 +1,7 @@
 @layer components {
   :where(.scope) :global(.organization-page) {
     display: grid;
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.organization-page > .page-header),
   :where(.scope) :global(.organization-page > .page-alert) {
@@ -21,39 +21,125 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
     max-width: 640px;
-    gap: 16px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.organization-timezone .field) {
     min-width: 0;
   }
-  :where(.scope) :global(.organization-location-item) {
-    flex-wrap: wrap;
+  :where(.scope) :global(.organization-location-list),
+  :where(.scope) :global(.organization-location-children) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     min-width: 0;
   }
-  :where(.scope) :global(.organization-location-item > div:first-child),
-  :where(.scope) :global(.organization-location-item > .organization-item-actions) {
-    flex-basis: 100%;
+  :where(.scope) :global(.organization-location-children) {
+    margin-inline-start: var(--space-inline);
+    padding-inline-start: var(--space-group);
+    border-inline-start: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.organization-location-list li) {
+    min-width: 0;
+  }
+  :where(.scope)
+    :global(.organization-location-children > li:last-child > .organization-location-item) {
+    padding-block-end: 0;
+    border-block-end: 0;
+  }
+  :where(.scope) :global(.organization-location-item) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-group);
+    padding-block: 16px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.organization-location-meta) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-inline);
+    margin-top: 4px;
+  }
+  :where(.scope) :global(.organization-location-meta .badge) {
+    display: inline-flex;
+  }
+  :where(.scope) :global(.organization-location-controls) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-inline);
     min-width: 0;
   }
   :where(.scope) :global(.organization-location-item strong) {
     overflow-wrap: anywhere;
   }
-  :where(.scope) :global(.organization-location-item > .settings-editor[open]) {
-    order: 0;
+  :where(.scope) :global(.organization-location-controls .organization-item-actions) {
+    display: contents;
+  }
+  :where(.scope)
+    :global(.organization-location-controls > .settings-editor:not(.organization-sublocation)) {
+    margin-inline-start: auto;
+  }
+  :where(.scope) :global(.organization-location-controls > .settings-editor) {
+    padding: 0;
+    border: 0;
+  }
+  :where(.scope) :global(.organization-location-controls > .settings-editor > summary),
+  :where(.scope) :global(.organization-location-controls .organization-delete > summary) {
+    box-sizing: border-box;
+    width: fit-content;
+    max-width: 100%;
+    min-height: var(--control-height);
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 22px;
+  }
+  :where(.scope) :global(.organization-location-controls summary::marker) {
+    font-size: 10px;
+  }
+  :where(.scope) :global(.organization-location-controls .organization-item-actions > small) {
+    flex-basis: 100%;
+    max-width: none;
+    margin: 0;
+    text-align: end;
+    font-size: 12px;
+    line-height: 16px;
+  }
+  :where(.scope) :global(.organization-location-controls .button) {
+    width: auto;
+    box-shadow: none;
+  }
+  :where(.scope) :global(.organization-location-controls label > span[aria-hidden='true']) {
+    display: inline;
+  }
+  :where(.scope) :global(.organization-location-controls > .settings-editor[open]),
+  :where(.scope) :global(.organization-location-controls .organization-delete[open]) {
+    flex-basis: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+  :where(.scope)
+    :global(.organization-location-controls .organization-delete summary:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
   }
   @media (max-width: 767px) {
-    :where(.scope) :global(.organization-location-item) {
-      flex-direction: column;
-      flex-wrap: nowrap;
-      align-items: stretch;
+    :where(.scope) :global(.organization-location-children) {
+      margin-inline-start: 0;
+      padding-inline-start: var(--space-inline);
     }
-    :where(.scope) :global(.organization-location-item > div:first-child),
-    :where(.scope) :global(.organization-location-item > .organization-item-actions),
-    :where(.scope) :global(.organization-location-item > .settings-editor[open]) {
-      flex-basis: auto;
+    :where(.scope)
+      :global(.organization-location-controls > .settings-editor:not(.organization-sublocation)) {
+      margin-inline-start: 0;
+    }
+    :where(.scope) :global(.organization-location-controls .organization-item-actions > small) {
+      text-align: start;
+    }
+    :where(.scope) :global(.organization-location-controls .organization-sublocation) {
+      flex-basis: 100%;
     }
     :where(.scope) :global(.organization-page) {
-      gap: 20px;
+      gap: var(--space-section);
     }
     :where(.scope) :global(.organization-timezone > .stack) {
       grid-template-columns: minmax(0, 1fr);
@@ -66,7 +152,7 @@
   :where(.scope) :global(.people-page) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
+    gap: var(--space-section);
   }
   :where(.scope) :global(.people-directory) {
     min-width: 0;
@@ -80,8 +166,8 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 20px 24px;
+    gap: var(--space-group);
+    padding: var(--space-group) var(--space-section);
   }
   :where(.scope) :global(.people-directory-heading h2) {
     font-size: 18px;
@@ -113,10 +199,10 @@
   :where(.scope) :global(.people-directory > .people-views) {
     margin: 0;
     padding: 0 24px 20px;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.people-directory-toolbar) {
-    padding: 20px 24px;
+    padding: var(--space-group) var(--space-section);
     background: var(--color-surface-subtle);
     border-block: 1px solid var(--color-border);
   }
@@ -140,6 +226,95 @@
     padding: 0;
     margin: 0;
   }
+  :where(.scope) :global(.people-selection) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-subtle);
+  }
+  :where(.scope) :global(.people-select-all),
+  :where(.scope) :global(.person-select),
+  :where(.scope) :global(.people-delete-acknowledgement) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-inline);
+    min-height: var(--control-height);
+    cursor: pointer;
+  }
+  :where(.scope) :global(.person-select) {
+    flex-shrink: 0;
+    min-width: var(--control-height);
+    justify-content: center;
+  }
+  :where(.scope) :global(.people-selection > [role='status']) {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+  :where(.scope) :global(.people-delete) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.people-delete > summary) {
+    list-style: none;
+  }
+  :where(.scope) :global(.people-delete > summary::-webkit-details-marker) {
+    display: none;
+  }
+  :where(.scope) :global(.people-selection > .people-delete[open]) {
+    flex-basis: 100%;
+  }
+  :where(.scope) :global(.people-delete-confirmation) {
+    padding: var(--space-group);
+    margin-top: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.people-delete-confirmation h4),
+  :where(.scope) :global(.people-delete-confirmation p) {
+    margin: 0;
+  }
+  :where(.scope) :global(.people-delete-names) {
+    margin: 0;
+    padding-inline-start: 20px;
+    max-height: 200px;
+    overflow: auto;
+  }
+  :where(.scope) :global(.people-delete-names:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
+  }
+  :where(.scope) :global(.people-delete-acknowledgement) {
+    align-items: flex-start;
+  }
+  :where(.scope) :global(.people-delete-acknowledgement input) {
+    margin-top: 4px;
+  }
+  :where(.scope) :global(.people-delete-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline);
+  }
+  @media (max-width: 1199px) {
+    :where(.scope) :global(.person-card:has(.person-select) .person-card-meta) {
+      padding-inline-start: calc(var(--control-height) + 72px);
+    }
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.people-selection) {
+      padding-inline: 16px;
+    }
+    :where(.scope) :global(.person-card-identity) {
+      gap: var(--space-inline);
+    }
+    :where(.scope) :global(.person-card:has(.person-select) .person-card-meta) {
+      padding-inline-start: calc(var(--control-height) + 56px);
+    }
+  }
   :where(.scope) :global(.person-access-change .settings-editor) {
     padding: 0;
     border: 0;
@@ -153,11 +328,11 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.people-invitation) {
     display: grid;
-    gap: 20px;
+    gap: var(--space-group);
   }
   :where(.scope) :global(.people-invitation h2) {
     margin: 8px 0;
@@ -169,7 +344,7 @@
   :where(.scope) :global(.people-invite-form) {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    gap: var(--space-group);
     align-items: end;
   }
   :where(.scope) :global(.people-invite-actions) {
@@ -204,7 +379,7 @@
     :where(.scope) :global(.people-directory > .people-directory-heading) {
       flex-wrap: nowrap;
       align-items: flex-start;
-      padding: 16px;
+      padding: var(--space-group);
     }
     :where(.scope) :global(.people-directory > .people-directory-heading > div) {
       min-width: 0;
@@ -213,7 +388,7 @@
       padding-bottom: 16px;
     }
     :where(.scope) :global(.people-directory > .people-directory-toolbar) {
-      padding: 16px;
+      padding: var(--space-group);
     }
   }
   @media (max-width: 767px) {
@@ -226,6 +401,16 @@
     padding: 16px 0;
     border-bottom: 1px solid var(--color-border);
     min-width: 0;
+  }
+  :where(.scope) :global(.management-item > .settings-editor:not([open])) {
+    flex-shrink: 0;
+    padding: 0;
+    border: 0;
+    align-self: flex-start;
+  }
+  :where(.scope) :global(.management-item > .settings-editor:not([open]) > summary) {
+    white-space: nowrap;
+    overflow-wrap: normal;
   }
   :where(.scope) :global(.settings-editor > summary) {
     cursor: pointer;
@@ -277,7 +462,7 @@
   :where(.scope) :global(.automation-list-welcome-copy > .administration-card-icon) {
     width: 44px;
     height: 44px;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-group);
   }
   :where(.scope) :global(.automation-list-manage .settings-editor) {
     padding: 0;
@@ -317,7 +502,7 @@
   :where(.scope) :global(.administration-jump-nav) {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-inline);
     margin-bottom: 32px;
   }
   :where(.scope) :global(.administration-hub-group) {
@@ -348,7 +533,7 @@
     display: grid;
     grid-template-columns: 44px minmax(220px, 1fr) minmax(220px, 0.9fr);
     align-items: center;
-    gap: 16px;
+    gap: var(--space-group);
     padding: 16px 24px;
   }
   :where(.scope) :global(.administration-setting-row + .administration-setting-row) {
@@ -375,7 +560,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-inline);
   }
   :where(.scope) :global(.administration-setting-title h3) {
     margin: 0;
@@ -408,7 +593,7 @@
     min-height: 40px;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-inline);
     color: var(--color-accent);
     font-size: 14px;
     font-weight: 600;
@@ -442,13 +627,67 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.administration-jump-nav) {
-      gap: 8px;
-      margin-bottom: 24px;
+      gap: var(--space-inline);
+      margin-bottom: var(--space-section);
     }
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.administration-hub-group) {
-      margin-top: 24px;
+      margin-top: var(--space-section);
     }
+  }
+}
+
+@layer components {
+  :where(.scope) :global(.sla-policy-editor > .action-form-fields) {
+    display: grid;
+    gap: var(--space-section);
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  :where(.scope) :global(.sla-schedule),
+  :where(.scope) :global(.sla-targets) {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  :where(.scope) :global(.sla-policy-editor legend) {
+    padding: 0;
+    margin-bottom: var(--space-group);
+    font-weight: 600;
+  }
+  :where(.scope) :global(.sla-working-days) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline) var(--space-group);
+  }
+  :where(.scope) :global(.sla-working-days label) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-inline);
+    min-height: var(--control-height);
+  }
+  :where(.scope) :global(.sla-priority-row) {
+    margin: 0;
+    padding: var(--space-group);
+    min-width: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+  }
+  :where(.scope) :global(.sla-priority-row legend) {
+    margin: 0;
+    padding-inline: 4px;
+  }
+  :where(.scope) :global(.sla-policy-editor .field) {
+    min-width: 0;
+  }
+  :where(.scope) :global(.sla-policy-editor .field input) {
+    width: 100%;
+  }
+  :where(.scope) :global(.sla-policy-editor > .action-form-fields > button) {
+    justify-self: start;
   }
 }

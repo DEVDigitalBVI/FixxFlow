@@ -431,7 +431,7 @@ test('Stage 6 read-only database service, authorization, references and zero sid
       );
       await identity(db);
       assert.equal((await service(db).testAutomation(request(target.id))).error.code, 'forbidden');
-      await db.query("select set_config('request.jwt.claims',$1,true)", [
+      await db.query('select pg_temp.set_test_session($1,true)', [
         JSON.stringify({ sub: ids.admin, role: 'authenticated', aal: 'aal2' }),
       ]);
       assert.equal((await service(db).testAutomation(request(target.id))).ok, true);

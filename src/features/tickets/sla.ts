@@ -1,6 +1,7 @@
 import type { TicketStatus } from '@/types/database';
 
 import { businessMillisecondsBetween, withinSupportHours } from './business-hours';
+import { defaultSlaSchedule, validSchedule, type SlaSchedule } from './organization-sla';
 
 export type SlaTicket = {
   created_at: string;
@@ -11,6 +12,7 @@ export type SlaTicket = {
   response_sla_due_at: string | null;
   resolution_sla_due_at: string | null;
   sla_timezone?: string | null;
+  sla_schedule?: unknown;
   resolution_sla_paused_at?: string | null;
   resolution_sla_remaining_seconds?: number | null;
 };
@@ -38,6 +40,7 @@ export function evaluateSla(
   now: number,
   terminal = false,
   timezone: string | null = null,
+  schedule: SlaSchedule = defaultSlaSchedule,
 ): SlaResult {
   const due = deadline ? Date.parse(deadline) : NaN;
   if (!Number.isFinite(due))
@@ -48,14 +51,16 @@ export function evaluateSla(
       state: met ? 'met' : 'missed',
       label: met
         ? 'Met'
-        : `Missed by ${duration(timezone ? businessMillisecondsBetween(due, Date.parse(completedAt), timezone) : Date.parse(completedAt) - due)}${timezone ? ' of support time' : ''}`,
+        : `Missed by ${duration(timezone ? businessMillisecondsBetween(due, Date.parse(completedAt), timezone, schedule) : Date.parse(completedAt) - due)}${timezone ? ' of support time' : ''}`,
       deadline,
       completedAt,
     };
   }
   if (terminal)
     return { state: 'missing', label: 'No public response recorded', deadline, completedAt };
-  const remaining = timezone ? businessMillisecondsBetween(now, due, timezone) : due - now;
+  const remaining = timezone
+    ? businessMillisecondsBetween(now, due, timezone, schedule)
+    : due - now;
   if (due <= now)
     return {
       state: 'breached',
@@ -68,10 +73,10 @@ export function evaluateSla(
       deadline,
       completedAt,
     };
-  if (timezone && !withinSupportHours(now, timezone))
+  if (timezone && !withinSupportHours(now, timezone, schedule))
     return { state: 'paused', label: 'Paused · outside support hours', deadline, completedAt };
   const budget = timezone
-    ? businessMillisecondsBetween(Date.parse(startedAt), due, timezone)
+    ? businessMillisecondsBetween(Date.parse(startedAt), due, timezone, schedule)
     : due - Date.parse(startedAt);
   const warningWindow = Math.min(30 * 60000, Math.max(0, budget * 0.2));
   return {
@@ -125,6 +130,7 @@ export function ticketSla(ticket: SlaTicket, now: number) {
       now,
       terminal,
       ticket.sla_timezone,
+      validSchedule(ticket.sla_schedule) ? ticket.sla_schedule : defaultSlaSchedule,
     ),
     resolution:
       !terminal &&
@@ -156,6 +162,7 @@ export function ticketSla(ticket: SlaTicket, now: number) {
               now,
               false,
               ticket.sla_timezone,
+              validSchedule(ticket.sla_schedule) ? ticket.sla_schedule : defaultSlaSchedule,
             ),
   };
 }

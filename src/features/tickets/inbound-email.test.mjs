@@ -107,3 +107,76 @@ test('HTML fallback extracts text without decoding entities twice', () => {
   assert.equal(messageBody(null, '<script>never closed'), '');
   assert.equal(messageBody(null, '<p>visible</p><unfinished'), 'visible');
 });
+
+test('thread headers are case insensitive and only canonical bounded Message-IDs pass through', () => {
+  const { emailThreadHeaders, messageIds, emailAttachmentIds } = load(
+    'src/features/tickets/inbound-email.ts',
+    { 'server-only': {} },
+  );
+  assert.deepEqual(
+    emailThreadHeaders({
+      message_id: '<reply@example.test>',
+      headers: {
+        'In-Reply-To': '<parent@example.test>',
+        References: '<first@example.test>\r\n <parent@example.test>',
+      },
+    }),
+    {
+      message_id: '<reply@example.test>',
+      reply_message_ids: ['<first@example.test>', '<parent@example.test>'],
+    },
+  );
+  assert.deepEqual(messageIds('bad\r\nInjected: header'), []);
+  assert.equal(
+    messageIds(Array.from({ length: 70 }, (_, i) => `<id${i}@test.example>`).join(' ')).length,
+    50,
+  );
+  assert.deepEqual(emailAttachmentIds([{ id: 'file' }, { id: 'file' }, null, { id: 42 }]), [
+    'file',
+  ]);
+});
+test('signature cleanup preserves the query and removes known plaintext and HTML signatures without fetching images', () => {
+  assert.equal(
+    messageBody('The VPN fails.\n\n-- \nJordan\nIT Manager\nhttps://example.test', null),
+    'The VPN fails.',
+  );
+  assert.equal(
+    messageBody(
+      'Please check the attached log.\n\nKind regards,\nJordan Morgan\nPhone: +1 555 555 5555',
+      null,
+    ),
+    'Please check the attached log.',
+  );
+  assert.equal(
+    messageBody('Thanks\nThe printer is still broken.', null),
+    'Thanks\nThe printer is still broken.',
+  );
+  assert.equal(
+    messageBody(
+      null,
+      '<p>Screen is blank &#x2014; please help.</p><div class="gmail_signature">Jordan<img src="https://track.example/pixel"></div>',
+    ),
+    'Screen is blank — please help.',
+  );
+  assert.equal(
+    messageBody(null, '<p>My update.</p><blockquote>Old message</blockquote>'),
+    'My update.',
+  );
+});
+
+test('inline screenshots are eligible only before known signature and quote containers', () => {
+  const { emailInlineAttachmentIds } = load('src/features/tickets/inbound-email.ts', {
+    'server-only': {},
+  });
+  const attachments = [
+    { id: 'screen', content_id: 'screen-shot' },
+    { id: 'logo', content_id: 'logo' },
+  ];
+  assert.deepEqual(
+    emailInlineAttachmentIds(
+      attachments,
+      '<p>See this error.</p><img src="cid:screen-shot"><div id="Signature"><img src="cid:logo"></div>',
+    ),
+    ['screen'],
+  );
+});

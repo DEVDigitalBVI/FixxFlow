@@ -37,6 +37,7 @@ import { createClient } from '@/lib/supabase/server';
 
 import { activityProfileIds, ActivityTimeline } from './activity-timeline';
 import { IncidentPanel } from './incident-panel';
+import { scheduleDescription } from './organization-sla';
 import { safeQueueReturn } from './queue-navigation';
 import { rateResolution } from './rating-actions';
 import { describeRating, ratingWindowOpen } from './ratings';
@@ -300,7 +301,7 @@ export async function TicketDetail({
       .limit(HISTORY_PAGE_SIZE),
     supabase
       .from('ticket_attachments')
-      .select('id, file_name, storage_path, size_bytes, created_at')
+      .select('id, file_name, storage_path, size_bytes, created_at, is_internal')
       .eq('organization_id', viewer.organizationId)
       .eq('ticket_id', ticketId)
       .order('created_at', { ascending: false })
@@ -610,6 +611,7 @@ export async function TicketDetail({
                   <a key={a.id} href={urls.get(a.storage_path)} target="_blank" rel="noreferrer">
                     <strong>{a.file_name}</strong>
                     <span>
+                      {a.is_internal ? 'Internal email attachment · ' : ''}
                       {Math.ceil(a.size_bytes / 1024)} KB · <Timestamp value={a.created_at} />
                     </span>
                   </a>
@@ -653,12 +655,12 @@ export async function TicketDetail({
               </SlaClock>
               <p className="muted">
                 {ticket.sla_timezone
-                  ? `Support hours: 7 AM–10 PM every day (${ticket.sla_timezone}). Both clocks stop overnight. Waiting on user pauses resolution only; on-hold time counts during support hours.`
+                  ? `Support hours: ${scheduleDescription(ticket.sla_schedule)} (${ticket.sla_timezone}). Both clocks stop outside working hours. Waiting on user pauses resolution only; on-hold time counts during support hours.`
                   : 'Completed under the previous calendar-hours policy. Historical SLA results are preserved.'}
               </p>
               <details>
                 <summary>SLA targets</summary>
-                <SlaPolicy />
+                <SlaPolicy targets={ticket.sla_targets} schedule={ticket.sla_schedule} />
                 <p className="muted">
                   Priority changes adjust unfinished targets from creation. Reopening resumes the
                   existing resolution target, including recorded waiting pauses. A requester reply

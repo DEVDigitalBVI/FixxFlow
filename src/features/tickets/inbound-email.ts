@@ -42,7 +42,7 @@ export function emailAddress(value: unknown): string | null {
 }
 
 /** Extracts text only; the result must always be rendered as text, never HTML. */
-function htmlText(html: string): string {
+function htmlText(html: string, inlineCids?: Set<string>): string {
   const output: string[] = [];
   let hidden: string | null = null;
   let cursor = 0;
@@ -75,8 +75,22 @@ function htmlText(html: string): string {
     const name = (closing ? tag.slice(1).trimStart() : tag).match(/^[a-z0-9]+/)?.[0];
     if (hidden) {
       if (closing && name === hidden) hidden = null;
-    } else if (!closing && (name === 'script' || name === 'style')) hidden = name;
-    else if (name === 'br' || (closing && ['p', 'div', 'li'].includes(name ?? '')))
+    } else if (!closing && ['script', 'style', 'head'].includes(name ?? '')) hidden = name ?? null;
+    else if (
+      !closing &&
+      /(?:gmail_signature|gmail_quote|yahoo_quoted|moz-signature|divrplyfwdmsg|id=["']signature["'])/i.test(
+        tag,
+      ) &&
+      output.join('').trim()
+    )
+      break;
+    else if (!closing && name === 'img') {
+      const cid = tag.match(/\bsrc\s*=\s*["']cid:([^"']+)["']/i)?.[1];
+      if (cid) inlineCids?.add(cid.replace(/^<|>$/g, '').toLowerCase());
+    } else if (!closing && name === 'blockquote') {
+      if (output.some((value) => value.trim())) break;
+      hidden = 'blockquote';
+    } else if (name === 'br' || (closing && ['p', 'div', 'li'].includes(name ?? '')))
       output.push('\n');
     cursor = end + 1;
   }
@@ -91,7 +105,16 @@ function htmlText(html: string): string {
   // One pass prevents an encoded ampersand from starting a second decode.
   return output
     .join('')
-    .replace(/&(nbsp|amp|lt|gt|quot|#39);/g, (_, name: string) => entities[name]);
+    .replace(/&(nbsp|amp|lt|gt|quot|#39|#x[0-9a-f]{1,6}|#\d{1,7});/gi, (_, name: string) => {
+      if (entities[name.toLowerCase()]) return entities[name.toLowerCase()];
+      const value = Number.parseInt(
+        name.slice(name[1]?.toLowerCase() === 'x' ? 2 : 1),
+        name[1]?.toLowerCase() === 'x' ? 16 : 10,
+      );
+      return value > 0 && value <= 0x10ffff && !(value >= 0xd800 && value <= 0xdfff)
+        ? String.fromCodePoint(value)
+        : '';
+    });
 }
 
 /** First recipient on the inbound domain, as a workspace slug. */
@@ -113,19 +136,88 @@ export function workspaceSlug(recipients: unknown[], domain: string): string | n
 export function messageBody(text: string | null | undefined, html: string | null | undefined) {
   const source = text?.trim() || htmlText(html ?? '');
   const kept: string[] = [];
-  for (const line of source.replace(/\r\n?/g, '\n').split('\n')) {
+  const lines = source.slice(0, 250000).replace(/\r\n?/g, '\n').split('\n');
+  let hasContent = false;
+  for (const [index, line] of lines.entries()) {
+    if (
+      hasContent &&
+      /^(?:Kind regards|Best regards|Regards|Sincerely|Thanks|Thank you)[,!]?$/i.test(line.trim())
+    ) {
+      const tail = lines.slice(index + 1).filter((value) => value.trim());
+      if (
+        tail.length <= 12 &&
+        (tail.some((value) => /@|https?:|(?:tel|phone|mobile):|\+?\d[\d ()-]{6,}/i.test(value)) ||
+          (tail.length <= 2 && tail.every((value) => /^[\p{L} .'-]{1,60}$/u.test(value))))
+      )
+        break;
+    }
     if (
       /^On .+wrote:\s*$/i.test(line.trim()) ||
-      /^-{2,}\s*Original Message\s*-{2,}$/i.test(line.trim())
+      /^-{2,}\s*Original Message\s*-{2,}$/i.test(line.trim()) ||
+      (hasContent &&
+        (/^-- $/.test(line) ||
+          /^(?:Sent from my (?:iPhone|iPad|Android)|Get Outlook for (?:iOS|Android))/i.test(
+            line.trim(),
+          )))
     )
       break;
     if (/^From: .+/i.test(line.trim()) && kept.length) break;
     if (line.trimStart().startsWith('>')) continue;
     kept.push(line);
+    if (line.trim()) hasContent = true;
   }
   return kept
     .join('\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim()
     .slice(0, 19000);
+}
+
+/** Canonical RFC Message-IDs only: no arbitrary header text reaches SQL or outgoing headers. */
+export function messageIds(value: unknown): string[] {
+  if (typeof value !== 'string') return [];
+  const raw = value.slice(0, 30000);
+  const matches: string[] = raw.match(/<[^<>\s@]{1,250}@[^<>\s@]{1,250}>/g) ?? [];
+  if (!matches.length && /^[^<>\s@]{1,250}@[^<>\s@]{1,250}$/.test(raw)) matches.push(`<${raw}>`);
+  return [...new Set(matches)].slice(-50);
+}
+export function emailThreadHeaders(email: { message_id?: unknown; headers?: unknown }) {
+  const headers =
+    email.headers && typeof email.headers === 'object'
+      ? Object.fromEntries(
+          Object.entries(email.headers).map(([key, value]) => [key.toLowerCase(), value]),
+        )
+      : {};
+  const message_id = messageIds(email.message_id ?? headers['message-id'])[0] ?? null;
+  const reply_message_ids = [
+    ...new Set([...messageIds(headers.references), ...messageIds(headers['in-reply-to'])]),
+  ].slice(-50);
+  return { message_id, reply_message_ids };
+}
+export function emailAttachmentIds(attachments: unknown): string[] {
+  if (!Array.isArray(attachments)) return [];
+  return [
+    ...new Set(
+      attachments.flatMap((item) =>
+        item && typeof item.id === 'string' && item.id.length > 0 && item.id.length <= 200
+          ? [item.id]
+          : [],
+      ),
+    ),
+  ].slice(0, 20);
+}
+
+/** Only inline images referenced before known signature/quote containers are eligible. */
+export function emailInlineAttachmentIds(attachments: unknown, html: unknown): string[] {
+  if (!Array.isArray(attachments) || typeof html !== 'string') return [];
+  const cids = new Set<string>();
+  htmlText(html.slice(0, 2000000), cids);
+  return emailAttachmentIds(
+    attachments.filter(
+      (item) =>
+        item &&
+        typeof item.content_id === 'string' &&
+        cids.has(item.content_id.replace(/^<|>$/g, '').toLowerCase()),
+    ),
+  );
 }

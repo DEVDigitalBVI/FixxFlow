@@ -32,9 +32,7 @@ test('outcome emails capture the exact transition, actor, owner and priority acr
         [org, id, name],
       );
     }
-    await db.query("select set_config('request.jwt.claims',$1,false)", [
-      JSON.stringify({ sub: worker }),
-    ]);
+    await db.query('select pg_temp.set_test_session($1,false)', [JSON.stringify({ sub: worker })]);
     await db.query(
       "insert into public.tickets(id,organization_id,requester_id,assigned_technician_id,title,description,status,priority) values($1,$2,$3,$4,'Printer','PRIVATE BODY','in_progress','high')",
       [ticket, org, employee, worker],

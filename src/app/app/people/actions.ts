@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+import { PEOPLE_DELETE_LIMIT } from '@/features/administration/people-deletion-model';
 import type { ActionResult } from '@/lib/action-result';
 import { requireViewer } from '@/lib/auth/viewer';
 import { formString } from '@/lib/form-data';
@@ -10,6 +11,57 @@ import { isUuid } from '@/lib/ids';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import type { AppRole, MembershipStatus } from '@/types/database';
+
+export async function deletePeople(form: FormData): Promise<ActionResult> {
+  const viewer = await requireViewer();
+  if (!['administrator', 'technician'].includes(viewer.role))
+    return { error: 'Only IT staff can delete people from this workspace.' };
+  const rawIds = form.getAll('personIds');
+  if (
+    !rawIds.length ||
+    rawIds.length > PEOPLE_DELETE_LIMIT ||
+    rawIds.some((id) => typeof id !== 'string' || !isUuid(id))
+  )
+    return { error: `Select between 1 and ${PEOPLE_DELETE_LIMIT} people on this page.` };
+  const ids = [...new Set(rawIds as string[])];
+  if (ids.includes(viewer.id)) return { error: 'You cannot delete yourself from the workspace.' };
+  if (form.get('confirmDelete') !== 'yes')
+    return { error: 'Confirm that you want to delete the selected people from this workspace.' };
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc('delete_workspace_people', {
+    org: viewer.organizationId,
+    targets: ids,
+    confirmed: true,
+  });
+  if (error || data === null) {
+    if (error?.code === '42501')
+      return {
+        error:
+          'This selection is no longer permitted. Technicians can delete employees only. Reload and review the selection.',
+      };
+    if (error?.code === 'P0002')
+      return {
+        error:
+          'A selected person is no longer available in this workspace. Reload and review the selection.',
+      };
+    return {
+      error:
+        'Deletion could not be confirmed. Your selection is preserved. Refresh to check the directory, or retry safely.',
+    };
+  }
+  revalidatePath('/app', 'layout');
+  const query = new URLSearchParams();
+  const search = formString(form, 'q', '').slice(0, 200);
+  if (search) query.set('q', search);
+  if (form.get('view') === 'technicians') query.set('view', 'technicians');
+  query.set(
+    'success',
+    data
+      ? `${data === 1 ? '1 person' : `${data} people`} deleted from the workspace. Existing history is preserved.`
+      : 'The selected people were already deleted from the workspace.',
+  );
+  return { redirectTo: `/app/people?${query}` };
+}
 
 export async function updateMemberDetails(form: FormData): Promise<ActionResult> {
   const viewer = await requireViewer();
@@ -106,11 +158,13 @@ export async function inviteMember(formData: FormData): Promise<ActionResult> {
   if (prepareError || !invitation)
     return {
       error:
-        prepareError?.code === 'PT429'
-          ? 'An invitation is already being sent. Your entries are preserved; retry in two minutes.'
-          : prepareError?.code === 'PT409'
-            ? 'This account or invitation already exists. Retry with the original invitation details, or manage the member in People.'
-            : 'The invitation could not be prepared. Your entries are preserved; please try again.',
+        prepareError?.code === 'PT410'
+          ? 'This person was deleted from the workspace. Their history is retained; contact your administrator to arrange access recovery.'
+          : prepareError?.code === 'PT429'
+            ? 'An invitation is already being sent. Your entries are preserved; retry in two minutes.'
+            : prepareError?.code === 'PT409'
+              ? 'This account or invitation already exists. Retry with the original invitation details, or manage the member in People.'
+              : 'The invitation could not be prepared. Your entries are preserved; please try again.',
     };
   if (invitation.completed)
     return {

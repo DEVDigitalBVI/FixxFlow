@@ -89,7 +89,7 @@ test('intake triggers and article reply run through real durable worker authorit
           "insert into auth.mfa_factors(id,user_id,factor_type,status) values($1,$2,'totp','verified')",
           [randomUUID(), platform],
         );
-        await db.query("select set_config('request.jwt.claims',$1,true)", [
+        await db.query('select pg_temp.set_test_session($1,true)', [
           JSON.stringify({
             sub: platform,
             role: 'authenticated',

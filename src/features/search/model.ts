@@ -17,6 +17,7 @@ export function searchDestinations(role: AppRole, inventory: boolean): SearchRes
     '/app/tickets': ['requests', 'issues'],
     '/app/chat': ['chats', 'messages'],
     '/app/help': ['help', 'articles', 'guides'],
+    '/app/faq': ['fixxflow', 'faq', 'getting started', 'product help'],
     '/app/administration': ['administration', 'admin', 'configuration'],
   };
   return [
@@ -24,6 +25,7 @@ export function searchDestinations(role: AppRole, inventory: boolean): SearchRes
     ['/app/tickets', employee ? 'My requests' : 'Ticket queue'],
     ['/app/chat', employee ? 'My chats' : 'Live chat'],
     ['/app/help', employee ? 'Help articles' : 'Knowledge base'],
+    ['/app/faq', 'FixxFlow Help & FAQ'],
     ['/app/assets', employee ? 'My equipment' : 'Assets'],
     ...(inventory ? [['/app/inventory', employee ? 'Request an item' : 'Inventory']] : []),
     ...(!employee

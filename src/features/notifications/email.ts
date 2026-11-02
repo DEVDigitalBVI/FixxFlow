@@ -125,6 +125,7 @@ const emailReasons: Record<NotificationKind, { label: string; message: string; a
 export type NotificationEmailRouting = {
   ticketNumber?: number;
   replyTo?: string;
+  inReplyTo?: string;
   workspaceName?: string;
 };
 
@@ -241,6 +242,9 @@ export async function sendNotificationEmail(
       from: config.from.trim(),
       to: [item.recipient_email],
       reply_to: emailReplies ? routing.replyTo : 'support@fixxflow.app',
+      ...(emailReplies && routing.inReplyTo
+        ? { headers: { 'In-Reply-To': routing.inReplyTo, References: routing.inReplyTo } }
+        : {}),
       subject: `FixxFlow: ${subject}${ticketTag}`,
       text: incident
         ? `${item.title}\n\n${message}\n\n${note}\n\n${announcement ? 'View announcement' : 'View approved update'}:\n${url}`

@@ -105,7 +105,7 @@ export const administrationSections = [
     slug: 'slas',
     title: 'SLAs',
     group: 'Service delivery',
-    status: 'Fixed',
+    status: 'Available',
     description: 'First response and resolution targets by priority.',
   },
   {

@@ -7,6 +7,7 @@ import type { ActionResult } from '@/lib/action-result';
 
 import { Alert } from './alert';
 import { Button } from './button';
+import { closeSavedDisclosure } from './close-saved-disclosure';
 import { FormPendingContext } from './form-pending';
 import { revealField } from './reveal-field';
 import { useUnsavedChanges } from './unsaved-changes';
@@ -91,7 +92,7 @@ export function ActionForm({
           try {
             const next = await action(data);
             setResult(next);
-            if (next.success || next.redirectTo) {
+            if (!next.error && (next.success || next.redirectTo)) {
               releaseDraft();
               setDirty(false);
               baseline.current = null;
@@ -103,10 +104,14 @@ export function ActionForm({
               } catch {
                 // The save already succeeded; never strand the user on the form.
               }
+              if (!next.error) closeSavedDisclosure(form);
               router.push(target);
               return;
             }
-            if (next.success && resetOnSuccess) form.reset();
+            if (next.success && !next.error) {
+              if (resetOnSuccess) form.reset();
+              closeSavedDisclosure(form);
+            }
           } catch {
             setResult({
               error:
