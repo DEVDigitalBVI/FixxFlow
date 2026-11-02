@@ -90,7 +90,7 @@ export function AnnouncementDeliveryProgress({
     document.addEventListener('visibilitychange', visible);
     const timer = window.setInterval(() => {
       if (remaining > 0) void check();
-    }, 10_000);
+    }, 2_000);
     if (initialCounts.pending > 0) void check();
     return () => {
       active = false;

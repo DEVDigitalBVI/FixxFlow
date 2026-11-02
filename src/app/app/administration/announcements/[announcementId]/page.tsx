@@ -21,6 +21,7 @@ import { createClient } from '@/lib/supabase/server';
 
 import { queueEmailAnnouncement } from '../actions';
 
+export const maxDuration = 60;
 export const metadata = { title: 'Review email announcement' };
 export default async function EmailAnnouncementReviewPage({
   params,

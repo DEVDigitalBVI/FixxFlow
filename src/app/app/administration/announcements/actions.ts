@@ -1,7 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { after } from 'next/server';
 
+import { startEmailAnnouncementDelivery } from '@/features/email-announcements/dispatch';
 import { emailAnnouncementsPath } from '@/features/email-announcements/model';
 import { getNotificationEmailConfiguration } from '@/features/notifications/configuration';
 import type { ActionResult } from '@/lib/action-result';
@@ -88,6 +90,7 @@ export async function queueEmailAnnouncement(form: FormData): Promise<ActionResu
   }
   revalidatePath(emailAnnouncementsPath);
   revalidatePath(`${emailAnnouncementsPath}/${target}`);
+  after(startEmailAnnouncementDelivery);
   return {
     success: `Announcement queued for ${data} members. Delivery runs in the background.`,
     redirectTo: `${emailAnnouncementsPath}/${target}?sending=1`,

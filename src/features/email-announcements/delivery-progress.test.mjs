@@ -14,7 +14,8 @@ test('automatic return waits for confirmed sent status, preserving the progress 
     oldInterval = globalThis.setInterval,
     oldClear = globalThis.clearInterval;
   let tick;
-  globalThis.setInterval = (callback) => {
+  globalThis.setInterval = (callback, interval) => {
+    assert.equal(interval, 2000);
     tick = callback;
     return 1;
   };

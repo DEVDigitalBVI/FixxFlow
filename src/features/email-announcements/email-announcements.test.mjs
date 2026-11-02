@@ -35,6 +35,8 @@ function actions(role = 'administrator', error = null, configured = true) {
   const calls = [];
   const api = load('src/app/app/administration/announcements/actions.ts', {
     'next/cache': { revalidatePath: (path) => calls.push(['refresh', path]) },
+    'next/server': { after: (callback) => calls.push(['after', callback]) },
+    '@/features/email-announcements/dispatch': { startEmailAnnouncementDelivery: async () => {} },
     '@/lib/auth/viewer': {
       requireWorkspaceAccess: async () => ({ role, organizationId: 'trusted-org' }),
     },
@@ -112,6 +114,7 @@ test('sending requires review confirmation, administrator access and configured 
   );
   assert.match(result.success, /queued for 1/);
   assert.equal(result.redirectTo, `/app/administration/announcements/${announcementId}?sending=1`);
+  assert.equal(api.calls.filter(([name]) => name === 'after').length, 1);
   assert.deepEqual(api.calls[0], [
     'queue_email_announcement',
     { org: 'trusted-org', target: announcementId },
@@ -259,7 +262,9 @@ test('email worker is cron-only and acknowledges both sent mail and retryable fa
       lease_token: 'lease',
       recipient_email: 'employee@example.invalid',
     };
+    let claimed = false;
     const { GET } = load('src/app/api/cron/email-announcements/route.ts', {
+      'node:timers/promises': { setTimeout: async () => {} },
       '@/lib/cron-auth': { isCronAuthorized: () => options.authorized !== false },
       '@/features/notifications/configuration': {
         getNotificationEmailConfiguration: () => (options.configured === false ? null : config),
@@ -276,9 +281,12 @@ test('email worker is cron-only and acknowledges both sent mail and retryable fa
         createAdminClient: () => ({
           rpc: async (name, args) => {
             calls.push([name, args]);
-            return name === 'claim_email_announcements'
-              ? { data: [delivery], error: null }
-              : { data: !options.failAck, error: null };
+            if (name === 'claim_email_announcements') {
+              const data = claimed ? [] : [delivery];
+              claimed = true;
+              return { data, error: null };
+            }
+            return { data: !options.failAck, error: null };
           },
         }),
       },
