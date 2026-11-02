@@ -296,12 +296,12 @@ const chatProps = {
   initialMessages: [],
   attachments: [],
 };
-test('live support defaults to internal notes and blocks shared attachments on notes', () => {
+test('live support defaults to employee replies with explicit audience and shared attachments', () => {
   const html = renderToStaticMarkup(React.createElement(ChatRoom, chatProps));
-  assert.match(html, /value="internal_note" selected=""/);
-  assert.match(html, /Only IT staff can see this note/);
-  assert.match(html, /Files are always shared with the employee/);
-  assert.match(html, /type="file"[^>]*disabled=""/);
+  assert.match(html, /value="message" selected=""/);
+  assert.match(html, /Visible to the employee/);
+  assert.match(html, /Attach a file for the employee/);
+  assert.doesNotMatch(html, /type="file"[^>]*disabled=""/);
   assert.match(html, /aria-describedby="chat-audience"/);
 });
 test('employee live support offers a public composer only', () => {
@@ -352,6 +352,12 @@ test('switching live chat audience keeps independent drafts', () => {
     }
   };
   let tree = render();
+  find(tree, 'select').props.onChange({ target: { value: 'internal_note' } });
+  tree = render();
+  const note = renderToStaticMarkup(tree);
+  assert.match(note, /Only IT staff can see this note/);
+  assert.match(note, /Files are always shared with the employee/);
+  assert.match(note, /type="file"[^>]*disabled=""/);
   find(tree, 'textarea').props.onChange({ target: { value: 'Private diagnosis' } });
   find(tree, 'select').props.onChange({ target: { value: 'message' } });
   tree = render();
