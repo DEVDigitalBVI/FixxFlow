@@ -38,6 +38,7 @@ export function searchDestinations(role: AppRole, inventory: boolean): SearchRes
       ? [
           ['/app/administration', 'Settings'],
           ['/app/organization', 'Organization'],
+          ['/app/administration/announcements', 'Email announcements'],
         ]
       : []),
     ['/app/profile', 'Profile'],

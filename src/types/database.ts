@@ -480,6 +480,39 @@ type RuntimeTables = {
   };
 
 type RuntimeFunctions = {
+  prepare_email_announcement: {
+    Args: {
+      org: string;
+      token: string;
+      heading: string;
+      message: string;
+      selected_members?: string[] | null;
+    };
+    Returns: string;
+  };
+  email_announcement_choices: {
+    Args: { org: string; query?: string; page?: number };
+    Returns: Json;
+  };
+  read_email_announcements: {
+    Args: { org: string; target?: string | null; page?: number };
+    Returns: Json;
+  };
+  queue_email_announcement: { Args: { org: string; target: string }; Returns: number };
+  claim_email_announcements: {
+    Args: { batch_size?: number };
+    Returns: import('@/features/email-announcements/model').EmailAnnouncementDelivery[];
+  };
+  finish_email_announcement: {
+    Args: {
+      campaign: string;
+      recipient: string;
+      token: string;
+      provider_id?: string;
+      failure?: boolean;
+    };
+    Returns: boolean;
+  };
   member_account_statuses: {
     Args: { org: string; members: string[] };
     Returns: {

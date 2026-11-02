@@ -89,6 +89,12 @@ const groups: readonly {
         destinations: ['email-to-ticket'],
       },
       {
+        title: 'Email announcements',
+        description: 'Share company updates with members, with a recipient review before sending.',
+        icon: 'notifications',
+        destinations: ['announcements'],
+      },
+      {
         title: 'Teams & routing',
         description: 'Organize support teams and route requests by category.',
         icon: 'routing',
