@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/ui/page-header';
 import { OrganizationCreateForm } from '@/features/administration/organization-create-form';
 import { OrganizationItemActions } from '@/features/administration/organization-item-actions';
 import { OrganizationItemEditor } from '@/features/administration/organization-item-editor';
-import { OrganizationLocationItem } from '@/features/administration/organization-location-item';
+import { OrganizationLocationList } from '@/features/administration/organization-location-item';
 import { TimezoneSelect } from '@/features/timezones/select';
 import { TimezoneSettingsForm } from '@/features/timezones/settings-form';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -169,17 +169,12 @@ export default async function OrganizationPage({ searchParams }: Props) {
           ) : (
             !locations?.length && <EmptyState as="p">No locations yet.</EmptyState>
           )}
-          <div className="management-list">
-            {locations?.map((item) => (
-              <OrganizationLocationItem
-                key={item.id}
-                item={item}
-                addAction={addLocation}
-                toggleAction={toggleLocation}
-                deleteAction={deleteLocation}
-              />
-            ))}
-          </div>
+          <OrganizationLocationList
+            items={locations ?? []}
+            addAction={addLocation}
+            toggleAction={toggleLocation}
+            deleteAction={deleteLocation}
+          />
         </section>
       </div>
     </div>

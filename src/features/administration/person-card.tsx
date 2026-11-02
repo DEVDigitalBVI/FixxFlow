@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
+import { DisclosureActionForm } from '@/components/ui/disclosure-action-form';
 import { NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { MemberDetailsEditor } from '@/features/administration/member-details-editor';
@@ -124,7 +125,7 @@ export function PersonCard({
                 <section className="stack" aria-labelledby={`person-access-${id}`}>
                   <h4 id={`person-access-${id}`}>Workspace access</h4>
                   <p className="muted">{rolePresentation[role].description}</p>
-                  <form action={updateRole} className="stack">
+                  <DisclosureActionForm action={updateRole} className="stack">
                     <input type="hidden" name="userId" value={id} />
                     <div className="field">
                       <label htmlFor={`role-${id}`}>Role for {name}</label>
@@ -139,7 +140,7 @@ export function PersonCard({
                     <SubmitButton variant="secondary">
                       Save role<span className="sr-only"> for {name}</span>
                     </SubmitButton>
-                  </form>
+                  </DisclosureActionForm>
                   <div className="person-access-change">
                     {isSelf && status === 'active' ? (
                       <p className="muted">You can’t deactivate your own account.</p>
@@ -149,7 +150,7 @@ export function PersonCard({
                           {status === 'active' ? 'Deactivate access' : 'Restore access'}
                           <span className="sr-only"> for {name}</span>
                         </summary>
-                        <form action={updateStatus} className="stack">
+                        <DisclosureActionForm action={updateStatus} className="stack">
                           <input type="hidden" name="userId" value={id} />
                           <input
                             type="hidden"
@@ -164,7 +165,7 @@ export function PersonCard({
                           <SubmitButton variant={status === 'active' ? 'danger' : 'secondary'}>
                             {status === 'active' ? 'Confirm deactivation' : 'Restore access'}
                           </SubmitButton>
-                        </form>
+                        </DisclosureActionForm>
                       </details>
                     )}
                   </div>

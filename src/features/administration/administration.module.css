@@ -26,6 +26,26 @@
   :where(.scope) :global(.organization-timezone .field) {
     min-width: 0;
   }
+  :where(.scope) :global(.organization-location-list),
+  :where(.scope) :global(.organization-location-children) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  :where(.scope) :global(.organization-location-children) {
+    margin-inline-start: var(--space-inline);
+    padding-inline-start: var(--space-group);
+    border-inline-start: 1px solid var(--color-border);
+  }
+  :where(.scope) :global(.organization-location-list li) {
+    min-width: 0;
+  }
+  :where(.scope)
+    :global(.organization-location-children > li:last-child > .organization-location-item) {
+    padding-block-end: 0;
+    border-block-end: 0;
+  }
   :where(.scope) :global(.organization-location-item) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -104,6 +124,10 @@
     outline-offset: 4px;
   }
   @media (max-width: 767px) {
+    :where(.scope) :global(.organization-location-children) {
+      margin-inline-start: 0;
+      padding-inline-start: var(--space-inline);
+    }
     :where(.scope)
       :global(.organization-location-controls > .settings-editor:not(.organization-sublocation)) {
       margin-inline-start: 0;
@@ -377,6 +401,16 @@
     padding: 16px 0;
     border-bottom: 1px solid var(--color-border);
     min-width: 0;
+  }
+  :where(.scope) :global(.management-item > .settings-editor:not([open])) {
+    flex-shrink: 0;
+    padding: 0;
+    border: 0;
+    align-self: flex-start;
+  }
+  :where(.scope) :global(.management-item > .settings-editor:not([open]) > summary) {
+    white-space: nowrap;
+    overflow-wrap: normal;
   }
   :where(.scope) :global(.settings-editor > summary) {
     cursor: pointer;

@@ -105,3 +105,76 @@ test('depth limit hides only add sublocation and full paths remain escaped and a
     /aria-label="Deactivate location Admin Building \/ Floor &lt;one&gt; \/ Room &amp; storage"/,
   );
 });
+
+const { OrganizationLocationList } = load(
+  'src/features/administration/organization-location-item.tsx',
+  {
+    './organization-create-form': { OrganizationCreateForm: () => null },
+    './organization-item-editor': { OrganizationItemEditor: () => null },
+    './organization-item-actions': { OrganizationItemActions: () => null },
+  },
+);
+
+function location(id, parent_id = null, depth = 1, is_active = true) {
+  return {
+    id,
+    name: id,
+    path: id,
+    parent_id,
+    depth,
+    is_active,
+    city: null,
+    region: null,
+    country_code: 'VG',
+    timezone: 'America/Tortola',
+    updated_at: '2026-11-01T12:00:00Z',
+  };
+}
+
+function renderList(items) {
+  return renderToStaticMarkup(
+    React.createElement(OrganizationLocationList, {
+      items,
+      addAction: '/add',
+      toggleAction: '/toggle',
+      deleteAction: '/delete',
+    }),
+  );
+}
+
+test('sublocations render inside their parent section once, preserving sibling order and inactive entries', () => {
+  const html = renderList([
+    location('Accounting', 'Admin', 2),
+    location('Storage', 'Accounting', 3, false),
+    location('Purchasing', 'Admin', 2),
+    location('Admin'),
+    location('Warehouse'),
+  ]);
+  const lists = [];
+  const positions = [];
+  for (const token of html.matchAll(/<ul\b[^>]*|<\/ul>|<strong>([^<]*)<\/strong>/g)) {
+    if (token[0].startsWith('<ul')) lists.push(token[0].match(/aria-label="([^"]*)"/)[1]);
+    else if (token[0] === '</ul>') lists.pop();
+    else positions.push([token[1], [...lists]]);
+  }
+  assert.deepEqual(positions, [
+    ['Admin', ['Locations']],
+    ['Accounting', ['Locations', 'Sublocations of Admin']],
+    ['Storage', ['Locations', 'Sublocations of Admin', 'Sublocations of Accounting']],
+    ['Purchasing', ['Locations', 'Sublocations of Admin']],
+    ['Warehouse', ['Locations']],
+  ]);
+  assert.match(html, />Inactive<\/span>/);
+  assert.doesNotMatch(html, /role="tree"/);
+});
+
+test('all eight levels remain nested and missing parents do not hide locations', () => {
+  const items = Array.from({ length: 8 }, (_, i) =>
+    location(`Level ${i + 1}`, i ? `Level ${i}` : null, i + 1),
+  );
+  const html = renderList([...items, location('Unlinked', 'missing', 2)]);
+  assert.equal((html.match(/class="organization-location-children"/g) ?? []).length, 7);
+  for (const item of items) assert.equal(html.split(`<strong>${item.path}</strong>`).length - 1, 1);
+  assert.match(html, /<strong>Unlinked<\/strong>/);
+  assert.equal(renderList([]), '');
+});
