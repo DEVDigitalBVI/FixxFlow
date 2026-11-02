@@ -24,7 +24,7 @@ grant select on import_fixture to authenticated;
 insert into auth.users(id,email) select staff,'import-staff-'||staff||'@example.test' from import_fixture union all select employee,'import-employee-'||employee||'@example.test' from import_fixture;
 insert into public.organizations(id,name,slug) select org,'Import regression','import-'||org from import_fixture union all select other_org,'Other import regression','import-'||other_org from import_fixture;
 insert into public.organization_memberships(organization_id,user_id,role) select org,staff,'technician'::public.app_role from import_fixture union all select org,employee,'end_user' from import_fixture;
-select pg_temp.set_test_session(jsonb_build_object('sub',staff,'aal','aal2','session_id',gen_random_uuid())::text,true) from import_fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',staff,'aal','aal2')::text,true) from import_fixture;
 set local role authenticated;
 insert into public.assets(organization_id,tag,name,kind) select org,'BATCH-1','Batch laptop one','computer' from import_fixture union all select org,'BATCH-2','Batch laptop two','computer' from import_fixture;
 do $$begin
@@ -44,7 +44,7 @@ reset role;
 do $$begin
  if (select count(*) from public.audit_events where organization_id=(select org from import_fixture) and entity_type='assets' and action='created')<>2 then raise exception 'Batch audit incorrect';end if;
 end$$;
-select pg_temp.set_test_session(jsonb_build_object('sub',employee,'aal','aal2','session_id',gen_random_uuid())::text,true) from import_fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',employee,'aal','aal2')::text,true) from import_fixture;
 set local role authenticated;
 do $$begin
  begin

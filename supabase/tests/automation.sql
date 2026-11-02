@@ -45,7 +45,7 @@ insert into private.platform_owners(user_id) values('10000000-0000-0000-0000-000
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values
  (gen_random_uuid(),'10000000-0000-0000-0000-000000000801','totp','verified',now(),now()),
  (gen_random_uuid(),'10000000-0000-0000-0000-000000000805','totp','verified',now(),now());
-insert into auth.sessions(id,user_id) values('90000000-0000-0000-0000-000000000805','10000000-0000-0000-0000-000000000805');
+insert into auth.sessions(id,user_id,created_at) values('90000000-0000-0000-0000-000000000805','10000000-0000-0000-0000-000000000805',now());
 insert into public.profiles(organization_id,user_id,display_name) values
  ('20000000-0000-0000-0000-000000000801','10000000-0000-0000-0000-000000000801','Automation admin A');
 select set_config('test.definition','{"schemaVersion":1,"name":"Route network requests","description":"PRIVATE_DEFINITION","trigger":{"type":"ticket.created","configuration":{}},"conditions":{"kind":"group","id":"root","operator":"and","children":[]},"actions":[{"id":"a","type":"set_priority","position":0,"configuration":{"priority":"high"}}]}',true);

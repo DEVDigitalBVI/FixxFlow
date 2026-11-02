@@ -29,7 +29,7 @@ insert into public.organization_memberships(organization_id,user_id,role) select
 insert into public.profiles(organization_id,user_id,display_name) select org,staff,'Test IT' from fixture union all select org,employee,'Test employee' from fixture union all select other_org,outsider,'Other IT' from fixture;
 insert into private.platform_owners(user_id) select owner from fixture;
 insert into auth.sessions(id,user_id,created_at,updated_at) select session,owner,now(),now() from fixture;
-select pg_temp.set_test_session(jsonb_build_object('sub',staff,'aal','aal2','session_id',gen_random_uuid())::text,true) from fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',staff,'aal','aal2')::text,true) from fixture;
 set local role authenticated;
 insert into public.assets(id,organization_id,tag,name,kind,status,assigned_user_id) select asset,org,' test-pc ','Test laptop','computer','in_use',employee from fixture;
 do $$begin if not exists(select 1 from public.assets where tag='TEST-PC' and revision=1) then raise exception 'Tag normalization failed';end if;end$$;
@@ -42,7 +42,7 @@ do $$begin
 end$$;
 reset role;
 insert into public.assets(id,organization_id,tag,name,kind) select other_asset,other_org,'OTHER','Other equipment','computer' from fixture;
-select pg_temp.set_test_session(jsonb_build_object('sub',employee,'aal','aal2','session_id',gen_random_uuid())::text,true) from fixture;
+select pg_temp.set_test_session(jsonb_build_object('sub',employee,'aal','aal2')::text,true) from fixture;
 set local role authenticated;
 do $$declare n integer; ticket uuid; before_count bigint;after_count bigint;begin
  if (select count(*) from public.assets)<>1 then raise exception 'Employee inventory visibility failed';end if;

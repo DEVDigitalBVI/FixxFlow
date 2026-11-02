@@ -19,7 +19,7 @@ end $$;
 
 -- Transactional fixture only: no invitations, content exports, or retained events.
 begin;
-select pg_temp.set_test_session(jsonb_build_object('sub',user_id,'role','authenticated','aal','aal2','session_id',gen_random_uuid())::text,true),set_config('app.test_org',organization_id::text,true)
+select pg_temp.set_test_session(jsonb_build_object('sub',user_id,'role','authenticated','aal','aal2')::text,true),set_config('app.test_org',organization_id::text,true)
 from public.organization_memberships where role='administrator' and status='active' limit 1;
 do $$
 declare org uuid:=current_setting('app.test_org')::uuid; t uuid; c uuid; linked uuid; baseline bigint; captured bigint; initial_count bigint;
