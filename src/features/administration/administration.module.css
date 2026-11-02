@@ -1,4 +1,25 @@
 @layer components {
+  :where(.scope) :global(.member-status-badge[data-member-status='active']) {
+    color: var(--color-ticket-green);
+    background-color: var(--color-ticket-green-surface);
+  }
+  :where(.scope) :global(.member-status-badge[data-member-status='invited']) {
+    color: var(--color-ticket-blue);
+    background-color: var(--color-ticket-blue-surface);
+  }
+  :where(.scope) :global(.person-account-hint) {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: 12px;
+    line-height: 16px;
+  }
+  @media (forced-colors: active) {
+    :where(.scope) :global(.member-status-badge[data-member-status]) {
+      color: CanvasText;
+      background-color: Canvas;
+      border-color: CanvasText;
+    }
+  }
   :where(.scope) :global(.organization-page) {
     display: grid;
     gap: var(--space-section);

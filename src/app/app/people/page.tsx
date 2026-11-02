@@ -19,6 +19,7 @@ import {
 } from '@/features/administration/people-deletion-controls';
 import { canDeletePerson } from '@/features/administration/people-deletion-model';
 import { PersonCard } from '@/features/administration/person-card';
+import { isMemberAccountStatus } from '@/features/identity/member-status';
 import { rolePresentation } from '@/features/identity/role';
 import { PermissionsForm } from '@/features/inventory/forms';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -79,6 +80,20 @@ export default async function PeoplePage({ searchParams }: Props) {
         : Promise.resolve({ data: [], error: null }),
     ]);
   if (membersError) throw new Error('Unable to load members.');
+  const { data: accountStates, error: accountStatesError } = memberships?.length
+    ? await supabase.rpc('member_account_statuses', {
+        org: viewer.organizationId,
+        members: memberships.map((member) => member.user_id),
+      })
+    : { data: [], error: null };
+  if (accountStatesError) throw new Error('Account statuses could not load. Please try again.');
+  const statusesByUser = new Map(
+    (accountStates ?? []).map((member) => [member.user_id, member.account_status]),
+  );
+  if (
+    memberships?.some((member) => !isMemberAccountStatus(statusesByUser.get(member.user_id) ?? ''))
+  )
+    throw new Error('Account statuses could not load. Please try again.');
   const { data: profiles, error: profilesError } = memberships?.length
     ? await supabase
         .from('profiles')
@@ -363,7 +378,7 @@ export default async function PeoplePage({ searchParams }: Props) {
                     }
                     avatarUrl={profile?.avatar_path ? avatarsByPath.get(profile.avatar_path) : null}
                     role={member.role}
-                    status={member.status}
+                    status={statusesByUser.get(member.user_id)!}
                     isSelf={member.user_id === viewer.id}
                     canManage={canManage}
                     profile={profile}

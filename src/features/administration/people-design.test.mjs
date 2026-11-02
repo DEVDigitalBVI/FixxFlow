@@ -226,3 +226,77 @@ test('read authorization, query scope, paging and failures remain server enforce
     /Unable to load members/,
   );
 });
+
+test('invited people have a separate written onboarding state and retain correct access controls', () => {
+  const html = render(React.createElement(PersonCard, { ...person, status: 'invited' }));
+  assert.match(html, /data-member-status="invited"/);
+  assert.match(html, />Invited<\/span>/);
+  assert.match(html, /Invitation sent · Account setup pending/);
+  assert.doesNotMatch(html, />Active<\/span>/);
+  assert.match(html, /Deactivate access/);
+  assert.match(html, /name="status" value="inactive"/);
+  const active = render(React.createElement(PersonCard, person));
+  assert.match(active, /member-status-badge[^>]*data-member-status="active"/);
+  assert.doesNotMatch(active, /Account setup pending/);
+  const inactive = render(React.createElement(PersonCard, { ...person, status: 'inactive' }));
+  assert.match(inactive, /data-member-status="inactive"/);
+  assert.doesNotMatch(inactive, /Account setup pending/);
+});
+
+test('People reads authoritative page-scoped account states and never guesses Active after a failed or incomplete read', async () => {
+  for (const result of [
+    { data: [{ user_id: 'user-1', account_status: 'invited' }], error: null },
+    { data: [], error: null },
+    { data: null, error: { message: 'unavailable' } },
+  ]) {
+    const builder = (table) => {
+      const data =
+        table === 'organization_memberships'
+          ? [{ user_id: 'user-1', role: 'end_user', status: 'active' }]
+          : table === 'profiles'
+            ? [{ ...person.profile, display_name: person.name, email: person.email }]
+            : [];
+      const query = new Proxy(
+        {},
+        {
+          get: (_, key) =>
+            key === 'then'
+              ? (resolve) =>
+                  Promise.resolve({ data, error: null, count: data.length }).then(resolve)
+              : () => query,
+        },
+      );
+      return query;
+    };
+    const Page = load('src/app/app/people/page.tsx', {
+      ...mocks,
+      '@/lib/auth/viewer': {
+        requireViewer: async () => ({
+          role: 'technician',
+          organizationId: 'trusted-org',
+          id: 'staff',
+        }),
+      },
+      '@/lib/supabase/server': {
+        createClient: async () => ({
+          from: builder,
+          rpc: async (name, args) => {
+            assert.equal(name, 'member_account_statuses');
+            assert.deepEqual(args, { org: 'trusted-org', members: ['user-1'] });
+            return result;
+          },
+        }),
+      },
+    }).default;
+    if (result.data?.length) {
+      const html = render(await Page({ searchParams: Promise.resolve({}) }));
+      assert.match(html, /data-member-status="invited"/);
+      assert.doesNotMatch(html, /data-member-status="active"/);
+    } else {
+      await assert.rejects(
+        Page({ searchParams: Promise.resolve({}) }),
+        /Account statuses could not load/,
+      );
+    }
+  }
+});

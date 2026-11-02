@@ -4,6 +4,10 @@ These changes are uncommitted and are not enabled in production.
 
 ## CSV invitations
 
+The People directory distinguishes account setup from enabled workspace access. Invited (blue) means the invitation exists but setup is pending. Active (green) means the invited account has confirmed its email and set a password or linked a supported company provider. Inactive overrides onboarding when workspace access is disabled. Opening an invitation link alone does not mark password setup complete. Existing non-invited accounts retain their access status.
+
+`member_account_statuses` reads at most 25 current-page members in the caller’s workspace, requires active staff access and assurance, and returns only user IDs and directory labels. It excludes deleted people and does not expose Auth fields, rewrite membership access, or depend on a background job. Deploy the account-status migration before the updated People page; status-load failures use the existing page retry path instead of guessing Active.
+
 Administrators open **People → Invite from CSV**. Upload a UTF-8 CSV with Email and Name headers and an optional Role column. Employee is the default; Technician and Administrator are explicit choices. Limits are 100 people and 200 KB. Preview the names, emails and requested roles before sending.
 
 All rows are validated before preview, and each server group is revalidated before sending. Duplicate emails, unknown roles, invalid names/emails and extra columns are rejected. The server derives the workspace and actor from the verified session, and never accepts a caller-supplied organization. Current members are recognized within that workspace and are left unchanged, including their role and active/inactive status.

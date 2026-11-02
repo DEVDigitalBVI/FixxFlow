@@ -480,6 +480,13 @@ type RuntimeTables = {
   };
 
 type RuntimeFunctions = {
+  member_account_statuses: {
+    Args: { org: string; members: string[] };
+    Returns: {
+      user_id: string;
+      account_status: import('@/features/identity/member-status').MemberAccountStatus;
+    }[];
+  };
   touch_app_session: { Args: never; Returns: Json };
   revoke_app_session: { Args: never; Returns: boolean };
   app_session_state: { Args: never; Returns: Json };
