@@ -24,6 +24,7 @@ export function LookupSelect({
   describedBy,
   compact = false,
   searchable = true,
+  selectFirstMatchOnSearch = false,
 }: {
   resource: LookupResource;
   name: string;
@@ -40,6 +41,7 @@ export function LookupSelect({
   describedBy?: string;
   compact?: boolean;
   searchable?: boolean | 'when-paginated';
+  selectFirstMatchOnSearch?: boolean;
 }) {
   const id = useId();
   const searchInput = useRef<HTMLInputElement>(null);
@@ -108,6 +110,13 @@ export function LookupSelect({
             ]),
           };
           if (!query) setPaginated(Boolean(cursor || data.next));
+          if (selectFirstMatchOnSearch && query.trim() && !cursor) {
+            const matches = data.rows.filter((row) => !activeOnly || row.active);
+            const next = matches.find((row) => row.id === selectedId) ?? matches[0] ?? null;
+            setLocal(next?.id ?? '');
+            if ((next?.id ?? '') !== selectedId) onChange?.(next?.id ?? '');
+            data.selected = next;
+          }
           setState({ data, pending: false, error: false });
         }
       } catch {
@@ -119,7 +128,18 @@ export function LookupSelect({
       clearTimeout(timer);
       controller.abort();
     };
-  }, [resource, query, cursor, selectedId, parentId, activeOnly, retry, composing]);
+  }, [
+    resource,
+    query,
+    cursor,
+    selectedId,
+    parentId,
+    activeOnly,
+    retry,
+    composing,
+    selectFirstMatchOnSearch,
+    onChange,
+  ]);
 
   const current = state.data.selected?.id === selected ? state.data.selected : null;
   const choices = [
@@ -145,7 +165,9 @@ export function LookupSelect({
             : 'No choices available.'
           : cursors.length > 1 || state.data.next
             ? `Page ${cursors.length}`
-            : '';
+            : selectFirstMatchOnSearch && query.trim() && current
+              ? `Selected ${current.label}.`
+              : '';
   const focusPicker = () => (searchInput.current ?? selectInput.current)?.focus();
   const search = (text: string) => {
     setQuery(text);
@@ -189,6 +211,9 @@ export function LookupSelect({
           />
           <small id={`${id}-hint`} className={compact ? 'sr-only' : 'muted'}>
             {SEARCH_HINT}
+            {selectFirstMatchOnSearch
+              ? ' Searching selects the first match when the current selection does not match.'
+              : ''}
           </small>
         </>
       )}
