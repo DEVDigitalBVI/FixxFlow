@@ -1,5 +1,7 @@
 import { randomBytes } from 'node:crypto';
 
+import { after } from 'next/server';
+
 import { endCurrentSession } from '@/features/auth/logout';
 import { logoutDocument } from '@/features/auth/logout-document';
 
@@ -7,7 +9,7 @@ export const runtime = 'nodejs';
 export async function POST(request: Request) {
   if (request.headers.get('origin') !== new URL(request.url).origin)
     return new Response('Forbidden', { status: 403 });
-  const result = await endCurrentSession();
+  const result = await endCurrentSession(after);
   const nonce = randomBytes(18).toString('base64');
   return new Response(logoutDocument(result.userId, nonce, result.revoked), {
     headers: {
