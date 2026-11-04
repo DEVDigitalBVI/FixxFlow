@@ -14,6 +14,7 @@ function deferred() {
 test('People loads page-scoped statuses, profiles and permissions concurrently', async () => {
   const reads = [
     'member_account_statuses',
+    'support_viewer_access',
     'profiles',
     'inventory_managers',
     'inventory_requesters',
@@ -59,7 +60,7 @@ test('People loads page-scoped statuses, profiles and permissions concurrently',
       createClient: async () => ({
         from: query,
         rpc: (name, args) => {
-          assert.equal(name, 'member_account_statuses');
+          assert.ok(['member_account_statuses', 'support_viewer_access'].includes(name));
           assert.deepEqual(args, { org: 'trusted-org', members: ['member-1'] });
           started.push(name);
           return gates[name].promise;
@@ -76,7 +77,9 @@ test('People loads page-scoped statuses, profiles and permissions concurrently',
   try {
     for (const read of reads)
       assert.ok(started.includes(read), `${read} starts before other details finish`);
-    for (const table of reads.slice(1)) {
+    for (const table of reads.filter(
+      (name) => !['member_account_statuses', 'support_viewer_access'].includes(name),
+    )) {
       assert.ok(
         scopes.some(
           (c) =>

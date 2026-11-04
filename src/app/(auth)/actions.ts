@@ -2,10 +2,13 @@
 
 import { redirect } from 'next/navigation';
 
+import { passwordMeetsPolicy } from '@/features/auth/password-policy';
+import { passwordUpdateMessage } from '@/features/auth/password-recovery';
 import { recordCompletedLogin } from '@/features/product-analytics/actions';
 import { requireAssurance } from '@/lib/auth/assurance';
 import { passwordValue } from '@/lib/auth/form-values';
 import { formString } from '@/lib/form-data';
+import { reportServerError } from '@/lib/server-errors';
 import { createClient } from '@/lib/supabase/server';
 
 const value = (formData: FormData, key: string) => formString(formData, key, '').trim();
@@ -31,8 +34,12 @@ export async function signUp(formData: FormData) {
   const confirmation = passwordValue(formData, 'passwordConfirmation');
   const fullName = value(formData, 'fullName');
   if (!email || !fullName) authRedirect('/signup', 'error', 'Enter your name and work email.');
-  if (password.length < 8)
-    authRedirect('/signup', 'error', 'Use a password with at least 8 characters.');
+  if (!passwordMeetsPolicy(password))
+    authRedirect(
+      '/signup',
+      'error',
+      'Use at least 8 characters with an uppercase letter, a lowercase letter, a number and a symbol.',
+    );
   if (password !== confirmation) authRedirect('/signup', 'error', 'The passwords do not match.');
   if (formData.get('terms') !== 'accepted')
     authRedirect('/signup', 'error', 'Accept the terms to create your workspace.');
@@ -62,9 +69,15 @@ export async function requestPasswordReset(formData: FormData) {
   if (!email) authRedirect('/forgot-password', 'error', 'Enter your email address.');
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   const supabase = await createClient();
-  await supabase.auth.resetPasswordForEmail(email, {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/callback?next=/auth/update-password`,
   });
+  if (error)
+    authRedirect(
+      '/forgot-password',
+      'error',
+      'Password-reset email could not be confirmed. Wait a minute and try again.',
+    );
   authRedirect(
     '/forgot-password',
     'success',
@@ -75,18 +88,20 @@ export async function requestPasswordReset(formData: FormData) {
 export async function updatePassword(formData: FormData) {
   const password = passwordValue(formData, 'password');
   const confirmation = passwordValue(formData, 'passwordConfirmation');
-  if (password.length < 8)
-    authRedirect('/auth/update-password', 'error', 'Use at least 8 characters.');
+  if (!passwordMeetsPolicy(password))
+    authRedirect(
+      '/auth/update-password',
+      'error',
+      'Use at least 8 characters with an uppercase letter, a lowercase letter, a number and a symbol.',
+    );
   if (password !== confirmation)
     authRedirect('/auth/update-password', 'error', 'The passwords do not match.');
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({ password });
-  if (error)
-    authRedirect(
-      '/auth/update-password',
-      'error',
-      'Your password could not be updated. Request a new link.',
-    );
+  if (error) {
+    reportServerError('auth.password.update', { code: error.code });
+    authRedirect('/auth/update-password', 'error', passwordUpdateMessage(error.code));
+  }
   authRedirect('/login', 'success', 'Password updated. Sign in with your new password.');
 }
 

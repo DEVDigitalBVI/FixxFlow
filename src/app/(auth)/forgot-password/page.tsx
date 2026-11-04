@@ -12,7 +12,10 @@ export default async function ForgotPasswordPage({ searchParams }: Props) {
   return (
     <section className="auth-card" aria-labelledby="reset-heading">
       <h1 id="reset-heading">Reset your password</h1>
-      <p className="auth-intro">We’ll send a secure reset link to your work email.</p>
+      <p className="auth-intro">
+        We’ll send a secure reset link to your work email. The newest link is valid for 24 hours and
+        can be used once.
+      </p>
       <form action={requestPasswordReset} className="stack">
         {message.error && (
           <Alert tone="error" role="alert">

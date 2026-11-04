@@ -8,6 +8,7 @@ import { DisclosureActionForm } from '@/components/ui/disclosure-action-form';
 import { NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { MemberDetailsEditor } from '@/features/administration/member-details-editor';
+import { ResendInvitation } from '@/features/administration/resend-invitation';
 import {
   memberStatusPresentation,
   type MemberAccountStatus,
@@ -38,6 +39,8 @@ export function PersonCard({
   updateRole,
   updateStatus,
   inventoryPermissions,
+  insightPermissions,
+  insightLabel,
   selection,
   deleteControl,
 }: {
@@ -53,6 +56,8 @@ export function PersonCard({
   departments: Option[];
   locations: Option[];
   inventoryPermissions?: ReactNode;
+  insightPermissions?: ReactNode;
+  insightLabel?: string;
   selection?: ReactNode;
   deleteControl?: ReactNode;
   updateRole: (form: FormData) => Promise<void>;
@@ -76,7 +81,10 @@ export function PersonCard({
           </div>
         </div>
         <div className="person-card-meta">
-          <span className="person-role">{rolePresentation[role].label}</span>
+          <span className="person-role">
+            {rolePresentation[role].label}
+            {insightLabel && ` · ${insightLabel}`}
+          </span>
           <Badge
             tone={presentation.tone}
             className="member-status-badge"
@@ -183,6 +191,8 @@ export function PersonCard({
                     )}
                   </div>
                 </section>
+                {status === 'invited' && <ResendInvitation id={id} name={name} />}
+                {insightPermissions}
                 {inventoryPermissions}
               </>
             )}

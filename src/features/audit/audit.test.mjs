@@ -98,11 +98,14 @@ test('invitation registration takes actor from the verified viewer, not the form
       }),
     },
     '@/lib/supabase/server': { createClient: async () => {} },
+    '@/features/auth/invitation-email': {
+      sendWorkspaceInvitation: async () => ({ success: 'Invitation accepted.' }),
+    },
     '@/lib/supabase/admin': {
       createAdminClient: () => ({
         auth: {
           admin: {
-            inviteUserByEmail: async () => ({
+            generateLink: async () => ({
               data: { user: { id: 'invited-user' } },
               error: null,
             }),

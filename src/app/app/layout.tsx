@@ -9,6 +9,7 @@ import { SessionGuard } from '@/features/auth/session-guard';
 import { rolePresentation } from '@/features/identity/role';
 import { ViewerAvatar } from '@/features/identity/viewer-avatar';
 import { inventoryAccess } from '@/features/inventory/access';
+import { supportViewerAccess } from '@/features/support-viewer/access';
 import { TimezoneProvider } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
 
@@ -16,7 +17,10 @@ import productStyles from '../product.module.css';
 
 export default async function WorkspaceLayout({ children }: Readonly<{ children: ReactNode }>) {
   const viewer = await requireViewer();
-  const inventory = await inventoryAccess(viewer);
+  const [inventory, insights] = await Promise.all([
+    inventoryAccess(viewer),
+    supportViewerAccess(viewer),
+  ]);
   return (
     <div className={productStyles.scope}>
       <TimezoneProvider timeZone={viewer.timeZone} preference={viewer.timezonePreference}>
@@ -26,6 +30,7 @@ export default async function WorkspaceLayout({ children }: Readonly<{ children:
             brand={<BrandLogo className="sidebar-logo" variant="navigation" href="/app" priority />}
             navigation={
               <WorkspaceNav
+                insightAccess={insights}
                 inventoryAccess={inventory.manager || inventory.departments.length > 0}
                 role={viewer.role}
                 organizationId={viewer.organizationId}

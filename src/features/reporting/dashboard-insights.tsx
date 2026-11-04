@@ -80,8 +80,10 @@ export function WorkloadCard({ rows }: { rows: WorkloadRow[] | null }) {
 export function DashboardInsights({
   report,
   workload,
+  showReports = true,
 }: {
   report: Report | null;
+  showReports?: boolean;
   workload: WorkloadRow[] | null;
 }) {
   const days = report?.daily.slice(-14) ?? [];
@@ -92,16 +94,18 @@ export function DashboardInsights({
           <h2 id="dashboard-insights-title">Workload &amp; response</h2>
           <p>Current assignments and the last 14 days · {report?.timezone ?? 'Workspace time'}</p>
         </div>
-        <Link className={buttonVariants({ variant: 'secondary' })} href="/app/reports">
-          View reports
-        </Link>
+        {showReports && (
+          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/reports">
+            View reports
+          </Link>
+        )}
       </header>
       <div className="report-chart-grid">
         <WorkloadCard rows={workload} />
         {report ? (
           <Trend
             title="Response time"
-            description="Average elapsed time to the first public IT reply, by reply day. Days without replies have no timing sample."
+            description="Average elapsed time from ticket creation to the first public IT reply, grouped by reply day."
             days={days.map((day) => day.day)}
             series={[{ label: 'Average response', values: days.map((day) => day.response) }]}
             time

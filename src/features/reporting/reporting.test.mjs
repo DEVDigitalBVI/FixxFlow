@@ -80,12 +80,12 @@ test('charts provide labeled data tables and distinguish empty timing samples', 
       time: true,
     }),
   );
-  assert.match(html, /role="img"/);
+  assert.match(html, /aria-label="Response time by recorded day"/);
   assert.match(html, /<caption>/);
   assert.match(html, /scope="row"/);
   assert.match(html, /No data/);
   assert.match(html, /18m/);
-  assert.match(html, /Response time over 2 days/);
+  assert.match(html, /1 of 2 days have timing data/);
   const empty = renderToStaticMarkup(
     React.createElement(Bars, {
       title: 'SLA compliance',

@@ -22,6 +22,7 @@ import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
+import { IncidentSharingPanel } from '@/features/support-viewer/sharing-panel';
 import { IncidentFollowers } from '@/features/tickets/incident-followers';
 import { SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { SlaPolicy } from '@/features/tickets/sla-policy-table';
@@ -406,6 +407,13 @@ export async function TicketDetail({
         ticketId={ticket.id}
         revision={ticket.revision}
         ownerId={viewer.id}
+      />
+      <IncidentSharingPanel
+        organizationId={viewer.organizationId}
+        ticketId={ticket.id}
+        eligible={
+          ticket.ticket_type === 'incident' || ['high', 'critical'].includes(ticket.priority)
+        }
       />
       <TicketProcedures organizationId={viewer.organizationId} ticketId={ticket.id} />
     </div>

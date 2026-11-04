@@ -81,7 +81,7 @@ test('dashboard response trends retain just fourteen reply days with null timing
   assert.match(html, /2026-09-17/);
   assert.match(html, /No data/);
   assert.match(html, /&lt;1m/);
-  assert.match(html, /role="img"/);
+  assert.match(html, /aria-label="Response time by recorded day"/);
   assert.match(html, /elapsed/);
 });
 test('daily action uses workspace time, ignores irrelevant day inputs, and rejects invalid or incomplete schedules', async () => {

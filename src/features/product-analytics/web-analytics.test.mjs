@@ -29,3 +29,18 @@ test('web page views retain feature paths while redacting every record ID', () =
   assert.equal(result.url, 'https://fixxflow.com/app/administration/automations/[id]/history/[id]');
   assert.equal(beforeSend({ type: 'pageview', url: 'not a URL' }), null);
 });
+
+test('performance telemetry removes invitation and recovery credentials from URLs', () => {
+  const { PrivateSpeedInsights } = load('src/features/product-analytics/speed-insights.tsx', {
+    '@vercel/speed-insights/next': { SpeedInsights: () => null },
+  });
+  const filter = PrivateSpeedInsights().props.beforeSend;
+  for (const path of [
+    '/auth/invitation?id=member&token=secret',
+    '/auth/recovery?token_hash=secret',
+  ]) {
+    const event = { type: 'vital', url: `https://fixxflow.com${path}#secret` };
+    assert.equal(filter(event).url, 'https://fixxflow.com' + path.split('?')[0]);
+    assert.ok(event.url.includes('secret'));
+  }
+});

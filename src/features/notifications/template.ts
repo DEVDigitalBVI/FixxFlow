@@ -7,6 +7,7 @@ import { render } from 'react-email';
 import { FixxFlowEmail, type EmailPurpose } from '@/emails/fixxflow-email';
 
 export type { EmailPurpose };
+export const passwordRecoveryHref = '{{ .SiteURL }}/auth/recovery?token_hash={{ .TokenHash }}';
 export const invitationConfirmationHref =
   '{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=invite';
 
@@ -51,6 +52,7 @@ export async function renderEmail({
     href &&
     href !== '{{ .ConfirmationURL }}' &&
     href !== invitationConfirmationHref &&
+    href !== passwordRecoveryHref &&
     !/^https:\/\//.test(href)
   )
     throw new Error('Invalid email action URL');

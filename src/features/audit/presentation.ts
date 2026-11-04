@@ -27,6 +27,11 @@ export const auditEntities: Record<string, string> = {
 };
 export const auditFields: Record<string, string> = {
   workspace_access: 'Workspace access',
+  invitation_expires_at: 'Invitation expiry',
+  support_dashboard: 'Support dashboard access',
+  shared_incidents: 'Shared incidents access',
+  shared_incident_published: 'Shared incident publication',
+  shared_summary_revision: 'Shared summary revision',
   require_mfa: 'Require two-step verification',
   inventory_action: 'Inventory action',
   inventory_details: 'Inventory details',

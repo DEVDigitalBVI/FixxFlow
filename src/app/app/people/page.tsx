@@ -22,6 +22,8 @@ import { PersonCard } from '@/features/administration/person-card';
 import { isMemberAccountStatus } from '@/features/identity/member-status';
 import { rolePresentation } from '@/features/identity/role';
 import { PermissionsForm } from '@/features/inventory/forms';
+import { isMemberAccess } from '@/features/support-viewer/model';
+import { InsightPermissionForm } from '@/features/support-viewer/permission-form';
 import { requireViewer } from '@/lib/auth/viewer';
 import { pageNumber } from '@/lib/pagination';
 import { normalizeSearch, SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
@@ -88,6 +90,7 @@ export default async function PeoplePage({ searchParams }: Props) {
     { data: profiles, error: profilesError },
     inventoryManagers,
     inventoryRequesters,
+    insights,
   ] = await Promise.all([
     memberIds.length
       ? supabase.rpc('member_account_statuses', { org: viewer.organizationId, members: memberIds })
@@ -115,7 +118,13 @@ export default async function PeoplePage({ searchParams }: Props) {
           .eq('organization_id', viewer.organizationId)
           .in('user_id', memberIds)
       : { data: [], error: null },
+    viewer.role === 'administrator' && memberIds.length
+      ? supabase.rpc('support_viewer_access', { org: viewer.organizationId, members: memberIds })
+      : { data: [], error: null },
   ]);
+  if (insights.error || !isMemberAccess(insights.data))
+    throw new Error('Support insight permissions could not load. Try again.');
+  const insightMembers = insights.data;
   if (accountStatesError) throw new Error('Account statuses could not load. Please try again.');
   const statusesByUser = new Map(
     (accountStates ?? []).map((member) => [member.user_id, member.account_status]),
@@ -344,6 +353,36 @@ export default async function PeoplePage({ searchParams }: Props) {
                           people={[{ id: member.user_id, name, email: profile?.email ?? '' }]}
                           search={search}
                           view={technicians ? 'technicians' : ''}
+                        />
+                      ) : undefined
+                    }
+                    insightLabel={
+                      member.role === 'end_user'
+                        ? (() => {
+                            const access = insightMembers.find(
+                              (row) => row.userId === member.user_id,
+                            );
+                            return [
+                              access?.dashboard ? 'Dashboard viewer' : '',
+                              access?.sharedIncidents ? 'Incident viewer' : '',
+                            ]
+                              .filter(Boolean)
+                              .join(' · ');
+                          })()
+                        : undefined
+                    }
+                    insightPermissions={
+                      canManage && member.role === 'end_user' ? (
+                        <InsightPermissionForm
+                          name={name}
+                          member={
+                            insightMembers.find((row) => row.userId === member.user_id) ?? {
+                              userId: member.user_id,
+                              dashboard: false,
+                              sharedIncidents: false,
+                              revision: 0,
+                            }
+                          }
                         />
                       ) : undefined
                     }

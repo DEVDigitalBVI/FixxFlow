@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { SignupProgress } from '@/components/ui/signup-progress';
 import { SubmitButton } from '@/components/ui/submit-button';
+import { PasswordFields } from '@/features/auth/password-fields';
 
 import { signUp } from '../actions';
 
@@ -35,34 +36,7 @@ export default async function SignupPage({ searchParams }: Props) {
           <Input id="email" name="email" type="email" autoComplete="email" required />
           <p className="form-note">We’ll send your verification link here.</p>
         </div>
-        <div className="signup-fields">
-          <div className="field">
-            <label htmlFor="password">Password</label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              minLength={8}
-              aria-describedby="password-hint"
-            />
-            <p className="form-note" id="password-hint">
-              At least 8 characters.
-            </p>
-          </div>
-          <div className="field">
-            <label htmlFor="passwordConfirmation">Confirm password</label>
-            <Input
-              id="passwordConfirmation"
-              name="passwordConfirmation"
-              type="password"
-              autoComplete="new-password"
-              required
-              minLength={8}
-            />
-          </div>
-        </div>
+        <PasswordFields label="Password" columns />
         <label className="check-field">
           <Checkbox name="terms" value="accepted" required />
           <span>I agree to the Terms of Service and Privacy Policy.</span>
