@@ -907,7 +907,7 @@
       "priority": 3,
       "area": "Authentication page paint",
       "evidence": "Reported browser LCP: login ~3.0s (333 samples), signup ~4.2s (79), forgot password ~4.0s (81), update password ~3.0s (55).",
-      "nextStep": "Measure repeat logout/login with a signed-in browser and asset waterfall after the cache change before further font/logo changes."
+      "nextStep": "Measure repeat logout/login with a signed-in browser and asset waterfall after the logout change before further font/logo changes."
     },
     {
       "priority": 4,
