@@ -134,7 +134,7 @@ test('email announcement rendering escapes text, preserves lines and sends priva
     lease_token: 'lease-1',
     recipient_email: 'employee@example.invalid',
     subject: 'A <script> subject',
-    body: 'First line\n<script>never execute</script>',
+    body: 'First line\n<script>never execute</script>\n<SCRIPT>never execute</SCRIPT>',
     workspace_name: 'Example workspace',
   };
   const keys = [];
@@ -148,7 +148,8 @@ test('email announcement rendering escapes text, preserves lines and sends priva
         assert.equal(payload.bcc, undefined);
         assert.match(payload.text, /First line\n<script>/);
         assert.match(payload.html, /&lt;script&gt;/);
-        assert.doesNotMatch(payload.html, /<script>/);
+        assert.match(payload.html, /&lt;SCRIPT&gt;/);
+        assert.doesNotMatch(payload.html, /<script\b/i);
         assert.match(payload.html, /Example workspace/);
         keys.push(options.headers['Idempotency-Key']);
         return Response.json({ id: 'provider-receipt' });
