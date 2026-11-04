@@ -16,6 +16,7 @@ export type FailureOperation =
   | 'viewer.membership'
   | 'viewer.platform'
   | 'viewer.details'
+  | 'people.load'
   | 'profile.load'
   | 'profile.save'
   | 'lookup.load'

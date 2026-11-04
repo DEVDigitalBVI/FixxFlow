@@ -27,6 +27,7 @@ import { InsightPermissionForm } from '@/features/support-viewer/permission-form
 import { requireViewer } from '@/lib/auth/viewer';
 import { pageNumber } from '@/lib/pagination';
 import { normalizeSearch, SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
+import { reportServerError } from '@/lib/server-errors';
 import { createClient } from '@/lib/supabase/server';
 
 import { inviteMember, updateMemberRole, updateMemberStatus } from './actions';
@@ -57,7 +58,7 @@ export default async function PeoplePage({ searchParams }: Props) {
       )
     : supabase.from('organization_memberships');
   let membersQuery = source
-    .select('user_id, role, status', { count: 'exact' })
+    .select('user_id, role, status, created_at', { count: 'exact' })
     .eq('organization_id', viewer.organizationId)
     .is('deleted_at', null)
     .order('created_at')
@@ -81,9 +82,12 @@ export default async function PeoplePage({ searchParams }: Props) {
             .order('path')
         : Promise.resolve({ data: [], error: null }),
     ]);
-  if (membersError) throw new Error('Unable to load members.');
+  if (membersError) {
+    reportServerError('people.load', membersError);
+    throw new Error('Unable to load members.');
+  }
   const memberIds = (memberships ?? []).map((member) => member.user_id);
-  // All four reads depend on the visible IDs, not on one another. Keep the
+  // These reads depend on the visible IDs, not on one another. Keep the
   // directory bounded to this page while avoiding three serial network waits.
   const [
     { data: accountStates, error: accountStatesError },
