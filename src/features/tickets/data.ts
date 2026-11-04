@@ -99,19 +99,7 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
   else if (sort === 'priority')
     query = query.order('priority', { ascending: false }).order('updated_at', { ascending: false });
   else query = query.order('updated_at', { ascending: false });
-  const [{ data: rows, error }, { count: knowledgeCount }] = await Promise.all([
-    query.order('id').range((page - 1) * 50, page * 50),
-    search
-      ? supabase
-          .rpc(
-            'search_knowledge_articles',
-            { target_organization_id: viewer.organizationId, search_text: search },
-            { count: 'exact', head: true },
-          )
-          .select('id')
-          .eq('status', 'published')
-      : Promise.resolve({ count: null }),
-  ]);
+  const { data: rows, error } = await query.order('id').range((page - 1) * 50, page * 50);
   const visible = error ? [] : (rows ?? []).slice(0, 50);
   const teamIds = [...new Set(visible.flatMap((row) => (row.team_id ? [row.team_id] : [])))];
   const [profiles, teamResult] =
@@ -147,7 +135,6 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
     error,
     profiles,
     teams,
-    knowledgeCount,
     tag,
     tagOptions,
     savedViews: views.data ?? [],

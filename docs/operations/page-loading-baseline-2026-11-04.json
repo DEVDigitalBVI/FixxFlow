@@ -1,0 +1,925 @@
+{
+  "checkedAt": "2026-11-04T17:20:01.355484+00:00",
+  "release": "3890bd1413e87b944245701a3f61be36e6717383",
+  "sources": {
+    "lcp": {
+      "metric": "vercel.speed_insights.lcp_ms",
+      "aggregation": "p75",
+      "groupBy": ["route"],
+      "filter": "environment:production",
+      "startTime": "2026-10-28T00:00:00.000Z",
+      "endTime": "2026-11-05T00:00:00.000Z",
+      "granularity": {
+        "days": 1
+      },
+      "orderBy": "count",
+      "orderDirection": "desc"
+    },
+    "ttfb": {
+      "metric": "vercel.speed_insights.ttfb_ms",
+      "aggregation": "p75",
+      "groupBy": ["route"],
+      "filter": "environment:production",
+      "startTime": "2026-10-28T00:00:00.000Z",
+      "endTime": "2026-11-05T00:00:00.000Z",
+      "granularity": {
+        "days": 1
+      },
+      "orderBy": "count",
+      "orderDirection": "desc"
+    },
+    "lcp-count": {
+      "metric": "vercel.speed_insights.lcp_ms",
+      "aggregation": "count",
+      "groupBy": ["route"],
+      "filter": "environment:production",
+      "startTime": "2026-10-28T00:00:00.000Z",
+      "endTime": "2026-11-05T00:00:00.000Z",
+      "granularity": {
+        "days": 1
+      },
+      "orderBy": "count",
+      "orderDirection": "desc"
+    },
+    "server-get-p95": {
+      "metric": "vercel.function_invocation.function_duration_ms",
+      "aggregation": "p95",
+      "groupBy": ["route"],
+      "filter": "(requestMethod:GET AND httpStatus:200) AND (environment:production)",
+      "startTime": "2026-11-03T00:00:00.000Z",
+      "endTime": "2026-11-05T00:00:00.000Z",
+      "granularity": {
+        "days": 1
+      },
+      "orderBy": "count",
+      "orderDirection": "desc"
+    },
+    "server-p95": {
+      "metric": "vercel.function_invocation.function_duration_ms",
+      "aggregation": "p95",
+      "groupBy": ["route"],
+      "filter": "environment:production",
+      "startTime": "2026-11-03T00:00:00.000Z",
+      "endTime": "2026-11-05T00:00:00.000Z",
+      "granularity": {
+        "days": 1
+      },
+      "orderBy": "count",
+      "orderDirection": "desc"
+    },
+    "server-count": {
+      "metric": "vercel.function_invocation.count",
+      "aggregation": "count",
+      "groupBy": ["route"],
+      "filter": "environment:production",
+      "startTime": "2026-11-03T00:00:00.000Z",
+      "endTime": "2026-11-05T00:00:00.000Z",
+      "granularity": {
+        "days": 1
+      },
+      "orderBy": "count",
+      "orderDirection": "desc"
+    }
+  },
+  "limitations": [
+    "Vercel CLI summary values are reported aggregates over daily time buckets; treat them as a baseline, not a single pooled percentile.",
+    "Browser LCP is largest-content paint, not time until every panel finishes loading.",
+    "Browser samples include hard navigations across multiple releases and devices; routes with fewer than 20 samples are directional only.",
+    "Function metrics include prefetches and may include streamed shells; they are not authenticated end-to-end page render durations.",
+    "No signed-in browser automation was available. Routes without browser samples remain unmeasured, not fast.",
+    "No personal names, search text, emails, IPs or session IDs are retained in this report."
+  ],
+  "routeCount": 78,
+  "routesWithBrowserSamples": 22,
+  "routes": [
+    {
+      "route": "/account/inactive",
+      "source": "src/app/(auth)/account/inactive/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/account/unassigned",
+      "source": "src/app/(auth)/account/unassigned/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": 1596,
+      "browserFirstByteReportedP75Ms": 64,
+      "browserSamples": 4,
+      "successfulGetFunctionReportedP95Ms": 254,
+      "allFunctionRequests": 4
+    },
+    {
+      "route": "/auth/enroll",
+      "source": "src/app/(auth)/auth/enroll/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/auth/invitation",
+      "source": "src/app/(auth)/auth/invitation/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 60,
+      "allFunctionRequests": 1
+    },
+    {
+      "route": "/auth/mfa",
+      "source": "src/app/(auth)/auth/mfa/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/auth/recovery",
+      "source": "src/app/(auth)/auth/recovery/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 61,
+      "allFunctionRequests": 1
+    },
+    {
+      "route": "/auth/update-password",
+      "source": "src/app/(auth)/auth/update-password/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": 2960,
+      "browserFirstByteReportedP75Ms": 1824,
+      "browserSamples": 55,
+      "successfulGetFunctionReportedP95Ms": 101,
+      "allFunctionRequests": 57
+    },
+    {
+      "route": "/forgot-password",
+      "source": "src/app/(auth)/forgot-password/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": 3992,
+      "browserFirstByteReportedP75Ms": 358,
+      "browserSamples": 81,
+      "successfulGetFunctionReportedP95Ms": 43,
+      "allFunctionRequests": 574
+    },
+    {
+      "route": "/login",
+      "source": "src/app/(auth)/login/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": 2978.75,
+      "browserFirstByteReportedP75Ms": 1528,
+      "browserSamples": 333,
+      "successfulGetFunctionReportedP95Ms": 288,
+      "allFunctionRequests": 863
+    },
+    {
+      "route": "/signup/check-email",
+      "source": "src/app/(auth)/signup/check-email/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 18,
+      "allFunctionRequests": 1
+    },
+    {
+      "route": "/signup",
+      "source": "src/app/(auth)/signup/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": 4160,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 79,
+      "successfulGetFunctionReportedP95Ms": 64,
+      "allFunctionRequests": 617
+    },
+    {
+      "route": "/app/administration/[section]",
+      "source": "src/app/app/administration/[section]/page.tsx",
+      "loadingBoundary": "src/app/app/administration/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 29,
+      "allFunctionRequests": 4
+    },
+    {
+      "route": "/app/administration/announcements/[announcementId]",
+      "source": "src/app/app/administration/announcements/[announcementId]/page.tsx",
+      "loadingBoundary": "src/app/app/administration/announcements/loading.tsx",
+      "browserPaintReportedP75Ms": 1296,
+      "browserFirstByteReportedP75Ms": 81,
+      "browserSamples": 2,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/announcements",
+      "source": "src/app/app/administration/announcements/page.tsx",
+      "loadingBoundary": "src/app/app/administration/announcements/loading.tsx",
+      "browserPaintReportedP75Ms": 1364,
+      "browserFirstByteReportedP75Ms": 73,
+      "browserSamples": 1,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/automations/[ruleId]/history/[executionId]",
+      "source": "src/app/app/administration/automations/[ruleId]/history/[executionId]/page.tsx",
+      "loadingBoundary": "src/app/app/administration/automations/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/automations/[ruleId]/history",
+      "source": "src/app/app/administration/automations/[ruleId]/history/page.tsx",
+      "loadingBoundary": "src/app/app/administration/automations/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/automations/[ruleId]",
+      "source": "src/app/app/administration/automations/[ruleId]/page.tsx",
+      "loadingBoundary": "src/app/app/administration/automations/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/automations/import",
+      "source": "src/app/app/administration/automations/import/page.tsx",
+      "loadingBoundary": "src/app/app/administration/automations/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/automations/new",
+      "source": "src/app/app/administration/automations/new/page.tsx",
+      "loadingBoundary": "src/app/app/administration/automations/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/automations/operations/history",
+      "source": "src/app/app/administration/automations/operations/history/page.tsx",
+      "loadingBoundary": "src/app/app/administration/automations/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/automations/operations",
+      "source": "src/app/app/administration/automations/operations/page.tsx",
+      "loadingBoundary": "src/app/app/administration/automations/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/automations",
+      "source": "src/app/app/administration/automations/page.tsx",
+      "loadingBoundary": "src/app/app/administration/automations/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/email-to-ticket",
+      "source": "src/app/app/administration/email-to-ticket/page.tsx",
+      "loadingBoundary": "src/app/app/administration/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/library",
+      "source": "src/app/app/administration/library/page.tsx",
+      "loadingBoundary": "src/app/app/administration/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration",
+      "source": "src/app/app/administration/page.tsx",
+      "loadingBoundary": "src/app/app/administration/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 30,
+      "allFunctionRequests": 348
+    },
+    {
+      "route": "/app/administration/saved-replies",
+      "source": "src/app/app/administration/saved-replies/page.tsx",
+      "loadingBoundary": "src/app/app/administration/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/security",
+      "source": "src/app/app/administration/security/page.tsx",
+      "loadingBoundary": "src/app/app/administration/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/workflows/[id]",
+      "source": "src/app/app/administration/workflows/[id]/page.tsx",
+      "loadingBoundary": "src/app/app/administration/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/workflows/new",
+      "source": "src/app/app/administration/workflows/new/page.tsx",
+      "loadingBoundary": "src/app/app/administration/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/administration/workflows",
+      "source": "src/app/app/administration/workflows/page.tsx",
+      "loadingBoundary": "src/app/app/administration/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/assets/[assetId]",
+      "source": "src/app/app/assets/[assetId]/page.tsx",
+      "loadingBoundary": "src/app/app/assets/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/assets/import",
+      "source": "src/app/app/assets/import/page.tsx",
+      "loadingBoundary": "src/app/app/assets/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/assets/new",
+      "source": "src/app/app/assets/new/page.tsx",
+      "loadingBoundary": "src/app/app/assets/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/assets",
+      "source": "src/app/app/assets/page.tsx",
+      "loadingBoundary": "src/app/app/assets/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 38,
+      "allFunctionRequests": 455
+    },
+    {
+      "route": "/app/chat/[conversationId]/history",
+      "source": "src/app/app/chat/[conversationId]/history/page.tsx",
+      "loadingBoundary": "src/app/app/chat/loading.tsx",
+      "browserPaintReportedP75Ms": 852,
+      "browserFirstByteReportedP75Ms": 62,
+      "browserSamples": 1,
+      "successfulGetFunctionReportedP95Ms": 39,
+      "allFunctionRequests": 34
+    },
+    {
+      "route": "/app/chat/[conversationId]",
+      "source": "src/app/app/chat/[conversationId]/page.tsx",
+      "loadingBoundary": "src/app/app/chat/loading.tsx",
+      "browserPaintReportedP75Ms": 1468,
+      "browserFirstByteReportedP75Ms": 323,
+      "browserSamples": 6,
+      "successfulGetFunctionReportedP95Ms": 688,
+      "allFunctionRequests": 81
+    },
+    {
+      "route": "/app/chat",
+      "source": "src/app/app/chat/page.tsx",
+      "loadingBoundary": "src/app/app/chat/loading.tsx",
+      "browserPaintReportedP75Ms": 452,
+      "browserFirstByteReportedP75Ms": 61,
+      "browserSamples": 1,
+      "successfulGetFunctionReportedP95Ms": 55,
+      "allFunctionRequests": 621
+    },
+    {
+      "route": "/app/faq/[articleId]",
+      "source": "src/app/app/faq/[articleId]/page.tsx",
+      "loadingBoundary": "src/app/app/faq/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/faq",
+      "source": "src/app/app/faq/page.tsx",
+      "loadingBoundary": "src/app/app/faq/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 44,
+      "allFunctionRequests": 454
+    },
+    {
+      "route": "/app/help/[articleId]/edit",
+      "source": "src/app/app/help/[articleId]/edit/page.tsx",
+      "loadingBoundary": "src/app/app/help/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/help/[articleId]",
+      "source": "src/app/app/help/[articleId]/page.tsx",
+      "loadingBoundary": "src/app/app/help/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 22,
+      "allFunctionRequests": 4
+    },
+    {
+      "route": "/app/help/new",
+      "source": "src/app/app/help/new/page.tsx",
+      "loadingBoundary": "src/app/app/help/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/help",
+      "source": "src/app/app/help/page.tsx",
+      "loadingBoundary": "src/app/app/help/loading.tsx",
+      "browserPaintReportedP75Ms": 5396,
+      "browserFirstByteReportedP75Ms": 81,
+      "browserSamples": 2,
+      "successfulGetFunctionReportedP95Ms": 35,
+      "allFunctionRequests": 456
+    },
+    {
+      "route": "/app/incident-updates/[id]",
+      "source": "src/app/app/incident-updates/[id]/page.tsx",
+      "loadingBoundary": "src/app/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/inventory/[itemId]",
+      "source": "src/app/app/inventory/[itemId]/page.tsx",
+      "loadingBoundary": "src/app/app/inventory/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/inventory",
+      "source": "src/app/app/inventory/page.tsx",
+      "loadingBoundary": "src/app/app/inventory/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 39,
+      "allFunctionRequests": 361
+    },
+    {
+      "route": "/app/notifications",
+      "source": "src/app/app/notifications/page.tsx",
+      "loadingBoundary": "src/app/app/notifications/loading.tsx",
+      "browserPaintReportedP75Ms": 856,
+      "browserFirstByteReportedP75Ms": 62,
+      "browserSamples": 1,
+      "successfulGetFunctionReportedP95Ms": 458,
+      "allFunctionRequests": 501
+    },
+    {
+      "route": "/app/notifications/settings",
+      "source": "src/app/app/notifications/settings/page.tsx",
+      "loadingBoundary": "src/app/app/notifications/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 22,
+      "allFunctionRequests": 36
+    },
+    {
+      "route": "/app/organization",
+      "source": "src/app/app/organization/page.tsx",
+      "loadingBoundary": "src/app/app/loading.tsx",
+      "browserPaintReportedP75Ms": 2396,
+      "browserFirstByteReportedP75Ms": 277,
+      "browserSamples": 3,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app",
+      "source": "src/app/app/page.tsx",
+      "loadingBoundary": "src/app/app/loading.tsx",
+      "browserPaintReportedP75Ms": 1556,
+      "browserFirstByteReportedP75Ms": 115,
+      "browserSamples": 19,
+      "successfulGetFunctionReportedP95Ms": 889,
+      "allFunctionRequests": 506
+    },
+    {
+      "route": "/app/people/[userId]/equipment",
+      "source": "src/app/app/people/[userId]/equipment/page.tsx",
+      "loadingBoundary": "src/app/app/people/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 260,
+      "allFunctionRequests": 17
+    },
+    {
+      "route": "/app/people/import",
+      "source": "src/app/app/people/import/page.tsx",
+      "loadingBoundary": "src/app/app/people/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 580,
+      "allFunctionRequests": 17
+    },
+    {
+      "route": "/app/people",
+      "source": "src/app/app/people/page.tsx",
+      "loadingBoundary": "src/app/app/people/loading.tsx",
+      "browserPaintReportedP75Ms": 1512,
+      "browserFirstByteReportedP75Ms": 84,
+      "browserSamples": 6,
+      "successfulGetFunctionReportedP95Ms": 539,
+      "allFunctionRequests": 425
+    },
+    {
+      "route": "/app/profile",
+      "source": "src/app/app/profile/page.tsx",
+      "loadingBoundary": "src/app/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 49,
+      "allFunctionRequests": 6
+    },
+    {
+      "route": "/app/reports/custom",
+      "source": "src/app/app/reports/custom/page.tsx",
+      "loadingBoundary": "src/app/app/reports/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/reports",
+      "source": "src/app/app/reports/page.tsx",
+      "loadingBoundary": "src/app/app/reports/loading.tsx",
+      "browserPaintReportedP75Ms": 2380,
+      "browserFirstByteReportedP75Ms": 196,
+      "browserSamples": 1,
+      "successfulGetFunctionReportedP95Ms": 35,
+      "allFunctionRequests": 358
+    },
+    {
+      "route": "/app/reports/saved/[reportId]",
+      "source": "src/app/app/reports/saved/[reportId]/page.tsx",
+      "loadingBoundary": "src/app/app/reports/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/security",
+      "source": "src/app/app/security/page.tsx",
+      "loadingBoundary": "src/app/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 22,
+      "allFunctionRequests": 6
+    },
+    {
+      "route": "/app/service-status",
+      "source": "src/app/app/service-status/page.tsx",
+      "loadingBoundary": "src/app/app/loading.tsx",
+      "browserPaintReportedP75Ms": 3824,
+      "browserFirstByteReportedP75Ms": 3525,
+      "browserSamples": 1,
+      "successfulGetFunctionReportedP95Ms": 297,
+      "allFunctionRequests": 40
+    },
+    {
+      "route": "/app/shared-incidents/[ticketId]",
+      "source": "src/app/app/shared-incidents/[ticketId]/page.tsx",
+      "loadingBoundary": "src/app/app/shared-incidents/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/shared-incidents",
+      "source": "src/app/app/shared-incidents/page.tsx",
+      "loadingBoundary": "src/app/app/shared-incidents/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 484,
+      "allFunctionRequests": 28
+    },
+    {
+      "route": "/app/support",
+      "source": "src/app/app/support/page.tsx",
+      "loadingBoundary": "src/app/app/loading.tsx",
+      "browserPaintReportedP75Ms": 1932,
+      "browserFirstByteReportedP75Ms": 251,
+      "browserSamples": 1,
+      "successfulGetFunctionReportedP95Ms": 18,
+      "allFunctionRequests": 8
+    },
+    {
+      "route": "/app/support-dashboard",
+      "source": "src/app/app/support-dashboard/page.tsx",
+      "loadingBoundary": "src/app/app/support-dashboard/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": 569,
+      "allFunctionRequests": 6
+    },
+    {
+      "route": "/app/tickets/[ticketId]/history",
+      "source": "src/app/app/tickets/[ticketId]/history/page.tsx",
+      "loadingBoundary": "src/app/app/tickets/loading.tsx",
+      "browserPaintReportedP75Ms": 766,
+      "browserFirstByteReportedP75Ms": 63,
+      "browserSamples": 1,
+      "successfulGetFunctionReportedP95Ms": 29,
+      "allFunctionRequests": 229
+    },
+    {
+      "route": "/app/tickets/[ticketId]",
+      "source": "src/app/app/tickets/[ticketId]/page.tsx",
+      "loadingBoundary": "src/app/app/tickets/loading.tsx",
+      "browserPaintReportedP75Ms": 2272,
+      "browserFirstByteReportedP75Ms": 291,
+      "browserSamples": 9,
+      "successfulGetFunctionReportedP95Ms": 463,
+      "allFunctionRequests": 779
+    },
+    {
+      "route": "/app/tickets/new",
+      "source": "src/app/app/tickets/new/page.tsx",
+      "loadingBoundary": "src/app/app/tickets/loading.tsx",
+      "browserPaintReportedP75Ms": 1352,
+      "browserFirstByteReportedP75Ms": 85,
+      "browserSamples": 1,
+      "successfulGetFunctionReportedP95Ms": 392,
+      "allFunctionRequests": 330
+    },
+    {
+      "route": "/app/tickets",
+      "source": "src/app/app/tickets/page.tsx",
+      "loadingBoundary": "src/app/app/tickets/loading.tsx",
+      "browserPaintReportedP75Ms": 1772,
+      "browserFirstByteReportedP75Ms": 1107,
+      "browserSamples": 2,
+      "successfulGetFunctionReportedP95Ms": 606.4400634765625,
+      "allFunctionRequests": 1650
+    },
+    {
+      "route": "/app/workflows/[id]",
+      "source": "src/app/app/workflows/[id]/page.tsx",
+      "loadingBoundary": "src/app/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/app/workflows",
+      "source": "src/app/app/workflows/page.tsx",
+      "loadingBoundary": "src/app/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/",
+      "source": "src/app/page.tsx",
+      "loadingBoundary": "src/app/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/platform/access",
+      "source": "src/app/platform/access/page.tsx",
+      "loadingBoundary": "src/app/platform/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/platform/analytics",
+      "source": "src/app/platform/analytics/page.tsx",
+      "loadingBoundary": "src/app/platform/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/platform/audit",
+      "source": "src/app/platform/audit/page.tsx",
+      "loadingBoundary": "src/app/platform/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/platform/customers",
+      "source": "src/app/platform/customers/page.tsx",
+      "loadingBoundary": "src/app/platform/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/platform/library/[articleId]/edit",
+      "source": "src/app/platform/library/[articleId]/edit/page.tsx",
+      "loadingBoundary": "src/app/platform/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/platform/library/new",
+      "source": "src/app/platform/library/new/page.tsx",
+      "loadingBoundary": "src/app/platform/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/platform/library",
+      "source": "src/app/platform/library/page.tsx",
+      "loadingBoundary": "src/app/platform/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    },
+    {
+      "route": "/platform",
+      "source": "src/app/platform/page.tsx",
+      "loadingBoundary": "src/app/platform/loading.tsx",
+      "browserPaintReportedP75Ms": null,
+      "browserFirstByteReportedP75Ms": null,
+      "browserSamples": 0,
+      "successfulGetFunctionReportedP95Ms": null,
+      "allFunctionRequests": 0
+    }
+  ],
+  "endpointHotspots": [
+    {
+      "route": "/app/search",
+      "serverReportedP95Ms": 8229,
+      "allFunctionRequests": 2
+    },
+    {
+      "route": "/app/help/suggestions",
+      "serverReportedP95Ms": 7819,
+      "allFunctionRequests": 117
+    },
+    {
+      "route": "/auth/sign-out",
+      "serverReportedP95Ms": 2498,
+      "allFunctionRequests": 15
+    }
+  ],
+  "findings": [
+    {
+      "priority": 1,
+      "area": "Knowledge search and suggestions",
+      "evidence": "Supabase edge origin p95 ~8.1s for search_knowledge_articles (17 requests, 12 server errors), ~8.0s for search_workspace (2 requests, 2 server errors), and ~5.5s for suggest_knowledge_articles (90 requests).",
+      "nextStep": "Capture a slow authenticated PostgREST trace/query plan with its actual parameters. The direct SQL probe had an inactive session and returned zero visible rows, so its timing is invalid as a performance benchmark. No live staff session was available for a representative replay. No RLS or index changes were made speculatively."
+    },
+    {
+      "priority": 2,
+      "area": "Logout",
+      "evidence": "Server duration reported p95 2498ms across 15 invocations. Cleanup additionally waits up to 2s for application storage, and Clear-Site-Data cache previously evicted public HTTP assets.",
+      "change": "After durable database revocation succeeds, schedule the captured-token provider logout with Next after(). Clear cookies before responding and retain private HTTP-cache/storage cleanup. If database revocation is not confirmed or the token is missing, await normal provider sign-out. The cache-clearing optimization was deliberately not shipped because signed private media may be cached."
+    },
+    {
+      "priority": 3,
+      "area": "Authentication page paint",
+      "evidence": "Reported browser LCP: login ~3.0s (333 samples), signup ~4.2s (79), forgot password ~4.0s (81), update password ~3.0s (55).",
+      "nextStep": "Measure repeat logout/login with a signed-in browser and asset waterfall after the cache change before further font/logo changes."
+    },
+    {
+      "priority": 4,
+      "area": "Ticket search coupling",
+      "evidence": "loadTicketQueue awaits an exact knowledge-article count alongside the ticket query. Slow knowledge search can hold back otherwise-ready ticket results.",
+      "change": "Move the optional count to KnowledgeMatchCount inside Suspense. The existing knowledge-search link and ticket results render before the count, and a count outage cannot fail the queue."
+    },
+    {
+      "priority": 5,
+      "area": "Coverage",
+      "evidence": "Most individual workspace pages have sparse or no browser measurements.",
+      "nextStep": "Collect signed-in staff and employee hard-load and navigation measurements for every route, including search, empty/error and populated states."
+    }
+  ]
+}

@@ -9,6 +9,7 @@ export type FailureOperation =
   | 'auth.session'
   | 'workspace.search'
   | 'knowledge.choices'
+  | 'knowledge.count'
   | 'knowledge.suggestions'
   | 'inbound.email'
   | 'equipment.reminders'

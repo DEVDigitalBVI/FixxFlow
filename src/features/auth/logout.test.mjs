@@ -4,7 +4,7 @@ import vm from 'node:vm';
 
 import { load } from '../../../tests/helpers/load-module.mjs';
 
-function logout({ dbFail = false, providerFail = false } = {}) {
+function logout({ dbFail = false, providerFail = false, token = 'session-token' } = {}) {
   const calls = [];
   const { endCurrentSession } = load('src/features/auth/logout.ts', {
     'server-only': {},
@@ -27,6 +27,13 @@ function logout({ dbFail = false, providerFail = false } = {}) {
         },
         auth: {
           getClaims: async () => ({ data: { claims: { sub: 'user' } } }),
+          getSession: async () => ({ data: { session: token ? { access_token: token } : null } }),
+          admin: {
+            signOut: async (...args) => {
+              calls.push(['provider', ...args]);
+              return { error: providerFail ? { code: 'offline' } : null };
+            },
+          },
           signOut: async (args) => {
             calls.push(['signOut', args]);
             return { error: providerFail ? { code: 'offline' } : null };
@@ -52,9 +59,33 @@ test('provider and database failures still clear local credentials without claim
   assert.equal((await h.run()).revoked, false);
   assert.equal(h.calls.filter((c) => c[0] === 'cookie').length, 2);
 });
+test('confirmed database revocation returns with cookies cleared before deferred provider cleanup', async () => {
+  for (const providerFail of [false, true]) {
+    const h = logout({ providerFail });
+    const tasks = [];
+    assert.deepEqual(await h.run((task) => tasks.push(task)), { userId: 'user', revoked: true });
+    assert.deepEqual(h.calls[0], ['rpc', 'revoke_app_session']);
+    assert.equal(h.calls.filter((c) => c[0] === 'cookie').length, 2);
+    assert.ok(!h.calls.some((c) => ['signOut', 'provider'].includes(c[0])));
+    assert.equal(tasks.length, 1);
+    await tasks[0]();
+    assert.deepEqual(h.calls.at(-1), ['provider', 'session-token', 'local']);
+  }
+});
+test('logout awaits provider fallback when database revocation is unconfirmed or token is missing', async () => {
+  for (const options of [{ dbFail: true }, { token: null }]) {
+    const h = logout(options);
+    const tasks = [];
+    assert.equal((await h.run((task) => tasks.push(task))).revoked, true);
+    assert.equal(tasks.length, 0);
+    assert.ok(h.calls.some((c) => c[0] === 'signOut'));
+    assert.equal(h.calls.filter((c) => c[0] === 'cookie').length, 2);
+  }
+});
 test('native logout POST rejects cross-origin attempts and returns an uncached constrained cleanup document', async () => {
   let calls = 0;
   const { POST, GET } = load('src/app/(auth)/auth/sign-out/route.ts', {
+    'next/server': { after: () => {} },
     '@/features/auth/logout': {
       endCurrentSession: async () => {
         calls++;
