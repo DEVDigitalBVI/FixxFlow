@@ -1,5 +1,7 @@
+import type { ActionResult } from '@/lib/action-result';
 import type { AppRole } from '@/types/database';
 
+export type InvitationResult = ActionResult & { rateLimited?: boolean };
 export type BulkInviteRow = { email: string; displayName: string; role: AppRole; token: string };
 export const bulkInviteLimit = 100;
 export function invitationValues(value: unknown): Omit<BulkInviteRow, 'token'> | null {

@@ -313,3 +313,51 @@
     }
   }
 }
+
+@layer components {
+  :where(.scope) :global(.password-requirements) {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.password-requirements h2) {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 600;
+    letter-spacing: normal;
+  }
+  :where(.scope) :global(.password-requirements ul) {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  :where(.scope) :global(.password-requirements li) {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  :where(.scope) :global(.password-requirements li svg) {
+    flex: 0 0 auto;
+    margin-top: 2px;
+  }
+  :where(.scope) :global(.password-requirements li[data-met='false'] svg) {
+    color: var(--color-danger);
+  }
+  :where(.scope) :global(.password-requirements li[data-met='true'] svg) {
+    color: var(--color-success);
+  }
+  :where(.scope) :global(.password-fields .form-note) {
+    margin: 0;
+  }
+  @media (forced-colors: active) {
+    :where(.scope) :global(.password-requirements li[data-met] svg) {
+      color: CanvasText;
+    }
+  }
+}

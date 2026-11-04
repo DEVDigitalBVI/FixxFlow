@@ -398,6 +398,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Reference pickers inside forms
 
 - Reuse `LookupSelect` for large reference sets: a labeled native search field, native select, current selection, and explicit Previous/More choices buttons. Fetch 50 permission-scoped choices per page with stable cursors. Resolve the selected record separately so paging and searching never clear it.
+- New-ticket Requester search selects the first active match when the current requester does not match the completed search. A successful search with no matches clears this required selection; failed searches preserve it and block submission. Clearing the search or paging preserves the chosen requester. Keep this behavior opt-in; other reference pickers preserve their current selection. Explain automatic selection beside the search and announce the selected name.
 - These searches operate within the editing form; Enter searches immediately without submitting the outer form. Reuse the 300ms delay, composition handling, literal search contract, and guidance from list search. Cancel stale requests and keep existing choices visible while loading.
 - Announce loading, empty, unavailable, and failed states in text. Offer retry, return focus to search after retry/clear, and prevent saves while required reference data is unresolved. Keep draft fields mounted after save failures and focus the shared `ActionForm` error summary.
 - Reuse existing field, button, focus, surface, and spacing tokens. Let paging actions wrap on compact screens. Introduce no new animation.
@@ -663,9 +664,13 @@ Group sublocations within their parent location section using nested, labeled li
 
 Across the app, successful saves and updates inside disclosures return the edited form to its closed state and restore focus to its summary. Keep enclosing sections open. Failed or unconfirmed saves retain the expanded form, draft and recoverable feedback. Standalone forms retain their existing success navigation. Closed Edit controls keep their intrinsic width when adjacent descriptions wrap.
 
+Departments and locations share OrganizationItemRow: full-width identity, written status and description above a compact action row. Keep Edit, Activate/Deactivate and Delete together as one group, with the deactivation hint below the controls. Wrap the whole group below Add sublocation when space is limited; expanded editors and confirmations use the available row width. Apply this structure to every entry, including newly created entries and nested locations.
+
 Display full paths in people, ticket and asset selectors, imports and reports. A parent report filter includes its descendants; grouping retains the most specific location and full path. Reject cross-workspace parents, cycles, duplicate names under the same parent, and depth overflow in the database. Deactivate active children before their parent; block deleting a location with children or linked records. Renames and moves preserve record IDs and refresh descendant paths.
 
 ### People deletion
+
+People distinguish workspace access from account setup. Show Invited with a blue badge and “Invitation sent · Account setup pending” until the invitation is accepted and a password is set or a supported company sign-in is linked. Show Active in green only after setup; disabled workspace access always reads Inactive. Derive these labels from trusted Auth data through a bounded, staff-only workspace read. Do not expose Auth details or change access rights merely to update the directory label. Reuse Badge, existing green/blue semantic palette pairs, and written status labels in both themes and forced colors. This is a user-approved color exception for People badges.
 
 Delete person removes a person from the workspace directory and revokes workspace access while retaining their login identity, profile and linked ticket, chat, equipment and audit history. Keep deactivation as a separate reversible access control. Administrators can delete other members; technicians can delete employees only. Self-deletion is unavailable. Enforce these rules in the database as well as the server and UI.
 
@@ -696,3 +701,19 @@ Email reply threading uses RFC headers with a workspace-scoped ticket-number fal
 ### Sent chat message color
 
 The product owner approved blue surfaces for the current viewer’s public chat messages and attachments, distinct from neutral incoming messages in both themes. Use `--color-chat-own-surface`, `--color-chat-own-text` and `--color-chat-own-border`; retain the You/sender label, alignment, accessible metadata, Edit controls and focus indicators. Internal notes keep their neutral surface, accent edge and written Internal note label. This is a scoped exception to the red/navy functional palette.
+
+### Employee support insights
+
+Employees may receive independent administrator-managed permissions to view the support dashboard and shared incidents. Retain their employee home, personal requests and chats. Use the shared TodayMetrics, DashboardInsights, TableRegion, TicketStatusBadge and PageHeader components, with a written View only badge. Dashboard viewers see the six activity metrics, technician workload and accessible response trend without staff queue, reporting or export links.
+
+Shared incidents use a searchable responsive queue and full detail routes with approved overview and resolution summaries. IT staff explicitly publish a separate safe title and summary for incidents or High/Urgent tickets; priority alone never grants visibility. Keep internal notes, raw descriptions, conversations and files outside this experience. Show current status and priority with centralized written badges. Reuse ActionForm, Checkbox, Input, Textarea, SubmitButton and native disclosures for permission and publication controls, preserving drafts and recoverable errors. Withdraw publication or revoke permissions without changing employee request behavior.
+
+### Password setup and recovery
+
+Reuse PasswordFields on account creation and password setup. Show a red X for unmet requirements and a check mark when met, with written labels, screen-reader states and a polite progress summary. Validate at least eight characters, uppercase, lowercase, number and symbol using the shared password policy on both browser and server, and track confirmation when either password changes. Use existing Input, NavigationIcon, form-note, focus and semantic danger/success tokens. Keep controls stacked at compact widths, preserve native password-manager/autocomplete behavior, and support forced colors without relying on color alone. Explain that common/exposed passwords are checked when saving; do not imply this remote screening passed based on local complexity.
+
+New invitations use a 72-hour single-use application link and an explicit acceptance step; password recovery uses a 24-hour link and an explicit continuation step. Reuse the auth card, ActionForm, SubmitButton and native details for new-invitation controls. Explain expired/used links, include recovery navigation, and show clear errors for weak, unchanged and invalid-session password updates.
+
+### Readable timing charts
+
+When a timing trend contains up to five recorded days, show dated horizontal bars with explicit hours/minutes instead of isolated dots across a mostly empty chart. State how many days contain samples and that missing days are not zero. Denser trends retain lines with visible time/count scales, subtle grid lines, readable HTML axis labels and abbreviated dates. Keep adjacent-day gaps intact and provide the existing exact-data disclosure for every date. Reuse report bars, chart color tokens, semantic tables and focus styles; zero-duration samples retain a written 0m value and no filled bar.

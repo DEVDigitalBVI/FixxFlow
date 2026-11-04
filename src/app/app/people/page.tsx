@@ -19,8 +19,11 @@ import {
 } from '@/features/administration/people-deletion-controls';
 import { canDeletePerson } from '@/features/administration/people-deletion-model';
 import { PersonCard } from '@/features/administration/person-card';
+import { isMemberAccountStatus } from '@/features/identity/member-status';
 import { rolePresentation } from '@/features/identity/role';
 import { PermissionsForm } from '@/features/inventory/forms';
+import { isMemberAccess } from '@/features/support-viewer/model';
+import { InsightPermissionForm } from '@/features/support-viewer/permission-form';
 import { requireViewer } from '@/lib/auth/viewer';
 import { pageNumber } from '@/lib/pagination';
 import { normalizeSearch, SEARCH_HINT, SEARCH_LIMIT } from '@/lib/search';
@@ -79,44 +82,59 @@ export default async function PeoplePage({ searchParams }: Props) {
         : Promise.resolve({ data: [], error: null }),
     ]);
   if (membersError) throw new Error('Unable to load members.');
-  const { data: profiles, error: profilesError } = memberships?.length
-    ? await supabase
-        .from('profiles')
-        .select(
-          'user_id, display_name, email, job_title, avatar_path, department_id, location_id, updated_at',
-        )
-        .eq('organization_id', viewer.organizationId)
-        .in(
-          'user_id',
-          memberships.map((member) => member.user_id),
-        )
-    : { data: [], error: null };
+  const memberIds = (memberships ?? []).map((member) => member.user_id);
+  // All four reads depend on the visible IDs, not on one another. Keep the
+  // directory bounded to this page while avoiding three serial network waits.
+  const [
+    { data: accountStates, error: accountStatesError },
+    { data: profiles, error: profilesError },
+    inventoryManagers,
+    inventoryRequesters,
+    insights,
+  ] = await Promise.all([
+    memberIds.length
+      ? supabase.rpc('member_account_statuses', { org: viewer.organizationId, members: memberIds })
+      : { data: [], error: null },
+    memberIds.length
+      ? supabase
+          .from('profiles')
+          .select(
+            'user_id, display_name, email, job_title, avatar_path, department_id, location_id, updated_at',
+          )
+          .eq('organization_id', viewer.organizationId)
+          .in('user_id', memberIds)
+      : { data: [], error: null },
+    viewer.role === 'administrator' && memberIds.length
+      ? supabase
+          .from('inventory_managers')
+          .select('user_id')
+          .eq('organization_id', viewer.organizationId)
+          .in('user_id', memberIds)
+      : { data: [], error: null },
+    viewer.role === 'administrator' && memberIds.length
+      ? supabase
+          .from('inventory_requesters')
+          .select('user_id,department_id')
+          .eq('organization_id', viewer.organizationId)
+          .in('user_id', memberIds)
+      : { data: [], error: null },
+    viewer.role === 'administrator' && memberIds.length
+      ? supabase.rpc('support_viewer_access', { org: viewer.organizationId, members: memberIds })
+      : { data: [], error: null },
+  ]);
+  if (insights.error || !isMemberAccess(insights.data))
+    throw new Error('Support insight permissions could not load. Try again.');
+  const insightMembers = insights.data;
+  if (accountStatesError) throw new Error('Account statuses could not load. Please try again.');
+  const statusesByUser = new Map(
+    (accountStates ?? []).map((member) => [member.user_id, member.account_status]),
+  );
+  if (
+    memberships?.some((member) => !isMemberAccountStatus(statusesByUser.get(member.user_id) ?? ''))
+  )
+    throw new Error('Account statuses could not load. Please try again.');
   if (profilesError || departments.error || locations.error)
     throw new Error('Unable to load member details. Please try again.');
-  const [inventoryManagers, inventoryRequesters] =
-    viewer.role === 'administrator' && memberships?.length
-      ? await Promise.all([
-          supabase
-            .from('inventory_managers')
-            .select('user_id')
-            .eq('organization_id', viewer.organizationId)
-            .in(
-              'user_id',
-              memberships.map((m) => m.user_id),
-            ),
-          supabase
-            .from('inventory_requesters')
-            .select('user_id,department_id')
-            .eq('organization_id', viewer.organizationId)
-            .in(
-              'user_id',
-              memberships.map((m) => m.user_id),
-            ),
-        ])
-      : [
-          { data: [], error: null },
-          { data: [], error: null },
-        ];
   if (inventoryManagers.error || inventoryRequesters.error)
     throw new Error('Inventory permissions could not load. Try again.');
   const pageHref = (target: number) =>
@@ -338,6 +356,36 @@ export default async function PeoplePage({ searchParams }: Props) {
                         />
                       ) : undefined
                     }
+                    insightLabel={
+                      member.role === 'end_user'
+                        ? (() => {
+                            const access = insightMembers.find(
+                              (row) => row.userId === member.user_id,
+                            );
+                            return [
+                              access?.dashboard ? 'Dashboard viewer' : '',
+                              access?.sharedIncidents ? 'Incident viewer' : '',
+                            ]
+                              .filter(Boolean)
+                              .join(' · ');
+                          })()
+                        : undefined
+                    }
+                    insightPermissions={
+                      canManage && member.role === 'end_user' ? (
+                        <InsightPermissionForm
+                          name={name}
+                          member={
+                            insightMembers.find((row) => row.userId === member.user_id) ?? {
+                              userId: member.user_id,
+                              dashboard: false,
+                              sharedIncidents: false,
+                              revision: 0,
+                            }
+                          }
+                        />
+                      ) : undefined
+                    }
                     inventoryPermissions={
                       canManage ? (
                         <PermissionsForm
@@ -363,7 +411,7 @@ export default async function PeoplePage({ searchParams }: Props) {
                     }
                     avatarUrl={profile?.avatar_path ? avatarsByPath.get(profile.avatar_path) : null}
                     role={member.role}
-                    status={member.status}
+                    status={statusesByUser.get(member.user_id)!}
                     isSelf={member.user_id === viewer.id}
                     canManage={canManage}
                     profile={profile}

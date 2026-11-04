@@ -45,7 +45,7 @@ test('workspace ticket search executes the projected, sorted RPC query in Postgr
     };
     const { searchWorkspace } = load('src/features/search/service.ts', {
       '@/lib/auth/viewer': {
-        requireViewer: async () => ({
+        requireWorkspaceAccess: async () => ({
           role: 'administrator',
           id: ids.admin,
           organizationId: ids.org,

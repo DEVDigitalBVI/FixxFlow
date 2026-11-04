@@ -8,8 +8,13 @@ import { DisclosureActionForm } from '@/components/ui/disclosure-action-form';
 import { NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { MemberDetailsEditor } from '@/features/administration/member-details-editor';
+import { ResendInvitation } from '@/features/administration/resend-invitation';
+import {
+  memberStatusPresentation,
+  type MemberAccountStatus,
+} from '@/features/identity/member-status';
 import { rolePresentation } from '@/features/identity/role';
-import type { AppRole, MembershipStatus } from '@/types/database';
+import type { AppRole } from '@/types/database';
 
 type Profile = {
   user_id: string;
@@ -34,6 +39,8 @@ export function PersonCard({
   updateRole,
   updateStatus,
   inventoryPermissions,
+  insightPermissions,
+  insightLabel,
   selection,
   deleteControl,
 }: {
@@ -42,18 +49,22 @@ export function PersonCard({
   email: string;
   avatarUrl?: string | null;
   role: AppRole;
-  status: MembershipStatus;
+  status: MemberAccountStatus;
   isSelf: boolean;
   canManage: boolean;
   profile?: Profile;
   departments: Option[];
   locations: Option[];
   inventoryPermissions?: ReactNode;
+  insightPermissions?: ReactNode;
+  insightLabel?: string;
   selection?: ReactNode;
   deleteControl?: ReactNode;
   updateRole: (form: FormData) => Promise<void>;
   updateStatus: (form: FormData) => Promise<void>;
 }) {
+  const presentation = memberStatusPresentation[status];
+  const accessEnabled = status !== 'inactive';
   return (
     <li className="person-card">
       <div className="person-card-overview">
@@ -70,11 +81,21 @@ export function PersonCard({
           </div>
         </div>
         <div className="person-card-meta">
-          <span className="person-role">{rolePresentation[role].label}</span>
-          <Badge tone={status === 'active' ? 'success' : 'muted'}>
+          <span className="person-role">
+            {rolePresentation[role].label}
+            {insightLabel && ` · ${insightLabel}`}
+          </span>
+          <Badge
+            tone={presentation.tone}
+            className="member-status-badge"
+            data-member-status={status}
+          >
             <span className="status-dot" aria-hidden="true" />
-            {status === 'active' ? 'Active' : 'Inactive'}
+            {presentation.label}
           </Badge>
+          {presentation.description && (
+            <p className="person-account-hint muted">{presentation.description}</p>
+          )}
         </div>
       </div>
       {!canManage && !deleteControl && (
@@ -142,12 +163,12 @@ export function PersonCard({
                     </SubmitButton>
                   </DisclosureActionForm>
                   <div className="person-access-change">
-                    {isSelf && status === 'active' ? (
+                    {isSelf && accessEnabled ? (
                       <p className="muted">You can’t deactivate your own account.</p>
                     ) : (
                       <details className="settings-editor">
                         <summary>
-                          {status === 'active' ? 'Deactivate access' : 'Restore access'}
+                          {accessEnabled ? 'Deactivate access' : 'Restore access'}
                           <span className="sr-only"> for {name}</span>
                         </summary>
                         <DisclosureActionForm action={updateStatus} className="stack">
@@ -155,21 +176,23 @@ export function PersonCard({
                           <input
                             type="hidden"
                             name="status"
-                            value={status === 'active' ? 'inactive' : 'active'}
+                            value={accessEnabled ? 'inactive' : 'active'}
                           />
                           <p>
-                            {status === 'active'
+                            {accessEnabled
                               ? `Deactivate ${name}’s workspace access? Their existing records will be retained.`
                               : `Restore ${name}’s workspace access? Their current role will be retained.`}
                           </p>
-                          <SubmitButton variant={status === 'active' ? 'danger' : 'secondary'}>
-                            {status === 'active' ? 'Confirm deactivation' : 'Restore access'}
+                          <SubmitButton variant={accessEnabled ? 'danger' : 'secondary'}>
+                            {accessEnabled ? 'Confirm deactivation' : 'Restore access'}
                           </SubmitButton>
                         </DisclosureActionForm>
                       </details>
                     )}
                   </div>
                 </section>
+                {status === 'invited' && <ResendInvitation id={id} name={name} />}
+                {insightPermissions}
                 {inventoryPermissions}
               </>
             )}

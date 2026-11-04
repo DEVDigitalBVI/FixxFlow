@@ -1,8 +1,8 @@
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import type { ReactNode } from 'react';
 
+import { PrivateSpeedInsights } from '@/features/product-analytics/speed-insights';
 import { WebAnalytics } from '@/features/product-analytics/web-analytics';
 import { themeScript } from '@/features/theme/theme';
 import { ThemeController } from '@/features/theme/theme-control';
@@ -64,7 +64,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         </a>
         {children}
         <ThemeController />
-        <SpeedInsights />
+        <PrivateSpeedInsights />
         <WebAnalytics />
       </body>
     </html>

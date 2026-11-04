@@ -126,7 +126,9 @@ test('suggestion endpoint derives organization from the viewer, separates empty 
   const calls = [];
   const { GET } = load('src/app/app/help/suggestions/route.ts', {
     'next/navigation': { ...searchNavigation, unstable_rethrow: () => {} },
-    '@/lib/auth/viewer': { requireViewer: async () => ({ organizationId: 'trusted-org' }) },
+    '@/lib/auth/viewer': {
+      requireWorkspaceAccess: async () => ({ organizationId: 'trusted-org' }),
+    },
     '@/lib/supabase/server': {
       createClient: async () => ({
         rpc: async (name, args) => {

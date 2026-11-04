@@ -21,6 +21,9 @@ test('employees and administrators use the same shell, brand and account control
           timezonePreference: 'organization',
         }),
       },
+      '@/features/support-viewer/access': {
+        supportViewerAccess: async () => ({ dashboard: false, sharedIncidents: false }),
+      },
       '@/features/inventory/access': {
         inventoryAccess: async () => ({ manager: false, departments: [] }),
       },

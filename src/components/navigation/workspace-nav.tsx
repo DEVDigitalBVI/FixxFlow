@@ -21,6 +21,7 @@ export function WorkspaceNav({
   platform = false,
   workspaceAvailable = true,
   inventoryAccess = false,
+  insightAccess = { dashboard: false, sharedIncidents: false },
   signOutControl,
 }: {
   /** Shown at the end of the compact navigation sheet; the sidebar keeps its own. */
@@ -28,6 +29,7 @@ export function WorkspaceNav({
   platform?: boolean;
   workspaceAvailable?: boolean;
   inventoryAccess?: boolean;
+  insightAccess?: { dashboard: boolean; sharedIncidents: boolean };
   role: AppRole;
   organizationId: string;
   userId: string;
@@ -80,6 +82,18 @@ export function WorkspaceNav({
           label: role === 'end_user' ? 'My requests' : 'Tickets',
           icon: <NavigationIcon name="tickets" />,
           visible: true,
+        },
+        {
+          href: '/app/support-dashboard',
+          label: 'Support dashboard',
+          icon: <NavigationIcon name="overview" />,
+          visible: role === 'end_user' && insightAccess.dashboard,
+        },
+        {
+          href: '/app/shared-incidents',
+          label: 'Shared incidents',
+          icon: <NavigationIcon name="tickets" />,
+          visible: role !== 'end_user' || insightAccess.sharedIncidents,
         },
         {
           href: '/app/chat',
@@ -220,7 +234,13 @@ export function WorkspaceNav({
         );
       });
   }
-  const primaryPaths = ['/app', '/app/tickets', '/app/chat'];
+  const primaryPaths = [
+    '/app',
+    '/app/tickets',
+    '/app/chat',
+    '/app/support-dashboard',
+    '/app/shared-incidents',
+  ];
   const resourcePaths = ['/app/help', '/app/faq', '/app/inventory', '/app/assets'];
   const managePaths = ['/app/reports', '/app/people', '/app/administration'];
   const accountPaths = ['/app/profile', '/app/security', '/app/support'];

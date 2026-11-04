@@ -71,7 +71,7 @@ function render(overrides = {}) {
 
 test('location row groups written metadata and preserves named lifecycle controls and confirmation', () => {
   const html = render();
-  assert.match(html, /class="organization-location-meta"/);
+  assert.match(html, /class="organization-entry-meta"/);
   assert.match(html, />Active<\/span><span aria-hidden="true">·<\/span><span>VG<\/span>/);
   assert.match(html, /Add sublocation<span class="sr-only"> to Admin Building/);
   assert.match(

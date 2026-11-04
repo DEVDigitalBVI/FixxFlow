@@ -7,7 +7,9 @@ const id = '10000000-0000-4000-8000-000000000001';
 function setup(role = 'technician', failure = null) {
   const calls = [];
   const api = load('src/features/lookups/service.ts', {
-    '@/lib/auth/viewer': { requireViewer: async () => ({ role, organizationId: 'trusted-org' }) },
+    '@/lib/auth/viewer': {
+      requireWorkspaceAccess: async () => ({ role, organizationId: 'trusted-org' }),
+    },
     '@/lib/supabase/server': {
       createClient: async () => ({
         rpc: async (name, args) => {

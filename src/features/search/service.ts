@@ -1,14 +1,14 @@
 import 'server-only';
 
 import { isKnowledgeAudience, knowledgeAudiences } from '@/features/knowledge/audience';
-import { requireViewer } from '@/lib/auth/viewer';
+import { requireWorkspaceAccess } from '@/lib/auth/viewer';
 import { normalizeSearch } from '@/lib/search';
 import { createClient } from '@/lib/supabase/server';
 
 import { SEARCH_RESULT_LIMIT, type SearchResult } from './model';
 
 export async function searchWorkspace(raw: string): Promise<SearchResult[]> {
-  const viewer = await requireViewer();
+  const viewer = await requireWorkspaceAccess();
   const q = normalizeSearch(raw);
   if (!q) return [];
   const { data, error } = await (

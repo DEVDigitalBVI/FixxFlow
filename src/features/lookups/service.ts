@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { requireViewer } from '@/lib/auth/viewer';
+import { requireWorkspaceAccess } from '@/lib/auth/viewer';
 import { UUID_PATTERN as uuid } from '@/lib/ids';
 import { normalizeSearch } from '@/lib/search';
 import { createClient } from '@/lib/supabase/server';
@@ -9,7 +9,7 @@ import { LOOKUP_PAGE_SIZE, lookupResources, type LookupPage, type LookupResource
 
 export class LookupInputError extends Error {}
 export async function lookupChoices(params: URLSearchParams): Promise<LookupPage> {
-  const viewer = await requireViewer();
+  const viewer = await requireWorkspaceAccess();
   const resource = params.get('resource') as LookupResource;
   const selected = params.get('selected') || null;
   const parent = params.get('parent') || null;

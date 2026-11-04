@@ -1,5 +1,13 @@
 export const administrationSections = [
   {
+    slug: 'announcements',
+    title: 'Email announcements',
+    group: 'Service delivery',
+    status: 'Available',
+    description: 'Draft, review and send company updates to registered members.',
+    href: '/app/administration/announcements',
+  },
+  {
     slug: 'library',
     title: 'FixxFlow library',
     group: 'Service delivery',

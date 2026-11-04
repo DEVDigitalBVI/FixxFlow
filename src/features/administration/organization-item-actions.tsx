@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 import { buttonVariants } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -10,6 +11,7 @@ type Props = {
   name: string;
   active: boolean;
   kind: 'department' | 'location';
+  editor?: ReactNode;
   toggleAction: (form: FormData) => Promise<void>;
   deleteAction: (form: FormData) => Promise<void>;
 };
@@ -19,6 +21,7 @@ export function OrganizationItemActions({
   name,
   active,
   kind,
+  editor,
   toggleAction,
   deleteAction,
 }: Props) {
@@ -28,58 +31,60 @@ export function OrganizationItemActions({
     </small>
   );
   return (
-    <div className="organization-item-actions">
-      <div className="organization-item-toggle">
-        <DisclosureActionForm action={toggleAction}>
-          <input type="hidden" name="id" value={id} />
-          <input type="hidden" name="isActive" value={String(active)} />
-          <SubmitButton
-            variant="secondary"
-            size="small"
-            aria-label={`${active ? 'Deactivate' : 'Activate'} ${kind} ${name}`}
-            aria-describedby={active ? `deactivate-description-${id}` : undefined}
-          >
-            {active ? 'Deactivate' : 'Activate'}
-          </SubmitButton>
-        </DisclosureActionForm>
-        {kind === 'department' && deactivationHint}
+    <>
+      <div className="organization-item-actions">
+        {editor}
+        <div className="organization-item-toggle">
+          <DisclosureActionForm action={toggleAction}>
+            <input type="hidden" name="id" value={id} />
+            <input type="hidden" name="isActive" value={String(active)} />
+            <SubmitButton
+              variant="secondary"
+              size="small"
+              aria-label={`${active ? 'Deactivate' : 'Activate'} ${kind} ${name}`}
+              aria-describedby={active ? `deactivate-description-${id}` : undefined}
+            >
+              {active ? 'Deactivate' : 'Activate'}
+            </SubmitButton>
+          </DisclosureActionForm>
+        </div>
+        <details className="organization-delete">
+          <summary>
+            Delete
+            <span className="sr-only">
+              {' '}
+              {kind} {name}
+            </span>
+            …
+          </summary>
+          <DisclosureActionForm action={deleteAction} className="stack">
+            <input type="hidden" name="id" value={id} />
+            <p id={`delete-description-${id}`}>
+              Permanently delete “{name}”? This cannot be undone. Linked records will block
+              deletion; deactivate the {kind} to keep its history.
+            </p>
+            <label className="organization-delete-confirm">
+              <Checkbox
+                name="confirmDelete"
+                value={id}
+                required
+                aria-describedby={`delete-description-${id}`}
+              />
+              I confirm permanent deletion of {name}.
+            </label>
+            <SubmitButton variant="danger" size="small" pendingLabel="Deleting…">
+              Delete {kind}
+            </SubmitButton>
+            <Link
+              className={buttonVariants({ variant: 'quiet' })}
+              href={`/app/organization#${kind === 'department' ? 'departments' : 'locations'}`}
+            >
+              Cancel
+            </Link>
+          </DisclosureActionForm>
+        </details>
       </div>
-      <details className="organization-delete">
-        <summary>
-          Delete
-          <span className="sr-only">
-            {' '}
-            {kind} {name}
-          </span>
-          …
-        </summary>
-        <DisclosureActionForm action={deleteAction} className="stack">
-          <input type="hidden" name="id" value={id} />
-          <p id={`delete-description-${id}`}>
-            Permanently delete “{name}”? This cannot be undone. Linked records will block deletion;
-            deactivate the {kind} to keep its history.
-          </p>
-          <label className="organization-delete-confirm">
-            <Checkbox
-              name="confirmDelete"
-              value={id}
-              required
-              aria-describedby={`delete-description-${id}`}
-            />
-            I confirm permanent deletion of {name}.
-          </label>
-          <SubmitButton variant="danger" size="small" pendingLabel="Deleting…">
-            Delete {kind}
-          </SubmitButton>
-          <Link
-            className={buttonVariants({ variant: 'quiet' })}
-            href={`/app/organization#${kind === 'department' ? 'departments' : 'locations'}`}
-          >
-            Cancel
-          </Link>
-        </DisclosureActionForm>
-      </details>
-      {kind === 'location' && deactivationHint}
-    </div>
+      {deactivationHint}
+    </>
   );
 }

@@ -57,7 +57,7 @@ export function BulkInvite() {
         const result = await sendInvitationBatch(
           batch.map(({ email, displayName, role, token }) => ({ email, displayName, role, token })),
         );
-        if (result.error || !result.rows) {
+        if (!result.rows) {
           setError(
             result.error ?? 'Invitations could not be confirmed. Retry without reloading this CSV.',
           );
@@ -76,6 +76,10 @@ export function BulkInvite() {
               : row;
           }),
         );
+        if (result.error) {
+          setError(result.error);
+          break;
+        }
         if (result.rows.some((row) => row.error)) {
           setError(
             'Some invitations need attention. Retry them, or skip those rows before continuing.',

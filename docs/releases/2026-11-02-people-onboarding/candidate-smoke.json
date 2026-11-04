@@ -1,0 +1,26 @@
+{
+  "target": "https://fixx-flow-ai16syuvm-fixx-flow.vercel.app",
+  "checkedAt": "2026-11-02T16:44:23.527Z",
+  "checks": [
+    {
+      "path": "/api/health/live",
+      "status": 200,
+      "durationMs": 600
+    },
+    {
+      "path": "/api/health/ready",
+      "status": 200,
+      "durationMs": 589
+    },
+    {
+      "path": "/",
+      "status": 307,
+      "durationMs": 514
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "durationMs": 513
+    }
+  ]
+}

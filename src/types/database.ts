@@ -12,6 +12,8 @@ import type { AutomationWorkerFunctions } from './automation-worker-database';
 import type { Database as GeneratedDatabase, Json } from './database.generated';
 import type { DomainEventFunctions } from './domain-event-database';
 import type { InventoryFunctions, InventoryTables } from './inventory-database';
+import type { InvitationFunctions } from './invitation-database';
+import type { SupportViewerFunctions } from './support-viewer-database';
 
 export type { Json } from './database.generated';
 
@@ -480,6 +482,46 @@ type RuntimeTables = {
   };
 
 type RuntimeFunctions = {
+  prepare_email_announcement: {
+    Args: {
+      org: string;
+      token: string;
+      heading: string;
+      message: string;
+      selected_members?: string[] | null;
+    };
+    Returns: string;
+  };
+  email_announcement_choices: {
+    Args: { org: string; query?: string; page?: number };
+    Returns: Json;
+  };
+  read_email_announcements: {
+    Args: { org: string; target?: string | null; page?: number };
+    Returns: Json;
+  };
+  queue_email_announcement: { Args: { org: string; target: string }; Returns: number };
+  claim_email_announcements: {
+    Args: { batch_size?: number };
+    Returns: import('@/features/email-announcements/model').EmailAnnouncementDelivery[];
+  };
+  finish_email_announcement: {
+    Args: {
+      campaign: string;
+      recipient: string;
+      token: string;
+      provider_id?: string;
+      failure?: boolean;
+    };
+    Returns: boolean;
+  };
+  member_account_statuses: {
+    Args: { org: string; members: string[] };
+    Returns: {
+      user_id: string;
+      account_status: import('@/features/identity/member-status').MemberAccountStatus;
+    }[];
+  };
   touch_app_session: { Args: never; Returns: Json };
   revoke_app_session: { Args: never; Returns: boolean };
   app_session_state: { Args: never; Returns: Json };
@@ -629,7 +671,9 @@ type RuntimeFunctions = {
   AutomationWorkerFunctions &
   AutomationDryRunFunctions &
   AutomationAdminFunctions &
-  InventoryFunctions & {
+  InventoryFunctions &
+  SupportViewerFunctions &
+  InvitationFunctions & {
     edit_chat_message: {
       Args: {
         org: string;

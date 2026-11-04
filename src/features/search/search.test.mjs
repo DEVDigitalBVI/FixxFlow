@@ -60,7 +60,7 @@ function service(role = 'administrator', error = false) {
     calls,
     search: load('src/features/search/service.ts', {
       '@/lib/auth/viewer': {
-        requireViewer: async () => ({ role, id: 'viewer', organizationId: 'org' }),
+        requireWorkspaceAccess: async () => ({ role, id: 'viewer', organizationId: 'org' }),
       },
       '@/lib/supabase/server': {
         createClient: async () => ({

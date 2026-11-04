@@ -222,3 +222,42 @@ test('company sign-in action requests only the needed provider scope and a fixed
     });
   }
 });
+
+test('bulk invitations stop immediately at the email limit, returning earlier successes and leaving later rows untouched', async () => {
+  const calls = [];
+  const { sendInvitationBatch } = load('src/app/app/people/import/actions.ts', {
+    '@/lib/auth/viewer': {
+      requireViewer: async () => ({ role: 'administrator', organizationId: 'trusted' }),
+    },
+    '@/lib/supabase/server': {
+      createClient: async () => ({
+        from: () => ({
+          select: () => ({ eq: () => ({ in: async () => ({ data: [], error: null }) }) }),
+        }),
+      }),
+    },
+    '../actions': {
+      inviteMember: async (form) => {
+        calls.push(form.get('submissionKey'));
+        return calls.length === 1
+          ? { success: 'Accepted' }
+          : { error: 'Hourly allowance reached.', rateLimited: true };
+      },
+    },
+  });
+  const rows = Array.from({ length: 5 }, (_, i) => ({
+    token: randomUUID(),
+    email: `person${i}@example.com`,
+    displayName: `Person ${i}`,
+    role: 'end_user',
+  }));
+  const result = await sendInvitationBatch(rows);
+  assert.deepEqual(
+    calls,
+    rows.slice(0, 2).map((row) => row.token),
+  );
+  assert.equal(result.error, 'Hourly allowance reached.');
+  assert.equal(result.rows[0].success, 'Accepted');
+  assert.equal(result.rows[1].error, 'Hourly allowance reached.');
+  assert.equal(result.rows.length, 2);
+});

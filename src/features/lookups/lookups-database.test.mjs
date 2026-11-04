@@ -40,7 +40,7 @@ test('lookup pages cross the API row cap, preserve selections, and enforce tenan
     };
     const viewer = { organizationId: ids.org, role: 'administrator' };
     const { lookupChoices } = load('src/features/lookups/service.ts', {
-      '@/lib/auth/viewer': { requireViewer: async () => viewer },
+      '@/lib/auth/viewer': { requireWorkspaceAccess: async () => viewer },
       '@/lib/supabase/server': {
         createClient: async () => ({
           rpc: (name, args) => {

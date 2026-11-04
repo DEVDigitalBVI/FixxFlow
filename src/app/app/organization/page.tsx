@@ -6,8 +6,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PageHeader } from '@/components/ui/page-header';
 import { OrganizationCreateForm } from '@/features/administration/organization-create-form';
-import { OrganizationItemActions } from '@/features/administration/organization-item-actions';
-import { OrganizationItemEditor } from '@/features/administration/organization-item-editor';
+import { OrganizationItemRow } from '@/features/administration/organization-item-row';
 import { OrganizationLocationList } from '@/features/administration/organization-location-item';
 import { TimezoneSelect } from '@/features/timezones/select';
 import { TimezoneSettingsForm } from '@/features/timezones/settings-form';
@@ -117,22 +116,13 @@ export default async function OrganizationPage({ searchParams }: Props) {
           )}
           <div className="management-list">
             {departments?.map((item) => (
-              <div className="management-item" key={item.id}>
-                <div>
-                  <strong>{item.name}</strong>
-                  <span>{item.is_active ? 'Active' : 'Inactive'}</span>
-                  <span>{item.description ?? 'No description'}</span>
-                </div>
-                <OrganizationItemEditor kind="departments" item={item} />
-                <OrganizationItemActions
-                  id={item.id}
-                  name={item.name}
-                  active={item.is_active}
-                  kind="department"
-                  toggleAction={toggleDepartment}
-                  deleteAction={deleteDepartment}
-                />
-              </div>
+              <OrganizationItemRow
+                key={item.id}
+                kind="department"
+                item={item}
+                toggleAction={toggleDepartment}
+                deleteAction={deleteDepartment}
+              />
             ))}
           </div>
         </section>

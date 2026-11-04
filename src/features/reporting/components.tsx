@@ -5,6 +5,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { RetryButton } from '@/components/ui/retry-button';
 import { Table, TableRegion } from '@/components/ui/table';
 
+import { chartDate, chartScale, elapsedLabel } from './chart-model';
 import { duration, topRows, type Report } from './model';
 
 export function ReportUnavailable() {
@@ -105,7 +106,17 @@ export function Trend({
   time?: boolean;
 }) {
   const all = series.flatMap((s) => s.values).filter((v): v is number => v !== null);
-  const max = Math.max(1, ...all);
+  const actualMax = Math.max(1, ...all);
+  const scale = chartScale(actualMax, time);
+  const max = scale.max;
+  const samples = days.flatMap((day, index) => {
+    const value = series[0]?.values[index];
+    return value === null || value === undefined ? [] : [{ day, value }];
+  });
+  const timingDays = days.filter((_, index) =>
+    series.some((item) => item.values[index] !== null && item.values[index] !== undefined),
+  ).length;
+  const sparseTiming = time && series.length === 1 && samples.length <= 5;
   const hasActivity = all.some((v) => v > 0) || (time && all.length > 0);
   return (
     <section className="settings-card report-chart">
@@ -113,49 +124,100 @@ export function Trend({
       <p>{description}</p>
       {hasActivity ? (
         <>
-          <ul className="report-legend">
-            {series.map((s, i) => (
-              <li key={s.label}>
-                <span aria-hidden="true" className={`report-line-key report-series-${i}`} />
-                {s.label}
-              </li>
-            ))}
-          </ul>
-          <svg
-            viewBox="0 0 600 150"
-            role="img"
-            aria-label={`${title} over ${days.length} days. Exact values are available in the data table below.`}
-          >
-            <line x1="8" x2="592" y1="140" y2="140" className="report-axis" />
-            {series.map((s, i) => (
-              <g key={s.label} className={`report-series-${i}`}>
-                {s.values.map((v, j) =>
-                  v === null ? null : (
-                    <g key={j}>
-                      {j > 0 && s.values[j - 1] !== null && (
-                        <line
-                          x1={8 + ((j - 1) * 584) / Math.max(1, days.length - 1)}
-                          y1={140 - ((s.values[j - 1] as number) / max) * 130}
-                          x2={8 + (j * 584) / Math.max(1, days.length - 1)}
-                          y2={140 - (v / max) * 130}
-                        />
+          {time && (
+            <p className="report-sample-note">
+              {timingDays} of {days.length} days have timing data. Days without samples are not
+              counted as zero.
+            </p>
+          )}
+          {sparseTiming ? (
+            <ul className="report-timing-samples" aria-label={`${title} by recorded day`}>
+              {samples.map((sample) => (
+                <li key={sample.day}>
+                  <div>
+                    <time dateTime={sample.day}>{chartDate(sample.day)}</time>
+                    <strong>{elapsedLabel(sample.value)}</strong>
+                  </div>
+                  <span className="report-bar-track" aria-hidden="true">
+                    <span style={{ width: `${Math.max(0, (sample.value / actualMax) * 100)}%` }} />
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <>
+              <ul className="report-legend">
+                {series.map((s, i) => (
+                  <li key={s.label}>
+                    <span aria-hidden="true" className={`report-line-key report-series-${i}`} />
+                    {s.label}
+                  </li>
+                ))}
+              </ul>
+              <p className="report-axis-unit">{time ? 'Elapsed time' : 'Tickets'}</p>
+              <div className="report-trend-layout">
+                <div className="report-y-axis" aria-hidden="true">
+                  {scale.ticks.map((tick) => (
+                    <span key={tick}>{time ? elapsedLabel(tick) : tick}</span>
+                  ))}
+                </div>
+                <svg
+                  className="report-trend-plot"
+                  viewBox="0 0 600 200"
+                  preserveAspectRatio="none"
+                  role="img"
+                  aria-label={`${title} over ${days.length} days. Vertical axis ranges from ${time ? '0 minutes' : '0'} to ${time ? elapsedLabel(max) : max}. Exact values are available in the data table below.`}
+                >
+                  {scale.ticks.map((tick, index) => (
+                    <line
+                      key={tick}
+                      x1="0"
+                      x2="600"
+                      y1={8 + index * 46}
+                      y2={8 + index * 46}
+                      className={tick === 0 ? 'report-axis' : 'report-grid-line'}
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))}
+                  {series.map((s, i) => (
+                    <g key={s.label} className={`report-series-${i}`}>
+                      {s.values.map((v, j) =>
+                        v === null ? null : (
+                          <g key={j}>
+                            {j > 0 && s.values[j - 1] !== null && (
+                              <line
+                                x1={((j - 1) * 600) / Math.max(1, days.length - 1)}
+                                y1={192 - ((s.values[j - 1] as number) / max) * 184}
+                                x2={(j * 600) / Math.max(1, days.length - 1)}
+                                y2={192 - (v / max) * 184}
+                                vectorEffect="non-scaling-stroke"
+                              />
+                            )}
+                            <circle
+                              cx={(j * 600) / Math.max(1, days.length - 1)}
+                              cy={192 - (v / max) * 184}
+                              r="4"
+                            >
+                              <title>{`${s.label} · ${days[j]} · ${time ? elapsedLabel(v) : v}`}</title>
+                            </circle>
+                          </g>
+                        ),
                       )}
-                      <circle
-                        cx={8 + (j * 584) / Math.max(1, days.length - 1)}
-                        cy={140 - (v / max) * 130}
-                        r="2.5"
-                      />
                     </g>
-                  ),
-                )}
-              </g>
-            ))}
-          </svg>
-          <div className="report-axis-labels">
-            <span>{days[0]}</span>
-            <span>{time ? duration(max) : max} max</span>
-            <span>{days.at(-1)}</span>
-          </div>
+                  ))}
+                </svg>
+                <div className="report-axis-labels report-date-axis">
+                  {[0, Math.floor((days.length - 1) / 2), days.length - 1]
+                    .filter((value, index, values) => values.indexOf(value) === index && value >= 0)
+                    .map((index) => (
+                      <time dateTime={days[index]} key={index}>
+                        {chartDate(days[index])}
+                      </time>
+                    ))}
+                </div>
+              </div>
+            </>
+          )}
         </>
       ) : (
         <div className="report-empty">
