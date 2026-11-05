@@ -398,6 +398,7 @@ When requirements are unclear, choose the option that improves clarity, accessib
 ### Reference pickers inside forms
 
 - Reuse `LookupSelect` for large reference sets: a labeled native search field, native select, current selection, and explicit Previous/More choices buttons. Fetch 50 permission-scoped choices per page with stable cursors. Resolve the selected record separately so paging and searching never clear it.
+- New-ticket Requester search selects the first active match when the current requester does not match the completed search. A successful search with no matches clears this required selection; failed searches preserve it and block submission. Clearing the search or paging preserves the chosen requester. Keep this behavior opt-in; other reference pickers preserve their current selection. Explain automatic selection beside the search and announce the selected name.
 - These searches operate within the editing form; Enter searches immediately without submitting the outer form. Reuse the 300ms delay, composition handling, literal search contract, and guidance from list search. Cancel stale requests and keep existing choices visible while loading.
 - Announce loading, empty, unavailable, and failed states in text. Offer retry, return focus to search after retry/clear, and prevent saves while required reference data is unresolved. Keep draft fields mounted after save failures and focus the shared `ActionForm` error summary.
 - Reuse existing field, button, focus, surface, and spacing tokens. Let paging actions wrap on compact screens. Introduce no new animation.
@@ -700,3 +701,19 @@ Email reply threading uses RFC headers with a workspace-scoped ticket-number fal
 ### Sent chat message color
 
 The product owner approved blue surfaces for the current viewer’s public chat messages and attachments, distinct from neutral incoming messages in both themes. Use `--color-chat-own-surface`, `--color-chat-own-text` and `--color-chat-own-border`; retain the You/sender label, alignment, accessible metadata, Edit controls and focus indicators. Internal notes keep their neutral surface, accent edge and written Internal note label. This is a scoped exception to the red/navy functional palette.
+
+### Employee support insights
+
+Employees may receive independent administrator-managed permissions to view the support dashboard and shared incidents. Retain their employee home, personal requests and chats. Use the shared TodayMetrics, DashboardInsights, TableRegion, TicketStatusBadge and PageHeader components, with a written View only badge. Dashboard viewers see the six activity metrics, technician workload and accessible response trend without staff queue, reporting or export links.
+
+Shared incidents use a searchable responsive queue and full detail routes with approved overview and resolution summaries. IT staff explicitly publish a separate safe title and summary for incidents or High/Urgent tickets; priority alone never grants visibility. Keep internal notes, raw descriptions, conversations and files outside this experience. Show current status and priority with centralized written badges. Reuse ActionForm, Checkbox, Input, Textarea, SubmitButton and native disclosures for permission and publication controls, preserving drafts and recoverable errors. Withdraw publication or revoke permissions without changing employee request behavior.
+
+### Password setup and recovery
+
+Reuse PasswordFields on account creation and password setup. Show a red X for unmet requirements and a check mark when met, with written labels, screen-reader states and a polite progress summary. Validate at least eight characters, uppercase, lowercase, number and symbol using the shared password policy on both browser and server, and track confirmation when either password changes. Use existing Input, NavigationIcon, form-note, focus and semantic danger/success tokens. Keep controls stacked at compact widths, preserve native password-manager/autocomplete behavior, and support forced colors without relying on color alone. Explain that common/exposed passwords are checked when saving; do not imply this remote screening passed based on local complexity.
+
+New invitations use a 72-hour single-use application link and an explicit acceptance step; password recovery uses a 24-hour link and an explicit continuation step. Reuse the auth card, ActionForm, SubmitButton and native details for new-invitation controls. Explain expired/used links, include recovery navigation, and show clear errors for weak, unchanged and invalid-session password updates.
+
+### Readable timing charts
+
+When a timing trend contains up to five recorded days, show dated horizontal bars with explicit hours/minutes instead of isolated dots across a mostly empty chart. State how many days contain samples and that missing days are not zero. Denser trends retain lines with visible time/count scales, subtle grid lines, readable HTML axis labels and abbreviated dates. Keep adjacent-day gaps intact and provide the existing exact-data disclosure for every date. Reuse report bars, chart color tokens, semantic tables and focus styles; zero-duration samples retain a written 0m value and no filled bar.

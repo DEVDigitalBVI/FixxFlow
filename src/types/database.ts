@@ -12,6 +12,8 @@ import type { AutomationWorkerFunctions } from './automation-worker-database';
 import type { Database as GeneratedDatabase, Json } from './database.generated';
 import type { DomainEventFunctions } from './domain-event-database';
 import type { InventoryFunctions, InventoryTables } from './inventory-database';
+import type { InvitationFunctions } from './invitation-database';
+import type { SupportViewerFunctions } from './support-viewer-database';
 
 export type { Json } from './database.generated';
 
@@ -669,7 +671,9 @@ type RuntimeFunctions = {
   AutomationWorkerFunctions &
   AutomationDryRunFunctions &
   AutomationAdminFunctions &
-  InventoryFunctions & {
+  InventoryFunctions &
+  SupportViewerFunctions &
+  InvitationFunctions & {
     edit_chat_message: {
       Args: {
         org: string;

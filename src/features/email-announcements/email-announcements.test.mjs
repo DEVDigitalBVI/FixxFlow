@@ -35,6 +35,8 @@ function actions(role = 'administrator', error = null, configured = true) {
   const calls = [];
   const api = load('src/app/app/administration/announcements/actions.ts', {
     'next/cache': { revalidatePath: (path) => calls.push(['refresh', path]) },
+    'next/server': { after: (callback) => calls.push(['after', callback]) },
+    '@/features/email-announcements/dispatch': { startEmailAnnouncementDelivery: async () => {} },
     '@/lib/auth/viewer': {
       requireWorkspaceAccess: async () => ({ role, organizationId: 'trusted-org' }),
     },
@@ -111,6 +113,8 @@ test('sending requires review confirmation, administrator access and configured 
     form({ announcementId, confirm: 'yes', recipients: 'attacker@example.invalid' }),
   );
   assert.match(result.success, /queued for 1/);
+  assert.equal(result.redirectTo, `/app/administration/announcements/${announcementId}?sending=1`);
+  assert.equal(api.calls.filter(([name]) => name === 'after').length, 1);
   assert.deepEqual(api.calls[0], [
     'queue_email_announcement',
     { org: 'trusted-org', target: announcementId },
@@ -130,7 +134,7 @@ test('email announcement rendering escapes text, preserves lines and sends priva
     lease_token: 'lease-1',
     recipient_email: 'employee@example.invalid',
     subject: 'A <script> subject',
-    body: 'First line\n<script>never execute</script>',
+    body: 'First line\n<script>never execute</script>\n<SCRIPT>never execute</SCRIPT>',
     workspace_name: 'Example workspace',
   };
   const keys = [];
@@ -144,7 +148,8 @@ test('email announcement rendering escapes text, preserves lines and sends priva
         assert.equal(payload.bcc, undefined);
         assert.match(payload.text, /First line\n<script>/);
         assert.match(payload.html, /&lt;script&gt;/);
-        assert.doesNotMatch(payload.html, /<script>/);
+        assert.match(payload.html, /&lt;SCRIPT&gt;/);
+        assert.doesNotMatch(payload.html, /<script\b/i);
         assert.match(payload.html, /Example workspace/);
         keys.push(options.headers['Idempotency-Key']);
         return Response.json({ id: 'provider-receipt' });
@@ -166,6 +171,7 @@ function page(role = 'administrator', data = review) {
   const mocks = {
     'next/link': { default: ({ children, ...props }) => React.createElement('a', props, children) },
     'next/navigation': {
+      useRouter: () => ({ replace() {} }),
       notFound: () => {
         throw Error('NOT_FOUND');
       },
@@ -257,7 +263,9 @@ test('email worker is cron-only and acknowledges both sent mail and retryable fa
       lease_token: 'lease',
       recipient_email: 'employee@example.invalid',
     };
+    let claimed = false;
     const { GET } = load('src/app/api/cron/email-announcements/route.ts', {
+      'node:timers/promises': { setTimeout: async () => {} },
       '@/lib/cron-auth': { isCronAuthorized: () => options.authorized !== false },
       '@/features/notifications/configuration': {
         getNotificationEmailConfiguration: () => (options.configured === false ? null : config),
@@ -274,9 +282,12 @@ test('email worker is cron-only and acknowledges both sent mail and retryable fa
         createAdminClient: () => ({
           rpc: async (name, args) => {
             calls.push([name, args]);
-            return name === 'claim_email_announcements'
-              ? { data: [delivery], error: null }
-              : { data: !options.failAck, error: null };
+            if (name === 'claim_email_announcements') {
+              const data = claimed ? [] : [delivery];
+              claimed = true;
+              return { data, error: null };
+            }
+            return { data: !options.failAck, error: null };
           },
         }),
       },
@@ -308,6 +319,7 @@ test('email worker is cron-only and acknowledges both sent mail and retryable fa
 
 test('announcement composer starts blank, includes all member roles and guards administrator access', async () => {
   for (const role of ['administrator', 'end_user']) {
+    let receiptResult = { data: null, error: null };
     const Page = load('src/app/app/administration/announcements/page.tsx', {
       'next/link': {
         default: ({ children, ...props }) => React.createElement('a', props, children),
@@ -349,6 +361,7 @@ test('announcement composer starts blank, includes all member roles and guards a
         createClient: async () => ({
           rpc: async (name, args) => {
             assert.equal(args.org, 'trusted-org');
+            if (args.target) return receiptResult;
             return {
               data:
                 name === 'email_announcement_choices'
@@ -385,5 +398,24 @@ test('announcement composer starts blank, includes all member roles and guards a
     assert.match(html, /<label for="email-announcement-body">Message/);
     assert.match(html, /Pending invitations and inactive/);
     assert.doesNotMatch(html, /Send announcement to/);
+    for (const counts of [
+      { total: 1, pending: 1, sent: 0, failed: 0, skipped: 0 },
+      { total: 2, pending: 0, sent: 1, failed: 1, skipped: 0 },
+      { total: 1, pending: 0, sent: 1, failed: 0, skipped: 0 },
+    ]) {
+      receiptResult = {
+        data: { ...review, campaign: { ...campaign, queued_at: '2026-11-02T12:00:00Z' }, counts },
+        error: null,
+      };
+      const returned = renderToStaticMarkup(
+        await Page({ searchParams: Promise.resolve({ sent: announcementId }) }),
+      );
+      assert.equal(
+        returned.includes('Announcement sent to'),
+        counts.pending === 0 && counts.failed === 0,
+      );
+      assert.match(returned, /name="subject" value=""/);
+      assert.match(returned, /<textarea[^>]*name="body"[^>]*><\/textarea>/);
+    }
   }
 });

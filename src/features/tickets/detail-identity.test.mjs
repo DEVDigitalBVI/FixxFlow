@@ -11,6 +11,7 @@ test('full page isolates the entire workflow by ticket identity, not revision', 
   const Announcement = () => null;
   const Incident = () => null;
   const Procedures = () => null;
+  const Sharing = () => null;
   const db = {
     from(table) {
       const response = () => ({
@@ -55,6 +56,7 @@ test('full page isolates the entire workflow by ticket identity, not revision', 
     },
     '@/lib/supabase/server': { createClient: async () => db },
     '@/features/lookups/labels': { profileLabels: async () => [] },
+    '@/features/support-viewer/sharing-panel': { IncidentSharingPanel: Sharing },
     './ticket-workflow': { TicketWorkflow: Workflow },
     './service-announcement-panel': { ServiceAnnouncementPanel: Announcement },
     './incident-panel': { IncidentPanel: Incident },
@@ -78,7 +80,7 @@ test('full page isolates the entire workflow by ticket identity, not revision', 
     assert.ok(first);
     assert.deepEqual(
       React.Children.toArray(first.props.tools.props.children).map((child) => child.type),
-      [Announcement, Incident, Procedures],
+      [Announcement, Incident, Sharing, Procedures],
       'coordination leads with the announcement and incident work before procedures',
     );
     assert.ok(second);

@@ -3,7 +3,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { load } from '../tests/helpers/load-module.mjs';
 
 // The renderer composes React Email components (TSX), so load it through the TypeScript loader.
-const { invitationConfirmationHref, renderEmail } = load('src/features/notifications/template.ts');
+const { invitationConfirmationHref, passwordRecoveryHref, renderEmail } = load(
+  'src/features/notifications/template.ts',
+);
 
 export const templates = [
   [
@@ -115,11 +117,13 @@ for (const [slug, title, message, action, note] of templates) {
       purpose,
       invitation: slug === 'invite-user',
       href:
-        slug === 'invite-user'
-          ? invitationConfirmationHref
-          : action
-            ? '{{ .ConfirmationURL }}'
-            : undefined,
+        slug === 'reset-password'
+          ? passwordRecoveryHref
+          : slug === 'invite-user'
+            ? invitationConfirmationHref
+            : action
+              ? '{{ .ConfirmationURL }}'
+              : undefined,
       code: slug === 'reauthentication' ? '{{ .Token }}' : undefined,
     }),
   );

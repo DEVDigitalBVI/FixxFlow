@@ -12,6 +12,7 @@ import { SubmissionKey } from '@/components/ui/submission-key';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { AnnouncementAudience } from '@/features/email-announcements/audience';
 import {
+  announcementSent,
   campaignStatus,
   emailAnnouncementsPath,
   type AnnouncementChoices,
@@ -31,7 +32,7 @@ export const metadata = { title: 'Email announcements' };
 export default async function EmailAnnouncementsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ draft?: string; page?: string }>;
+  searchParams: Promise<{ draft?: string; page?: string; sent?: string }>;
 }) {
   const viewer = await requireViewer();
   if (viewer.role !== 'administrator') notFound();
@@ -39,12 +40,15 @@ export default async function EmailAnnouncementsPage({
   if (params.draft && !isUuid(params.draft)) notFound();
   const page = pageNumber(params.page, 10000);
   const db = await createClient();
-  const [history, source, members] = await Promise.all([
+  const [history, source, members, receipt] = await Promise.all([
     db.rpc('read_email_announcements', { org: viewer.organizationId, page }),
     params.draft
       ? db.rpc('read_email_announcements', { org: viewer.organizationId, target: params.draft })
       : { data: null, error: null },
     db.rpc('email_announcement_choices', { org: viewer.organizationId }),
+    params.sent && isUuid(params.sent)
+      ? db.rpc('read_email_announcements', { org: viewer.organizationId, target: params.sent })
+      : { data: null, error: null },
   ]);
   if (members.error || !members.data)
     throw new Error('Registered members could not load. Try again.');
@@ -55,6 +59,10 @@ export default async function EmailAnnouncementsPage({
   const data = history.data as unknown as EmailAnnouncementList;
   const draft = source.data ? (source.data as unknown as EmailAnnouncementReview).campaign : null;
   const configured = Boolean(getNotificationEmailConfiguration(process.env));
+  const sentReceipt =
+    !receipt.error && receipt.data ? (receipt.data as unknown as EmailAnnouncementReview) : null;
+  const sent =
+    sentReceipt?.campaign.queued_at && announcementSent(sentReceipt.counts) ? sentReceipt : null;
   return (
     <div className="page page-narrow stack">
       <PageHeader
@@ -63,6 +71,13 @@ export default async function EmailAnnouncementsPage({
         description="Share company announcements, guidance and updates with members who completed signup."
         back={{ href: '/app/administration#admin-support', label: 'Settings' }}
       />
+      {sent && (
+        <Alert tone="success" role="status">
+          Announcement sent to {sent.counts.sent} {sent.counts.sent === 1 ? 'member' : 'members'}.
+          {sent.counts.skipped > 0 && ` ${sent.counts.skipped} skipped.`}{' '}
+          <Link href={`${emailAnnouncementsPath}/${sent.campaign.id}`}>View delivery details</Link>
+        </Alert>
+      )}
       {!configured && (
         <Alert tone="warning" role="status">
           Email delivery is not configured. You can prepare drafts; contact FixxFlow support before
@@ -77,7 +92,7 @@ export default async function EmailAnnouncementsPage({
           receives a separate email.
         </p>
         <ActionForm
-          key={params.draft ?? 'blank'}
+          key={params.draft ?? params.sent ?? 'blank'}
           action={prepareEmailAnnouncement}
           className="stack"
           pendingMessage="Preparing the draft and recipients…"

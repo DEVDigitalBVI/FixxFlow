@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 
 import type { InvitationResult } from '@/features/administration/bulk-invite-model';
 import { PEOPLE_DELETE_LIMIT } from '@/features/administration/people-deletion-model';
+import { sendWorkspaceInvitation } from '@/features/auth/invitation-email';
 import type { ActionResult } from '@/lib/action-result';
 import { requireViewer } from '@/lib/auth/viewer';
 import { formString } from '@/lib/form-data';
@@ -167,20 +168,20 @@ export async function inviteMember(formData: FormData): Promise<InvitationResult
               ? 'This account or invitation already exists. Retry with the original invitation details, or manage the member in People.'
               : 'The invitation could not be prepared. Your entries are preserved; please try again.',
     };
-  if (invitation.completed)
-    return {
-      success: 'This invitation is already registered. Manage the member’s access in People.',
-    };
   let userId = invitation.userId;
   if (!userId) {
     const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/auth/callback?next=/auth/update-password`;
-    const { data, error } = await admin.auth.admin.inviteUserByEmail(email, {
-      redirectTo,
-      // Email personalization only; authorization comes from organization_memberships.
-      data: {
-        invitation_role: role,
-        invited_by: viewer.displayName,
-        workspace_name: viewer.organizationName,
+    const { data, error } = await admin.auth.admin.generateLink({
+      type: 'invite',
+      email,
+      options: {
+        redirectTo,
+        // Email personalization only; authorization comes from organization_memberships.
+        data: {
+          invitation_role: role,
+          invited_by: viewer.displayName,
+          workspace_name: viewer.organizationName,
+        },
       },
     });
     if (error?.code === 'over_email_send_rate_limit')
@@ -211,14 +212,19 @@ export async function inviteMember(formData: FormData): Promise<InvitationResult
   if (registrationError)
     return {
       error:
-        'The invitation email was accepted, but workspace access needs repair. Your entries are preserved. Send again to repair access; another invitation email will not be sent.',
+        'The account was created, but workspace access needs repair before an invitation can be sent. Your entries are preserved; retry to repair access.',
     };
+  const result = await sendWorkspaceInvitation({
+    admin,
+    org: viewer.organizationId,
+    userId,
+    actor: viewer.id,
+    invitationId: invitation.id,
+    workspaceName: viewer.organizationName,
+    inviterName: viewer.displayName,
+  });
   revalidatePath('/app/people');
-  return {
-    success: invitation.userId
-      ? 'Workspace access repaired. The existing invitation email can be used; request a password reset if its link has expired.'
-      : 'Invitation email accepted and workspace access created.',
-  };
+  return result;
 }
 
 export async function updateMemberRole(formData: FormData) {
@@ -263,4 +269,25 @@ export async function updateMemberStatus(formData: FormData) {
     .eq('user_id', userId);
   if (error) peopleError('The member access status could not be updated.');
   revalidatePath('/app/people');
+}
+
+export async function resendMemberInvitation(form: FormData): Promise<ActionResult> {
+  const viewer = await requireViewer();
+  if (viewer.role !== 'administrator')
+    return { error: 'Only administrators can send workspace invitations.' };
+  const userId = formString(form, 'userId', ''),
+    token = formString(form, 'submissionKey', '');
+  if (!isUuid(userId) || !isUuid(token))
+    return { error: 'Reload this member before sending a new invitation.' };
+  const result = await sendWorkspaceInvitation({
+    admin: createAdminClient(),
+    org: viewer.organizationId,
+    userId,
+    actor: viewer.id,
+    invitationId: token,
+    workspaceName: viewer.organizationName,
+    inviterName: viewer.displayName,
+  });
+  revalidatePath('/app/people');
+  return result;
 }

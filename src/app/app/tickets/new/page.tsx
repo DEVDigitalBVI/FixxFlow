@@ -213,6 +213,7 @@ export default async function NewTicketPage({ searchParams }: Props) {
                   name="requesterId"
                   label="Requester"
                   defaultValue={viewer.id}
+                  selectFirstMatchOnSearch
                   required
                 />
                 <div className="field">

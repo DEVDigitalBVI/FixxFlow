@@ -283,3 +283,78 @@ test('loaded dropdowns omit choice counts across resources and display modes', a
     globalThis.fetch = old;
   }
 });
+
+test('new-ticket requester search moves to a match, permits explicit choice, and clears unmatched requesters', async () => {
+  const old = globalThis.fetch;
+  let fail = false;
+  const changes = [];
+  globalThis.fetch = async (url) => {
+    const params = new URL(url, 'https://fixture.test').searchParams;
+    if (fail) return Response.json({}, { status: 503 });
+    const rows =
+      params.get('q') === 'Ishelle'
+        ? [choice('ishelle', 'Ishelle'), choice('ishelle-other', 'Ishelle Other')]
+        : params.get('q')
+          ? []
+          : [choice('jamaal', 'Jamaal')];
+    return Response.json({ rows, selected: choice(params.get('selected'), 'Jamaal'), next: null });
+  };
+  const ui = componentHarness('src/features/lookups/lookup-select.tsx', 'LookupSelect', {
+    resource: 'people',
+    name: 'requesterId',
+    label: 'Requester',
+    defaultValue: 'jamaal',
+    selectFirstMatchOnSearch: true,
+    required: true,
+    onChange: (id) => changes.push(id),
+  });
+  const search = async (text) => {
+    ui.find((n) => n.props.type === 'search').props.onChange({
+      target: { value: text },
+      stopPropagation() {},
+    });
+    ui.render();
+    assert.equal(ui.find((n) => n.props.name === 'lookupLoadError').props.value, 'true');
+    await pause(text ? 330 : 20);
+    ui.render();
+    await pause(20);
+    ui.render();
+  };
+  try {
+    await pause(20);
+    ui.render();
+    assert.equal(ui.find((n) => n.type === 'select').props.value, 'jamaal');
+    await search('Ishelle');
+    assert.equal(ui.find((n) => n.type === 'select').props.value, 'ishelle');
+    assert.match(ui.find((n) => n.props.role === 'status').props.children, /Selected Ishelle/);
+    assert.equal(ui.all((n) => n.type === 'option' && n.props.value === 'jamaal').length, 0);
+    ui.find((n) => n.type === 'select').props.onChange({ target: { value: 'ishelle-other' } });
+    ui.render();
+    await pause(20);
+    ui.render();
+    assert.equal(ui.find((n) => n.type === 'select').props.value, 'ishelle-other');
+    await search('');
+    assert.equal(
+      ui.find((n) => n.type === 'select').props.value,
+      'ishelle-other',
+      'clear search retains the chosen requester',
+    );
+    fail = true;
+    await search('offline');
+    assert.equal(
+      ui.find((n) => n.type === 'select').props.value,
+      'ishelle-other',
+      'failed search preserves the draft',
+    );
+    assert.equal(ui.find((n) => n.props.name === 'lookupLoadError').props.value, 'true');
+    fail = false;
+    await search('no matches');
+    assert.equal(ui.find((n) => n.type === 'select').props.value, '');
+    assert.equal(ui.find((n) => n.type === 'select').props.required, true);
+    assert.match(ui.find((n) => n.props.role === 'status').props.children, /No matches/);
+    assert.deepEqual(changes, ['ishelle', 'ishelle-other', '']);
+  } finally {
+    ui.close();
+    globalThis.fetch = old;
+  }
+});
