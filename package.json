@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "24.x"
+    "node": "26.x"
   },
   "scripts": {
     "dev": "next dev",
@@ -28,12 +28,12 @@
   "dependencies": {
     "@pdf-lib/fontkit": "1.1.1",
     "@supabase/ssr": "0.12.7",
-    "@supabase/supabase-js": "2.118.0",
+    "@supabase/supabase-js": "2.119.0",
     "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^2.0.0",
+    "@vercel/speed-insights": "^2.1.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
-    "next": "16.4.2",
+    "next": "16.4.5",
     "pdf-lib": "1.17.1",
     "radix-ui": "1.8.1",
     "react": "19.3.1",
@@ -43,18 +43,18 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "0.5.11",
-    "@electric-sql/pglite-pgtap": "0.0.12",
+    "@electric-sql/pglite": "0.5.15",
+    "@electric-sql/pglite-pgtap": "0.0.16",
     "@ianvs/prettier-plugin-sort-imports": "4.7.1",
-    "@tailwindcss/postcss": "4.3.3",
-    "@types/node": "24.19.2",
+    "@tailwindcss/postcss": "4.3.4",
+    "@types/node": "26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "eslint": "10.13.0",
-    "eslint-config-next": "16.4.2",
+    "eslint": "10.14.0",
+    "eslint-config-next": "16.4.5",
     "prettier": "3.9.10",
     "supabase": "2.122.0",
-    "tailwindcss": "4.3.3",
+    "tailwindcss": "4.3.4",
     "typescript": "5.9.3"
   },
   "allowScripts": {

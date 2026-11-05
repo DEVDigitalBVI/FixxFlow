@@ -2,9 +2,13 @@
 
 FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 
+The supported runtime is Node.js 26.x. TypeScript remains pinned to 5.9.3 because
+the current lint tooling does not support TypeScript 7. Supabase CLI remains pinned
+to 2.122.0 pending a separate migration of database target flags and configuration.
+
 ## Local development
 
-1. Install Node.js 24.x.
+1. Install Node.js 26.x.
 2. Copy `.env.example` to `.env.local` and add the project URL and publishable key from the Supabase Connect dialog.
 3. Install the locked packages with `npm ci`.
 4. Start the app with `npm run dev`.
@@ -131,7 +135,7 @@ realtime events with a 60-second reconciliation interval; disconnected chats ret
 a shorter fallback. Focus and visibility changes reconcile promptly. Background
 refreshes coalesce event bursts and avoid overlapping route transitions.
 
-The GitHub Checks workflow runs Node 24, lockfile installation, production dependency
+The GitHub Checks workflow runs Node 26, lockfile installation, production dependency
 audit, lint, generated route types, typecheck, unit/component tests, the production
 build, and the production proxy check. Its isolated database job starts the local
 Supabase stack and runs database lint, pgTAP, and every transactional SQL regression.

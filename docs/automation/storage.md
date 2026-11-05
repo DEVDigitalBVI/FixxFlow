@@ -377,10 +377,10 @@ and invalid contexts. Native PostgreSQL `lower()` differs from JavaScript for do
 I and contextual sigma, so a trusted frozen Unicode lowercase mapping implements
 the JavaScript behavior without depending on database collation. The mapping is
 Unicode 17 (the available Node 26 runtime); the parity test checks both runtime
-and stored mappings. **Run this gate under declared Node 24 before deployment and
+and stored mappings. **Run this gate under declared Node 26 before deployment and
 regenerate the trusted mapping from that runtime if its Unicode data differs.**
-This version-alignment verification remains part of the existing Node environment
-gap; it must not be dismissed as a cosmetic test difference.
+Runtime and Unicode version alignment remains a release gate whenever the runtime
+changes; a parity failure must not be dismissed as a cosmetic test difference.
 
 Future domains register their event predicate/snapshot nullability and trusted
 command adapter through migrations. They reuse execution and delivery contracts.

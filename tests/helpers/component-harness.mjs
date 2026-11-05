@@ -117,6 +117,29 @@ export function componentHarness(file, name, props, mocks = {}) {
       });
       return result;
     },
+    submit(data) {
+      // Node has no HTMLFormElement overload. Model only the synchronous FormData
+      // snapshot; use real browser checks for native validation and form resets.
+      const Original = globalThis.FormData;
+      const form = {};
+      globalThis.FormData = class {
+        constructor(target) {
+          if (target !== form) throw Error('Unexpected form snapshot');
+          return data;
+        }
+      };
+      try {
+        return api
+          .find((node) => node.type === 'form')
+          .props.onSubmit({
+            preventDefault() {},
+            currentTarget: form,
+            nativeEvent: { submitter: null },
+          });
+      } finally {
+        globalThis.FormData = Original;
+      }
+    },
     close() {
       slots.forEach((item) => item?.cleanup?.());
       globalThis.document = oldDocument;

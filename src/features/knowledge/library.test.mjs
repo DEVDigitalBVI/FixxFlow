@@ -74,7 +74,7 @@ test('library editor uses owner action, preserves drafts on failure and returns 
     const text = h.find((n) => n.type === 'textarea');
     text.props.onChange({ target: { value: 'Preserved draft' } });
     h.render();
-    await h.find((n) => n.type === 'form').props.action(new FormData());
+    await h.submit(new FormData());
     h.render();
     frames.splice(0).forEach((fn) => fn());
     assert.equal(routes.length, 0);
@@ -82,7 +82,7 @@ test('library editor uses owner action, preserves drafts on failure and returns 
     assert.equal(h.find((n) => n.type === 'textarea').props.value, 'Preserved draft');
     assert.ok(h.focuses.length, 'error receives focus');
     succeed = true;
-    await h.find((n) => n.type === 'form').props.action(new FormData());
+    await h.submit(new FormData());
     assert.deepEqual(calls[0], calls[1]);
     assert.deepEqual(routes, [`/platform/library?saved=${id}`]);
   } finally {

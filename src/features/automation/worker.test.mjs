@@ -823,6 +823,49 @@ test('Stage 5 worker integration through migrated database RPCs', async (t) => {
         );
       },
     );
+    await scenario(
+      'a slow job does not exhaust the final retry of untouched batch items',
+      async () => {
+        const { store } = await ready(db);
+        await ticket(db);
+        await ticket(db);
+        await owner(db);
+        await db.exec(
+          "update private.domain_event_deliveries set attempts=7 where consumer='automation' and status='pending'",
+        );
+        await service(db);
+        const deliveries = await store.claim();
+        assert.equal(deliveries.length, 3);
+        const started = [];
+        let now = Date.now();
+        const result = await runAutomationWorker(
+          {
+            ...store,
+            claim: async () => deliveries,
+            discover: async (delivery) => {
+              started.push(delivery.deliveryId);
+              now += 46_000;
+              return [];
+            },
+          },
+          { enabled: true, now: () => now },
+        );
+        assert.deepEqual(started, [deliveries[0].deliveryId]);
+        assert.equal(result.failed, 1, 'only the job that actually started used its last retry');
+        assert.equal(result.capacityDeferred, 2);
+        const untouched = deliveries.slice(1).map((delivery) => delivery.deliveryId);
+        const saved = await state(db);
+        for (const id of untouched) {
+          const delivery = saved.deliveries.find((row) => row.id === id);
+          assert.equal(delivery.status, 'pending');
+          assert.equal(delivery.attempts, 7);
+          assert.equal(delivery.capacity_reason, 'worker_deferred_capacity');
+          await available(db, id);
+        }
+        await service(db);
+        assert.equal((await runAutomationWorker(store, options)).acknowledged, 2);
+      },
+    );
     await scenario('new worker RPCs deny ordinary clients and forged lease tokens', async () => {
       const { store } = await ready(db);
       const [d] = await store.claim();

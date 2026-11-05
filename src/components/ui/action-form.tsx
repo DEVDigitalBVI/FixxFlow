@@ -85,7 +85,7 @@ export function ActionForm({
         event.preventDefault();
         if (busy.current) return;
         const form = event.currentTarget;
-        const data = new FormData(form);
+        const data = new FormData(form, event.nativeEvent.submitter);
         busy.current = true;
         setResult({});
         startTransition(async () => {
