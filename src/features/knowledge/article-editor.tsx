@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 
 import { saveArticle } from '@/app/app/help/actions';
 import { Alert } from '@/components/ui/alert';
@@ -47,12 +47,21 @@ export function ArticleEditor({
 }) {
   const router = useRouter();
   const [revision] = useState(article.revision);
+  const [metadata, setMetadata] = useState({
+    title: article.title,
+    category: article.category,
+    summary: article.summary ?? '',
+    status: article.status,
+    helpTopic: article.help_topic ?? 'getting-started',
+    helpFormat: article.help_format ?? 'guide',
+  });
   const [collection, setCollection] = useState(article.help_collection ?? 'knowledge');
   const [audience, setAudience] = useState<KnowledgeAudience>(article.audience);
   const [blocks, setBlocks] = useState<ArticleBlock[]>(parseArticleContent(article.content) ?? []);
   const [assets, setAssets] = useState(initialAssets);
   const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [busy, startTransition] = useTransition();
+  const saveInFlight = useRef(false);
   const [uploading, setUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
   const [dirty, setDirty] = useState(false);
@@ -87,7 +96,8 @@ export function ArticleEditor({
     area.focus();
   };
   async function submit(form: FormData) {
-    setBusy(true);
+    if (saveInFlight.current) return;
+    saveInFlight.current = true;
     setError('');
     form.set('content', JSON.stringify(blocks));
     try {
@@ -107,8 +117,9 @@ export function ArticleEditor({
       }
     } catch {
       setError('Could not save. Your work is still here; please retry.');
+      requestAnimationFrame(() => errorRef.current?.focus());
     } finally {
-      setBusy(false);
+      saveInFlight.current = false;
     }
   }
   async function upload(file?: File) {
@@ -173,7 +184,15 @@ export function ArticleEditor({
   return (
     <div className="knowledge-editor">
       <form
-        action={submit}
+        method="post"
+        aria-busy={busy}
+        onSubmit={(event) => {
+          event.preventDefault();
+          const form = new FormData(event.currentTarget);
+          // React form actions reset native controls even after handled errors.
+          // Keep submission under our control so the entire failed draft survives.
+          return startTransition(() => submit(form));
+        }}
         onChange={() => setDirty(true)}
         onInvalidCapture={(event) => revealField(event.target as HTMLElement)}
       >
@@ -191,7 +210,8 @@ export function ArticleEditor({
             Title
             <Input
               name="title"
-              defaultValue={article.title}
+              value={metadata.title}
+              onChange={(event) => setMetadata({ ...metadata, title: event.target.value })}
               required
               minLength={3}
               maxLength={180}
@@ -379,7 +399,13 @@ export function ArticleEditor({
                     FixxFlow topic
                     <NativeSelect
                       name="helpTopic"
-                      defaultValue={article.help_topic ?? 'getting-started'}
+                      value={metadata.helpTopic}
+                      onChange={(event) =>
+                        setMetadata({
+                          ...metadata,
+                          helpTopic: event.target.value as typeof metadata.helpTopic,
+                        })
+                      }
                     >
                       {Object.entries(helpTopics).map(([value, label]) => (
                         <option value={value} key={value}>
@@ -390,7 +416,16 @@ export function ArticleEditor({
                   </label>
                   <label>
                     Content format
-                    <NativeSelect name="helpFormat" defaultValue={article.help_format ?? 'guide'}>
+                    <NativeSelect
+                      name="helpFormat"
+                      value={metadata.helpFormat}
+                      onChange={(event) =>
+                        setMetadata({
+                          ...metadata,
+                          helpFormat: event.target.value as typeof metadata.helpFormat,
+                        })
+                      }
+                    >
                       <option value="guide">Full guide</option>
                       <option value="faq">FAQ · quick answer</option>
                     </NativeSelect>
@@ -401,7 +436,16 @@ export function ArticleEditor({
           )}
           <label>
             Category
-            <NativeSelect name="category" defaultValue={article.category}>
+            <NativeSelect
+              name="category"
+              value={metadata.category}
+              onChange={(event) =>
+                setMetadata({
+                  ...metadata,
+                  category: event.target.value as typeof metadata.category,
+                })
+              }
+            >
               {knowledgeCategories.map((c) => (
                 <option key={c}>{c}</option>
               ))}
@@ -409,11 +453,22 @@ export function ArticleEditor({
           </label>
           <label>
             Short summary (optional)
-            <Textarea name="summary" defaultValue={article.summary} maxLength={500} />
+            <Textarea
+              name="summary"
+              value={metadata.summary}
+              onChange={(event) => setMetadata({ ...metadata, summary: event.target.value })}
+              maxLength={500}
+            />
           </label>
           <label>
             Publication status
-            <NativeSelect name="status" defaultValue={article.status}>
+            <NativeSelect
+              name="status"
+              value={metadata.status}
+              onChange={(event) =>
+                setMetadata({ ...metadata, status: event.target.value as typeof metadata.status })
+              }
+            >
               <option value="draft">Draft — IT staff only</option>
               <option value="published">Published</option>
               <option value="archived">Archived — IT staff only</option>

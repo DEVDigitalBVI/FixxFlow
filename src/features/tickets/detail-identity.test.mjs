@@ -103,6 +103,13 @@ test('full page isolates the entire workflow by ticket identity, not revision', 
     assert.deepEqual(order, ['TicketWorkActions', 'request', 'MessageComposer']);
     const actions = findBy(drawer, (n) => n.type?.name === 'TicketWorkActions');
     assert.equal(actions.props.stage, 'all');
+    assert.ok(actions.key.endsWith(id), 'switching tickets resets quick-action drafts');
+    const refreshed = await TicketDetail({ ticketId: id, embedded: true });
+    assert.equal(
+      findBy(refreshed, (n) => n.type?.name === 'TicketWorkActions').key,
+      actions.key,
+      'same-ticket refresh preserves its quick-action draft',
+    );
     const composer = findBy(drawer, (n) => n.type?.name === 'MessageComposer');
     assert.ok(composer.key.endsWith(id), 'switching tickets resets reply drafts');
   }

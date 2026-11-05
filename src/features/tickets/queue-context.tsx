@@ -148,6 +148,9 @@ export function TicketQueueContext({
           if (queuePositions.size > 20) queuePositions.delete(queuePositions.keys().next().value!);
           if (!allowDrawer || !window.matchMedia('(min-width: 1200px)').matches) return;
           event.preventDefault();
+          // This capture handler navigates before the link's native handler. Ask
+          // here as well as at the document guard so direct drawer switches are protected.
+          if (hasPanel && link.dataset.queueTicket !== selected && !confirmDiscardChanges()) return;
           trigger.current = link;
           if (!hasPanel) openedHere.current = true;
           const url = new URL(returnTo, window.location.origin);

@@ -8,6 +8,7 @@ import { ActionForm } from '@/components/ui/action-form';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { NativeSelect } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
+import { useUnsavedChanges } from '@/components/ui/unsaved-changes';
 import type { TicketStatus } from '@/types/database';
 
 import { ticketStatuses } from './presentation';
@@ -34,6 +35,7 @@ export function TicketWorkActions({
   const [statusDraft, setStatusDraft] = useState(ticket.status);
   const [baseline, setBaseline] = useState(ticket.revision);
   const [conflict, setConflict] = useState(false);
+  const releaseDraft = useUnsavedChanges(dirty);
   const expectedRevision = dirty || conflict ? baseline : ticket.revision;
   const stale = conflict || expectedRevision !== ticket.revision;
   const done = ticket.status === 'resolved' || ticket.status === 'closed';
@@ -41,6 +43,7 @@ export function TicketWorkActions({
     const result = await workTicket(data);
     if (result.conflict) setConflict(true);
     if (result.success && result.revision) {
+      releaseDraft();
       setBaseline(result.revision);
       setDirty(false);
       setConflict(false);
@@ -87,6 +90,7 @@ export function TicketWorkActions({
             variant="secondary"
             onClick={() => {
               setBaseline(ticket.revision);
+              releaseDraft();
               setDirty(false);
               setConflict(false);
               router.refresh();
@@ -134,7 +138,7 @@ export function TicketWorkActions({
                   onChange={(event) => {
                     setStatusDraft(event.target.value as TicketStatus);
                     setBaseline(ticket.revision);
-                    setDirty(true);
+                    setDirty(event.target.value !== ticket.status);
                   }}
                 >
                   {Object.entries(ticketStatuses).map(([value, item]) => (

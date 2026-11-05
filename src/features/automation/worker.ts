@@ -81,12 +81,14 @@ export async function runAutomationWorker(store: AutomationWorkerStore, options:
   result.claimed = deliveries.length;
   for (const delivery of deliveries) {
     let context: AutomationLog = { deliveryId: delivery.deliveryId, result: 'claimed' };
+    let started = false;
     const checkTime = () => {
       if (now() >= Date.parse(delivery.leaseExpiresAt))
         throw new AutomationWorkerError('lease_lost');
       if (now() >= deadline) throw new AutomationWorkerError('budget_exhausted');
     };
     try {
+      checkTime();
       const checked = validateEvent(delivery.event);
       if (!checked.valid) throw new AutomationWorkerError('invalid_event');
       const event: DomainEvent = checked.value;
@@ -101,6 +103,7 @@ export async function runAutomationWorker(store: AutomationWorkerStore, options:
       let cursor: RuleCursor | null = null;
       while (true) {
         checkTime();
+        started = true;
         const rules = await store.discover(delivery, cursor);
         for (const candidate of rules) {
           checkTime();
@@ -189,7 +192,12 @@ export async function runAutomationWorker(store: AutomationWorkerStore, options:
         log({ ...context, result: 'lease_lost' });
       }
     } catch (error) {
-      const failure = classifyWorkerFailure(error);
+      // A claimed job that never reached discovery has not had a processing
+      // attempt. Capacity deferral returns that attempt to the queue.
+      const failure =
+        !started && error instanceof AutomationWorkerError && error.code === 'budget_exhausted'
+          ? { outcome: 'deferred' as const, code: 'worker_deferred_capacity' as const }
+          : classifyWorkerFailure(error);
       log({ ...context, result: failure.outcome, code: failure.code });
       try {
         if (await store.finish(delivery, failure.outcome, failure.code)) {

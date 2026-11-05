@@ -46,6 +46,7 @@ import { ReportedImpact } from './reported-impact';
 import { RequestExpectations } from './request-expectations';
 import { ResolutionRating } from './resolution-rating';
 import { ServiceAnnouncementPanel } from './service-announcement-panel';
+import { TicketAttachmentList, ticketAttachmentUrls } from './ticket-attachment-list';
 import { TicketWorkflow } from './ticket-workflow';
 import { TicketWorkActions } from './work-actions';
 
@@ -126,10 +127,7 @@ export async function TicketDetail({
     );
     const names = new Map(profiles.map((p) => [p.user_id, p.display_name]));
     const paths = (attachmentsR.data ?? []).map((a) => a.storage_path);
-    const { data: signed } = paths.length
-      ? await supabase.storage.from('ticket-attachments').createSignedUrls(paths, 3600)
-      : { data: [] };
-    const urls = new Map((signed ?? []).map((v) => [v.path, v.signedUrl ?? undefined]));
+    const urls = await ticketAttachmentUrls(supabase, paths);
     const canReopen =
       employeeTicket.requester_id === viewer.id &&
       (employeeTicket.status === 'resolved' || employeeTicket.status === 'closed');
@@ -260,21 +258,11 @@ export async function TicketDetail({
               userId={viewer.id}
             />
           )}
-          {attachmentsR.error && (
-            <p role="alert">
-              Attachments could not load. <RetryButton />
-            </p>
-          )}
-          <div className="attachment-list">
-            {attachmentsR.data?.map((a) => (
-              <a key={a.id} href={urls.get(a.storage_path)} target="_blank" rel="noreferrer">
-                {a.file_name} · {Math.ceil(a.size_bytes / 1024)} KB
-              </a>
-            ))}
-            {!attachmentsR.error && !attachmentsR.data?.length && (
-              <p className="muted">No files attached.</p>
-            )}
-          </div>
+          <TicketAttachmentList
+            files={attachmentsR.data ?? []}
+            urls={urls}
+            error={!!attachmentsR.error}
+          />
         </section>
       </div>
     );
@@ -392,10 +380,7 @@ export async function TicketDetail({
   ]);
   const names = new Map(profiles.map((p) => [p.user_id, p.display_name]));
   const paths = attachmentsR.data?.map((a) => a.storage_path) ?? [];
-  const { data: signed } = paths.length
-    ? await supabase.storage.from('ticket-attachments').createSignedUrls(paths, 3600)
-    : { data: [] };
-  const urls = new Map((signed ?? []).map((v) => [v.path, v.signedUrl ?? undefined]));
+  const urls = await ticketAttachmentUrls(supabase, paths);
   const activeWorkflow =
     ticket.ticket_type === 'incident' || Boolean(workflowR.data) || Boolean(workflowR.error);
   const coordination = ticket.request_kind !== 'inventory' && (
@@ -513,7 +498,7 @@ export async function TicketDetail({
         <SlaClock initialNow={new Date().getTime()}>
           <SlaIndicator ticket={ticket} compact />
         </SlaClock>
-        <TicketWorkActions ticket={ticket} stage="all" assignee={assignee} />
+        <TicketWorkActions key={ticket.id} ticket={ticket} stage="all" assignee={assignee} />
         <section className="settings-card">
           <h3>Request from {names.get(ticket.requester_id) ?? 'the requester'}</h3>
           <p className="ticket-description">{ticket.description}</p>
@@ -601,25 +586,12 @@ export async function TicketDetail({
                 ticketId={ticket.id}
                 userId={viewer.id}
               />
-              {attachmentsR.error && (
-                <p role="alert">
-                  Attachments could not load. <RetryButton />
-                </p>
-              )}
-              <div className="attachment-list">
-                {attachmentsR.data?.map((a) => (
-                  <a key={a.id} href={urls.get(a.storage_path)} target="_blank" rel="noreferrer">
-                    <strong>{a.file_name}</strong>
-                    <span>
-                      {a.is_internal ? 'Internal email attachment · ' : ''}
-                      {Math.ceil(a.size_bytes / 1024)} KB · <Timestamp value={a.created_at} />
-                    </span>
-                  </a>
-                ))}
-                {!attachmentsR.error && !attachmentsR.data?.length && (
-                  <p className="muted">No attachments.</p>
-                )}
-              </div>
+              <TicketAttachmentList
+                files={attachmentsR.data ?? []}
+                urls={urls}
+                error={!!attachmentsR.error}
+                staff
+              />
             </section>
           </>
         }

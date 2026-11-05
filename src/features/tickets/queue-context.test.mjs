@@ -8,6 +8,7 @@ import { load } from '../../../tests/helpers/load-module.mjs';
 function fixture() {
   const slots = [];
   let cursor = 0;
+  let discard = true;
   const calls = [],
     oldWindow = globalThis.window,
     oldElement = globalThis.Element;
@@ -35,10 +36,13 @@ function fixture() {
           ]),
         ),
     },
-    '@/components/ui/unsaved-changes': { confirmDiscardChanges: () => true },
+    '@/components/ui/unsaved-changes': { confirmDiscardChanges: () => discard },
   });
   return {
     calls,
+    discard(value) {
+      discard = value;
+    },
     render(panel = null, allowDrawer = true) {
       cursor = 0;
       return TicketQueueContext({
@@ -85,6 +89,22 @@ test('first desktop inspection pushes history; switching tickets replaces it so 
     assert.equal(f.calls[1][0], 'replace');
     panel.props.children[1].props.children[0].props.children[1].props.onClick();
     assert.deepEqual(f.calls[2], ['back']);
+  } finally {
+    f.close();
+  }
+});
+
+test('declining discard keeps the selected drawer ticket and its draft mounted', () => {
+  const f = fixture();
+  try {
+    const panel = f.render('Details');
+    f.discard(false);
+    assert.equal(f.click(panel, 'two').prevented, true);
+    assert.equal(f.calls.length, 0);
+    f.discard(true);
+    f.click(panel, 'two');
+    assert.equal(f.calls.at(-1)[0], 'replace');
+    assert.match(f.calls.at(-1)[1], /ticket=two/);
   } finally {
     f.close();
   }
