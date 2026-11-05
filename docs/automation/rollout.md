@@ -53,7 +53,7 @@ For a separately authorized future rollout:
    Stage 12 migration and its correction. Do not edit the original migration or
    repair the ledger. A lock timeout must abort/roll back, then be investigated;
    never remove the timeout and wait indefinitely during live traffic.
-4. Deploy the corrected Node 24 application with environment processing OFF.
+4. Deploy the corrected Node 26 application with environment processing OFF.
    Verify legacy read/disable/archive, strict create/edit/reenable/dry-run errors,
    tenant/MFA denials, Operations safety filters and invocation tracing.
 5. Verify OFF, ordinary ticket operations, rule/version preservation and complete
@@ -146,7 +146,7 @@ warning; subsequent lint/build passed. No dependency upgrade was attempted.
 Both runtimes report Unicode 17.0 / ICU 78.3. The exhaustive lowercase mapping,
 stored SQL mapping, dotted-I/contextual-sigma and condition parity tests pass on
 both. This closes the Node/Unicode development gates for this tested Node 24 patch.
-Use Node 24 in deployment and rerun parity when changing runtime/ICU versions.
+The current configured runtime is Node 26; rerun parity when changing runtime/ICU versions.
 
 Local logs are in `/tmp/stage8-*` (ephemeral, not a release artifact store):
 baseline tests/lint/build, Node 24 install/tests/typecheck/lint/build, final Node
@@ -372,7 +372,7 @@ Vercel production deployment ID for rollback.
    OFF, event capture triggers are live after migration; smoke-test existing ticket
    creation/update, routing, SLA, employee reopening, history and notifications.
    Watch transaction latency and outbox growth. OFF is not a schema compatibility test.
-4. Deploy the application to Vercel on Node 24, explicitly setting server-only
+4. Deploy the application to Vercel on Node 26, explicitly setting server-only
    `AUTOMATION_PROCESSING_ENABLED=false`. Required environment: public Supabase URL
    and publishable key, public site URL, server-only `SUPABASE_SECRET_KEY` and
    `CRON_SECRET`. Existing email sender/provider settings remain with the separate
