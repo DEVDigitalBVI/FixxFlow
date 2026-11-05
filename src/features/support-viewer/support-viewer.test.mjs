@@ -223,3 +223,41 @@ test('permission and sharing forms use labeled native controls, explicit publica
   assert.match(sharing, /name="overview" required="" maxLength="4000"/);
   assert.doesNotMatch(sharing, /checked=""/);
 });
+
+test('permission rows keep each explanation with its checkbox and share one clear privacy limit', () => {
+  const { InsightPermissionForm } = load('src/features/support-viewer/permission-form.tsx', {
+    './actions': { saveInsightAccess: async () => ({}) },
+    '@/components/ui/action-form': {
+      ActionForm: ({ children }) => React.createElement('form', null, children),
+    },
+    '@/components/ui/submit-button': {
+      SubmitButton: ({ children }) => React.createElement('button', null, children),
+    },
+  });
+  const html = render(
+    React.createElement(InsightPermissionForm, {
+      name: 'Alex',
+      member: { userId: 'person', dashboard: true, sharedIncidents: false, revision: 1 },
+    }),
+  );
+  assert.match(
+    html,
+    /<label class="insight-access-option">[\s\S]*?View support dashboard[\s\S]*?ticket totals[\s\S]*?<\/label>/,
+  );
+  assert.match(
+    html,
+    /<label class="insight-access-option">[\s\S]*?View shared incidents[\s\S]*?including the resolution[\s\S]*?<\/label>/,
+  );
+  assert.match(
+    html,
+    /aria-labelledby="dashboard-label-person" aria-describedby="dashboard-help-person"/,
+  );
+  assert.match(
+    html,
+    /aria-labelledby="incidents-label-person" aria-describedby="incidents-help-person"/,
+  );
+  assert.equal(
+    (html.match(/conversations, internal notes and attachments stay private/g) ?? []).length,
+    1,
+  );
+});

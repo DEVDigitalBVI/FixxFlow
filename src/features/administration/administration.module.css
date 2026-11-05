@@ -718,3 +718,58 @@
     justify-self: start;
   }
 }
+
+@layer components {
+  :where(.scope) :global(.insight-access) {
+    gap: 8px;
+  }
+  :where(.scope) :global(.insight-access-form) {
+    margin-top: 12px;
+  }
+  :where(.scope) :global(.insight-access-form .action-form-fields) {
+    display: grid;
+    gap: 12px;
+  }
+  :where(.scope) :global(.insight-access-options) {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+  :where(.scope) :global(.insight-access-option) {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-height: var(--control-height);
+    cursor: pointer;
+    margin: 0;
+  }
+  :where(.scope) :global(.insight-access-option input) {
+    flex: 0 0 auto;
+    margin-top: 3px;
+  }
+  :where(.scope) :global(.insight-access-copy) {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.insight-access-copy strong) {
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  :where(.scope) :global(.insight-access .insight-access-limits) {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+  :where(.scope) :global(.insight-access-form .button) {
+    justify-self: start;
+  }
+  :where(.scope) :global(.insight-access-form > [role='status']:empty) {
+    display: none;
+  }
+}

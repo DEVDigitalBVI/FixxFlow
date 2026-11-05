@@ -90,6 +90,17 @@ test('ticket search calls the permission-scoped RPC and preserves filters in pag
   assert.equal((html.match(/<strong>Search result<\/strong>/g) || []).length, 50);
 });
 
+test('ticket results and the knowledge link are available before the optional article count starts', async () => {
+  const { calls, Page } = setup();
+  const page = await Page({ searchParams: Promise.resolve({ q: 'VPN' }) });
+  assert.ok(page);
+  assert.ok(calls.some((c) => c[0] === 'rpc' && c[1] === 'search_tickets'));
+  assert.ok(!calls.some((c) => c[0] === 'rpc' && c[1] === 'search_knowledge_articles'));
+  const html = renderToStaticMarkup(page);
+  assert.match(html, /Search knowledge articles/);
+  assert.match(html, /<strong>Search result<\/strong>/);
+});
+
 test('employee ticket lists do not fetch staff-only lookup data', async () => {
   const { calls, Page } = setup('end_user');
   const html = renderToStaticMarkup(await Page({ searchParams: Promise.resolve({}) }));

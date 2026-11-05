@@ -17,6 +17,7 @@ import { BulkActions } from '@/features/tickets/bulk-actions';
 import { BulkSelectAll } from '@/features/tickets/bulk-select-all';
 import { ConversationRefresh } from '@/features/tickets/conversation-refresh';
 import { loadTicketQueue, type TicketQueueFilters } from '@/features/tickets/data';
+import { KnowledgeMatchCount } from '@/features/tickets/knowledge-match-count';
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 import { TicketQueueContext } from '@/features/tickets/queue-context';
 import { ticketDetailHref } from '@/features/tickets/queue-navigation';
@@ -59,7 +60,6 @@ export default async function TicketsPage({
     error,
     profiles,
     teams,
-    knowledgeCount,
     tag,
     tagOptions,
     savedViews,
@@ -104,7 +104,9 @@ export default async function TicketsPage({
     <p className="queue-count">
       <Link href={`/app/help?q=${encodeURIComponent(search)}`}>
         Search knowledge articles
-        {knowledgeCount ? ` (${knowledgeCount} ${knowledgeCount === 1 ? 'match' : 'matches'})` : ''}
+        <Suspense key={search} fallback={null}>
+          <KnowledgeMatchCount organizationId={viewer.organizationId} search={search} />
+        </Suspense>
       </Link>
     </p>
   );
