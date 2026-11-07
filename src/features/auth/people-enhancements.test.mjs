@@ -82,6 +82,84 @@ test('bulk endpoint validates an entire bounded group and reuses individual invi
   assert.ok((await sendInvitationBatch([row])).error);
   assert.equal(calls.length, 1);
 });
+test('bulk invitations distinguish current, inactive and deleted membership instead of counting retained profiles as sent', async () => {
+  const profiles = ['active', 'inactive', 'deleted', 'missing'].map((state) => ({
+    user_id: state,
+    email: `${state}@example.com`,
+  }));
+  let fail = false;
+  const calls = [];
+  const { sendInvitationBatch } = load('src/app/app/people/import/actions.ts', {
+    '@/lib/auth/viewer': {
+      requireViewer: async () => ({ role: 'administrator', organizationId: 'trusted' }),
+    },
+    '@/lib/supabase/server': {
+      createClient: async () => ({
+        from: (table) => ({
+          select: () => ({
+            eq: (key, org) => {
+              assert.equal(key, 'organization_id');
+              assert.equal(org, 'trusted');
+              return {
+                in: async (key, values) => {
+                  if (table === 'profiles') {
+                    assert.equal(key, 'email');
+                    return {
+                      data: profiles.filter((profile) => values.includes(profile.email)),
+                      error: null,
+                    };
+                  }
+                  assert.equal(table, 'organization_memberships');
+                  assert.equal(key, 'user_id');
+                  assert.deepEqual(
+                    values,
+                    profiles.map((profile) => profile.user_id),
+                  );
+                  return {
+                    data: [
+                      { user_id: 'active', status: 'active', deleted_at: null },
+                      { user_id: 'inactive', status: 'inactive', deleted_at: null },
+                      {
+                        user_id: 'deleted',
+                        status: 'inactive',
+                        deleted_at: '2026-11-01T00:00:00Z',
+                      },
+                    ],
+                    error: fail ? { message: 'lookup unavailable' } : null,
+                  };
+                },
+              };
+            },
+          }),
+        }),
+      }),
+    },
+    '../actions': {
+      inviteMember: async (form) => {
+        calls.push(form.get('email'));
+        return { success: 'Accepted' };
+      },
+    },
+  });
+  const rows = [...profiles, { email: 'new@example.com' }].map(({ email }) => ({
+    email,
+    displayName: 'Person',
+    role: 'end_user',
+    token: randomUUID(),
+  }));
+  const result = await sendInvitationBatch(rows);
+  assert.match(result.rows[0].success, /Already a member/);
+  assert.match(result.rows[1].error, /inactive/);
+  assert.match(result.rows[2].error, /deleted/);
+  assert.match(result.rows[3].error, /could not be verified/);
+  assert.ok(result.rows.slice(1, 4).every((row) => !row.success));
+  assert.deepEqual(calls, ['new@example.com']);
+  calls.length = 0;
+  fail = true;
+  assert.match((await sendInvitationBatch(rows)).error, /Member access could not be checked/);
+  assert.deepEqual(calls, [], 'lookup failure stops the entire group before sending');
+});
+
 test('company login is opt-in, callbacks use the canonical origin, and authorization redirects stay on the configured Auth endpoint', () => {
   assert.deepEqual(config.companyProviders({}), []);
   assert.deepEqual(

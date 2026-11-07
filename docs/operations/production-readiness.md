@@ -15,7 +15,7 @@ state.
 
 Implemented in this repository:
 
-- Node 24 lockfile builds, generated Next.js route types, lint, application tests,
+- Node 26 lockfile builds, generated Next.js route types, lint, application tests,
   production dependency audit, production build, and proxy verification in CI.
 - An isolated Supabase PostgreSQL 17 job that replays migrations and seed data, runs
   database lint, pgTAP, and all transactional SQL regressions.

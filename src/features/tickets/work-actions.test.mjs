@@ -140,7 +140,10 @@ test('Resolve provides an explicit save for every status and submits the selecte
       const select = h.find((n) => n.type === 'select');
       assert.equal(select.props.value, status);
       const hint = h.find((n) => n.props.id === select.props['aria-describedby']);
-      assert.match(hint.props.children, /Unsaved status:/);
+      assert.match(
+        hint.props.children,
+        status === initial.status ? /Choose a status/ : /Unsaved status:/,
+      );
       const data = new FormData();
       for (const input of h.all((n) => n.type === 'input' && n.props.name))
         data.set(input.props.name, String(input.props.value));
@@ -169,4 +172,48 @@ test('status guidance remains outside the forms and linked to the status select'
   const hintId = html.match(/aria-describedby="([^"]+)"/)[1];
   assert.ok(html.includes('id="' + hintId + '"'));
   assert.match(html, /button-secondary[^>]*" href="#ticket-conversation"/);
+});
+
+test('an unsaved status guards navigation until restored or successfully saved', async () => {
+  let protectedDraft = false;
+  let fail = true;
+  const h = componentHarness(
+    'src/features/tickets/work-actions.tsx',
+    'TicketWorkActions',
+    { ticket: initial, assignee: 'Unassigned' },
+    {
+      ...mocks,
+      '@/components/ui/unsaved-changes': {
+        useUnsavedChanges: (dirty) => {
+          protectedDraft = dirty;
+          return () => {
+            protectedDraft = false;
+          };
+        },
+      },
+      '@/app/app/tickets/actions': {
+        workTicket: async () => (fail ? { error: 'Retry' } : { success: 'Saved', revision: 2 }),
+      },
+    },
+  );
+  try {
+    const change = (value) => {
+      h.find((n) => n.type === 'select').props.onChange({ target: { value } });
+      h.render();
+    };
+    change('resolved');
+    assert.equal(protectedDraft, true);
+    change('open');
+    assert.equal(protectedDraft, false);
+    change('resolved');
+    await h.find((n) => n.props.className === 'ticket-status-action').props.action(new FormData());
+    h.render();
+    assert.equal(protectedDraft, true, 'failed saves keep navigation protection');
+    fail = false;
+    await h.find((n) => n.props.className === 'ticket-status-action').props.action(new FormData());
+    h.render();
+    assert.equal(protectedDraft, false);
+  } finally {
+    h.close();
+  }
 });

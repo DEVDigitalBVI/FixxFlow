@@ -178,6 +178,8 @@ export async function manageReportSchedule(data: FormData): Promise<ActionResult
   if (viewer.role !== 'administrator' || !scheduleId || !reportId)
     return { error: 'Only administrators can change report delivery.' };
   const command = data.get('command');
+  if (!['delete', 'activate', 'pause'].includes(String(command)))
+    return { error: 'Choose whether to activate, pause or delete this schedule.' };
   const database = await createClient();
   try {
     const query =

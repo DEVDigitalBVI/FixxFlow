@@ -172,7 +172,7 @@ claim anything and prominently states **No changes were made.**
 
 ## Verification and release gates
 
-Run under Node 24:
+Run under Node 26:
 
 ```
 npm test

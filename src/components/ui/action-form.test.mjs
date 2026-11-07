@@ -25,8 +25,11 @@ function fixture(action, extra = {}) {
   );
   const Original = globalThis.FormData;
   globalThis.FormData = class {
-    constructor(form) {
-      return form.data;
+    constructor(form, submitter) {
+      const data = new Original();
+      for (const [name, value] of form.data) data.append(name, value);
+      if (submitter?.name) data.append(submitter.name, submitter.value);
+      return data;
     }
   };
   const form = {
@@ -50,10 +53,10 @@ function fixture(action, extra = {}) {
       h.find((n) => n.type === 'form').props.onChange({ currentTarget: form });
       h.render();
     },
-    submit() {
+    submit(submitter = null) {
       return h
         .find((n) => n.type === 'form')
-        .props.onSubmit({ preventDefault() {}, currentTarget: form });
+        .props.onSubmit({ preventDefault() {}, currentTarget: form, nativeEvent: { submitter } });
     },
     close() {
       h.close();
@@ -61,6 +64,27 @@ function fixture(action, extra = {}) {
     },
   };
 }
+
+test('clicked submit commands are included once without leaking into later keyboard submissions', async () => {
+  const calls = [];
+  const f = fixture(async (data) => {
+    calls.push(data);
+    return {};
+  });
+  try {
+    for (const command of ['activate', 'pause', 'delete']) {
+      f.submit({ name: 'command', value: command });
+      await new Promise((resolve) => setImmediate(resolve));
+      assert.deepEqual(calls.at(-1).getAll('command'), [command]);
+    }
+    f.submit();
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(calls.at(-1).get('command'), null);
+    assert.equal(calls.at(-1).get('status'), 'open');
+  } finally {
+    f.close();
+  }
+});
 
 test('classification edits warn, restoring original values clears the warning, and hidden revisions are ignored', () => {
   const f = fixture(async () => ({}));
