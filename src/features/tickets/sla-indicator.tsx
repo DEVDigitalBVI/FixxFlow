@@ -70,7 +70,10 @@ export function SlaIndicator({
   const sla = ticketSla(ticket, now);
   if (compact) {
     const summary = queueSlaSummary(sla);
-    const style = presentation[summary.state];
+    const historical = ticket.status === 'resolved' || ticket.status === 'closed';
+    const style = historical
+      ? { tone: 'neutral', icon: presentation[summary.state].icon }
+      : presentation[summary.state];
     const describe = (label: string, result: SlaResult) =>
       `${label} SLA: ${result.label}${result.deadline ? `, due ${formatTimestamp(result.deadline, zone)}` : ''}.`;
     const detail = `${describe('Response', sla.response)} ${describe('Resolution', sla.resolution)}`;
@@ -79,7 +82,10 @@ export function SlaIndicator({
       <div className={`sla-indicator sla-compact sla-${style.tone}`} title={detail}>
         <div className="sla-label" aria-hidden="true">
           <NavigationIcon name={style.icon} className="inline-icon" size={16} />
-          <span>{summary.text}</span>
+          <span>
+            {historical ? 'Recorded outcome · ' : ''}
+            {summary.text}
+          </span>
         </div>
         <span className="sr-only">{detail}</span>
       </div>

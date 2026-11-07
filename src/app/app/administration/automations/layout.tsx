@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { Alert } from '@/components/ui/alert';
@@ -11,7 +12,9 @@ export default async function AutomationLayout({ children }: { children: ReactNo
         {process.env.AUTOMATION_PROCESSING_ENABLED !== 'true' ? (
           <>
             <strong>Automation processing is off.</strong> You can save, test and enable rules. They
-            will remain idle until processing is activated separately.
+            will remain idle until the deployment administrator activates processing. Enabling a
+            rule does not start the processing service.{' '}
+            <Link href="/app/support">Contact FixxFlow support for activation</Link>.
           </>
         ) : (
           <>

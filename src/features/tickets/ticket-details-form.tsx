@@ -52,7 +52,7 @@ export function TicketAssignmentEditor({
     <TicketDetailsForm ticket={ticket} timeZone={timeZone} />
   ) : (
     <Button type="button" variant="secondary" onClick={() => setEditing(true)}>
-      Choose technician or edit details
+      Edit assignment and ticket details
     </Button>
   );
 }

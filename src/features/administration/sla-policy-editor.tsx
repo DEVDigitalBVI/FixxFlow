@@ -6,6 +6,7 @@ import { ActionForm } from '@/components/ui/action-form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
+import { elapsedLabel } from '@/features/reporting/chart-model';
 import {
   scheduleTime,
   slaDays,
@@ -24,6 +25,7 @@ export function SlaPolicyEditor({
   timeZone: string;
 }) {
   const [version, setVersion] = useState(policy.version);
+  const [targets, setTargets] = useState(policy.targets);
   const save = async (form: FormData) => {
     const result = await saveSlaPolicy(form);
     if (result.success && result.version !== undefined) setVersion(result.version);
@@ -35,7 +37,8 @@ export function SlaPolicyEditor({
       <fieldset className="sla-schedule stack">
         <legend>Working hours</legend>
         <p className="muted">
-          Times use the workspace timezone ({timeZone}). Both clocks stop outside this schedule.
+          One opening and closing time applies to every selected day, in {timeZone}. Both clocks
+          stop outside this schedule.
         </p>
         <div className="sla-working-days" role="group" aria-label="Working days">
           {slaDays.map((label, index) => (
@@ -103,8 +106,27 @@ export function SlaPolicyEditor({
                     step={1}
                     required
                     defaultValue={policy.targets[priority][objective]}
-                    aria-describedby="sla-target-unit"
+                    onChange={(event) =>
+                      setTargets((current) => ({
+                        ...current,
+                        [priority]: {
+                          ...current[priority],
+                          [objective]: Number(event.target.value),
+                        },
+                      }))
+                    }
+                    aria-describedby={`sla-target-unit sla-equivalent-${priority}-${objective}`}
                   />
+                  <span
+                    id={`sla-equivalent-${priority}-${objective}`}
+                    className="muted"
+                    role="status"
+                  >
+                    {Number.isFinite(targets[priority][objective]) &&
+                    targets[priority][objective] > 0
+                      ? `${elapsedLabel(targets[priority][objective])} of support time`
+                      : 'Enter a positive whole number of minutes.'}
+                  </span>
                 </div>
               ))}
             </div>

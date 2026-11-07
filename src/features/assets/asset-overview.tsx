@@ -62,29 +62,39 @@ export function AssetOverview({
       </section>
       <section aria-labelledby="asset-warranty-heading">
         <h3 id="asset-warranty-heading">Purchase & lifecycle</h3>
-        <dl className="asset-record-facts">
-          <div>
-            <dt>Purchased</dt>
-            <dd>
-              <AssetDate value={asset.purchased_on} />
-            </dd>
-          </div>
-          <div>
-            <dt>Warranty ends</dt>
-            <dd>
-              <AssetDate value={asset.warranty_until} />
-            </dd>
-          </div>
-          <div>
-            <dt>End of life</dt>
-            <dd>
-              <AssetDate value={asset.end_of_life_on ?? null} />
-            </dd>
-          </div>
-        </dl>
-        <p className="muted">
-          IT receives reminders 30 days before and when these dates are reached.
-        </p>
+        {!asset.purchased_on && !asset.warranty_until && !asset.end_of_life_on ? (
+          <p className="muted">
+            Purchase, warranty and replacement dates have not been recorded. Add them in Edit asset
+            when available.
+          </p>
+        ) : (
+          <>
+            {' '}
+            <dl className="asset-record-facts">
+              <div>
+                <dt>Purchased</dt>
+                <dd>
+                  <AssetDate value={asset.purchased_on} />
+                </dd>
+              </div>
+              <div>
+                <dt>Warranty ends</dt>
+                <dd>
+                  <AssetDate value={asset.warranty_until} />
+                </dd>
+              </div>
+              <div>
+                <dt>End of life</dt>
+                <dd>
+                  <AssetDate value={asset.end_of_life_on ?? null} />
+                </dd>
+              </div>
+            </dl>
+            <p className="muted">
+              IT receives reminders 30 days before and when these dates are reached.
+            </p>
+          </>
+        )}
       </section>
     </div>
   );

@@ -279,7 +279,7 @@ test('reports page passes administrator-only SLA navigation without altering tec
       },
     }).default;
     const html = renderToStaticMarkup(await page({ searchParams: Promise.resolve({}) }));
-    assert.match(html, /At a glance/);
+    assert.match(html, /Today and current workload/);
     assert.match(html, /Download report/);
     assert.equal(html.includes('href="/app/administration/slas"'), role === 'administrator');
   }
@@ -314,6 +314,6 @@ test('reports page links each section from one labelled jump list', async () => 
   // Supporting sections keep their id in both the loaded and the failure layout.
   const source = (file) => fs.readFileSync(`src/features/reporting/${file}`, 'utf8');
   assert.equal(source('satisfaction-report.tsx').match(/id="report-satisfaction"/g).length, 2);
-  assert.equal(source('incident-report.tsx').match(/id="incident-report"/g).length, 2);
+  assert.equal(source('incident-report.tsx').match(/id="incident-report"/g).length, 3);
   assert.match(source('custom-components.tsx'), /<section id="saved-reports"/);
 });

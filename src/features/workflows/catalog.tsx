@@ -100,7 +100,7 @@ export async function WorkflowCatalog({
           <Input type="search" name="q" maxLength={200} defaultValue={q} />
         </label>
         <label className="field">
-          Procedure type
+          Template type
           <NativeSelect name="kind" defaultValue={kind ?? ''}>
             <option value="">All types</option>
             {Object.entries(workflowKinds).map(([value, label]) => (
@@ -113,7 +113,7 @@ export async function WorkflowCatalog({
         {ticket && <input type="hidden" name="ticket" value={ticket} />}{' '}
         {archived && <input type="hidden" name="view" value="archived" />}
         <Button variant="secondary" type="submit">
-          Search procedures
+          {admin ? 'Search templates' : 'Search procedures'}
         </Button>
       </form>
       {error ? (
@@ -125,7 +125,7 @@ export async function WorkflowCatalog({
         </p>
       ) : !data?.length ? (
         <section className="settings-card">
-          <h2>No procedures found</h2>
+          <h2>{admin ? 'No workflow templates found' : 'No company procedures found'}</h2>
           <p className="muted">
             {admin
               ? 'Create a template or adjust your filters.'

@@ -20,7 +20,7 @@ export default async function OperationsPage() {
   return (
     <>
       <AutomationHeader
-        title="Automation Operations"
+        title="Automation operations"
         description="Service availability, your organization’s work queue and recent execution outcomes."
       />
       <div className="automation-inline">

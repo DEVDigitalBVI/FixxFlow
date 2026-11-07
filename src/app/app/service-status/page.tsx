@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import { PageHeader } from '@/components/ui/page-header';
 import { ServiceAnnouncements } from '@/features/portal/service-announcements';
 
@@ -15,10 +13,10 @@ export default async function ServiceStatusPage({
     <div className="page page-narrow">
       <PageHeader
         title="Service announcements"
-        description="Updates from your IT team about known issues."
+        description="Published updates from ticket coordination. Shared incidents contain curated issue summaries; email announcements are separate company messages."
+        back={{ href: '/app', label: 'Back to dashboard' }}
       />
       <ServiceAnnouncements full page={page} />
-      <Link href="/app">Back to home</Link>
     </div>
   );
 }

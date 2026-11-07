@@ -29,7 +29,9 @@ export function PageHeader({
           href={back.href}
         >
           <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
-          {back.label}
+          {back.label.startsWith('Back ')
+            ? back.label
+            : `Back to ${back.label.startsWith('FixxFlow') ? back.label : back.label.charAt(0).toLowerCase() + back.label.slice(1)}`}
         </Link>
       )}
       <header className={['page-header', className].filter(Boolean).join(' ')}>

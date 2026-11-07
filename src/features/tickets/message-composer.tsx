@@ -120,7 +120,7 @@ export function MessageComposer({
         </fieldset>
       )}
       <div className="composer-audience" id="message-audience" role="status">
-        <strong>{staff ? mode.label : 'Reply to IT'}</strong>
+        {kind === 'internal_note' && <strong>Internal note · IT staff only</strong>}
         <span>{staff ? mode.audience : 'Visible to you and IT support.'}</span>
       </div>
       <label htmlFor="message-body">{staff ? mode.label : 'Your message'}</label>

@@ -31,7 +31,7 @@ export default async function WorkspaceLibraryPage({
   return (
     <div className="page stack">
       <PageHeader
-        title="Shared help content"
+        title="FixxFlow library"
         description="Choose which troubleshooting guides and FixxFlow Help & FAQ content apply to your workspace. Hidden content stays available here so you can restore it."
         back={{ href: '/app/administration', label: 'Settings' }}
       />
@@ -51,7 +51,9 @@ export default async function WorkspaceLibraryPage({
           <ul className="knowledge-library-management">
             {rows.map((article) => (
               <li key={article.id} className="settings-card">
-                <h2>{article.title}</h2>
+                <h2>
+                  <Link href={`/app/help/${article.id}`}>{article.title}</Link>
+                </h2>
                 <p>{article.summary}</p>
                 <p className="muted">
                   {article.category} · {knowledgeAudiences[article.audience].label}

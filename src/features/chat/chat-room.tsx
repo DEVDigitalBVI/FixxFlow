@@ -589,7 +589,7 @@ export function ChatRoom({
               {kind === 'internal_note' && isWorker
                 ? 'Internal note · IT only'
                 : isWorker
-                  ? 'Reply to employee'
+                  ? 'Your message'
                   : 'Message'}
             </label>
             {isWorker && (

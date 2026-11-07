@@ -721,3 +721,15 @@ When a timing trend contains up to five recorded days, show dated horizontal bar
 Support insight permissions keep each checkbox, title and description together in one clickable row, with a 4px title/helper gap and 12px between options. Explain the dashboard as ticket totals, technician workload and response times; explain shared incidents as IT-published incident/High/Urgent summaries and resolutions. Put shared privacy limits in one concise note. Preserve independent native checkboxes, explicit accessible names/descriptions, touch targets and the existing disclosure/save behavior.
 
 Optional knowledge-article match counts stream independently of ticket search results. Keep the existing knowledge-search link available while the count loads or is unavailable, without shifting or blocking the primary ticket queue. Logout confirms durable application-session revocation and clears credentials before responding; provider cleanup may finish afterward, while private browser cache and storage cleanup remain intact.
+
+### IT workspace audit consistency (November 2026)
+
+Settings destination actions sit beneath their row description, aligned to its content edge, so links stay with their context. Back links use an explicit Back to destination label and the shared quiet treatment. Desktop form actions use intrinsic width; compact layouts can expand them while preserving 44px targets. Queue view selectors use the same rounded written selection and edge treatment.
+
+Closed and resolved staff tickets retain the guided workflow and every mounted draft. Label their resolution step Outcome & reopen, explain the saved terminal state, and keep status changes explicit. Historical queue SLA outcomes use neutral treatment and a Recorded outcome label; live warnings remain distinct. Staff previews of employee dashboards and shared incidents say Staff preview and explain private drafts separately from employee-visible publications.
+
+Asset lifecycle values remain authoritative. An Available asset with an employee assignment is labeled Assigned · Review availability; editors explain how to reconcile the two fields without silently changing data. Similar category names receive an administrator review notice rather than automatic renaming or merging. Organization deactivation guidance appears once above the lists; object-specific descriptions remain linked to their controls for assistive technology.
+
+Queued email announcements lead with delivery progress and a collapsed plain-text message preview. Pre-send drafts retain an expanded preview and required review confirmation. Plain-text authoring explains that Markdown markers are literal. Article contents use a named native disclosure; the answer remains in the reading flow. Chat history preserves the current viewer’s blue public-message treatment and written identity; internal notes remain distinct.
+
+Reports distinguish Today and current workload from last-30-days trends, name independent chart scales, explain incomplete classification, and use a concise no-incidents state. Preserve accessible exact-data disclosures and all existing authorization, retry and pagination behavior.

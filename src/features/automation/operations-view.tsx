@@ -68,7 +68,7 @@ export function OperationsOverviewView({ data }: { data: OperationsOverview }) {
           </p>
         </section>
         <section className="settings-card stack">
-          <h2>Worker</h2>
+          <h2>Rule execution service</h2>
           <HealthBadge state={worker} />
           <p>
             Last successful run
@@ -80,7 +80,7 @@ export function OperationsOverviewView({ data }: { data: OperationsOverview }) {
           )}
         </section>
         <section className="settings-card stack">
-          <h2>Temporal discovery</h2>
+          <h2>Scheduled rule checks</h2>
           <HealthBadge state={discovery} />
           <p>
             Last successful run

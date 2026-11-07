@@ -58,18 +58,6 @@ export default async function EmailAnnouncementReviewPage({
         }
         back={{ href: emailAnnouncementsPath, label: 'Email announcements' }}
       />
-      <section className="settings-card stack" aria-labelledby="email-preview-heading">
-        <h2 id="email-preview-heading">{campaign.subject}</h2>
-        <p className="muted">
-          Recipients:{' '}
-          {campaign.member_selection?.length ? 'Specific members' : 'All registered members'}
-        </p>
-        <p className="muted">Email subject: FixxFlow: {campaign.subject}</p>
-        <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">{campaign.body}</p>
-        <p className="muted">
-          The email uses FixxFlow branding and includes an Open FixxFlow link.
-        </p>
-      </section>
       {queued ? (
         <AnnouncementDeliveryProgress
           announcementId={announcementId}
@@ -83,6 +71,22 @@ export default async function EmailAnnouncementReviewPage({
           draft. New members require a new draft; members who become ineligible will be skipped.
         </Alert>
       )}
+      <section className="settings-card stack" aria-labelledby="email-preview-heading">
+        <h2 id="email-preview-heading">{campaign.subject}</h2>
+        <p className="muted">
+          Recipients:{' '}
+          {campaign.member_selection?.length ? 'Specific members' : 'All registered members'}
+        </p>
+        <p className="muted">Email subject: FixxFlow: {campaign.subject}</p>
+        <details open={!queued}>
+          <summary>Message preview · Plain text</summary>
+          <p className="muted">Formatting markers such as ** are sent as literal text.</p>
+          <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">{campaign.body}</p>
+        </details>
+        <p className="muted">
+          The email uses FixxFlow branding and includes an Open FixxFlow link.
+        </p>
+      </section>
       <section className="settings-card stack" aria-labelledby="email-recipients-heading">
         <h2 id="email-recipients-heading">Recipients ({counts.total})</h2>
         <ul className="stack list-none p-0">

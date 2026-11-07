@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
@@ -69,6 +70,28 @@ export default async function AdministrationSection({
           Manage names and availability. Inactive entries stay linked to existing tickets and are
           hidden from new selections.
         </p>
+        {section === 'categories' &&
+          visible.some((row, i) =>
+            visible.some(
+              (other, j) =>
+                i < j &&
+                row.name
+                  .toLocaleLowerCase()
+                  .split(/[^\p{L}\p{N}]+/u)
+                  .filter((part) => part.length > 3)
+                  .some((part) =>
+                    other.name
+                      .toLocaleLowerCase()
+                      .split(/[^\p{L}\p{N}]+/u)
+                      .includes(part),
+                  ),
+            ),
+          ) && (
+            <Alert tone="warning" role="status">
+              Some category names on this page overlap. Review their routing and rename them to make
+              their purpose distinct. Existing tickets and history are preserved.
+            </Alert>
+          )}
         <ClassificationEditor kind={kind} teams={routingTeams.data ?? []} />
         {!data.length && <p>No {section} found on this page.</p>}
         <div className="management-list">
@@ -139,11 +162,17 @@ export default async function AdministrationSection({
           resolution, and reopening. Internal notes do not notify requesters.
         </p>
         <p>
-          Repeated notifications are grouped to reduce noise. Individual notification preferences
-          are planned.
+          Repeated notifications are grouped to reduce noise. Choose email frequency, quiet hours
+          and timezone in your notification preferences.
         </p>
         <Link className={buttonVariants({ variant: 'secondary' })} href="/app/notifications">
           Open your notifications
+        </Link>
+        <Link
+          className={buttonVariants({ variant: 'secondary' })}
+          href="/app/notifications/settings"
+        >
+          Notification preferences
         </Link>
       </>
     );

@@ -278,7 +278,11 @@ export function ArticleEditor({
                   </NativeSelect>
                 </label>
               )}
-              <div className="knowledge-actions">
+              <div
+                className="knowledge-actions"
+                role="group"
+                aria-label={`Format section ${i + 1}`}
+              >
                 {!['image', 'link', 'code'].includes(block.type) && (
                   <>
                     <Button type="button" variant="secondary" onClick={() => format(i, '**')}>

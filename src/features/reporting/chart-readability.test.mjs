@@ -6,7 +6,7 @@ import { renderToStaticMarkup as render } from 'react-dom/server';
 
 import { load } from '../../../tests/helpers/load-module.mjs';
 
-const { Trend } = load('src/features/reporting/components.tsx', {
+const { Trend, Bars } = load('src/features/reporting/components.tsx', {
   'next/link': { default: (props) => React.createElement('a', props) },
 });
 const { chartScale, elapsedLabel } = load('src/features/reporting/chart-model.ts');
@@ -56,4 +56,24 @@ test('dense timing data has readable HTML scale and gridlines and never bridges 
   assert.match(html, /Vertical axis ranges from 0 minutes to 12h/);
   assert.equal(elapsedLabel(582), '9h 42m');
   assert.deepEqual(chartScale(582, true), { max: 720, ticks: [720, 540, 360, 180, 0] });
+});
+
+test('bar scales preserve count, percent and elapsed-time units', () => {
+  for (const [props, unit, value] of [
+    [{}, 'tickets', '90'],
+    [{ percent: true }, 'percent', '90.0%'],
+    [{ time: true }, 'minutes', '1h 30m'],
+  ]) {
+    const html = render(
+      React.createElement(Bars, {
+        title: 'Breakdown',
+        description: 'Measured values',
+        rows: [{ label: 'Support', value: 90 }],
+        ...props,
+      }),
+    );
+    assert.match(html, new RegExp(`${unit} · each chart has its own scale`));
+    assert.ok(html.includes(`<strong>${value}</strong>`));
+    assert.match(html, /width:/);
+  }
 });

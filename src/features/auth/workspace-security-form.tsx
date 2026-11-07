@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { saveWorkspaceSecurity } from '@/app/app/administration/security/actions';
 import { ActionForm } from '@/components/ui/action-form';
 import { Alert } from '@/components/ui/alert';
+import { buttonVariants } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SubmitButton } from '@/components/ui/submit-button';
 
@@ -41,8 +42,10 @@ export function WorkspaceSecurityForm({
       </p>
       {!canChange && (
         <Alert as="p" tone="info">
-          Set up and verify <Link href="/app/security">your authenticator</Link> before changing
-          workspace protection.
+          Set up and verify an authenticator before changing workspace protection.
+          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/security">
+            Set up authenticator
+          </Link>
         </Alert>
       )}
       <SubmitButton variant="primary" disabled={!canChange}>

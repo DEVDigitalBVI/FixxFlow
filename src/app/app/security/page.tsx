@@ -19,8 +19,10 @@ export default async function SecurityPage() {
       <section className="settings-card">
         <h2>Multi-factor authentication</h2>
         <p className="muted">
-          Use an authenticator app as a second step when signing in. Add a second factor as a backup
-          before removing your primary factor.
+          Use an authenticator app as a second step when signing in.{' '}
+          {data[0].has_verified_factor
+            ? 'Add a second factor as a backup before removing your primary factor.'
+            : 'Add and verify your first authenticator to finish setup.'}
         </p>
         <MfaEnrollment required={data[0].mfa_required} />
       </section>

@@ -70,7 +70,7 @@ function inventory({
   };
 }
 
-test('inventory groups count, filters, complete asset identity and named Open controls', async () => {
+test('inventory groups count, filters, complete asset identity and linked asset names', async () => {
   const html = await inventory().render();
   for (const text of [
     'Assets',
@@ -85,10 +85,7 @@ test('inventory groups count, filters, complete asset identity and named Open co
   ])
     assert.ok(html.includes(text));
   assert.match(html, /aria-labelledby="inventory-heading"/);
-  assert.match(
-    html,
-    /class="button [^"]*\bbutton-secondary\b[^"]*" href="\/app\/assets\/asset-a">Open<span class="sr-only"> Reception laptop/,
-  );
+  assert.match(html, /class="asset-name" href="\/app\/assets\/asset-a">Reception laptop<\/a>/);
   assert.match(html, /<table[^>]*class="table [^"]*responsive-table table-nowrap\b/);
   assert.doesNotMatch(html, /aria-label="Asset pages"/);
 });

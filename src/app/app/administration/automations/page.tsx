@@ -55,7 +55,7 @@ export default async function AutomationsPage({
               href={`${automationPath}/import`}
               className={buttonVariants({ variant: 'secondary' })}
             >
-              Import Automation
+              Import automation
             </Link>
             <Link
               href={`${automationPath}/operations`}
@@ -64,7 +64,7 @@ export default async function AutomationsPage({
               Operations
             </Link>
             <Link href={`${automationPath}/new`} className={buttonVariants({ variant: 'primary' })}>
-              <span aria-hidden="true">＋</span>Create Automation
+              <span aria-hidden="true">＋</span>Create automation
             </Link>
           </>
         }

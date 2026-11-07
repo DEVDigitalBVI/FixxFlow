@@ -147,6 +147,12 @@ export function AssetForm({ asset, onCancel }: { onCancel?: () => void; asset?: 
             onChange={(value) => setDraft((d) => ({ ...d, location_id: value }))}
           />
         </div>
+        {draft.status === 'available' && draft.assigned_user_id && (
+          <Alert tone="warning" role="status">
+            This asset is assigned to an employee but marked Available. Set In use if they are using
+            it, or unassign it before offering it to someone else.
+          </Alert>
+        )}
         {draft.status === 'retired' && (
           <p className="muted">
             Retirement preserves the asset and its ticket history. Unassign the employee before

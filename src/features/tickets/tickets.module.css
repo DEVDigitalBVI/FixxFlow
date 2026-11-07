@@ -618,9 +618,9 @@
     overflow: visible;
   }
   :where(.scope) :global(.ticket-queue-heading > .queue-views a[aria-current='page']) {
-    background: transparent;
+    background: var(--color-accent-subtle);
     border-color: var(--color-selected-border);
-    box-shadow: none;
+    box-shadow: inset 0 -2px var(--color-selected-border);
   }
   :where(.scope) :global(.ticket-queue-toolbar) {
     padding: 16px 20px;

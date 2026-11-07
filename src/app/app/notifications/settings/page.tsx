@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 import { Alert } from '@/components/ui/alert';
-import { buttonVariants } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import { NotificationPreferencesForm } from '@/features/notifications/preferences-form';
 import { defaultNotificationPreferences } from '@/features/notifications/preferences-model';
@@ -18,15 +17,11 @@ export default async function NotificationSettingsPage() {
     .eq('user_id', viewer.id)
     .maybeSingle();
   return (
-    <div className={`page${viewer.role === 'end_user' ? ' portal-detail' : ''}`}>
+    <div className="page page-narrow stack">
       <PageHeader
         title="Notification preferences"
         description="Choose when email updates reach you."
-        actions={
-          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/notifications">
-            Back to notifications
-          </Link>
-        }
+        back={{ href: '/app/notifications', label: 'Back to notifications' }}
       />
       <section className="settings-card">
         {error ? (

@@ -65,7 +65,7 @@ export default async function HelpPage({
             href="/app"
           >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
-            Home
+            Back to home
           </Link>
           <h1>{staff ? 'Knowledge base' : 'Help articles'}</h1>
           <p>
@@ -79,7 +79,7 @@ export default async function HelpPage({
             className={buttonVariants({ variant: 'secondary' })}
             href="/app/administration/library"
           >
-            Manage shared guides
+            Manage FixxFlow library
           </Link>
         )}
         {staff && (
@@ -153,18 +153,21 @@ export default async function HelpPage({
         </p>
       </details>
       {!q && !filters.category && (
-        <nav className="knowledge-categories" aria-label="Browse help topics">
-          {knowledgeCategories.map((category) => (
-            <Link
-              className="portal-detail-card"
-              key={category}
-              href={`/app/help?${new URLSearchParams({ category, ...(staff && filters.view === 'all' ? { view: 'all' } : {}), ...(audience ? { audience } : {}) })}`}
-            >
-              <strong>{category}</strong>
-              <span>{knowledgeCategoryDescriptions[category]}</span>
-            </Link>
-          ))}
-        </nav>
+        <details className="portal-search-tips" open={!staff}>
+          <summary>Browse by category</summary>
+          <nav className="knowledge-categories" aria-label="Browse help topics">
+            {knowledgeCategories.map((category) => (
+              <Link
+                className="portal-detail-card"
+                key={category}
+                href={`/app/help?${new URLSearchParams({ category, ...(staff && filters.view === 'all' ? { view: 'all' } : {}), ...(audience ? { audience } : {}) })}`}
+              >
+                <strong>{category}</strong>
+                <span>{knowledgeCategoryDescriptions[category]}</span>
+              </Link>
+            ))}
+          </nav>
+        </details>
       )}
       {error ? (
         <Alert tone="error" role="alert">

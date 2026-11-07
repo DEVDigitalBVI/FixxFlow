@@ -57,6 +57,21 @@ export async function IncidentReport({
   const report = data as unknown as IncidentReportData,
     s = report.summary,
     more = report.items.length > 20;
+  if (s.total === 0 && s.open === 0 && !report.items.length && page <= 1)
+    return (
+      <section
+        id="incident-report"
+        className="settings-card"
+        aria-labelledby="incident-report-heading"
+      >
+        <h2 id="incident-report-heading">Incidents</h2>
+        <p>No incidents declared in the last 30 days and no older incidents remain open.</p>
+        <p className="muted">
+          Timing and breakdowns appear after an incident is recorded. Missing measurements are not
+          zero.
+        </p>
+      </section>
+    );
   const metrics = [
     ['Incidents', s.total, 'Declared in the last 30 days'],
     ['Open now', s.open, 'Includes older incidents'],

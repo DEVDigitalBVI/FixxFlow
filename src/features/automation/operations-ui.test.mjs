@@ -25,7 +25,7 @@ test('Operations OFF and empty states are intentional, accessible and read only'
     'No threshold observations',
   ])
     assert.ok(html.includes(text), text);
-  assert.match(html, /<h2>Worker<\/h2>/);
+  assert.match(html, /<h2>Rule execution service<\/h2>/);
   assert.match(html, /<summary>How service health/);
   assert.match(html, /<dt/);
   assert.doesNotMatch(html, /<button|<input|Force execute|Replay event|Clear queue/);

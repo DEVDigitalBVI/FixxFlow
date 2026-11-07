@@ -114,7 +114,7 @@ export default async function AssetsPage({
                   <h2>
                     <Link href={`/app/assets/${a.id}`}>{a.name}</Link>
                   </h2>
-                  <AssetStatusBadge status={a.status} />
+                  <AssetStatusBadge status={a.status} assigned={Boolean(a.assigned_user_id)} />
                 </div>
                 <p className="muted">
                   {assetKinds[a.kind]}
@@ -316,24 +316,17 @@ export default async function AssetsPage({
                       <div className="asset-tag">{a.tag}</div>
                     </td>
                     <td data-label="Asset status">
-                      <AssetStatusBadge status={a.status} />
+                      <AssetStatusBadge status={a.status} assigned={Boolean(a.assigned_user_id)} />
                     </td>
                     <td data-label="Type">{assetKinds[a.kind]}</td>
                     <td data-label="Model">{a.model ?? 'Not set'}</td>
                     <td data-label="Serial number">
-                      {/* Long serials truncate visually; the full value stays in the text. */}
                       <span className="asset-serial" title={a.serial_number ?? undefined}>
                         {a.serial_number ?? 'Not set'}
                       </span>
                     </td>
                     <td data-label="Actions">
                       <div className="asset-row-actions">
-                        <Link
-                          className={buttonVariants({ variant: 'secondary' })}
-                          href={`/app/assets/${a.id}`}
-                        >
-                          Open<span className="sr-only"> {a.name}</span>
-                        </Link>
                         {ticketR?.data && (
                           <AssetLinkForm ticketId={ticketR.data.id} asset={a} link />
                         )}

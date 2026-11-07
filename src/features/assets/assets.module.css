@@ -370,9 +370,8 @@
     /* Serials are lookup data, not identity: keep them from widening the table. */
     :where(.scope) :global(.asset-serial) {
       display: inline-block;
-      max-width: 14ch;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      max-width: none;
+      overflow: visible;
       vertical-align: bottom;
       white-space: nowrap;
       font-variant-numeric: tabular-nums;

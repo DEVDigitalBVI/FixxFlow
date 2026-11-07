@@ -22,7 +22,7 @@ export default async function SupportDashboardPage() {
   return (
     <div className="page overview-page">
       <PageHeader
-        title="Support dashboard"
+        title={viewer.role === 'end_user' ? 'Support dashboard' : 'Employee dashboard preview'}
         eyebrow={viewer.organizationName}
         description="A read-only view of IT support activity across your workspace."
         actions={
@@ -34,7 +34,9 @@ export default async function SupportDashboardPage() {
         }
       />
       <p>
-        <Badge tone="neutral">View only</Badge>
+        <Badge tone="neutral">
+          {viewer.role === 'end_user' ? 'View only' : 'Staff preview · View only'}
+        </Badge>
       </p>
       {error || !isDashboard(data) ? (
         <Alert tone="error" role="alert">

@@ -7,7 +7,7 @@ export default async function NewAutomationPage() {
   return (
     <>
       <AutomationHeader
-        title="Create Automation"
+        title="Create automation"
         description="Choose when to act, what must match and what happens next."
       />
       <CreateAutomation />

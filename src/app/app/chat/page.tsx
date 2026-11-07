@@ -26,7 +26,7 @@ export default async function ChatPage({
         <PageHeader
           title="Start a chat"
           eyebrow="Your IT support"
-          description="Tell us what’s happening. We’ll take it from here."
+          description="Send a message to your IT team. A conversation is created immediately; a technician replies when available during support hours."
           back={{ href: '/app/chat', label: 'Back to chats' }}
         />
         <div className="chat-intake-layout">

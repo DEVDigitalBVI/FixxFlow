@@ -119,8 +119,9 @@ export default async function OperationsHistoryPage({
           </div>
         </div>
         <p id="operations-range-help" className="muted">
-          Defaults to the last 24 hours. Select a range of up to 31 days. Names reflect the version
-          that executed.
+          Date boundaries use UTC, not your profile timezone. A UTC day may begin on the previous
+          local evening. Defaults to the last 24 hours. Select a range of up to 31 days. Names
+          reflect the version that executed.
         </p>
         {data.error && (
           <Alert as="p" tone="error" role="alert">

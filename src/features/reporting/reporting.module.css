@@ -776,3 +776,23 @@
     }
   }
 }
+
+@layer components {
+  :where(.scope) :global(.report-metrics dd > span) {
+    font-size: 28px;
+    margin-block: 8px;
+  }
+  :where(.scope) :global(.overview-page .report-metrics .settings-card) {
+    padding: var(--space-group);
+  }
+  :where(.scope) :global(.report-chart-empty) {
+    min-height: 0;
+    align-content: start;
+  }
+  :where(.scope) :global(.report-chart-empty > details) {
+    margin-top: auto;
+  }
+  :where(.scope) :global(.report-chart-grid:has(.report-chart-empty)) {
+    align-items: start;
+  }
+}

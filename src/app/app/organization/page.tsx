@@ -63,8 +63,8 @@ export default async function OrganizationPage({ searchParams }: Props) {
           {message.error}
         </Alert>
       )}
-      <section className="organization-guidance" aria-labelledby="organization-guidance-title">
-        <h2 id="organization-guidance-title">How departments and locations work</h2>
+      <details className="organization-guidance progressive-section">
+        <summary>How departments and locations work</summary>
         <p>
           These are separate lists, not a hierarchy. A department can work across several locations,
           and a location can contain several departments. For example, Finance staff might work at
@@ -75,7 +75,7 @@ export default async function OrganizationPage({ searchParams }: Props) {
           <Link href="/app/people">People → Manage → Profile details</Link>. These choices describe
           the person; they do not assign an IT technician to their requests.
         </p>
-      </section>
+      </details>
       <section
         className="settings-card organization-timezone"
         aria-labelledby="organization-timezone-title"
@@ -89,6 +89,10 @@ export default async function OrganizationPage({ searchParams }: Props) {
           <TimezoneSelect value={viewer.organizationTimezone} />
         </TimezoneSettingsForm>
       </section>
+      <p className="muted">
+        Deactivated entries disappear from new selections; existing records stay linked. Deactivate
+        sublocations before their parent.
+      </p>
       <div className="settings-grid">
         <section id="departments" className="settings-card">
           <h2>Departments</h2>

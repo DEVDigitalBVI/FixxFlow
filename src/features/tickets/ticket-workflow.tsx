@@ -115,7 +115,10 @@ export function TicketWorkflow({
   activeWorkflow: boolean;
   history: ReactNode;
 }) {
+  const done = status === 'resolved' || status === 'closed';
   const steps = tools ? workflowSteps : stepsWithoutCoordination;
+  const stepTitle = (item: (typeof workflowSteps)[number]) =>
+    done && item.hash === 'ticket-resolution' ? 'Outcome & reopen' : item.title;
   const initialHash =
     status === 'resolved' || status === 'closed'
       ? 'ticket-resolution'
@@ -173,13 +176,23 @@ export function TicketWorkflow({
     'ticket-activity': history,
   };
   const hint = (item: (typeof workflowSteps)[number]) =>
-    item.hash === 'ticket-workflow-tools'
-      ? activeWorkflow
-        ? 'This ticket has active coordination work. Review its checklist, approvals and stakeholder updates before continuing.'
-        : 'Optional for routine tickets. Apply a company procedure or declare a wider incident here, or continue to Respond.'
-      : item.hint;
+    done && item.hash === 'ticket-resolution'
+      ? `This ticket is ${status}. Review its outcome or use Status and Save status to reopen it.`
+      : done && item.hash === 'ticket-conversation'
+        ? 'Review messages or add an update. Use Outcome & reopen to change the ticket status explicitly.'
+        : item.hash === 'ticket-workflow-tools'
+          ? activeWorkflow
+            ? 'This ticket has active coordination work. Review its checklist, approvals and stakeholder updates before continuing.'
+            : 'Optional for routine tickets. Apply a company procedure or declare a wider incident here, or continue to Respond.'
+          : item.hint;
   return (
     <div className="ticket-wizard">
+      {done && (
+        <p className="ticket-closed-summary">
+          <strong>This ticket is {status}.</strong> Reviewing a step does not reopen it. Use Outcome
+          &amp; reopen to change its status.
+        </p>
+      )}
       <nav aria-label="Ticket workflow">
         <ol className="ticket-wizard-steps">
           {steps.map((item, index) => (
@@ -198,14 +211,14 @@ export function TicketWorkflow({
                 <span className="ticket-step-number" aria-hidden="true">
                   {index + 1}
                 </span>
-                <span>{item.title}</span>
+                <span>{stepTitle(item)}</span>
               </button>
             </li>
           ))}
         </ol>
       </nav>
       <p className="sr-only" role="status">
-        Step {step + 1} of {steps.length} · {steps[step].title}
+        Step {step + 1} of {steps.length} · {stepTitle(steps[step])}
       </p>
       {steps.map((item, index) => (
         <section
@@ -223,14 +236,14 @@ export function TicketWorkflow({
               }}
               tabIndex={-1}
             >
-              {item.title}
+              {stepTitle(item)}
             </h2>
             <p className="muted">{hint(item)}</p>
             <details className="ticket-step-help">
               <summary>
                 <span className="ticket-guidance-show">Show guidance</span>
                 <span className="ticket-guidance-hide">Hide guidance</span>
-                <span className="sr-only">: {item.title}</span>
+                <span className="sr-only">: {stepTitle(item)}</span>
               </summary>
               <ol>
                 {item.help.map((instruction, position) => (
@@ -250,19 +263,19 @@ export function TicketWorkflow({
         <div className="ticket-wizard-navigation">
           {step > 0 ? (
             <Button type="button" variant="secondary" onClick={() => go(step - 1)}>
-              Back: {steps[step - 1].title}
+              Back: {stepTitle(steps[step - 1])}
             </Button>
           ) : (
             <span />
           )}
           {step < steps.length - 1 ? (
             <Button type="button" variant="secondary" onClick={() => go(step + 1)}>
-              Next: {steps[step + 1].title}
+              Next: {stepTitle(steps[step + 1])}
             </Button>
           ) : (
             <p className="muted">
               {status === 'resolved' || status === 'closed'
-                ? 'This ticket is resolved. You can review any step or return to the queue.'
+                ? `This ticket is ${status}. You can review any step or return to the queue.`
                 : 'Return to Resolve to update the ticket status, or review any earlier step.'}
             </p>
           )}

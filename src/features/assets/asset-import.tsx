@@ -152,8 +152,14 @@ export function AssetImport() {
               setResult({});
             }}
           />{' '}
-          Create or update by asset tag
+          Update existing assets with matching tags (optional)
         </label>
+        {!updateExisting && (
+          <p className="muted">
+            New assets only. To change existing records, select the update option and review every
+            field before importing.
+          </p>
+        )}
         {updateExisting && (
           <p className="form-note">
             Matching tags will be updated. Blank optional cells clear saved values; omitted columns

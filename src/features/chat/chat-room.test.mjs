@@ -393,7 +393,7 @@ test('compact composer keeps staff audiences explicit and preserves each draft w
     assert.equal(f.h.find((n) => n.type === 'select').props.value, 'message');
     assert.equal(
       f.h.find((n) => n.type === 'label' && n.props.htmlFor === 'chat-draft').props.children,
-      'Reply to employee',
+      'Your message',
     );
     f.h.find((n) => n.type === 'select').props.onChange({ target: { value: 'internal_note' } });
     f.h.render();

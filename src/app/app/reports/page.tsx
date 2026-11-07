@@ -19,7 +19,7 @@ import { requireViewer } from '@/lib/auth/viewer';
 import { reportServerError } from '@/lib/server-errors';
 
 const reportSections = [
-  ['tickets-today', 'At a glance'],
+  ['tickets-today', 'Today & current workload'],
   ['report-sla-title', 'Service levels'],
   ['report-trends-title', 'Activity & turnaround'],
   ['report-workload-title', 'Current workload'],
@@ -82,7 +82,7 @@ export default async function ReportsPage({
             </div>
             <ReportDownload />
           </section>
-          <TodayMetrics report={report} title="At a glance" />
+          <TodayMetrics report={report} title="Today and current workload" />
           <ServiceLevels report={report} canViewTargets={viewer.role === 'administrator'} />
           <ReportCharts report={report} />
         </>

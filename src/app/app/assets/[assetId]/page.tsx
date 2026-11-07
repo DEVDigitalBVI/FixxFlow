@@ -90,7 +90,9 @@ export default async function AssetPage({
               ? 'Back to assets'
               : 'My equipment',
         }}
-        actions={<AssetStatusBadge status={asset.status} />}
+        actions={
+          <AssetStatusBadge status={asset.status} assigned={Boolean(asset.assigned_user_id)} />
+        }
       />
       {saved && (
         <Alert as="p" tone="success" role="status">

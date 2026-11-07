@@ -72,7 +72,7 @@ export async function LibraryArticleDetail({
       </header>
       <p className="muted">Maintained by FixxFlow and shared across workspaces.</p>
       <article className="portal-detail-card">
-        <LibraryArticleContent content={article.content} />
+        <LibraryArticleContent content={article.content} summary={article.summary} />
       </article>
       {(related.error || !!related.data?.length) && (
         <section className="settings-card">

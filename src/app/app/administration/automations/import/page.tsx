@@ -7,7 +7,7 @@ export default async function ImportAutomationPage() {
   return (
     <>
       <AutomationHeader
-        title="Import Automation"
+        title="Import automation"
         description="Bring a workflow into your organization. Review, map and test before saving."
       />
       <ImportAutomation />

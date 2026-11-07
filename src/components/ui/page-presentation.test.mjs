@@ -31,7 +31,7 @@ test('shared page heading separates native back navigation, title and primary ac
   );
   assert.match(
     html,
-    /<svg class="inline-icon" aria-hidden="true"[^>]*><path[^>]*><\/path><\/svg>Knowledge base<\/a>/,
+    /<svg class="inline-icon" aria-hidden="true"[^>]*><path[^>]*><\/path><\/svg>Back to knowledge base<\/a>/,
   );
   assert.ok(html.indexOf('</a>') < html.indexOf('<header'));
   assert.match(html, /<button type="button" class="button button-primary">Save draft/);

@@ -1,0 +1,143 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+
+import React from 'react';
+import { renderToStaticMarkup as render } from 'react-dom/server';
+
+import { componentHarness } from '../../../tests/helpers/component-harness.mjs';
+import { load } from '../../../tests/helpers/load-module.mjs';
+
+const { AssetStatusBadge } = load('src/features/assets/asset-status-badge.tsx');
+test('assigned equipment never presents an unqualified Available label', () => {
+  const html = render(
+    React.createElement(AssetStatusBadge, { status: 'available', assigned: true }),
+  );
+  assert.match(html, /Assigned · Review availability/);
+  assert.doesNotMatch(html, />Available</);
+  assert.match(render(React.createElement(AssetStatusBadge, { status: 'available' })), /Available/);
+  assert.match(
+    render(React.createElement(AssetStatusBadge, { status: 'repair', assigned: true })),
+    /Under repair/,
+  );
+});
+
+test('terminal tickets explain reopening and retain every mounted workflow panel', () => {
+  const { TicketWorkflow } = load('src/features/tickets/ticket-workflow.tsx');
+  for (const status of ['closed', 'resolved']) {
+    const html = render(
+      React.createElement(TicketWorkflow, {
+        status,
+        assigned: true,
+        review: 'Request draft',
+        assignment: 'Assignment draft',
+        conversation: 'Reply draft',
+        resolution: 'Status controls',
+        tools: 'Coordination draft',
+        activeWorkflow: false,
+        history: 'Recorded history',
+      }),
+    );
+    assert.match(html, new RegExp(`This ticket is ${status}`));
+    assert.match(html, /Outcome &amp; reopen/);
+    assert.match(html, /Reviewing a step does not reopen it/);
+    assert.equal((html.match(/class="ticket-wizard-panel"/g) ?? []).length, 6);
+    assert.equal((html.match(/hidden=""/g) ?? []).length, 5);
+    assert.match(html, /Reply draft/);
+    assert.match(html, /Status controls/);
+  }
+});
+
+test('article contents are available as a named collapsed disclosure before readable content', () => {
+  const { ArticleContent } = load('src/features/knowledge/article-content.tsx');
+  const html = render(
+    React.createElement(ArticleContent, {
+      showContents: true,
+      content: [
+        { type: 'heading', text: 'First step' },
+        { type: 'paragraph', text: 'Useful answer' },
+        { type: 'heading', text: 'Second step' },
+      ],
+    }),
+  );
+  assert.match(html, /<details class="knowledge-contents"><summary>On this page/);
+  assert.doesNotMatch(html, /<details[^>]* open/);
+  assert.match(html, /href="#article-section-0"/);
+  assert.match(html, /Useful answer/);
+});
+
+test('copy address confirms success and explains clipboard failure without losing the address', async () => {
+  const previous = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  const copied = [];
+  let fail = false;
+  Object.defineProperty(globalThis, 'navigator', {
+    configurable: true,
+    value: {
+      clipboard: {
+        writeText: async (text) => {
+          if (fail) throw Error('Denied');
+          copied.push(text);
+        },
+      },
+    },
+  });
+  const h = componentHarness('src/components/ui/copy-text-button.tsx', 'CopyTextButton', {
+    text: 'it@example.invalid',
+  });
+  try {
+    await h.find((n) => n.type === 'button').props.onClick();
+    h.render();
+    assert.deepEqual(copied, ['it@example.invalid']);
+    assert.equal(h.find((n) => n.props.role === 'status').props.children, 'Copied.');
+    fail = true;
+    await h.find((n) => n.type === 'button').props.onClick();
+    h.render();
+    assert.match(
+      h.find((n) => n.props.role === 'status').props.children,
+      /Select and copy the address above/,
+    );
+  } finally {
+    h.close();
+    if (previous) Object.defineProperty(globalThis, 'navigator', previous);
+    else delete globalThis.navigator;
+  }
+});
+
+test('empty incident reports explain absence instead of presenting empty detail controls', async () => {
+  const { IncidentReport } = load('src/features/reporting/incident-report.tsx', {
+    '@/lib/supabase/server': {
+      createClient: async () => ({
+        rpc: async () => ({
+          data: {
+            summary: { total: 0, open: 0 },
+            items: [],
+            breakdowns: [],
+          },
+          error: null,
+        }),
+      }),
+    },
+  });
+  const html = render(await IncidentReport({ organizationId: 'org' }));
+  assert.match(html, /No incidents declared/);
+  assert.doesNotMatch(html, /Incident details|Avg. service downtime/);
+  assert.match(html, /id="incident-report"/);
+});
+
+test('omitting a repeated introduction preserves existing article section anchors', () => {
+  const { ArticleContent } = load('src/features/knowledge/article-content.tsx');
+  const html = render(
+    React.createElement(ArticleContent, {
+      openingSummary: 'Repeated summary',
+      showContents: true,
+      content: [
+        { type: 'paragraph', text: 'Repeated summary' },
+        { type: 'heading', text: 'First step' },
+        { type: 'paragraph', text: 'The answer' },
+        { type: 'heading', text: 'Next step' },
+      ],
+    }),
+  );
+  assert.doesNotMatch(html, /Repeated summary/);
+  assert.match(html, /id="article-section-1"/);
+  assert.match(html, /href="#article-section-3"/);
+});

@@ -58,15 +58,17 @@ export default async function SharedIncidentsPage({
         }
       />
       <p>
-        <Badge tone="neutral">View only</Badge>{' '}
+        <Badge tone="neutral">{viewer.role === 'end_user' ? 'View only' : 'Staff preview'}</Badge>{' '}
         <span className="muted">
-          Shared summaries only. Your personal requests remain in My requests.
+          {viewer.role === 'end_user'
+            ? 'Shared summaries only. Your personal requests remain in My requests.'
+            : 'Published summaries are visible to permitted employees. Private drafts are visible only to IT staff.'}
         </span>
       </p>
       {viewer.role !== 'end_user' && (
         <p className="muted">
-          Staff preview includes private drafts. Publish summaries from the ticket’s Shared incident
-          summary section.
+          Publish or withdraw a summary from the ticket’s Shared incident summary section.
+          Publishing shares only the approved title, overview and resolution.
         </p>
       )}
       <LiveSearchForm
@@ -87,8 +89,12 @@ export default async function SharedIncidentsPage({
             <option value="priority">High and Urgent</option>
           </NativeSelect>
         </label>
-        <Button variant="secondary">Apply</Button>
-        {(q || filter !== 'all') && <Link href="/app/shared-incidents">Clear filters</Link>}
+        <Button variant="secondary">Search</Button>
+        {(q || filter !== 'all') && (
+          <Link className={buttonVariants({ variant: 'quiet' })} href="/app/shared-incidents">
+            Clear filters
+          </Link>
+        )}
       </LiveSearchForm>
       <p className="muted">
         {data.count} {data.count === 1 ? 'summary' : 'summaries'}
@@ -142,6 +148,11 @@ export default async function SharedIncidentsPage({
               ? 'Try another search or clear the filters.'
               : 'IT-approved summaries will appear here when published.'}
           </p>
+          {viewer.role !== 'end_user' && (
+            <Link className={buttonVariants({ variant: 'secondary' })} href="/app/tickets">
+              Open ticket queue
+            </Link>
+          )}
         </EmptyState>
       )}
       {(page > 1 || page * 25 < data.count) && (

@@ -33,13 +33,13 @@ export async function HistoryBrowser({
     kind === 'ticket'
       ? await db
           .from('tickets')
-          .select('id, requester_id, request_kind')
+          .select('id, ticket_number, title, requester_id, request_kind')
           .eq('organization_id', org)
           .eq('id', id)
           .maybeSingle()
       : await db
           .from('chat_conversations')
-          .select('id, requester_id, status')
+          .select('id, topic, requester_id, status')
           .eq('organization_id', org)
           .eq('id', id)
           .maybeSingle();
@@ -197,7 +197,7 @@ export async function HistoryBrowser({
       <ol className="ticket-conversation">
         {page.items.toReversed().map((row) => (
           <li
-            className={`conversation-item${row.kind === 'internal_note' ? ' conversation-item-note' : ''}`}
+            className={`conversation-item${row.kind === 'internal_note' ? ' conversation-item-note' : kind === 'chat' && row.author_id === viewer.id ? ' conversation-item-own' : ''}`}
             key={row.id}
           >
             <article className="conversation-bubble">
@@ -207,7 +207,7 @@ export async function HistoryBrowser({
                   <Timestamp value={row.created_at} />
                 </time>
               </header>
-              {staff && (
+              {staff && (row.kind === 'internal_note' || kind !== 'chat') && (
                 <p>
                   {row.kind === 'internal_note' ? 'Internal note · IT staff only' : 'Public reply'}
                 </p>
@@ -231,7 +231,11 @@ export async function HistoryBrowser({
         ))}
       </ol>
     ) : (
-      <p>No messages in this part of the history.</p>
+      <p>
+        {filters.before
+          ? 'No older messages on this page. Return to the latest entries.'
+          : 'No messages have been recorded for this conversation.'}
+      </p>
     );
   }
 
@@ -248,9 +252,18 @@ export async function HistoryBrowser({
   }
 
   return (
-    <div className={staff ? 'page stack' : 'portal-page stack'}>
+    <div
+      className={`${staff ? 'page stack' : 'portal-page stack'}${kind === 'chat' ? ' conversation-history-chat' : ''}`}
+    >
       <PageHeader
         title="Conversation history"
+        eyebrow={
+          'ticket_number' in parent.data
+            ? `Ticket #${parent.data.ticket_number} · ${parent.data.title}`
+            : 'topic' in parent.data
+              ? parent.data.topic
+              : 'Chat conversation'
+        }
         description={`Up to ${HISTORY_PAGE_SIZE} entries per page. Live replies remain in the conversation.`}
         back={{ href: base, label: 'Back to conversation' }}
       />

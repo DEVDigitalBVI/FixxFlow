@@ -52,7 +52,8 @@ export function CreateAutomation() {
               <p>{item.description}</p>
               <details>
                 <summary>
-                  Preview <span className="sr-only">{item.name}</span>
+                  Preview rule <span aria-hidden="true">⌄</span>
+                  <span className="sr-only">: {item.name}</span>
                 </summary>
                 <p>{item.useCase}</p>
                 <p>{automationSummary(item.definition)}</p>

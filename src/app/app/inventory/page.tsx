@@ -174,7 +174,13 @@ export default async function InventoryPage({
             </p>
           )}
           <div className="asset-inventory-footer">
-            <span className="muted">Available stock is ready to request.</span>
+            <span className="muted">
+              {items.error
+                ? 'Stock availability is unavailable.'
+                : items.data?.length
+                  ? 'Choose an item to check available quantities and request stock.'
+                  : 'Receive stock to make items available for requests.'}
+            </span>
             {(page > 1 || page * 25 < (items.count ?? 0)) && (
               <nav className="asset-pagination" aria-label="Inventory pages">
                 {page > 1 && (

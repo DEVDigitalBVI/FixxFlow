@@ -44,6 +44,19 @@ export default async function NotificationsPage({
         .eq('organization_id', viewer.organizationId)
         .eq('recipient_id', viewer.id)
         .is('read_at', null);
+  const ticketIds = [
+    ...new Set((data ?? []).flatMap((item) => (item.ticket_id ? [item.ticket_id] : []))),
+  ];
+  const ticketContext = ticketIds.length
+    ? await supabase
+        .from('tickets')
+        .select('id,title')
+        .eq('organization_id', viewer.organizationId)
+        .in('id', ticketIds)
+    : { data: [] };
+  const ticketTitles = new Map(
+    (ticketContext.data ?? []).map((ticket) => [ticket.id, ticket.title]),
+  );
   const pageHref = (next: number) =>
     `/app/notifications?${new URLSearchParams({ view: unread ? 'unread' : 'all', page: String(next) })}`;
   return (
@@ -116,6 +129,9 @@ export default async function NotificationsPage({
                 <Link className="notification-title" href={notificationHref(item)}>
                   {item.title}
                 </Link>
+                {item.ticket_id && ticketTitles.get(item.ticket_id) && (
+                  <p className="muted">{ticketTitles.get(item.ticket_id)}</p>
+                )}
               </div>
               {!item.read_at && <ReadButton id={item.id} />}
             </li>

@@ -21,11 +21,13 @@ export function ArticleContent({
   content,
   images = {},
   showContents = false,
+  openingSummary,
   stepScreenshots = [],
 }: {
   content: unknown;
   images?: Record<string, string>;
   showContents?: boolean;
+  openingSummary?: string;
   stepScreenshots?: {
     afterText: string;
     src: string;
@@ -44,18 +46,27 @@ export function ArticleContent({
   return (
     <div className="knowledge-content">
       {showContents && headings.length > 1 && (
-        <nav className="knowledge-contents" aria-label="On this page">
-          <strong>On this page</strong>
-          <ul>
-            {headings.map((heading) => (
-              <li key={heading.index}>
-                <a href={`#article-section-${heading.index}`}>{inline(heading.text)}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <details className="knowledge-contents">
+          <summary>On this page</summary>
+          <nav aria-label="On this page">
+            <ul>
+              {headings.map((heading) => (
+                <li key={heading.index}>
+                  <a href={`#article-section-${heading.index}`}>{inline(heading.text)}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </details>
       )}
       {blocks.map((block, i) => {
+        if (
+          i === 0 &&
+          block.type === 'paragraph' &&
+          openingSummary &&
+          block.text.trim() === openingSummary.trim()
+        )
+          return null;
         switch (block.type) {
           case 'heading':
             return (

@@ -16,7 +16,7 @@ export default function SupportPage() {
             href="/app"
           >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
-            Home
+            Back to home
           </Link>
           <h1>Contact support</h1>
           <p>
@@ -27,7 +27,10 @@ export default function SupportPage() {
       </header>
       <section className="portal-detail-card" aria-labelledby="email-support-heading">
         <h2 id="email-support-heading">Email FixxFlow support</h2>
-        <p>Include your organization name and a short description of the problem.</p>
+        <p>
+          Include your organization name and a short description of the problem. Email{' '}
+          <a href="mailto:support@fixxflow.app">support@fixxflow.app</a>.
+        </p>
         <p>
           <a
             className={buttonVariants({ variant: 'primary' })}

@@ -42,7 +42,7 @@ export default async function SavedRepliesPage() {
             : { href: '/app/tickets', label: 'Tickets' }
         }
       />
-      <details className="settings-card" open={!data.length}>
+      <details className="settings-card">
         <summary>
           <strong>New saved reply</strong>
         </summary>

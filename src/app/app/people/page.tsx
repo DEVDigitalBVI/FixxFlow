@@ -215,7 +215,9 @@ export default async function PeoplePage({ searchParams }: Props) {
             <span className="section-kicker">Grow your workspace</span>
             <h2 id="invite-heading">Invite someone to FixxFlow</h2>
             <p className="muted">
-              They’ll receive an email to set up their account. Choose the access they need.
+              Invitation links expire after 72 hours. Employees manage their own requests;
+              technicians work tickets; administrators also manage workspace settings. Choose only
+              the access needed.
             </p>
           </div>
           <ActionForm action={inviteMember} className="people-invite-form">
@@ -443,7 +445,7 @@ export default async function PeoplePage({ searchParams }: Props) {
               {search
                 ? 'Try another name, email or job title, or clear your search.'
                 : technicians
-                  ? 'Members with the Technician role will appear here.'
+                  ? 'Only members with the Technician role appear here; administrators are listed under All people.'
                   : 'Workspace members and their access will appear here.'}
             </p>
             <Link

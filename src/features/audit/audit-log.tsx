@@ -128,6 +128,13 @@ export async function AuditLog({
                 <strong>{event.entity_label}</strong>
               )}
             </p>
+            <p className="muted">
+              {parseChanges(event.changes)
+                .slice(0, 3)
+                .map((change) => auditFields[change.field] ?? 'Details')
+                .join(' · ')}
+              {parseChanges(event.changes).length > 3 ? ' · More changes' : ''}
+            </p>
             <details>
               <summary>View changes</summary>
               <ul className="audit-changes">

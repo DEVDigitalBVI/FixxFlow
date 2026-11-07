@@ -81,10 +81,8 @@ export function PersonCard({
           </div>
         </div>
         <div className="person-card-meta">
-          <span className="person-role">
-            {rolePresentation[role].label}
-            {insightLabel && ` · ${insightLabel}`}
-          </span>
+          <span className="person-role">{rolePresentation[role].label}</span>
+          {insightLabel && <span className="person-permissions muted">{insightLabel}</span>}
           <Badge
             tone={presentation.tone}
             className="member-status-badge"

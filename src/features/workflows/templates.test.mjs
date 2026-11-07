@@ -218,7 +218,7 @@ test('catalog access and literal searches stay within the company and use bounde
     const html = renderToStaticMarkup(
       await WorkflowCatalog({ params: { q: '25%_', page: '2', ticket } }),
     );
-    assert.match(html, /No procedures found/);
+    assert.match(html, /No company procedures found/);
     assert.ok(calls.some((c) => c[0] === 'eq' && c[1] === 'organization_id' && c[2] === 'org'));
     assert.ok(calls.some((c) => c[0] === 'gt' && c[1] === 'latest_version' && c[2] === 0));
     assert.ok(calls.some((c) => c[0] === 'range' && c[1] === 20 && c[2] === 39));

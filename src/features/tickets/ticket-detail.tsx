@@ -609,7 +609,8 @@ export async function TicketDetail({
             <section className="settings-card ticket-assignment">
               <h3>Choose a technician or team</h3>
               <p className="muted">
-                Use Assign to me above, or choose another technician below and save the details.
+                Choose a technician or team in the assignment editor, then save your changes. For a
+                resolved or closed ticket, reopen it using Status before starting work again.
               </p>
               <TicketAssignmentEditor key={ticket.id} ticket={ticket} timeZone={viewer.timeZone} />
             </section>

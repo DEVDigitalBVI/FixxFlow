@@ -109,6 +109,7 @@ export function CustomReportResults({ report }: { report: CustomReport }) {
                       : undefined,
                 }))}
                 percent={metric.unit === 'percent'}
+                time={metric.unit === 'minutes'}
                 allRows
               />
             ))
@@ -252,9 +253,11 @@ export function SavedReportList({
           <h2 id="saved-reports-title">Saved reports</h2>
           <p>Open a saved report to see current results.</p>
         </div>
-        <Link className={buttonVariants({ variant: 'primary' })} href="/app/reports/custom">
-          Create custom report
-        </Link>
+        {(reports === null || reports.length > 0) && (
+          <Link className={buttonVariants({ variant: 'primary' })} href="/app/reports/custom">
+            Create custom report
+          </Link>
+        )}
       </header>
       {reports === null ? (
         <Alert tone="warning" role="alert">
@@ -283,6 +286,9 @@ export function SavedReportList({
       ) : (
         <EmptyState>
           <strong>No saved reports yet</strong>
+          <Link className={buttonVariants({ variant: 'primary' })} href="/app/reports/custom">
+            Create your first report
+          </Link>
           <p>Create a report and save it here for reuse.</p>
         </EmptyState>
       )}

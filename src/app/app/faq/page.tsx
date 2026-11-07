@@ -86,7 +86,7 @@ export default async function FaqPage({
               className={buttonVariants({ variant: 'secondary' })}
               href="/app/administration/library"
             >
-              Manage shared guides
+              Manage FixxFlow library
             </Link>
           ) : undefined
         }

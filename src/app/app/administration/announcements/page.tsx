@@ -130,7 +130,8 @@ export default async function EmailAnnouncementsPage({
               aria-describedby="email-announcement-hint"
             />
             <small id="email-announcement-hint" className="muted">
-              Up to 6,000 characters. Plain text and line breaks are preserved.
+              Up to 6,000 characters. Plain text only: line breaks are preserved; Markdown and HTML
+              formatting are not applied.
             </small>
           </div>
           <SubmitButton variant="primary" pendingLabel="Preparing review…">

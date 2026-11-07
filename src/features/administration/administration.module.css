@@ -773,3 +773,42 @@
     display: none;
   }
 }
+
+@layer components {
+  :where(.scope) :global(.organization-location-children) {
+    border-inline-start: 2px solid var(--color-border-strong);
+    padding-inline-start: var(--space-group);
+  }
+  :where(.scope) :global(.administration-card-actions) {
+    gap: var(--space-inline);
+    flex-wrap: wrap;
+  }
+  :where(.scope) :global(.administration-card-actions > a) {
+    min-height: 44px;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.organization-location-children) {
+      padding-inline-start: var(--space-inline);
+    }
+  }
+}
+
+@layer components {
+  :where(.scope) :global(.administration-setting-row) {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 8px 16px;
+  }
+  :where(.scope) :global(.administration-card-icon) {
+    grid-row: span 2;
+    align-self: start;
+  }
+  :where(.scope) :global(.administration-card-actions) {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+  @media (max-width: 767px) {
+    :where(.scope) :global(.administration-setting-row) {
+      grid-template-columns: 32px minmax(0, 1fr);
+    }
+  }
+}

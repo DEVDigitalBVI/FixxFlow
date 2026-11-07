@@ -53,7 +53,7 @@ for (const kind of ['department', 'location']) {
         if (active)
           assert.match(
             html,
-            /<\/details><\/div><small class="muted" id="deactivate-description-entry">/,
+            /<\/details><\/div><small class="sr-only" id="deactivate-description-entry">/,
           );
         else assert.doesNotMatch(html, /deactivate-description-entry/);
       }

@@ -40,7 +40,7 @@ export default async function ProfilePage({ searchParams }: Props) {
       <PageHeader
         title="Your profile"
         eyebrow="Account"
-        description="Manage your details and preferences."
+        description="Manage your details and preferences. Each section saves independently using its own action."
         actions={<OwnerConsoleLink className={buttonVariants({ variant: 'secondary' })} />}
       />
       {message.error && (

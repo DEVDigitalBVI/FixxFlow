@@ -243,6 +243,9 @@ test('queued emails show progress without another send action and retain recipie
   );
   assert.match(html, /Announcement progress/);
   assert.match(html, /1 sent · 49 pending · 1 failed/);
+  assert.ok(html.indexOf('email-progress-heading') < html.indexOf('email-preview-heading'));
+  assert.match(html, /<details><summary>Message preview · Plain text/);
+  assert.doesNotMatch(html, /<details open/);
   assert.match(html, /Refresh progress/);
   assert.match(html, /aria-label="Recipient pages"/);
   assert.doesNotMatch(html, /name="confirm"|Send announcement to/);

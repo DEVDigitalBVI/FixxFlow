@@ -22,7 +22,7 @@ export function ReportUnavailable() {
 }
 export function TodayMetrics({
   report,
-  title = 'Tickets today',
+  title = 'Today and current workload',
 }: {
   report: Report | null;
   title?: string;
@@ -119,7 +119,7 @@ export function Trend({
   const sparseTiming = time && series.length === 1 && samples.length <= 5;
   const hasActivity = all.some((v) => v > 0) || (time && all.length > 0);
   return (
-    <section className="settings-card report-chart">
+    <section className={`settings-card report-chart${hasActivity ? '' : ' report-chart-empty'}`}>
       <h3>{title}</h3>
       <p>{description}</p>
       {hasActivity ? (
@@ -270,28 +270,42 @@ export function Bars({
   description,
   rows,
   percent = false,
+  time = false,
   allRows = false,
 }: {
   title: string;
   description: string;
   rows: { label: string; value: number; detail?: string }[];
   percent?: boolean;
+  time?: boolean;
   allRows?: boolean;
 }) {
   const shown: { label: string; value: number; detail?: string }[] =
     percent || allRows ? rows : topRows(rows);
-  const max = percent ? 100 : Math.max(1, ...shown.map((row) => row.value));
+  const max = percent ? 100 : chartScale(Math.max(1, ...shown.map((row) => row.value)), time).max;
   return (
     <section className="settings-card report-chart">
       <h3>{title}</h3>
       <p>{description}</p>
+      {shown.length > 0 && (
+        <p className="muted report-scale">
+          Scale: 0–{max} {percent ? 'percent' : time ? 'minutes' : 'tickets'} · each chart has its
+          own scale
+        </p>
+      )}
       {shown.length ? (
         <ul className="report-bars">
           {shown.map((row, i) => (
             <li key={`${row.label}-${i}`}>
               <div>
                 <span>{row.label}</span>
-                <strong>{percent ? `${row.value.toFixed(1)}%` : row.value}</strong>
+                <strong>
+                  {percent
+                    ? `${row.value.toFixed(1)}%`
+                    : time
+                      ? elapsedLabel(row.value)
+                      : row.value}
+                </strong>
               </div>
               <span className="report-bar-track" aria-hidden="true">
                 <span
@@ -367,7 +381,8 @@ export function ServiceLevels({
           )}
           <p className="report-footnote">
             Only completed targets with a recorded deadline are measured. Pending targets are
-            excluded. SLA targets count support hours (7 AM–10 PM every day).
+            excluded. SLA targets count each ticket’s saved support hours; turnaround charts use
+            elapsed time.
           </p>
         </div>
         <div className="report-sla-current">
@@ -478,6 +493,17 @@ export function ReportCharts({ report }: { report: Report }) {
           <div>
             <h2 id="report-breakdowns-title">Where requests come from</h2>
             <p>Tickets created in the last 30 days.</p>
+            {report.breakdowns.some(
+              (row) =>
+                ['Uncategorized', 'No department', 'No location'].includes(row.label) &&
+                row.value > 0,
+            ) && (
+              <p className="muted">
+                Some tickets lack a category, department or location. These remain in totals under
+                their written missing-value labels; complete those details in tickets or People to
+                improve future reporting.
+              </p>
+            )}
           </div>
         </header>
         <div className="report-chart-grid">

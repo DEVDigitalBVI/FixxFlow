@@ -2785,10 +2785,9 @@
   .ticket-queue-heading > .queue-views a:not(.button) {
     min-height: var(--control-height);
     padding: 11px 16px 9px;
-    border: 0;
-    border-bottom: 2px solid transparent;
-    border-radius: 0;
-    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: var(--color-surface);
   } /* Guidance lives in the linked hint; the status line appears once a search runs. */
   @media (max-width: 767px) {
     .ticket-queue-toolbar .queue-filters > .button {
@@ -3227,9 +3226,9 @@
   }
   .app-shell[data-sidebar] .nav-group,
   .app-shell[data-sidebar] .staff-more-nav {
-    padding: 0;
-    border-color: transparent;
-    background: transparent;
+    padding: 4px;
+    border-color: var(--color-border);
+    background: var(--color-surface-subtle);
   }
   .app-shell[data-sidebar] .nav-link {
     min-height: 48px;
@@ -3940,6 +3939,130 @@
       color: GrayText;
       border-color: GrayText;
       opacity: 1;
+    }
+  }
+}
+
+@layer components {
+  .copy-text-control {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-inline);
+  }
+  .inbound-address {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-group);
+  }
+  .workspace[data-page-flow='standard'] .page-back-link {
+    margin-block: 0;
+    min-height: 44px;
+  }
+  .workspace[data-page-flow='standard'] :is(form.stack, form.sla-policy-editor) > button.button {
+    justify-self: start;
+    width: auto;
+    max-width: 100%;
+  }
+  .workspace[data-page-flow='standard']
+    :is(.settings-card, .portal-detail-card)
+    > details
+    > summary,
+  .workspace[data-page-flow='standard'] .ticket-step-content details > summary {
+    cursor: pointer;
+    min-height: 44px;
+    padding-block: 12px;
+    list-style: disclosure-closed;
+  }
+  .workspace[data-page-flow='standard']
+    :is(.settings-card, .portal-detail-card)
+    > details[open]
+    > summary,
+  .workspace[data-page-flow='standard'] .ticket-step-content details[open] > summary {
+    list-style: disclosure-open;
+  }
+  .workspace[data-page-flow='standard'] summary:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+  .conversation-history-chat .conversation-item-own:not(.conversation-item-note) {
+    margin-inline-start: auto;
+  }
+  .conversation-history-chat
+    .conversation-item-own:not(.conversation-item-note)
+    > .conversation-bubble {
+    background: var(--color-chat-own-surface);
+    color: var(--color-chat-own-text);
+    border-color: var(--color-chat-own-border);
+  }
+  .ticket-closed-summary {
+    margin: 0;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: var(--color-surface-subtle);
+  }
+  .person-permissions {
+    display: block;
+    max-width: 30ch;
+    font-size: 12px;
+    line-height: 18px;
+  }
+  @media (max-width: 767px) {
+    .workspace[data-page-flow='standard'] form.stack > button.button {
+      width: 100%;
+    }
+    .copy-text-control {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+  @media (forced-colors: active) {
+    .conversation-history-chat .conversation-item-own > .conversation-bubble {
+      background: Canvas;
+      color: CanvasText;
+      border-color: CanvasText;
+    }
+  }
+}
+
+@layer components {
+  .report-template-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  }
+  .workspace[data-page-flow='standard'] .settings-card:has(> form.sla-policy-editor) {
+    max-width: 960px;
+  }
+  .workspace[data-page-flow='standard'] .ticket-queue-heading {
+    padding-block: 8px;
+  }
+  .workspace[data-page-flow='standard'] .ticket-queue-toolbar {
+    padding-block: 12px;
+  }
+  .workspace[data-page-flow='standard'] .ticket-queue-toolbar .queue-count {
+    margin-block: 8px;
+  }
+  .workspace[data-page-flow='standard'] .ticket-step-heading {
+    padding-block: 12px;
+  }
+  .workspace[data-page-flow='standard'] .ticket-step-help > summary {
+    min-height: 44px;
+  }
+  .workspace[data-page-flow='standard']
+    .ticket-step-content
+    :is(.incident-coordination, .ticket-procedures)
+    summary {
+    cursor: pointer;
+  }
+  @media (min-width: 1200px) {
+    .workspace[data-page-flow='standard'] .ticket-wizard-steps {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767px) {
+    .report-template-grid {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 }

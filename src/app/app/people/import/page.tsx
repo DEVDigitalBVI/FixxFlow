@@ -12,8 +12,8 @@ export default async function BulkInvitePage() {
     <div className="page people-page">
       <PageHeader
         title="Invite from CSV"
-        description="Review people and roles, then send their invitations."
-        back={{ href: '/app/people', label: 'Back to People' }}
+        description="1. Choose a CSV. 2. Review names, email addresses and roles. 3. Confirm and send invitations. Selecting a file does not send email."
+        back={{ href: '/app/people', label: 'Back to people' }}
       />
       <BulkInvite />
     </div>

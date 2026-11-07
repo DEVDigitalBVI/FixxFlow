@@ -26,7 +26,7 @@ export function OrganizationItemActions({
   deleteAction,
 }: Props) {
   const deactivationHint = active && (
-    <small className="muted" id={`deactivate-description-${id}`}>
+    <small className="sr-only" id={`deactivate-description-${id}`}>
       Hidden from new selections. Existing records stay linked.
     </small>
   );
