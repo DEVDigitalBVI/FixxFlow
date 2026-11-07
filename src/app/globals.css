@@ -3961,7 +3961,11 @@
     margin-block: 0;
     min-height: 44px;
   }
-  .workspace[data-page-flow='standard'] :is(form.stack, form.sla-policy-editor) > button.button {
+  .workspace[data-page-flow='standard'] :is(form.stack, form.sla-policy-editor) > button.button,
+  .workspace[data-page-flow='standard']
+    :is(form.stack, form.sla-policy-editor)
+    > .action-form-fields
+    > button.button {
     justify-self: start;
     align-self: flex-start;
     width: auto;
@@ -4013,7 +4017,8 @@
     line-height: 18px;
   }
   @media (max-width: 767px) {
-    .workspace[data-page-flow='standard'] form.stack > button.button {
+    .workspace[data-page-flow='standard'] form.stack > button.button,
+    .workspace[data-page-flow='standard'] form.stack > .action-form-fields > button.button {
       width: 100%;
     }
     .copy-text-control {
