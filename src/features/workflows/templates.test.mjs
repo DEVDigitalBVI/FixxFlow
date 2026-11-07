@@ -277,9 +277,12 @@ test('builder explains the reusable checklist and keeps optional controls mounte
       ui.find((n) => n.type === 'summary' && n.props.children === 'Updates & audiences (optional)'),
     );
     assert.ok(
-      ui.find(
-        (n) => n.type === 'h2' && n.props.children === 'A repeatable checklist for your team',
-      ),
+      ui.find((n) => n.type === 'summary' && n.props.children === 'How workflow templates work'),
+    );
+    assert.equal(
+      ui.find((n) => n.type === 'details' && n.props.className === 'workflow-builder-intro').props
+        .open,
+      undefined,
     );
     assert.ok(ui.find((n) => n.type === 'h2' && n.props.children === 'Save, review, then publish'));
   } finally {

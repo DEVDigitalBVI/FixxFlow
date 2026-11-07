@@ -233,6 +233,22 @@ export function ArticleEditor({
                 {i + 1}
               </legend>
 
+              <div
+                className="knowledge-actions"
+                role="group"
+                aria-label={`Format section ${i + 1}`}
+              >
+                {!['image', 'link', 'code'].includes(block.type) && (
+                  <>
+                    <Button type="button" variant="secondary" onClick={() => format(i, '**')}>
+                      Bold
+                    </Button>
+                    <Button type="button" variant="secondary" onClick={() => format(i, '*')}>
+                      Italic
+                    </Button>
+                  </>
+                )}
+              </div>
               <label>
                 {block.type === 'image'
                   ? 'Image description (alt text)'
@@ -278,22 +294,6 @@ export function ArticleEditor({
                   </NativeSelect>
                 </label>
               )}
-              <div
-                className="knowledge-actions"
-                role="group"
-                aria-label={`Format section ${i + 1}`}
-              >
-                {!['image', 'link', 'code'].includes(block.type) && (
-                  <>
-                    <Button type="button" variant="secondary" onClick={() => format(i, '**')}>
-                      Bold
-                    </Button>
-                    <Button type="button" variant="secondary" onClick={() => format(i, '*')}>
-                      Italic
-                    </Button>
-                  </>
-                )}
-              </div>
               <details className="knowledge-block-options">
                 <summary>
                   Section options<span className="sr-only">: section {i + 1}</span>

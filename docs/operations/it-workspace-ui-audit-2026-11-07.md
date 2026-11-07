@@ -29,7 +29,17 @@ These captures establish visible design findings; they do not establish failures
 
 - Reuses existing PageHeader, Button, Alert, badge, form, disclosure and semantic color/spacing tokens. Adds a reusable clipboard button with success and failure feedback.
 - Regression checks cover terminal panel retention, assignment warnings, clipboard recovery, collapsed contents, stable article anchors and incident empty states. Full tests, lint, type checking and production build are release checks.
-- Local synthetic-data preview checked desktop settings, compact organization layout, dark mode, wrapping and visible keyboard focus. This is not a claim that all 68 routes were individually exercised in a browser after implementation.
-- No category merges, asset assignment corrections, status changes or other production data edits were performed. Warnings identify records needing a human decision.
-- Vercel confirmed that the project production toolbar is Off and saved; the setting applies to the next deployment.
+- Signed-in production visual review covered the pages and regions represented by all 68 captures, including lower settings groups, organization hierarchy, ticket workflow panels, chat and ticket histories, article/FAQ detail, announcement delivery detail and report sections. This checks visible UI, not every possible submission or permission combination.
+- Local synthetic-data preview checked desktop settings, 390px organization layout, dark mode, wrapping and visible keyboard focus.
+- With user approval, redundant Access and Computer categories were deactivated; Computer’s one ticket moved to Hardware. Account / Access and Hardware remain active. No records were deleted. Verification found no tickets still using the redundant categories.
+- Nine available assets with active assignments were corrected to In use while preserving assignments. Guarded updates used record revisions and existing audit triggers. Verification found no assigned assets still marked Available and confirmed nine audited status corrections.
+- Vercel production toolbar is Off; no toolbar overlay appeared during production verification.
 - No deliberate exceptions to the product design system; the audit refinements are documented there.
+
+## Final verification refinements
+
+- Inactive category names no longer trigger overlap warnings; active ambiguity still does.
+- Desktop form actions use intrinsic width, notification links have a shared wrapping gap, and native disclosures retain visible open/closed markers and keyboard focus.
+- Long serials wrap without losing characters. Permissions sit beneath the member role. Own-message alignment is consistent between conversation and history, retaining chat-only semantic colors.
+- Closed/resolved tickets use Assignment and explicit reopening guidance throughout. Workflow introduction is collapsed. Article formatting precedes the text field; repeated opening summaries are omitted while preserving extra guidance and stable section anchors.
+- Release validation: full test suite, targeted regressions, lint, type checking, production build and production CSS/proxy checks. Deployment and live health are verified before reporting completion.

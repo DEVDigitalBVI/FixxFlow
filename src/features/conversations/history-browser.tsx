@@ -253,7 +253,7 @@ export async function HistoryBrowser({
 
   return (
     <div
-      className={`${staff ? 'page stack' : 'portal-page stack'}${kind === 'chat' ? ' conversation-history-chat' : ''}`}
+      className={`conversation-history ${staff ? 'page stack' : 'portal-page stack'}${kind === 'chat' ? ' conversation-history-chat' : ''}`}
     >
       <PageHeader
         title="Conversation history"

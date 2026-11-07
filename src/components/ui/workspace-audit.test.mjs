@@ -44,6 +44,12 @@ test('terminal tickets explain reopening and retain every mounted workflow panel
     assert.equal((html.match(/hidden=""/g) ?? []).length, 5);
     assert.match(html, /Reply draft/);
     assert.match(html, /Status controls/);
+    assert.match(html, />Assignment</);
+    assert.doesNotMatch(
+      html,
+      /Assign &amp; start|Choose an owner, confirm the priority, and begin work/,
+    );
+    assert.match(html, /before resuming work/);
   }
 });
 
@@ -140,4 +146,46 @@ test('omitting a repeated introduction preserves existing article section anchor
   assert.doesNotMatch(html, /Repeated summary/);
   assert.match(html, /id="article-section-1"/);
   assert.match(html, /href="#article-section-3"/);
+});
+
+test('category overlap warnings ignore retired choices but retain genuine active ambiguity', () => {
+  const { hasOverlappingActiveNames } = load('src/features/administration/classification-names.ts');
+  const rows = [
+    { name: 'Account / Access', is_active: true },
+    { name: 'Access', is_active: false },
+    { name: 'Hardware', is_active: true },
+    { name: 'Computer', is_active: false },
+  ];
+  assert.equal(hasOverlappingActiveNames(rows), false);
+  assert.equal(hasOverlappingActiveNames(rows.map((row) => ({ ...row, is_active: true }))), true);
+  assert.equal(
+    hasOverlappingActiveNames([
+      { name: 'Network / Printer', is_active: true },
+      { name: 'PRINTER', is_active: true },
+    ]),
+    true,
+  );
+  assert.equal(hasOverlappingActiveNames([{ name: 'Access', is_active: true }]), false);
+});
+
+test('article introductions omit the repeated summary while preserving additional guidance and anchors', () => {
+  const { ArticleContent } = load('src/features/knowledge/article-content.tsx');
+  const html = render(
+    React.createElement(ArticleContent, {
+      openingSummary: 'Find the correct settings.',
+      showContents: true,
+      content: [
+        {
+          type: 'paragraph',
+          text: 'Find the correct settings. Available controls depend on your role.',
+        },
+        { type: 'heading', text: 'Open settings' },
+        { type: 'heading', text: 'Review access' },
+      ],
+    }),
+  );
+  assert.doesNotMatch(html, /Find the correct settings/);
+  assert.match(html, /Available controls depend on your role/);
+  assert.match(html, /href="#article-section-1"/);
+  assert.match(html, /id="article-section-1"/);
 });

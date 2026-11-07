@@ -118,7 +118,11 @@ export function TicketWorkflow({
   const done = status === 'resolved' || status === 'closed';
   const steps = tools ? workflowSteps : stepsWithoutCoordination;
   const stepTitle = (item: (typeof workflowSteps)[number]) =>
-    done && item.hash === 'ticket-resolution' ? 'Outcome & reopen' : item.title;
+    done && item.hash === 'ticket-resolution'
+      ? 'Outcome & reopen'
+      : done && item.hash === 'ticket-assignment'
+        ? 'Assignment'
+        : item.title;
   const initialHash =
     status === 'resolved' || status === 'closed'
       ? 'ticket-resolution'
@@ -178,13 +182,43 @@ export function TicketWorkflow({
   const hint = (item: (typeof workflowSteps)[number]) =>
     done && item.hash === 'ticket-resolution'
       ? `This ticket is ${status}. Review its outcome or use Status and Save status to reopen it.`
-      : done && item.hash === 'ticket-conversation'
-        ? 'Review messages or add an update. Use Outcome & reopen to change the ticket status explicitly.'
-        : item.hash === 'ticket-workflow-tools'
-          ? activeWorkflow
-            ? 'This ticket has active coordination work. Review its checklist, approvals and stakeholder updates before continuing.'
-            : 'Optional for routine tickets. Apply a company procedure or declare a wider incident here, or continue to Respond.'
-          : item.hint;
+      : done && item.hash === 'ticket-assignment'
+        ? 'Review ownership and priority. Use Outcome & reopen before resuming work.'
+        : done && item.hash === 'ticket-conversation'
+          ? 'Review messages or add an update. Use Outcome & reopen to change the ticket status explicitly.'
+          : item.hash === 'ticket-workflow-tools'
+            ? activeWorkflow
+              ? 'This ticket has active coordination work. Review its checklist, approvals and stakeholder updates before continuing.'
+              : 'Optional for routine tickets. Apply a company procedure or declare a wider incident here, or continue to Respond.'
+            : item.hint;
+  const help = (item: (typeof workflowSteps)[number]) => {
+    if (!done) return item.help;
+    if (item.hash === 'ticket-assignment')
+      return [
+        <>Review the recorded owner and priority; save only if a correction is needed.</>,
+        <>
+          Use <strong>Outcome &amp; reopen</strong> to reopen this ticket before resuming work.
+        </>,
+      ];
+    if (item.hash === 'ticket-review')
+      return [
+        <>Review the original request, impact and attachments.</>,
+        <>
+          Use <strong>Assignment</strong> to review ownership and{' '}
+          <strong>Outcome &amp; reopen</strong> to resume work.
+        </>,
+      ];
+    if (item.hash === 'ticket-resolution')
+      return [
+        <>Review the recorded outcome and conversation.</>,
+        <>
+          To resume work, choose an open work status under <strong>Status</strong>, then select{' '}
+          <strong>Save status</strong>.
+        </>,
+        <>Reviewing or replying does not reopen the ticket.</>,
+      ];
+    return item.help;
+  };
   return (
     <div className="ticket-wizard">
       {done && (
@@ -246,7 +280,7 @@ export function TicketWorkflow({
                 <span className="sr-only">: {stepTitle(item)}</span>
               </summary>
               <ol>
-                {item.help.map((instruction, position) => (
+                {help(item).map((instruction, position) => (
                   <li key={position}>{instruction}</li>
                 ))}
               </ol>

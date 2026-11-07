@@ -88,14 +88,14 @@ export function TemplateBuilder({
       <input type="hidden" name="operation" value="save" />
       <input type="hidden" name="revision" value={effectiveRevision} />
       <input type="hidden" name="definition" value={serialized} />
-      <div className="workflow-builder-intro">
-        <h2>A repeatable checklist for your team</h2>
+      <details className="workflow-builder-intro">
+        <summary>How workflow templates work</summary>
         <p>Create the steps once. Staff apply a published version to a ticket when they need it.</p>
         <p className="muted">
           <strong>Example:</strong> “Restore office Wi-Fi”: check the outage, restart equipment,
           confirm recovery.
         </p>
-      </div>
+      </details>
       <section className="stack workflow-builder-section" aria-labelledby={`${id}-basics`}>
         <div>
           <h2 id={`${id}-basics`}>1. Describe the procedure</h2>

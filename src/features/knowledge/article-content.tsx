@@ -60,13 +60,14 @@ export function ArticleContent({
         </details>
       )}
       {blocks.map((block, i) => {
-        if (
-          i === 0 &&
-          block.type === 'paragraph' &&
-          openingSummary &&
-          block.text.trim() === openingSummary.trim()
-        )
-          return null;
+        if (i === 0 && block.type === 'paragraph' && openingSummary?.trim()) {
+          const text = block.text.trim();
+          const summary = openingSummary.trim();
+          if (text === summary) return null;
+          if (text.startsWith(`${summary} `) || text.startsWith(`${summary}\n`)) {
+            return <p key={i}>{inline(text.slice(summary.length).trim())}</p>;
+          }
+        }
         switch (block.type) {
           case 'heading':
             return (

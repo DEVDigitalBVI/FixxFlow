@@ -133,14 +133,16 @@ export function AnnouncementDeliveryProgress({
           Delivery status could not refresh. You’ll stay here until sending is confirmed. Try again.
         </Alert>
       )}
-      <Button
-        type="button"
-        variant="secondary"
-        disabled={pending}
-        onClick={() => void refresh.current()}
-      >
-        Refresh progress
-      </Button>
+      <div className="settings-actions">
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={pending}
+          onClick={() => void refresh.current()}
+        >
+          Refresh progress
+        </Button>
+      </div>
     </section>
   );
 }

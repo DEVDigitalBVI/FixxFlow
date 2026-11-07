@@ -357,6 +357,11 @@
     min-height: var(--control-height);
     padding-block: 12px;
     cursor: pointer;
+    display: list-item;
+    list-style: disclosure-closed;
+  }
+  :where(.scope) :global(.asset-import details[open] > summary) {
+    list-style: disclosure-open;
   }
   :where(.scope) :global(.asset-import input[type='file']) {
     min-width: 0;
@@ -370,10 +375,10 @@
     /* Serials are lookup data, not identity: keep them from widening the table. */
     :where(.scope) :global(.asset-serial) {
       display: inline-block;
-      max-width: none;
-      overflow: visible;
+      max-width: 24ch;
+      overflow-wrap: anywhere;
       vertical-align: bottom;
-      white-space: nowrap;
+      white-space: normal;
       font-variant-numeric: tabular-nums;
     }
   }

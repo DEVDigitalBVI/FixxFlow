@@ -3944,6 +3944,7 @@
 }
 
 @layer components {
+  .settings-actions,
   .copy-text-control {
     display: inline-flex;
     align-items: center;
@@ -3962,6 +3963,7 @@
   }
   .workspace[data-page-flow='standard'] :is(form.stack, form.sla-policy-editor) > button.button {
     justify-self: start;
+    align-self: flex-start;
     width: auto;
     max-width: 100%;
   }
@@ -3973,6 +3975,7 @@
     cursor: pointer;
     min-height: 44px;
     padding-block: 12px;
+    display: list-item;
     list-style: disclosure-closed;
   }
   .workspace[data-page-flow='standard']
@@ -3986,7 +3989,7 @@
     outline: 2px solid var(--color-focus);
     outline-offset: 3px;
   }
-  .conversation-history-chat .conversation-item-own:not(.conversation-item-note) {
+  .conversation-history .conversation-item-own:not(.conversation-item-note) {
     margin-inline-start: auto;
   }
   .conversation-history-chat

@@ -33,6 +33,12 @@
     background: var(--color-surface-subtle);
     border-radius: 12px;
   }
+  :where(.scope) :global(.workflow-builder-intro > summary) {
+    display: list-item;
+    min-height: var(--control-height);
+    cursor: pointer;
+    font-weight: 500;
+  }
   :where(.scope) :global(.workflow-builder-intro h2),
   :where(.scope) :global(.workflow-builder-section h2),
   :where(.scope) :global(.workflow-builder-save h2) {

@@ -97,7 +97,7 @@ export async function AuditLog({
           </NativeSelect>
         </div>
         <Button variant="primary" type="submit">
-          Apply filters
+          Search
         </Button>
         {(search || entity || action) && (
           <Link
