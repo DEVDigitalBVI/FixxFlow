@@ -10,6 +10,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Project instructions for Codex
 
+## Git and deployment workflow
+
+- Work directly on `main`; do not create branches unless the user explicitly requests one.
+- Run relevant checks, then push `main` for the Vercel production deployment when deployment is requested.
+
 ## Design source of truth
 
 For all user-facing implementation, read and follow `DESIGN_SYSTEM.md` before changing UI code. Treat it as the authoritative product design specification. Do not copy any single reference design or imitate macOS; build an original web interface that applies the documented principles.
