@@ -2784,7 +2784,7 @@
   }
   .ticket-queue-heading > .queue-views a:not(.button) {
     min-height: var(--control-height);
-    padding: 11px 16px 9px;
+    padding: 8px 16px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-control);
     background: var(--color-surface);

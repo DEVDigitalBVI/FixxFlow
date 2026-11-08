@@ -737,3 +737,8 @@ Asset lifecycle values remain authoritative. An Available asset with an employee
 Queued email announcements lead with delivery progress and a collapsed plain-text message preview. Pre-send drafts retain an expanded preview and required review confirmation. Plain-text authoring explains that Markdown markers are literal. Article contents use a named native disclosure; the answer remains in the reading flow. Chat history preserves the current viewer’s blue public-message treatment and written identity; internal notes remain distinct.
 
 Reports distinguish Today and current workload from last-30-days trends, name independent chart scales, explain incomplete classification, and use a concise no-incidents state. Preserve accessible exact-data disclosures and all existing authorization, retry and pagination behavior.
+
+
+### Ticket queue toolbar hierarchy
+
+Queue view links use an explicit flex/grid layout with 8px gaps, equal control heights and consistent padding. Use a quiet navy/slate selected fill, a thin border and an underlined semibold current label; avoid a heavy bottom inset. Keep Saved views beside ownership views and the page count, with expanded saved content flowing at full width. Search, Search action and the closed Filters and sort disclosure share a wrapping row on wide screens; expanded filters occupy full width. Compact view links form a two-column grid and search controls wrap without page overflow. Workspace names above the queue title use muted text. Retain native links, GET search, details disclosures, visible focus and touch targets.

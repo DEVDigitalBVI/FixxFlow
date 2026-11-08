@@ -87,3 +87,15 @@ test('pagination stays hidden for one page and offers navigation for multiple or
   assert.match(later, /aria-label="Ticket pages"/);
   assert.match(later, />Previous<\/a>/);
 });
+
+test('saved views sit with ownership navigation outside the GET search form', async () => {
+  const html = await renderTicketQueue();
+  const heading = html.match(/<header class="ticket-queue-heading">([\s\S]*?)<\/header>/)[1];
+  assert.match(heading, /aria-label="Ticket views"/);
+  assert.match(heading, /<details class="saved-queue-views">/);
+  assert.match(heading, /6 on this page/);
+  const toolbar = html.slice(html.indexOf('<div class="ticket-queue-toolbar">'));
+  assert.doesNotMatch(toolbar, /class="saved-queue-views"/);
+  assert.match(toolbar, /Search tickets/);
+  assert.match(toolbar, /Filters and sort/);
+});

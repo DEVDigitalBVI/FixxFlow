@@ -362,17 +362,17 @@ export default async function TicketsPage({
                 </Link>
               ))}
             </nav>
+            <SavedQueueViews
+              views={savedViews}
+              currentQuery={queueViewQuery(filters)}
+              error={savedViewsError}
+            />
             <span className="ticket-queue-page-count">
               {error ? 'Queue unavailable' : `${tickets?.length ?? 0} on this page`}
             </span>
           </header>
 
           <div className="ticket-queue-toolbar">
-            <SavedQueueViews
-              views={savedViews}
-              currentQuery={queueViewQuery(filters)}
-              error={savedViewsError}
-            />
             <LiveSearchForm
               action="/app/tickets"
               className="queue-filters"
