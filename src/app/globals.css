@@ -4085,10 +4085,10 @@
     padding: var(--space-section);
   }
   .workspace.employee-workspace[data-page-flow='standard']
-    > :is(.portal-form-page, .knowledge-detail, .portal-detail) {
+    :is(.page, .portal-page):is(.portal-form-page, .knowledge-detail, .portal-detail) {
     max-width: 840px;
   }
-  .employee-workspace :is(.settings-card, .portal-detail-card, .portal-empty) {
+  .employee-workspace :is(.settings-card, .portal-detail-card, .portal-empty):not(.profile-card) {
     padding: var(--space-section);
   }
   .employee-workspace .portal-empty {
@@ -4115,7 +4115,7 @@
   @media (max-width: 767px) {
     .workspace.employee-workspace[data-page-flow='standard']
       > :is(.page, .portal-page):not(.portal-home),
-    .employee-workspace :is(.settings-card, .portal-detail-card, .portal-empty) {
+    .employee-workspace :is(.settings-card, .portal-detail-card, .portal-empty):not(.profile-card) {
       padding: var(--space-group);
     }
   }
