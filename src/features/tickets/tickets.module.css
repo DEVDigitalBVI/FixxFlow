@@ -106,12 +106,12 @@
     }
   }
   :where(.scope) :global(.queue-views a[aria-current='page']) {
-    color: var(--color-accent);
-    background: var(--color-accent-subtle);
+    color: var(--color-active);
+    background: var(--color-active-surface);
     border-color: var(--color-selected-border);
     font-weight: 600;
     font-family: var(--font-heading);
-    box-shadow: inset 0 -2px var(--color-accent);
+    box-shadow: inset 0 -2px var(--color-active);
   }
   :where(.scope) :global(.queue-filters label) {
     display: grid;
@@ -291,7 +291,7 @@
   }
   :where(.scope) :global(.composer-modes label:has(:checked)) {
     border-color: var(--color-selected-border);
-    color: var(--color-accent);
+    color: var(--color-active);
     font-weight: 600;
     font-family: var(--font-heading);
   }
@@ -618,7 +618,7 @@
     overflow: visible;
   }
   :where(.scope) :global(.ticket-queue-heading > .queue-views a[aria-current='page']) {
-    background: var(--color-accent-subtle);
+    background: var(--color-active-surface);
     border-color: var(--color-selected-border);
     box-shadow: inset 0 -2px var(--color-selected-border);
   }
@@ -654,8 +654,8 @@
   }
   :where(.scope) :global(.ticket-queue-toolbar .queue-filter-options[open] summary) {
     border-color: var(--color-selected-border);
-    color: var(--color-accent);
-    background: var(--color-accent-subtle);
+    color: var(--color-active);
+    background: var(--color-active-surface);
   }
   :where(.scope) :global(.ticket-queue-toolbar .queue-filter-fields) {
     display: grid;
@@ -883,7 +883,7 @@
     line-height: 1.5;
   }
   :where(.scope) :global(.ticket-queue-panel .ticket-table tr:has(.queue-row-check:checked)) {
-    background: var(--color-accent-subtle);
+    background: var(--color-active-surface);
   }
   :where(.scope) :global(.ticket-queue-panel .ticket-table td[data-label='Updated']) {
     font-size: 12px;
@@ -1701,7 +1701,7 @@
     }
   }
   :where(.scope) :global(.ticket-wizard-steps button[aria-current='step']) {
-    background: var(--color-accent-subtle);
+    background: var(--color-active-surface);
     color: var(--color-text);
     border-color: var(--color-selected-border);
     font-weight: 600;

@@ -114,9 +114,9 @@
     }
   }
   :where(.scope) :global(.nav-link[aria-current='page']) {
-    color: var(--color-accent);
-    background: var(--color-accent-subtle);
-    box-shadow: inset 3px 0 var(--color-accent);
+    color: var(--color-active);
+    background: var(--color-active-surface);
+    box-shadow: inset 3px 0 var(--color-active);
     font-weight: 600;
     font-family: var(--font-heading);
   }
@@ -137,8 +137,8 @@
     flex-shrink: 0;
   }
   :where(.scope) :global(.staff-more-nav > summary:has([data-active])) {
-    color: var(--color-accent);
-    background: var(--color-accent-subtle);
+    color: var(--color-active);
+    background: var(--color-active-surface);
   }
   :where(.scope) :global(.nav-sign-out) {
     display: none;

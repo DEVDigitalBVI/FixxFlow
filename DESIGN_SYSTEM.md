@@ -51,8 +51,8 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-brand-primary: #ef233c;
   --color-brand-secondary: #8d99ae;
   --color-brand-ink: #2b2d42;
-  --color-brand-panel: #35383d;
-  --color-brand-panel-hover: #292c30;
+  --color-brand-panel: #2b2d42;
+  --color-brand-panel-hover: #232536;
   --color-canvas: #edf2f4;
   --color-surface: #ffffff;
   --color-surface-subtle: #f4f6f8;
@@ -65,15 +65,15 @@ Use CSS custom properties or theme tokens. Components must not contain unexplain
   --color-accent-subtle: #fff0f3;
   --color-active: #2b2d42;
   --color-active-surface: #e3e9ee;
-  --color-success: #2b2d42;
-  --color-success-subtle: #e3e9ee;
-  --color-warning: #2b2d42;
-  --color-warning-subtle: #e3e9ee;
+  --color-success: #166534;
+  --color-success-subtle: #eef7f1;
+  --color-warning: #854d0e;
+  --color-warning-subtle: #fff8e6;
   --color-danger: #d90429;
   --color-danger-surface: #fff0f3;
   --color-focus: #d90429;
   --color-control-border: #818c9e;
-  --color-selected-border: #d90429;
+  --color-selected-border: #2b2d42;
   --brand-flow: linear-gradient(100deg, var(--color-brand-primary), var(--color-brand-secondary));
   --shadow-field: 0 1px 2px rgb(43 45 66 / 5%), 0 3px 8px rgb(43 45 66 / 5%);
   --shadow-card: 0 1px 2px rgb(26 26 26 / 2%), 0 4px 12px rgb(26 26 26 / 2%);
@@ -91,6 +91,10 @@ The approved palette is navy `#2B2D42`, slate `#8D99AE`, frost `#EDF2F4`, bright
 Functional links and focus use crimson on light surfaces and frost on dark surfaces. Filled actions use crimson with white labels and a deeper crimson hover. Secondary actions use the surface and border tokens. Essential field edges retain 3:1 contrast; normal text retains 4.5:1. Preserve written status labels, icons, chart line styles and exact-data tables. Never rely on color alone. Legacy purple tokens remain neutral chart aliases.
 
 Dark mode uses a deeper navy canvas `#232536`, navy cards `#2B2D42` and elevated navy `#32354B`. Secondary text uses a lighter slate `#B4BECD`; exact slate remains available for controls and branding. Error labels use crimson on light surfaces and a readable red tint `#FFADB8` on dark surfaces. Automatic and explicit dark mode share identical values. Forced-colors mode retains system text, borders and focus.
+
+Success uses muted green (`#166534` on `#EEF7F1`); warnings use muted amber (`#854D0E` on `#FFF8E6`). Dark equivalents use pale green/amber labels on restrained tinted surfaces. These functional colors extend the brand palette and must accompany written labels or icons. Ticket badges use similarly quiet tints, preserving distinct status and priority mappings.
+
+Selection uses navy/slate active surfaces, semibold labels and a persistent edge indicator; reserve crimson for primary actions, links and errors. Dark brand panels use elevated navy `#32354B` with `#3C4059` hover. Keep white reading surfaces on frost in light mode, and use neutral secondary actions to preserve primary-action hierarchy.
 
 ### 3.2 Brand identity and logo flow
 

@@ -211,8 +211,8 @@
     border-bottom: 1px solid var(--color-border);
   }
   :where(.scope) :global(.portal-request-types a[aria-current='page']) {
-    color: var(--color-accent);
-    background: var(--color-accent-subtle);
+    color: var(--color-active);
+    background: var(--color-active-surface);
   }
   :where(.scope) :global(.portal-search label),
   :where(.scope) :global(.portal-request-form label) {
@@ -425,7 +425,7 @@
     padding: 0;
   }
   :where(.scope) :global(.portal-header .nav-link[aria-current='page']) {
-    box-shadow: inset 0 -3px var(--color-accent);
+    box-shadow: inset 0 -3px var(--color-active);
   }
   :where(.scope) :global(.portal-header > form) {
     flex-shrink: 0;
@@ -471,7 +471,7 @@
   }
   @media (max-width: 767px) {
     :where(.scope) :global(.portal-header .nav-link[aria-current='page']) {
-      box-shadow: inset 3px 0 var(--color-accent);
+      box-shadow: inset 3px 0 var(--color-active);
     }
   }
   @media (max-width: 767px) {
@@ -655,7 +655,7 @@
   :where(.scope) :global(.employee-requests-toolbar .portal-request-types a[aria-current='page']) {
     font-weight: 600;
     font-family: var(--font-heading);
-    box-shadow: inset 0 -2px var(--color-accent);
+    box-shadow: inset 0 -2px var(--color-active);
   }
   :where(.scope) :global(.employee-requests-toolbar .portal-search) {
     margin: 0;
@@ -1194,8 +1194,8 @@
   }
   :where(.scope) :global(.rating-option:has(input:checked)) {
     border-color: var(--color-selected-border);
-    background: var(--color-accent-subtle);
-    box-shadow: inset 0 0 0 1px var(--color-accent);
+    background: var(--color-active-surface);
+    box-shadow: inset 0 0 0 1px var(--color-active);
   }
   :where(.scope) :global(.rating-option:has(input:focus-visible)) {
     outline: 2px solid var(--color-focus);

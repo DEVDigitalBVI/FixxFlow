@@ -706,8 +706,8 @@
     background: var(--color-surface-subtle);
   }
   :where(.scope) :global(.chat-conversation-link[aria-current='page']) {
-    background: var(--color-accent-subtle);
-    border-inline-start-color: var(--color-accent);
+    background: var(--color-active-surface);
+    border-inline-start-color: var(--color-active);
   }
   :where(.scope) :global(.chat-conversation-link:focus-visible) {
     outline-offset: -3px;

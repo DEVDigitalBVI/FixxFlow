@@ -81,7 +81,7 @@
   }
   :where(.scope) :global(.knowledge-actions [aria-pressed='true']) {
     border-color: var(--color-selected-border);
-    background: var(--color-accent-subtle);
+    background: var(--color-active-surface);
   }
   :where(.scope) :global(.knowledge-detail > .settings-card) {
     margin-bottom: 16px;

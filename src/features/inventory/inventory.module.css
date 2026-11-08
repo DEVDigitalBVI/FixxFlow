@@ -73,7 +73,7 @@
   }
   :where(.scope) :global(.inventory-permission-option:has(:checked)) {
     border-color: var(--color-selected-border);
-    background: var(--color-accent-subtle);
+    background: var(--color-active-surface);
   }
   :where(.scope) :global(.inventory-permission-option:has(:focus-visible)) {
     outline: 2px solid var(--color-focus);

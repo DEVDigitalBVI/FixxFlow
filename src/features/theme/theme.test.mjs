@@ -554,3 +554,24 @@ test('browser favicon exports keep the approved mark visible with transparent su
     );
   }
 });
+
+test('semantic feedback remains distinct from neutral selection in every theme', () => {
+  const css = productStyles();
+  const read = (block) =>
+    Object.fromEntries(
+      [...block.matchAll(/--color-([\w-]+): (#[\da-f]+);/g)].map((m) => [m[1], m[2]]),
+    );
+  const base = read(css.match(/:root \{([^}]+)\}/)[1]);
+  const dark = read(css.match(/:root\[data-theme='dark'\] \{([^}]+)\}/)[1]);
+  for (const tokens of [base, { ...base, ...dark }]) {
+    assert.equal(
+      new Set(['success', 'warning', 'danger', 'active'].map((role) => tokens[role])).size,
+      4,
+    );
+    for (const role of ['success', 'warning', 'danger', 'active']) {
+      const surface = `${role}-${['success', 'warning'].includes(role) ? 'subtle' : 'surface'}`;
+      assert.ok(contrast(tokens[role], tokens[surface]) >= 4.5, role);
+    }
+    assert.ok(contrast(tokens['selected-border'], tokens['active-surface']) >= 3);
+  }
+});
