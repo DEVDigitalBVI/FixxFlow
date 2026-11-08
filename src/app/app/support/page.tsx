@@ -25,41 +25,43 @@ export default function SupportPage() {
           </p>
         </div>
       </header>
-      <section className="portal-detail-card" aria-labelledby="email-support-heading">
-        <h2 id="email-support-heading">Email FixxFlow support</h2>
-        <p>
-          Include your organization name and a short description of the problem. Email{' '}
-          <a href="mailto:support@fixxflow.app">support@fixxflow.app</a>.
-        </p>
-        <p>
-          <a
-            className={buttonVariants({ variant: 'primary' })}
-            href="mailto:support@fixxflow.app?subject=FixxFlow%20support"
-          >
-            Email FixxFlow support
-          </a>
-        </p>
-        <p className="muted">Opens your email app. Your message is sent when you choose Send.</p>
-        <details className="progressive-section">
-          <summary>Email app didn’t open?</summary>
-          <p>
-            Write to <a href="mailto:support@fixxflow.app">support@fixxflow.app</a> using your email
-            service.
-          </p>
-        </details>
-      </section>
       <section className="portal-detail-card" aria-labelledby="more-help-heading">
         <h2 id="more-help-heading">Workplace IT help</h2>
         <p>
           For equipment, access or other workplace IT issues, contact your IT team or find a guide.
         </p>
         <div className="page-header-actions">
-          <Link className={buttonVariants({ variant: 'secondary' })} href="/app/tickets/new">
+          <Link className={buttonVariants({ variant: 'primary' })} href="/app/tickets/new">
             Submit an IT request
           </Link>
           <Link className={buttonVariants({ variant: 'secondary' })} href="/app/help">
             Browse help articles
           </Link>
+          <section className="portal-detail-card" aria-labelledby="email-support-heading">
+            <h2 id="email-support-heading">Email FixxFlow support</h2>
+            <p>
+              Include your organization name and a short description of the problem. Email{' '}
+              <a href="mailto:support@fixxflow.app">support@fixxflow.app</a>.
+            </p>
+            <p>
+              <a
+                className={buttonVariants({ variant: 'secondary' })}
+                href="mailto:support@fixxflow.app?subject=FixxFlow%20support"
+              >
+                Email FixxFlow support
+              </a>
+            </p>
+            <p className="muted">
+              Opens your email app. Your message is sent when you choose Send.
+            </p>
+            <details className="progressive-section">
+              <summary>Email app didn’t open?</summary>
+              <p>
+                Write to <a href="mailto:support@fixxflow.app">support@fixxflow.app</a> using your
+                email service.
+              </p>
+            </details>
+          </section>
         </div>
       </section>
     </div>

@@ -102,7 +102,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ articl
             href="/app/help"
           >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
-            Knowledge base
+            {staff ? 'Knowledge base' : 'Help articles'}
           </Link>
           <p className="muted">
             {article.category} · {article.status}

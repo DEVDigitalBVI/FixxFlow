@@ -23,9 +23,11 @@ export function ReportUnavailable() {
 export function TodayMetrics({
   report,
   title = 'Today and current workload',
+  personal = false,
 }: {
   report: Report | null;
   title?: string;
+  personal?: boolean;
 }) {
   const s = report?.summary;
   const metrics = [
@@ -37,9 +39,11 @@ export function TodayMetrics({
     },
     { label: 'Open', value: s?.open ?? '—', hint: 'All unresolved tickets right now' },
     {
-      label: 'Overdue',
+      label: personal ? 'Past target' : 'Overdue',
       value: s?.overdue ?? '—',
-      hint: 'Open tickets with a breached response or resolution SLA',
+      hint: personal
+        ? 'Open requests past a reply or completion target'
+        : 'Open tickets with a breached response or resolution SLA',
     },
     {
       label: 'Avg response',

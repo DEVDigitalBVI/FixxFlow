@@ -88,7 +88,7 @@ export default async function HelpPage({
           </Link>
         )}
       </header>
-      <HelpNavigation current="knowledge" />
+      <HelpNavigation current="knowledge" personal={!staff} />
       <LiveSearchForm
         action="/app/help"
         className="queue-filters"

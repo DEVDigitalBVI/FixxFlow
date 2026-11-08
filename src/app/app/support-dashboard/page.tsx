@@ -45,12 +45,18 @@ export default async function SupportDashboardPage() {
         </Alert>
       ) : (
         <>
-          <TodayMetrics report={data.report} />
-          <DashboardInsights
-            report={data.report}
-            workload={data.workload.map((row, index) => ({ ...row, user_id: `summary-${index}` }))}
-            showReports={false}
-          />
+          <TodayMetrics report={data.report} personal title="Support across your organization" />
+          <details className="progressive-section support-workload-details">
+            <summary>IT workload and response details</summary>
+            <DashboardInsights
+              report={data.report}
+              workload={data.workload.map((row, index) => ({
+                ...row,
+                user_id: `summary-${index}`,
+              }))}
+              showReports={false}
+            />
+          </details>
         </>
       )}
     </div>

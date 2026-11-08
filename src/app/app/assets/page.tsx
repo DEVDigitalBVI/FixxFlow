@@ -160,6 +160,11 @@ export default async function AssetsPage({
                   ? 'Return to the first page to see your equipment.'
                   : 'Your IT team will add equipment here when it is assigned to you.'}
             </p>
+            {!q && page === 1 && (
+              <Link className={buttonVariants({ variant: 'secondary' })} href="/app/tickets/new">
+                Ask IT about missing equipment
+              </Link>
+            )}
             {(q || page > 1) && (
               <Link className={buttonVariants({ variant: 'secondary' })} href="/app/assets">
                 {q ? 'Clear search' : 'Back to my equipment'}

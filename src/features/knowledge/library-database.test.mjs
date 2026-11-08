@@ -65,6 +65,19 @@ test('shared library enforces audience, lifecycle, active membership, owner MFA 
       ).rows[0].n,
       0,
     );
+    const requestGuide = (
+      await db.query(
+        "select title,content,audience,status from public.library_articles where id='16610b18-b509-5736-9334-6ce53ac38369'",
+      )
+    ).rows[0];
+    assert.equal(requestGuide.title, 'Submit an IT request');
+    assert.equal(requestGuide.audience, 'employees');
+    assert.equal(requestGuide.status, 'published');
+    const requestSteps = JSON.stringify(requestGuide.content);
+    assert.match(requestSteps, /5 files/);
+    assert.match(requestSteps, /10 MB/);
+    assert.match(requestSteps, /Submit request/);
+    assert.doesNotMatch(requestSteps, /no attachment upload|Assignment & timing/);
     const ids = {};
     for (const [name, status, audience] of [
       ['employee', 'published', 'employees'],

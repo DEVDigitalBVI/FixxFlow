@@ -117,8 +117,9 @@ export default async function InventoryPage({
       )}
       {!access.manager && !access.departments.length && (
         <Alert as="p">
-          You do not have inventory request permission. An administrator can grant access for your
-          department in People. Your support access is unchanged.
+          Your department does not have inventory request access for this account. Ask your IT team
+          to enable access or help you request an item. You can still{' '}
+          <Link href="/app/tickets/new">submit an IT request</Link>.
         </Alert>
       )}
       {(access.manager || access.departments.length > 0) && (

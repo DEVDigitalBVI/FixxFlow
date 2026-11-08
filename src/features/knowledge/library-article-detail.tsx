@@ -60,11 +60,12 @@ export async function LibraryArticleDetail({
             href={product ? '/app/faq' : '/app/help'}
           >
             <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
-            {product ? 'FixxFlow Help & FAQ' : 'Knowledge base'}
+            {product ? 'FixxFlow Help & FAQ' : staff ? 'Knowledge base' : 'Help articles'}
           </Link>
           <p className="muted">
-            {product ? 'FixxFlow Help & FAQ' : 'FixxFlow library'} · {article.category} ·{' '}
-            {knowledgeAudiences[article.audience].label}
+            {product ? 'FixxFlow Help & FAQ' : staff ? 'FixxFlow library' : 'Help articles'} ·{' '}
+            {article.category}
+            {staff ? ` · ${knowledgeAudiences[article.audience].label}` : ''}
           </p>
           <h1>{article.title}</h1>
           <p>{article.summary}</p>

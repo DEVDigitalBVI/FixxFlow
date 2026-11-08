@@ -92,7 +92,7 @@ export default async function FaqPage({
         }
       />
       <div className="fixxflow-help-navigation">
-        <HelpNavigation current="fixxflow" />
+        <HelpNavigation current="fixxflow" personal={!staff} />
         {staff ? (
           <nav className="queue-views" aria-label="FAQ audience">
             <Link
@@ -113,7 +113,7 @@ export default async function FaqPage({
         ) : (
           <p className="muted">
             Help for employees · Your IT team’s troubleshooting articles are in the{' '}
-            <Link href="/app/help">Knowledge base</Link>.
+            <Link href="/app/help">{staff ? 'Knowledge base' : 'Help articles'}</Link>.
           </p>
         )}
       </div>

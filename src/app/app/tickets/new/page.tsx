@@ -73,13 +73,12 @@ export default async function NewTicketPage({ searchParams }: Props) {
           description="Capture the issue and get it to the right people."
         />
       ) : (
-        <header className="portal-page-heading">
-          <div>
-            <span className="portal-kicker">IT support</span>
-            <h1>Open a ticket</h1>
-            <p>Tell IT what is happening. We’ll keep you updated here.</p>
-          </div>
-        </header>
+        <PageHeader
+          title="New request"
+          eyebrow="IT support"
+          description="Tell IT what is happening. We’ll keep you updated here."
+          back={{ href: '/app/tickets', label: 'My requests' }}
+        />
       )}
       {message.error && (
         <Alert tone="error" className="page-alert" role="alert">

@@ -133,7 +133,8 @@ test('shared reader identifies provenance and supports feedback without tenant e
     }),
   );
   assert.match(html, /<h1>Shared Wi-Fi guide<\/h1>/);
-  assert.match(html, /FixxFlow library/);
+  assert.match(html, /Help articles/);
+  assert.doesNotMatch(html, /Employee-facing/);
   assert.match(html, /aria-label="On this page"/);
   assert.match(html, /href="\/app\/tickets\/new"/);
   assert.doesNotMatch(html, /Edit article|Usage in this workspace/);

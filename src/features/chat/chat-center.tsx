@@ -9,10 +9,12 @@ export function ChatCenter({
   inbox,
   children,
   personal = false,
+  empty = false,
 }: {
   inbox: ReactNode;
   children?: ReactNode;
   personal?: boolean;
+  empty?: boolean;
 }) {
   return (
     <div className={`page chat-center-page${personal ? ' chat-center-personal' : ''}`}>
@@ -25,19 +27,22 @@ export function ChatCenter({
           </Link>
         }
       />
-      <div className={`chat-center${children ? ' chat-center-selected' : ''}`}>
+      <div
+        className={`chat-center${children ? ' chat-center-selected' : empty ? ' chat-center-empty' : ''}`}
+      >
         <div className="chat-center-inbox">{inbox}</div>
-        {children ?? (
-          <section className="chat-center-welcome" aria-labelledby="chat-welcome-title">
-            <span className="chat-intake-icon">
-              <NavigationIcon name="chat" />
-            </span>
-            <h2 id="chat-welcome-title">Select a conversation</h2>
-            <p>
-              Choose a chat from the inbox to read messages and reply{personal ? ' to IT.' : '.'}
-            </p>
-          </section>
-        )}
+        {children ??
+          (!empty && (
+            <section className="chat-center-welcome" aria-labelledby="chat-welcome-title">
+              <span className="chat-intake-icon">
+                <NavigationIcon name="chat" />
+              </span>
+              <h2 id="chat-welcome-title">Select a conversation</h2>
+              <p>
+                Choose a chat from the inbox to read messages and reply{personal ? ' to IT.' : '.'}
+              </p>
+            </section>
+          ))}
       </div>
     </div>
   );

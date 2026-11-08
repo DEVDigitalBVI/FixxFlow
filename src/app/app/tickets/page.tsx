@@ -121,11 +121,21 @@ export default async function TicketsPage({
             title="My requests"
             description="Track your requests and replies from IT."
             actions={
-              <Link className={buttonVariants({ variant: 'primary' })} href="/app/tickets/new">
-                New request
+              <Link
+                className={buttonVariants({ variant: 'primary' })}
+                href={filters.kind === 'inventory' ? '/app/inventory' : '/app/tickets/new'}
+              >
+                {filters.kind === 'inventory' ? 'Request equipment' : 'New request'}
               </Link>
             }
           />
+          {filters.kind === 'inventory' && (
+            <p className="employee-request-guidance">
+              Equipment requests are orders from department inventory. Request equipment to browse
+              available items; your department needs inventory access. For a broken device or other
+              IT issue, <Link href="/app/tickets/new">submit an IT request</Link>.
+            </p>
+          )}
           <section className="employee-requests-panel" aria-label="Requests">
             <div className="employee-requests-toolbar">
               <nav className="portal-request-types" aria-label="Request types">

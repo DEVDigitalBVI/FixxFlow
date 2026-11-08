@@ -1137,9 +1137,13 @@
     cursor: pointer;
     font-weight: 500;
     font-family: var(--font-body);
-    min-height: 40px;
-    display: flex;
-    align-items: center;
+    min-height: 44px;
+    display: list-item;
+    list-style: disclosure-closed inside;
+    padding-block: 10px;
+  }
+  :where(.scope) :global(.impact-expectations[open] summary) {
+    list-style-type: disclosure-open;
   }
   :where(.scope) :global(.impact-expectations table) {
     margin-block: 8px;

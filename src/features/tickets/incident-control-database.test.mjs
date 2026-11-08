@@ -423,6 +423,7 @@ test('upgrading existing response steps preserves their content, revisions and a
       ]);
       before = (await db.query('select * from public.incident_steps')).rows[0];
       await db.exec('reset role');
+      await db.query('select pg_temp.set_test_session($1,false)', ['{}']);
     },
   });
   try {

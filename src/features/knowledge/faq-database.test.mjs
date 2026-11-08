@@ -17,6 +17,7 @@ async function identity(db, id) {
 test('FAQ migration preserves guides and links while keeping employee, staff, hidden and troubleshooting scopes separate', async () => {
   let before;
   const db = await migratedPostgres({
+    throughMigration: '20261101220243_fixxflow_help_faq_collections.sql',
     beforeMigration: async (db, name) => {
       if (name.endsWith('_fixxflow_help_faq_collections.sql'))
         before = (

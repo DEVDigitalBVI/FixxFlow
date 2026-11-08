@@ -76,8 +76,13 @@ export function LiveChatQueue({
     };
   }, [organizationId, viewerId, personal, refresh]);
   return (
-    <span className="chat-connection" data-connected={connected} role="status">
-      {connected ? 'Connected' : 'Reconnecting…'}
+    <span
+      className="chat-connection"
+      data-connected={connected}
+      role="status"
+      title="Connection to FixxFlow updates. This does not indicate whether IT is available."
+    >
+      {connected ? 'Live updates connected' : 'Reconnecting updates…'}
     </span>
   );
 }

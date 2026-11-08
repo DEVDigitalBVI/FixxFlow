@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { ActionForm } from '@/components/ui/action-form';
 import { Alert } from '@/components/ui/alert';
 import { buttonVariants } from '@/components/ui/button';
@@ -89,8 +91,16 @@ export default async function ProfilePage({ searchParams }: Props) {
               </div>
               <div className="field">
                 <label htmlFor="email">Email</label>
-                <Input id="email" value={profile?.email ?? viewer.email} disabled />
-                <small className="muted">Managed by your sign-in settings.</small>
+                <Input
+                  id="email"
+                  value={profile?.email ?? viewer.email}
+                  disabled
+                  aria-describedby="profile-email-help"
+                />
+                <small id="profile-email-help" className="muted">
+                  Your sign-in email cannot be changed here.{' '}
+                  <Link href="/app/tickets/new">Ask your IT team to update it</Link>.
+                </small>
               </div>
               <div className="field">
                 <label htmlFor="jobTitle">Job title</label>

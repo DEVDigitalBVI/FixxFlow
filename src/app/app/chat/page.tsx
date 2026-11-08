@@ -47,6 +47,7 @@ export default async function ChatPage({
   return (
     <ChatCenter
       personal={personal}
+      empty={personal && !inbox.failed && inbox.chats.length === 0}
       inbox={
         <ChatInbox
           {...inbox}
