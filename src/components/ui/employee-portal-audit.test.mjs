@@ -52,4 +52,6 @@ test('workplace IT support is the first and primary contact path', () => {
   assert.match(html, /href="\/app\/tickets\/new"/);
   assert.match(html, /mailto:support@fixxflow.app/);
   assert.match(html, /Email app didn’t open/);
+  const sections = Page().props.children.filter((child) => child?.type === 'section');
+  assert.equal(sections.length, 2, 'IT and product support have independent cards');
 });
