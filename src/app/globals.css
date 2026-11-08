@@ -4078,7 +4078,7 @@
 @layer components {
   /* Employee task pages share a frame; forms and long-form reading stay narrower. */
   .workspace.employee-workspace[data-page-flow='standard']
-    > :is(.page, .portal-page):not(.portal-home) {
+    :is(.page, .portal-page):not(.portal-home) {
     width: 100%;
     max-width: 1040px;
     margin-inline: auto;
@@ -4114,7 +4114,7 @@
   }
   @media (max-width: 767px) {
     .workspace.employee-workspace[data-page-flow='standard']
-      > :is(.page, .portal-page):not(.portal-home),
+      :is(.page, .portal-page):not(.portal-home),
     .employee-workspace :is(.settings-card, .portal-detail-card, .portal-empty):not(.profile-card) {
       padding: var(--space-group);
     }
