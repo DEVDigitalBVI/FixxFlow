@@ -742,3 +742,8 @@ Reports distinguish Today and current workload from last-30-days trends, name in
 ### Ticket queue toolbar hierarchy
 
 Queue view links use an explicit flex/grid layout with 8px gaps, equal control heights and consistent padding. Use a quiet navy/slate selected fill, a thin border and an underlined semibold current label; avoid a heavy bottom inset. Keep Saved views beside ownership views and the page count, with expanded saved content flowing at full width. Search, Search action and the closed Filters and sort disclosure share a wrapping row on wide screens; expanded filters occupy full width. Compact view links form a two-column grid and search controls wrap without page overflow. Workspace names above the queue title use muted text. Retain native links, GET search, details disclosures, visible focus and touch targets.
+
+
+### Viewport-bound workspace navigation
+
+At widths of 768px and above, fix the shared sidebar to the viewport at its current expanded/collapsed width and reserve the matching grid column for it. The page scrolls independently; the logo and account stay visible, while the navigation list scrolls within the remaining sidebar height. Compact screens retain the sticky header and modal navigation sheet. This applies to ticket queues and the shared workspace shell.
