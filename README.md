@@ -84,24 +84,19 @@ name captured at creation; inactive categories/teams receive no automatic assign
 
 Later phase: administrator-managed Category → Subcategory → Issue Type. Keep tenant-scoped IDs and parent-child constraints for analytics and automation; archive used values instead of deleting history. Category and Subcategory tables exist today. The Issue Type model, administrator editor, and analytics/automation rules are future work.
 
-### SLA tracking (calendar-time V1)
+### SLA tracking
 
-Apply `20260925004643_ticket_sla_targets.sql` before deploying the SLA UI. It stores separate response and resolution deadlines on every ticket, including tickets created from chat. Existing tickets are backfilled from creation time and current priority; this cannot reconstruct historical priority changes. Historical closed tickets recover their resolution timestamp from activity when available, otherwise their close timestamp is used.
+Tickets snapshot the organization’s support schedule, timezone and priority targets. Deadlines count saved working hours; manual due dates remain separate. Public staff replies satisfy response. Starting work on a technician’s self-assigned request satisfies response acknowledgment and is labeled separately from a public reply. Assignment and internal notes alone do not satisfy response. Work starting or a public reply also records IT acknowledgment for reporting.
 
-| Priority | First public staff response | Resolution |
-| --- | --- | --- |
-| Urgent | 15 minutes | 4 hours |
-| High | 1 hour | 8 hours |
-| Normal | 4 hours | 24 hours |
-| Low | 8 hours | 48 hours |
+Waiting on user and documented On hold states pause resolution only. Holds require an owner, a reason (vendor, parts, approval or scheduled work), a requester-visible explanation, and a future follow-up date. Review dates flag overdue holds without automatically resuming them. A requester reply resumes Waiting on user, while vendor and other holds require an explicit staff action. Resuming retains the remaining allowance and any pre-hold breach. Holds must be documented individually; bulk status updates and new automatic status actions cannot create undocumented holds.
 
-Both clocks start at creation and count calendar time, including nights, weekends, waiting-on-user, and on-hold time. Internal notes and requester replies do not satisfy first response. Priority changes recalculate unfinished targets from creation; completed targets stay fixed. Resolution stops on resolve/close, closing preserves an earlier resolution timestamp, and reopening resumes the existing resolution deadline without resetting first response. Manual due dates remain separate.
+Apply `20261109161826_ticket_acknowledgment_and_controlled_holds.sql` first (the notification enum change must commit), followed by `20261109162844_controlled_ticket_sla_workflow.sql`, before releasing the application. These migrations do not backdate acknowledgment or pause existing On hold tickets. Staff must document existing holds; missing follow-up dates appear in the review queue. Existing automations that attempt to place tickets on hold without required details will fail validation in the database and must be replaced with an individual staff review.
 
-Warnings begin in the last 20% of the target, capped at 30 minutes. Counts update every 30 seconds and on window focus. Queue filtering, SLA sorting, and the technician dashboard use the indexed next unfinished deadline. Both objectives show met/missed outcomes and accessible exact deadlines in addition to colors.
+The existing notifications cron enqueues hold review reminders, deduplicated by ticket, review date and recipient. Reviewing/resuming/reassigning a hold skips obsolete pending reminder email. Notification preferences continue to apply. SLA outcomes, acknowledgment time, resolution support time, total turnaround and recorded paused elapsed time are reported separately; the exports contain these distinctions. Historical pauses are not reconstructed, and old calendar-policy resolution samples are excluded from support-time averages.
 
-Future business-hours support belongs in the database deadline calculator, with an explicit organization timezone, weekly schedule, holidays, and versioned policy snapshots. Existing deadlines should retain their original calendar policy rather than shifting when a new schedule is introduced.
+Warnings begin in the last 20% of a target, capped at 30 minutes. SLA indicators refresh every 30 seconds and on window focus. Queue filtering, SLA sorting, and dashboard counts use the indexed next unfinished deadline; overdue hold reviews have their own queue filter.
 
-Run the transactional SQL regression with `supabase db query --local --file supabase/tests/sla-regression.sql` after local migrations. It creates temporary test fixtures and rolls them back.
+Run `npm test` for PostgreSQL migration/lifecycle/permission tests and UI interaction tests. The transactional SLA regression is `supabase/tests/sla-regression.sql`; it creates temporary test fixtures and rolls them back.
 
 ### Security and database verification
 

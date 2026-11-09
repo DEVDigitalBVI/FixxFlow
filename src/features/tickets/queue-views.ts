@@ -10,6 +10,7 @@ export const QUEUE_VIEW_KEYS = [
   'sort',
   'overdue',
   'sla',
+  'hold',
   'tag',
 ] as const;
 export type QueueViewKey = (typeof QUEUE_VIEW_KEYS)[number];

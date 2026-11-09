@@ -2,6 +2,7 @@ import { Timestamp } from '@/features/timezones/provider';
 import type { Json } from '@/types/database';
 
 import { activityAuthorName } from './authorship';
+import { holdReasons } from './holds';
 import { activityLabels, ticketPriorities, ticketStatuses } from './presentation';
 import { describeRating } from './ratings';
 
@@ -50,6 +51,11 @@ export function activityDetail(row: Activity, names: ReadonlyMap<string, string>
       to = person(details.to);
     return from && to ? `${from} to ${to}` : to ? `Assigned to ${to}` : null;
   }
+  if (row.action === 'hold_review_updated' || row.action === 'hold_ended')
+    return typeof details.hold_reason === 'string' &&
+      Object.hasOwn(holdReasons, details.hold_reason)
+      ? holdReasons[details.hold_reason as keyof typeof holdReasons]
+      : null;
   if (row.action === 'created') {
     const status = label(details.status, ticketStatuses),
       priority = label(details.priority, ticketPriorities);
@@ -98,6 +104,17 @@ export function ActivityTimeline({
                   : (activityLabels[item.action] ?? item.action.replaceAll('_', ' '))}
               </p>
               {detail && <p className="ticket-activity-detail">{detail}</p>}
+              {typeof record(item.details).review_at === 'string' && (
+                <p>
+                  Follow-up: <Timestamp value={record(item.details).review_at as string} />
+                </p>
+              )}
+              {(item.action === 'hold_review_updated' || item.action === 'hold_ended') &&
+                typeof data.reason === 'string' && (
+                  <p className="ticket-activity-reason">
+                    <strong>Explanation:</strong> {data.reason}
+                  </p>
+                )}
               {reopenReason && (
                 <p className="ticket-activity-reason">
                   <strong>Reason:</strong> {reopenReason}

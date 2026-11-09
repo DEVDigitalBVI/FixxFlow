@@ -300,6 +300,7 @@ export default async function TicketsPage({
     },
     { key: 'team', label: filters.team ? (teamNames.get(filters.team) ?? 'Selected team') : null },
     { key: 'overdue', label: filters.overdue === '1' ? 'Manual date overdue' : null },
+    { key: 'hold', label: filters.hold === 'review' ? 'Hold follow-up overdue' : null },
     { key: 'sla', label: filters.sla === 'breached' ? 'SLA breached' : null },
     { key: 'tag', label: tag ? `Tag: ${tag}` : null },
   ] as const;
@@ -481,6 +482,14 @@ export default async function TicketsPage({
                       ))}
                     </NativeSelect>
                   </label>
+                  <label>
+                    <Checkbox
+                      name="hold"
+                      value="review"
+                      defaultChecked={filters.hold === 'review'}
+                    />{' '}
+                    Hold follow-up overdue
+                  </label>
                   <label className="queue-check">
                     <Checkbox name="overdue" value="1" defaultChecked={filters.overdue === '1'} />{' '}
                     Manual date overdue
@@ -558,8 +567,8 @@ export default async function TicketsPage({
                       <NativeSelect name="status" defaultValue="">
                         <option value="">Choose status</option>
                         {Object.entries(ticketStatuses).map(([value, p]) => (
-                          <option key={value} value={value}>
-                            {p.label}
+                          <option key={value} value={value} disabled={value === 'on_hold'}>
+                            {value === 'on_hold' ? 'On hold (requires ticket review)' : p.label}
                           </option>
                         ))}
                       </NativeSelect>
@@ -667,6 +676,13 @@ export default async function TicketsPage({
                             </td>
                             <td data-label="Status">
                               <TicketStatusBadge status={ticket.status} />
+                              {ticket.status === 'on_hold' &&
+                                (!ticket.hold_review_at ||
+                                  Date.parse(ticket.hold_review_at) <= renderedAt) && (
+                                  <span className="ticket-manual-overdue">
+                                    Hold follow-up overdue
+                                  </span>
+                                )}
                             </td>
                             <td data-label="Priority">
                               <TicketStatusBadge priority={ticket.priority} />

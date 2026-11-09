@@ -15,6 +15,7 @@ export const notificationLabels: Record<NotificationKind, string> = {
   new_chat: 'New chat',
   ticket_reassigned: 'Reassignment',
   sla_approaching: 'SLA warning',
+  hold_review_due: 'Hold follow-up',
   ticket_resolved: 'Resolved',
   ticket_reopened: 'Reopened',
   user_replied: 'Requester reply',

@@ -59,7 +59,7 @@ export const dailyDefinitions = [
     key: 'response',
     label: 'Average response',
     unit: 'minutes',
-    note: 'Creation to first public IT reply, grouped by reply day.',
+    note: 'Creation to response or self-assigned technician acknowledgment, grouped by recorded day.',
   },
   {
     key: 'resolution',
@@ -69,7 +69,7 @@ export const dailyDefinitions = [
   },
 ] as const;
 export const slaNote =
-  'Completed targets in the reporting period. Pending targets and missing deadlines are excluded.';
+  'Completed targets in the reporting period. Support-hour deadlines exclude waiting and documented holds; pre-hold breaches remain. A technician starting their own request counts as response acknowledgment. Pending targets and missing deadlines are excluded.';
 export const timingNote =
   'All durations are elapsed calendar minutes, including evenings and weekends. No data means no completed timing samples.';
 export function summaryRows(report: Report) {
@@ -108,7 +108,7 @@ export function summaryRows(report: Report) {
       value: s.response,
       unit: 'minutes',
       scope: report.today,
-      note: 'First public IT replies sent today.',
+      note: 'First public IT replies or self-assigned technician acknowledgments recorded today.',
     },
     {
       label: 'Average resolution',
@@ -117,5 +117,51 @@ export function summaryRows(report: Report) {
       scope: report.today,
       note: 'Latest resolutions recorded today.',
     },
+    ...(report.lifecycle
+      ? [
+          {
+            label: 'Average acknowledgment',
+            value: report.lifecycle.acknowledgment,
+            unit: 'minutes',
+            scope: 'Last 30 days',
+            note: `Work started or first public reply; ${report.lifecycle.acknowledgmentSamples} recorded samples. Historical acknowledgments are not reconstructed.`,
+          },
+          {
+            label: 'On hold',
+            value: report.lifecycle.heldTickets,
+            unit: 'tickets',
+            scope: 'Current snapshot',
+            note: 'Tickets currently on hold.',
+          },
+          {
+            label: 'Hold follow-ups overdue',
+            value: report.lifecycle.holdReviewsDue,
+            unit: 'tickets',
+            scope: 'Current snapshot',
+            note: 'Includes legacy holds missing a follow-up date.',
+          },
+          {
+            label: 'Average resolution support time',
+            value: report.lifecycle.resolutionSupport,
+            unit: 'minutes',
+            scope: 'Last 30 days',
+            note: `Support time excluding pauses; ${report.lifecycle.resolutionSupportSamples} completed samples.`,
+          },
+          {
+            label: 'Average total turnaround',
+            value: report.lifecycle.resolutionElapsed,
+            unit: 'minutes',
+            scope: 'Last 30 days',
+            note: 'Creation to resolution, including nights, weekends and delays.',
+          },
+          {
+            label: 'Average recorded paused time',
+            value: report.lifecycle.holdElapsed,
+            unit: 'minutes',
+            scope: 'Last 30 days',
+            note: 'Elapsed waiting and hold time recorded since this workflow was introduced; historical pauses are not reconstructed.',
+          },
+        ]
+      : []),
   ];
 }

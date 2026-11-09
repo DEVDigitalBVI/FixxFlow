@@ -795,4 +795,16 @@
   :where(.scope) :global(.report-chart-grid:has(.report-chart-empty)) {
     align-items: start;
   }
+  :where(.scope) :global(.report-timing-values) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: var(--space-group);
+    margin: 0;
+    padding: var(--space-group) 0;
+  }
+  :where(.scope) :global(.report-timing-values dd) {
+    margin: 4px 0 0;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
 }

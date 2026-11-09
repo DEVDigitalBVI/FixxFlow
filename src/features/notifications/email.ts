@@ -60,6 +60,12 @@ const emailReasons: Record<NotificationKind, { label: string; message: string; a
     message: 'This ticket has been reopened and needs further attention.',
     action: 'Open reopened ticket',
   },
+  hold_review_due: {
+    label: 'Hold follow-up overdue',
+    message:
+      'Review the dependency, update the requester and set the next follow-up date, or resume work when the dependency is cleared.',
+    action: 'Review hold follow-up',
+  },
   sla_approaching: {
     label: 'SLA deadline approaching',
     message:

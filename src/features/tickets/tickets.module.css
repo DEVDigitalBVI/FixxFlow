@@ -2265,4 +2265,25 @@
   :where(.scope) :global(.request-expectations-policy p) {
     margin: 6px 0 0;
   }
+  :where(.scope) :global(.ticket-status-action .ticket-hold-editor) {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+  :where(.scope) :global(.ticket-hold-fields) {
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--space-group);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    overflow-wrap: anywhere;
+  }
+  :where(.scope) :global(.ticket-hold-fields legend) {
+    font-weight: 600;
+  }
+  :where(.scope) :global(fieldset.ticket-work-controls) {
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
 }

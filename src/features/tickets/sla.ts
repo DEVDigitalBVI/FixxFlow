@@ -7,12 +7,15 @@ export type SlaTicket = {
   created_at: string;
   status: TicketStatus;
   first_response_at: string | null;
+  first_response_kind?: 'public_reply' | 'work_started' | null;
   resolved_at: string | null;
   closed_at: string | null;
   response_sla_due_at: string | null;
   resolution_sla_due_at: string | null;
   sla_timezone?: string | null;
   sla_schedule?: unknown;
+  hold_note?: string | null;
+  hold_review_at?: string | null;
   resolution_sla_paused_at?: string | null;
   resolution_sla_remaining_seconds?: number | null;
 };
@@ -143,8 +146,8 @@ export function ticketSla(ticket: SlaTicket, now: number) {
                 : ('paused' as const),
             label:
               ticket.resolution_sla_remaining_seconds <= 0
-                ? 'Paused · waiting on requester · already breached'
-                : `Paused · waiting on requester · ${duration(ticket.resolution_sla_remaining_seconds * 1000)} of support time left`,
+                ? `Paused · ${ticket.status === 'on_hold' ? 'on hold' : 'waiting on requester'} · already breached`
+                : `Paused · ${ticket.status === 'on_hold' ? 'on hold' : 'waiting on requester'} · ${duration(ticket.resolution_sla_remaining_seconds * 1000)} of support time left`,
             deadline: ticket.resolution_sla_due_at,
             completedAt: null,
           }

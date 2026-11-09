@@ -45,9 +45,19 @@ export function RequestExpectations({ ticket }: { ticket: SlaTicket & { status: 
     >
       <h2 id="expectations-heading">What to expect</h2>
       <dl>
-        {reply && <Row term="First reply" item={reply} />}
+        {reply && (
+          <Row
+            term={ticket.first_response_kind === 'work_started' ? 'Acknowledgment' : 'First reply'}
+            item={reply}
+          />
+        )}
         {resolution && <Row term="Resolution" item={resolution} />}
       </dl>
+      {ticket.status === 'on_hold' && ticket.hold_review_at && (
+        <p className="muted">
+          Follow-up due <Timestamp value={ticket.hold_review_at} />.
+        </p>
+      )}
       {active && ticket.sla_timezone && (
         <details className="request-expectations-policy">
           <summary>How these times work</summary>

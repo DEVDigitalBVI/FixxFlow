@@ -15,10 +15,14 @@ import type { Database } from '@/types/database';
 
 import { CategoryFields } from './category-fields';
 import { DeadlineField } from './deadline-field';
+import { HoldFields } from './hold-fields';
 import { ticketPriorities, ticketStatuses } from './presentation';
 
 type TicketDetails = Pick<
   Database['public']['Tables']['tickets']['Row'],
+  | 'hold_reason'
+  | 'hold_note'
+  | 'hold_review_at'
   | 'id'
   | 'revision'
   | 'status'
@@ -66,6 +70,7 @@ export function TicketDetailsForm({
 }) {
   // Realtime page refreshes must never advance the draft's revision or reset its fields.
   const [draft] = useState(ticket);
+  const [status, setStatus] = useState(ticket.status);
   const [revision, setRevision] = useState(ticket.revision);
   const [conflicted, setConflicted] = useState(false);
   const router = useRouter();
@@ -114,7 +119,11 @@ export function TicketDetailsForm({
       <input type="hidden" name="revision" value={revision} />
       <label>
         Status
-        <NativeSelect name="status" defaultValue={draft.status}>
+        <NativeSelect
+          name="status"
+          defaultValue={draft.status}
+          onChange={(event) => setStatus(event.target.value as typeof status)}
+        >
           {Object.entries(ticketStatuses).map(([value, item]) => (
             <option key={value} value={value}>
               {item.label}
@@ -122,6 +131,7 @@ export function TicketDetailsForm({
           ))}
         </NativeSelect>
       </label>
+      {status === 'on_hold' && <HoldFields ticket={draft} timeZone={timeZone} />}
       <label>
         Priority
         <NativeSelect name="priority" defaultValue={draft.priority}>

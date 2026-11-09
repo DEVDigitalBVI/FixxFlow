@@ -25,6 +25,7 @@ export type TicketQueueFilters = {
   sort?: string;
   overdue?: string;
   sla?: string;
+  hold?: string;
   tag?: string;
   success?: string;
   error?: string;
@@ -46,7 +47,7 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
       // `tags` lists every tag for display; `tag_match` is a second embed used only to
       // filter by a tag (with `not is null` it behaves like an inner join). Tag rows are
       // staff-only under row-level security, so employees always get empty lists.
-      'id, ticket_number, request_kind, ticket_type, title, requester_id, assigned_technician_id, team_id, priority, status, due_at, created_at, updated_at, first_response_at, resolved_at, closed_at, response_sla_due_at, resolution_sla_due_at, sla_next_due_at, sla_timezone, sla_schedule, resolution_sla_paused_at, resolution_sla_remaining_seconds, tags:ticket_tags(tag), tag_match:ticket_tags(tag)',
+      'id, ticket_number, request_kind, ticket_type, title, requester_id, assigned_technician_id, team_id, priority, status, due_at, created_at, updated_at, first_response_at, first_response_kind, resolved_at, closed_at, response_sla_due_at, resolution_sla_due_at, sla_next_due_at, sla_timezone, sla_schedule, resolution_sla_paused_at, resolution_sla_remaining_seconds, hold_reason, hold_review_at, tags:ticket_tags(tag), tag_match:ticket_tags(tag)',
     )
     .eq('organization_id', viewer.organizationId);
   if (viewer.role === 'end_user' && filters.kind !== 'inventory')
@@ -60,6 +61,10 @@ export async function loadTicketQueue(viewer: Viewer, filters: TicketQueueFilter
       query = query.is('assigned_technician_id', null).in('status', active);
     if (view === 'team') query = query.not('team_id', 'is', null).in('status', active);
     if (filters.team && isUuid(filters.team)) query = query.eq('team_id', filters.team);
+    if (filters.hold === 'review')
+      query = query
+        .eq('status', 'on_hold')
+        .or(`hold_review_at.lte.${new Date().toISOString()},hold_review_at.is.null`);
     if (filters.sla === 'breached') query = query.lte('sla_next_due_at', new Date().toISOString());
     if (filters.overdue === '1')
       query = query.lt('due_at', new Date().toISOString()).in('status', active);

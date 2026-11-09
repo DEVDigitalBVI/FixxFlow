@@ -259,7 +259,7 @@ test('SLA support schedule, migration history, lifecycle and authority are enfor
           "select private.sla_business_seconds(now()-interval '30 hours',now(),'UTC') seconds",
         );
         await identity(db, admin);
-        await db.query("update public.tickets set status='on_hold' where id=$1", [id]);
+        await db.query("update public.tickets set status='in_progress' where id=$1", [id]);
         let row = await one(db, 'select * from public.tickets where id=$1', [id]);
         assert.equal(row.sla_paused_business_seconds, Number(expected.seconds));
         assert.ok(row.resolution_sla_due_at);

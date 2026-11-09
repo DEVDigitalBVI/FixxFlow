@@ -16,7 +16,19 @@ export function isReport(value: unknown): value is Report {
   )
     return false;
   const summary = value.summary;
+  const lifecycle = value.lifecycle;
   return (
+    (lifecycle === undefined ||
+      (record(lifecycle) &&
+        ['acknowledgment', 'resolutionSupport', 'resolutionElapsed', 'holdElapsed'].every((key) =>
+          timing(lifecycle[key]),
+        ) &&
+        [
+          'acknowledgmentSamples',
+          'holdReviewsDue',
+          'heldTickets',
+          'resolutionSupportSamples',
+        ].every((key) => number(lifecycle[key])))) &&
     record(summary) &&
     ['created', 'resolved', 'open', 'overdue'].every((key) => number(summary[key])) &&
     timing(summary.response) &&

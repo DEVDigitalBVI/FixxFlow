@@ -136,7 +136,8 @@ export function SlaPolicyEditor({
       <p className="muted">
         Changes apply to new tickets. Existing tickets keep their original targets, working days and
         hours, including when priority changes or work resumes. Waiting on user pauses only
-        resolution; on-hold time still counts during working hours.
+        resolution. Documented holds also pause resolution and require an owner and follow-up date.
+        Existing breaches are preserved.
       </p>
       <SubmitButton pendingLabel="Saving SLA standards…">Save SLA standards</SubmitButton>
     </ActionForm>

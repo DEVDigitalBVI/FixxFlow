@@ -1,4 +1,14 @@
 export type Report = {
+  lifecycle?: {
+    acknowledgment: number | null;
+    acknowledgmentSamples: number;
+    holdReviewsDue: number;
+    heldTickets: number;
+    resolutionSupport: number | null;
+    resolutionSupportSamples: number;
+    resolutionElapsed: number | null;
+    holdElapsed: number | null;
+  };
   asOf: string;
   timezone: string;
   today: string;

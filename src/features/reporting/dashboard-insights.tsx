@@ -105,7 +105,7 @@ export function DashboardInsights({
         {report ? (
           <Trend
             title="Response time"
-            description="Average elapsed time from ticket creation to the first public IT reply, grouped by reply day."
+            description="Average elapsed time from ticket creation to response or self-assigned technician acknowledgment, grouped by recorded day."
             days={days.map((day) => day.day)}
             series={[{ label: 'Average response', values: days.map((day) => day.response) }]}
             time

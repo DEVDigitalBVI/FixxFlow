@@ -57,8 +57,8 @@ select pg_temp.assert_sla((select response_sla_due_at = pg_temp.deadline(created
 insert into public.ticket_messages (organization_id, ticket_id, author_id, kind, body)
 values ('20000000-0000-0000-0000-000000000031', '30000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000032', 'reply', 'Public staff response');
 select pg_temp.assert_sla((select first_response_at is not null and sla_next_due_at = resolution_sla_due_at from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'public staff response completes response and advances next deadline');
-update public.tickets set priority = 'high', status = 'on_hold' where id = '30000000-0000-0000-0000-000000000031';
-select pg_temp.assert_sla((select response_sla_due_at = pg_temp.deadline(created_at,'critical',true) and resolution_sla_due_at = pg_temp.deadline(created_at,'high',false) and sla_next_due_at = resolution_sla_due_at from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'completed response target freezes and on-hold does not pause resolution');
+update public.tickets set priority = 'high', status = 'in_progress' where id = '30000000-0000-0000-0000-000000000031';
+select pg_temp.assert_sla((select response_sla_due_at = pg_temp.deadline(created_at,'critical',true) and resolution_sla_due_at = pg_temp.deadline(created_at,'high',false) and sla_next_due_at = resolution_sla_due_at from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'completed response target freezes and active work does not pause resolution');
 update public.tickets set status = 'resolved' where id = '30000000-0000-0000-0000-000000000031';
 select pg_temp.assert_sla((select resolved_at is not null and sla_next_due_at is null from public.tickets where id = '30000000-0000-0000-0000-000000000031'), 'resolution stops queue SLA clock');
 update public.tickets set status = 'closed', priority = 'low' where id = '30000000-0000-0000-0000-000000000031';

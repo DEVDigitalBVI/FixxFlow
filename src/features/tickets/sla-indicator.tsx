@@ -97,7 +97,12 @@ export function SlaIndicator({
         Response SLA: {sla.response.state.replaceAll('_', ' ')}. Resolution SLA:{' '}
         {sla.resolution.state.replaceAll('_', ' ')}.
       </span>
-      <Objective label="Response" result={sla.response} />
+      <Objective
+        label={
+          ticket.first_response_kind === 'work_started' ? 'Response acknowledgment' : 'Response'
+        }
+        result={sla.response}
+      />
       <Objective label="Resolution" result={sla.resolution} />
     </div>
   );

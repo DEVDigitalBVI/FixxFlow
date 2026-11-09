@@ -1,6 +1,8 @@
+import { ticketStatuses } from '@/features/tickets/presentation';
+
 import { automationSafetyLimits } from '../../limits';
 import type { ActionRegistration, ConfigurationSchema, ValueSchema } from '../../registries';
-import { ticketPriorityValue, ticketStatusValue } from './fields';
+import { ticketPriorityValue } from './fields';
 
 const action = (
   key: string,
@@ -22,7 +24,13 @@ export const ticketActions: readonly ActionRegistration[] = [
     teamId: property({ kind: 'reference', resource: 'teams' }),
   }),
   action('set_priority', 'Set priority', { priority: property(ticketPriorityValue) }),
-  action('set_status', 'Set status', { status: property(ticketStatusValue) }),
+  // Holds require an owner, explanation and a dated review on the individual ticket.
+  action('set_status', 'Set status', {
+    status: property({
+      kind: 'enum',
+      values: Object.keys(ticketStatuses).filter((status) => status !== 'on_hold'),
+    }),
+  }),
   action('set_category', 'Set category', {
     categoryId: property({ kind: 'reference', resource: 'ticket_categories' }),
   }),

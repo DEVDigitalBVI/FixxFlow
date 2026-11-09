@@ -108,6 +108,7 @@ test('configured cron sends and acknowledges queued mail using the shared config
             calls.push(name);
             if (name === 'enqueue_incident_escalations') return { data: 0, error: null };
             if (name === 'enqueue_incident_update_reminders') return { data: 0, error: null };
+            if (name === 'enqueue_hold_review_notifications') return { data: 0, error: null };
             if (name === 'enqueue_sla_notifications') return { data: null, error: null };
             if (name === 'claim_notification_emails') return { data: [item], error: null };
             assert.equal(name, 'finish_notification_email');
@@ -139,6 +140,7 @@ test('configured cron sends and acknowledges queued mail using the shared config
     assert.deepEqual(calls, [
       'enqueue_incident_escalations',
       'enqueue_incident_update_reminders',
+      'enqueue_hold_review_notifications',
       'enqueue_sla_notifications',
       'claim_notification_emails',
       'send',

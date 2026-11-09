@@ -28,6 +28,9 @@ export const formatTicketDate = (value: string | null, timeZone = 'UTC') =>
   formatTimestamp(value, timeZone);
 
 export const activityLabels: Record<string, string> = {
+  acknowledged: 'acknowledged the ticket',
+  hold_review_updated: 'updated the hold and follow-up',
+  hold_ended: 'ended the hold',
   inventory_approve: 'approved inventory and reserved stock',
   inventory_issue: 'recorded the inventory handover',
   inventory_decline: 'declined the inventory request',

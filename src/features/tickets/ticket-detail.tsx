@@ -633,10 +633,20 @@ export async function TicketDetail({
               <h3>Service levels</h3>
               <SlaClock initialNow={new Date().getTime()}>
                 <SlaIndicator ticket={ticket} />
+                <p className="muted">
+                  Acknowledgment:{' '}
+                  {ticket.acknowledged_at ? (
+                    <Timestamp value={ticket.acknowledged_at} />
+                  ) : (
+                    'No acknowledgment recorded'
+                  )}
+                  . Work starting records acknowledgment; public replies record requester
+                  communication.
+                </p>
               </SlaClock>
               <p className="muted">
                 {ticket.sla_timezone
-                  ? `Support hours: ${scheduleDescription(ticket.sla_schedule)} (${ticket.sla_timezone}). Both clocks stop outside working hours. Waiting on user pauses resolution only; on-hold time counts during support hours.`
+                  ? `Support hours: ${scheduleDescription(ticket.sla_schedule)} (${ticket.sla_timezone}). Both clocks stop outside working hours. Waiting on user and documented holds pause resolution only. Earlier breaches remain recorded. For technicians handling their own request, starting work counts as response acknowledgment.`
                   : 'Completed under the previous calendar-hours policy. Historical SLA results are preserved.'}
               </p>
               <details>

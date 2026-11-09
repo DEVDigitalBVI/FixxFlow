@@ -443,7 +443,7 @@ test('Stage 4 execution authority and trusted ticket commands on clean migration
         ]);
         assert.equal((await execute(db, context)).status, 'succeeded');
         await identity(db);
-        await db.query("update public.tickets set status='on_hold' where id=$1", [
+        await db.query("update public.tickets set status='waiting_on_user' where id=$1", [
           context.target.id,
         ]);
         await service(db);
@@ -459,7 +459,7 @@ test('Stage 4 execution authority and trusted ticket commands on clean migration
         assert.equal(execution.actions_attempted, 2);
         assert.equal(
           (await rows(db, 'public.tickets', 'id', context.target.id))[0].status,
-          'on_hold',
+          'waiting_on_user',
         );
       },
     );

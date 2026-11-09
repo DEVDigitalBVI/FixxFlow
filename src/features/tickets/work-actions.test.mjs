@@ -9,6 +9,7 @@ import { load } from '../../../tests/helpers/load-module.mjs';
 
 const initial = { id: 'ticket', revision: 1, status: 'open', assigned_technician_id: null };
 const mocks = {
+  '@/features/timezones/provider': { useTimezone: () => 'UTC', Timestamp: ({ value }) => value },
   'next/navigation': { useRouter: () => ({ refresh() {} }) },
   '@/app/app/tickets/actions': { workTicket: async () => ({ success: 'Saved', revision: 2 }) },
   '@/components/ui/action-form': {
@@ -60,7 +61,7 @@ test('background updates preserve a changed status draft; explicit review adopts
     h.render();
     props.ticket = { ...initial, revision: 2, assigned_technician_id: 'someone' };
     h.render();
-    assert.equal(h.all((n) => n.props.name === 'intent').length, 0);
+    assert.equal(h.find((n) => n.props.className === 'ticket-work-controls').props.disabled, true);
     h.find((n) => n.type === 'button').props.onClick();
     h.render();
     assert.equal(h.find((n) => n.props.name === 'revision').props.value, 2);
@@ -99,7 +100,7 @@ test('first status choice survives assignment and start revisions and is retaine
     assert.equal(h.find((n) => n.type === 'select').props.value, 'waiting_on_user');
     props.ticket = { ...props.ticket, revision: 4 };
     h.render();
-    assert.equal(h.all((n) => n.type === 'select').length, 0);
+    assert.equal(h.find((n) => n.props.className === 'ticket-work-controls').props.disabled, true);
     h.find((n) => n.type === 'button').props.onClick();
     h.render();
     assert.equal(h.find((n) => n.type === 'select').props.value, 'in_progress');
@@ -216,4 +217,31 @@ test('an unsaved status guards navigation until restored or successfully saved',
   } finally {
     h.close();
   }
+});
+
+test('on-hold controls expose required labeled follow-up fields and explicit resume', () => {
+  const { TicketWorkActions } = load('src/features/tickets/work-actions.tsx', mocks);
+  const html = renderToStaticMarkup(
+    React.createElement(TicketWorkActions, {
+      ticket: {
+        ...initial,
+        status: 'on_hold',
+        assigned_technician_id: 'worker',
+        hold_reason: 'vendor',
+        hold_note: 'Replacement scheduled',
+        hold_review_at: '2027-01-01T12:00:00Z',
+      },
+      assignee: 'IT worker',
+    }),
+  );
+  assert.match(html, /Resume work/);
+  assert.match(html, /<fieldset[^>]*>[\s\S]*<legend>Hold &amp; follow-up<\/legend>/);
+  assert.match(html, /name="holdReason" required/);
+  assert.match(html, /name="holdNote" required/);
+  assert.match(
+    html,
+    /<input(?=[^>]*name="holdReviewAt")(?=[^>]*type="datetime-local")(?=[^>]*required)[^>]*>/,
+  );
+  assert.match(html, /visible to the requester/);
+  assert.match(html, /does not extend the SLA or automatically resume work/);
 });

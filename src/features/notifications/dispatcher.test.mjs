@@ -56,6 +56,7 @@ async function dispatch({
             if (name === rpcError) return { error: new Error('private database details') };
             if (name === 'enqueue_incident_escalations') return { data: 0, error: null };
             if (name === 'enqueue_incident_update_reminders') return { data: 0, error: null };
+            if (name === 'enqueue_hold_review_notifications') return { data: 0, error: null };
             if (name === 'enqueue_sla_notifications') return { data: null, error: null };
             if (name === 'claim_notification_emails') {
               assert.deepEqual(args, { batch_size: 5 });
@@ -104,6 +105,7 @@ test('empty email queue returns success without sending or acknowledging mail', 
     [
       'enqueue_incident_escalations',
       'enqueue_incident_update_reminders',
+      'enqueue_hold_review_notifications',
       'enqueue_sla_notifications',
       'claim_notification_emails',
     ],
@@ -147,6 +149,7 @@ test('provider failure schedules a sanitized retry and continues the remaining b
 for (const rpcError of [
   'enqueue_incident_escalations',
   'enqueue_incident_update_reminders',
+  'enqueue_hold_review_notifications',
   'enqueue_sla_notifications',
   'claim_notification_emails',
 ]) {

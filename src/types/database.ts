@@ -39,7 +39,8 @@ export type NotificationKind =
   | 'chat_idle_warning'
   | 'chat_auto_closed'
   | 'asset_lifecycle'
-  | 'inventory_low_stock';
+  | 'inventory_low_stock'
+  | 'hold_review_due';
 export type Notification = Omit<Tables['notifications']['Row'], 'kind'> & {
   kind: NotificationKind;
   incident_bulletin_id: string | null;
@@ -452,8 +453,15 @@ type RuntimeTables = {
       };
     };
     // BEFORE INSERT triggers assign the number and SLA deadlines.
-    tickets: Omit<Tables['tickets'], 'Row' | 'Insert'> & {
+    tickets: Omit<Tables['tickets'], 'Row' | 'Insert' | 'Update'> & {
+      Update: Tables['tickets']['Update'] & import('@/features/tickets/holds').HoldFields;
       Row: Tables['tickets']['Row'] & {
+        acknowledged_at: string | null;
+        first_response_kind: 'public_reply' | 'work_started' | null;
+        hold_reason: string | null;
+        hold_note: string | null;
+        hold_review_at: string | null;
+        hold_elapsed_seconds: number;
         sla_targets: Json | null;
         sla_schedule: Json | null;
         ticket_type: 'support' | 'incident';
@@ -482,6 +490,7 @@ type RuntimeTables = {
   };
 
 type RuntimeFunctions = {
+  enqueue_hold_review_notifications: { Args: Record<string, never>; Returns: number };
   prepare_email_announcement: {
     Args: {
       org: string;

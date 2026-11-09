@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { parseTicketInput } from '@/features/tickets/create-input';
 import { submitNewTicket } from '@/features/tickets/create-service';
 import { parseDeadline } from '@/features/tickets/deadlines';
+import { parseHold } from '@/features/tickets/holds';
 import { parseIncident } from '@/features/tickets/incidents';
 import { ticketPriorities, ticketStatuses } from '@/features/tickets/presentation';
 import { requireViewer } from '@/lib/auth/viewer';
@@ -148,7 +149,10 @@ export async function updateTicket(
     subcategoryId: currentTicket.subcategory_id,
   });
   if (categoryError) return { error: categoryError };
+  const hold = status === 'on_hold' ? parseHold(formData) : null;
+  if (hold?.error) return { error: hold.error };
   const assignee = optional(formData.get('assignedTechnicianId'));
+  if (hold && !assignee) return { error: 'Assign an owner before placing this ticket on hold.' };
   if (assignee) {
     const { data: worker, error: workerError } = await supabase
       .from('organization_memberships')
@@ -171,6 +175,7 @@ export async function updateTicket(
     .from('tickets')
     .update({
       status,
+      ...(hold?.values ?? {}),
       priority,
       assigned_technician_id: assignee,
       team_id: optional(formData.get('teamId')),
@@ -214,11 +219,16 @@ export async function workTicket(
     (intent === 'status' && !Object.hasOwn(ticketStatuses, status))
   )
     return { error: 'Choose a valid action and reload the latest ticket.' };
+  const hold = intent === 'status' && status === 'on_hold' ? parseHold(formData) : null;
+  if (hold?.error) return { error: hold.error };
   const db = await createClient();
   const changes =
     intent === 'take'
       ? { assigned_technician_id: viewer.id }
-      : { status: intent === 'start' ? ('in_progress' as TicketStatus) : status };
+      : {
+          status: intent === 'start' ? ('in_progress' as TicketStatus) : status,
+          ...(hold?.values ?? {}),
+        };
   let query = db
     .from('tickets')
     .update(changes)
@@ -232,7 +242,12 @@ export async function workTicket(
   const { data, error } = await query.select('id, revision').maybeSingle();
   if (error) {
     reportServerError('ticket.save', error);
-    return { error: 'The ticket could not be updated. Try again.' };
+    return {
+      error:
+        error.code === '22023'
+          ? 'On hold requires an owner, reason, explanation and future follow-up date.'
+          : 'The ticket could not be updated. Try again.',
+    };
   }
   if (!data)
     return {
@@ -358,6 +373,11 @@ export async function bulkUpdateTickets(formData: FormData) {
   const ids = [...new Set(formData.getAll('ticketIds').map(String))];
   const intent = formString(formData, 'intent', '');
   const value = formString(formData, intent, '');
+  if (intent === 'status' && value === 'on_hold')
+    fail(
+      '/app/tickets',
+      'Open each ticket to record its hold reason, explanation and follow-up date.',
+    );
   if (!ids.length || ids.length > 100 || ids.some((id) => !isUuid(id)))
     fail('/app/tickets', 'Select up to 100 tickets.');
   const supabase = await createClient();

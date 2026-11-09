@@ -747,3 +747,11 @@ Queue view links use an explicit flex/grid layout with 8px gaps, equal control h
 ### Viewport-bound workspace navigation
 
 At widths of 768px and above, fix the shared sidebar to the viewport at its current expanded/collapsed width and reserve the matching grid column for it. The page scrolls independently; the logo and account stay visible, while the navigation list scrolls within the remaining sidebar height. Compact screens retain the sticky header and modal navigation sheet. This applies to ticket queues and the shared workspace shell.
+
+### Ticket acknowledgment and controlled holds
+
+Record IT acknowledgment when staff start work or send the first public reply. Starting work on a technician’s self-assigned request also satisfies response acknowledgment; label it explicitly so it is never presented as a public reply. Internal notes and assignment alone do not satisfy response.
+
+On hold requires an assigned owner, centralized reason (vendor, parts, approval or scheduled work), a requester-visible explanation, and a future follow-up date. Reuse ActionForm, NativeSelect, Textarea, DeadlineField, SubmitButton, Timestamp and existing status badges. Keep private troubleshooting in internal notes. Both On hold and Waiting on user pause resolution only, preserve pre-existing breaches and remaining support time, and never reset the SLA on review. Requester replies resume Waiting on user only. Review deadlines flag overdue holds without automatically resuming them.
+
+Expose overdue hold follow-ups in the primary queue and existing notifications. Keep required labels, native validation, timezone/DST handling, pending/error feedback, draft protection, revision conflict recovery, compact wrapping and visible keyboard focus. Report acknowledgment, resolution support time, total turnaround and recorded paused time separately, with clear sample counts and historical-data limits. Existing holds require explicit documentation; do not invent reasons or retroactively change historical outcomes.

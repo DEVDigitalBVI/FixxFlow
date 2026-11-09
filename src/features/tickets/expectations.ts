@@ -51,7 +51,15 @@ export function requestExpectations(
 
   let reply: Expectation | null = null;
   if (ticket.first_response_at)
-    reply = { tone: 'success', icon: 'check', text: 'IT replied', at: ticket.first_response_at };
+    reply = {
+      tone: 'success',
+      icon: 'check',
+      text:
+        ticket.first_response_kind === 'work_started'
+          ? 'IT acknowledged and started work'
+          : 'IT replied',
+      at: ticket.first_response_at,
+    };
   else if (!done && sla.response.deadline)
     reply =
       sla.response.state === 'breached'
@@ -78,12 +86,19 @@ export function requestExpectations(
       text: ticket.status === 'closed' ? 'Closed' : 'Resolved',
       at: completed,
     };
-  } else if (ticket.status === 'waiting_on_user')
+  } else if (
+    ticket.status === 'waiting_on_user' ||
+    (ticket.status === 'on_hold' && ticket.resolution_sla_paused_at)
+  )
     resolution = {
       tone: 'neutral',
       icon: 'pause',
-      text: 'IT is waiting for your reply. The resolution target is paused until you respond.',
+      text:
+        ticket.status === 'on_hold'
+          ? 'IT is coordinating the next step. The resolution target is paused while this request is on hold.'
+          : 'IT is waiting for your reply. The resolution target is paused until you respond.',
       at: null,
+      note: ticket.status === 'on_hold' ? (ticket.hold_note ?? undefined) : undefined,
     };
   else if (sla.resolution.state === 'breached')
     resolution = {

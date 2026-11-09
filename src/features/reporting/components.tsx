@@ -48,7 +48,7 @@ export function TodayMetrics({
     {
       label: 'Avg response',
       value: s ? duration(s.response) : '—',
-      hint: 'First public IT replies sent today',
+      hint: 'IT responses or technician acknowledgments recorded today',
     },
     {
       label: 'Avg resolution',
@@ -352,6 +352,54 @@ export function ServiceLevels({
           </Link>
         )}
       </header>
+      {report.lifecycle && (
+        <div className="stack">
+          <h3>IT acknowledgment &amp; holds</h3>
+          <dl className="report-timing-values">
+            <div>
+              <dt>Average acknowledgment · Last 30 days</dt>
+              <dd>
+                {duration(report.lifecycle.acknowledgment)} ·{' '}
+                {report.lifecycle.acknowledgmentSamples} samples
+              </dd>
+            </div>
+            <div>
+              <dt>On hold · Right now</dt>
+              <dd>
+                {report.lifecycle.heldTickets} tickets · {report.lifecycle.holdReviewsDue}{' '}
+                follow-ups overdue
+              </dd>
+            </div>
+            <div>
+              <dt>Average resolution support time · Last 30 days</dt>
+              <dd>
+                {duration(report.lifecycle.resolutionSupport)} ·{' '}
+                {report.lifecycle.resolutionSupportSamples} samples
+              </dd>
+            </div>
+            <div>
+              <dt>Average total turnaround · Last 30 days</dt>
+              <dd>{duration(report.lifecycle.resolutionElapsed)}</dd>
+            </div>
+            <div>
+              <dt>Average recorded paused time · Last 30 days</dt>
+              <dd>{duration(report.lifecycle.holdElapsed)}</dd>
+            </div>
+          </dl>
+          <p className="report-footnote">
+            Acknowledgment records work starting or the first public IT reply. Support time excludes
+            waiting on user and documented holds; total turnaround includes nights and all delays.
+            Paused elapsed time is recorded from this workflow’s introduction; historical pauses are
+            not reconstructed.
+          </p>
+          <Link
+            className={buttonVariants({ variant: 'secondary' })}
+            href="/app/tickets?view=all&hold=review"
+          >
+            Review hold follow-ups
+          </Link>
+        </div>
+      )}
       <div className="report-sla-grid">
         <div>
           <h3>
@@ -450,7 +498,7 @@ export function ReportCharts({ report }: { report: Report }) {
           />
           <Trend
             title="Response time"
-            description="Average time to the first public IT reply, by reply day."
+            description="Average time to response or self-assigned technician acknowledgment, by recorded day."
             days={days}
             series={[{ label: 'Average response', values: report.daily.map((d) => d.response) }]}
             time

@@ -28,6 +28,8 @@ export async function GET(request: Request) {
     if (escalations.error) throw escalations.error;
     const reminders = await database.rpc('enqueue_incident_update_reminders');
     if (reminders.error) throw reminders.error;
+    const holds = await database.rpc('enqueue_hold_review_notifications');
+    if (holds.error) throw holds.error;
     const sla = await database.rpc('enqueue_sla_notifications');
     if (sla.error) throw sla.error;
     const batch = await database.rpc('claim_notification_emails', { batch_size: 5 });
