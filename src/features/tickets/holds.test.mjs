@@ -54,3 +54,30 @@ test('ambiguous follow-up dates require an explicit DST occurrence', () => {
     '2026-11-01T06:30:00.000Z',
   );
 });
+
+test('a past follow-up identifies the date without blaming a valid reason or explanation', () => {
+  const result = parseHold(
+    form({ holdReviewAt: '2026-10-07T17:29' }),
+    Date.parse('2026-11-09T12:00Z'),
+  );
+  assert.equal(
+    result.error,
+    'The next follow-up must be in the future. Choose a later date and time.',
+  );
+  assert.doesNotMatch(result.error, /reason|explanation/);
+});
+
+test('hold errors name only the invalid field', () => {
+  const now = Date.parse('2026-11-09T12:00Z');
+  for (const [change, message] of [
+    [{ holdReason: '' }, 'Choose a hold reason.'],
+    [{ holdNote: '' }, 'Enter an explanation for this hold.'],
+    [{ holdNote: 'x'.repeat(2001) }, 'Keep the hold explanation to 2,000 characters or fewer.'],
+    [{ holdReviewAt: '' }, 'Enter the next follow-up date and time.'],
+  ])
+    assert.equal(parseHold(form(change), now).error, message);
+  assert.match(
+    parseHold(form({ holdReviewAt: '2026-02-30T09:00' }), now).error,
+    /valid next follow-up/,
+  );
+});
