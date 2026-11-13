@@ -1559,16 +1559,21 @@
   }
   :where(.scope) :global(.ticket-work-controls),
   :where(.scope) :global(.ticket-status-action .action-form-fields) {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: end;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-group);
+    align-items: start;
+    justify-items: start;
   }
   :where(.scope) :global(.ticket-work-controls > form) {
     min-width: 0;
   }
   :where(.scope) :global(.ticket-status-action) {
-    flex: 1 1 320px;
+    width: 100%;
+  }
+  :where(.scope) :global(.ticket-status-action .action-form-fields > label),
+  :where(.scope) :global(.ticket-work-guidance) {
+    width: 100%;
   }
   :where(.scope) :global(.ticket-status-hint) {
     flex-basis: 100%;
@@ -1606,8 +1611,7 @@
   @media (max-width: 767px) {
     :where(.scope) :global(.ticket-work-controls),
     :where(.scope) :global(.ticket-status-action .action-form-fields) {
-      align-items: stretch;
-      flex-direction: column;
+      justify-items: stretch;
     }
   }
   @media (max-width: 767px) {
@@ -2266,7 +2270,7 @@
     margin: 6px 0 0;
   }
   :where(.scope) :global(.ticket-status-action .ticket-hold-editor) {
-    flex-basis: 100%;
+    width: 100%;
     min-width: 0;
   }
   :where(.scope) :global(.ticket-hold-fields) {
