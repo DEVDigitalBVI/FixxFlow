@@ -860,6 +860,22 @@ type RuntimeFunctions = {
       'finish_notification_email',
       'provider_message_id' | 'failure'
     >;
+    ticket_tag_suggestions: { Args: { org: string }; Returns: { tag: string }[] };
+    reply_and_set_ticket_status: {
+      Args: {
+        ticket_id: string;
+        message_id: string;
+        body: string;
+        status: 'waiting_on_user' | 'resolved';
+        expected_revision: number;
+      };
+      Returns: {
+        message_sent: boolean;
+        status_changed: boolean;
+        revision: number;
+        already_sent: boolean;
+      }[];
+    };
     reopen_ticket: {
       Args: { target: string; expected_revision: number; explanation: string; token: string };
       Returns: number;

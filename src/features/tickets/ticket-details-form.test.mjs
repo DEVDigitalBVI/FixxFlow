@@ -85,7 +85,7 @@ test('submission keys stay attached to their mounted drafts across refreshed ser
   }
 });
 
-test('assignment editor opens against current details and stays mounted when revisiting a wizard step', () => {
+test('assignment editor opens against current details and stays mounted when revisiting the workspace', () => {
   const props = { ticket: { ...initial }, timeZone: 'America/Tortola' };
   const h = componentHarness(
     'src/features/tickets/ticket-details-form.tsx',
@@ -144,5 +144,26 @@ test('saved-details fragment opens the editor initially and on later hash naviga
     later.cleanup();
   } finally {
     globalThis.window = previous;
+  }
+});
+
+test('workspace details disclosure mounts the editor on its first open and retains it after closing', () => {
+  const props = { ticket: { ...initial }, timeZone: 'UTC', disclosure: true };
+  const h = componentHarness(
+    'src/features/tickets/ticket-details-form.tsx',
+    'TicketAssignmentEditor',
+    props,
+    { 'next/navigation': { useRouter: () => ({ refresh() {} }) } },
+  );
+  try {
+    assert.equal(h.all((n) => n.props.ticket).length, 0);
+    h.find((n) => n.type === 'details').props.onToggle({ currentTarget: { open: true } });
+    h.render();
+    assert.equal(h.all((n) => n.props.ticket).length, 1);
+    h.find((n) => n.type === 'details').props.onToggle({ currentTarget: { open: false } });
+    h.render();
+    assert.equal(h.all((n) => n.props.ticket).length, 1);
+  } finally {
+    h.close();
   }
 });

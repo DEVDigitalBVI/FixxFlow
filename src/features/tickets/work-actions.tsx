@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 
 import { workTicket } from '@/app/app/tickets/actions';
 import { ActionForm } from '@/components/ui/action-form';
@@ -15,6 +15,7 @@ import type { TicketStatus } from '@/types/database';
 import { HoldFields } from './hold-fields';
 import type { HoldFields as HoldValues } from './holds';
 import { ticketStatuses } from './presentation';
+import { useTicketMutationState } from './ticket-mutation-state';
 
 type WorkTicket = HoldValues & {
   id: string;
@@ -26,12 +27,16 @@ export function TicketWorkActions({
   ticket,
   assignee,
   stage = 'all',
+  compact = false,
 }: {
   ticket: WorkTicket;
   assignee: string;
   stage?: 'all' | 'assignment' | 'resolution';
+  compact?: boolean;
 }) {
   const router = useRouter();
+  const mutation = useTicketMutationState();
+  const setWorkDirty = mutation?.setWorkDirty;
   const timeZone = useTimezone();
   const heading = useId();
   const statusHint = useId();
@@ -45,18 +50,32 @@ export function TicketWorkActions({
   const expectedRevision = dirty || conflict ? baseline : ticket.revision;
   const stale = conflict || expectedRevision !== ticket.revision;
   const done = ticket.status === 'resolved' || ticket.status === 'closed';
+  useEffect(() => {
+    setWorkDirty?.(dirty || stale);
+  }, [setWorkDirty, dirty, stale]);
+  useEffect(() => () => setWorkDirty?.(false), [setWorkDirty]);
+  const changeDirty = (next: boolean) => {
+    setDirty(next);
+    setWorkDirty?.(next);
+  };
   const action = async (data: FormData) => {
-    const result = await workTicket(data);
-    if (result.conflict) setConflict(true);
-    if (result.success && result.revision) {
-      releaseDraft();
-      setBaseline(result.revision);
-      setDirty(false);
-      setHoldDirty(false);
-      setConflict(false);
+    if (mutation && !mutation.beginWork())
+      return { error: 'Wait for the current ticket action to finish.' };
+    try {
+      const result = await workTicket(data);
+      if (result.conflict) setConflict(true);
+      if (result.success && result.revision) {
+        releaseDraft();
+        setBaseline(result.revision);
+        changeDirty(false);
+        setHoldDirty(false);
+        setConflict(false);
+      }
+      if (result.success || result.conflict) router.refresh();
+      return result;
+    } finally {
+      mutation?.endWork();
     }
-    if (result.success || result.conflict) router.refresh();
-    return result;
   };
   const fields = (intent: string) => (
     <>
@@ -76,19 +95,21 @@ export function TicketWorkActions({
             Owner: <strong>{assignee}</strong>
           </p>
         </div>
-        {stage === 'all' && (
+        {stage === 'all' && !compact && (
           <a className={buttonVariants({ variant: 'secondary' })} href="#ticket-conversation">
             Reply or add a note
           </a>
         )}
       </div>
-      <p className="muted">
-        {done
-          ? 'Review the conversation or reopen this ticket if more work is needed.'
-          : !ticket.assigned_technician_id
-            ? 'Assign the ticket, reply to the requester, then resolve it when the issue is fixed.'
-            : 'Keep the requester updated. When the issue is fixed, set the status to Resolved.'}
-      </p>
+      {(!compact || done) && (
+        <p className="muted">
+          {done
+            ? 'To resume work, choose an open work status and select Save status. Reviewing or replying does not reopen this ticket.'
+            : !ticket.assigned_technician_id
+              ? 'Assign the ticket, reply to the requester, then resolve it when the issue is fixed.'
+              : 'Keep the requester updated. When the issue is fixed, set the status to Resolved.'}
+        </p>
+      )}
       {ticket.status === 'on_hold' && (
         <p className="muted">
           {ticket.hold_note && <>{ticket.hold_note} </>}
@@ -112,7 +133,7 @@ export function TicketWorkActions({
               setBaseline(ticket.revision);
               setDraftKey((key) => key + 1);
               releaseDraft();
-              setDirty(false);
+              changeDirty(false);
               setHoldDirty(false);
               setConflict(false);
               router.refresh();
@@ -122,7 +143,11 @@ export function TicketWorkActions({
           </Button>
         </div>
       )}
-      <fieldset key={draftKey} disabled={stale} className="ticket-work-controls">
+      <fieldset
+        key={draftKey}
+        disabled={stale || mutation?.workBlocked}
+        className="ticket-work-controls"
+      >
         <legend className="sr-only">Ticket work actions</legend>
         {stage !== 'resolution' && !done && !ticket.assigned_technician_id && (
           <ActionForm action={action} protectDraft={false}>
@@ -163,7 +188,7 @@ export function TicketWorkActions({
                 onChange={(event) => {
                   setStatusDraft(event.target.value as TicketStatus);
                   if (!dirty) setBaseline(ticket.revision);
-                  setDirty(event.target.value !== ticket.status || holdDirty);
+                  changeDirty(event.target.value !== ticket.status || holdDirty);
                 }}
               >
                 {Object.entries(ticketStatuses).map(([value, item]) => (
@@ -179,7 +204,7 @@ export function TicketWorkActions({
                 onChange={() => {
                   if (!dirty) setBaseline(ticket.revision);
                   setHoldDirty(true);
-                  setDirty(true);
+                  changeDirty(true);
                 }}
               >
                 <HoldFields ticket={ticket} timeZone={timeZone} />

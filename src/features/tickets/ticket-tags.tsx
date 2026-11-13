@@ -1,10 +1,10 @@
 import { addTicketTag, removeTicketTag } from '@/app/app/tickets/organize-actions';
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { ActionForm } from '@/components/ui/action-form';
-import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/ui/submit-button';
 
-import { TAG_HINT, TICKET_TAG_LENGTH, TICKET_TAG_LIMIT } from './tags';
+import { TagSuggestions } from './tag-suggestions';
+import { TICKET_TAG_LIMIT } from './tags';
 
 /** Staff-only tag editor for one ticket. */
 export function TicketTags({
@@ -15,10 +15,9 @@ export function TicketTags({
 }: {
   ticketId: string;
   tags: string[];
-  suggestions: string[];
+  suggestions?: string[];
   error?: boolean;
 }) {
-  const available = suggestions.filter((tag) => !tags.includes(tag));
   return (
     <section className="settings-card stack" aria-labelledby="ticket-tags-heading">
       <h3 id="ticket-tags-heading">Tags</h3>
@@ -52,26 +51,7 @@ export function TicketTags({
       {!error && tags.length < TICKET_TAG_LIMIT && (
         <ActionForm action={addTicketTag} className="ticket-tag-add" resetOnSuccess>
           <input type="hidden" name="ticketId" value={ticketId} />
-          <div className="field">
-            <label htmlFor={`ticket-tag-${ticketId}`}>Add a tag</label>
-            <Input
-              id={`ticket-tag-${ticketId}`}
-              name="tag"
-              required
-              maxLength={TICKET_TAG_LENGTH}
-              list={`ticket-tag-options-${ticketId}`}
-              autoComplete="off"
-              aria-describedby={`ticket-tag-hint-${ticketId}`}
-            />
-            <datalist id={`ticket-tag-options-${ticketId}`}>
-              {available.map((tag) => (
-                <option key={tag} value={tag} />
-              ))}
-            </datalist>
-            <small id={`ticket-tag-hint-${ticketId}`} className="muted">
-              {TAG_HINT}
-            </small>
-          </div>
+          <TagSuggestions ticketId={ticketId} tags={tags} suggestions={suggestions} />
           <SubmitButton variant="secondary" pendingLabel="Adding…">
             Add tag
           </SubmitButton>

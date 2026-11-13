@@ -3,26 +3,48 @@
 import Link from 'next/link';
 import { useId, useRef, useState } from 'react';
 
-import { buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import { renderSavedReply, type SavedReply, type SavedReplyContext } from './saved-replies';
+import { useLazyTicketList } from './use-lazy-ticket-list';
+
+const validReplies = (value: unknown): value is SavedReply[] =>
+  Array.isArray(value) &&
+  value.length <= 200 &&
+  value.every(
+    (reply) =>
+      reply &&
+      typeof reply === 'object' &&
+      typeof reply.id === 'string' &&
+      typeof reply.title === 'string' &&
+      typeof reply.body === 'string',
+  );
 
 /**
  * Staff-only picker shared by the ticket and chat composers. Choosing a reply
  * inserts filled-in text into the current draft for review; nothing is sent.
  */
 export function SavedReplyPicker({
-  replies,
+  replies: initialReplies,
+  lazy = false,
   context,
   onInsert,
   disabled = false,
 }: {
-  replies: SavedReply[];
+  replies?: SavedReply[];
+  lazy?: boolean;
   context: SavedReplyContext;
   onInsert: (text: string) => void;
   disabled?: boolean;
 }) {
+  const list = useLazyTicketList(
+    '/app/tickets/choices?kind=saved-replies',
+    initialReplies ?? (lazy ? undefined : []),
+    validReplies,
+  );
+  const replies = list.items;
+  const search = useRef<HTMLInputElement>(null);
   const id = useId();
   const details = useRef<HTMLDetailsElement>(null);
   const [query, setQuery] = useState('');
@@ -32,13 +54,35 @@ export function SavedReplyPicker({
     return terms.every((term) => text.includes(term));
   });
   return (
-    <details className="saved-reply-picker" ref={details}>
+    <details
+      className="saved-reply-picker"
+      ref={details}
+      onToggle={(event) => {
+        if (event.currentTarget.open) void list.load();
+      }}
+    >
       <summary className={buttonVariants({ variant: 'secondary' })}>Saved replies</summary>
       <div className="saved-reply-panel">
-        {replies.length ? (
+        {list.phase === 'loading' ? (
+          <p role="status">Loading saved replies…</p>
+        ) : list.phase === 'error' ? (
+          <div role="status">
+            <p>Saved replies could not load. You can still write and send your message.</p>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={async () => {
+                if (await list.load()) requestAnimationFrame(() => search.current?.focus());
+              }}
+            >
+              Retry saved replies
+            </Button>
+          </div>
+        ) : replies.length ? (
           <>
             <label htmlFor={`${id}-search`}>Find a saved reply</label>
             <Input
+              ref={search}
               id={`${id}-search`}
               type="search"
               value={query}

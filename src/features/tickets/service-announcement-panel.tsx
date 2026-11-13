@@ -5,21 +5,25 @@ import { RetryButton } from '@/components/ui/retry-button';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
+import type { Database } from '@/types/database';
 
 import { announcementStatus } from './announcement-status';
 import { AnnouncementEditor, AnnouncementForm } from './service-announcement-forms';
+import { loadTicketWorkflow } from './ticket-loaders';
 
 export async function ServiceAnnouncementPanel({
   organizationId,
   ticketId,
+  ticket,
 }: {
   organizationId: string;
   ticketId: string;
+  ticket: Pick<Database['public']['Tables']['tickets']['Row'], 'status' | 'assigned_technician_id'>;
 }) {
   const viewer = await requireViewer();
   if (viewer.role === 'end_user' || viewer.organizationId !== organizationId) return null;
   const db = await createClient();
-  const [draftResult, liveResult, ticketResult, workflowResult] = await Promise.all([
+  const [draftResult, liveResult, workflowResult] = await Promise.all([
     db
       .from('service_announcement_drafts')
       .select('*')
@@ -33,20 +37,9 @@ export async function ServiceAnnouncementPanel({
       .eq('ticket_id', ticketId)
       .is('withdrawn_at', null)
       .maybeSingle(),
-    db
-      .from('tickets')
-      .select('status,assigned_technician_id')
-      .eq('organization_id', organizationId)
-      .eq('id', ticketId)
-      .maybeSingle(),
-    db
-      .from('ticket_workflows')
-      .select('owner_id')
-      .eq('organization_id', organizationId)
-      .eq('ticket_id', ticketId)
-      .maybeSingle(),
+    loadTicketWorkflow(organizationId, ticketId),
   ]);
-  if ([draftResult, liveResult, ticketResult, workflowResult].some((r) => r.error))
+  if ([draftResult, liveResult, workflowResult].some((r) => r.error))
     return (
       <section
         id="employee-announcement"
@@ -63,9 +56,9 @@ export async function ServiceAnnouncementPanel({
     live = liveResult.data,
     manager =
       viewer.role === 'administrator' ||
-      viewer.id === ticketResult.data?.assigned_technician_id ||
+      viewer.id === ticket.assigned_technician_id ||
       viewer.id === workflowResult.data?.owner_id,
-    terminal = ['resolved', 'closed'].includes(ticketResult.data?.status ?? 'closed');
+    terminal = ['resolved', 'closed'].includes(ticket.status);
   const editor = (
     <AnnouncementEditor
       ticketId={ticketId}

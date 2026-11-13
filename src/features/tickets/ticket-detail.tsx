@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { addTicketMessage, reopenTicket } from '@/app/app/tickets/actions';
+import { addTicketMessage, reopenTicket, replyAndSetStatus } from '@/app/app/tickets/actions';
 import { RetryButton } from '@/components/ui/retry-button';
 import { TicketAssets } from '@/features/assets/ticket-assets';
 import { LinkedChatHistory } from '@/features/chat/linked-chat-history';
@@ -18,37 +18,43 @@ import { TicketStatusBadge } from '@/features/tickets/ticket-status-badge';
 
 import '@/features/tickets/presentation';
 
+import { Suspense } from 'react';
+
 import { NavigationIcon } from '@/components/navigation/navigation-icon';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
-import { IncidentSharingPanel } from '@/features/support-viewer/sharing-panel';
 import { IncidentFollowers } from '@/features/tickets/incident-followers';
 import { SlaClock, SlaIndicator } from '@/features/tickets/sla-indicator';
 import { SlaPolicy } from '@/features/tickets/sla-policy-table';
-import { popularTags } from '@/features/tickets/tags';
 import { TicketAssignmentEditor } from '@/features/tickets/ticket-details-form';
 import { TicketLinks, type LinkedTicket } from '@/features/tickets/ticket-links';
 import { TicketTags } from '@/features/tickets/ticket-tags';
-import { TicketWatchers } from '@/features/tickets/ticket-watchers';
 import { Timestamp } from '@/features/timezones/provider';
-import { TicketProcedures } from '@/features/workflows/ticket-procedures';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
 
-import { activityProfileIds, ActivityTimeline } from './activity-timeline';
-import { IncidentPanel } from './incident-panel';
 import { scheduleDescription } from './organization-sla';
 import { safeQueueReturn } from './queue-navigation';
 import { rateResolution } from './rating-actions';
-import { describeRating, ratingWindowOpen } from './ratings';
+import { ratingWindowOpen } from './ratings';
 import { ReopenTicketForm } from './reopen-ticket-form';
 import { ReportedImpact } from './reported-impact';
 import { RequestExpectations } from './request-expectations';
 import { ResolutionRating } from './resolution-rating';
-import { ServiceAnnouncementPanel } from './service-announcement-panel';
 import { TicketAttachmentList, ticketAttachmentUrls } from './ticket-attachment-list';
-import { TicketWorkflow } from './ticket-workflow';
+import { TicketMutationProvider } from './ticket-mutation-state';
+import { TicketPanel } from './ticket-panel';
+import {
+  TicketActivity,
+  TicketCoordination,
+  TicketCoordinationBadge,
+  TicketFileCount,
+  TicketFiles,
+  TicketRatings,
+  TicketWatcherDetails,
+} from './ticket-secondary-panels';
+import { TicketWorkspace } from './ticket-workspace';
 import { TicketWorkActions } from './work-actions';
 
 export async function TicketDetail({
@@ -268,18 +274,7 @@ export async function TicketDetail({
       </div>
     );
   }
-  const [
-    messagesR,
-    attachmentsR,
-    activityR,
-    workflowR,
-    savedRepliesR,
-    tagsR,
-    tagUsageR,
-    linksR,
-    watchersR,
-    ratingsR,
-  ] = await Promise.all([
+  const [messagesR, tagsR, linksR] = await Promise.all([
     supabase
       .from('ticket_messages')
       .select('id, author_id, author_type, automation_name, kind, body, created_at')
@@ -289,48 +284,11 @@ export async function TicketDetail({
       .order('id', { ascending: false })
       .limit(HISTORY_PAGE_SIZE),
     supabase
-      .from('ticket_attachments')
-      .select('id, file_name, storage_path, size_bytes, created_at, is_internal')
-      .eq('organization_id', viewer.organizationId)
-      .eq('ticket_id', ticketId)
-      .order('created_at', { ascending: false })
-      .order('id', { ascending: false })
-      .limit(HISTORY_PAGE_SIZE),
-    supabase
-      .from('ticket_activity')
-      .select('id, actor_id, action, details, created_at')
-      .eq('organization_id', viewer.organizationId)
-      .eq('ticket_id', ticketId)
-      .order('created_at', { ascending: false })
-      .order('id', { ascending: false })
-      .limit(HISTORY_PAGE_SIZE),
-    supabase
-      .from('ticket_workflows')
-      .select('ticket_id')
-      .eq('organization_id', viewer.organizationId)
-      .eq('ticket_id', ticketId)
-      .maybeSingle(),
-    supabase
-      .from('saved_replies')
-      .select('id, title, body')
-      .eq('organization_id', viewer.organizationId)
-      .order('title')
-      .order('id')
-      .limit(200),
-    supabase
       .from('ticket_tags')
       .select('tag')
       .eq('organization_id', viewer.organizationId)
       .eq('ticket_id', ticketId)
       .order('tag'),
-    // Recent tag usage across the workspace, for consistent suggestions.
-    supabase
-      .from('ticket_tags')
-      .select('tag')
-      .eq('organization_id', viewer.organizationId)
-      .order('created_at', { ascending: false })
-      .limit(500),
-    // Links in either direction, with the other ticket's summary embedded.
     supabase
       .from('ticket_links')
       .select(
@@ -338,71 +296,30 @@ export async function TicketDetail({
       )
       .eq('organization_id', viewer.organizationId)
       .or(`ticket_id.eq.${ticket.id},linked_ticket_id.eq.${ticket.id}`),
-    supabase
-      .from('ticket_watchers')
-      .select('user_id')
-      .eq('organization_id', viewer.organizationId)
-      .eq('ticket_id', ticket.id)
-      .order('created_at'),
-    supabase
-      .from('ticket_resolution_ratings')
-      .select('id, score, comment, resolved_at, updated_at')
-      .eq('organization_id', viewer.organizationId)
-      .eq('ticket_id', ticket.id)
-      .order('resolved_at', { ascending: false })
-      .limit(5),
   ]);
-  const watcherIds = (watchersR.data ?? []).map((row) => row.user_id);
   const tags = (tagsR.data ?? []).map((row) => row.tag);
   const links: LinkedTicket[] = (linksR.data ?? []).flatMap((row) => {
     const outgoing = row.ticket_id === ticket.id;
     const other = outgoing ? row.target : row.source;
-    if (!other) return [];
-    const relation: LinkedTicket['relation'] =
-      row.kind === 'related' ? 'related' : outgoing ? 'main' : 'duplicate';
-    return [
-      {
-        id: other.id,
-        number: other.ticket_number,
-        title: other.title,
-        status: other.status,
-        relation,
-      },
-    ];
+    return other
+      ? [
+          {
+            id: other.id,
+            number: other.ticket_number,
+            title: other.title,
+            status: other.status,
+            relation: row.kind === 'related' ? 'related' : outgoing ? 'main' : 'duplicate',
+          },
+        ]
+      : [];
   });
   const mainTicket = links.find((link) => link.relation === 'main');
-  const tagSuggestions = popularTags((tagUsageR.data ?? []).map((row) => row.tag));
   const profiles = await profileLabels(supabase, viewer.organizationId, [
-    ...watcherIds,
     ticket.requester_id,
     ...(ticket.assigned_technician_id ? [ticket.assigned_technician_id] : []),
     ...(messagesR.data ?? []).map((row) => row.author_id),
-    ...activityProfileIds(activityR.data ?? []),
   ]);
   const names = new Map(profiles.map((p) => [p.user_id, p.display_name]));
-  const paths = attachmentsR.data?.map((a) => a.storage_path) ?? [];
-  const urls = await ticketAttachmentUrls(supabase, paths);
-  const activeWorkflow =
-    ticket.ticket_type === 'incident' || Boolean(workflowR.data) || Boolean(workflowR.error);
-  const coordination = ticket.request_kind !== 'inventory' && (
-    <div className="ticket-coordination">
-      <ServiceAnnouncementPanel organizationId={viewer.organizationId} ticketId={ticket.id} />
-      <IncidentPanel
-        organizationId={viewer.organizationId}
-        ticketId={ticket.id}
-        revision={ticket.revision}
-        ownerId={viewer.id}
-      />
-      <IncidentSharingPanel
-        organizationId={viewer.organizationId}
-        ticketId={ticket.id}
-        eligible={
-          ticket.ticket_type === 'incident' || ['high', 'critical'].includes(ticket.priority)
-        }
-      />
-      <TicketProcedures organizationId={viewer.organizationId} ticketId={ticket.id} />
-    </div>
-  );
   const assignee = ticket.assigned_technician_id
     ? (names.get(ticket.assigned_technician_id) ?? 'Assigned staff member')
     : 'Unassigned';
@@ -456,6 +373,20 @@ export async function TicketDetail({
       )}
     </>
   );
+  const request = (
+    <section className="settings-card">
+      <h3>Request from {names.get(ticket.requester_id) ?? 'the requester'}</h3>
+      <p className="ticket-description">{ticket.description}</p>
+      <ReportedImpact value={ticket.reported_impact} />
+      {!embedded && (
+        <a href="#ticket-files">
+          <Suspense fallback="View files">
+            <TicketFileCount organizationId={viewer.organizationId} ticketId={ticket.id} />
+          </Suspense>
+        </a>
+      )}
+    </section>
+  );
   const conversation = (
     <section className="settings-card" id={embedded ? 'ticket-conversation' : undefined}>
       <div className="section-heading-row">
@@ -486,8 +417,10 @@ export async function TicketDetail({
         key={ticket.id}
         ticketId={ticket.id}
         action={addTicketMessage}
-        // Optional: if saved replies fail to load, the composer still works without them.
-        savedReplies={savedRepliesR.error ? undefined : (savedRepliesR.data ?? [])}
+        statusAction={replyAndSetStatus}
+        revision={ticket.revision}
+        ticketStatus={ticket.status}
+        lazySavedReplies
         replyContext={{
           requesterName: names.get(ticket.requester_id) ?? null,
           agentName: viewer.displayName,
@@ -496,42 +429,34 @@ export async function TicketDetail({
       />
     </section>
   );
-  // The queue drawer is for quick handling: identity, next actions, request and reply.
-  // Deeper work (reassignment, coordination, files, activity) stays on the full ticket.
   if (embedded)
     return (
-      <div className="page ticket-drawer-summary">
-        <p className="ticket-drawer-number muted">#{ticket.ticket_number}</p>
-        {identity}
-        <SlaClock initialNow={new Date().getTime()}>
-          <SlaIndicator ticket={ticket} compact />
-        </SlaClock>
-        <TicketWorkActions key={ticket.id} ticket={ticket} stage="all" assignee={assignee} />
-        <section className="settings-card">
-          <h3>Request from {names.get(ticket.requester_id) ?? 'the requester'}</h3>
-          <p className="ticket-description">{ticket.description}</p>
-          <ReportedImpact value={ticket.reported_impact} />
-        </section>
-        {conversation}
-        <p className="ticket-drawer-more muted">
-          Use Open full ticket to reassign, change priority, coordinate, manage files or review
-          activity.
-        </p>
-      </div>
+      <TicketMutationProvider key={ticket.id}>
+        <div className="page ticket-drawer-summary">
+          <p className="ticket-drawer-number muted">#{ticket.ticket_number}</p>
+          {identity}
+          <SlaClock initialNow={new Date().getTime()}>
+            <SlaIndicator ticket={ticket} compact />
+          </SlaClock>
+          <div id="ticket-status" tabIndex={-1}>
+            <TicketWorkActions key={ticket.id} ticket={ticket} stage="all" assignee={assignee} />
+          </div>
+          {request}
+          {conversation}
+        </div>
+      </TicketMutationProvider>
     );
   return (
     <div className="page">
       <div className="ticket-topbar">
-        {!embedded && (
-          <Link
-            className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
-            href={back}
-            scroll={false}
-          >
-            <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
-            Back to tickets
-          </Link>
-        )}
+        <Link
+          className={buttonVariants({ variant: 'quiet', className: 'page-back-link' })}
+          href={back}
+          scroll={false}
+        >
+          <NavigationIcon name="arrowLeft" className="inline-icon" size={16} />
+          Back to tickets
+        </Link>
         <div className="ticket-topbar-actions">
           <a className={buttonVariants({ variant: 'secondary' })} href="#ticket-assignment">
             Assignment &amp; details
@@ -540,187 +465,161 @@ export async function TicketDetail({
         </div>
       </div>
       {identity}
-      <TicketWorkflow
-        key={ticket.id}
-        status={ticket.status}
-        assigned={Boolean(ticket.assigned_technician_id)}
-        activeWorkflow={activeWorkflow}
-        review={
-          <>
-            <section className="settings-card">
-              <h3>Request from {names.get(ticket.requester_id) ?? 'the requester'}</h3>
-              <p className="ticket-description">{ticket.description}</p>
-              <ReportedImpact value={ticket.reported_impact} />
-            </section>
-            <TicketTags
-              ticketId={ticket.id}
-              tags={tags}
-              suggestions={tagSuggestions}
-              error={Boolean(tagsR.error)}
-            />
-            <TicketLinks
-              ticketId={ticket.id}
-              revision={ticket.revision}
-              status={ticket.status}
-              links={links}
-              error={Boolean(linksR.error)}
-            />
-            {ticket.ticket_type === 'incident' && <IncidentFollowers ticketId={ticket.id} />}
-            <TicketWatchers
-              ticketId={ticket.id}
-              viewerId={viewer.id}
-              admin={viewer.role === 'administrator'}
-              watchers={watcherIds.map((userId) => ({
-                userId,
-                name: names.get(userId) ?? 'Staff member',
-              }))}
-              error={Boolean(watchersR.error)}
-            />
-            <InventoryRequestPanel ticketId={ticket.id} />
-            <TicketAssets ticketId={ticket.id} />
-            <section className="settings-card">
-              <div className="section-heading-row">
-                <h3>Attachments</h3>
-                <Link
-                  className={buttonVariants({ variant: 'quiet' })}
-                  href={`/app/tickets/${ticket.id}/history?view=files`}
-                >
-                  View all files
-                </Link>
-              </div>
-              <p className="muted">Files are visible to the requester and IT staff.</p>
-              <AttachmentUpload
-                organizationId={viewer.organizationId}
-                ticketId={ticket.id}
-                userId={viewer.id}
+      <TicketMutationProvider key={ticket.id}>
+        <TicketWorkspace
+          key={ticket.id}
+          review={request}
+          coordinationSection={
+            ticket.request_kind !== 'inventory' ? (
+              <TicketPanel
+                label="Coordination"
+                load={() => TicketCoordination({ ticket, viewer })}
               />
-              <TicketAttachmentList
-                files={attachmentsR.data ?? []}
-                urls={urls}
-                error={!!attachmentsR.error}
-                staff
+            ) : undefined
+          }
+          files={
+            <TicketPanel label="Files" load={() => TicketFiles({ ticketId: ticket.id, viewer })} />
+          }
+          details={
+            <>
+              <TicketAssignmentEditor
+                key={ticket.id}
+                ticket={ticket}
+                timeZone={viewer.timeZone}
+                disclosure
               />
-            </section>
-          </>
-        }
-        assignment={
-          <>
-            <TicketWorkActions ticket={ticket} stage="assignment" assignee={assignee} />
-            <section className="settings-card ticket-assignment">
-              <h3>Choose a technician or team</h3>
-              <p className="muted">
-                Choose a technician or team in the assignment editor, then save your changes. For a
-                resolved or closed ticket, reopen it using Status before starting work again.
-              </p>
-              <TicketAssignmentEditor key={ticket.id} ticket={ticket} timeZone={viewer.timeZone} />
-            </section>
-          </>
-        }
-        conversation={
-          <>
-            {conversation}
-            <LinkedChatHistory
-              ticketId={ticket.id}
-              organizationId={viewer.organizationId}
-              viewerId={viewer.id}
-            />
-          </>
-        }
-        resolution={
-          <>
-            <TicketWorkActions ticket={ticket} stage="resolution" assignee={assignee} />
-            <section className="settings-card">
-              <h3>Service levels</h3>
-              <SlaClock initialNow={new Date().getTime()}>
-                <SlaIndicator ticket={ticket} />
-                <p className="muted">
-                  Acknowledgment:{' '}
-                  {ticket.acknowledged_at ? (
-                    <Timestamp value={ticket.acknowledged_at} />
-                  ) : (
-                    'No acknowledgment recorded'
-                  )}
-                  . Work starting records acknowledgment; public replies record requester
-                  communication.
-                </p>
-              </SlaClock>
-              <p className="muted">
-                {ticket.sla_timezone
-                  ? `Support hours: ${scheduleDescription(ticket.sla_schedule)} (${ticket.sla_timezone}). Both clocks stop outside working hours. Waiting on user and documented holds pause resolution only. Earlier breaches remain recorded. For technicians handling their own request, starting work counts as response acknowledgment.`
-                  : 'Completed under the previous calendar-hours policy. Historical SLA results are preserved.'}
-              </p>
-              <details>
-                <summary>SLA targets</summary>
-                <SlaPolicy targets={ticket.sla_targets} schedule={ticket.sla_schedule} />
-                <p className="muted">
-                  Priority changes adjust unfinished targets from creation. Reopening resumes the
-                  existing resolution target, including recorded waiting pauses. A requester reply
-                  resumes waiting tickets automatically.
-                </p>
+              <details className="ticket-disclosure">
+                <summary>
+                  {tagsR.error
+                    ? 'Tags · Unavailable'
+                    : tags.length
+                      ? `Tags · ${tags.join(', ')}`
+                      : 'Add tags'}
+                </summary>
+                <TicketTags ticketId={ticket.id} tags={tags} error={Boolean(tagsR.error)} />
               </details>
-            </section>
-            {(ratingsR.error || Boolean(ratingsR.data?.length) || ticket.resolved_at) && (
-              <section
-                className="settings-card requester-ratings"
-                aria-labelledby="requester-rating-heading"
-              >
-                <h3 id="requester-rating-heading">Requester rating</h3>
-                {ratingsR.error ? (
-                  <p role="alert">
-                    Ratings could not load. <RetryButton />
-                  </p>
-                ) : ratingsR.data?.length ? (
-                  <ul className="requester-rating-list">
-                    {ratingsR.data.map((rating) => (
-                      <li key={rating.id}>
-                        <strong>{describeRating(rating.score)}</strong>
-                        <span className="muted">
-                          {rating.resolved_at === ticket.resolved_at
-                            ? 'Current resolution'
-                            : 'Earlier resolution'}{' '}
-                          · rated <Timestamp value={rating.updated_at} />
-                        </span>
-                        {rating.comment && (
-                          <p className="requester-rating-comment">{rating.comment}</p>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="muted">
-                    {ratingWindowOpen(ticket.resolved_at, new Date().getTime())
-                      ? 'No rating yet. The requester can rate this resolution for 30 days after it is resolved.'
-                      : 'The requester did not rate this resolution.'}
-                  </p>
-                )}
-              </section>
-            )}
-          </>
-        }
-        tools={coordination}
-        history={
-          <section className="settings-card activity">
-            <h3>Recent activity</h3>
-            <Link
-              className={buttonVariants({ variant: 'secondary' })}
-              href={`/app/tickets/${ticket.id}/history?view=activity`}
-            >
-              Browse all activity
-            </Link>
-            {activityR.error && (
-              <p role="alert">
-                Activity could not load. <RetryButton />
+              <details className="ticket-disclosure">
+                <summary>
+                  {linksR.error
+                    ? 'Links · Unavailable'
+                    : links.length
+                      ? `Links · ${links.map((link) => `#${link.number}`).join(', ')}`
+                      : 'Add links'}
+                </summary>
+                <TicketLinks
+                  ticketId={ticket.id}
+                  revision={ticket.revision}
+                  status={ticket.status}
+                  links={links}
+                  error={Boolean(linksR.error)}
+                />
+              </details>
+              {ticket.ticket_type === 'incident' && (
+                <details className="ticket-disclosure">
+                  <summary>Incident followers</summary>
+                  <TicketPanel
+                    label="Incident followers"
+                    load={() => IncidentFollowers({ ticketId: ticket.id })}
+                  />
+                </details>
+              )}
+              <TicketPanel
+                label="Watchers"
+                load={() => TicketWatcherDetails({ ticketId: ticket.id, viewer })}
+              />
+              {ticket.request_kind === 'inventory' && (
+                <details className="ticket-disclosure">
+                  <summary>Inventory request</summary>
+                  <TicketPanel
+                    label="Inventory request"
+                    load={() => InventoryRequestPanel({ ticketId: ticket.id })}
+                  />
+                </details>
+              )}
+              <TicketPanel
+                label="Assets"
+                load={() => TicketAssets({ ticketId: ticket.id, compact: true })}
+              />
+            </>
+          }
+          assignment={
+            <>
+              <TicketWorkActions ticket={ticket} stage="all" assignee={assignee} compact />
+              <p>
+                Priority: <TicketStatusBadge priority={ticket.priority} />{' '}
+                <a href="#ticket-assignment">Edit details</a>
               </p>
-            )}
-            {!activityR.error && !activityR.data?.length && (
-              <p className="muted">No activity recorded yet.</p>
-            )}
-            {Boolean(activityR.data?.length) && (
-              <ActivityTimeline items={activityR.data ?? []} names={names} />
-            )}
-          </section>
-        }
-      />
+              <SlaClock initialNow={new Date().getTime()}>
+                <SlaIndicator ticket={ticket} compact />
+              </SlaClock>
+              {ticket.request_kind !== 'inventory' && (
+                <Suspense fallback={null}>
+                  <TicketCoordinationBadge ticket={ticket} organizationId={viewer.organizationId} />
+                </Suspense>
+              )}
+            </>
+          }
+          conversation={
+            <>
+              {conversation}
+              <TicketPanel
+                label="Linked chat"
+                load={() =>
+                  LinkedChatHistory({
+                    ticketId: ticket.id,
+                    organizationId: viewer.organizationId,
+                    viewerId: viewer.id,
+                  })
+                }
+              />
+            </>
+          }
+          resolution={
+            <>
+              <section className="settings-card">
+                <h3>Service levels</h3>
+                <SlaClock initialNow={new Date().getTime()}>
+                  <SlaIndicator ticket={ticket} />
+                  <p className="muted">
+                    Acknowledgment:{' '}
+                    {ticket.acknowledged_at ? (
+                      <Timestamp value={ticket.acknowledged_at} />
+                    ) : (
+                      'No acknowledgment recorded'
+                    )}
+                    . Work starting records acknowledgment; public replies record requester
+                    communication.
+                  </p>
+                </SlaClock>
+                <p className="muted">
+                  {ticket.sla_timezone
+                    ? `Support hours: ${scheduleDescription(ticket.sla_schedule)} (${ticket.sla_timezone}). Both clocks stop outside working hours. Waiting on user and documented holds pause resolution only. Earlier breaches remain recorded. For technicians handling their own request, starting work counts as response acknowledgment.`
+                    : 'Completed under the previous calendar-hours policy. Historical SLA results are preserved.'}
+                </p>
+                <details>
+                  <summary>SLA targets</summary>
+                  <SlaPolicy targets={ticket.sla_targets} schedule={ticket.sla_schedule} />
+                  <p className="muted">
+                    Priority changes adjust unfinished targets from creation. Reopening resumes the
+                    existing resolution target, including recorded waiting pauses. A requester reply
+                    resumes waiting tickets automatically.
+                  </p>
+                </details>
+              </section>
+              <TicketPanel
+                label="Requester rating"
+                load={() => TicketRatings({ ticket, viewer })}
+              />
+            </>
+          }
+          history={
+            <TicketPanel
+              label="Activity"
+              load={() => TicketActivity({ ticketId: ticket.id, viewer })}
+            />
+          }
+        />
+      </TicketMutationProvider>
     </div>
   );
 }

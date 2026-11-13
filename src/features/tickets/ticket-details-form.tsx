@@ -39,19 +39,36 @@ type TicketDetails = Pick<
 export function TicketAssignmentEditor({
   ticket,
   timeZone,
+  disclosure = false,
 }: {
   ticket: TicketDetails;
   timeZone: string;
+  disclosure?: boolean;
 }) {
   const [editing, setEditing] = useState(false);
   useEffect(() => {
     const openLinkedDetails = () => {
-      if (window.location?.hash === '#ticket-details') setEditing(true);
+      if (['#ticket-details', '#ticket-assignment'].includes(window.location?.hash))
+        setEditing(true);
     };
     openLinkedDetails();
     window.addEventListener('hashchange', openLinkedDetails);
     return () => window.removeEventListener('hashchange', openLinkedDetails);
   }, []);
+  if (disclosure)
+    return (
+      <details
+        className="ticket-disclosure"
+        id="ticket-assignment"
+        open={editing || undefined}
+        onToggle={(event) => {
+          if (event.currentTarget.open) setEditing(true);
+        }}
+      >
+        <summary>Edit details</summary>
+        {editing && <TicketDetailsForm ticket={ticket} timeZone={timeZone} />}
+      </details>
+    );
   return editing ? (
     <TicketDetailsForm ticket={ticket} timeZone={timeZone} />
   ) : (

@@ -6,7 +6,13 @@ import { createClient } from '@/lib/supabase/server';
 
 import { AssetLinkForm } from './ticket-link-form';
 
-export async function TicketAssets({ ticketId }: { ticketId: string }) {
+export async function TicketAssets({
+  ticketId,
+  compact = false,
+}: {
+  ticketId: string;
+  compact?: boolean;
+}) {
   const viewer = await requireViewer();
   if (viewer.role === 'end_user') return null;
   const db = await createClient();
@@ -23,7 +29,7 @@ export async function TicketAssets({ ticketId }: { ticketId: string }) {
         .eq('organization_id', viewer.organizationId)
         .in('id', ids)
     : { data: [], error: null };
-  return (
+  const content = (
     <section className="settings-card stack">
       <h2>Linked assets</h2>
       {error || assetError ? (
@@ -52,5 +58,19 @@ export async function TicketAssets({ ticketId }: { ticketId: string }) {
         </>
       )}
     </section>
+  );
+  return compact ? (
+    <details className="ticket-disclosure">
+      <summary>
+        {error || assetError
+          ? 'Assets · Unavailable'
+          : assets?.length
+            ? `Assets · ${assets.map((a) => a.tag).join(', ')}`
+            : 'Add assets'}
+      </summary>
+      {content}
+    </details>
+  ) : (
+    content
   );
 }

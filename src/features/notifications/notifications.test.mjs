@@ -622,3 +622,29 @@ test('announcement status and workspace are separate from escaped multiline cont
     { workspaceName: 'Example & Co' },
   );
 });
+
+test('waiting reply email names the requested response in HTML and text without sending another email', async () => {
+  let calls = 0;
+  await sendNotificationEmail(
+    {
+      ...item,
+      email_kind: 'ticket_response',
+      ticket_status: 'waiting_on_user',
+      reply_author: 'Alex Support',
+      reply_preview: 'Please reconnect and tell us what happens.',
+      reply_created_at: '2026-11-12T12:00:00Z',
+    },
+    config,
+    async (_url, options) => {
+      calls++;
+      const body = JSON.parse(options.body);
+      for (const value of [body.html, body.text]) {
+        assert.match(value, /Waiting on your reply/);
+        assert.match(value, /Resolution work is paused until you reply/);
+        assert.match(value, /Please reconnect/);
+      }
+      return Response.json({ id: 'sent' });
+    },
+  );
+  assert.equal(calls, 1);
+});

@@ -6,6 +6,7 @@ import { profileLabels } from '@/features/lookups/labels';
 import { ChecklistPanel } from '@/features/tickets/checklist-panel';
 import { CommunicationPanel } from '@/features/tickets/communication-panel';
 import { IncidentControlPanel } from '@/features/tickets/incident-control-panel';
+import { loadTicketWorkflow } from '@/features/tickets/ticket-loaders';
 import { Timestamp } from '@/features/timezones/provider';
 import { requireViewer } from '@/lib/auth/viewer';
 import { createClient } from '@/lib/supabase/server';
@@ -24,12 +25,7 @@ export async function TicketProcedures({
   if (viewer.role === 'end_user' || viewer.organizationId !== organizationId) return null;
   const db = await createClient();
   const [workflowR, runsR] = await Promise.all([
-    db
-      .from('ticket_workflows')
-      .select('*')
-      .eq('organization_id', organizationId)
-      .eq('ticket_id', ticketId)
-      .maybeSingle(),
+    loadTicketWorkflow(organizationId, ticketId),
     db
       .from('ticket_workflow_applications')
       .select('*')

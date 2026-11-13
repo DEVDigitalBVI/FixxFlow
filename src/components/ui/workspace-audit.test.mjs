@@ -21,36 +21,25 @@ test('assigned equipment never presents an unqualified Available label', () => {
   );
 });
 
-test('terminal tickets explain reopening and retain every mounted workflow panel', () => {
-  const { TicketWorkflow } = load('src/features/tickets/ticket-workflow.tsx');
-  for (const status of ['closed', 'resolved']) {
-    const html = render(
-      React.createElement(TicketWorkflow, {
-        status,
-        assigned: true,
-        review: 'Request draft',
-        assignment: 'Assignment draft',
-        conversation: 'Reply draft',
-        resolution: 'Status controls',
-        tools: 'Coordination draft',
-        activeWorkflow: false,
-        history: 'Recorded history',
-      }),
-    );
-    assert.match(html, new RegExp(`This ticket is ${status}`));
-    assert.match(html, /Outcome &amp; reopen/);
-    assert.match(html, /Reviewing a step does not reopen it/);
-    assert.equal((html.match(/class="ticket-wizard-panel"/g) ?? []).length, 6);
-    assert.equal((html.match(/hidden=""/g) ?? []).length, 5);
-    assert.match(html, /Reply draft/);
-    assert.match(html, /Status controls/);
-    assert.match(html, />Assignment</);
-    assert.doesNotMatch(
-      html,
-      /Assign &amp; start|Choose an owner, confirm the priority, and begin work/,
-    );
-    assert.match(html, /before resuming work/);
-  }
+test('workspace keeps request and reply visible with native secondary disclosures', () => {
+  const { TicketWorkspace } = load('src/features/tickets/ticket-workspace.tsx');
+  const html = render(
+    React.createElement(TicketWorkspace, {
+      review: 'Request draft',
+      assignment: 'Status controls',
+      conversation: 'Reply draft',
+      resolution: 'SLA',
+      tools: 'Coordination draft',
+      activeWorkflow: true,
+      history: 'Recorded history',
+      files: 'Files',
+    }),
+  );
+  assert.doesNotMatch(html, /hidden=""|ticket-wizard|Show guidance/);
+  assert.match(html, /Request draft/);
+  assert.match(html, /Reply draft/);
+  assert.match(html, /id="ticket-workflow-tools" open=""/);
+  assert.match(html, /<summary>Activity<\/summary>/);
 });
 
 test('article contents are available as a named collapsed disclosure before readable content', () => {

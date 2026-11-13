@@ -52,6 +52,7 @@ export function componentHarness(file, name, props, mocks = {}) {
     },
     useEffect: effect,
     useLayoutEffect: effect,
+    useContext: () => null,
     useId: () => `fixture-${slot(() => null)}`,
     useTransition: () => [false, (fn) => fn()],
   };
@@ -93,6 +94,7 @@ export function componentHarness(file, name, props, mocks = {}) {
         const target = {
           focus: () => focuses.push(node.props.id ?? node.props['aria-label'] ?? 'feedback'),
           setCustomValidity: (message) => validities.push({ id: node.props.id, message }),
+          closest: () => null,
           scrollHeight: 1000,
           scrollTo: (options) => scrolls.push(options),
         };

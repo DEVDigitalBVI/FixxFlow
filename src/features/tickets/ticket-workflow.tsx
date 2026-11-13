@@ -1,320 +1,78 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+/** Open old wizard links and nested disclosures without unmounting drafts. */
+export function followTicketHash(root: HTMLElement, hash: string) {
+  const aliases: Record<string, string> = {
+    'ticket-details': 'ticket-assignment',
+  };
+  let id: string;
+  try {
+    id = decodeURIComponent(hash.replace(/^#/, ''));
+  } catch {
+    return false;
+  }
+  if (!id) return false;
+  const target = root.querySelector<HTMLElement>(`[id="${CSS.escape(aliases[id] ?? id)}"]`);
+  if (!target) return false;
+  let parent: HTMLElement | null = target;
+  while (parent && parent !== root) {
+    if (parent instanceof HTMLDetailsElement) parent.open = true;
+    parent = parent.parentElement;
+  }
+  const focus = target instanceof HTMLDetailsElement ? target.querySelector('summary') : target;
+  if (focus instanceof HTMLElement) {
+    if (!(target instanceof HTMLDetailsElement) && !focus.hasAttribute('tabindex'))
+      focus.tabIndex = -1;
+    focus.focus({ preventScroll: true });
+    focus.scrollIntoView({ block: 'start', behavior: 'instant' });
+  }
+  return true;
+}
 
-import { Button } from '@/components/ui/button';
-import type { TicketStatus } from '@/types/database';
-
-const workflowSteps = [
-  {
-    title: 'Review request',
-    hint: 'Understand what the requester needs and how the issue affects their work.',
-    help: [
-      <>Check the description, reported work impact and attached files.</>,
-      <>
-        Use <strong>Assign &amp; start</strong> to choose an owner and review the priority.
-      </>,
-      <>
-        If information is missing, use <strong>Respond</strong> to ask the requester.
-      </>,
-    ],
-    hash: 'ticket-review',
-  },
-  {
-    title: 'Assign & start',
-    hint: 'Choose an owner, confirm the priority, and begin work.',
-    help: [
-      <>
-        Select <strong>Assign to me</strong> for an unassigned ticket, or choose an owner and save.
-      </>,
-      <>Check priority against the reported work impact.</>,
-      <>
-        Select <strong>Start work</strong> when troubleshooting begins.
-      </>,
-    ],
-    hash: 'ticket-assignment',
-  },
-  {
-    title: 'Coordinate',
-    hint: '',
-    help: [
-      <>Apply a company procedure for checklists, approvals or scheduled updates.</>,
-      <>Declare an incident when a wider disruption needs coordinated response.</>,
-      <>
-        Routine tickets can go straight to <strong>Respond</strong>.
-      </>,
-    ],
-    hash: 'ticket-workflow-tools',
-  },
-  {
-    title: 'Respond',
-    hint: 'Ask a question, share an update, or record a private IT note.',
-    help: [
-      <>
-        Read the conversation, then choose <strong>Reply to requester</strong> for a message they
-        can see, or <strong>Internal note</strong> for troubleshooting visible only to IT staff.
-      </>,
-      <>
-        Use the send or add button to save your message; sending a reply does not resolve the
-        ticket.
-      </>,
-      <>Skip this step if no update is needed.</>,
-    ],
-    hash: 'ticket-conversation',
-  },
-  {
-    title: 'Resolve',
-    hint: 'Record the outcome and mark the ticket resolved when the issue is fixed.',
-    help: [
-      <>
-        Use <strong>Respond</strong> to explain the fix to the requester.
-      </>,
-      <>
-        Choose <strong>Resolved</strong> from <strong>Status</strong>, then select{' '}
-        <strong>Save status</strong> when the issue is fixed.
-      </>,
-      <>
-        If work is continuing, choose the appropriate work status instead. Moving to the next step
-        does not resolve the ticket.
-      </>,
-    ],
-    hash: 'ticket-resolution',
-  },
-  {
-    title: 'Activity history',
-    hint: 'See who changed this ticket, what changed and when.',
-    help: [
-      <>Review recent activity for ownership, status changes and recorded decisions.</>,
-      <>Open the full history for older events.</>,
-      <>To continue working, select the relevant step above.</>,
-    ],
-    hash: 'ticket-activity',
-  },
-];
-const stepsWithoutCoordination = workflowSteps.filter(
-  (step) => step.hash !== 'ticket-workflow-tools',
-);
-export function TicketWorkflow({
-  status,
-  assigned,
-  review,
-  assignment,
-  conversation,
-  resolution,
-  tools,
-  activeWorkflow,
-  history,
-}: {
-  status: TicketStatus;
-  assigned: boolean;
-  review: ReactNode;
-  assignment: ReactNode;
-  conversation: ReactNode;
-  resolution: ReactNode;
-  tools: ReactNode;
-  activeWorkflow: boolean;
-  history: ReactNode;
-}) {
-  const done = status === 'resolved' || status === 'closed';
-  const steps = tools ? workflowSteps : stepsWithoutCoordination;
-  const stepTitle = (item: (typeof workflowSteps)[number]) =>
-    done && item.hash === 'ticket-resolution'
-      ? 'Outcome & reopen'
-      : done && item.hash === 'ticket-assignment'
-        ? 'Assignment'
-        : item.title;
-  const initialHash =
-    status === 'resolved' || status === 'closed'
-      ? 'ticket-resolution'
-      : assigned
-        ? status === 'new' || status === 'open'
-          ? 'ticket-assignment'
-          : 'ticket-conversation'
-        : 'ticket-review';
-  const initial = steps.findIndex((item) => item.hash === initialHash);
-  const [step, setStep] = useState(initial);
-  const headings = useRef<Array<HTMLHeadingElement | null>>([]);
-  const focusNext = useRef(false);
-  useEffect(() => {
-    const followHash = () => {
-      const hash = window.location.hash;
-      const coordinationHashes = [
-        '#ticket-procedures',
-        '#incident-summary',
-        '#response-checklist',
-        '#incident-approvals',
-        '#communication-plan',
-      ];
-      const index = coordinationHashes.includes(hash)
-        ? steps.findIndex((s) => s.hash === 'ticket-workflow-tools')
-        : hash === '#ticket-details'
-          ? steps.findIndex((s) => s.hash === 'ticket-assignment')
-          : steps.findIndex((s) => `#${s.hash}` === hash);
-      if (index >= 0) {
-        focusNext.current = true;
-        setStep(index);
+/** Only a pending explicit hash may focus a late streamed target. */
+export function observeTicketHash(root: HTMLElement, browser: Window, doc: Document) {
+  let observer: MutationObserver | undefined;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let pending = '';
+  const cancel = () => {
+    observer?.disconnect();
+    observer = undefined;
+    if (timer) clearTimeout(timer);
+    timer = undefined;
+    pending = '';
+  };
+  const navigate = () => {
+    cancel();
+    const hash = browser.location.hash;
+    if (!hash || followTicketHash(root, hash)) return;
+    pending = hash;
+    observer = new MutationObserver(() => {
+      if (browser.location.hash !== pending) {
+        cancel();
+        return;
       }
-    };
-    followHash();
-    window.addEventListener('hashchange', followHash);
-    return () => window.removeEventListener('hashchange', followHash);
-  }, [steps]);
-  useEffect(() => {
-    if (focusNext.current) {
-      headings.current[step]?.focus();
-      focusNext.current = false;
-    }
-  }, [step]);
-  const go = (index: number) => {
-    if (index === step) return;
-    focusNext.current = true;
-    setStep(index);
-    window.history.replaceState(window.history.state, '', `#${steps[index].hash}`);
+      if (followTicketHash(root, pending)) cancel();
+    });
+    observer.observe(root, { childList: true, subtree: true });
+    timer = setTimeout(cancel, 10000);
   };
-  const panels: Record<string, ReactNode> = {
-    'ticket-review': review,
-    'ticket-assignment': assignment,
-    'ticket-workflow-tools': tools,
-    'ticket-conversation': conversation,
-    'ticket-resolution': resolution,
-    'ticket-activity': history,
+  // If the worker starts another interaction, the old navigation no longer owns focus.
+  const userMoved = () => cancel();
+  const click = (event: MouseEvent) => {
+    const target = event.target;
+    const link = target instanceof Element ? target.closest('a[href^="#"]') : null;
+    if (link?.getAttribute('href') === browser.location.hash) navigate();
   };
-  const hint = (item: (typeof workflowSteps)[number]) =>
-    done && item.hash === 'ticket-resolution'
-      ? `This ticket is ${status}. Review its outcome or use Status and Save status to reopen it.`
-      : done && item.hash === 'ticket-assignment'
-        ? 'Review ownership and priority. Use Outcome & reopen before resuming work.'
-        : done && item.hash === 'ticket-conversation'
-          ? 'Review messages or add an update. Use Outcome & reopen to change the ticket status explicitly.'
-          : item.hash === 'ticket-workflow-tools'
-            ? activeWorkflow
-              ? 'This ticket has active coordination work. Review its checklist, approvals and stakeholder updates before continuing.'
-              : 'Optional for routine tickets. Apply a company procedure or declare a wider incident here, or continue to Respond.'
-            : item.hint;
-  const help = (item: (typeof workflowSteps)[number]) => {
-    if (!done) return item.help;
-    if (item.hash === 'ticket-assignment')
-      return [
-        <>Review the recorded owner and priority; save only if a correction is needed.</>,
-        <>
-          Use <strong>Outcome &amp; reopen</strong> to reopen this ticket before resuming work.
-        </>,
-      ];
-    if (item.hash === 'ticket-review')
-      return [
-        <>Review the original request, impact and attachments.</>,
-        <>
-          Use <strong>Assignment</strong> to review ownership and{' '}
-          <strong>Outcome &amp; reopen</strong> to resume work.
-        </>,
-      ];
-    if (item.hash === 'ticket-resolution')
-      return [
-        <>Review the recorded outcome and conversation.</>,
-        <>
-          To resume work, choose an open work status under <strong>Status</strong>, then select{' '}
-          <strong>Save status</strong>.
-        </>,
-        <>Reviewing or replying does not reopen the ticket.</>,
-      ];
-    return item.help;
+  navigate();
+  browser.addEventListener('hashchange', navigate);
+  doc.addEventListener('click', click);
+  root.addEventListener('pointerdown', userMoved);
+  root.addEventListener('keydown', userMoved);
+  return () => {
+    cancel();
+    browser.removeEventListener('hashchange', navigate);
+    doc.removeEventListener('click', click);
+    root.removeEventListener('pointerdown', userMoved);
+    root.removeEventListener('keydown', userMoved);
   };
-  return (
-    <div className="ticket-wizard">
-      {done && (
-        <p className="ticket-closed-summary">
-          <strong>This ticket is {status}.</strong> Reviewing a step does not reopen it. Use Outcome
-          &amp; reopen to change its status.
-        </p>
-      )}
-      <nav aria-label="Ticket workflow">
-        <ol className="ticket-wizard-steps">
-          {steps.map((item, index) => (
-            <li key={item.hash}>
-              <button
-                type="button"
-                className={
-                  item.hash === 'ticket-activity' ||
-                  (item.hash === 'ticket-workflow-tools' && !activeWorkflow)
-                    ? 'ticket-step-secondary'
-                    : undefined
-                }
-                aria-current={step === index ? 'step' : undefined}
-                onClick={() => go(index)}
-              >
-                <span className="ticket-step-number" aria-hidden="true">
-                  {index + 1}
-                </span>
-                <span>{stepTitle(item)}</span>
-              </button>
-            </li>
-          ))}
-        </ol>
-      </nav>
-      <p className="sr-only" role="status">
-        Step {step + 1} of {steps.length} · {stepTitle(steps[step])}
-      </p>
-      {steps.map((item, index) => (
-        <section
-          key={item.hash}
-          id={item.hash}
-          hidden={step !== index}
-          aria-labelledby={`${item.hash}-heading`}
-          className="ticket-wizard-panel"
-        >
-          <header className="ticket-step-heading">
-            <h2
-              id={`${item.hash}-heading`}
-              ref={(node) => {
-                headings.current[index] = node;
-              }}
-              tabIndex={-1}
-            >
-              {stepTitle(item)}
-            </h2>
-            <p className="muted">{hint(item)}</p>
-            <details className="ticket-step-help">
-              <summary>
-                <span className="ticket-guidance-show">Show guidance</span>
-                <span className="ticket-guidance-hide">Hide guidance</span>
-                <span className="sr-only">: {stepTitle(item)}</span>
-              </summary>
-              <ol>
-                {help(item).map((instruction, position) => (
-                  <li key={position}>{instruction}</li>
-                ))}
-              </ol>
-            </details>
-          </header>
-          <div className="ticket-step-content">{panels[item.hash]}</div>
-        </section>
-      ))}
-      <div className="ticket-wizard-footer">
-        <p className="muted ticket-navigation-note">
-          Jump to any step. Back and Next only change the view; use each action’s button to save
-          changes.
-        </p>
-        <div className="ticket-wizard-navigation">
-          {step > 0 ? (
-            <Button type="button" variant="secondary" onClick={() => go(step - 1)}>
-              Back: {stepTitle(steps[step - 1])}
-            </Button>
-          ) : (
-            <span />
-          )}
-          {step < steps.length - 1 ? (
-            <Button type="button" variant="secondary" onClick={() => go(step + 1)}>
-              Next: {stepTitle(steps[step + 1])}
-            </Button>
-          ) : (
-            <p className="muted">
-              {status === 'resolved' || status === 'closed'
-                ? `This ticket is ${status}. You can review any step or return to the queue.`
-                : 'Return to Resolve to update the ticket status, or review any earlier step.'}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
 }

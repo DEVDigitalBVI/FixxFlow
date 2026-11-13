@@ -1,0 +1,118 @@
+{
+  "checkedAt": "2026-11-13T02:14:12.482Z",
+  "method": "Deterministic synthetic staff fixture exercising TicketDetail before/after; table calls count queries constructed by the shell. profileLabels is separately stubbed to record displayed identities. Not a production performance benchmark.",
+  "before": {
+    "drawer": {
+      "tables": [
+        "tickets",
+        "ticket_messages",
+        "ticket_attachments",
+        "ticket_activity",
+        "ticket_workflows",
+        "saved_replies",
+        "ticket_tags",
+        "ticket_tags",
+        "ticket_links",
+        "ticket_watchers",
+        "ticket_resolution_ratings"
+      ],
+      "profileIds": [
+        "watcher",
+        "requester",
+        "owner",
+        "author",
+        "actor"
+      ],
+      "attachmentSigningCalls": 1
+    },
+    "fullPageShell": {
+      "tables": [
+        "tickets",
+        "ticket_messages",
+        "ticket_attachments",
+        "ticket_activity",
+        "ticket_workflows",
+        "saved_replies",
+        "ticket_tags",
+        "ticket_tags",
+        "ticket_links",
+        "ticket_watchers",
+        "ticket_resolution_ratings"
+      ],
+      "profileIds": [
+        "watcher",
+        "requester",
+        "owner",
+        "author",
+        "actor"
+      ],
+      "attachmentSigningCalls": 1
+    }
+  },
+  "after": {
+    "drawer": {
+      "tables": [
+        "tickets",
+        "ticket_messages",
+        "ticket_tags",
+        "ticket_links"
+      ],
+      "profileIds": [
+        "requester",
+        "owner",
+        "author"
+      ],
+      "attachmentSigningCalls": 0
+    },
+    "fullPageShell": {
+      "tables": [
+        "tickets",
+        "ticket_messages",
+        "ticket_tags",
+        "ticket_links"
+      ],
+      "profileIds": [
+        "requester",
+        "owner",
+        "author"
+      ],
+      "attachmentSigningCalls": 0
+    }
+  },
+  "verifiedChanges": [
+    "Drawer and full-page shell construct 4 table queries instead of 11.",
+    "Core profile lookup requests only requester, owner and message authors.",
+    "No attachment signing on drawer or core shell path.",
+    "Secondary full-page data loads under independent Suspense/error boundaries.",
+    "Workflow and attachment-list reads use request-scoped React cache with primitive org/ticket keys.",
+    "Tag counts and saved replies load on first picker opening."
+  ],
+  "productionComparison": {
+    "status": "pending",
+    "reason": "Current changes are not deployed. The Vercel integration is available but not installed/connected; authenticated current-release telemetry has not been collected. No before/after TTFB/LCP/server-duration improvement is claimed.",
+    "historicalBaseline": "docs/operations/page-loading-baseline-2026-11-04.json",
+    "routes": [
+      "/app/tickets",
+      "/app/tickets/[ticketId]"
+    ],
+    "requiredMetrics": [
+      "p75 TTFB",
+      "p75 LCP",
+      "p95 successful GET server duration"
+    ],
+    "comparisonRequirements": [
+      "Capture the current deployed release as the new before baseline.",
+      "After an authorized deployment, use equivalent traffic windows, routes, environment and device classes.",
+      "Record release IDs and sample counts; keep the November 4 baseline as historical context only."
+    ]
+  },
+  "preservedBehavior": [
+    "Employee branch retains its separate data path.",
+    "Ineligible tickets still query existing shared summaries, preserving staff editing/withdrawal controls for previously shared tickets.",
+    "Collapsed secondary server panels still load eventually; streaming reduces shell dependencies, not all eventual queries."
+  ],
+  "verification": {
+    "browser": "Synthetic fixture, desktop and 390px, keyboard-operated saved-reply opening/search/insertion and tag disclosure/suggestions; confirmed draft retention and focus return. Delayed coordination target opened its ancestor disclosure and received focus.",
+    "scope": "Synthetic fixture verifies browser interactions; production data timing is unmeasured."
+  }
+}

@@ -190,7 +190,11 @@ test('Coordinate shows one direct publishing form for the assignee, coordinator 
       },
     );
     const html = renderToStaticMarkup(
-      await ServiceAnnouncementPanel({ organizationId: viewer.organizationId, ticketId: 'ticket' }),
+      await ServiceAnnouncementPanel({
+        organizationId: viewer.organizationId,
+        ticketId: 'ticket',
+        ticket: { status: 'open', assigned_technician_id: assigned },
+      }),
     );
     assert.match(html, /id="employee-announcement"/);
     assert.match(html, /<h2[^>]*>Employee announcement/);

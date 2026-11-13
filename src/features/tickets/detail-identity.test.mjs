@@ -57,7 +57,7 @@ test('full page isolates the entire workflow by ticket identity, not revision', 
     '@/lib/supabase/server': { createClient: async () => db },
     '@/features/lookups/labels': { profileLabels: async () => [] },
     '@/features/support-viewer/sharing-panel': { IncidentSharingPanel: Sharing },
-    './ticket-workflow': { TicketWorkflow: Workflow },
+    './ticket-workspace': { TicketWorkspace: Workflow },
     './service-announcement-panel': { ServiceAnnouncementPanel: Announcement },
     './incident-panel': { IncidentPanel: Incident },
     '@/features/workflows/ticket-procedures': { TicketProcedures: Procedures },
@@ -78,10 +78,16 @@ test('full page isolates the entire workflow by ticket identity, not revision', 
     selected = 'ticket-b';
     const second = find(await TicketDetail({ ticketId: selected, embedded }));
     assert.ok(first);
+    const coordination = await first.props.coordinationSection.props.load();
+    const content = React.Children.toArray(coordination.props.children)[1];
     assert.deepEqual(
-      React.Children.toArray(first.props.tools.props.children).map((child) => child.type),
-      [Announcement, Incident, Sharing, Procedures],
-      'coordination leads with the announcement and incident work before procedures',
+      React.Children.toArray(content.props.children).map((child) => child.props.label),
+      [
+        'Employee announcement',
+        'Incident coordination',
+        'Shared incident summary',
+        'Ticket procedures',
+      ],
     );
     assert.ok(second);
     assert.ok(first.key.endsWith('ticket-a'));
@@ -114,5 +120,12 @@ test('full page isolates the entire workflow by ticket identity, not revision', 
     );
     const composer = findBy(drawer, (n) => n.type?.name === 'MessageComposer');
     assert.ok(composer.key.endsWith(id), 'switching tickets resets reply drafts');
+    assert.equal(composer.props.revision, 3);
+    assert.equal(composer.props.ticketStatus, 'in_progress');
+    assert.equal(typeof composer.props.statusAction, 'function');
+    assert.ok(
+      findBy(drawer, (n) => n.type?.name === 'TicketMutationProvider'),
+      'drawer scopes work/composer action locks together',
+    );
   }
 });

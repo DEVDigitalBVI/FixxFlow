@@ -17,19 +17,23 @@ export async function IncidentPanel({
   ticketId,
   revision,
   ownerId,
+  isIncident = true,
 }: {
   organizationId: string;
   ticketId: string;
   revision: number;
   ownerId: string;
+  isIncident?: boolean;
 }) {
-  const db = await createClient();
-  const { data, error } = await db
-    .from('ticket_incidents')
-    .select('*')
-    .eq('organization_id', organizationId)
-    .eq('ticket_id', ticketId)
-    .maybeSingle();
+  const db = isIncident ? await createClient() : null;
+  const { data, error } = isIncident
+    ? await db!
+        .from('ticket_incidents')
+        .select('*')
+        .eq('organization_id', organizationId)
+        .eq('ticket_id', ticketId)
+        .maybeSingle()
+    : { data: null, error: null };
   if (error)
     return (
       <section className="settings-card" aria-label="Incident coordination">
@@ -60,7 +64,7 @@ export async function IncidentPanel({
   let ownerError = false;
   try {
     ownerName =
-      (await profileLabels(db, organizationId, [data.owner_id]))[0]?.display_name ?? ownerName;
+      (await profileLabels(db!, organizationId, [data.owner_id]))[0]?.display_name ?? ownerName;
   } catch {
     ownerError = true;
   }

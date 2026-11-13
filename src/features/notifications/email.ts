@@ -155,6 +155,8 @@ export async function sendNotificationEmail(
     ['ticket_response', 'user_replied'].includes(item.email_kind ?? '') &&
     item.reply_preview,
   );
+  const waitingReply =
+    reply && item.email_kind === 'ticket_response' && item.ticket_status === 'waiting_on_user';
   const statusUpdate = Boolean(
     !incident &&
     item.ticket_id &&
@@ -188,7 +190,10 @@ export async function sendNotificationEmail(
         value: `${new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(item.reply_created_at))} UTC`,
       });
     if (item.ticket_status)
-      details.push({ label: 'Status at reply', value: ticketStatuses[item.ticket_status].label });
+      details.push({
+        label: waitingReply ? 'Status' : 'Status at reply',
+        value: waitingReply ? 'Waiting on your reply' : ticketStatuses[item.ticket_status].label,
+      });
     if (item.ticket_priority)
       details.push({ label: 'Priority', value: ticketPriorities[item.ticket_priority].label });
   }
@@ -213,7 +218,9 @@ export async function sendNotificationEmail(
     ? item.approved_body!
     : statusUpdate
       ? `The ticket status changed${item.previous_status ? ` from ${ticketStatuses[item.previous_status].label}` : ''} to ${statusLabel}. ${item.email_kind === 'ticket_reopened' ? 'Further work is needed. Open the ticket to review the next steps.' : 'Review the outcome in FixxFlow. If the issue continues, return to the ticket to follow up.'}`
-      : (reason?.message ?? 'There is an update waiting for you in FixxFlow.');
+      : waitingReply
+        ? 'Your support team is waiting for your reply. Resolution work is paused until you reply.'
+        : (reason?.message ?? 'There is an update waiting for you in FixxFlow.');
   // The queue prefixes public announcement bodies with a written status. Older
   // stakeholder updates remain plain messages and must not be reinterpreted.
   const publicStatus = announcement

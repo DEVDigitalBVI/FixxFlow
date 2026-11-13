@@ -291,6 +291,7 @@ export async function addTicketMessage(formData: FormData) {
     body,
     kind,
   });
+  let duplicate = false;
   if (error) {
     // A retry after a lost response must not post the same message twice.
     const { data: existing } = await supabase
@@ -309,16 +310,107 @@ export async function addTicketMessage(formData: FormData) {
       return {
         error: 'The message could not be added. Your draft is preserved; please try again.',
       };
+    duplicate = true;
   }
   revalidatePath(`/app/tickets/${ticketId}`);
   revalidatePath('/app/tickets');
   return {
+    duplicate,
     success:
       kind === 'internal_note'
         ? 'Internal note added · IT staff only.'
         : viewer.role === 'end_user'
           ? 'Message sent to IT.'
           : 'Public reply sent.',
+  };
+}
+
+/** The database commits reply, acknowledgment and status together under caller permissions. */
+export async function replyAndSetStatus(formData: FormData): Promise<{
+  error?: string;
+  success?: string;
+  messageSent?: boolean;
+  statusChanged?: boolean;
+  conflict?: boolean;
+  revision?: number;
+}> {
+  const viewer = await requireViewer();
+  if (viewer.role === 'end_user') return { error: 'Only IT staff can send and change status.' };
+  const ticketId = formString(formData, 'ticketId', '');
+  const messageId = formString(formData, 'messageId', '');
+  const body = formString(formData, 'body', '').trim();
+  const status = formString(formData, 'status', '');
+  const revision = Number(formData.get('revision'));
+  if (
+    !isUuid(ticketId) ||
+    !isUuid(messageId) ||
+    !body ||
+    body.length > 20000 ||
+    formString(formData, 'kind', '') !== 'reply' ||
+    !['waiting_on_user', 'resolved'].includes(status) ||
+    !Number.isSafeInteger(revision) ||
+    revision < 1
+  )
+    return {
+      error:
+        'Choose a public reply action with a message of up to 20,000 characters and reload the latest ticket.',
+    };
+  const db = await createClient();
+  // Transport errors deliberately propagate: the composer preserves the same ID,
+  // intent and revision for a receipt-backed retry after an uncertain response.
+  const { data, error } = await db.rpc('reply_and_set_ticket_status', {
+    ticket_id: ticketId,
+    message_id: messageId,
+    body,
+    status: status as 'waiting_on_user' | 'resolved',
+    expected_revision: revision,
+  });
+  if (error) {
+    if (error.code === 'PT409' || error.code === '40001')
+      return {
+        messageSent: false,
+        statusChanged: false,
+        conflict: true,
+        error:
+          'Reply not sent. The ticket was updated by someone else. Review the latest status before sending again. Your draft is preserved.',
+      };
+    if (error.code === '42501' || error.code === '22023' || error.code === 'PT422')
+      return {
+        messageSent: false,
+        statusChanged: false,
+        error:
+          error.code === 'PT422'
+            ? 'This reply ID was already used with different details. Your draft is preserved; review the conversation before sending again.'
+            : error.code === '42501'
+              ? 'You no longer have permission to reply and change this ticket. Your draft is preserved.'
+              : 'The reply and status change were rejected. Review the current ticket and selected action. Your draft is preserved.',
+      };
+    reportServerError('ticket.save', error);
+    // A network/provider failure can arrive after a successful database commit.
+    // Do not claim that nothing was sent; let the composer offer a stable retry.
+    throw new Error('Reply and status outcome could not be confirmed.');
+  }
+  const outcome = data?.[0];
+  if (!outcome?.message_sent) throw new Error('Reply outcome could not be confirmed.');
+  revalidatePath(`/app/tickets/${ticketId}`);
+  revalidatePath('/app/tickets');
+  if (!outcome.status_changed)
+    return {
+      messageSent: true,
+      statusChanged: false,
+      revision: outcome.revision,
+      error:
+        'Reply already sent. No combined status change was recorded for that reply. Review the current status before setting it again.',
+    };
+  return {
+    messageSent: true,
+    statusChanged: true,
+    revision: outcome.revision,
+    success: outcome.already_sent
+      ? `Reply and ${ticketStatuses[status as 'waiting_on_user' | 'resolved'].label} action already saved. The current ticket has been refreshed.`
+      : status === 'waiting_on_user'
+        ? 'Reply sent. Waiting on the requester’s reply; resolution SLA paused.'
+        : 'Reply sent. Ticket resolved.',
   };
 }
 
