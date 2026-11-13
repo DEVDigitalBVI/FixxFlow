@@ -6,28 +6,21 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import { saveArticle } from '@/app/app/help/actions';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Input, NativeSelect, Textarea } from '@/components/ui/input';
+import { Input } from '@/components/ui/input';
 import { revealField } from '@/components/ui/reveal-field';
 import { confirmDiscardChanges, useUnsavedChanges } from '@/components/ui/unsaved-changes';
-import { helpTopics } from '@/features/knowledge/help-collections';
 import { createClient } from '@/lib/supabase/client';
 import { uploadAndRegister } from '@/lib/uploads';
 import type { KnowledgeArticle, KnowledgeAsset } from '@/types/database';
 
+import { articleAssetTypes, renderArticleAssets } from './article-assets';
+import { renderArticleBlocksEditor } from './article-blocks-editor';
 import { ArticleContent } from './article-content';
-import { knowledgeAudiences, type KnowledgeAudience } from './audience';
-import { blockTypes, knowledgeCategories, parseArticleContent, type ArticleBlock } from './content';
+import { renderArticlePublication } from './article-publication';
+import { type KnowledgeAudience } from './audience';
+import { parseArticleContent, type ArticleBlock } from './content';
 import { RelatedArticlePicker } from './related-article-picker';
 
-const assetTypes = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-  'application/pdf',
-  'text/plain',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-];
 export function ArticleEditor({
   article,
   organizationId,
@@ -124,7 +117,7 @@ export function ArticleEditor({
   }
   async function upload(file?: File) {
     if (!file) return;
-    if (!assetTypes.includes(file.type) || file.size === 0 || file.size > 6 * 1024 * 1024) {
+    if (!articleAssetTypes.includes(file.type) || file.size === 0 || file.size > 6 * 1024 * 1024) {
       setUploadMessage('Use a JPG, PNG, WebP, PDF, text, Word, or Excel file up to 6 MB.');
       return;
     }
@@ -218,288 +211,29 @@ export function ArticleEditor({
             />
           </label>
         </fieldset>
-        <fieldset disabled={busy}>
-          <legend>Write your article</legend>
-          <p className="muted">
-            Start with the answer, then explain the steps. Use Bold and Italic to format selected
-            text.
-          </p>
-          {blocks.map((block, i) => (
-            <fieldset className="knowledge-block" key={i}>
-              <legend>
-                {block.type === 'paragraph'
-                  ? 'Paragraph'
-                  : block.type[0].toUpperCase() + block.type.slice(1)}{' '}
-                {i + 1}
-              </legend>
-
-              <div
-                className="knowledge-actions"
-                role="group"
-                aria-label={`Format section ${i + 1}`}
-              >
-                {!['image', 'link', 'code'].includes(block.type) && (
-                  <>
-                    <Button type="button" variant="secondary" onClick={() => format(i, '**')}>
-                      Bold
-                    </Button>
-                    <Button type="button" variant="secondary" onClick={() => format(i, '*')}>
-                      Italic
-                    </Button>
-                  </>
-                )}
-              </div>
-              <label>
-                {block.type === 'image'
-                  ? 'Image description (alt text)'
-                  : block.type === 'link'
-                    ? 'Link label'
-                    : 'Text'}
-                <Textarea
-                  ref={(node) => {
-                    textareas.current[i] = node;
-                  }}
-                  value={block.text}
-                  rows={block.type === 'image' || block.type === 'link' ? 2 : 5}
-                  maxLength={20000}
-                  onChange={(e) => update(i, { text: e.target.value })}
-                />
-              </label>
-              {block.type === 'link' && (
-                <label>
-                  Link URL
-                  <Input
-                    type="url"
-                    value={block.url ?? ''}
-                    placeholder="https://"
-                    onChange={(e) => update(i, { url: e.target.value })}
-                  />
-                </label>
-              )}
-              {block.type === 'image' && (
-                <label>
-                  Uploaded image
-                  <NativeSelect
-                    value={block.assetId ?? ''}
-                    onChange={(e) => update(i, { assetId: e.target.value })}
-                  >
-                    <option value="">Choose image</option>
-                    {assets
-                      .filter((a) => a.content_type.startsWith('image/'))
-                      .map((a) => (
-                        <option key={a.id} value={a.id}>
-                          {a.file_name}
-                        </option>
-                      ))}
-                  </NativeSelect>
-                </label>
-              )}
-              <details className="knowledge-block-options">
-                <summary>
-                  Section options<span className="sr-only">: section {i + 1}</span>
-                </summary>
-                <label>
-                  Section format
-                  <NativeSelect
-                    value={block.type}
-                    onChange={(e) => update(i, { type: e.target.value as ArticleBlock['type'] })}
-                  >
-                    {blockTypes
-                      .filter((type) => !library || type !== 'image')
-                      .map((type) => (
-                        <option key={type} value={type}>
-                          {type[0].toUpperCase() + type.slice(1)}
-                        </option>
-                      ))}
-                  </NativeSelect>
-                </label>
-                <div className="knowledge-actions">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    disabled={i === 0}
-                    aria-label={`Move block ${i + 1} up`}
-                    onClick={() => {
-                      setDirty(true);
-                      focusParagraph.current = i - 1;
-                      setBlocks((items) => {
-                        const next = [...items];
-                        [next[i - 1], next[i]] = [next[i], next[i - 1]];
-                        return next;
-                      });
-                    }}
-                  >
-                    Move up
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    disabled={i === blocks.length - 1}
-                    aria-label={`Move block ${i + 1} down`}
-                    onClick={() => {
-                      setDirty(true);
-                      focusParagraph.current = i + 1;
-                      setBlocks((items) => {
-                        const next = [...items];
-                        [next[i + 1], next[i]] = [next[i], next[i + 1]];
-                        return next;
-                      });
-                    }}
-                  >
-                    Move down
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    aria-label={`Remove block ${i + 1}`}
-                    onClick={() => {
-                      if (block.text && !window.confirm('Remove this section and its content?'))
-                        return;
-                      setDirty(true);
-                      focusParagraph.current = Math.max(0, i - 1);
-                      setBlocks((items) => items.filter((_, index) => index !== i));
-                    }}
-                  >
-                    Remove
-                  </Button>
-                </div>
-              </details>
-            </fieldset>
-          ))}
-          <Button
-            type="button"
-            variant="secondary"
-            disabled={blocks.length >= 100}
-            onClick={() => {
-              setDirty(true);
-              focusParagraph.current = blocks.length;
-              setBlocks((items) => [...items, { type: 'paragraph', text: '' }]);
-            }}
-          >
-            Add paragraph
-          </Button>
-        </fieldset>
-        <fieldset disabled={busy}>
-          <legend>Publish settings</legend>
-          {library && (
-            <>
-              <label>
-                Help collection
-                <NativeSelect
-                  name="helpCollection"
-                  value={collection}
-                  onChange={(event) => {
-                    setDirty(true);
-                    setCollection(event.target.value as 'knowledge' | 'fixxflow');
-                  }}
-                >
-                  <option value="knowledge">Knowledge base · IT troubleshooting</option>
-                  <option value="fixxflow">FixxFlow Help &amp; FAQ</option>
-                </NativeSelect>
-              </label>
-              {collection === 'fixxflow' && (
-                <>
-                  <label>
-                    FixxFlow topic
-                    <NativeSelect
-                      name="helpTopic"
-                      value={metadata.helpTopic}
-                      onChange={(event) =>
-                        setMetadata({
-                          ...metadata,
-                          helpTopic: event.target.value as typeof metadata.helpTopic,
-                        })
-                      }
-                    >
-                      {Object.entries(helpTopics).map(([value, label]) => (
-                        <option value={value} key={value}>
-                          {label}
-                        </option>
-                      ))}
-                    </NativeSelect>
-                  </label>
-                  <label>
-                    Content format
-                    <NativeSelect
-                      name="helpFormat"
-                      value={metadata.helpFormat}
-                      onChange={(event) =>
-                        setMetadata({
-                          ...metadata,
-                          helpFormat: event.target.value as typeof metadata.helpFormat,
-                        })
-                      }
-                    >
-                      <option value="guide">Full guide</option>
-                      <option value="faq">FAQ · quick answer</option>
-                    </NativeSelect>
-                  </label>
-                </>
-              )}
-            </>
-          )}
-          <label>
-            Category
-            <NativeSelect
-              name="category"
-              value={metadata.category}
-              onChange={(event) =>
-                setMetadata({
-                  ...metadata,
-                  category: event.target.value as typeof metadata.category,
-                })
-              }
-            >
-              {knowledgeCategories.map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </NativeSelect>
-          </label>
-          <label>
-            Short summary (optional)
-            <Textarea
-              name="summary"
-              value={metadata.summary}
-              onChange={(event) => setMetadata({ ...metadata, summary: event.target.value })}
-              maxLength={500}
-            />
-          </label>
-          <label>
-            Publication status
-            <NativeSelect
-              name="status"
-              value={metadata.status}
-              onChange={(event) =>
-                setMetadata({ ...metadata, status: event.target.value as typeof metadata.status })
-              }
-            >
-              <option value="draft">Draft — IT staff only</option>
-              <option value="published">Published</option>
-              <option value="archived">Archived — IT staff only</option>
-            </NativeSelect>
-          </label>
-          <label>
-            Audience
-            <NativeSelect
-              name="audience"
-              required
-              value={audience}
-              onChange={(event) => setAudience(event.target.value as KnowledgeAudience)}
-              aria-describedby="article-audience-hint"
-            >
-              {Object.entries(knowledgeAudiences).map(([value, item]) => (
-                <option key={value} value={value}>
-                  {item.label}
-                </option>
-              ))}
-            </NativeSelect>
-          </label>
-          <p id="article-audience-hint" className="muted">
-            {library
-              ? 'Published employee-facing articles are available to active members in every workspace. Published IT only articles are available to technicians and administrators. Drafts and archived library articles are visible only to the platform owner.'
-              : 'Employee-facing articles are available to employees only after publication. IT only articles stay private to technicians and administrators. Drafts and archived articles are always IT only.'}
-          </p>
-        </fieldset>
+        {renderArticleBlocksEditor({
+          busy,
+          blocks,
+          assets,
+          library,
+          format,
+          update,
+          textareasRef: textareas,
+          focusParagraphRef: focusParagraph,
+          setDirty,
+          setBlocks,
+        })}
+        {renderArticlePublication({
+          busy,
+          library,
+          collection,
+          metadata,
+          audience,
+          setDirty,
+          setCollection,
+          setMetadata,
+          setAudience,
+        })}
         <details className="progressive-section knowledge-related-disclosure">
           <summary>
             Related articles <span className="muted">Optional</span>
@@ -531,41 +265,7 @@ export function ArticleEditor({
           </Button>
         </div>
       </form>
-      {!library && (
-        <section className="settings-card">
-          <h2>Images and attachments</h2>
-          {isNew ? (
-            <p>
-              Save your article to add images and attachments. You’ll return to this editor after
-              saving.
-            </p>
-          ) : (
-            <>
-              <p>Files added here are available to anyone who can read this article.</p>
-              <label className="knowledge-file">
-                Upload a file (up to 6 MB)
-                <input
-                  type="file"
-                  accept={assetTypes.join(',')}
-                  disabled={uploading || busy}
-                  onChange={(e) => {
-                    void upload(e.target.files?.[0]);
-                    e.target.value = '';
-                  }}
-                />
-              </label>
-              {uploadMessage && <p role="status">{uploadMessage}</p>}
-              <ul>
-                {assets.map((a) => (
-                  <li key={a.id}>
-                    <a href={`/app/help/assets/${a.id}?download=1`}>{a.file_name}</a>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </section>
-      )}
+      {renderArticleAssets({ library, isNew, busy, uploading, uploadMessage, assets, upload })}
       <details className="settings-card progressive-section">
         <summary>Content preview</summary>
         <ArticleContent content={blocks} images={images} />
