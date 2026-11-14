@@ -14,6 +14,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - Work directly on `main`; do not create branches unless the user explicitly requests one.
 - Run relevant checks, then push `main` for the Vercel production deployment when deployment is requested.
+- Database migrations are part of implementing a feature, not a handoff task. Before deploying database-dependent changes, compare every repository migration with the target project's applied history, apply reviewed pending migrations in order, and verify the resulting functions/tables and permissions with read-only queries. Never report a production feature complete based only on local migration tests.
+- Run `npm run db:check-production` against the target before pushing a production release. The production build also enforces this check. Missing credentials, an unavailable history API, or pending migrations block the release; do not bypass the gate. Report applied migrations and verification in the completion message. Do not edit previously applied migrations.
 
 ## Design source of truth
 

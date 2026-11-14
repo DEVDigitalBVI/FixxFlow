@@ -40,13 +40,14 @@ async function render({ error = false, role = 'technician', members = [] } = {})
       SubmitButton: ({ children }) => React.createElement('button', { type: 'submit' }, children),
     },
     '@/features/lookups/lookup-select': {
-      LookupSelect: ({ label, resource, describedBy, required }) =>
+      LookupSelect: ({ label, resource, describedBy, required, selectFirstMatchOnSearch }) =>
         React.createElement(
           'label',
           null,
           label,
           React.createElement('select', {
             'data-resource': resource,
+            'data-select-first-match': selectFirstMatchOnSearch,
             'aria-describedby': describedBy,
             required,
           }),
@@ -59,6 +60,7 @@ test('incident followers identifies the employee audience, next action and discl
   const html = await render({ members: [{ user_id: 'gm' }] });
   assert.match(html, /Incident followers/);
   assert.match(html, /data-resource="people"/);
+  assert.match(html, /data-select-first-match="true"/);
   assert.match(html, /aria-describedby="incident-followers-hint"/);
   assert.match(html, /approved incident updates/);
   assert.match(html, /doesn’t change the assignee/);

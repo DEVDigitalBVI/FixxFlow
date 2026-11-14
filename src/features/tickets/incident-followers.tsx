@@ -72,6 +72,7 @@ export async function IncidentFollowers({ ticketId }: { ticketId: string }) {
               name="userId"
               label="Workspace member"
               emptyLabel="Choose a workspace member"
+              selectFirstMatchOnSearch
               required
               describedBy="incident-followers-hint"
             />

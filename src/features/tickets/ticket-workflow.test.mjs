@@ -33,7 +33,9 @@ test('workspace exposes core work together and keeps secondary disclosures mount
   ])
     assert.ok(html.includes(text));
   assert.ok(html.indexOf('Owner/status') < html.indexOf('Request'));
-  assert.ok(html.indexOf('Draft') < html.indexOf('Metadata'));
+  assert.match(html, /<aside class="ticket-workspace-sidebar"/);
+  assert.ok(html.indexOf('ticket-workspace-secondary') > html.indexOf('ticket-workspace-main'));
+  assert.ok(html.indexOf('ticket-workspace-secondary') > html.indexOf('Draft'));
   assert.match(html, /<summary>Coordination<\/summary>/);
   assert.doesNotMatch(html, /<details[^>]* open/);
   const active = renderToStaticMarkup(

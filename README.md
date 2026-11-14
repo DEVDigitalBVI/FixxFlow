@@ -1,5 +1,18 @@
 # FixxFlow
 
+Production builds run a read-only migration gate before Next.js builds. Configure
+`SUPABASE_ACCESS_TOKEN` in Vercel's Production environment with project-scoped
+`database:read` access. The gate derives the target project from
+`NEXT_PUBLIC_SUPABASE_URL`, checks every SQL migration against applied history,
+and blocks on missing migrations, credentials, or API failures. Connector-applied
+migrations can have generated versions, so a unique matching migration name is
+also accepted. This checks application history, not SQL checksums or schema drift.
+Local and preview builds skip the production gate; run
+`npm run db:check-production` explicitly before releasing. Apply reviewed pending
+migrations in order, verify their schema and permissions, then deploy. Builds
+never apply migrations automatically. Include the before/after ledger and
+verification in the release record.
+
 FixxFlow is built with Next.js, React, TypeScript, and Supabase.
 
 The supported runtime is Node.js 26.x. TypeScript remains pinned to 5.9.3 because

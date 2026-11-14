@@ -2095,7 +2095,8 @@
     align-items: start;
     min-width: 0;
   }
-  :where(.scope) :global(.ticket-workspace-main) {
+  :where(.scope) :global(.ticket-workspace-main),
+  :where(.scope) :global(.ticket-workspace-sidebar) {
     display: contents;
   }
   :where(.scope) :global(.ticket-workspace > *),
@@ -2146,32 +2147,39 @@
   :where(.scope) :global(.ticket-workspace-actions .ticket-status-action) {
     flex-wrap: wrap;
   }
+  :where(.scope) :global(.ticket-workspace-action-slot) {
+    order: 0;
+  }
+  :where(.scope) :global(.ticket-workspace-request) {
+    order: 1;
+  }
+  :where(.scope) :global(.ticket-workspace-conversation) {
+    order: 2;
+  }
+  :where(.scope) :global(.ticket-workspace-details) {
+    order: 3;
+  }
+  :where(.scope) :global(.ticket-workspace-secondary) {
+    order: 4;
+  }
   @media (min-width: 1200px) {
-    /* Independent column flow prevents conversation height from sizing sidebar gaps. */
     :where(.scope) :global(.ticket-workspace) {
-      --ticket-sidebar-width: clamp(280px, 28%, 340px);
-      display: flow-root;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
     }
-    :where(.scope) :global(.ticket-workspace-main) {
+    :where(.scope) :global(.ticket-workspace-main),
+    :where(.scope) :global(.ticket-workspace-sidebar) {
       display: grid;
-      gap: var(--space-section);
-      float: left;
-      width: calc(100% - var(--ticket-sidebar-width) - var(--space-section));
+      gap: var(--space-group);
       min-width: 0;
     }
-    :where(.scope) :global(.ticket-workspace-action-slot) {
-      float: right;
-      width: var(--ticket-sidebar-width);
+    :where(.scope) :global(.ticket-workspace-main) {
+      grid-column: 1;
+      grid-row: 1;
+      gap: var(--space-section);
     }
-    :where(.scope) :global(.ticket-workspace-details) {
-      float: right;
-      clear: right;
-      width: var(--ticket-sidebar-width);
-      margin-top: var(--space-group);
-    }
-    :where(.scope) :global(.ticket-workspace-secondary) {
-      clear: both;
-      padding-top: var(--space-section);
+    :where(.scope) :global(.ticket-workspace-sidebar) {
+      grid-column: 2;
+      grid-row: 1;
     }
   }
 }
