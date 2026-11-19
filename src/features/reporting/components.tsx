@@ -39,11 +39,9 @@ export function TodayMetrics({
     },
     { label: 'Open', value: s?.open ?? '—', hint: 'All unresolved tickets right now' },
     {
-      label: personal ? 'Past target' : 'Overdue',
+      label: 'Overdue',
       value: s?.overdue ?? '—',
-      hint: personal
-        ? 'Open requests past a reply or completion target'
-        : 'Open tickets with a breached response or resolution SLA',
+      hint: 'Open tickets with a breached response or resolution SLA',
     },
     {
       label: 'Avg response',
@@ -54,6 +52,38 @@ export function TodayMetrics({
       label: 'Avg resolution',
       value: s ? duration(s.resolution) : '—',
       hint: 'Latest resolutions recorded today',
+    },
+  ];
+  const groups = [
+    {
+      title: 'Right now',
+      items: [
+        { label: 'Open requests', value: s?.open ?? '—' },
+        {
+          label: 'Past target',
+          value: s?.open ? `${s.overdue} of ${s.open}` : (s?.overdue ?? '—'),
+        },
+      ],
+    },
+    {
+      title: 'Today',
+      items: [
+        { label: 'Opened', value: s?.created ?? '—' },
+        { label: 'Resolved', value: s?.resolved ?? '—' },
+      ],
+    },
+    {
+      title: 'Timing today',
+      items: [
+        {
+          label: 'Average response',
+          value: s ? supportDuration(s.response, 'No responses recorded') : '—',
+        },
+        {
+          label: 'Average resolution',
+          value: s ? supportDuration(s.resolution, 'No resolutions recorded') : '—',
+        },
+      ],
     },
   ];
   return (
@@ -80,19 +110,44 @@ export function TodayMetrics({
           </span>
         )}
       </div>
-      <dl className="report-metrics">
-        {metrics.map((m) => (
-          <div className="settings-card" key={m.label}>
-            <dt>{m.label}</dt>
-            <dd>
-              <span>{m.value}</span>
-              <p>{m.hint}</p>
-            </dd>
-          </div>
-        ))}
-      </dl>
+      {personal ? (
+        <div className="support-metric-groups settings-card">
+          {groups.map(({ title: groupTitle, items }) => (
+            <div className="support-metric-group" key={groupTitle}>
+              <h3>{groupTitle}</h3>
+              <dl>
+                {items.map(({ label, value }) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <dl className="report-metrics">
+          {metrics.map((m) => (
+            <div className="settings-card" key={m.label}>
+              <dt>{m.label}</dt>
+              <dd>
+                <span>{m.value}</span>
+                <p>{m.hint}</p>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
     </section>
   );
+}
+
+function supportDuration(minutes: number | null, empty: string) {
+  if (minutes === null || !Number.isFinite(minutes)) return empty;
+  const days = minutes / 1440;
+  if (days >= 1 && Number.isInteger(days)) return days === 1 ? '1 day' : `${days} days`;
+  return elapsedLabel(minutes);
 }
 
 type Series = { label: string; values: (number | null)[] };

@@ -12,6 +12,7 @@ export function PageHeader({
   eyebrow,
   back,
   actions,
+  titleStatus,
   className,
 }: {
   title: string;
@@ -19,6 +20,7 @@ export function PageHeader({
   eyebrow?: string;
   back?: { href: string; label: string };
   actions?: ReactNode;
+  titleStatus?: ReactNode;
   className?: string;
 }) {
   return (
@@ -37,7 +39,14 @@ export function PageHeader({
       <header className={['page-header', className].filter(Boolean).join(' ')}>
         <div>
           {eyebrow && <span className="page-eyebrow">{eyebrow}</span>}
-          <h1>{title}</h1>
+          {titleStatus ? (
+            <div className="page-header-title">
+              <h1>{title}</h1>
+              {titleStatus}
+            </div>
+          ) : (
+            <h1>{title}</h1>
+          )}
           {description && <p>{description}</p>}
         </div>
         {actions && <div className="page-header-actions">{actions}</div>}

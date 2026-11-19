@@ -63,16 +63,25 @@ test('read-only dashboard reuses the six metrics and accessible trend without st
   const html = render(await Page());
   assert.deepEqual(calls, [{ name: 'support_viewer_dashboard', args: { org: 'trusted-org' } }]);
   for (const label of [
-    'Created',
+    'Opened',
     'Resolved',
-    'Open',
-    'Overdue',
-    'Avg response',
-    'Avg resolution',
+    'Open requests',
+    'Past target',
+    'Average response',
+    'Average resolution',
     'Technician workload',
     'View only',
   ])
     assert.ok(html.includes(label));
+  assert.match(html, /<h1>Support dashboard<\/h1><span[^>]*>View only<\/span>/);
+  assert.match(
+    html,
+    /Right now.*Open requests.*Past target<\/dt><dd>2 of 12.*<h3>Today.*<h3>Timing today/,
+  );
+  assert.match(
+    html,
+    /<details class="progressive-section support-workload-details"><summary>Workload and response history<\/summary>/,
+  );
   assert.match(html, /role="img"/);
   assert.match(html, /View data for/);
   assert.match(html, /14 days/);
@@ -91,6 +100,21 @@ test('read-only dashboard reuses the six metrics and accessible trend without st
     render(await load('src/app/app/support-dashboard/page.tsx', failed.mocks).default()),
     /role="alert"/,
   );
+});
+test('dashboard distinguishes empty activity from missing timing samples', async () => {
+  const data = {
+    ...dashboard,
+    report: {
+      ...dashboard.report,
+      summary: { created: 0, resolved: 2, open: 0, overdue: 0, response: null, resolution: 10080 },
+    },
+  };
+  const { mocks } = setup({ data, access: { dashboard: true, sharedIncidents: false } });
+  const html = render(await load('src/app/app/support-dashboard/page.tsx', mocks).default());
+  assert.match(html, /Past target<\/dt><dd>0<\/dd>/);
+  assert.match(html, /Average response<\/dt><dd>No responses recorded<\/dd>/);
+  assert.match(html, /Average resolution<\/dt><dd>7 days<\/dd>/);
+  assert.doesNotMatch(html, /href="\/app\/shared-incidents/);
 });
 test('shared queue retains scoped search/filter/page state, written badges and full detail links', async () => {
   const { mocks, calls } = setup({ data: { count: 30, rows: [sharedIncident] } });

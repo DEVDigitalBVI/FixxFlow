@@ -609,6 +609,15 @@
     letter-spacing: -0.02em;
     margin: 0 0 4px;
   }
+  .page-header-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-inline);
+  }
+  .page-header-title h1 {
+    margin: 0;
+  }
   .page-header p {
     color: var(--color-text-muted);
     margin: 0;
@@ -4120,8 +4129,54 @@
   .chat-center-empty > .chat-center-inbox {
     border-right: 0;
   }
+  .support-metric-groups.settings-card {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 0;
+  }
+  .support-metric-group {
+    min-width: 0;
+    padding: var(--space-group);
+    overflow-wrap: anywhere;
+  }
+  .support-metric-group + .support-metric-group {
+    border-inline-start: 1px solid var(--color-border);
+  }
+  .support-metric-group h3 {
+    margin: 0 0 var(--space-inline);
+    font-size: 1rem;
+  }
+  .support-metric-group dl,
+  .support-metric-group dd {
+    margin: 0;
+  }
+  .support-metric-group dl > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px var(--space-inline);
+    padding-block: 4px;
+  }
+  .support-metric-group dt {
+    color: var(--color-text-muted);
+  }
+  .support-metric-group dd {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .support-metric-definitions,
   .support-workload-details > .report-section {
     margin-top: var(--space-section);
+  }
+  @media (max-width: 959px) {
+    .support-metric-groups.settings-card {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .support-metric-group + .support-metric-group {
+      border-inline-start: 0;
+      border-block-start: 1px solid var(--color-border);
+    }
   }
   @media (max-width: 767px) {
     .workspace.employee-workspace[data-page-flow='standard']

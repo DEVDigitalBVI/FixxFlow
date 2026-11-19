@@ -20,11 +20,15 @@ export default async function SupportDashboardPage() {
   const { data, error } = await db.rpc('support_viewer_dashboard', { org: viewer.organizationId });
   if (error?.code === '42501') notFound();
   return (
-    <div className="page overview-page">
+    <div className="page">
       <PageHeader
         title={viewer.role === 'end_user' ? 'Support dashboard' : 'Employee dashboard preview'}
         eyebrow={viewer.organizationName}
-        description="A read-only view of IT support activity across your workspace."
+        titleStatus={
+          <Badge tone="neutral">
+            {viewer.role === 'end_user' ? 'View only' : 'Staff preview · View only'}
+          </Badge>
+        }
         actions={
           access.sharedIncidents ? (
             <Link className={buttonVariants({ variant: 'secondary' })} href="/app/shared-incidents">
@@ -33,11 +37,6 @@ export default async function SupportDashboardPage() {
           ) : undefined
         }
       />
-      <p>
-        <Badge tone="neutral">
-          {viewer.role === 'end_user' ? 'View only' : 'Staff preview · View only'}
-        </Badge>
-      </p>
       {error || !isDashboard(data) ? (
         <Alert tone="error" role="alert">
           <p>Support statistics could not load. Try again.</p>
@@ -45,9 +44,9 @@ export default async function SupportDashboardPage() {
         </Alert>
       ) : (
         <>
-          <TodayMetrics report={data.report} personal title="Support across your organization" />
+          <TodayMetrics report={data.report} personal title="Support activity" />
           <details className="progressive-section support-workload-details">
-            <summary>IT workload and response details</summary>
+            <summary>Workload and response history</summary>
             <DashboardInsights
               report={data.report}
               workload={data.workload.map((row, index) => ({
@@ -56,6 +55,17 @@ export default async function SupportDashboardPage() {
               }))}
               showReports={false}
             />
+            <div className="support-metric-definitions">
+              <h3>How metrics are counted</h3>
+              <ul>
+                <li>Past target counts open requests beyond a reply or completion target.</li>
+                <li>Resolved today includes requests that have since reopened.</li>
+                <li>
+                  Today’s averages use recorded IT replies or acknowledgments and latest
+                  resolutions.
+                </li>
+              </ul>
+            </div>
           </details>
         </>
       )}
