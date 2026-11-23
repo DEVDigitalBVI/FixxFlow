@@ -44,8 +44,8 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "0.5.15",
-    "@electric-sql/pglite-pgtap": "0.0.16",
+    "@electric-sql/pglite": "0.5.17",
+    "@electric-sql/pglite-pgtap": "0.0.18",
     "@ianvs/prettier-plugin-sort-imports": "4.7.1",
     "@tailwindcss/postcss": "4.3.4",
     "@types/node": "26.6.6",
